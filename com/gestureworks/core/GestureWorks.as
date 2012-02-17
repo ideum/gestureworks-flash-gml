@@ -23,7 +23,7 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Simulator;
 	//import com.gestureworks.utils.TUIO;
 	import com.gestureworks.tuio.TuioLink;
-	import com.gestureworks.cml.components.ComponentDisplay;
+	import com.gestureworks.cml.components.CMLDisplay;
 	import com.gestureworks.core.CML;
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
@@ -105,7 +105,7 @@ package com.gestureworks.core
 		public static var fileName:String = "app:/key";
 		
 		private var modeManager:ModeManager;
-		private var componentDisplay:ComponentDisplay;
+		private var componentDisplay:CMLDisplay;
 		private var _gwComplete:Boolean;
 		private var _root:* = root;
 		
@@ -137,7 +137,7 @@ package com.gestureworks.core
 		{
 			_gwComplete = value;
 			
-			componentDisplay = new ComponentDisplay();
+			componentDisplay = new CMLDisplay();
 			addChild(componentDisplay);
 		}
 		/**
