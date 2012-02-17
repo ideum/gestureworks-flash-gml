@@ -17,7 +17,7 @@ package com.gestureworks.managers
 {
 	/**
 	 * ...
-	 * @author Matthew C. Valverde
+	 * @author  
 	 */
 	
 	import flash.events.Event;

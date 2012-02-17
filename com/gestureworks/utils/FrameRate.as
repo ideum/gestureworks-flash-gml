@@ -23,7 +23,7 @@ package com.gestureworks.utils
 	
 	/**
 	 * ...
-	 * @author Matthew Valverde
+	 * @author  
 	 */
 	
 	public class FrameRate extends Sprite

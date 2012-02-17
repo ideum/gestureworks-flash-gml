@@ -20,7 +20,7 @@ package com.gestureworks.utils.modeScreens
 	
 	/**
 	 * ...
-	 * @author Matthew Valverde
+	 * @author  
 	 */
 	public class StandardSplash extends Sprite 
 	{

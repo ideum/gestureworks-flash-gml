@@ -19,7 +19,7 @@ package com.gestureworks.core
 	
 	/**
 	 * ...
-	 * @author Matthew C. Valverde
+	 * @author  
 	 */
 	
 	public interface IGestureWorks 
