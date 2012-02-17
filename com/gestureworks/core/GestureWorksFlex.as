@@ -22,6 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.utils.GMLParser;
 	import com.gestureworks.managers.ModeManager;
 	import com.gestureworks.utils.Simulator;
+	import flash.utils.getDefinitionByName;
 	//import com.gestureworks.utils.TUIO;
 	import com.gestureworks.tuio.TuioLink;
 	import com.gestureworks.utils.Yolotzin;
@@ -41,7 +42,6 @@ package com.gestureworks.core
 		//public static var touchMoveMarshall:Boolean = false;
 		public static var fileName:String="app:/key";
 		private var modeManager:ModeManager;
-		private var componentDisplay:CMLDisplay;
 		private var _gwComplete:Boolean;
 		private var _root:* = root;
 		public static var hasCML:Boolean;
