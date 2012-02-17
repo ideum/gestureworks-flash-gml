@@ -13,6 +13,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.core
 {
 	import flash.display.Stage;
@@ -23,7 +24,6 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Simulator;
 	//import com.gestureworks.utils.TUIO;
 	import com.gestureworks.tuio.TuioLink;
-	import com.gestureworks.cml.components.CMLDisplay;
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
 		
@@ -58,8 +58,23 @@ package com.gestureworks.core
 		{
 			_gwComplete = value;
 						
-			componentDisplay = new CMLDisplay();
-			addChild(componentDisplay);
+			if (hasCML)
+			{
+				try
+				{
+					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.components.CMLDisplay") as Class;
+					var componentDisplay:* = new CMLDisplay();
+					addChild(componentDisplay);
+				}
+				catch (e:Error)
+				{
+					throw new Error("if you are trying to utilize CML and/or have included a settingsPath in your Main doc class, please make sure that you have included this statement into your Main Document class:  ' import com.gestureworks.components.CMLDisplay; CMLDisplay; '. ");
+				}
+			}
+			else
+			{
+				writeComplete = true;
+			}
 		}
 		
 		public function set writeComplete(value:Boolean):void

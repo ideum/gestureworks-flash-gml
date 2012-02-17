@@ -23,10 +23,10 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Simulator;
 	//import com.gestureworks.utils.TUIO;
 	import com.gestureworks.tuio.TuioLink;
-	import com.gestureworks.cml.components.CMLDisplay;
 	import com.gestureworks.core.CML;
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
+	import flash.utils.getDefinitionByName;
 		
 	/**
 		 * The GestureWorks class is the core class that can be accessed from all classes within.
@@ -76,7 +76,7 @@ package com.gestureworks.core
 		 */
 		public static var isRunTime:Boolean;
 		/**
-		 * Varaible equals stage.
+		 * Var = stage.
 		 */
 		public static var application:Stage;
 		/**
@@ -105,7 +105,6 @@ package com.gestureworks.core
 		public static var fileName:String = "app:/key";
 		
 		private var modeManager:ModeManager;
-		private var componentDisplay:CMLDisplay;
 		private var _gwComplete:Boolean;
 		private var _root:* = root;
 		
@@ -137,8 +136,23 @@ package com.gestureworks.core
 		{
 			_gwComplete = value;
 			
-			componentDisplay = new CMLDisplay();
-			addChild(componentDisplay);
+			if (hasCML)
+			{
+				try
+				{
+					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.components.CMLDisplay") as Class;
+					var componentDisplay:* = new CMLDisplay();
+					addChild(componentDisplay);
+				}
+				catch (e:Error)
+				{
+					throw new Error("if you are trying to utilize CML and/or have included a settingsPath in your Main doc class, please make sure that you have included this statement into your Main Document class:  ' import com.gestureworks.components.CMLDisplay; CMLDisplay; '. ");
+				}
+			}
+			else
+			{
+				writeComplete = true;
+			}
 		}
 		/**
 		 * @private
@@ -146,6 +160,7 @@ package com.gestureworks.core
 		public function set writeComplete(value:Boolean):void
 		{
 			dispatchEvent(new Event(GestureWorks.GESTUREWORKS_COMPLETE));
+			
 			gestureworksInit();
 		}
 		
