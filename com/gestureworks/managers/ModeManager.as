@@ -1,0 +1,189 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  IDEUM
+//  Copyright 2011-2012 Ideum
+//  All Rights Reserved.
+//
+//  GestureWorks
+//
+//  File:    ModeManager.as
+//  Authors:  Ideum
+//             
+//  NOTICE: Ideum permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////////////////////////
+package com.gestureworks.managers 
+{
+	import com.gestureworks.utils.Yolotzin;
+	import flash.display.Sprite;
+	import com.gestureworks.utils.CMLLoader;
+	import com.gestureworks.utils.modeScreens.*;
+	import com.gestureworks.core.gw_public;
+	import com.gestureworks.utils.tgrqzd;
+	import flash.events.Event;
+	import flash.utils.setInterval;
+	import flash.utils.clearInterval;
+	import flash.utils.Timer;
+	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.utils.KeyListener;
+	import com.gestureworks.utils.TimeCompare;
+	
+	public class ModeManager extends Sprite
+	{
+		private var alphaDate:Date = new Date("Tue Dec 20 23:59:59 GMT-0700 2011");
+		private var modeImage:Sprite;
+		private var waterImage:Sprite;
+		private var watermark:Sprite;
+		private var timer:Timer = new Timer(5000);
+		private var key:String;
+		private var timeInterval:uint;
+		private var trialTimer:TrialTimer;
+		private var _r:*;
+		
+		public function ModeManager(r:*, k:*)
+		{
+			super();
+			
+			_r = r;
+			
+			key = k;
+			
+			if (stage) init();
+			else addEventListener(Event.ADDED_TO_STAGE, init);
+		}
+		
+		private function init(event:Event = null):void
+		{			
+			if (!key)
+			{
+				trace("You must enter a key into your .cml or hard code it into the Main document class.");
+				
+				return;
+			}
+			
+			if (key == "cl3ar") 
+			{
+				Yolotzin.mode = 2;
+				complete();
+				return;
+			}
+			
+			var yolotzin:Yolotzin = new Yolotzin();
+			addChild(yolotzin);
+			yolotzin.tgrqzd::qftgtopiuqewer(_r, key, CMLLoader.settingsPath);
+		}
+		
+		public function wComplete():void
+		{
+			var p:* = parent;
+			if (p) p.writeComplete = true;
+		}
+		
+		public function complete():void
+		{					
+			var timerCount:int;
+			
+			if (key != "cl3ar" && !Yolotzin.clear)
+			{
+				modeImage = createModeImage(Yolotzin.mode);
+				
+				var timeOut:Number = Yolotzin.mode;
+				
+				if (Yolotzin.mode > 2) timeOut = 2;
+				
+				timerCount = 6000 - (timeOut * 2000);
+			}
+			
+			if (Yolotzin.clear && Yolotzin.mode<2) modeImage = new RunTimeSplashScreen();
+			
+			if (modeImage) stage.addChild(modeImage);
+			if (modeImage) modeImage.x = (stage.stageWidth - modeImage.width) / 2;
+			if (modeImage) modeImage.y = (stage.stageHeight - modeImage.height) / 2;
+			
+			if(Yolotzin.clear && Yolotzin.mode<2) timerCount = 4000 - (Yolotzin.mode * 2000);
+			
+			timeInterval = setInterval(timerComplete, timerCount);
+		}
+						
+		private function timerComplete():void
+		{						
+			clearInterval(timeInterval);
+			
+			if (Yolotzin.mode == 4)
+			{
+				var compare:Number = TimeCompare.of(alphaDate, new Date());
+				if (compare < 0) return;				
+			}
+			
+			if (Yolotzin.mode >= 0)
+			{
+				if (modeImage) stage.removeChild(modeImage);
+				if (modeImage) modeImage = null;
+			}
+			else
+			{
+				addEventListener(Event.ENTER_FRAME, keepOnTop);
+			}
+			
+			if (Yolotzin.mode==0)
+			{
+				trialTimer = new TrialTimer();
+				stage.addChild(trialTimer);
+				trialTimer.addEventListener(TrialTimer.COMPLETE, trialTimerComplete);
+				trialTimer.y = stage.stageHeight - 40;
+				trialTimer.x = 20;
+				
+				watermark = new TrialWaterMark();
+				stage.addChild(watermark);
+				watermark.alpha = .5;
+				watermark.x = stage.stageWidth - watermark.width - 10;
+				watermark.y = stage.stageHeight  - watermark.height - 10;
+				
+				addEventListener(Event.ENTER_FRAME, keepOnTop);
+			}
+			
+			TouchManager.gw_public::initialize();
+			TouchUpdateManager.gw_public::initialize();
+			MouseManager.gw_public::initialize();
+			ObjectManager.gw_public::initialize();
+			EnterFrameManager.gw_public::initialize();
+			KeyListener.gw_public::initialize();
+			
+			var p:* = parent;
+			if (p) p.gwComplete = true;
+		}
+				
+		private function keepOnTop(event:Event):void
+		{
+			if (watermark) stage.setChildIndex( watermark, stage.numChildren - 1 );
+			if (modeImage) stage.setChildIndex( modeImage, stage.numChildren - 1 );
+			if (trialTimer) stage.setChildIndex( trialTimer, stage.numChildren - 1 );
+		}
+		
+		private function trialTimerComplete(event:Event):void
+		{
+			if (!GestureWorks.supportsTouch) GestureWorks.supportsTouch = true;
+			TouchManager.gw_public::deInitialize();
+		}
+		
+		private function createModeImage(mode:int):Sprite
+		{
+			var sprite:Sprite;
+			
+			switch (mode)
+			{
+				case -2:sprite = new Unregistered(); break;
+				case -1:sprite = new TrialExpired(); break;
+				case 0:sprite = new TrialSplash(); break;
+				case 1:sprite = new StandardSplash(); break;
+				case 2:sprite = new ProSplash(); break;
+				case 3:sprite = new SiteSplash(); break;
+				case 4:sprite = new AlphaSplash(); break;
+			}
+			
+			if (sprite) return sprite;
+			else return null;
+		}	
+	}
+}
