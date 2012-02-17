@@ -19,7 +19,6 @@ package com.gestureworks.utils
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import com.gestureworks.utils.CompileDate;
-	import com.gestureworks.bridges.AirBridge;
 	import com.gestureworks.utils.SwfByteLoader;
 	import com.gestureworks.events.BinaryEvent;
 	import com.gestureworks.core.CML;
