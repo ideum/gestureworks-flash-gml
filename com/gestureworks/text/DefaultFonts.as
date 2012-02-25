@@ -94,25 +94,30 @@ package com.gestureworks.text
 		
 		
 		// DroidSerif-BoldItalic
-		[Embed(source="../../../../lib/defaultFonts/DroidSerif-BoldItalic.ttf",fontName='DroidSerifBoldItalic',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		[Embed(source="../../../../lib/defaultFonts/DroidSerifBoldItalic.ttf",fontName='DroidSerifBoldItalic',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var DroidSerifBoldItalic:Class;
 		Font.registerFont(DroidSerifBoldItalic);
 		
 		// DroidSerif-Bold
-		[Embed(source="../../../../lib/defaultFonts/DroidSerif-Bold.ttf",fontName='DroidSerifBold',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		[Embed(source="../../../../lib/defaultFonts/DroidSerifBold.ttf",fontName='DroidSerifBold',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var DroidSerifBold:Class;
 		Font.registerFont(DroidSerifBold);
 		// DroidSerif-Italic
-		[Embed(source="../../../../lib/defaultFonts/DroidSerif-Italic.ttf",fontName='DroidSerifItalic',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		[Embed(source="../../../../lib/defaultFonts/DroidSerifItalic.ttf",fontName='DroidSerifItalic',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var DroidSerifItalic:Class;
 		Font.registerFont(DroidSerifItalic);
 		// DroidSerif-Regular
-		[Embed(source="../../../../lib/defaultFonts/DroidSerif-Regular.ttf",fontName='DroidSerifRegular',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		[Embed(source="../../../../lib/defaultFonts/DroidSerifRegular.ttf",fontName='DroidSerifRegular',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var DroidSerifRegular:Class;
 		Font.registerFont(DroidSerifRegular);
 		// Gotham-Bold
-		[Embed(source="../../../../lib/defaultFonts/Gotham-Bold.otf",fontName='GothamBold',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		[Embed(source="../../../../lib/defaultFonts/GothamBold.otf",fontName='GothamBold',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var GothamBold:Class;
 		Font.registerFont(GothamBold);
+		
+		// Gotham-Ultra
+		[Embed(source="../../../../lib/defaultFonts/GothamUltra.otf",fontName='GothamUltra',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		public static var GothamUltra:Class;
+		Font.registerFont(GothamUltra);
 	}
 }
