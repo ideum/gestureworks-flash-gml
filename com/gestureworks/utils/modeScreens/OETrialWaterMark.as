@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    Unregistered.as
+//  File:    TrialWaterMark.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -22,21 +22,14 @@ package com.gestureworks.utils.modeScreens
 	 * ...
 	 * @author  
 	 */
-	
-	public class Unregistered extends Sprite 
+	public class OETrialWaterMark extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/unregistered_version.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/oe_trialWatermark.png")] private var Splash:Class;
 		
-		public function Unregistered() 
+		public function OETrialWaterMark() 
 		{
 			var splash:Bitmap = new Splash();
 			addChild(splash);
-			
-			var button:SplashButton = new SplashButton(290, 75, 0, "http://support.gestureworks.com/");
-			addChild(button);
-			
-			button.x = 255;
-			button.y = 457;
 		}	
 	}
 }

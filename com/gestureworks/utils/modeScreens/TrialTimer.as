@@ -19,12 +19,14 @@ package com.gestureworks.utils.modeScreens
 	import flash.events.Event;
 	import flash.utils.Timer;
 	import flash.events.TimerEvent;
+	import com.gestureworks.core.GestureWorks;
 	
 	public class TrialTimer extends Sprite 
 	{
 		public static var COMPLETE:String = "complete trial timer";
 		private var timerCompleteAmount:Number = 3600;
-		private var textString:String = "GestureWorks trial time : ";
+		private var textString:String;
+		private var finalString:String;
 		private var textColor:uint = 0x666666;
 		private var textSize:int = 18;
 		private var timer:Timer;
@@ -33,6 +35,10 @@ package com.gestureworks.utils.modeScreens
 		
 		public function TrialTimer() 
 		{
+			textString = GestureWorks.isOpenExibits ? "Open Exhibits trial time : " : "GestureWorks trial time : ";
+			
+			finalString = GestureWorks.isOpenExibits ? "Open Exhibits trial timer has expired" : "GestureWorks trial timer has expired";
+			
 			timer=new Timer(1000);
 			timer.addEventListener(TimerEvent.TIMER, updateDisplay);
 			timer.start();
@@ -50,7 +56,7 @@ package com.gestureworks.utils.modeScreens
 			{
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, updateDisplay);
-				timerText.updateText("GestureWorks trial timer has expired");
+				timerText.updateText(finalString);
 				dispatchEvent(new Event(TrialTimer.COMPLETE));
 			}
 			

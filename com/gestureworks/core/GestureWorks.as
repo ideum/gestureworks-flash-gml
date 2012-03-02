@@ -57,12 +57,25 @@ package com.gestureworks.core
 		 * 
 		 */
 	
+		 
+		/* 
+		
+		IMPORTANT NOTE TO DEVELOPER **********************************************
+		 
+		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE... PERIOD...
+		IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY (paul@ideum.com) ABOUT IT'S IMPORTATANCE.
+		IF PAUL IS UNABLE TO HELP YOU UNDERSTAND, THEN PLEASE LOOK AND READ THE ACTUAL CODE FOR IT'S PATH.
+		SOMETHINGS AT FIRST MAY NOT BE CLEAR AS TO WHAT THE ACTUAL PURPOSE IS, BUT IT IS VALUABLE AND IS USED IF IT IS CURRENTLY WRITTTEN HERE.
+		DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
+		
+		*/
+	
 	public class GestureWorks extends GestureWorksCore
 	{
 		/**
 		 * Returns the current version of GestureWorks.
 		 */
-		public static var version:String = "3.0.51";
+		public static var version:String = "3.6.0";
 		/**
 		 * Returns the current copyright information for GestureWorks.
 		 */
@@ -103,6 +116,10 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public static var fileName:String = "app:/key";
+		/**
+		 * @private
+		 */
+		public static var isOpenExibits:Boolean;
 		
 		private var modeManager:ModeManager;
 		private var _gwComplete:Boolean;

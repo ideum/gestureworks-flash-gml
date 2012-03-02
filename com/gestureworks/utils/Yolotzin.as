@@ -31,6 +31,18 @@ package com.gestureworks.utils
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.utils.TimeCompare;
 	
+	/* 
+		
+		IMPORTANT NOTE TO DEVELOPER **********************************************
+		 
+		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE... PERIOD...
+		IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY (paul@ideum.com) ABOUT IT'S IMPORTATANCE.
+		IF PAUL IS UNABLE TO HELP YOU UNDERSTAND, THEN PLEASE LOOK AND READ THE ACTUAL CODE FOR IT'S PATH.
+		SOMETHINGS AT FIRST MAY NOT BE CLEAR AS TO WHAT THE ACTUAL PURPOSE IS, BUT IT IS VALUABLE AND IS USED IF IT IS CURRENTLY WRITTTEN HERE.
+		DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
+		
+		*/
+	
 	public class Yolotzin extends Sprite
 	{
 		public static var mode:int;
@@ -78,12 +90,17 @@ package com.gestureworks.utils
 		
 		private var inRunTime:Boolean;
 		private function testCompileDate(keyString:String):void
-		{
+		{			
+			if (keyString == "")
+			{
+				mode = -2;
+				completed = true;
+				return;
+			}
+			
 			c = CompileDate.from(r);
 			
 			var cDate:Date;
-			
-			//trace(CompileDate.isFlash);
 			
 			if (CompileDate.isFlash)
 			{
@@ -95,7 +112,6 @@ package com.gestureworks.utils
 				var minutes:String = date.slice(14, 16);
 				var seconds:String = date.slice(17, 19);
 				cDate = new Date(year, month, day, hours, minutes, seconds);
-				
 				//trace("isFlash:",year, month, day, hours, minutes, seconds)
 			}
 			else
@@ -105,13 +121,14 @@ package com.gestureworks.utils
 			
 			var todaysDate:Date = new Date();
 			var dateDifference:Number = todaysDate.valueOf() - cDate.valueOf();
-			
 			//trace("c:",c, "\n  dateDifference:", dateDifference, "\n  cDate:", cDate, "\n  todaysDate:", todaysDate);
 			
 			if (dateDifference > 30000) inRunTime = true;
 			var dencrpyt:* = Tpyrcne.d(keyString, "gestureworks");
-			var ya:Array = dencrpyt.toString().split("*");
-			mode = ya[0];
+			var ya:Array = dencrpyt.toString().split("*");			
+			mode = ya[0] == 10 ? 0 : ya[0] == 12 ? 1 : ya[0];
+			GestureWorks.isOpenExibits = ya[0].toString().length == 2 ? true : false;
+			
 			if (inRunTime)
 			{
 				GestureWorks.isRunTime = true;
@@ -129,8 +146,7 @@ package com.gestureworks.utils
 				}
 				else
 				{
-					trace("Your GestureWorks trial has expired")
-					return;
+					mode = -1;
 				}
 				
 				completed = true;

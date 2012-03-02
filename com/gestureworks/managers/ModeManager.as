@@ -29,6 +29,18 @@ package com.gestureworks.managers
 	import com.gestureworks.utils.KeyListener;
 	import com.gestureworks.utils.TimeCompare;
 	
+	/* 
+		
+		IMPORTANT NOTE TO DEVELOPER **********************************************
+		 
+		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE... PERIOD...
+		IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY (paul@ideum.com) ABOUT IT'S IMPORTATANCE.
+		IF PAUL IS UNABLE TO HELP YOU UNDERSTAND, THEN PLEASE LOOK AND READ THE ACTUAL CODE FOR IT'S PATH.
+		SOMETHINGS AT FIRST MAY NOT BE CLEAR AS TO WHAT THE ACTUAL PURPOSE IS, BUT IT IS VALUABLE AND IS USED IF IT IS CURRENTLY WRITTTEN HERE.
+		DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
+		
+		*/
+	
 	public class ModeManager extends Sprite
 	{
 		private var alphaDate:Date = new Date("Tue Dec 20 23:59:59 GMT-0700 2011");
@@ -57,9 +69,7 @@ package com.gestureworks.managers
 		{			
 			if (!key)
 			{
-				trace("You must enter a key into your .cml or hard code it into the Main document class.");
-				
-				return;
+				key = "";
 			}
 			
 			if (key == "cl3ar") 
@@ -95,7 +105,7 @@ package com.gestureworks.managers
 				timerCount = 6000 - (timeOut * 2000);
 			}
 			
-			if (Yolotzin.clear && Yolotzin.mode<2) modeImage = new RunTimeSplashScreen();
+			if (Yolotzin.clear && Yolotzin.mode<2) modeImage = GestureWorks.isOpenExibits ? new OERunTimeSplashScreen() : new RunTimeSplashScreen();
 			
 			if (modeImage) stage.addChild(modeImage);
 			if (modeImage) modeImage.x = (stage.stageWidth - modeImage.width) / 2;
@@ -110,11 +120,11 @@ package com.gestureworks.managers
 		{						
 			clearInterval(timeInterval);
 			
-			if (Yolotzin.mode == 4)
+			/*if (Yolotzin.mode == 4)
 			{
 				var compare:Number = TimeCompare.of(alphaDate, new Date());
 				if (compare < 0) return;				
-			}
+			}*/
 			
 			if (Yolotzin.mode >= 0)
 			{
@@ -134,7 +144,7 @@ package com.gestureworks.managers
 				trialTimer.y = stage.stageHeight - 40;
 				trialTimer.x = 20;
 				
-				watermark = new TrialWaterMark();
+				watermark = GestureWorks.isOpenExibits ? new OETrialWaterMark() : new TrialWaterMark();
 				stage.addChild(watermark);
 				watermark.alpha = .5;
 				watermark.x = stage.stageWidth - watermark.width - 10;
@@ -173,10 +183,10 @@ package com.gestureworks.managers
 			
 			switch (mode)
 			{
-				case -2:sprite = new Unregistered(); break;
-				case -1:sprite = new TrialExpired(); break;
-				case 0:sprite = new TrialSplash(); break;
-				case 1:sprite = new StandardSplash(); break;
+				case -2:sprite = GestureWorks.isOpenExibits ? new OEUnregistered() : new Unregistered(); break;
+				case -1:sprite = GestureWorks.isOpenExibits ? new OETrialExpired() : new TrialExpired(); break;
+				case 0:sprite = GestureWorks.isOpenExibits ? new OETrialSplash() : new TrialSplash(); break;
+				case 1:sprite = GestureWorks.isOpenExibits ? new OESplash() : new StandardSplash(); break;
 				case 2:sprite = new ProSplash(); break;
 				case 3:sprite = new SiteSplash(); break;
 				case 4:sprite = new AlphaSplash(); break;

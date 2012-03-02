@@ -50,9 +50,11 @@ package com.gestureworks.text
 		Font.registerFont(VerdanaFont);
 		
 		// Verdana Bold
-		/*[Embed(source="../../../../lib/defaultFonts/verdanaBold.ttf",fontName='VerdanaBoldFont',fontFamily='font',mimeType='application/x-font-truetype',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
+		/*
+		[Embed(source="../../../../lib/defaultFonts/verdanaBold.ttf",fontName='VerdanaBoldFont',fontFamily='font',mimeType='application/x-font-truetype',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var VerdanaBoldFont:Class;
-		Font.registerFont(VerdanaBoldFont);*/
+		Font.registerFont(VerdanaBoldFont);
+		*/
 		
 		// Helvetica New
 		[Embed(source="../../../../lib/defaultFonts/helvetica.ttf",fontName='HelveticaFont',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
@@ -88,10 +90,6 @@ package com.gestureworks.text
 		[Embed(source="../../../../lib/defaultFonts/OpenSansExtraBold.ttf",fontName='OpenSansExtraBold',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]
 		public static var OpenSansExtraBold:Class;
 		Font.registerFont(OpenSansExtraBold);
-		
-		
-		
-		
 		
 		// DroidSerif-BoldItalic
 		[Embed(source="../../../../lib/defaultFonts/DroidSerifBoldItalic.ttf",fontName='DroidSerifBoldItalic',fontFamily='font',fontWeight='normal',fontStyle='normal',mimeType='application/x-font-truetype',advancedAntiAliasing='true',embedAsCFF='false',unicodeRange='U+0020-U+002F,U+0030-U+0039,U+003A-U+0040,U+0041-U+005A,U+005B-U+0060,U+0061-U+007A,U+007B-U+007E')]

@@ -23,16 +23,16 @@ package com.gestureworks.utils.modeScreens
 	 * @author  
 	 */
 	
-	public class Unregistered extends Sprite 
+	public class OEUnregistered extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/unregistered_version.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/OEUnregistered.png")] private var Splash:Class;
 		
-		public function Unregistered() 
+		public function OEUnregistered() 
 		{
 			var splash:Bitmap = new Splash();
 			addChild(splash);
 			
-			var button:SplashButton = new SplashButton(290, 75, 0, "http://support.gestureworks.com/");
+			var button:SplashButton = new SplashButton(290, 75, 0, "http://openexhibits.org/support");
 			addChild(button);
 			
 			button.x = 255;
