@@ -250,6 +250,8 @@ package com.gestureworks.utils
 								}
 							}
 							gO.pOList = pOList;
+							
+							traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
@@ -265,6 +267,7 @@ package com.gestureworks.utils
 							trace("		property item:",pOList[i][j]);
 					}
 				}
+				trace("complete");
 		}
 	}
 }
