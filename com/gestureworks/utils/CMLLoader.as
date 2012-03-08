@@ -49,8 +49,8 @@ package com.gestureworks.utils
 			if (_settingsPath==value)
 			{
 				return;
-			}
-
+			}	
+			
 			settingsLoader = new URLLoader();
 			settingsLoader.addEventListener(Event.COMPLETE, settingsLoader_completeHandler);
 			_settingsPath=value;
@@ -58,7 +58,7 @@ package com.gestureworks.utils
 		}
 
 		private static function settingsLoader_completeHandler(event:Event):void
-		{
+		{			
 			settings=new XML(settingsLoader.data);
 			
 			amountToShow=settings.GlobalSettings.amountToShow;
