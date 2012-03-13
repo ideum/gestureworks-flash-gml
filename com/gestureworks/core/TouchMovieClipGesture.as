@@ -100,7 +100,7 @@ package com.gestureworks.core
 		*/
 		public function initTimeline():void
 		{
-			if (!tiO.timelineInit){
+			//if (!tiO.timelineInit){
 			
 			if ((gestureList["hold"]) || (gestureList["tap"]) || (gestureList["double_tap"]) || (gestureList["triple_tap"])) 
 			{
@@ -131,7 +131,7 @@ package com.gestureworks.core
 				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_TAP, onTouchTap);
 				
 				tiO.timelineInit = true;
-			}
+			//}
 		}
 		
 		/**

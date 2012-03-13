@@ -54,6 +54,8 @@ package com.gestureworks.core
 		{
 			super();
 			initGesture();
+			
+			//trace_debug_mode = true
          }
 		 
 		// initializers   
@@ -63,6 +65,8 @@ package com.gestureworks.core
 			
 			initGestureVars();
 			initGestureAnalysis();
+			///////////////////
+			//initTimeline();
 		}
 		
 		/**
@@ -79,7 +83,8 @@ package com.gestureworks.core
 		*/
 		public function initGestureAnalysis():void //clusterObject:Object
 		{
-			if (trace_debug_mode) trace("init gesture analysis", touchObjectID);
+			//if (trace_debug_mode) 
+			trace("init gesture analysis", touchObjectID);
 
 			// analyze for continuous gesturing
 			if(contGesturemetricsOn){
@@ -92,16 +97,19 @@ package com.gestureworks.core
 				//initTimeline();
 			}
 			// analyze for gesture conflict/compliment
-					
+			
+			
 		}
 		/**
 		* @private
 		*/
 		public function initTimeline():void
 		{
-			//trace("framerate",GestureWorks.application.frameRate)
+			//trace("framerate", GestureWorks.application.frameRate);
+			//trace("init timeline anlaysis",tiO.timelineOn, gO.pOList["tap"],gO.pOList["double_tap"],gestureList["tap"],gestureList["double_tap"])
 			
-			if (!tiO.timelineInit){
+			
+			//if (!tiO.timelineInit){ // cml requires to re-init therefor taps do not work
 				
 				if ((gestureList["hold"]) || (gestureList["tap"]) || (gestureList["double_tap"]) || (gestureList["triple_tap"])) 
 				{
@@ -133,7 +141,7 @@ package com.gestureworks.core
 				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_TAP, onTouchTap);
 				
 				tiO.timelineInit = true;
-			}
+			//}
 		}
 		/**
 		* @private
@@ -145,7 +153,7 @@ package com.gestureworks.core
 		//////////////////////////////////////////////////////
 		private function updateTimelineGestureAnalysis():void
 		{
-			//trace("update timeline gesture analysis");
+			trace("update timeline gesture analysis");
 			if ((discGesturemetricsOn) && (tiO.timelineOn)) 
 			{
 					gesture_disc.findTimelineGestures();

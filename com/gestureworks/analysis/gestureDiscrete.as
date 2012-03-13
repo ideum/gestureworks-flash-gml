@@ -47,7 +47,7 @@ package com.gestureworks.analysis
 		{
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
 			
-			if(ts.trace_debug_mode) trace("init gesture discrete analysis");
+			if (ts.trace_debug_mode) trace("init gesture discrete analysis");
 		}
 		
 		///////bug bug bug //////////////////////////////////////
@@ -59,7 +59,7 @@ package com.gestureworks.analysis
 			N = ts.cO.n;
 			pointList = ts.cO.pointArray;
 			
-			//if (ts.trace_debug_mode) trace("find hold---------------------------------------------------------");
+			if (ts.trace_debug_mode) trace("find hold---------------------------------------------------------");
 				
 			if((N)&&(pointList)){
 				var hold_dist:int = ts.gO.pOList["hold"].point_translation_threshold;
@@ -114,7 +114,7 @@ package com.gestureworks.analysis
 		// ALSO USE TO DEFFERENTIATE BETWEEN TWO FINGER DELAYED TAP AND SINGLE FINGER DOUBLE TAP
 		public function findTimelineTapEvent(event:TouchEvent):void
 		{
-			if (ts.trace_debug_mode) trace("find tap---------------------------------------------------------");
+			if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
 			
 			//var tap_time:int = 18//gO.pOList["tap"]["tap_x"].point_event_duration_threshold;
 			//var tap_dist:int = ts.gO.pOList["tap"].point_translation_threshold;
@@ -140,7 +140,7 @@ package com.gestureworks.analysis
 		
 		public function findTimelineDoubleTapEvent(event:TouchEvent):void
 		{
-			if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
+			if (ts.trace_debug_mode) trace("find d taps---------------------------------------------------------");
 				
 				var dtap_time:int = Math.ceil(ts.gO.pOList["double_tap"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001);
 				var dtap_dist:int = ts.gO.pOList["double_tap"].point_translation_threshold;

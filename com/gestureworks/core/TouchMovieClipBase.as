@@ -42,6 +42,8 @@ package com.gestureworks.core
 	import com.gestureworks.utils.GestureParser;
 	import com.gestureworks.utils.MousePoint;
 	
+	import com.gestureworks.events.GWGestureEvent;
+	
 	/**
 	 * The TouchSprite class is the base class for all touch and gestures enabled
 	 * Sprites that require additional display list management. 
@@ -67,7 +69,7 @@ package com.gestureworks.core
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
 		
-		//public var value_limit:Boolean = false;
+		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
 		public function TouchMovieClipBase():void
 		{
@@ -227,14 +229,19 @@ package com.gestureworks.core
 			for (var i:String in gestureList) 
 			{
 				gestureList[i] = gestureList[i].toString() == "true" ?true:false;
-				if(trace_debug_mode) trace("setting gestureList:", gestureList[i]);
+				if (trace_debug_mode) trace("setting gestureList:", gestureList[i]);
 			}
 			
-			/////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////
 			// Convert GML Into Property Objects That describe how to match,analyze, 
 			// process and map point/clusterobject properties
-			/////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////
 			callLocalGestureParser();
+			
+			//////////////////////////////////////////////////////////////////////////
+			// makes sure that if gesture list chnages timeline gesture int is reset
+			/////////////////////////////////////////////////////////////////////////
+			this.dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 		}
 		/**
 		 * @private

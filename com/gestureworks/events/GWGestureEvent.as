@@ -22,6 +22,7 @@ package com.gestureworks.events
 	{
 		public var value:Object;
 
+		public static var GESTURELIST_UPDATE:String = "gesturelist update";
 		public static var START:String = "start";
 		public static var COMPLETE:String = "comlpete";
 		public static var RELEASE:String = "release";

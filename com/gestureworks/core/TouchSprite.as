@@ -16,6 +16,7 @@
 package com.gestureworks.core
 {
 	import com.gestureworks.events.GWEvent;
+	import com.gestureworks.events.GWGestureEvent;
 	import flash.display.Stage;
 	
 	import flash.events.*;
@@ -57,7 +58,9 @@ package com.gestureworks.core
         private function initTouchSprite():void 
         {	
 			//trace("create touchsprite interface");
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onEnterFrame, false,0,true);
+			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onEnterFrame, false, 0, true);
+			
+			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate);
 			
 			//var myTimer:Timer = new Timer(20, 0);
 				//myTimer.addEventListener(TimerEvent.TIMER, timerHandler, false,10,false);
@@ -71,7 +74,6 @@ package com.gestureworks.core
 		 */
 		
 		private function onEnterFrame(event:GWEvent):void  
-		//private function onEnterFrame(event:Event):void 
 		{
 			if (trace_debug_mode)  trace("TouchSprite update-----------------------------",GestureGlobals.frameID, N,System.totalMemory);
 			
@@ -89,11 +91,12 @@ package com.gestureworks.core
 			//updateProcessing();
 			//updateGestureAnalysis();
 			//updateTransformation();
+			
 			updateDebugDisplay();
 			}
 		}
 		
-		
+		/*
 		private function timerHandler(event:TimerEvent):void
 		{
 		  
@@ -107,6 +110,12 @@ package com.gestureworks.core
 				updateDebugDisplay();
 				//event.updateAfterEvent();
 			}
+		}*/
+		
+		private function onGestureListUpdate(event:GWGestureEvent):void  
+		{
+			trace("gesturelist update");
+			this.initTimeline();
 		}
 		
 	}

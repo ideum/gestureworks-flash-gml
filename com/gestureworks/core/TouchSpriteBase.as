@@ -18,6 +18,7 @@ package com.gestureworks.core
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import flash.events.Event;
 	import flash.geom.Point;
 
 	import com.gestureworks.core.GestureWorks;
@@ -40,6 +41,8 @@ package com.gestureworks.core
 	
 	import com.gestureworks.utils.GestureParser;
 	import com.gestureworks.utils.MousePoint;
+	
+	import com.gestureworks.events.GWGestureEvent;
 	
 	
 	/**
@@ -76,6 +79,8 @@ package com.gestureworks.core
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
 		
+		public static var GESTRELIST_UPDATE:String = "gestureList update";
+		
 		public function TouchSpriteBase():void
 		{
 			super();
@@ -85,7 +90,7 @@ package com.gestureworks.core
 		// initializers
          private function initBase():void 
          {
-			//trace("create touchsprite base");
+			trace("create touchsprite base");
 					
 				    // add touch event listener 
 					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
@@ -94,7 +99,7 @@ package com.gestureworks.core
 					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 					
 					// set mouseChildren to default
-					mouseChildren = false;
+					mouseChildren = true; //false
 									
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -237,7 +242,7 @@ package com.gestureworks.core
 			for (var i:String in gestureList) 
 			{
 				gestureList[i] = gestureList[i].toString() == "true" ?true:false;
-				if (trace_debug_mode) trace("setting gestureList:", gestureList[i]);
+				//if (trace_debug_mode) trace("setting gestureList:", gestureList[i]);
 			}
 			
 			/////////////////////////////////////////////////////////////////////
@@ -245,6 +250,13 @@ package com.gestureworks.core
 			// process and map point/clusterobject properties
 			/////////////////////////////////////////////////////////////////////
 			callLocalGestureParser();
+			
+			
+			//////////////////////////////////////////////////////////////////////////
+			// makes sure that if gesture list chnages timeline gesture int is reset
+			/////////////////////////////////////////////////////////////////////////
+			this.dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
+			
 		}
 		/**
 		 * @private
@@ -352,10 +364,10 @@ package com.gestureworks.core
 		// determins clustering
 		
 		
-		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent):void
 		{			
-			//trace("-this.name",this.name,"-target.name:", event.target.name,"-phase:", event.eventPhase)
+			//trace("-this.name",this.name,"-target.name:", event.target.name,"-phase:", event.eventPhase,event.target,event.target.parent)
 			//if(!distributeTarget){
 			
 			if (GestureWorks.activeTUIO)
