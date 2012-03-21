@@ -526,12 +526,24 @@ package com.gestureworks.utils.debug
 		dsy = clusterObject.dsy
 		dtheta = clusterObject.dtheta / 4;
 		
+		
+		//NEED A BETTER GLOBAL POSITIONING SYSTEM FOR DEBUG
 		dist = (_r + displayRadius) * (1 / Math.sqrt(2));
 		
 		// set list holder properties
 		listHolder.visible = true;
 		listHolder.x = _x + dist;
-		listHolder.y = (_y - dist)+310;
+		listHolder.y = (_y - dist) + 310;
+		
+		//////////////////////////////////////////
+		// adjust and flip
+		//////////////////////////////////////////
+		//if ((_y - dist + 310) > stage.stageHeight) listHolder.y =(_y + dist) + 130;
+		if ((_x + dist + obj.width) > stage.stageWidth) listHolder.x = _x - dist-obj.width;
+		
+		//if ((_y - dist + 310) < 0) listHolder.y =(_y + dist) + 310;
+		//if ((_x+dist)< 0) listHolder.x = _x - dist;
+		
 			
 		////////////////////////////////////////////////////////////////////////
 		// not put threshold state logic into cluster analysis

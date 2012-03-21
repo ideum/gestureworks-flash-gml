@@ -500,7 +500,6 @@ package com.gestureworks.utils.debug
 			
 	public function drawDataView():void
 	{	
-		
 		// core vars
 		_x = trO.x;
 		_y = trO.y;
@@ -515,7 +514,7 @@ package com.gestureworks.utils.debug
 		var ts_scaley:Number = ts.scaleY;
 		var ts_rotation:Number = ts.rotation;
 		
-		
+		//NEED A BETTER GLOBAL POSITIONING SYSTEM FOR DEBUG
 		dist = (_r + displayRadius) * (1 / Math.sqrt(2));
 		
 		// set list holder properties
@@ -523,6 +522,16 @@ package com.gestureworks.utils.debug
 		listHolder.x = _x + dist;
 		listHolder.y = (_y - dist) - 160;
 		
+		
+		//////////////////////////////////////////
+		// adjust and flip
+		//////////////////////////////////////////
+		//if ((_y - dist - 160) > stage.stageHeight) listHolder.y =(_y + dist) - 160;
+		if ((_x + dist + obj.width) > stage.stageWidth) listHolder.x = _x - dist-obj.width;
+		
+		//if ((_y - dist - 160) < 0) listHolder.y =(_y + dist) - 160;
+		//if ((_x+dist)< 0) listHolder.x = _x - dist;
+		/////////////////////////////////////////
 		
 		//dynamic deltas
 		//dx = tO.dx;

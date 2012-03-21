@@ -256,7 +256,7 @@ package com.gestureworks.utils.debug
 						lineHolder1.addChild(H4);
 						iconList[3] = H4;
 						
-						var H5:Bitmap = new hand4();
+						var H5:Bitmap = new hand5();
 							H5.cacheAsBitmap = true;
 							H5.x = imgx;
 							H5.y = imgy;
@@ -303,10 +303,21 @@ package com.gestureworks.utils.debug
 		
 		dist = (_r + displayRadius) * (1 / Math.sqrt(2));
 		
+		//NEED A BETTER GLOBAL POSITIONING SYSTEM FOR DEBUG
+		
 		// set list holder properties
 		listHolder.visible = true;
 		listHolder.x = _x + dist;
 		listHolder.y = (_y - dist) + 130;
+		
+		//////////////////////////////////////////
+		// adjust and flip
+		//////////////////////////////////////////
+		//if ((_y - dist + 130) > stage.stageHeight) listHolder.y =(_y + dist) + 130;
+		if ((_x + dist + obj.width) > stage.stageWidth) listHolder.x = _x - dist-obj.width;
+		
+		//if ((_y - dist + 130) < 0) listHolder.y =(_y + dist) + 130;
+		//if ((_x + 2*dist)< 0) listHolder.x = _x - 2*dist;
 		
 		/////////////////////////////////////////////////////////
 		// look for gesture events by scanning property object
