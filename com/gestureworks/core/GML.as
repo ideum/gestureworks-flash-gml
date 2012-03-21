@@ -234,11 +234,7 @@ package com.gestureworks.core
 				</mapping>
 			</Gesture>
 			
-			
-			
-			
-			
-			
+
 				<Gesture id="flick" type="flick">
 				<match>
 					<action>

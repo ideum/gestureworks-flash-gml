@@ -16,6 +16,7 @@
 package com.gestureworks.analysis 
 {
 	import flash.events.TouchEvent;
+	import flash.geom.Point;
 	
 	//import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.core.GestureGlobals;
@@ -59,19 +60,25 @@ package com.gestureworks.analysis
 			N = ts.cO.n;
 			pointList = ts.cO.pointArray;
 			
-			if (ts.trace_debug_mode) trace("find hold---------------------------------------------------------");
+			//if (ts.trace_debug_mode) 
+			//trace("find hold---------------------------------------------------------");
 				
-			if((N)&&(pointList)){
+			if ((N) && (pointList)) {
+				
 				var hold_dist:int = ts.gO.pOList["hold"].point_translation_threshold;
 				var	hold_time:int = Math.ceil(ts.gO.pOList["hold"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);
+				
+				trace("hold point analysis", hold_dist, hold_time,N);
 				
 				// check point list for hold monitoring
 				for (var i:int = 0; i < N; i++) 
 					{
-						//trace("oef", pointList[i].touchPointID);
+						trace("oef", pointList[i].touchPointID);
 						if (pointList[i].holdMonitorOn)
 						{
 							pointList[i].holdCount++;
+							
+							trace("hold point count", pointList[i].holdCount++);
 							// check monitor count
 							if (pointList[i].holdCount >= hold_time) 
 							{
@@ -102,7 +109,13 @@ package com.gestureworks.analysis
 		
 		public function findTimelineHoldEvent(event:TouchEvent):void
 		{
-			GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn = true;
+			trace("hold monitor has been activated");
+			trace("hold monitor has been activated", event.touchPointID);
+			trace("hold monitor has been activated", GestureGlobals.gw_public::points);
+			//trace("hold monitor has been activated", GestureGlobals.gw_public::points[event.touchPointID]);
+			//trace("hold monitor has been activated", GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn);
+			//GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn = true;
+			
 		}
 		
 		////////////////////////////////////////////////////////////
@@ -129,8 +142,11 @@ package com.gestureworks.analysis
 						var touch_event:Object = pointEventArray[j]
 						if (touch_event.type =="touchTap")
 							{
+								var spt:Point = new Point (touch_event.stageX, touch_event.stageY); // stage point
+								var lpt:Point = ts.globalToLocal(spt); //local point
+								
 								//trace("tap",j, touch_event.touchPointID);
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
 								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 							}
 						}
@@ -159,10 +175,14 @@ package com.gestureworks.analysis
 									{
 										var distX:Number = Math.abs(event.stageX - touch_event.stageX);
 										var distY:Number = Math.abs(event.stageY - touch_event.stageY);
+										
+										var spt:Point = new Point (touch_event.stageX, touch_event.stageY); // stage point
+										var lpt:Point = ts.globalToLocal(spt); //local point
+										
 											
 										//if((distX<rad)&&(distY<rad)) trace("double tap", i, j, touch_event.touchPointID, distX, distY);
 										//trace("double tap", i, j, touch_event.touchPointID);
-										ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX , y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+										ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX , y:touch_event.stageY, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
 										if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 									}
 								}
@@ -191,6 +211,9 @@ package com.gestureworks.analysis
 									{
 										var distX:Number = Math.abs(event.stageX - touch_event.stageX);
 										var distY:Number = Math.abs(event.stageY - touch_event.stageY);
+										var spt:Point = new Point (touch_event.stageX, touch_event.stageY); // stage point
+										var lpt:Point = ts.globalToLocal(spt); //local point
+										
 											
 										if ((distX < ttap_dist) && (distY < ttap_dist)) tap_count++;
 									}
@@ -200,7 +223,7 @@ package com.gestureworks.analysis
 					if (tap_count == 2)
 					{ 
 						//trace("triple tap", i, j, touch_event.touchPointID, distX, distY);
-						ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageX, touchPointID:touch_event.touchPointID } ));
+						ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageX, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
 						if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 					}
 		}

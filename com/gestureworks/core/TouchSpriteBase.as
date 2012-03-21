@@ -84,6 +84,10 @@ package com.gestureworks.core
 		public function TouchSpriteBase():void
 		{
 			super();
+			
+			// set mouseChildren to default false
+			mouseChildren = false; //false
+			
 			initBase();
         }
 		  
@@ -96,10 +100,7 @@ package com.gestureworks.core
 					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
 					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true, 0, true); 
 					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_END, onTouchUp, false,0,true); // bubbles up when nested
-					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-					
-					// set mouseChildren to default
-					mouseChildren = true; //false
+					//else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 									
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -239,11 +240,11 @@ package com.gestureworks.core
 		{
 			_gestureList = value;
 			
-			for (var i:String in gestureList) 
-			{
-				gestureList[i] = gestureList[i].toString() == "true" ?true:false;
+			//for (var i:String in gestureList) 
+			//{
+				//gestureList[i] = gestureList[i].toString() == "true" ?true:false;
 				//if (trace_debug_mode) trace("setting gestureList:", gestureList[i]);
-			}
+			//}
 			
 			/////////////////////////////////////////////////////////////////////
 			// Convert GML Into Property Objects That describe how to match,analyze, 
@@ -292,45 +293,56 @@ package com.gestureworks.core
 			if (value) mouseChildren = true;
 			else mouseChildren = false;
 		}
+		 
 		/**
 		 * @private
 		 */
-		private var _pointContainerEnabled:Boolean = false;
-		public function get pointContainerEnabled():Boolean{return _pointContainerEnabled;}
-		public function set pointContainerEnabled(value:Boolean):void
+		// allows touchsprite touch listeners to switch between triggering at during capture phase or buble phase
+		private var _capture:Boolean = false;
+		public function get capture():Boolean{return _capture;}
+		public function set capture(value:Boolean):void
 		{
-			_pointContainerEnabled = value;
+			_capture = value;
+			
+			/*
+			if (_capture)
+			{
+				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false);
+				//removeEventListener(TouchEvent.TOUCH_END, onTouchUp, false);
+				
+				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true, 0, true);
+				//addEventListener(TouchEvent.TOUCH_END, onTouchUp, true,0,true);
+			}
+			else {
+				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true);
+				//removeEventListener(TouchEvent.TOUCH_END, onTouchUp, true);
+				
+				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true);
+				//addEventListener(TouchEvent.TOUCH_END, onTouchUp,false, 0,true);
+			}*/
+		}
+		
+		
+		/**
+		 * @private
+		 */
+		// allows touch and gesture events to explicitly target parent touch object
+		private var _targetParent:Boolean = false;
+		public function get targetParent():Boolean{return _targetParent;}
+		public function set targetParent(value:Boolean):void
+		{
+			_targetParent = value;
 		}
 		
 		/**
 		 * @private
 		 */
-		/*
-		private function removeCaptureListener():void
-		{
-			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown,true);
-			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown,false, 0,true);
-		}
-		*/
-		/**
-		 * @private
-		 */
-		/*
-		private function addCaptureListener():void
-		{
-			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false);
-			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true,0,true);
-		}
-		*/
-		/**
-		 * @private
-		 */
 		// allows touch and gesture events to explicitly target parent touch object
-		private var _targetParent:Boolean = false
-		public function get targetParent():Boolean{return _targetParent;}
-		public function set targetParent(value:Boolean):void
+		private var _targetCurrent:Boolean = false;
+		public function get targetCurrent():Boolean{return _targetCurrent;}
+		public function set targetCurrent(value:Boolean):void
 		{
-			_targetParent = value;
+			_targetCurrent = value;
 		}
 		
 		/**
@@ -367,19 +379,46 @@ package com.gestureworks.core
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent):void
 		{			
-			//trace("-this.name",this.name,"-target.name:", event.target.name,"-phase:", event.eventPhase,event.target,event.target.parent)
+			//trace("-this.name", this.name, "-target.name:", event.target.name, "-phase:", event.eventPhase, "-currentTarget:", event.currentTarget.name)
+			//trace("this:	",this.name,"target:	", event.target.name,"-currentTarget:	", event.currentTarget.name)
 			//if(!distributeTarget){
 			
-			if (GestureWorks.activeTUIO)
-			{
-				assignEvent(event);
-				return;
+			
+			
+			//assignEvent(event);
+			//event.target.assignEvent(event);
+			//event.currentTarget.assignEvent(event);
+			
+			
+			//if (event.target == event.currentTarget) assignEvent(event);
+			
+			//if (event.target.parent == event.currentTarget) event.target.parent.assignEvent(event);
+			//if (event.target.parent == event.target) event.target.parent.assignEvent(event);
+				//if (event.target.parent == event.target)event.target.assignEvent(event);
+			
+			//if (this == event.target) assignEvent(event);
+			// assignEvent(event);
+			/*
+			if (targetParent) {
+			if ((event.target.parent is TouchSprite)||(event.target.parent is TouchMovieClip)){
+								event.target.parent.assignEvent(event);
 			}
+			}
+			*/
 			
 			
+				// touch socket 
+				if (GestureWorks.activeTUIO)
+				{
+					assignEvent(event);
+					return;
+				}
+				// native touch
 				if (GestureWorks.supportsTouch)
 				{
-					if(_targeting){
+					if (_targeting) {
+						
+						
 						if (targetParent) {
 							//trace("redefine target as parent:", event.target.parent.name);
 							if ((event.target.parent is TouchSprite)||(event.target.parent is TouchMovieClip)){
@@ -388,19 +427,20 @@ package com.gestureworks.core
 							}
 						}
 						
-						else {
-						 if (this == event.target) {
-							//trace("assign target:", event.target.parent.name);
-							assignEvent(event);
-							//event.stopPropagation(); // allows touch down and tap
-						 }
+						else if (targetCurrent)
+						{ //else if
+							if (this == event.currentTarget) assignEvent(event);
 						}
+						else {
+						 if (this == event.target) assignEvent(event);
+						}
+						
 					}
 					else assignEvent(event);
 					//trace("natural target:",event.target.name,_touchable);
 				}
-			// for mouse events
-			else assignEvent(event);
+				// mouse events
+				else assignEvent(event);	
 		}
 		
 		
@@ -427,7 +467,26 @@ package com.gestureworks.core
 				}
 			else trace("local touch end multi-target", event.target.name);
 			
+			
+			// removes point id from global point dictionary
 			//TouchManager.onTouchUp(event);
+			
+			//GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
+			//if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
+			
+			
+			
+			// remove point from local cluster
+			// search for mathinc ID and remove
+			//cO.pointArray ..........;
+			//event.touchPointID..............
+			
+			
+			
+			
+			
+			// put touch up event on timeline
+			if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event);
 		}
 		*/
 		
@@ -437,50 +496,66 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public function assignEvent(event:TouchEvent):void
-		{			
-			var pointObject:PointObject  = new PointObject();
-			var historyArray:Array = new Array();
-									
-			point = new Object();
-			pointObject.point=point;
-						
-			pointObject.object = this; 
-			pointObject.event = event;
-			pointObject.id = pointCount;
-			pointObject.touchPointID = event.touchPointID;
-						
-			//trace("event",event.target.name, event.currentTarget.name, this.name)
-						
-			if (GestureWorks.supportsTouch && !GestureWorks.activeTUIO)
-			{
-				//pointObject.point.x = event.stageX;
-				//pointObject.point.y = event.stageY;
-				pointObject.point.x = event.localX;
-				pointObject.point.y = event.localY;
-			}
-			else
-			{
-				pointObject.point.x = event.stageX;
-				pointObject.point.y = event.stageY;
-			}
-						
-			_pointArray.push(pointObject);
-			cO.pointArray = _pointArray;
+		{
+			var ppt = GestureGlobals.gw_public::points[event.touchPointID];
+			trace(ppt);
 			
-			if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
-						
-			GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
-						
+			//check to see if point has been created already by another touch object
+			//if (!ppt)
+			//{
+				trace("point does not exist yet");
+				// create new point object
+				var pointObject:PointObject  = new PointObject();
+				var historyArray:Array = new Array();
+										
+				point = new Object();
+					pointObject.point=point;
+								
+					pointObject.object = this; 
+					pointObject.event = event;
+					pointObject.id = pointCount;
+					pointObject.touchPointID = event.touchPointID;
+					
+					// set point init position
+					if (GestureWorks.supportsTouch && !GestureWorks.activeTUIO)
+					{
+						//pointObject.point.x = event.stageX;
+						//pointObject.point.y = event.stageY;
+						pointObject.point.x = event.localX;
+						pointObject.point.y = event.localY;
+					}
+					else
+					{
+						pointObject.point.x = event.stageX;
+						pointObject.point.y = event.stageY;
+					}
+				
+				// add point object to touch object cluster
+				_pointArray.push(pointObject);
+				cO.pointArray = _pointArray;
+				
+				// add touch down to gesture event timeline
+				if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
+				
+				// add point object to global point list
+				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;			
+			//}
+			
+		//	else {
+				//trace("point aready in system");
+				//add to local cluster
+				//cO.pointArray.push(GestureGlobals.gw_public::points[event.touchPointID]);
+			//}
+			
+			// increment point count on touch object
+			pointCount++;
+			
+			// regisiter touch point with touchmanager
 			if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 			else MouseManager.gw_public::registerMousePoint(event);
-						
-			pointCount++;
-			//trace("Touch down", event.touchPointID);
 			
-			////////////////////////////////////
-			//event.stopPropagation();
-			event.stopImmediatePropagation();
-			///////////////////////////////////
+			
+			trace(this.name, cO.pointArray.length, cO);
 		}
 		////////////////////////////////////////////////////////////////////////////
 	}

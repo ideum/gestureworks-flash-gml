@@ -30,13 +30,14 @@ package com.gestureworks.managers
 				
 		public static function historyQueue(event:TouchEvent):void
 		{
-			
-			var history:Array = GestureGlobals.gw_public::points[event.touchPointID].history;
-			history.unshift(historyObject(history[0].x,history[0].y,event));
-							
-			if (history.length-1>=GestureGlobals.pointHistoryCaptureLength)
-			{
-				history.pop();
+			if(GestureGlobals.gw_public::points[event.touchPointID]){
+				var history:Array = GestureGlobals.gw_public::points[event.touchPointID].history;
+				history.unshift(historyObject(history[0].x,history[0].y,event));
+								
+				if (history.length-1>=GestureGlobals.pointHistoryCaptureLength)
+				{
+					history.pop();
+				}
 			}
 		}
 		

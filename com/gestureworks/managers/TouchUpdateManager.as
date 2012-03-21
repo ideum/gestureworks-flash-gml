@@ -31,7 +31,7 @@ package com.gestureworks.managers
 		
 		IMPORTANT NOTE TO DEVELOPER **********************************************
 		 
-		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE... PERIOD...
+		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE.
 		IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY (paul@ideum.com) ABOUT IT'S IMPORTATANCE.
 		IF PAUL IS UNABLE TO HELP YOU UNDERSTAND, THEN PLEASE LOOK AND READ THE ACTUAL CODE FOR IT'S PATH.
 		SOMETHINGS AT FIRST MAY NOT BE CLEAR AS TO WHAT THE ACTUAL PURPOSE IS, BUT IT IS VALUABLE AND IS USED IF IT IS CURRENTLY WRITTTEN HERE.
@@ -41,9 +41,10 @@ package com.gestureworks.managers
 	
 	public class TouchUpdateManager
 	{
-		public static var pointMoveQueue:Dictionary = new Dictionary();
+		//public static var pointMoveQueue:Dictionary = new Dictionary();
 		gw_public static function initialize():void{}
 		
+		/*
 		public static function touchFrameHandler():void
 		{
 			//trace("=================================== touch frame handler");
@@ -54,8 +55,10 @@ package com.gestureworks.managers
 				if (GestureGlobals.gw_public::points[pointMoveQueue[key].touchPointID])
 				{
 					// send event to history queue
-					PointHistories.historyQueue(pointMoveQueue[key]);
+					//PointHistories.historyQueue(pointMoveQueue[key]);
 					moving(pointMoveQueue[key]);
+					updateTouchObject(pointMoveQueue[key]);
+					trace("point move que update");
 				}
 				delete pointMoveQueue[key];
 			}
@@ -81,9 +84,10 @@ package com.gestureworks.managers
 			//pointObject.point.y = event.localY;
 			//pointObject.point.x = event.localX;
 			
-			//trace("moving object cluster moving touchupdate manager",event.target.name, pointObject.object.clusterID,pointObject.object.name)
+			//trace("moving object cluster moving touchupdate manager",event.target.name, pointObject.object.clusterID,pointObject.object.name);
+			
 			///////////////////////////////////
-			event.stopImmediatePropagation();
+			//3.1//event.stopImmediatePropagation();
 			///////////////////////////////////
 		}
 			
@@ -107,9 +111,9 @@ package com.gestureworks.managers
 						}
 				//////////////////////////////////
 				//event.stopPropagation();
-				event.stopImmediatePropagation();
+				//3.1//event.stopImmediatePropagation();
 				/////////////////////////////////
 			}
-			
+			*/
 	}
 }

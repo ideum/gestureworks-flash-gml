@@ -76,8 +76,8 @@ package com.gestureworks.managers
 			mousePointX = event.localX;
 			mousePointY = event.localY;
 			
-			TouchManager.count++;
-			TouchManager.isTouching = true;
+			//TouchManager.count++;
+			//TouchManager.isTouching = true;
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void

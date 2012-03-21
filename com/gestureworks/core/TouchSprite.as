@@ -53,12 +53,15 @@ package com.gestureworks.core
 		{
 			super();
 			initTouchSprite();
+	
         }
 		 
         private function initTouchSprite():void 
         {	
 			//trace("create touchsprite interface");
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onEnterFrame, false, 0, true);
+			
+			//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); 
 			
 			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate);
 			
@@ -117,6 +120,14 @@ package com.gestureworks.core
 			trace("gesturelist update");
 			this.initTimeline();
 		}
+		
+		//override public function onTouchDown(event:TouchEvent):void
+		//{
+			//trace("t down		", "TARGET:	", event.target.name, "		CURRENT TARGET:	", event.currentTarget.name);
+			
+			// assign touchpoint cluster
+			//assignEvent(event);
+		//}
 		
 	}
 }
