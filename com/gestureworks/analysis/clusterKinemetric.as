@@ -675,7 +675,8 @@ package com.gestureworks.analysis
 					var scroll_h:int = 6;
 					var etmVel:Point = findMeanTemporalVelocity(scroll_h); //ensamble temporal mean 
 					////////////////////////////////////////////////////////////////////////////////////////////
-
+					
+					
 					if ((Math.abs(etmVel.x) > scroll_threshold) && (Math.abs(etmVel.y) > scroll_threshold))
 					{
 						scroll_dx = etmVel.x;
@@ -683,17 +684,18 @@ package com.gestureworks.analysis
 					}
 					else if (Math.abs(etmVel.x) > scroll_threshold) 
 					{
-						scroll_dx = swipe_etmVel.x;
+						scroll_dx = etmVel.x;
 						scroll_dy = 0;
 					}
 					else if (Math.abs(etmVel.y) > scroll_threshold) 
 					{
 						scroll_dx = 0;
-						scroll_dy = swipe_etmVel.y;
+						scroll_dy = etmVel.y;
 					}	
 					
 					ts.gO.pOList[key]["scroll_dx"].clusterDelta = scroll_dx; 
 					ts.gO.pOList[key]["scroll_dy"].clusterDelta = scroll_dy;
+					trace("scroll velocity",etmVel.x,etmVel.y)
 					}
 				}
 			}

@@ -45,14 +45,19 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWGestureEvent;
 	
 	/**
-	 * The TouchSprite class is the base class for all touch and gestures enabled
-	 * Sprites that require additional display list management. 
+	 * The TouchMovieClipBase class is the base class for all touch and gestures enabled
+	 * MovieClips that require additional display list management. 
 	 * 
 	 * <pre>
-	 * 	<b>Properties</b>
-	 * 	 blobContainerEnabled="false"
-	 * 	 touchChildren="false"
-	 * 	 targetParent = "false"
+	 *		<b>Properties</b>
+	 * 		mouseChildren="false"
+	 *		touchChildren="false"
+	 *		targetParent = "false"
+	 *		disableNativeTransform = "true"
+	 *		disableAffineTransform = "true"
+	 *		gestureEvents = "false"
+	 *		clusterEvents = "false"
+	 *		transformEvents = "false"
 	 * </pre>
 	 */
 	
@@ -74,23 +79,23 @@ package com.gestureworks.core
 		public function TouchMovieClipBase():void
 		{
 			super();
+			
+			// set mouseChildren to default
+			mouseChildren = false;
+			
 			initBase();
         }
 		  
 		// initializers
          private function initBase():void 
          {
-			//trace("create touchsprite base");
+			//trace("create touchmovieclip base");
 					
 				    // add touch event listener
-					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown); // bubbles up when nested
 					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false,0,true); // bubbles up when nested
 					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-					
-					// set mouseChildren to default
-					mouseChildren = false;
-					
-					//trace(this)
+
+				
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
 					GestureGlobals.gw_public::touchObjects[_touchObjectID] = this;
@@ -151,8 +156,6 @@ package com.gestureworks.core
 		////////////////////////////////////////////////////////////////
 		// public read only
 		////////////////////////////////////////////////////////////////
-		//public var _componentID:int = 0; //read only
-		//public function get componentID():int { return _componentID;}	
 		/**
 		 * @private
 		 */
@@ -242,7 +245,7 @@ package com.gestureworks.core
 			//////////////////////////////////////////////////////////////////////////
 			// makes sure that if gesture list chnages timeline gesture int is reset
 			/////////////////////////////////////////////////////////////////////////
-			this.dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
+			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 		}
 		/**
 		 * @private
@@ -279,30 +282,7 @@ package com.gestureworks.core
 			if (value) mouseChildren = true;
 			else mouseChildren = false;
 		}
-		/**
-		 * @private
-		 */
-		private var _pointContainerEnabled:Boolean = false;
-		public function get pointContainerEnabled():Boolean{return _pointContainerEnabled;}
-		public function set pointContainerEnabled(value:Boolean):void
-		{
-			_pointContainerEnabled = value;
-		}
 		
-		
-		/*
-		private function removeCaptureListener():void
-		{
-			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown,true);
-			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown,false, 0,true);
-		}
-		
-		private function addCaptureListener():void
-		{
-			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false);
-			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true,0,true);
-		}
-		*/
 		/**
 		 * @private
 		 */
@@ -343,6 +323,14 @@ package com.gestureworks.core
 		{						
 			//trace("-this.name",this.name,"-target.name:", event.target.name,"-phase:", event.eventPhase)
 			
+			// touch socket 
+			if (GestureWorks.activeTUIO)
+			{
+				assignEvent(event);
+				return;
+			}
+			
+			// native touch
 			if (GestureWorks.supportsTouch)
 				{
 					if(_targeting){
@@ -352,9 +340,7 @@ package com.gestureworks.core
 								event.target.parent.assignEvent(event);
 								event.stopPropagation(); // allows touch down and tap
 							}
-							
 						}
-						
 						else {
 						 if (this == event.target) {
 							assignEvent(event);
@@ -378,21 +364,18 @@ package com.gestureworks.core
 		{						
 			var pointObject:PointObject  = new PointObject();
 			var historyArray:Array = new Array();
-									
+			
+			// create new point object
 			point = new Object();
-			pointObject.point=point;
+				pointObject.point=point;	
+				pointObject.object = this; 
+				pointObject.event = event;
+				pointObject.id = pointCount;
+				pointObject.touchPointID = event.touchPointID;
 						
-			pointObject.object = this; 
-			pointObject.event = event;
-			pointObject.id = pointCount;
-			pointObject.touchPointID = event.touchPointID;
-						
-			//trace("event",event.target.name, event.currentTarget.name, this.name)
-						
+			// set point init position	
 			if (GestureWorks.supportsTouch && !GestureWorks.activeTUIO)
 			{
-				//pointObject.point.x = event.stageX;
-				//pointObject.point.y = event.stageY;
 				pointObject.point.x = event.localX;
 				pointObject.point.y = event.localY;
 			}
@@ -401,27 +384,24 @@ package com.gestureworks.core
 				pointObject.point.x = event.stageX;
 				pointObject.point.y = event.stageY;
 			}
-						
+			
+			// add point object to touch object cluster
 			_pointArray.push(pointObject);
 			cO.pointArray = _pointArray;
+			
+			// add touch down to gesture event timeline
 			if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
-						
+			
+			// add point object to global point list		
 			GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
-						
+				
+			// regisiter touch point with touchmanager
 			if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 			else MouseManager.gw_public::registerMousePoint(event);
-						
+			
+			// increment point count on touch object
 			pointCount++;
-			//trace("Touch down", event.touchPointID);
 		}
-		
-		
-		//public function get value_limOn():Boolean{return value_limit;}
-		//public function set value_limOn(value:Boolean):void
-		//{
-			//value_limit=value;
-		//}
-		
 		////////////////////////////////////////////////////////////////////////////
 	}
 }

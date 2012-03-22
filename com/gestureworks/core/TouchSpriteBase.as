@@ -50,10 +50,15 @@ package com.gestureworks.core
 	 * Sprites that require additional display list management. 
 	 * 
 	 * <pre>
-	 * 	<b>Properties</b>
-	 * 	 blobContainerEnabled="false"
-	 * 	 touchChildren="false"
-	 * 	 targetParent = "false"
+	 * 		<b>Properties</b>
+	 * 		mouseChildren="false"
+	 *		touchChildren="false"
+	 *		targetParent = "false"
+	 *		disableNativeTransform = "true"
+	 *		disableAffineTransform = "true"
+	 *		gestureEvents = "false"
+	 *		clusterEvents = "false"
+	 *		transformEvents = "false"
 	 * </pre>
 	 */
 	
@@ -94,13 +99,13 @@ package com.gestureworks.core
 		// initializers
          private function initBase():void 
          {
-			trace("create touchsprite base");
+			//trace("create touchsprite base");
 					
 				    // add touch event listener 
 					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
 					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true, 0, true); 
 					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_END, onTouchUp, false,0,true); // bubbles up when nested
-					//else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 									
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -162,8 +167,6 @@ package com.gestureworks.core
 		////////////////////////////////////////////////////////////////
 		// public read only
 		////////////////////////////////////////////////////////////////
-		//public var _componentID:int = 0; //read only
-		//public function get componentID():int { return _componentID;}
 		/**
 		 * @private
 		 */
@@ -256,7 +259,7 @@ package com.gestureworks.core
 			//////////////////////////////////////////////////////////////////////////
 			// makes sure that if gesture list chnages timeline gesture int is reset
 			/////////////////////////////////////////////////////////////////////////
-			this.dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
+			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 			
 		}
 		/**
@@ -435,8 +438,6 @@ package com.gestureworks.core
 				if (GestureWorks.supportsTouch)
 				{
 					if (_targeting) {
-						
-						
 						if (targetParent) {
 							//trace("redefine target as parent:", event.target.parent.name);
 							if ((event.target.parent is TouchSprite)||(event.target.parent is TouchMovieClip)){
@@ -447,10 +448,15 @@ package com.gestureworks.core
 						
 						else if (targetCurrent)
 						{ //else if
-							if (this == event.currentTarget) assignEvent(event);
+							if (this == event.currentTarget){
+								assignEvent(event);
+							}
 						}
 						else {
-						 if (this == event.target) assignEvent(event);
+							 if (this == event.target) {
+								assignEvent(event);
+								event.stopPropagation(); // allows touch down and tap
+							 }
 						}
 						
 					}
@@ -526,13 +532,13 @@ package com.gestureworks.core
 			//if (!ppt)
 			//{
 				//trace("point does not exist yet");
+				
 				// create new point object
 				var pointObject:PointObject  = new PointObject();
 				var historyArray:Array = new Array();
 										
 				point = new Object();
-					pointObject.point=point;
-								
+					pointObject.point=point;	
 					pointObject.object = this; 
 					pointObject.event = event;
 					pointObject.id = pointCount;
@@ -576,8 +582,7 @@ package com.gestureworks.core
 			if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 			else MouseManager.gw_public::registerMousePoint(event);
 			
-			
-			trace(this.name, cO.pointArray.length, cO);
+			//trace(this.name, cO.pointArray.length, cO);
 		}
 		////////////////////////////////////////////////////////////////////////////
 	}

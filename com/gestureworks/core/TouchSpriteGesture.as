@@ -134,7 +134,7 @@ package com.gestureworks.core
 				// init listners
 				// NOTE: ONENTERFRAME ONLY SEEMS TO FIRE WHEN MOVE DETECTED IN DEBUG MODE
 				if (tiO.timelineOn) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
-				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchHoldDown,true, 0, true); //////////////////////////////
+				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchHoldDown);
 				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_TAP, onTouchTap);
 				
 				tiO.timelineInit = true;
@@ -147,7 +147,7 @@ package com.gestureworks.core
 		*/
 		//////////////////////////////////////////////////////
 		// currently not used
-		// intended for non tap gestures that require timline 
+		// intended for non tap gestures that require timeline 
 		// analysis like gesture sequencing
 		//////////////////////////////////////////////////////
 		private function updateTimelineGestureAnalysis():void

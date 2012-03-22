@@ -66,19 +66,19 @@ package com.gestureworks.analysis
 			if ((N) && (pointList)) {
 				
 				var hold_dist:int = ts.gO.pOList["hold"].point_translation_threshold;
-				var	hold_time:int = Math.ceil(ts.gO.pOList["hold"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);
+				var	hold_time:int = Math.ceil(ts.gO.pOList["hold"].point_event_duration_threshold *0.001 * GestureWorks.application.frameRate);
 				
-				trace("hold point analysis", hold_dist, hold_time,N);
+				//trace("hold point analysis", hold_dist, hold_time,N,ts.gO.pOList["hold"].point_event_duration_threshold,GestureWorks.application.frameRate);
 				
 				// check point list for hold monitoring
 				for (var i:int = 0; i < N; i++) 
 					{
-						trace("oef", pointList[i].touchPointID);
+						//trace("oef", pointList[i].touchPointID);
 						if (pointList[i].holdMonitorOn)
 						{
 							pointList[i].holdCount++;
 							
-							trace("hold point count", pointList[i].holdCount++);
+							//trace("hold point count", pointList[i].holdCount++);
 							// check monitor count
 							if (pointList[i].holdCount >= hold_time) 
 							{
@@ -109,12 +109,8 @@ package com.gestureworks.analysis
 		
 		public function findTimelineHoldEvent(event:TouchEvent):void
 		{
-			trace("hold monitor has been activated");
-			trace("hold monitor has been activated", event.touchPointID);
-			trace("hold monitor has been activated", GestureGlobals.gw_public::points);
-			//trace("hold monitor has been activated", GestureGlobals.gw_public::points[event.touchPointID]);
-			//trace("hold monitor has been activated", GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn);
-			//GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn = true;
+			//trace("hold monitor has been activated",event.touchPointID, GestureGlobals.gw_public::points,GestureGlobals.gw_public::points[event.touchPointID],GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn);
+			GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn = true;
 			
 		}
 		

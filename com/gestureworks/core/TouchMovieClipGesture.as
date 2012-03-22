@@ -16,6 +16,7 @@
 package com.gestureworks.core
 {
 	import flash.events.TouchEvent;
+	import flash.geom.Point;
 	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
@@ -118,14 +119,15 @@ package com.gestureworks.core
 					if ((gO.pOList["tap"]) && (gestureList["tap"])) frames = 0;
 					if ((gO.pOList["hold"]) && (gestureList["hold"])) frames = 40;
 					if ((gO.pOList["double_tap"]) && (gestureList["double_tap"])) frames = 60;
-					if ((gO.pOList["triple_tap"])&&(gestureList["triple_tap"])) frames = 80;
+					if ((gO.pOList["triple_tap"]) && (gestureList["triple_tap"])) frames = 80;
+					
+					GestureGlobals.timelineHistoryCaptureLength = frames;
 					
 					if (trace_debug_mode) trace("init timeline set length:", frames);
 				}
 				
 				// init listners
-				// ON ENTER FRAME ONLY SEEMS TO FIRE WHEN MOVE DETECTED 
-				// BUT HAPPENS WHEN IN DEBUG MODE
+				// ON ENTER FRAME ONLY SEEMS TO FIRE WHEN MOVE DETECTED BUT HAPPENS WHEN IN DEBUG MODE
 				if (tiO.timelineOn) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
 				if ((GestureWorks.supportsTouch)&&(tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchHoldDown);
 				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_TAP, onTouchTap);
@@ -312,6 +314,7 @@ package com.gestureworks.core
 					{
 						var drag_dx:Number = gO.pOList[key]["drag_dx"].gestureDelta;
 						var drag_dy:Number = gO.pOList[key]["drag_dy"].gestureDelta;
+						var drag_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						//var b:String = "GWGestureEvent.DRAG"
 						
@@ -321,7 +324,7 @@ package com.gestureworks.core
 						{
 							if (trace_debug_mode) trace("drag", drag_dx, drag_dy);
 							
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.DRAG, {dx: drag_dx, dy: drag_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.DRAG, {dx: drag_dx, dy: drag_dy, stageX:cO.x, stageY:cO.y, localX:drag_pt.x, localY:drag_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DRAG, {dx:drag_dx, dy:drag_dy, n:N}));
 						}
 					}
@@ -333,12 +336,13 @@ package com.gestureworks.core
 					if ((gO.pOList[key])&&(gestureList[key]))
 					{
 						var rotate_dtheta:Number = gO.pOList[key]["rotate_dtheta"].gestureDelta;
+						var rotate_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						if (trace_debug_mode) trace("rotate_dtheta",rotate_dtheta);
 						
 						if (rotate_dtheta)
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta: rotate_dtheta, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta: rotate_dtheta,stageX:cO.x, stageY:cO.y, localX:rotate_pt.x, localY:rotate_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta:rotate_dtheta, n:N}));
 						}
 					}
@@ -350,10 +354,11 @@ package com.gestureworks.core
 					{
 						var scale_dsx:Number = gO.pOList[key]["scale_dsx"].gestureDelta;
 						var scale_dsy:Number = gO.pOList[key]["scale_dsy"].gestureDelta;
+						var scale_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						if ((scale_dsx)||(scale_dsy)) 
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCALE, {dsx: scale_dsx, dsy: scale_dsy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCALE, {dsx: scale_dsx, dsy: scale_dsy, stageX:cO.x, stageY:cO.y, localX:scale_pt.x, localY:scale_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCALE, {dsx:scale_dsx, dsy:scale_dsy, n:N}));
 						}
 					}
@@ -366,10 +371,12 @@ package com.gestureworks.core
 					if ((gO.pOList[key])&&(gestureList[key]))
 					{
 						var pivot_dtheta:Number = gO.pOList[key]["pivot_dtheta"].gestureDelta;
+						//MAY NEED CONTEXT UPDATE FOR CENTER OF OBJECT
+						var pivot_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point  
 						
 						if (pivot_dtheta)
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.PIVOT, {dtheta: pivot_dtheta, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.PIVOT, {dtheta: pivot_dtheta,stageX:cO.x, stageY:cO.y, localX:pivot_pt.x, localY:pivot_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.PIVOT, {pivot_dtheta:pivot_dtheta, n:N}));
 						}
 					}
@@ -383,10 +390,12 @@ package com.gestureworks.core
 						//trace("orient")
 						var orient_dx:Number = gO.pOList[key]["orient_dx"].gestureDelta;
 						var orient_dy:Number = gO.pOList[key]["orient_dy"].gestureDelta;
+						// MAY NEED CONTERXT UPDATE FOR CENTER OF HAND SKELETON
+						var orient_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						if ((orient_dx) || (orient_dy)) 
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: orient_dx, dy: orient_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: orient_dx, dy: orient_dy, stageX:cO.x, stageY:cO.y, localX:orient_pt.x, localY:orient_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCROLL, {dx:orient_dx, dy:orient_dy, n:N}));
 						}
 					}
@@ -400,10 +409,11 @@ package com.gestureworks.core
 						//trace("scroll")	
 						var scroll_dx:Number = gO.pOList[key]["scroll_dx"].gestureDelta;
 						var scroll_dy:Number = gO.pOList[key]["scroll_dy"].gestureDelta;
+						var scroll_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						if ((scroll_dx) || (scroll_dy)) 
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: scroll_dx, dy: scroll_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: scroll_dx, dy: scroll_dy, stageX:cO.x, stageY:cO.y, localX:scroll_pt.x, localY:scroll_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCROLL, {dx:scroll_dx, dy:scroll_dy, n:N}));
 						}
 					}
@@ -416,11 +426,12 @@ package com.gestureworks.core
 					{
 						var flick_dx:Number = gO.pOList[key]["flick_dx"].gestureDelta;
 						var flick_dy:Number = gO.pOList[key]["flick_dy"].gestureDelta;
+						var flick_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						// flickx
 						if ((flick_dx) || (flick_dy))
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx: flick_dx, dy: flick_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx: flick_dx, dy: flick_dy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N}));
 						}
 					}
@@ -433,10 +444,11 @@ package com.gestureworks.core
 					{
 						var swipe_dx:Number = gO.pOList[key]["swipe_dx"].gestureDelta;
 						var swipe_dy:Number = gO.pOList[key]["swipe_dy"].gestureDelta;
+						var swipe_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						if ((swipe_dx) || (swipe_dy))
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N}));
 						}
 					}
@@ -449,10 +461,11 @@ package com.gestureworks.core
 					{
 						var tilt_dx:Number = gO.pOList[key]["tilt_dx"].gestureDelta;
 						var tilt_dy:Number = gO.pOList[key]["tilt_dy"].gestureDelta;
+						var tilt_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
 						if ((tilt_dx)||(tilt_dy))
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.TILT,{dx: tilt_dx, dy: tilt_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.TILT,{dx: tilt_dx, dy: tilt_dy, stageX:cO.x, stageY:cO.y, localX:tilt_pt.x, localY:tilt_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:tilt_dx, dy:tilt_dy, n:N}));
 						}
 					}
