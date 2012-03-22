@@ -33,17 +33,10 @@ package com.gestureworks.core
 		*/
 		private var j:String;
 		
-		///////////////////////////////////////////
-		// public override
-		///////////////////////////////////////////
-		public var deltaFilterOn:Boolean = true;
-		public var inertialDampingOn:Boolean = false;
-		
 		
 		public function TouchMovieClipProcessor():void
 		{
 			super();
-			//initProcessing();
         }
 		// internal public
 		public function initProcessing():void
@@ -89,7 +82,7 @@ package com.gestureworks.core
 		*/
 		public function applyNoiseSuppression():void 
 		{
-			if (deltaFilterOn)
+			if (_deltaFilterOn)
 			{	
 				// property list loop
 				for (i in gO.pOList)
@@ -141,7 +134,7 @@ package com.gestureworks.core
 		public function applyInertialDampening():void
 		{
 			/*
-			if (inertialDampingOn) 
+			if (_inertialDampingOn) 
 			{
 				trace("inertial dampening")
 				for (i in gO.pOList)
@@ -171,6 +164,27 @@ package com.gestureworks.core
 				}
 			}
 			*/
+		}
+		
+		private var _deltaFilterOn:Boolean = false//true;
+		/**
+		* Determins whether filtering is applied to the delta values.
+		*/
+		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
+		public function set deltaFilterOn(value:Boolean):void
+		{
+			_deltaFilterOn=value;
+		}
+		
+		private var _inertialDampingOn:Boolean = false;
+		
+		/**
+		* Determins whether damping is applied to the delta values.
+		*/
+		public function get inertialDampingOn():Boolean{return _inertialDampingOn;}
+		public function set inertialDampingOn(value:Boolean):void
+		{
+			_inertialDampingOn=value;
 		}
 		
 	}

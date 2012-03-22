@@ -107,6 +107,7 @@ package com.gestureworks.core
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			GestureWorks.supportsTouch = Multitouch.supportsTouchEvents;
 			GestureWorksFlex.supportsTouch = Multitouch.supportsTouchEvents;
+			
 			GestureWorks.application = stage;
 			GestureWorksFlex.application = stage;
 			

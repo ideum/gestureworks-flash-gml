@@ -522,7 +522,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _gestureEvents:Boolean = false;
+		private var _gestureEvents:Boolean = true;
 		/**
 		* Determins whether gestureEvents are processed on the touchSprite.
 		*/
@@ -548,7 +548,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public var _gestureReleaseInertia:Boolean = true;	// gesture release inertia switch
+		public var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
 		/**
 		* Determins whether release inertia is given to gestureEvents on the touchSprite.
 		*/

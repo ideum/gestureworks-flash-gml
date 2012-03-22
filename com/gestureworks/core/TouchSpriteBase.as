@@ -348,6 +348,20 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
+		private var _targetStack:Boolean = false;
+		/** 
+		 * allows touch and gesture events to explicitly target the complete stack of activated 
+		 * parent touch containers and the target touch object
+		*/
+		public function get targetStack():Boolean{return _targetStack;}
+		public function set targetStack(value:Boolean):void
+		{
+			_targetStack = value;
+		}
+		
+		/**
+		 * @private
+		 */
 		// turns off targeting
 		private var _targeting:Boolean = true;
 		public function get targeting():Boolean{return _targeting;}
@@ -371,12 +385,16 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		// manages assignment of touch begin events
+		/**
+		 * decides how to assign the captured touch point
+		 * can pass to parent, self and parent or to self exclusively.
+		 */
+		 
+		 // manages assignment of touch begin events
 		// determins what parent or child object owns the touch points
 		// determins clustering
-		
-		
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
+		
 		public function onTouchDown(event:TouchEvent):void
 		{			
 			//trace("-this.name", this.name, "-target.name:", event.target.name, "-phase:", event.eventPhase, "-currentTarget:", event.currentTarget.name)
@@ -495,15 +513,19 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
+		
+		 /**
+		 * registers assigned touch point globaly and to relevant local clusters 
+		 */
 		public function assignEvent(event:TouchEvent):void
 		{
-			var ppt = GestureGlobals.gw_public::points[event.touchPointID];
-			trace(ppt);
+			//var ppt = GestureGlobals.gw_public::points[event.touchPointID];
+			//trace(ppt);
 			
 			//check to see if point has been created already by another touch object
 			//if (!ppt)
 			//{
-				trace("point does not exist yet");
+				//trace("point does not exist yet");
 				// create new point object
 				var pointObject:PointObject  = new PointObject();
 				var historyArray:Array = new Array();

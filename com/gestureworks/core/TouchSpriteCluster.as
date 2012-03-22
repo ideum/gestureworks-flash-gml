@@ -202,7 +202,7 @@ package com.gestureworks.core
 		 */
 		private var _clusterEvents:Boolean = false;
 		/**
-		* Determins whether clusterEvents are processed on the touchSprite.
+		* Determins whether clusterEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get clusterEvents():Boolean{return _clusterEvents;}
 		public function set clusterEvents(value:Boolean):void

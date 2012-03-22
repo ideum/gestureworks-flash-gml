@@ -234,17 +234,23 @@ package com.gestureworks.core
 		{
 			_gestureList = value;
 			
+			/*
 			for (var i:String in gestureList) 
 			{
 				gestureList[i] = gestureList[i].toString() == "true" ?true:false;
 				if(trace_debug_mode) trace("setting gestureList:", gestureList[i]);
 			}
-			
+			*/
 			/////////////////////////////////////////////////////////////////////
 			// Convert GML Into Property Objects That describe how to match,analyze, 
 			// process and map point/clusterobject properties
 			/////////////////////////////////////////////////////////////////////
 			callLocalGestureParser();
+			
+			//////////////////////////////////////////////////////////////////////////
+			// makes sure that if gesture list chnages timeline gesture int is reset
+			/////////////////////////////////////////////////////////////////////////
+			this.dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 		}
 		/**
 		 * @private

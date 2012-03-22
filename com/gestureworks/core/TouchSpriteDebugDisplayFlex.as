@@ -31,7 +31,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public var displayOn:Boolean = true;
+		public var displayOn:Boolean = false;
 		/**
 		* @private
 		*/

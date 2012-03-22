@@ -378,7 +378,8 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _disableNativeTransform:Boolean = false;
+		//NOW TRUE BY DEFAULT
+		private var _disableNativeTransform:Boolean = true;
 		
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
 		public function set disableNativeTransform(value:Boolean):void
@@ -389,7 +390,8 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _disableAffineTransform:Boolean = false;
+		// NOW TRUE BY DEFAULT
+		private var _disableAffineTransform:Boolean = true;
 		
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
 		public function set disableAffineTransform(value:Boolean):void

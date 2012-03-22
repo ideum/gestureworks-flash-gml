@@ -62,8 +62,8 @@ package com.gestureworks.core
 		 * Contains a dictionary of all timelines objects present to the framework.
 		 */
 		gw_public static var timelines:Dictionary = new Dictionary();
-				
-		//  frameID frame stamp relative to start of application ------------
+		
+		// frameID frame stamp relative to start of application ------------
 		private static var _frameID:int = 0;//int.MAX_VALUE
 		/**
 		 * frameID frame stamp relative to start of application.

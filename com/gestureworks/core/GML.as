@@ -14,6 +14,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// DEFAULT INTERNAL GML
+// WHEN NO EXTERNAL GML DETECTED CAN BE LOADED TO ENABLE GESTURE ANALTYSIS
+// MAKE SURE IS UP TO DATE WITH STANDARD MY_GESTURE.GML FILE
+
 package com.gestureworks.core
 {
 	public class GML

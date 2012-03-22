@@ -502,7 +502,8 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _gestureEvents:Boolean = false;
+		// NOW DEFAULT TRUE
+		private var _gestureEvents:Boolean = true;
 		
 		public function get gestureEvents():Boolean{return _gestureEvents;}
 		public function set gestureEvents(value:Boolean):void
@@ -522,7 +523,8 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public var _gestureReleaseInertia:Boolean = true;	// gesture release inertia switch
+		// NOW DEFAULT FALSE
+		public var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
 		
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
 		public function set gestureReleaseInertia(value:Boolean):void

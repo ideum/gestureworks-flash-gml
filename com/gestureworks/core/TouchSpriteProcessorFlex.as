@@ -36,7 +36,6 @@ package com.gestureworks.core
 		///////////////////////////////////////////
 		// public override
 		///////////////////////////////////////////
-		public var deltaFilterOn:Boolean = true;
 		public var inertialDampingOn:Boolean = false;
 		
 		public function TouchSpriteProcessorFlex():void
@@ -88,7 +87,7 @@ package com.gestureworks.core
 		*/
 		public function applyNoiseSuppression():void 
 		{
-			if (deltaFilterOn)
+			if (_deltaFilterOn)
 			{	
 				// property list loop
 				for (i in gO.pOList)
@@ -170,6 +169,16 @@ package com.gestureworks.core
 				}
 			}
 			*/
+		}
+		
+		private var _deltaFilterOn:Boolean = false//true;
+		/**
+		* Determins whether filtering is applied to the delta values.
+		*/
+		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
+		public function set deltaFilterOn(value:Boolean):void
+		{
+			_deltaFilterOn=value;
 		}
 		
 	}

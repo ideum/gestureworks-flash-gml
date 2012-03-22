@@ -476,7 +476,9 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var _transformEvents:Boolean = false;
-		
+		/**
+		* Determins whether transformEvents are processed and dispatched on the touchSprite.
+		*/
 		public function get transformEvents():Boolean{return _transformEvents;}
 		public function set transformEvents(value:Boolean):void
 		{
@@ -520,8 +522,11 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _disableNativeTransform:Boolean = false;
-		
+		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
+		private var _disableNativeTransform:Boolean = true;
+		/**
+		* Determins whether transformations are handled internally (natively) on the touchSprite.
+		*/
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
 		public function set disableNativeTransform(value:Boolean):void
 		{
@@ -530,8 +535,11 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _disableAffineTransform:Boolean = false;
-		
+		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
+		private var _disableAffineTransform:Boolean = true;
+		/**
+		* Determins whether internal (native) transformations are affine (dynamically centered) on the touchSprite.
+		*/
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
 		public function set disableAffineTransform(value:Boolean):void
 		{

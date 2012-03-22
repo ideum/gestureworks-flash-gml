@@ -226,12 +226,13 @@ package com.gestureworks.core
 		{
 			_gestureList = value;
 			
+			/*
 			for (var i:String in gestureList) 
 			{
 				gestureList[i] = gestureList[i].toString() == "true" ?true:false;
 				if (trace_debug_mode) trace("setting gestureList:", gestureList[i]);
 			}
-			
+			*/
 			///////////////////////////////////////////////////////////////////////
 			// Convert GML Into Property Objects That describe how to match,analyze, 
 			// process and map point/clusterobject properties
@@ -288,26 +289,28 @@ package com.gestureworks.core
 			_pointContainerEnabled = value;
 		}
 		
-		/**
-		 * @private
-		 */
+		
+		/*
 		private function removeCaptureListener():void
 		{
 			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown,true);
 			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown,false, 0,true);
 		}
-		/**
-		 * @private
-		 */
+		
 		private function addCaptureListener():void
 		{
 			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false);
 			addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true,0,true);
 		}
+		*/
 		/**
 		 * @private
 		 */
-		public var _targetParent:Boolean = false//;
+	
+		public var _targetParent:Boolean = false;
+		/**
+		 *  
+		 */
 		public function get targetParent():Boolean{return _targetParent;}
 		public function set targetParent(value:Boolean):void
 		{
@@ -317,8 +320,10 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		// turns off targeting
 		private var _targeting:Boolean = true;
+		/** 
+		 * turns off targeting
+		 */
 		public function get targeting():Boolean{return _targeting;}
 		public function set targeting(value:Boolean):void
 		{
@@ -328,7 +333,13 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		private function onTouchDown(event:TouchEvent):void
+		
+		 /**
+		 * decides how to assign the captured touch point
+		 * can pass to parent, self and parent or to self exclusively.
+		 */
+		 
+		public function onTouchDown(event:TouchEvent):void
 		{						
 			//trace("-this.name",this.name,"-target.name:", event.target.name,"-phase:", event.eventPhase)
 			
@@ -358,6 +369,10 @@ package com.gestureworks.core
 		}
 		/**
 		 * @private
+		 */
+		
+		/**
+		 * registers assigned touch point globaly and to relevant local clusters 
 		 */
 		private function assignEvent(event:TouchEvent):void
 		{						
