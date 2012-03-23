@@ -16,6 +16,7 @@
 package com.gestureworks.core
 {
 	import flash.events.TouchEvent;
+	import flash.geom.Point;
 	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;

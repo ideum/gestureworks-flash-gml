@@ -42,6 +42,7 @@ package com.gestureworks.core
 	import com.gestureworks.utils.MousePoint;
 	import mx.core.UIComponent;
 	
+	import com.gestureworks.events.GWGestureEvent;
 	
 	/**
 	 * The TouchSpriteBaseFlex class is the base class for all touch and gestures enabled
