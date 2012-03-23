@@ -82,8 +82,11 @@ package com.gestureworks.analysis
 							// check monitor count
 							if (pointList[i].holdCount >= hold_time) 
 							{
+								var spt:Point = new Point (pointList[i].point.x, pointList[i].point.y); // stage point
+								var lpt:Point = ts.globalToLocal(spt); //local point
+								
 								//trace("dispatch");
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x: pointList[i].point.x, y:pointList[i].point.y, touchPointID:pointList[i].point.touchPointID} ));
+								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, touchPointID:pointList[i].point.touchPointID} ));
 								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: pointList[i].point.x, y:pointList[i].point.y, touchPointID:pointList[i].point.touchPointID} ));
 								pointList[i].holdMonitorOn = false;
 								pointList[i].holdCount = 0;
@@ -142,7 +145,7 @@ package com.gestureworks.analysis
 								var lpt:Point = ts.globalToLocal(spt); //local point
 								
 								//trace("tap",j, touch_event.touchPointID);
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
+								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x:touch_event.stageX, y:touch_event.stageY,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
 								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 							}
 						}

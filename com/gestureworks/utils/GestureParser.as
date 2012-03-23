@@ -149,11 +149,11 @@ package com.gestureworks.utils
 															pOList[gesture_id].nMax = nMin;
 															
 															// set cluster action thresholds
-															pOList[gesture_id].cluster_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.points.attribute("translation_threshold"));
-															pOList[gesture_id].cluster_rotation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.points.attribute("rotation_threshold"));
-															pOList[gesture_id].cluster_separation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.points.attribute("separation_threshold"));
-															pOList[gesture_id].cluster_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.points.attribute("acceleration_threshold"));
-															//pOList[gesture_id].cluster_jolt_threshold = gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.points.attribute("jolt_threshold");
+															pOList[gesture_id].cluster_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_threshold"));
+															pOList[gesture_id].cluster_rotation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_threshold"));
+															pOList[gesture_id].cluster_separation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_threshold"));
+															pOList[gesture_id].cluster_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_threshold"));
+															//pOList[gesture_id].cluster_jolt_threshold = gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("jolt_threshold");
 														}
 													}
 												

@@ -410,10 +410,14 @@ package com.gestureworks.core
 						// MAY NEED CONTERXT UPDATE FOR CENTER OF HAND SKELETON
 						var orient_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 						
+						
+						
+						//WHY NOT CONTINUOUS??
 						if ((orient_dx) || (orient_dy)) 
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: orient_dx, dy: orient_dy, stageX:cO.x, stageY:cO.y, localX:orient_pt.x, localY:orient_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCROLL, {dx:orient_dx, dy:orient_dy, n:N}));
+							//trace("orient", orient_dx, orient_dy);
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.ORIENT, {dx: orient_dx, dy: orient_dy, stageX:cO.x, stageY:cO.y, localX:orient_pt.x, localY:orient_pt.y, n:N}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.ORIENT, {dx:orient_dx, dy:orient_dy, n:N}));
 						}
 					}
 				}
@@ -427,9 +431,10 @@ package com.gestureworks.core
 						var scroll_dx:Number = gO.pOList[key]["scroll_dx"].gestureDelta;
 						var scroll_dy:Number = gO.pOList[key]["scroll_dy"].gestureDelta;
 						var scroll_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-						
+
 						if ((scroll_dx) || (scroll_dy)) 
 						{
+							//trace("scroll",scroll_dx,scroll_dy);
 							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: scroll_dx, dy: scroll_dy, stageX:cO.x, stageY:cO.y, localX:scroll_pt.x, localY:scroll_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCROLL, {dx:scroll_dx, dy:scroll_dy, n:N}));
 						}
@@ -448,7 +453,8 @@ package com.gestureworks.core
 						// flickx
 						if ((flick_dx) || (flick_dy))
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx: flick_dx, dy: flick_dy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N}));
+							//trace("flick",flick_dx,flick_dy);
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N}));
 						}
 					}
@@ -462,10 +468,11 @@ package com.gestureworks.core
 						var swipe_dx:Number = gO.pOList[key]["swipe_dx"].gestureDelta;
 						var swipe_dy:Number = gO.pOList[key]["swipe_dy"].gestureDelta;
 						var swipe_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-						
+				
 						if ((swipe_dx) || (swipe_dy))
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N}));
+							//trace("swipe",swipe_dx,swipe_dy);
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N}));
 							if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N}));
 						}
 					}
@@ -483,7 +490,7 @@ package com.gestureworks.core
 						if ((tilt_dx)||(tilt_dy))
 						{
 							dispatchEvent(new GWGestureEvent(GWGestureEvent.TILT,{dx: tilt_dx, dy: tilt_dy, stageX:cO.x, stageY:cO.y, localX:tilt_pt.x, localY:tilt_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:tilt_dx, dy:tilt_dy, n:N}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TILT, {dx:tilt_dx, dy:tilt_dy, n:N}));
 						}
 					}
 				}

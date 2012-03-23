@@ -199,6 +199,15 @@ package com.gestureworks.analysis
 			//dddx_threshold_max = 15;
 			//dddy_threshold_min = 0.001;
 			//dddy_threshold_max = 15;
+			
+			//ADD FOR CLUSTER PRESURE CHANGE
+			//dp 
+			//ddp 
+			//ADD FOR CLUSTER AVERAGE POINT SIZE CHANGE
+			//dw 
+			//ddw
+			//dh 
+			//ddh
 		}
 		
 		public function findCluster():void
@@ -484,7 +493,9 @@ package com.gestureworks.analysis
 									orient_dy += (pointList[i].history[0].y - c_py) * k1;
 								}
 						}
-						
+						//NEED TO PUSH OUT ORIENTATION ANGLE
+						// TO CLUSTER ROTATION
+						// WILL BE MAPPED TO ROTATION FOR TRANSFROM OBJECT AND THEN TO TOUCHSPRITE NATIVELEY SNAP TO ORIENTATION 
 						ts.gO.pOList[key]["orient_dx"].clusterDelta = orient_dx;
 						ts.gO.pOList[key]["orient_dy"].clusterDelta = orient_dy;
 					}
@@ -558,6 +569,7 @@ package com.gestureworks.analysis
 			// BASIC FLICK CONTROL // ALGORITHM
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			// CHECK FOR ACCELERATION
+			
 			// IF ABOVE ACCEL THREHOLD RETURN 
 			if (ts.gO.pOList[key].gesture_type == "flick")
 			{
@@ -567,7 +579,7 @@ package com.gestureworks.analysis
 				{
 					ts.gO.pOList[key]["flick_dx"].clusterDelta = 0; 
 					ts.gO.pOList[key]["flick_dy"].clusterDelta = 0; 
-					
+				
 				if((N >= ts.gO.pOList[key].nMin)&&(N <= ts.gO.pOList[key].nMax))
 				{
 					var flick_dx:Number = 0;
@@ -579,6 +591,16 @@ package com.gestureworks.analysis
 					var flick_etm_accel:Point = findMeanTemporalAcceleration(flick_h); //ensamble temporal mean acceleration
 					var flick_etmVel:Point = findMeanTemporalVelocity(flick_h); // ensamble temporal mean velocity
 					////////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					//////////////////////////////////////////////////////////////////
+					// STANDARD OPERATION	
+					///////////////////////////////////////////////////////////////////
+					if (!findMeanInstAcceleration_comlpete) 
+					{
+						findMeanInstAcceleration();
+						findMeanInstAcceleration_comlpete = true;
+					}
+					////////////////////////////////////////////////////////////////////
 					
 					if ((Math.abs(flick_etm_accel.x) > flick_threshold) && (Math.abs(flick_etm_accel.y) > flick_threshold))
 					{
@@ -595,10 +617,17 @@ package com.gestureworks.analysis
 						flick_dy = flick_etmVel.y;
 						flick_dx = 0;
 					}
-			
+					
+					// TODO ADD DISPATCH CHECK 
+					//ONLY ALLOW DISPATCH ONCE PER CLUSTER SESSION, REQUIRE RELEASE BEFORE RESETTING
+					//REQUIRE RELEASE BEFORE RE-DISPATCH
+					//REQUIRE MIN HISTORY OF 20 FRAMES TO REDUCE INIT TOUCH JERK ACCIDENTAL TRIGGER
+					
+					
 					// assign value to property object
 					ts.gO.pOList[key]["flick_dx"].clusterDelta = flick_dx;
 					ts.gO.pOList[key]["flick_dy"].clusterDelta = flick_dy;
+					//trace("flick, velocity",flick_etmVel.x,flick_etmVel.y,flick_etm_accel.x,flick_etm_accel.y,flick_threshold,flick_dx,flick_dy)
 					}
 				}
 			}
@@ -629,25 +658,44 @@ package com.gestureworks.analysis
 					var swipe_etmAccel:Point = findMeanTemporalAcceleration(swipe_h); //ensamble temporal mean velocity
 					////////////////////////////////////////////////////////////////////////////////////////////////////
 					
+					//////////////////////////////////////////////////////////////////
+					// STANDARD OPERATION	
+					///////////////////////////////////////////////////////////////////
+					if (!findMeanInstAcceleration_comlpete) 
+					{
+						findMeanInstAcceleration();
+						findMeanInstAcceleration_comlpete = true;
+					}
+					////////////////////////////////////////////////////////////////////
+					
+					//swipe_dx = swipe_etmVel.x;
+					//swipe_dy = swipe_etmVel.y;
+						
+					
 					if ((Math.abs(swipe_etmAccel.x) < swipe_threshold) && (Math.abs(swipe_etmAccel.y) < swipe_threshold))
 					{
 						swipe_dx = swipe_etmVel.x;
 						swipe_dy = swipe_etmVel.y;
 					}
-					else if (Math.abs(c_ddx) < swipe_threshold) 
-					{
-						swipe_dx = swipe_etmVel.x;
-						swipe_dy = 0;
-					}
-					else if (Math.abs(c_ddy) < swipe_threshold) 
-					{
-						swipe_dy = swipe_etmVel.y;
-						swipe_dx = 0;
-					}	
+					//else if (Math.abs(swipe_etmAccel.x) < swipe_threshold) 
+					//{
+						//swipe_dx = swipe_etmVel.x;
+						//swipe_dy = 0;
+					//}
+					//else if (Math.abs(swipe_etmAccel.y) < swipe_threshold) 
+					//{
+						//swipe_dy = swipe_etmVel.y;
+						//swipe_dx = 0;
+					//}
+					
+					// STRCT CONDITIONS FOR BOTH X AND Y
+					// NEEDS TO RETURN ACCELERATION ALSO
+					// NEED MULTIPLE FIELDS FOR CLUSTER DELTA
 					
 					// assign value to property object
 					ts.gO.pOList[key]["swipe_dx"].clusterDelta = swipe_dx;
 					ts.gO.pOList[key]["swipe_dy"].clusterDelta = swipe_dy;
+					//trace("swipe, velocity",swipe_etmVel.x,swipe_etmVel.y,swipe_etmAccel.x,swipe_etmAccel.y,swipe_threshold)
 					}
 				}
 			}
@@ -676,7 +724,6 @@ package com.gestureworks.analysis
 					var etmVel:Point = findMeanTemporalVelocity(scroll_h); //ensamble temporal mean 
 					////////////////////////////////////////////////////////////////////////////////////////////
 					
-					
 					if ((Math.abs(etmVel.x) > scroll_threshold) && (Math.abs(etmVel.y) > scroll_threshold))
 					{
 						scroll_dx = etmVel.x;
@@ -695,7 +742,7 @@ package com.gestureworks.analysis
 					
 					ts.gO.pOList[key]["scroll_dx"].clusterDelta = scroll_dx; 
 					ts.gO.pOList[key]["scroll_dy"].clusterDelta = scroll_dy;
-					trace("scroll velocity",etmVel.x,etmVel.y)
+					//trace("scroll, velocity",etmVel.x,etmVel.y)
 					}
 				}
 			}
@@ -709,12 +756,14 @@ package com.gestureworks.analysis
 			{
 				if (ts.trace_debug_mode) trace("cluster tilt algorithm");
 				
+					
 				if ((ts.gO.pOList[key])&&(ts.gestureList[key]))
 				{
 					ts.gO.pOList[key]["tilt_dx"].clusterDelta = 0; 
 					ts.gO.pOList[key]["tilt_dy"].clusterDelta = 0; 
 				
-					if((N >= ts.gO.pOList[key].nMin)&&(N <= ts.gO.pOList[key].nMax))
+					if((N == ts.gO.pOList[key].n)) // LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
+					//if((N >= ts.gO.pOList[key].nMin)&&(N <= ts.gO.pOList[key].nMax))
 					{
 						var tilt_dx:Number = 0;
 						var tilt_dy:Number = 0;
@@ -735,12 +784,12 @@ package com.gestureworks.analysis
 							tilt_dx = c_dsx;
 							tilt_dy = c_dsy;
 						}
-						else if (Math.abs(c_ddx) < tilt_threshold) 
+						else if (Math.abs(c_dsx) > tilt_threshold) 
 						{
 							tilt_dx = c_dsx;
 							tilt_dy = 0;
 						}
-						else if (Math.abs(c_ddy) < tilt_threshold) 
+						else if (Math.abs(c_dsy) > tilt_threshold) 
 						{
 							tilt_dx = 0;
 							tilt_dy = c_dsy;
@@ -748,6 +797,7 @@ package com.gestureworks.analysis
 						
 						ts.gO.pOList[key]["tilt_dx"].clusterDelta = tilt_dx; //tilt_dx
 						ts.gO.pOList[key]["tilt_dy"].clusterDelta = tilt_dy; //tilt_dy
+						//trace("TILT seperation",c_dsx,c_dsy)
 					}
 				}
 			}

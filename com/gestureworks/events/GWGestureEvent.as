@@ -35,6 +35,7 @@ package com.gestureworks.events
 		public static var SCALE:String = "scale";
 		public static var PIVOT:String = "pivot";
 		public static var TILT:String = "tilt";
+		public static var ORIENT:String = "orient";
 		
 		public static var HOLD:String = "hold";
 		public static var TAP:String = "tap";
