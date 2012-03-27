@@ -99,7 +99,7 @@ package com.gestureworks.core
 		
 		private function onGestureListUpdate(event:GWGestureEvent):void  
 		{
-			trace("gesturelist update");
+			//trace("gesturelist update");
 			this.initTimeline();
 		}
 		

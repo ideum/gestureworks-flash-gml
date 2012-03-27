@@ -80,8 +80,7 @@ package com.gestureworks.core
 		*/
 		public function initGestureAnalysis():void //clusterObject:Object
 		{
-			//if (trace_debug_mode) 
-			trace("init gesture analysis", touchObjectID);
+			if (trace_debug_mode) trace("init gesture analysis", touchObjectID);
 
 			// analyze for continuous gesturing
 			if(contGesturemetricsOn){
