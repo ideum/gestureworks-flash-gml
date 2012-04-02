@@ -25,18 +25,22 @@ package com.gestureworks.utils.modeScreens
 	
 	public class OEUnregistered extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/OEUnregistered.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/unable_to_verify.png")] private var Splash:Class;
 		
 		public function OEUnregistered() 
 		{
 			var splash:Bitmap = new Splash();
 			addChild(splash);
 			
-			var button:SplashButton = new SplashButton(290, 75, 0, "http://openexhibits.org/support");
-			addChild(button);
+			var buttonGW:SplashButton = new SplashButton(180, 60, 0, "http://support.gestureworks.com/");
+			buttonGW.x = 581;
+			buttonGW.y = 162;
+			addChild(buttonGW);
 			
-			button.x = 255;
-			button.y = 457;
+			var buttonOE:SplashButton = new SplashButton(180, 60, 0, "http://openexhibits.org/support/");
+			buttonOE.x = 581;
+			buttonOE.y = 342;		
+			addChild(buttonOE);
 		}	
 	}
 }

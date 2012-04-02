@@ -24,18 +24,22 @@ package com.gestureworks.utils.modeScreens
 	 */
 	public class TrialExpired extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/expired_trial_version.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/unable_to_verify.png")] private var Splash:Class;
 		
 		public function TrialExpired() 
 		{
 			var splash:Bitmap = new Splash();
 			addChild(splash);
 			
-			var button:SplashButton = new SplashButton(200, 75);
-			addChild(button);
+			var buttonGW:SplashButton = new SplashButton(180, 60, 0, "http://support.gestureworks.com/");
+			buttonGW.x = 581;
+			buttonGW.y = 162;
+			addChild(buttonGW);
 			
-			button.x = 298;
-			button.y = 478;
+			var buttonOE:SplashButton = new SplashButton(180, 60, 0, "http://openexhibits.org/support/");
+			buttonOE.x = 581;
+			buttonOE.y = 342;		
+			addChild(buttonOE);
 		}
 		
 	}
