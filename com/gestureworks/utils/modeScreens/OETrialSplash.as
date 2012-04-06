@@ -14,7 +14,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 package com.gestureworks.utils.modeScreens 
 {
 	import flash.display.Sprite;
@@ -30,18 +29,31 @@ package com.gestureworks.utils.modeScreens
 	public class OETrialSplash extends Sprite 
 	{
 		[Embed(source = "../../../../../lib/assets/oe_trial_splash.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/oe_trial_splash_no_date.png")] private var SplashNoDate:Class;
 		
-		public function OETrialSplash() 
+		public function OETrialSplash(ignoreDateCountdown:Boolean=false) 
 		{
-			var splash:Bitmap = new Splash();
-			addChild(splash);
+			var splash:Bitmap;
 			
-			var timeString:String = Yolotzin.trialLeft.toString();
-			if (timeString.length == 1)timeString = "0" + Yolotzin.trialLeft.toString();
-			var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 5);
-			addChild(timeLeft);
-			timeLeft.x = 603;
-			timeLeft.y = 92;
+			if (ignoreDateCountdown)
+			{
+				splash = new SplashNoDate();
+				addChild(splash);
+			}
+			else
+			{
+				splash = new Splash();
+				addChild(splash);
+				var timeString:String = Yolotzin.trialLeft.toString();
+				if (timeString.length == 1)timeString = "0" + Yolotzin.trialLeft.toString();
+				var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 5);
+				timeLeft.selectable = false;
+				addChild(timeLeft);
+				timeLeft.x = 603;
+				timeLeft.y = 92;			
+			}
+
+
 		}
 		
 	}

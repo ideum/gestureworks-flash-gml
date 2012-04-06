@@ -13,10 +13,14 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.utils.modeScreens 
 {
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import com.gestureworks.text.DefaultFonts;
 	
 	/**
 	 * ...
@@ -30,11 +34,6 @@ package com.gestureworks.utils.modeScreens
 		{
 			var splash:Bitmap = new Splash();
 			addChild(splash);
-			
-			/*var version:SplashVersion = new SplashVersion();
-			addChild(version);
-			version.x = 247;
-			version.y = 480;*/
 		}
 		
 	}

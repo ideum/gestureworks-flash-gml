@@ -21,14 +21,14 @@ package com.gestureworks.utils.modeScreens
 	{
 		private var textFormat:TextFormat = new TextFormat();
 		
-		public function SplashText(txt:String, size:Number=15, color:uint=0x000000, spacing:int=0) 
+		public function SplashText(txt:String, size:Number=15, color:uint=0x000000, spacing:int=0, font:String="OpenSansRegular") 
 		{
 			super();
 			
 			textFormat.size = size;
 			textFormat.align = TextFormatAlign.LEFT;
 			textFormat.color = color;
-			textFormat.font = "GillSansLightFont";
+			textFormat.font = font;
 			textFormat.letterSpacing = spacing;
 			
 			defaultTextFormat = textFormat;

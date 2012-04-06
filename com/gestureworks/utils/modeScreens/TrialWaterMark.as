@@ -13,6 +13,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.utils.modeScreens 
 {
 	import flash.display.Sprite;
@@ -24,12 +25,12 @@ package com.gestureworks.utils.modeScreens
 	 */
 	public class TrialWaterMark extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/standard.png")] private var Splash:Class;
+		//[Embed(source = "../../../../../lib/assets/standard.png")] private var Splash:Class;
 		
 		public function TrialWaterMark() 
 		{
-			var splash:Bitmap = new Splash();
-			addChild(splash);
+			//var splash:Bitmap = new Splash();
+			//addChild(splash);
 		}
 		
 	}

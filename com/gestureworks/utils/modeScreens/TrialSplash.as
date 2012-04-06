@@ -13,6 +13,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.utils.modeScreens 
 {
 	import flash.display.Sprite;
@@ -27,28 +28,41 @@ package com.gestureworks.utils.modeScreens
 	public class TrialSplash extends Sprite 
 	{
 		[Embed(source = "../../../../../lib/assets/trial_splash.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/gw_trial_splash_no_date.png")] private var SplashNoDate:Class;
 		
-		public function TrialSplash() 
+		public function TrialSplash(ignoreDateCountdown:Boolean=false) 
 		{
-			var splash:Bitmap = new Splash();
-			addChild(splash);
+			var splash:Bitmap;
+			
+			if (ignoreDateCountdown)
+			{
+				splash = new SplashNoDate();
+				addChild(splash);
+			}
+			
+			else
+			{
+				splash = new Splash();
+				addChild(splash);				
+				
+				var button:SplashButton = new SplashButton(130, 30);
+				addChild(button);
+				button.x = 200;
+				button.y = 195;				
+
+				var timeString:String = Yolotzin.trialLeft.toString();
+				if (timeString.length == 1)timeString = "0" + Yolotzin.trialLeft.toString();
+				var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 5);
+				timeLeft.selectable = false;
+				addChild(timeLeft);
+				timeLeft.x = 120;
+				timeLeft.y = 147;
+			}
 			
 			var version:SplashVersion = new SplashVersion();
 			addChild(version);
 			version.x = 247;
-			version.y = 490;
-			
-			var button:SplashButton = new SplashButton(130, 30);
-			addChild(button);
-			button.x = 200;
-			button.y = 195;
-			
-			var timeString:String = Yolotzin.trialLeft.toString();
-			if (timeString.length == 1)timeString = "0" + Yolotzin.trialLeft.toString();
-			var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 5);
-			addChild(timeLeft);
-			timeLeft.x = 120;
-			timeLeft.y = 147;
+			version.y = 490;			
 		}
 		
 	}

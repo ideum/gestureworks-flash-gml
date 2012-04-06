@@ -15,11 +15,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.utils.modeScreens 
 {
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.utils.Timer;
-	import flash.events.TimerEvent;
-	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.*;
+	import com.gestureworks.text.*;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.text.*;
+	import flash.utils.*;
 	
 	public class TrialTimer extends Sprite 
 	{
@@ -27,36 +28,35 @@ package com.gestureworks.utils.modeScreens
 		private var timerCompleteAmount:Number = 3600;
 		private var textString:String;
 		private var finalString:String;
-		private var textColor:uint = 0x666666;
-		private var textSize:int = 18;
 		private var timer:Timer;
 		private var count:int;
-		private var timerText:SplashText;
+		private var timerText:TextField;
+		private var readmeText:TextField;
+		private var formatBold:TextFormat;
+		private var formatRegular:TextFormat;
 		
 		public function TrialTimer() 
 		{
-			textString = GestureWorks.isOpenExibits ? "Open Exhibits trial time : " : "GestureWorks trial time : ";
-			
+			textString = "Trial Mode ";
 			finalString = GestureWorks.isOpenExibits ? "Open Exhibits trial timer has expired" : "GestureWorks trial timer has expired";
+			
+			createText();
+			updateTimerText(textString + "60:00");
 			
 			timer=new Timer(1000);
 			timer.addEventListener(TimerEvent.TIMER, updateDisplay);
-			timer.start();
-			
-			timerText = new SplashText("", textSize, textColor);
-			timerText.width = 300;
-			addChild(timerText);
+			timer.start();			
 		}
 		
 		private function updateDisplay(event:TimerEvent):void
 		{			
-			timerText.updateText(textString + formatTime(timerCompleteAmount));
+			updateTimerText(textString + formatTime(timerCompleteAmount));
 			
 			if (timerCompleteAmount==0)
 			{
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, updateDisplay);
-				timerText.updateText(finalString);
+				timerText.text = finalString;
 				dispatchEvent(new Event(TrialTimer.COMPLETE));
 			}
 			
@@ -82,6 +82,44 @@ package com.gestureworks.utils.modeScreens
 			{
 				return "00:00";
 			}
+		}
+		
+		
+		private function createText():void
+		{
+			var defaultFonts:DefaultFonts = new DefaultFonts;
+			
+			timerText = new TextField;	
+			timerText.y = -40;
+			timerText.antiAliasType = AntiAliasType.ADVANCED;
+			timerText.width = 300;
+			timerText.wordWrap = true;
+			timerText.embedFonts = true;
+			timerText.selectable = false;
+			addChild(timerText);						
+			
+			readmeText = new TextField;
+			readmeText.antiAliasType = AntiAliasType.ADVANCED;
+			readmeText.width = 400;
+			readmeText.wordWrap = true;
+			readmeText.text = "See the Read Me to license";
+			readmeText.embedFonts = true;
+			readmeText.selectable = false;
+			addChild(readmeText);
+			
+			formatBold = new TextFormat("OpenSansBold", 30, 0xFFFFFF);
+			formatRegular = new TextFormat("OpenSansRegular", 30, 0xFFFFFF);
+			
+			readmeText.setTextFormat(formatRegular, 0, 7);			
+			readmeText.setTextFormat(formatBold, 7, 15);				
+			readmeText.setTextFormat(formatRegular, 15, readmeText.text.length);				
+		}
+		
+		private function updateTimerText(txt:String):void
+		{
+			timerText.text = txt;
+			timerText.setTextFormat(formatRegular, 0, txt.length-6);			
+			timerText.setTextFormat(formatBold, txt.length-6, txt.length);			
 		}
 		
 	}
