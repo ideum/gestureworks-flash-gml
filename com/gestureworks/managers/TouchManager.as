@@ -29,32 +29,24 @@ package com.gestureworks.managers
 	import com.gestureworks.managers.PointHistories;
 	
 	/* 
-		
-		IMPORTANT NOTE TO DEVELOPER **********************************************
-		 
-		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE.
-		IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY (paul@ideum.com) ABOUT IT'S IMPORTANCE.
-		IF PAUL IS UNABLE TO HELP YOU UNDERSTAND, THEN PLEASE LOOK AND READ THE ACTUAL CODE FOR IT'S PATH.
-		SOMETHINGS AT FIRST MAY NOT BE CLEAR AS TO WHAT THE ACTUAL PURPOSE IS, BUT IT IS VALUABLE AND IS USED IF IT IS CURRENTLY WRITTTEN HERE.
-		DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
-		
-		*/
+	IMPORTANT NOTE TO DEVELOPER ********************************
+	PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS
+	IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY
+	DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, 
+	TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
+	************************************************************
+	*/
 	
 	public class TouchManager
 	{
 		public static var points:Dictionary = new Dictionary();
-		//public static var count:int;
-		//public static var isTouching:Boolean;
-		//public static var frameNum:int = 0;
 		
 		// initializes touchManager...
 		gw_public static function initialize():void
 		{
 			points = GestureGlobals.gw_public::points;
-			
 			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
 			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-			//if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove, false, 1, true);
 		}
 		
 		gw_public static function deInitialize():void
@@ -68,84 +60,56 @@ package com.gestureworks.managers
 		{
 			if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY, event))
 			else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event));
-			
-			//count++;
-			//isTouching = true;
-			
-			//////////////////////////////////
-			//3.1//event.stopImmediatePropagation(); //previous default
-			//////////////////////////////////
 		}
 		
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:TouchEvent):void
 		{
-			if (points[event.touchPointID])
-			{
-				// define local touch object
-				var tO:Object = GestureGlobals.gw_public::touchObjects[points[event.touchPointID].object.clusterID];
-					// push touch up event to touch object timeline
-					if((tO.tiO.timelineOn)&&(tO.tiO.pointEvents)) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
-					// clear local debug display
-					if ((tO.debug_display) && (tO.cO)) tO.clearDebugDisplay(); // clear display
-					
-					
-					// remove touch point from global list
-					removeTouchPoint(event);
-			}
-			
-			//3.1//if (count == 0) isTouching = false;
-			//////////////////////////////////
-			//3.1//event.stopImmediatePropagation(); previous defualt
-			//////////////////////////////////
-		}
-		
-		// removes all touch events.
-		private static function removeTouchPoint(event:TouchEvent):void
-		{
-			//3.1//count--;
-			
-			ArrangePoints.arrangePointArray(event);
-			//3.1//	delete TouchUpdateManager.pointMoveQueue[event.touchPointID]; // delete point from move queue
-			delete points[event.touchPointID]; // delete from global points list
-			
-			//3.1//if (count == 0) isTouching = false;
-			
-			
-			//////////////////////////////////
-			//3.1//event.stopImmediatePropagation(); // previous default
-			/////////////////////////////////
-		}
-		
-		// the Stage TOUCH_MOVE event.		
-		public static function onTouchMove(event:TouchEvent):void
-		{			
-			//trace("reciving touch points on move");
-			//3.1//TouchUpdateManager.pointMoveQueue[event.touchPointID] = event;
-			//3.1//TouchUpdateManager.touchFrameHandler();
-			
-			// update point history
-			PointHistories.historyQueue(event);
-			// update point position
-			updatePointObject(event);
-			// update cluster and gesture analysis
-			updateTouchObject(event);
-		}
-		
-		
-		
-		
-		public static function updatePointObject(event:TouchEvent):void
-		{
-			//trace("updating point data in moving", event.touchPointID, event.stageX, event.stageY);
-			
-			/////////////////////////////////////////////////////////////////////////////////////////////
-			// update point object positions
-			/////////////////////////////////////////////////////////////////////////////////////////////
 			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
 			
 			if (pointObject)
 			{
+				// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
+				for (var j:int = 0; j < pointObject.objectList.length; j++)
+				{
+					var tO:Object = pointObject.objectList[j];
+					
+					// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
+					if((tO.tiO.timelineOn)&&(tO.tiO.pointEvents)) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
+					//UPDATE DEBUG DISPLAY // clear local debug display
+					if ((tO.debug_display) && (tO.cO)) tO.clearDebugDisplay(); // clear display
+				
+					
+					// REMOVE POINT FROM LOCAL LIST
+					tO.pointArray.splice(pointObject.id, 1);
+					
+					// REDUCE LOACAL POINT COUNT
+					tO.pointCount--;
+					
+					// UPDATE POINT ID 
+					for (var i:int = 0; i < tO.pointArray.length; i++)
+					{
+						tO.pointArray[i].id = i;
+					}
+				}
+			}
+			// DELETE FROM GLOBAL POINT LIST
+			delete points[event.touchPointID];
+		}
+		
+	
+		// the Stage TOUCH_MOVE event.	
+		public static function onTouchMove(event:TouchEvent):void
+		{			
+			// update point history
+			PointHistories.historyQueue(event);
+			
+			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUC OBJECT CALCULATIONS
+			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			
+			if (pointObject)
+			{
+				// UPDATE POINT POSITIONS
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
 					pointObject.point.x = event.localX;
@@ -154,32 +118,57 @@ package com.gestureworks.managers
 				}
 				pointObject.point.y = event.stageY;
 				pointObject.point.x = event.stageX;
-			}
+				
+				// UPDATE TOUCH OBJECTS
+				for (var j:int = 0; j < pointObject.objectList.length; j++) // NEED TO COME UP WITH METHOD TO REMOVE OBJECTS THAT ARE NO LONGER ON STAGE
+				{
+					//var tO:Object = pointObject.object;
+					var tO:Object = pointObject.objectList[j];
+						tO.updateClusterAnalysis();
+						tO.updateProcessing();
+						tO.updateGestureAnalysis();
+						tO.updateTransformation();
+						//tO.updateDebugDisplay(); // resource intensive moved to on enter frame
+				}
+			}	
 		}
 		
+		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
+		public static function updatePointObject(event:TouchEvent):void
+		{
+			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			
+			if (pointObject)
+			{
+				// UPDATE POINT POSITIONS
+				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				{
+					pointObject.point.x = event.localX;
+					pointObject.point.y = event.localY;
+					return;
+				}
+				pointObject.point.y = event.stageY;
+				pointObject.point.x = event.stageX;
+			}	
+		}
 		
+		//EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////////
 		public static function updateTouchObject(event:TouchEvent):void
 		{
-			//if (trace_debug_mode) trace("update Touch Object");
-				
-			/////////////////////////////////////////////////////////////////////////////////////////////
-			// update touch object
-			/////////////////////////////////////////////////////////////////////////////////////////////
-			if (GestureGlobals.gw_public::points[event.touchPointID]) 
-				{
-				//curently returns a single object, should return a list of clusters the contain the point
-				var clusterID:Object = GestureGlobals.gw_public::points[event.touchPointID].object.clusterID;
-				
-				
-				// should update all touch objects that contain this point
-				var tO:Object = GestureGlobals.gw_public::touchObjects[clusterID];//
+			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			
+			if (pointObject)
+			{
+				// UPDATE TOUCH OBJECT
+				var tO:Object = pointObject.object;//
 					tO.updateClusterAnalysis();
 					tO.updateProcessing();
 					tO.updateGestureAnalysis();
 					tO.updateTransformation();
 					//tO.updateDebugDisplay(); // resource intensive moved to on enter frame
-				}
+			}	
 		}
 
+		
 	}
 }

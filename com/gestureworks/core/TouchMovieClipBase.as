@@ -55,7 +55,7 @@ package com.gestureworks.core
 	 *		targetParent = "false"
 	 *		disableNativeTransform = "true"
 	 *		disableAffineTransform = "true"
-	 *		gestureEvents = "false"
+	 *		gestureEvents = "true"
 	 *		clusterEvents = "false"
 	 *		transformEvents = "false"
 	 * </pre>

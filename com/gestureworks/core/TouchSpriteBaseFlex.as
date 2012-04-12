@@ -50,9 +50,14 @@ package com.gestureworks.core
 	 * 
 	 * <pre>
 	 * 	<b>Properties</b>
-	 * 	 blobContainerEnabled="false"
-	 * 	 touchChildren="false"
-	 * 	 targetParent = "false"
+	 * 		mouseChildren="false"
+	 *		touchChildren="false"
+	 *		targetParent = "false"
+	 *		disableNativeTransform = "true"
+	 *		disableAffineTransform = "true"
+	 *		gestureEvents = "true"
+	 *		clusterEvents = "false"
+	 *		transformEvents = "false"
 	 * </pre>
 	 */
 	

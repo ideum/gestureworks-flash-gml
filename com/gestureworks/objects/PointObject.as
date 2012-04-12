@@ -75,6 +75,11 @@ package com.gestureworks.objects
 			_holdCount = value;
 		}
 		
+		///////////////////////////////////////////////////
+		// DIRECT REFERENCE TO THE TOUCH OBJECT THAT "OWNS" THE TOUCH POINT
+		// primary touch object (should be target)
+		//////////////////////////////////////////////////
+		
 		// object
 		private var _object:DisplayObject;
 		public function get object():DisplayObject
@@ -84,6 +89,28 @@ package com.gestureworks.objects
 		public function set object(value:DisplayObject):void
 		{
 			_object = value;
+		}
+		
+		///////////////////////////////////////////////////////
+		// list of objects that are given copy of touch point
+		// touch object in nested stack or in cluster broadcast
+		///////////////////////////////////////////////////////
+		
+		//  objectList 
+		private var _objectList:Array = [];
+		/**
+		 * Returns a pointClusterList.
+		 */
+		public function get objectList():Array
+		{
+			return _objectList;
+		}
+		/**
+		 * Sets a objectList.
+		 */
+		public function set objectList(value:Array):void
+		{
+			_objectList=value;
 		}
 		
 		// point
@@ -129,6 +156,24 @@ package com.gestureworks.objects
 		public function set history(value:Array):void
 		{
 			_history = value;
+		}
+		
+		
+		// 
+		private var _clusterList:Array = [];
+		/**
+		 * Returns a pointClusterList.
+		 */
+		public function get clusterList():Array
+		{
+			return _clusterList;
+		}
+		/**
+		 * Sets a pointClusterList.
+		 */
+		public function set clusterList(value:Array):void
+		{
+			_clusterList=value;
 		}
 		
 		

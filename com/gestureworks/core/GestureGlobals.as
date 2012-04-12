@@ -205,39 +205,39 @@ package com.gestureworks.core
 		
 		
 		//  pointList -----------------------------------------------
-		private static var _pointList:Array = [];
+		//private static var _pointList:Array = [];
 		/**
 		 * Returns a pointList. 
 		 */
-		public static function get pointList():Array
+		/*public static function get pointList():Array
 		{
 			return _pointList;
 		}
 		/**
 		 * Sets a pointList.
 		 */
-		gw_public static function set pointList(value:Array):void
+		/*gw_public static function set pointList(value:Array):void
 		{
 			_pointList=value;
-		}
+		}*/
 		
 		
 		//  pointClusterList -----------------------------------------------
-		private static var _pointClusterList:Array = [];
+		//private static var _pointClusterList:Array = [];
 		/**
 		 * Returns a pointClusterList.
 		 */
-		public static function get pointClusterList():Array
+		/*public static function get pointClusterList():Array
 		{
 			return _pointClusterList;
 		}
 		/**
 		 * Sets a pointClusterList.
 		 */
-		gw_public static function set pointClusterList(value:Array):void
+		/*gw_public static function set pointClusterList(value:Array):void
 		{
 			_pointClusterList=value;
-		}
+		}*/
 		
 	}
 }
