@@ -103,8 +103,6 @@ package com.gestureworks.core
 					
 				    // add touch event listener 
 					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true, 0, true); 
-					//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_END, onTouchUp, false,0,true); // bubbles up when nested
 					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 									
 					// Register touchObject with object manager, return object id
@@ -300,55 +298,17 @@ package com.gestureworks.core
 			if (value) mouseChildren = true;
 			else mouseChildren = false;
 		}
-		 
-		/**
-		 * @private
-		 */
-		// allows touchsprite touch listeners to switch between triggering at during capture phase or buble phase
-		private var _capture:Boolean = false;
-		public function get capture():Boolean{return _capture;}
-		public function set capture(value:Boolean):void
-		{
-			_capture = value;
-			
-			/*
-			if (_capture)
-			{
-				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false);
-				//removeEventListener(TouchEvent.TOUCH_END, onTouchUp, false);
-				
-				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true, 0, true);
-				//addEventListener(TouchEvent.TOUCH_END, onTouchUp, true,0,true);
-			}
-			else {
-				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, true);
-				//removeEventListener(TouchEvent.TOUCH_END, onTouchUp, true);
-				
-				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true);
-				//addEventListener(TouchEvent.TOUCH_END, onTouchUp,false, 0,true);
-			}*/
-		}
-		
-		
-		/**
-		 * @private
-		 */
-		// allows touch and gesture events to explicitly target parent touch object
-		private var _targetParent:Boolean = false;
-		public function get targetParent():Boolean{return _targetParent;}
-		public function set targetParent(value:Boolean):void
-		{
-			_targetParent = value;
-		}
 		
 		/**
 		 * @private
 		 */
 		private var _clusterBubbling:Boolean = false;
 		/** 
-		 * ALLOWS TOUCH POINTS FROM CHILD CLUSTERS TO BE COPIED TO INTO THE TOUCH OBJECT
-		 * SO THAT MULTIPLE PARALLEL CLUSTERS CAN FORM FROM A SINGLE TOUCH POINT
-		 * THIS ALLOWS GESTURES TO FORM ON MULTIPLE TOUCH OBJECTS
+		 * Allows touch points from a childclusters to copy into container touch objects
+		 * in the local parent child display list stack. This allows the for the concept of parallel
+		 * clustering of touch point. Where a single touch point can simultaniuosly be a 
+		 * member of multiple touch point clusters. This allows multiple gestures to be 
+		 * dispatched from multiple touch objects from a set of touch points.
 		*/
 		public function get clusterBubbling():Boolean{return _clusterBubbling;}
 		public function set clusterBubbling(value:Boolean):void
@@ -359,10 +319,23 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
+		private var _targetParent:Boolean = false;
+		/**
+		* Allows touch and gesture events to explicitly target the parent touch object
+		**/
+		public function get targetParent():Boolean{return _targetParent;}
+		public function set targetParent(value:Boolean):void
+		{
+			_targetParent = value;
+		}
+		
+		/**
+		 * @private
+		 */
 		private var _targetObject:Object;
 		/** 
-		 * allows touch and gesture events to explicitly target a touch object 
-		 * this can be outside the local parent child stack
+		 * Allows touch and gesture events to explicitly target a touch object 
+		 * this can be outside the local parent child display list stack
 		*/
 		public function get targetObject():Object{return _targetObject;}
 		public function set targetObject(value:Object):void
@@ -375,8 +348,8 @@ package com.gestureworks.core
 		 */
 		private var _targetList:Array = [];
 		/** 
-		* allows touch and gesture events to explicitly target a group of touch objects 
-		* these can be outside of the local parent child stack
+		* Allows touch and gesture events to explicitly target a group of defined 
+		* touch objects which can be outside of the local parent child display list stack
 		*/
 		public function get targetList():Array{return _targetList;}
 		public function set targetList(value:Array):void
@@ -390,7 +363,8 @@ package com.gestureworks.core
 		 */
 		private var _targeting:Boolean = true;
 		/** 
-		* turns off ALL targeting control
+		* Turns off manual ALL targeting control, defaults to a simple hit test
+		* targeting model with exclusive target clustering
 		*/
 		public function get targeting():Boolean{return _targeting;}
 		public function set targeting(value:Boolean):void
@@ -408,18 +382,23 @@ package com.gestureworks.core
 		 * targets or a passed to any touch object in the local display stack.
 		 */
 		 
-		// DETERMINS CLUSTERING
-		// DETERMINS WHICH TOUCH OBJECT OWNS TOUCH POINTS
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
-		
 		public function onTouchDown(event:TouchEvent):void
-		{			
+		{		
+				//////////////////////////////////
+				// ASSUMING HIT TEST IS CORRECT TUIO
+				// 
 				// touch socket 
-				if (GestureWorks.activeTUIO)
-				{
-					assignPoint(event);
-					return;
-				}
+				//if (GestureWorks.activeTUIO)
+				//{
+					//assignPoint(event);
+					//event.stopPropagation();
+					//return;
+				//}
+				
+				trace(event.target,event.stageX,event.localX)
+				
+				
 				// native touch
 				if (GestureWorks.supportsTouch)
 				{
@@ -443,7 +422,7 @@ package com.gestureworks.core
 						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
 						{
 							
-							//ASSIGN THIS AS PRIMARY CLUSTER
+							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
 							assignPoint(event);
 							
 							//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
@@ -471,11 +450,20 @@ package com.gestureworks.core
 						
 					}
 					// SIMPLE TARGETING
-					else assignPoint(event);
+					else 
+					{
+						return
+						//assignPoint(event);
+						//event.stopPropagation();
+					}
+					
 				}
 				// mouse events
-				else assignPoint(event);
-				
+				else {
+					return
+					//assignPoint(event);
+					//event.stopPropagation();
+				}
 				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 		}
 		
@@ -487,7 +475,7 @@ package com.gestureworks.core
 		 /**
 		 * registers assigned touch point globaly and to relevant local clusters 
 		 */
-		public function assignPoint(event:TouchEvent):void // asigns point
+		private function assignPoint(event:TouchEvent):void // asigns point
 		{
 			// create new point object
 			var pointObject:PointObject  = new PointObject();
@@ -500,21 +488,8 @@ package com.gestureworks.core
 					pointObject.event = event;
 					pointObject.id = pointCount;
 					pointObject.touchPointID = event.touchPointID;
-					
-					// set point init position
-					if (GestureWorks.supportsTouch && !GestureWorks.activeTUIO)
-					{
-						//pointObject.point.x = event.stageX;
-						//pointObject.point.y = event.stageY;
-						pointObject.point.x = event.localX;
-						pointObject.point.y = event.localY;
-					}
-					else
-					{
-						pointObject.point.x = event.stageX;
-						pointObject.point.y = event.stageY;
-					}
-				
+					pointObject.point.x = event.stageX;
+					pointObject.point.y = event.stageY;
 
 				_pointArray.push(pointObject);
 				cO.pointArray = _pointArray;
@@ -533,7 +508,7 @@ package com.gestureworks.core
 				//trace("point array length", _pointArray.length);
 		}
 		
-		public function assignPointClone(event:TouchEvent):void // assigns point copy
+		private function assignPointClone(event:TouchEvent):void // assigns point copy
 		{
 				// assign existing point object
 				var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID]

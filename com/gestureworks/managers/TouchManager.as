@@ -65,7 +65,8 @@ package com.gestureworks.managers
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:TouchEvent):void
 		{
-			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject)
 			{
@@ -105,16 +106,19 @@ package com.gestureworks.managers
 			PointHistories.historyQueue(event);
 			
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUC OBJECT CALCULATIONS
-			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject)
 			{
 				// UPDATE POINT POSITIONS
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					pointObject.point.x = event.localX;
-					pointObject.point.y = event.localY;
-					return;
+					//pointObject.point.x = event.localX;
+					//pointObject.point.y = event.localY;
+					pointObject.point.y = event.stageY;
+					pointObject.point.x = event.stageX;
+					//return;
 				}
 				pointObject.point.y = event.stageY;
 				pointObject.point.x = event.stageX;
@@ -136,16 +140,19 @@ package com.gestureworks.managers
 		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
 		public static function updatePointObject(event:TouchEvent):void
 		{
-			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject)
 			{
 				// UPDATE POINT POSITIONS
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					pointObject.point.x = event.localX;
-					pointObject.point.y = event.localY;
-					return;
+					//pointObject.point.x = event.localX;
+					//pointObject.point.y = event.localY;
+					pointObject.point.y = event.stageY;
+					pointObject.point.x = event.stageX;
+					//return;
 				}
 				pointObject.point.y = event.stageY;
 				pointObject.point.x = event.stageX;
@@ -155,7 +162,8 @@ package com.gestureworks.managers
 		//EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////////
 		public static function updateTouchObject(event:TouchEvent):void
 		{
-			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
+			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject)
 			{
