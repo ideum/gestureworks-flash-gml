@@ -26,6 +26,8 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
+	
+	
 		
 	public class gestureDiscrete
 	{
@@ -86,8 +88,8 @@ package com.gestureworks.analysis
 								var lpt:Point = ts.globalToLocal(spt); //local point
 								
 								//trace("dispatch");
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, touchPointID:pointList[i].point.touchPointID} ));
-								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: pointList[i].point.x, y:pointList[i].point.y, touchPointID:pointList[i].point.touchPointID} ));
+//								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, touchPointID:pointList[i].point.touchPointID} ));
+//								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: pointList[i].point.x, y:pointList[i].point.y, touchPointID:pointList[i].point.touchPointID} ));
 								pointList[i].holdMonitorOn = false;
 								pointList[i].holdCount = 0;
 								return;	
@@ -145,8 +147,8 @@ package com.gestureworks.analysis
 								var lpt:Point = ts.globalToLocal(spt); //local point
 								
 								//trace("tap",j, touch_event.touchPointID);
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x:touch_event.stageX, y:touch_event.stageY,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
-								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+//								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x:touch_event.stageX, y:touch_event.stageY,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
+//								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 							}
 						}
 				}
@@ -181,8 +183,8 @@ package com.gestureworks.analysis
 											
 										//if((distX<rad)&&(distY<rad)) trace("double tap", i, j, touch_event.touchPointID, distX, distY);
 										//trace("double tap", i, j, touch_event.touchPointID);
-										ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX , y:touch_event.stageY, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
-										if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+//										ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX , y:touch_event.stageY, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
+//										if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 									}
 								}
 						}
@@ -222,8 +224,8 @@ package com.gestureworks.analysis
 					if (tap_count == 2)
 					{ 
 						//trace("triple tap", i, j, touch_event.touchPointID, distX, distY);
-						ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageX, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
-						if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+//						ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageX, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
+//						if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
 					}
 		}
 		

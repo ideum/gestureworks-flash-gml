@@ -25,6 +25,8 @@ package com.gestureworks.utils
 	import com.gestureworks.utils.Yolotzin;
 	import com.gestureworks.core.GML;
 	
+	import com.gestureworks.events.GWGestureEvent;
+	
 	public class GestureParser //extends Sprite
 	{
 		public var gO:GestureObject;
@@ -52,6 +54,8 @@ package com.gestureworks.utils
 			
 			// version
 			//var Y:int = Yolotzin.mode;
+			
+			GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
 			
 			gO = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);
