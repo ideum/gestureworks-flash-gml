@@ -27,8 +27,7 @@ package com.gestureworks.core
 	import flash.utils.setInterval;
 	import flash.utils.clearInterval;
 	import com.gestureworks.utils.Simulator;
-	//import com.gestureworks.utils.TUIO;
-	import com.gestureworks.tuio.TuioLink;
+	import com.gestureworks.tuio.TUIO;
 	
 	/* 
 		
@@ -102,7 +101,7 @@ package com.gestureworks.core
 		{
 			if (tuio == value) return;
 			_tuio = value;
-			TuioLink.initialize(stage);
+			TUIO.initialize();
 		}
 					
 		private function init(e:Event = null):void 

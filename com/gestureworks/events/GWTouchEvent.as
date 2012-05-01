@@ -19,7 +19,7 @@ package com.gestureworks.events
 	import flash.display.InteractiveObject;
 	import flash.events.TouchEvent;
 
-	public class GWTouchEvent extends Event
+	public class GWTouchEvent extends TouchEvent
 	{
 		public static const TOUCH_BEGIN : String = "touchBegin";
 		public static const TOUCH_END : String = "touchEnd"

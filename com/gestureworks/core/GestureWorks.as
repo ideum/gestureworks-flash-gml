@@ -22,7 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.ModeManager;
 	import com.gestureworks.utils.Simulator;
 	//import com.gestureworks.utils.TUIO;
-	import com.gestureworks.tuio.TuioLink;
+	import com.gestureworks.tuio.TUIO;
 	import com.gestureworks.core.CML;
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
@@ -207,7 +207,7 @@ package com.gestureworks.core
 			CML.Objects = CMLLoader.settings;
 			key = CMLLoader.settings.@key;
 			if (CML.Objects.@simulator == "true") Simulator.initialize();
-			if (CML.Objects.@tuio == "true") TuioLink.initialize(stage);
+			if (CML.Objects.@tuio == "true") TUIO.initialize();
 			startGmlParse();
 		}
 		

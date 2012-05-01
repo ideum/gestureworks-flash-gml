@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
@@ -383,7 +384,7 @@ package com.gestureworks.core
 		 */
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
-		public function onTouchDown(event:TouchEvent):void
+		public function onTouchDown(event:TouchEvent, target:*=null):void
 		{		
 				//////////////////////////////////
 				// ASSUMING HIT TEST IS CORRECT TUIO
@@ -396,19 +397,33 @@ package com.gestureworks.core
 					//return;
 				//}
 				
-				trace(event.target,event.stageX,event.localX)
+								
+				if (!target)
+					target = event.target;
+				if (!target)
+					return;
+				
+					
+					
+				
+				var parent:* = target.parent;					
+				trace("target: ", target, "parent: ", target.parent);
+					
+				
+				
+				
+				//trace(event.target, event.stageX, event.localX);
 				
 				
 				// native touch
-				if (GestureWorks.supportsTouch)
+				if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					
 					if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
-							if ((event.target.parent is TouchSprite) || (event.target.parent is TouchMovieClip)) 
+							if ((target is TouchSprite) || (target is TouchMovieClip)) 
 							{
 								//ASSIGN PRIMARY CLUSTER TO PARENT
-								event.target.parent.assignPoint(event);
+								parent.assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							}
 						}

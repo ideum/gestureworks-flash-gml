@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  IDEUM
+//  Ideum
 //  Copyright 2011-2012 Ideum
 //  All Rights Reserved.
 //
@@ -19,6 +19,12 @@ package com.gestureworks.tuio
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.TouchEvent;
+	import org.tuio.connectors.UDPConnector;
+	import org.tuio.osc.OSCEvent;
+	import org.tuio.TuioClient;
+	import org.tuio.TuioManager;
+	import org.tuio.debug.TuioDebug;
+	import org.tuio.TuioEvent;
 	import flash.ui.*;
 	import com.gestureworks.core.DisplayList;
 	
@@ -26,6 +32,7 @@ package com.gestureworks.tuio
 	
 	public class TUIOManager extends Sprite
 	{
+		private var udpConnector:UDPConnector;
 		
 		public function TUIOManager() 
 		{
@@ -37,7 +44,43 @@ package com.gestureworks.tuio
 		
 		private function init(event:Event = null):void 
 		{			
+			Multitouch.inputMode = MultitouchInputMode.NONE;			
+			udpConnector = new UDPConnector();
+			var tc:TuioClient = new TuioClient(udpConnector);
+			var tm:TuioManager = TuioManager.init(stage);
+			tc.addListener(tm);
+			//tc.addListener(TuioDebug.init(stage))
+			tm.addEventListener(TuioEvent.ADD, pointAddedHandler);
+			tm.addEventListener(TuioEvent.UPDATE, pointUpdatedHandler);
+			tm.addEventListener(TuioEvent.REMOVE, pointRemovedHandler);
 		}
 		
+		private function pointAddedHandler(e:TuioEvent):void
+		{
+			var object:Object = new Object();
+			object.touchPointID = e.tuioContainer.sessionID;
+			object.x = e.tuioContainer.x * stage.stageWidth;
+			object.y = e.tuioContainer.y * stage.stageHeight;
+			
+			SocketTouchManager.add(object);
+		}
+		
+		private function pointUpdatedHandler(e:TuioEvent):void
+		{			
+			var object:Object = new Object();
+			object.touchPointID = e.tuioContainer.sessionID;
+			object.x = e.tuioContainer.x * stage.stageWidth;
+			object.y = e.tuioContainer.y * stage.stageHeight;
+			SocketTouchManager.update(object);
+		}
+		
+		private function pointRemovedHandler(e:TuioEvent):void
+		{			
+			var object:Object = new Object();
+			object.touchPointID = e.tuioContainer.sessionID;
+			object.x = e.tuioContainer.x * stage.stageWidth;
+			object.y = e.tuioContainer.y * stage.stageHeight;
+			SocketTouchManager.remove(object);
+		}
 	}
 }
