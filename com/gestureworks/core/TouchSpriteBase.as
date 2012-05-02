@@ -403,17 +403,9 @@ package com.gestureworks.core
 				if (!target)
 					return;
 				
-					
-					
-				
-				var parent:* = target.parent;					
-				trace("target: ", target, "parent: ", target.parent);
-					
-				
-				
+				var parent:* = target.parent;										
 				
 				//trace(event.target, event.stageX, event.localX);
-				
 				
 				// native touch
 				if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)

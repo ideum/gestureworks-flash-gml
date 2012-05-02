@@ -101,7 +101,7 @@ package com.gestureworks.core
 		{
 			if (tuio == value) return;
 			_tuio = value;
-			TUIO.initialize();
+			if (_tuio) TUIO.initialize();
 		}
 					
 		private function init(e:Event = null):void 
@@ -130,7 +130,6 @@ package com.gestureworks.core
 		private function timerComplete():void
 		{
 			clearInterval(timeInterval);
-			
 			create();
 		}
 		

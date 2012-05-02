@@ -21,7 +21,6 @@ package com.gestureworks.core
 	import com.gestureworks.utils.GMLParser;
 	import com.gestureworks.managers.ModeManager;
 	import com.gestureworks.utils.Simulator;
-	//import com.gestureworks.utils.TUIO;
 	import com.gestureworks.tuio.TUIO;
 	import com.gestureworks.core.CML;
 	import com.gestureworks.utils.Yolotzin;

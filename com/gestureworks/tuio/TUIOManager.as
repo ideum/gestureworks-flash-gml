@@ -60,7 +60,7 @@ package com.gestureworks.tuio
 			}
 			catch (e:Error)
 			{
-				throw new Error("TUIO is currently only supported with AIR, if you are trying to utilize TUIO, please make sure that you have included this statement into your Main Document class:  ' import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR; '. ");
+				throw new Error("TUIO is currently only supported in AIR, if you are trying to utilize TUIO, please make sure that you have included this statement into your Main Document class:  ' import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR; '. ");
 			}
 			
 		}
