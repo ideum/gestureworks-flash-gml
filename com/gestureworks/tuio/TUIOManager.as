@@ -67,7 +67,6 @@ package com.gestureworks.tuio
 			
 		private function init(event:Event = null):void 
 		{
-			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			

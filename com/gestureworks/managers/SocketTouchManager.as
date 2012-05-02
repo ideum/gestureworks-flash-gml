@@ -25,13 +25,10 @@ package com.gestureworks.managers
 	{		
 		public static function add(object:Object):void
 		{
-			trace("add");
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, object.touchPointID, false, object.x, object.y);			
 			var hitObject:DisplayObject = HitTestManager.instance.hitTest(GestureWorks.application, object.x, object.y);
 			if (hitObject && hitObject is TouchSprite)
-			{	
 				TouchSprite(hitObject).onTouchDown(event, hitObject);			
-			}
 		}
 		
 		public static function update(object:Object):void
