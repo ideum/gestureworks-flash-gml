@@ -55,7 +55,7 @@ package com.gestureworks.utils
 			// version
 			//var Y:int = Yolotzin.mode;
 			
-			GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
+			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
 			
 			gO = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);
