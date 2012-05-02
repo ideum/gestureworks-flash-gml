@@ -45,6 +45,7 @@ package com.gestureworks.events
 				DOUBLE_TAP:"double_tap",
 				TRIPLE_TAP:"triple_tap"
 			};
+			
 		
 		//public static var vars:Object { };
 		//trace("test", GestureGlobalVariables.GE.HOLD, GestureGlobalVariables.GE["hold"]);

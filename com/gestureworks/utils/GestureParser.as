@@ -22,7 +22,7 @@ package com.gestureworks.utils
 	import com.gestureworks.objects.GesturePropertyObject;
 	import com.gestureworks.objects.GestureObject;
 	
-	import com.gestureworks.utils.Yolotzin;
+	//import com.gestureworks.utils.Yolotzin;
 	import com.gestureworks.core.GML;
 	
 	import com.gestureworks.events.GWGestureEvent;

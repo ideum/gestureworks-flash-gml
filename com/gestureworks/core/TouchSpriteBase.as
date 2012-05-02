@@ -147,13 +147,13 @@ package com.gestureworks.core
 						GestureGlobals.gw_public::transforms[_touchObjectID] = trO;
 						
 						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW TIMLINE OBJECT 
+						// CREATES A NEW TIMELINE OBJECT 
 						// CONTAINS A HISTORY OF ALL TOUCH EVENTS, CLUSTER EVENTS, GESTURE EVENTS 
 						// AND TRANSFORM EVENTS THAT OCCUR ON THE TOUCHSPRITE
 						/////////////////////////////////////////////////////////////////////////
 						tiO = new TimelineObject();
 							tiO.id = touchObjectID;
-							tiO.timelineOn = false; // activates timlein manager
+							tiO.timelineOn = false; // activates timline manager
 							tiO.pointEvents = false; // pushes point events into timline
 							tiO.clusterEvents = false; // pushes cluster events into timeline
 							tiO.gestureEvents = false; // pushes gesture events into timleine
@@ -397,14 +397,25 @@ package com.gestureworks.core
 					//return;
 				//}
 				
-								
+				//////////////////
+				// new stuff
+				//////////////////
 				if (!target)
 					target = event.target;
 				if (!target)
 					return;
-				
+				//////////////////
 				var parent:* = target.parent;										
 				
+<<<<<<< .mine
+				var parent:* = target.parent;					
+				//trace("target: ", target, "parent: ", target.parent);
+					
+				
+				
+				
+=======
+>>>>>>> .r875
 				//trace(event.target, event.stageX, event.localX);
 				
 				// native touch

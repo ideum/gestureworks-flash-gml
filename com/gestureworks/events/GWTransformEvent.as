@@ -31,8 +31,9 @@ package com.gestureworks.events
 		public static var T_COMPLETE:String = "t comlpete";
 		public static var T_START:String = "t start";
 		
-		//public static var T_3D_ROTATE_X:String = "t 3d rotate x";
-		//public static var T_3D_ROTATE_Y:String = "t 3d rotate y";
+		//public static var T_ROTATE_X:String = "t 3d rotate x";
+		//public static var T_ROTATE_Y:String = "t 3d rotate y";
+		//public static var T_ROTATE_Z:String = "t 3d rotate z";
 		
 		
 
