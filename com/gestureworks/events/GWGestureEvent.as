@@ -74,28 +74,13 @@ package com.gestureworks.events
 		//public static var EXIT:String = "exit";
 		//public static var HOME:String = "home";
 		
-		
-		/*
+	
 		public static var CUSTOM:Object = 
 			{
-				GESTURELIST_UPDATE:"gesturelist update",
-				START:"start",
-				COMPLETE:"comlpete",
-				RELEASE:"release",
-				DRAG:"drag",
-				ROTATE:"rotate",
-				SCALE:"scale",
-				SCROLL:"scroll",
-				FLICK:"flick",
-				PIVOT:"pivot",
-				TILT:"tilt",
-				ORIENT:"orient",
-				HOLD:"hold",
-				TAP:"tap",
-				DOUBLE_TAP:"double_tap",
-				TRIPLE_TAP:"triple_tap"
+				SEED_GESTURE:"seed gesture",
+				EXAMPLE_GESTURE:"example gesture"
 			};
-		*/	
+	
 		
 		//public static var vars:Object { };
 		//trace("test", GestureGlobalVariables.GE.HOLD, GestureGlobalVariables.GE["hold"]);
