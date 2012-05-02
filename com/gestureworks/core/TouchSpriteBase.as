@@ -406,16 +406,8 @@ package com.gestureworks.core
 					return;
 				//////////////////
 				var parent:* = target.parent;										
-				
-<<<<<<< .mine
-				var parent:* = target.parent;					
-				//trace("target: ", target, "parent: ", target.parent);
-					
-				
-				
-				
-=======
->>>>>>> .r875
+						
+				//trace("target: ", target, "parent: ", target.parent)
 				//trace(event.target, event.stageX, event.localX);
 				
 				// native touch
