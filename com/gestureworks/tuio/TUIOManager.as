@@ -67,11 +67,12 @@ package com.gestureworks.tuio
 			
 		private function init(event:Event = null):void 
 		{
-			//TODO - auto-calibrate
-			/*
+			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
+			//TODO - auto-calibrate
+			/*
 			screenW = stage.fullScreenWidth;
 			screenH = stage.fullScreenHeight;
 			
