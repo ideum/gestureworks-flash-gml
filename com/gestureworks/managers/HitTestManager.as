@@ -11,7 +11,7 @@ package com.gestureworks.managers
 	
 	public class HitTestManager extends EventDispatcher
 	{
-		private var debug:Boolean = true;
+		private var debug:Boolean = false;
 		
 		public function HitTestManager(enforcer:SingletonEnforcer) {}
 		
@@ -42,20 +42,17 @@ package com.gestureworks.managers
 							
 					if (child is TouchSprite && !(child["mouseChildren"] || child["touchChildren"]) && child.hitTestPoint(hitX, hitY))
 					{
-						trace("touchsprite");
 						hitObject = child;
 						return;
 					}
 					else if (child.hasEventListener(MouseEvent.MOUSE_DOWN) && child.hitTestPoint(hitX, hitY))
 					{
-						trace("mouse");
 						hitObject = child;
 						hitObject.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false));
 						return;
 					}
 					else if (child.hasEventListener(TouchEvent.TOUCH_BEGIN) && child.hitTestPoint(hitX, hitY))
 					{
-						trace("touch");
 						hitObject = child;
 						hitObject.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false));
 						return;

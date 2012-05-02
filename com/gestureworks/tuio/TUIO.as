@@ -20,25 +20,20 @@ package com.gestureworks.tuio
 	import flash.system.*;
 	import flash.utils.*;
 	
+	import com.gestureworks.tuio.TUIOManager;
+	
 	public class TUIO 
 	{		
 		public static function initialize():void
-		{
-			if ( Capabilities.playerType != "Desktop") return;
-			
+		{			
+			if ( Capabilities.playerType != "Desktop") return;	
 			var tuioString:String = CML.Objects.@tuio;
-			
 			if (tuioString == "") return;
-			
-			var tuioManager:*;
-			var TuioManagerClass:Class = getDefinitionByName("com.gestureworks.tuio.TUIOManager") as Class;
-			tuioManager = new TuioManagerClass;
-			
+			var tuioManager:TUIOManager = new TUIOManager;
 			var tuio:Boolean = tuioString == "true" ? true : false;
 			GestureWorks.application.addChild(tuioManager);
 			GestureWorks.activeTUIO = tuio;
-			if (tuio) 
-				trace("tuio is active \n & if your OS supports Native touch, please inactivate touch support in your control panel.");
+			if (tuio) trace("tuio is active \n & if your OS supports Native touch, please inactivate touch support in your control panel.");
 		}	
 	}
 }
