@@ -47,22 +47,22 @@ package com.gestureworks.events
 		public static var TRIPLE_TAP:String = "triple_tap";
 		
 		
-		//public static var ANCHOR:String = "anchor";
-		//public static var ANCHOR_TAP:String = "anchor";
-		//public static var ANCHOR_ROTATE:String = "anchor";
-		//public static var ANCHOR_SCALE:String = "anchor";
-		//public static var ANCHOR_FLICK:String = "anchor";
-				
-		//public static var PULSE:String = "pulse";
-		//public static var FLEX:String = "flex";
-		//public static var REPEL:String = "repel";
-		//public static var ATTRACT:String = "attract";
-
 		//public static var STROKE_LETTER:String = "letter";
 		//public static var STROKE_GREEK:String = "greek";
 		//public static var STROKE_SYMBOL:String = "symbol";
 		//public static var STROKE_SHAPE:String = "shape";
 		//public static var STROKE_NUMBER:String = "number";
+		
+		//public static var ANCHOR:String = "anchor";
+		//public static var ANCHOR_TAP:String = "anchor";
+		//public static var ANCHOR_ROTATE:String = "anchor";
+		//public static var ANCHOR_SCALE:String = "anchor";
+		//public static var ANCHOR_FLICK:String = "anchor";
+		
+		//public static var PULSE:String = "pulse";
+		//public static var FLEX:String = "flex";
+		//public static var REPEL:String = "repel";
+		//public static var ATTRACT:String = "attract";
 
 		//public static var BROADCAST:String = "broadcast";
 		//public static var CUT:String = "cut";
