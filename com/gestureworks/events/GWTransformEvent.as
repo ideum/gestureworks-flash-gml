@@ -28,7 +28,7 @@ package com.gestureworks.events
 		public static var T_TRANSFORM:String = "t transform";
 		public static var T_RESIZE:String = "t resize";
 		
-		public static var T_COMPLETE:String = "t comlpete";
+		public static var T_COMPLETE:String = "t complete";
 		public static var T_START:String = "t start";
 		
 		//public static var T_ROTATE_X:String = "t 3d rotate x";
