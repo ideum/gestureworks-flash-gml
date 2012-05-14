@@ -1,5 +1,10 @@
 ﻿package com.gestureworks.events
 {
+	
+    public class GestureVariables 
+    {
+	
+	}
 /*
 public static var GESTURELIST_UPDATE:String = "gesturelist update";
 public static var START:String = "start";

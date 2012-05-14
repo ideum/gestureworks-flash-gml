@@ -17,13 +17,10 @@ package com.gestureworks.events
 {
 	import flash.events.Event;
 	import com.gestureworks.core.GestureGlobals;
-	//import com.gestureworks.events.GestureGlobalVariables;
 
 	public class GWGestureEvent extends Event
 	{
 		public var value:Object;
-
-		//include "GestureVariables.as"
 		
 		
 		public static var GESTURELIST_UPDATE:String = "gesturelist update";
