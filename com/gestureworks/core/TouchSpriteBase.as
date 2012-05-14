@@ -281,8 +281,7 @@ package com.gestureworks.core
 		 */
 		private function onMouseDown(e:MouseEvent):void
 		{			
-			var pointID:int = MousePoint.getID();
-			
+			var pointID:int = MousePoint.getID();			
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
 			onTouchDown(event);
 		}
@@ -385,7 +384,7 @@ package com.gestureworks.core
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent, target:*=null):void
-		{		
+		{			
 				//////////////////////////////////
 				// ASSUMING HIT TEST IS CORRECT TUIO
 				// 
@@ -397,16 +396,20 @@ package com.gestureworks.core
 					//return;
 				//}
 				
+			
 				//////////////////
 				// new stuff
 				//////////////////
+				
+				// if target gets passed it takes precendence, otherwise try to find it
+				// currently target gests passed in as argument for our global hit test 
 				if (!target)
-					target = event.target;
+					target = event.target; // object that got hit, used for our non-tuio gesture events
 				if (!target)
-					return;
-				//////////////////
+					target = this; // itself, used for mouse simulation
+				
 				var parent:* = target.parent;										
-						
+					
 				//trace("target: ", target, "parent: ", target.parent)
 				//trace(event.target, event.stageX, event.localX);
 				
@@ -463,16 +466,19 @@ package com.gestureworks.core
 					else 
 					{
 						return
-						//assignPoint(event);
+						assignPoint(event);
 						//event.stopPropagation();
 					}
 					
 				}
 				// mouse events
 				else {
-					return
-					//assignPoint(event);
-					//event.stopPropagation();
+					// took return out for simlator event to work
+					//return					
+					
+					//uncommented for simuluator
+					assignPoint(event);
+					event.stopPropagation();
 				}
 				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 		}

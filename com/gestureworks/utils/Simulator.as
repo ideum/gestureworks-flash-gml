@@ -21,7 +21,7 @@ package com.gestureworks.utils
 	public class Simulator 
 	{		
 		public static function initialize(simulator:Boolean = false):void
-		{
+		{			
 			if (GestureWorks.hasCML) 
 			{
 				var simString:String = CML.Objects.@simulator;
