@@ -412,22 +412,20 @@ package com.gestureworks.core
 				var parent:* = target.parent;										
 			
 				
-				trace("target: ", target.id, "parent: ", target.parent)
+				//trace("target: ", target.id, "parent: ", target.parent)
 				//trace(event.target, event.stageX, event.localX);
 				
-				// native touch
 				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
+				// There is one conditional check for the simalutor within the nested conditions (2 == event.eventPhase)
+				// -Charles (5/16/2012)
 				
-				// update: replaced the first condition (above) so everything gets put through these conditions.
-				// there is one conditional check for the simalutor (2 == event.eventPhase)
 				if (1)
 				{
 					if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
 							if ((target is TouchSprite) || (target is TouchMovieClip)) 
-							{
-								trace("1");
-								
+							{								
 								//ASSIGN PRIMARY CLUSTER TO PARENT
 								parent.assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
@@ -436,16 +434,11 @@ package com.gestureworks.core
 						else if ((_targetObject is TouchSprite)||(_targetObject is TouchMovieClip))
 						{							
 							// ASSIGN PRIMARY CLUSTER TO TARGET
-							_targetObject.assignPoint(event);
-							
-							trace("2");
-							
+							_targetObject.assignPoint(event);							
 						}
 						
 						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
-						{
-							trace("3");
-							
+						{							
 							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
 							assignPoint(event);
 							
@@ -457,25 +450,17 @@ package com.gestureworks.core
 						}
 						
 						else if (_clusterBubbling)
-						{
-							trace("4");
-							
+						{							
 							if (3 == event.eventPhase){ // bubling phase
-								trace("4.a");
 								assignPointClone(event);
 							}
 							else if (2 == event.eventPhase) { //targeting phase
-								trace("4.b");
 								assignPoint(event);
 							 }
 						}
-						else {
-							
-							trace("5");
-														
+						else {														
 							if (2 == event.eventPhase && !Simulator.on) { //targeting phase
 								assignPoint(event);
-								trace("5.a");
 								//event.stopPropagation(); // allows touch down and tap
 							 }
 						}
@@ -492,7 +477,7 @@ package com.gestureworks.core
 				}
 				// mouse events
 				else {
-					//return										
+					return										
 					//assignPoint(event);
 					//event.stopPropagation();
 				}
