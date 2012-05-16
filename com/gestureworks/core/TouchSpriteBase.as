@@ -402,15 +402,16 @@ package com.gestureworks.core
 				//////////////////
 				
 				// if target gets passed it takes precendence, otherwise try to find it
-				// currently target gests passed in as argument for our global hit test 
+				// currently target gets passed in as argument for our global hit test 
 				if (!target)
 					target = event.target; // object that got hit, used for our non-tuio gesture events
 				if (!target)
 					target = this; // itself, used for mouse simulation
 				
 				var parent:* = target.parent;										
-					
-				//trace("target: ", target, "parent: ", target.parent)
+			
+				
+				trace("target: ", target.id, "parent: ", target.parent)
 				//trace(event.target, event.stageX, event.localX);
 				
 				// native touch
@@ -420,20 +421,25 @@ package com.gestureworks.core
 						if (targetParent) { //LEGACY SUPPORT
 							if ((target is TouchSprite) || (target is TouchMovieClip)) 
 							{
+								trace("1");
+								
 								//ASSIGN PRIMARY CLUSTER TO PARENT
 								parent.assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							}
 						}
 						else if ((_targetObject is TouchSprite)||(_targetObject is TouchMovieClip))
-						{
+						{							
 							// ASSIGN PRIMARY CLUSTER TO TARGET
 							_targetObject.assignPoint(event);
+							
+							trace("2");
 							
 						}
 						
 						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
 						{
+							trace("3");
 							
 							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
 							assignPoint(event);
@@ -447,6 +453,8 @@ package com.gestureworks.core
 						
 						else if (_clusterBubbling)
 						{
+							trace("4");
+							
 							if (3 == event.eventPhase){ // bubling phase
 								assignPointClone(event);
 							}
@@ -455,6 +463,9 @@ package com.gestureworks.core
 							 }
 						}
 						else {
+							
+							trace("5");
+							
 							if (2 == event.eventPhase) { //targeting phase
 								assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
