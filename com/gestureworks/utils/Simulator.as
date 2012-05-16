@@ -30,7 +30,16 @@ package com.gestureworks.utils
 						
 			GestureWorks.supportsTouch = !simulator;
 			
-			if (!GestureWorks.supportsTouch) trace("simulator is on");
+			if (!GestureWorks.supportsTouch) {
+				trace("simulator is on");
+				Simulator.on = true;
+			}
 		}
+		
+		
+		// Added this property, to do conditional checks in TouchSpriteBase
+		// - Charles (5/16/2012)
+		public static var on:Boolean = false;
+		
 	}
 }

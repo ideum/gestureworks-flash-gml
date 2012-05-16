@@ -45,6 +45,7 @@ package com.gestureworks.core
 	
 	import com.gestureworks.events.GWGestureEvent;
 	
+	import com.gestureworks.utils.Simulator;
 	
 	/**
 	 * The TouchSpriteBase class is the base class for all touch and gestures enabled
@@ -415,7 +416,11 @@ package com.gestureworks.core
 				//trace(event.target, event.stageX, event.localX);
 				
 				// native touch
-				if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				
+				// update: replaced the first condition (above) so everything gets put through these conditions.
+				// there is one conditional check for the simalutor (2 == event.eventPhase)
+				if (1)
 				{
 					if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
@@ -456,18 +461,21 @@ package com.gestureworks.core
 							trace("4");
 							
 							if (3 == event.eventPhase){ // bubling phase
+								trace("4.a");
 								assignPointClone(event);
 							}
 							else if (2 == event.eventPhase) { //targeting phase
+								trace("4.b");
 								assignPoint(event);
 							 }
 						}
 						else {
 							
 							trace("5");
-							
-							if (2 == event.eventPhase) { //targeting phase
+														
+							if (2 == event.eventPhase && !Simulator.on) { //targeting phase
 								assignPoint(event);
+								trace("5.a");
 								//event.stopPropagation(); // allows touch down and tap
 							 }
 						}
@@ -484,12 +492,9 @@ package com.gestureworks.core
 				}
 				// mouse events
 				else {
-					// took return out for simlator event to work
-					//return					
-					
-					//uncommented for simuluator
-					assignPoint(event);
-					event.stopPropagation();
+					//return										
+					//assignPoint(event);
+					//event.stopPropagation();
 				}
 				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 		}
@@ -532,7 +537,7 @@ package com.gestureworks.core
 				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 				else MouseManager.gw_public::registerMousePoint(event);
 
-				//trace("point array length", _pointArray.length);
+				trace("point array length", _pointArray.length);
 		}
 		
 		private function assignPointClone(event:TouchEvent):void // assigns point copy
