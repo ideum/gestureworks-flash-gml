@@ -25,6 +25,7 @@ package com.gestureworks.tuio
 	import org.tuio.TuioManager;
 	import org.tuio.debug.TuioDebug;
 	import org.tuio.TuioEvent;
+	import org.tuio.adapters.*;
 	import flash.ui.*;
 	import flash.display.*
 	import flash.utils.*;
@@ -87,6 +88,15 @@ package com.gestureworks.tuio
 			Multitouch.inputMode = MultitouchInputMode.NONE;			
 			var tc:TuioClient = new TuioClient(udpConnector);
 			var tm:TuioManager = TuioManager.init(stage);
+			
+			var mta:MouseTuioAdapter = new MouseTuioAdapter(stage);
+			var tm:TuioManager = TuioManager.init(stage);
+			var tDbg:TuioDebug = TuioDebug.init(stage);
+ 
+			mta.addListener(tm);
+			mta.addListener(tDbg);
+			
+			
 			tc.addListener(tm);
 			tc.addListener(TuioDebug.init(stage))
 			tm.addEventListener(TuioEvent.ADD, pointAddedHandler);
