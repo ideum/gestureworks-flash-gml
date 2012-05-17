@@ -89,13 +89,9 @@ package com.gestureworks.tuio
 			var tc:TuioClient = new TuioClient(udpConnector);
 			var tm:TuioManager = TuioManager.init(stage);
 			
-			var mta:MouseTuioAdapter = new MouseTuioAdapter(stage);
-			var tm:TuioManager = TuioManager.init(stage);
-			var tDbg:TuioDebug = TuioDebug.init(stage);
- 
-			mta.addListener(tm);
-			mta.addListener(tDbg);
-			
+			//var mta:MouseTuioAdapter = new MouseTuioAdapter(stage);
+			//var tDbg:TuioDebug = TuioDebug.init(stage);
+			//mta.addListener(tDbg);
 			
 			tc.addListener(tm);
 			tc.addListener(TuioDebug.init(stage))
