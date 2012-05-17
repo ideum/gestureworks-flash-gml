@@ -36,7 +36,6 @@ package com.gestureworks.utils
 			}
 		}
 		
-		
 		// Added this property, to do conditional checks in TouchSpriteBase
 		// Currently, this is actually the same as GestureWorks.supportsTouch, but adding this seems to be more clear
 		// - Charles (5/16/2012)
