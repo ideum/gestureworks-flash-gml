@@ -417,7 +417,7 @@ package com.gestureworks.core
 				
 				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
-				// There is one conditional check for the simalutor within the nested conditions (2 == event.eventPhase)
+				// There is one conditional check for the simulator within the nested conditions (2 == event.eventPhase)
 				// -Charles (5/16/2012)
 				
 				if (1)
@@ -522,7 +522,7 @@ package com.gestureworks.core
 				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 				else MouseManager.gw_public::registerMousePoint(event);
 
-				trace("point array length", _pointArray.length);
+				//trace("point array length", _pointArray.length);
 		}
 		
 		private function assignPointClone(event:TouchEvent):void // assigns point copy
