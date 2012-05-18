@@ -136,6 +136,8 @@ package com.gestureworks.core
 			super();
 			
 			if (cmlSettingsPath) settingsPath = cmlSettingsPath;
+			
+			if (!supportsTouch) simulator = true;
 		}
 		
 		/**
