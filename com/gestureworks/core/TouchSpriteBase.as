@@ -261,7 +261,7 @@ package com.gestureworks.core
 			
 			
 			//////////////////////////////////////////////////////////////////////////
-			// makes sure that if gesture list chnages timeline gesture int is reset
+			// makes sure that if gesture list changes timeline gesture int is reset
 			/////////////////////////////////////////////////////////////////////////
 			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 			
@@ -386,17 +386,7 @@ package com.gestureworks.core
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent, target:*=null):void
 		{			
-				//////////////////////////////////
-				// ASSUMING HIT TEST IS CORRECT TUIO
-				// 
-				// touch socket 
-				//if (GestureWorks.activeTUIO)
-				//{
-					//assignPoint(event);
-					//event.stopPropagation();
-					//return;
-				//}
-				
+				//trace("touchBegin");
 			
 				//////////////////
 				// new stuff
@@ -409,19 +399,21 @@ package com.gestureworks.core
 				if (!target)
 					target = this; 
 				
+				
 				var parent:* = target.parent;										
 			
 				
 				//trace("target: ", target.id, "parent: ", target.parent)
 				//trace(event.target, event.stageX, event.localX);
+				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 				
-				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				///////////////
+				// native touch
+				///////////////
+				if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
 				// -Charles (5/16/2012)
-				
-				if (1)
 				{					
-					if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
 							if ((target is TouchSprite) || (target is TouchMovieClip)) 
 							{								
@@ -463,25 +455,15 @@ package com.gestureworks.core
 								assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							 }
-						}
-						
-					}
-					// SIMPLE TARGETING
-					else 
-					{
-						return
-						assignPoint(event);
-						//event.stopPropagation();
-					}
-					
+						}	
 				}
+				////////////////
 				// mouse events
+				////////////////
 				else {
+					assignPoint(event);
 					return										
-					//assignPoint(event);
-					//event.stopPropagation();
 				}
-				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 		}
 		
 
@@ -523,6 +505,7 @@ package com.gestureworks.core
 				else MouseManager.gw_public::registerMousePoint(event);
 
 				//trace("point array length", _pointArray.length);
+				
 		}
 		
 		private function assignPointClone(event:TouchEvent):void // assigns point copy
