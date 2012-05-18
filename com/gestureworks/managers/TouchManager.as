@@ -65,6 +65,7 @@ package com.gestureworks.managers
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:TouchEvent):void
 		{
+			//trace("TouchEnd manager")
 			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
 			var pointObject:Object = points[event.touchPointID];
 			
@@ -73,13 +74,17 @@ package com.gestureworks.managers
 				// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
 				for (var j:int = 0; j < pointObject.objectList.length; j++)
 				{
+					//trace("updating targets");
 					var tO:Object = pointObject.objectList[j];
 					
 					// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
-					if((tO.tiO.timelineOn)&&(tO.tiO.pointEvents)) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
+					//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
+					tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
 					//UPDATE DEBUG DISPLAY // clear local debug display
 					if ((tO.debug_display) && (tO.cO)) tO.clearDebugDisplay(); // clear display
-				
+					
+					// analyze for taps
+					tO.onTouchEnd(event);
 					
 					// REMOVE POINT FROM LOCAL LIST
 					tO.pointArray.splice(pointObject.id, 1);
