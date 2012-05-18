@@ -44,6 +44,8 @@ package com.gestureworks.core
 	
 	import com.gestureworks.events.GWGestureEvent;
 	
+	import com.gestureworks.utils.Simulator;
+	
 	/**
 	 * The TouchMovieClipBase class is the base class for all touch and gestures enabled
 	 * MovieClips that require additional display list management. 
@@ -262,10 +264,9 @@ package com.gestureworks.core
 		 */
 		private function onMouseDown(e:MouseEvent):void
 		{			
-			var pointID:int = MousePoint.getID();
-			
+			var pointID:int = MousePoint.getID();			
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
-			onTouchDown(event);
+			onTouchDown(event, e.target);
 		}
 		
 		/**
@@ -368,36 +369,68 @@ package com.gestureworks.core
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent):void
 		{			
+		/**
+		 * decides how to assign the captured touch point to a cluster
+		 * can pass to parent, an explicit target, an explicit list or 
+		 * targets or a passed to any touch object in the local display stack.
+		 */
+		 
+		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
+		public function onTouchDown(event:TouchEvent, target:*=null):void
+		{			
+				//////////////////////////////////
+				// ASSUMING HIT TEST IS CORRECT TUIO
+				// 
 				// touch socket 
-				if (GestureWorks.activeTUIO)
+				//if (GestureWorks.activeTUIO)
+				//{
+					//assignPoint(event);
+					//event.stopPropagation();
+					//return;
+				//}
+				
+			
+				//////////////////
+				// new stuff
+				//////////////////
+				
+				// if target gets passed it takes precendence, otherwise try to find it
+				// currently target gets passed in as argument for our global hit test 
+				if (!target)
+					target = event.target; // object that got hit, used for our non-tuio gesture events
+				if (!target)
+					target = this; // itself, used for mouse simulation
+				
+				var parent:* = target.parent;										
+			
+				
+				//trace("target: ", target.id, "parent: ", target.parent)
+				//trace(event.target, event.stageX, event.localX);
+				
+				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
+				// There is one conditional check for the simulator within the nested conditions (2 == event.eventPhase)
+				// -Charles (5/16/2012)
+				
+				if (1)
 				{
-					assignPoint(event);
-					event.stopPropagation();
-					return;
-				}
-				// native touch
-				if (GestureWorks.supportsTouch)
-				{
-					
 					if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
-							if ((event.target.parent is TouchSprite) || (event.target.parent is TouchMovieClip)) 
-							{
+							if ((target is TouchSprite) || (target is TouchMovieClip)) 
+							{								
 								//ASSIGN PRIMARY CLUSTER TO PARENT
-								event.target.parent.assignPoint(event);
+								parent.assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							}
 						}
 						else if ((_targetObject is TouchSprite)||(_targetObject is TouchMovieClip))
-						{
+						{							
 							// ASSIGN PRIMARY CLUSTER TO TARGET
-							_targetObject.assignPoint(event);
-							
+							_targetObject.assignPoint(event);							
 						}
 						
 						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
-						{
-							
+						{							
 							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
 							assignPoint(event);
 							
@@ -409,7 +442,7 @@ package com.gestureworks.core
 						}
 						
 						else if (_clusterBubbling)
-						{
+						{							
 							if (3 == event.eventPhase){ // bubling phase
 								assignPointClone(event);
 							}
@@ -417,8 +450,8 @@ package com.gestureworks.core
 								assignPoint(event);
 							 }
 						}
-						else {
-							if (2 == event.eventPhase) { //targeting phase
+						else {														
+							if (2 == event.eventPhase && !Simulator.on) { //targeting phase
 								assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							 }
@@ -429,14 +462,14 @@ package com.gestureworks.core
 					else 
 					{
 						return
-						//assignPoint(event);
+						assignPoint(event);
 						//event.stopPropagation();
 					}
 					
 				}
 				// mouse events
 				else {
-					return
+					return										
 					//assignPoint(event);
 					//event.stopPropagation();
 				}

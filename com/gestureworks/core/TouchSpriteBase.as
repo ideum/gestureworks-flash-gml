@@ -284,7 +284,7 @@ package com.gestureworks.core
 		{			
 			var pointID:int = MousePoint.getID();			
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
-			onTouchDown(event);
+			onTouchDown(event, e.target);
 		}
 		/**
 		 * @private
