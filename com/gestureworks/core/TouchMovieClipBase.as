@@ -367,15 +367,6 @@ package com.gestureworks.core
 		 */
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
-		public function onTouchDown(event:TouchEvent):void
-		{			
-		/**
-		 * decides how to assign the captured touch point to a cluster
-		 * can pass to parent, an explicit target, an explicit list or 
-		 * targets or a passed to any touch object in the local display stack.
-		 */
-		 
-		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent, target:*=null):void
 		{			
 				//////////////////////////////////
