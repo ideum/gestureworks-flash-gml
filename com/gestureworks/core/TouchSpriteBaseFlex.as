@@ -413,7 +413,6 @@ package com.gestureworks.core
 				
 				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
-				// There is one conditional check for the simulator within the nested conditions (2 == event.eventPhase)
 				// -Charles (5/16/2012)
 				
 				if (1)
@@ -454,7 +453,8 @@ package com.gestureworks.core
 								assignPoint(event);
 							 }
 						}
-						else {														
+						else {
+							// added the !mouseChildren in order to simluator to work properly -charles (5/17/2012)
 							if (2 == event.eventPhase && !Simulator.on) { //targeting phase
 								assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap

@@ -417,11 +417,10 @@ package com.gestureworks.core
 				
 				//if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
-				// There is one conditional check for the simulator within the nested conditions (2 == event.eventPhase)
 				// -Charles (5/16/2012)
 				
 				if (1)
-				{
+				{					
 					if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
 							if ((target is TouchSprite) || (target is TouchMovieClip)) 
@@ -458,8 +457,9 @@ package com.gestureworks.core
 								assignPoint(event);
 							 }
 						}
-						else {														
-							if (2 == event.eventPhase && !Simulator.on) { //targeting phase
+						else {
+							// added the !mouseChildren in order to simluator to work properly -charles (5/17/2012)
+							if (2 == event.eventPhase && !mouseChildren) { //targeting phase
 								assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							 }
@@ -497,7 +497,9 @@ package com.gestureworks.core
 			// create new point object
 			var pointObject:PointObject  = new PointObject();
 			var historyArray:Array = new Array();
-										
+				
+				trace(pointObject);
+			
 				point = new Object();
 					pointObject.point=point;	
 					pointObject.object = this; // sets primary touch object/cluster
