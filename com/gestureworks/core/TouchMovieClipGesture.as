@@ -101,7 +101,6 @@ package com.gestureworks.core
 		*/
 		public function initTimeline():void
 		{
-			//if (!tiO.timelineInit){
 			
 			if ((gestureList["hold"]) || (gestureList["tap"]) || (gestureList["double_tap"]) || (gestureList["triple_tap"])) 
 			{
@@ -116,24 +115,26 @@ package com.gestureworks.core
 			if (tiO.timelineOn)
 			{
 				var frames:int = 0;
-					if ((gO.pOList["tap"]) && (gestureList["tap"])) frames = 0;
-					if ((gO.pOList["hold"]) && (gestureList["hold"])) frames = 40;
+				GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
+					
+					if ((gO.pOList["n-hold"]) && (gestureList["n-hold"])) 
+					{
+						frames = 40;
+						if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+					}
+					
+					if ((gestureList["hold"]) || (gestureList["tap"]) || (gestureList["double_tap"]) || (gestureList["triple_tap"])) 
+					{
+						if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+					}
+					
+					if ((gO.pOList["tap"]) && (gestureList["tap"])) frames = 40; // edit from 0
 					if ((gO.pOList["double_tap"]) && (gestureList["double_tap"])) frames = 60;
 					if ((gO.pOList["triple_tap"]) && (gestureList["triple_tap"])) frames = 80;
 					
 					GestureGlobals.timelineHistoryCaptureLength = frames;
-					
-					if (trace_debug_mode) trace("init timeline set length:", frames);
-				}
-				
-				// init listners
-				// ON ENTER FRAME ONLY SEEMS TO FIRE WHEN MOVE DETECTED BUT HAPPENS WHEN IN DEBUG MODE
-				if (tiO.timelineOn) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
-				if ((GestureWorks.supportsTouch)&&(tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchHoldDown);
-				if ((GestureWorks.supportsTouch) && (tiO.timelineOn)) addEventListener(TouchEvent.TOUCH_TAP, onTouchTap);
-				
-				tiO.timelineInit = true;
-			//}
+					if (trace_debug_mode) trace("init timeline set length:", frames)
+			}
 		}
 		
 		/**
@@ -222,22 +223,24 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public function onTouchHoldDown(event:TouchEvent):void
+		public function onTouchBegin(event:TouchEvent):void
 		{
 			if (trace_debug_mode) trace("Touch DOWN gesture analysis", event.touchPointID, event.stageX, event.stageY);
-			if ((gO.pOList["hold"])&&(gestureList["hold"]))					gesture_disc.findTimelineHoldEvent(event);
+			//if ((gO.pOList["hold"])&&(gestureList["hold"]))					gesture_disc.findTimelineHoldEvent(event);
+			if ((gO.pOList["n-hold"]) && (gestureList["n-hold"]))		gO.pOList["n-hold"].complete = false;
 		}
 		/**
 		* @private
 		*/	
-		public function onTouchTap(event:TouchEvent):void
+		public function onTouchEnd(event:TouchEvent):void
 		{
-			if((tiO.timelineOn)&&(tiO.pointEvents))tiO.frame.pointEventArray.push(event);
+			//if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event);
+			
 			if (trace_debug_mode)trace("Touch TAP gesture analysis", event.touchPointID, event.stageX, event.stageY);	
 
-			if ((gO.pOList["tap"])&&(gestureList["tap"]))					gesture_disc.findTimelineTapEvent(event);
-			if ((gO.pOList["double_tap"])&&(gestureList["double_tap"])) 	gesture_disc.findTimelineDoubleTapEvent(event);
-			if ((gO.pOList["triple_tap"])&&(gestureList["triple_tap"]))		gesture_disc.findTimelineTripleTapEvent(event);
+			//if ((gO.pOList["n-tap"])&&(gestureList["n-tap"]))					gesture_disc.findTimelineTapEvent();
+			//if ((gO.pOList["double_tap"])&&(gestureList["double_tap"])) 	gesture_disc.findTimelineDoubleTapEvent(event);
+			//if ((gO.pOList["triple_tap"])&&(gestureList["triple_tap"]))		gesture_disc.findTimelineTripleTapEvent(event);
 				
 		}
 		/**
@@ -248,14 +251,10 @@ package com.gestureworks.core
 			// MANAGE TIMELINE
 			if (tiO.timelineOn) 
 			{
-				if (trace_debug_mode) trace("timeline frame update");
-				// push histories 
-				TimelineHistories.historyQueue(clusterID);
-				// create new timline frame //trace("manage timeline");
-				tiO.frame = new FrameObject();
-				
-				// UPDATE HOLD
-				if ((gO.pOList["hold"])&&(gestureList["hold"])) gesture_disc.holdMonitor();
+				if (trace_debug_mode) trace("timeline frame update");	// debug
+				TimelineHistories.historyQueue(clusterID);				// push histories
+				tiO.frame = new FrameObject();							// create new timline frame 
+				//trace("manage timeline");
 			}
 		}
 		
@@ -271,6 +270,7 @@ package com.gestureworks.core
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////
 			// Core GestureEvent Dispatch Manager
+			// for all gesture activity on the touch object
 			/////////////////////////////////////////////////////////////////////////////////////////////////
 		
 				// start gesture
@@ -298,6 +298,7 @@ package com.gestureworks.core
 						//trace("complete fired");
 				}		
 		}
+		
 		/**
 		* @private
 		*/
@@ -305,8 +306,36 @@ package com.gestureworks.core
 		{	
 			if (trace_debug_mode) trace("continuous gesture event dispatch");
 			
+			/////////////////////////////////////////////////////////////
+			// for all continuously analyzed gestures on touch objects
+			/////////////////////////////////////////////////////////////
+			
 			for (key in gO.pOList) 
 			{	
+				
+				// hold gesture
+				if (gO.pOList[key].gesture_type == "hold")
+				{
+					if ((gO.pOList[key]) && (gestureList[key])) 
+					{	
+						var hold_number:int = gO.pOList[key].n;
+						var holdLockCount:int = cO.locked;
+						
+						if (trace_debug_mode)trace(hold_number,holdLockCount,cO.hold_x,cO.hold_y);
+						
+						if ((holdLockCount == hold_number) && (!gO.pOList[key].complete)) 
+						{
+							gO.pOList[key].complete = true;
+							
+							var spt:Point = new Point (cO.hold_x, cO.hold_y); // stage point
+							var lpt:Point = globalToLocal(spt); //local point
+									
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, N:holdLockCount} ));//touchPointID:pointList[i].point.touchPointID
+							if(tiO.pointEvents)tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: spt.x, y:spt.y, localX:lpt.x, localY:lpt.y, N:holdLockCount} ));//touchPointID:pointList[i].point.touchPointID
+						}
+					}
+				}
+				
 				// drag gesture
 				if (gO.pOList[key].gesture_type == "drag")
 				{
