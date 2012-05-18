@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
-	import com.adobe.utils.IntUtil;
+	//import com.adobe.utils.IntUtil;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	

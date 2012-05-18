@@ -50,6 +50,14 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var key:String;
+		
+		private var discrete_dispatch_reset:Boolean = false;
+		
+		private var gesture_start_dispatched:Boolean = false;
+		private var gesture_complete_dispatched:Boolean = false;
+		private var gesture_release_dispatched:Boolean = false;
+		
+		private var tapOn:Boolean = false;
 		/////////////////////////////////////////////////////////
 		
 		public function TouchMovieClipGesture():void
@@ -102,39 +110,25 @@ package com.gestureworks.core
 		public function initTimeline():void
 		{
 			
-			if ((gestureList["hold"]) || (gestureList["tap"]) || (gestureList["double_tap"]) || (gestureList["triple_tap"])) 
+			for (key in gO.pOList)
 			{
-				tiO.timelineOn = true;
-				tiO.pointEvents = true;
-			}
-			else {
-				tiO.timelineOn = false;
-				tiO.pointEvents = false;
-			}
-			
-			if (tiO.timelineOn)
-			{
-				var frames:int = 0;
-				GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
-					
-					if ((gO.pOList["n-hold"]) && (gestureList["n-hold"])) 
+				
+				if (!tiO.timelineOn)
+				{
+					if ((gO.pOList[key].gesture_type == "hold")||(gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
 					{
-						frames = 40;
-						if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+						tiO.timelineOn = true;
+						tiO.pointEvents = true;
+						tiO.timelineInit = true;
+						GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
+						GestureGlobals.timelineHistoryCaptureLength = 80;
 					}
-					
-					if ((gestureList["hold"]) || (gestureList["tap"]) || (gestureList["double_tap"]) || (gestureList["triple_tap"])) 
-					{
-						if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+					else {
+						tiO.timelineOn = false;
+						tiO.pointEvents = false;
 					}
-					
-					if ((gO.pOList["tap"]) && (gestureList["tap"])) frames = 40; // edit from 0
-					if ((gO.pOList["double_tap"]) && (gestureList["double_tap"])) frames = 60;
-					if ((gO.pOList["triple_tap"]) && (gestureList["triple_tap"])) frames = 80;
-					
-					GestureGlobals.timelineHistoryCaptureLength = frames;
-					if (trace_debug_mode) trace("init timeline set length:", frames)
-			}
+				}
+			}	
 		}
 		
 		/**
@@ -211,7 +205,8 @@ package com.gestureworks.core
 		*/
 		private function manageGestureEventDispatch():void 
 		{
-				gestureObjectEventDispatch();
+				//ONLY FIRES IF TOUCHING OBJECT 
+				discrete_dispatch_reset = false
 				gestureContinuousEventDispatch();
 		}
 		
@@ -223,80 +218,120 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public function onTouchBegin(event:TouchEvent):void
-		{
-			if (trace_debug_mode) trace("Touch DOWN gesture analysis", event.touchPointID, event.stageX, event.stageY);
-			//if ((gO.pOList["hold"])&&(gestureList["hold"]))					gesture_disc.findTimelineHoldEvent(event);
-			if ((gO.pOList["n-hold"]) && (gestureList["n-hold"]))		gO.pOList["n-hold"].complete = false;
-		}
-		/**
-		* @private
-		*/	
 		public function onTouchEnd(event:TouchEvent):void
 		{
-			//if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event);
-			
-			if (trace_debug_mode)trace("Touch TAP gesture analysis", event.touchPointID, event.stageX, event.stageY);	
-
-			//if ((gO.pOList["n-tap"])&&(gestureList["n-tap"]))					gesture_disc.findTimelineTapEvent();
-			//if ((gO.pOList["double_tap"])&&(gestureList["double_tap"])) 	gesture_disc.findTimelineDoubleTapEvent(event);
-			//if ((gO.pOList["triple_tap"])&&(gestureList["triple_tap"]))		gesture_disc.findTimelineTripleTapEvent(event);
+			for (key in gO.pOList)
+			{
+				if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
+				{
+					if ((gO.pOList[key]) && (gestureList[key])) tapOn = true;
+				}
+				else tapOn = false;
 				
+				if (gO.pOList[key].gesture_type == "hold")
+				{
+					if ((gO.pOList[key]) && (gestureList[key])) gO.pOList[key].complete = false;  // resets hold gesture
+				}
+			}
+			
+			if (tapOn) gesture_disc.findGestureTap(event,key); // tap event pairs
+			
 		}
+		
+		
+		public function onGestureTap(event:GWGestureEvent):void
+		{
+			//trace("on gesture tap");
+			
+			for (key in gO.pOList) 
+			{	
+				// double taps
+				if (gO.pOList[key].gesture_type == "double_tap")
+				{
+					if ((gO.pOList[key]) && (gestureList[key])) 
+					{
+					gesture_disc.findGestureDoubleTap(event, key);
+					
+					}
+				}
+				
+				// triple taps
+				if (gO.pOList[key].gesture_type == "triple_tap")
+				{
+					if ((gO.pOList[key]) && (gestureList[key])) 
+					{
+					gesture_disc.findGestureTripleTap(event,key);
+					}
+				}
+			}
+		}
+		
+		
+		
+		
 		/**
 		* @private
 		*/
 		public function onGestureEnterFrame(event:GWEvent):void
 		{
-			// MANAGE TIMELINE
-			if (tiO.timelineOn) 
-			{
-				if (trace_debug_mode) trace("timeline frame update");	// debug
-				TimelineHistories.historyQueue(clusterID);				// push histories
-				tiO.frame = new FrameObject();							// create new timline frame 
-				//trace("manage timeline");
-			}
-		}
-		
-		//////////////////////////////////////////////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////
-		/**
-		* @private
-		*/
-		private function gestureObjectEventDispatch():void 
-		{
-			if (trace_debug_mode) trace("gestureObject event dispatch");
+			//trace("on gesture eneter frame");
 			
-			/////////////////////////////////////////////////////////////////////////////////////////////////
-			// Core GestureEvent Dispatch Manager
-			// for all gesture activity on the touch object
-			/////////////////////////////////////////////////////////////////////////////////////////////////
-		
-				// start gesture
-				if ((gO.start)&&(_gestureEventStart))
-				{
+			// MANAGE TIMELINE
+			if (tiO.timelineOn)
+			{
+				if (trace_debug_mode) trace("timeline frame update");
+				TimelineHistories.historyQueue(clusterID);			// push histories 
+				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
+			}
+			
+			
+			// MANAGE DICRETE EVENT DISPATCHING
+			// when released and if hasnt already fired
+			if (!discrete_dispatch_reset){
+				
+					if ((gO.start)&&(_gestureEventStart)&&(!gesture_start_dispatched))
+					{
 						dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
 						if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
 						gO.start = false;
+						gesture_start_dispatched = true;
 						//trace("start fired");
-				}
-				// release gesture
-				if ((gO.release)&&(_gestureEventRelease))
-				{
-						dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-						if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-						gO.release = false;
-						//trace("release fired");
-				}
-				// gesture complete event
-				if ((gO.complete)&&(_gestureEventComplete))
-				{
-						dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
-						if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
-						gO.complete = false;
-						//trace("complete fired");
-				}		
+					}
+				
+					if (gO.release)
+					{
+						for (key in gO.pOList) 
+						{	
+							//tap counter
+							if (gO.pOList[key].gesture_type == "tap")
+							{
+								if ((gO.pOList[key]) && (gestureList[key])) gesture_disc.countTapEvents(key);
+							}
+							// double tap counter
+							if (gO.pOList[key].gesture_type == "double_tap")
+							{
+								if ((gO.pOList[key]) && (gestureList[key])) gesture_disc.countDoubleTapEvents(key);
+							}
+							// triple tap counter
+							if (gO.pOList[key].gesture_type == "triple_tap")
+							{
+								if ((gO.pOList[key]) && (gestureList[key])) gesture_disc.countTripleTapEvents(key);
+							}
+						}
+						
+						// GESTURE OBJECT EVENTS
+						if ((gO.release)&&(_gestureEventRelease))//&&(!gesture_release_dispatched))
+						{
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+							gO.release = false;
+							gesture_start_dispatched = false;
+							//trace("release fired");
+						}
+					}
+				
+					discrete_dispatch_reset = true;
+			}
 		}
 		
 		/**
@@ -310,9 +345,17 @@ package com.gestureworks.core
 			// for all continuously analyzed gestures on touch objects
 			/////////////////////////////////////////////////////////////
 			
+			// gesture OBJECT complete event
+			if ((gO.complete)&&(_gestureEventComplete))
+			{
+				dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
+				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
+				gO.complete = false;
+				trace("complete fired");
+			}	
+			
 			for (key in gO.pOList) 
 			{	
-				
 				// hold gesture
 				if (gO.pOList[key].gesture_type == "hold")
 				{
@@ -321,8 +364,7 @@ package com.gestureworks.core
 						var hold_number:int = gO.pOList[key].n;
 						var holdLockCount:int = cO.locked;
 						
-						if (trace_debug_mode)trace(hold_number,holdLockCount,cO.hold_x,cO.hold_y);
-						
+						//trace(cO.hold_x,cO.hold_y);
 						if ((holdLockCount == hold_number) && (!gO.pOList[key].complete)) 
 						{
 							gO.pOList[key].complete = true;
@@ -335,6 +377,7 @@ package com.gestureworks.core
 						}
 					}
 				}
+				
 				
 				// drag gesture
 				if (gO.pOList[key].gesture_type == "drag")
