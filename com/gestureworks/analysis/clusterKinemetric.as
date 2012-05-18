@@ -57,6 +57,11 @@ package com.gestureworks.analysis
 		private var j:int = 0;
 		private var h:int = 0;
 		private var h0:Number = 0;
+		
+		// sub cluster vars
+		private var LN:int = 0; //locked touch points
+		private var c_hold_x_mean:Number = 0;
+		private var c_hold_y_mean:Number = 0;
 
 		////////////////////////////////////////////////////////////////////////////////////////
 		// cluster property variables
@@ -224,20 +229,44 @@ package com.gestureworks.analysis
 				if (GestureGlobals.touchMoveMarshallOn) h0 = 1;
 				else h0 = 1 / N;
 				/////////////////////////////////////////////////////
-
+				
 				if (N) 
 				{
 					N1 = N - 1;
 					k0 = 1 / N;
-					k1 = 1/N1;
+					k1 = 1 / N1;
+					if (N == 0) k1 = 0;
 					pointList = ts.cO.pointArray
+					
+					///////////////////////
+					LN = 0;
+					for (i = 0; i < N; i++)
+					{
+						if (pointList[i].holdLock) LN++;
+					}
+					//trace("LOCKED",LN)
+					//////////////////////
+
 					clusterProperties();
 					
-					if (N == 0) k1 = 0;
+					
+					
+					
+					/*
+					if (LN) 
+					{
+					N1 = LN - 1;
+					k0 = 1 / LN;
+					k1 = 1/N1;
+					clusterProperties();
+					
+					if (LN == 0) k1 = 0;
+					}
+					*/
 				}
-
-			else resetVars();
-			return
+				
+				else resetVars();
+				return
 		}
 		
 		
@@ -281,6 +310,12 @@ package com.gestureworks.analysis
 			findMeanInstSeparationXY_complete = false;
 			findMeanInstRotation_complete = false;
 			findMeanInstAcceleration_comlpete = false;
+			
+			
+			// sub cluster analysis
+			c_hold_x_mean = 0;
+			c_hold_y_mean = 0;
+			//c_locked = LN;
 		}
 		
 		private function clusterProperties():void
@@ -308,12 +343,59 @@ package com.gestureworks.analysis
 		
 			
 			for (key in ts.gO.pOList) 
-			{	
+			{
 				
-				///////////////////////////////////////////////////////////////////////////////////////////////////
-				// BASIC DRAG CONTROL // ALGORITHM // type drag
-				//////////////////////////////////////////////////////////////////////////////////////////////////
-				if (ts.gO.pOList[key].gesture_type == "drag"){
+				
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+			// BASIC HOLD CONTROL // ALGORITHM // type hold
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			if (ts.gO.pOList[key].gesture_type == "hold"){
+				
+					if (ts.trace_debug_mode) trace("cluster hold algorithm");
+					
+					if ((ts.gO.pOList[key])&&(ts.gestureList[key]))
+					{
+						var hold_dist:int = ts.gO.pOList[key].point_translation_threshold;
+						var	hold_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold * 0.001 * GestureWorks.application.frameRate);
+						var hold_number:int = ts.gO.pOList[key].n;
+						
+							for (i = 0; i < N; i++)
+								{
+								if ((Math.abs(pointList[i].history[0].dx) < hold_dist) && (Math.abs(pointList[i].history[0].dy) < hold_dist))
+									{
+									if (pointList[i].holdCount < hold_time) pointList[i].holdCount++;
+															
+										if (pointList[i].holdCount >= hold_time) 
+											{
+											pointList[i].holdLock = true; 
+											c_hold_x_mean += pointList[i].history[0].x;
+											c_hold_y_mean += pointList[i].history[0].y;
+											}	
+										}
+										else {
+											pointList[i].holdCount = 0; // reset count
+											pointList[i].holdLock = false; // add this feature here
+															
+											// NEED TO FOX SO THAT ONLY RESETS IF A PREVIOUSLY LOCKED POINT MOVES
+											// CURRENTLY RESETS IF ANY POINT IN CLUSTER MOVES
+											//ts.gO.pOList[key].complete = false; 
+											}
+								}
+						if(LN){
+						c_hold_x_mean *= 1/LN//k0;
+						c_hold_y_mean *= 1/LN//k0;
+						}
+						else {
+							c_hold_x_mean = 0;
+							c_hold_y_mean = 0;
+						}
+					}
+			}	
+				
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+			// BASIC DRAG CONTROL // ALGORITHM // type drag
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			if (ts.gO.pOList[key].gesture_type == "drag"){
 				
 					if (ts.trace_debug_mode) trace("cluster drag algorithm");
 					
@@ -339,7 +421,7 @@ package com.gestureworks.analysis
 							ts.gO.pOList[key]["drag_dy"].clusterDelta = c_dy; // drag_dy
 						}
 					}
-				}
+			}
 				
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			// BASIC SCALE CONTROL // ALGORITHM // type scale
@@ -861,6 +943,13 @@ package com.gestureworks.analysis
 			//cO.ddsx = c_ddsx;
 			//cO.ddsy = c_ddsy;
 			//cO.ddtheta = c_ddtheta;
+			
+			////////////////////////////
+			// sub cluster analysis
+			////////////////////////////
+			ts.cO.hold_x = c_hold_x_mean;
+			ts.cO.hold_y = c_hold_y_mean;
+			ts.cO.locked = LN;
 		}
 		
 		////////////////////////////////////////////////////////////
@@ -895,7 +984,7 @@ package com.gestureworks.analysis
 							{
 								for (var j1:int = 0; j1 < N; j1++)
 								{
-									if ((i != j1)&&(pointList[i].history[0]) && (pointList[j1].history[0]))
+									if ((i != j1)&&(pointList[i].history[0]) && (pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
 										{
 											//trace("dim",N);
 											var dx:Number = pointList[i].history[0].x - pointList[j1].history[0].x
@@ -949,7 +1038,7 @@ package com.gestureworks.analysis
 								{
 									if (i != j1)
 									{
-										if ((pointList[i].history[0]) && (pointList[j1].history[0])) 
+										if ((pointList[i].history[0]) && (pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
 										{
 											var dx:Number = Math.abs(pointList[i].history[0].x - pointList[j1].history[0].x);
 											var dy:Number = Math.abs(pointList[i].history[0].y - pointList[j1].history[0].y);
@@ -986,7 +1075,7 @@ package com.gestureworks.analysis
 							{
 								for (var j1:int = 0; j1 < N; j1++)
 								{
-									if ((i != j1)&&(pointList[i].history[0]) && (pointList[j1].history[0])) 
+									if ((i != j1)&&(pointList[i].history[0]) && (pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit 
 										{
 										//trace("dim",N);
 										var dx:Number = pointList[i].history[0].x - pointList[j1].history[0].x
@@ -1014,7 +1103,7 @@ package com.gestureworks.analysis
 						
 						for (i = 0; i < N; i++) 
 						{
-							if (pointList[i].history[h])
+							if (pointList[i].history[h])//&&(!pointList[i].holdLock))// edit
 							{
 								for (j = 0; j < h; j++) 
 								{
@@ -1129,7 +1218,7 @@ package com.gestureworks.analysis
 							
 				for (i = 0; i < N; i++) 
 				{
-					if (pointList[i].history[0])
+					if (pointList[i].history[0])//&&(!pointList[i].holdLock))//edit
 					{
 						c_emx += pointList[i].history[0].x;
 						c_emy += pointList[i].history[0].y;
@@ -1176,7 +1265,7 @@ package com.gestureworks.analysis
 					
 			for (i = 0; i < N; i++) 
 				{
-					if (pointList[i].history[t])
+					if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
 					{
 					for (j = 0; j < t; j++) 
 						{
@@ -1247,7 +1336,7 @@ package com.gestureworks.analysis
 						
 						for (i = 0; i < N; i++) 
 						{
-							if (pointList[i].history[1])
+							if (pointList[i].history[1])//&&(!pointList[i].holdLock))//edit
 							{
 								// SIMPLIFIED DELTAS
 								// second diff of x anf y wrt t
@@ -1287,7 +1376,7 @@ package com.gestureworks.analysis
 						
 				for (i = 0; i < N; i++) 
 					{
-					if (pointList[i].history[t])
+					if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
 						{
 							// SIMPLIFIED DELTAS
 							// second diff of x anf y wrt t

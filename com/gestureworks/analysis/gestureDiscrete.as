@@ -26,19 +26,31 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
-	
-	
 		
 	public class gestureDiscrete
 	{
 		private var touchObjectID:int;
 		private var ts:Object;//	private var ts:TouchSprite;
-		private var pointEventArray:Array = new Array();
-		private var pointList:Array;
-		private var N:int = 0;
 		
-		//private var fps = 60;
-		private var rate:Number = 1 / 60;              ////////////////////////// FIX ME, REMOVE 
+		// pause time between gesture event counting cycles
+		private var tap_pauseTime:int = 0;
+		private var dtap_pauseTime:int = 0;
+		private var ttap_pauseTime:int = 0;
+		
+		// sets gesture id for individual tap events
+		private var tapID:int = 0;
+		private var dtapID:int = 0;
+		private var ttapID:int = 0;
+		
+		// sets gesture id for tap clusters
+		private var ntapID:int = 0;
+		private var ndtapID:int = 0;
+		private var nttapID:int = 0;
+		
+		// counts event threads on timeline of touch object
+		private var tapEventCount:int = 0;
+		private var dtapEventCount:int = 0;
+		private var ttapEventCount:int = 0;
 		
 		public function gestureDiscrete(_id:int) {
 			
@@ -53,178 +65,385 @@ package com.gestureworks.analysis
 			if (ts.trace_debug_mode) trace("init gesture discrete analysis");
 		}
 		
-		///////bug bug bug //////////////////////////////////////
-		///////////////////////////////////////////////////////////
-		// waiting for touch move to trigger analysis
-		/////////////////////////////////////////////////
-		public function holdMonitor():void
-		{
-			N = ts.cO.n;
-			pointList = ts.cO.pointArray;
-			
-			if (ts.trace_debug_mode) trace("find hold---------------------------------------------------------");
-				
-			if ((N) && (pointList)) {
-				
-				var hold_dist:int = ts.gO.pOList["hold"].point_translation_threshold;
-				var	hold_time:int = Math.ceil(ts.gO.pOList["hold"].point_event_duration_threshold *0.001 * GestureWorks.application.frameRate);
-				
-				//trace("hold point analysis", hold_dist, hold_time,N,ts.gO.pOList["hold"].point_event_duration_threshold,GestureWorks.application.frameRate);
-				
-				// check point list for hold monitoring
-				for (var i:int = 0; i < N; i++) 
-					{
-						//trace("oef", pointList[i].touchPointID);
-						if (pointList[i].holdMonitorOn)
-						{
-							pointList[i].holdCount++;
-							
-							//trace("hold point count", pointList[i].holdCount++);
-							// check monitor count
-							if (pointList[i].holdCount >= hold_time) 
-							{
-								var spt:Point = new Point (pointList[i].point.x, pointList[i].point.y); // stage point
-								var lpt:Point = ts.globalToLocal(spt); //local point
-								
-								//trace("dispatch");
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, touchPointID:pointList[i].point.touchPointID} ));
-								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: pointList[i].point.x, y:pointList[i].point.y, touchPointID:pointList[i].point.touchPointID} ));
-								pointList[i].holdMonitorOn = false;
-								pointList[i].holdCount = 0;
-								return;	
-							}
-							// test for exessive movement
-							else {
-								if (pointList[i].history[0])
-								{
-									if ((Math.abs(pointList[i].history[0].dx) > hold_dist) || (Math.abs(pointList[i].history[0].dy) > hold_dist))
-									{
-										//trace("no");
-										pointList[i].holdMonitorOn = false;
-										pointList[i].holdCount = 0;
-										return;	
-									}
-								}
-							}
-						}
-				}
-			}
-		}
 		
-		public function findTimelineHoldEvent(event:TouchEvent):void
-		{
-			//trace("hold monitor has been activated",event.touchPointID, GestureGlobals.gw_public::points,GestureGlobals.gw_public::points[event.touchPointID],GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn);
-			GestureGlobals.gw_public::points[event.touchPointID].holdMonitorOn = true;
-		}
-		
-		////////////////////////////////////////////////////////////
-		// NOTE HISTORY BUG
-		// tiO.history[i]
-		// USING FRAME FOR HISTORY[0]
-		// MAKE MORE SPECIFIC 
-		// USE TAP_DIST AND TAP_TIME TO CREATER A MORE RIGID TAP GESTURE
-		// ALSO USE TO DEFFERENTIATE BETWEEN TWO FINGER DELAYED TAP AND SINGLE FINGER DOUBLE TAP
-		public function findTimelineTapEvent(event:TouchEvent):void
+		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
 			if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
 			
-			//var tap_time:int = 18//gO.pOList["tap"]["tap_x"].point_event_duration_threshold;
-			//var tap_dist:int = ts.gO.pOList["tap"].point_translation_threshold;
+			var tap_time:int = 10//Math.ceil(gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);;
+			var tap_dist:int = 10//ts.gO.pOList[key].point_translation_threshold;
 			
-			if (ts.tiO.frame)
+			var pointEventArray:Array = ts.tiO.frame.pointEventArray
+				
+				for (var p:int = 0; p < pointEventArray.length; p++) 
 				{
-				var pointEventArray:Array = ts.tiO.frame.pointEventArray;
-				//trace(tiO.frame.pointEventArray);
-						
-					for (var j:int = 0; j < pointEventArray.length; j++) 
+					//trace("point event array", ts.tiO.frame.pointEventArray[p].type)
+					
+					////////////////////////////////////////
+					// check current frame first
+					////////////////////////////////////////
+					
+					// match type and id
+					if ((pointEventArray[p].type =="touchBegin")&&(pointEventArray[p].touchPointID == event.touchPointID))
 						{
-						var touch_event:Object = pointEventArray[j]
-						if (touch_event.type =="touchTap")
+							var dx:Number = Math.abs(pointEventArray[p].stageX - event.stageX)
+							var dy:Number = Math.abs(pointEventArray[p].stageY - event.stageY)
+					
+							// match dist							
+							if ((dx < tap_dist) && (dy < tap_dist))
 							{
-								var spt:Point = new Point (touch_event.stageX, touch_event.stageY); // stage point
-								var lpt:Point = ts.globalToLocal(spt); //local point
-								
-								//trace("tap",j, touch_event.touchPointID);
-								ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TAP, { x:touch_event.stageX, y:touch_event.stageY,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
-								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TAP, { x: touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
-							}
+								// add tap event to gesture timeline 
+								// uses touchEnd id and position
+								//trace("Current Frame TAP", pointEventArray[p].touchPointID);
+								tapID ++;
+								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID } );
+								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(tap_event);
+								ts.onGestureTap(tap_event);
+								return; // must exit if finds as do not want to refind
+							}	
 						}
+					else {
+					////////////////////////////////////////
+					//look in history
+					////////////////////////////////////////
+						
+							for (var i:int = 0; i < tap_time; i++) // 20 fames
+								{
+							
+								if (ts.tiO.history[i])
+								{
+								pointEventArray = ts.tiO.history[i].pointEventArray;
+							
+									for (var j:int = 0; j < pointEventArray.length; j++) 
+									{
+										if ((pointEventArray[j].type =="touchBegin")&&(pointEventArray[j].touchPointID == event.touchPointID))
+										{
+											var dx0:Number = Math.abs(pointEventArray[j].stageX - event.stageX)
+											var dy0:Number = Math.abs(pointEventArray[j].stageY - event.stageY)
+																
+											if ((dx0 < tap_dist) && (dy0 < tap_dist))
+											{
+												// add tap event to gesture timeline 
+												// uses touchEnd id and position
+												//trace("History TAP", pointEventArray[j].touchPointID);
+												tapID ++;
+												var tap_event0:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID } );
+												//if (ts.tiO.pointEvents)
+												ts.tiO.frame.gestureEventArray.push(tap_event0);
+												ts.onGestureTap(tap_event0);
+												return; //must exit if finds, as need most recent pair
+											}	
+										}	
+									}
+								}	
+								}	
+						}
+						/////////////////////////////////////////
 				}
 		}
 		
 		
-		public function findTimelineDoubleTapEvent(event:TouchEvent):void
+		public function findGestureDoubleTap(event:GWGestureEvent,key:String):void
 		{
-			if (ts.trace_debug_mode) trace("find d taps---------------------------------------------------------");
+			//if (ts.trace_debug_mode) trace("find d taps---------------------------------------------------------");
+		
+				var dtap_time:int = 20//Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001);
+				var dtap_dist:int = 20//ts.gO.pOList[key].point_translation_threshold;
+				var	gestureEventArray:Array = new Array();
 				
-				var dtap_time:int = Math.ceil(ts.gO.pOList["double_tap"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001);
-				var dtap_dist:int = ts.gO.pOList["double_tap"].point_translation_threshold;
-				var tap_count:int = 0;
-			
-				for (var i:int = 1; i < dtap_time; i++) 
+				// find tap pairs 
+				// dont need current frame as never double tap in a single frame
+				// LOOK IN HISTORY
+				for (var i:int = 0; i < dtap_time; i++) 
 					{
 					if (ts.tiO.history[i])
 					{
-						var	pointEventArray:Array = ts.tiO.history[i].pointEventArray;
-							
-							for (var j:int = 0; j < pointEventArray.length; j++) 
+					gestureEventArray = ts.tiO.history[i].gestureEventArray;
+
+							for (var j:int = 0; j < gestureEventArray.length; j++) 
 								{
-									var touch_event:Object = pointEventArray[j]
-									if (touch_event.type =="touchTap")
+									if (gestureEventArray[j].type =="tap")//&&(event.value.gestureID != gestureEventArray[j].value.gestureID))
 									{
-										var distX:Number = Math.abs(event.stageX - touch_event.stageX);
-										var distY:Number = Math.abs(event.stageY - touch_event.stageY);
+										var distX:Number = Math.abs(event.value.x - gestureEventArray[j].value.x);
+										var distY:Number = Math.abs(event.value.y - gestureEventArray[j].value.y);
 										
-										var spt:Point = new Point (touch_event.stageX, touch_event.stageY); // stage point
-										var lpt:Point = ts.globalToLocal(spt); //local point
-										
+										if ((distX < dtap_dist) && (distY < dtap_dist)) 
+										{
+											//trace("hist DOUBLE TAP",distX,distY);
+											var spt:Point = new Point (event.value.x, event.value.y); // stage point
+											var lpt:Point = ts.globalToLocal(spt); //local point
 											
-										//if((distX<rad)&&(distY<rad)) trace("double tap", i, j, touch_event.touchPointID, distX, distY);
-										//trace("double tap", i, j, touch_event.touchPointID);
-										ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX , y:touch_event.stageY, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
-										if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+											dtapID++;
+											var dtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:dtapID});
+											//if (ts.tiO.pointEvents) 
+											ts.tiO.frame.gestureEventArray.push(dtap_event);
+											return; 
+										}
 									}
 								}
+						}
+					}	
+		}
+		
+		
+		public function findGestureTripleTap(event:GWGestureEvent,key:String):void
+		{
+			//if (ts.trace_debug_mode) trace("find t taps---------------------------------------------------------");
+		
+				var ttap_time:int = 20//Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //15 => 250ms
+				var ttap_dist:int = 20//ts.gO.pOList[key].point_translation_threshold;
+				var	gestureEventArray:Array = new Array();
+				
+				// find tap pairs // dont need current frame as never double tap in a single frame
+				// LOOK IN HISTORY
+				for (var i:int = 0; i < ttap_time; i++) 
+					{
+					if (ts.tiO.history[i])
+					{
+					gestureEventArray = ts.tiO.history[i].gestureEventArray;
+
+							for (var j:int = 0; j < gestureEventArray.length; j++) 
+								{
+									//trace(gestureEventArray[j].type,event.value.gestureID,gestureEventArray[j].value.gestureID);
+									if ((gestureEventArray[j].type =="tap")&&(event.value.gestureID != gestureEventArray[j].value.gestureID))
+									{
+										//trace("ID", event.value.tapID, gestureEventArray[j].value.tapID)
+										var dx1:Number = Math.abs(event.value.x - gestureEventArray[j].value.x);
+										var dy1:Number = Math.abs(event.value.y - gestureEventArray[j].value.y);
+										
+										if ((dx1 < ttap_dist) && (dy1 < ttap_dist)) 
+										{
+											//////////////////////////////////////////////////
+											//trace("T TAP Pair", dx1,dy1);
+											for (var k:int = i; k < (i+ttap_time); k++) 
+												{
+												var gestureEventArray2:Array = ts.tiO.history[k].gestureEventArray;
+												
+												for (var q:int = 0; q < gestureEventArray2.length; q++) 
+												{
+													if ((gestureEventArray2[q].type =="tap")&&(event.value.gestureID!=gestureEventArray2[q].value.gestureID)&&(gestureEventArray[j].value.gestureID != gestureEventArray2[q].value.gestureID))
+													{
+														
+														//trace("ID",event.value.gestureID, gestureEventArray2[q].value.gestureID)
+														
+														var dx2:Number = Math.abs(event.value.x - gestureEventArray2[q].value.x);//
+														var dy2:Number = Math.abs(event.value.y - gestureEventArray2[q].value.y);//
+													
+														if ((dx2 < ttap_dist) && (dy2 < ttap_dist)) 
+														{
+															//trace("TAP Triplet",dx1,dy1,dx2,dy2);
+															var spt:Point = new Point (event.value.x, event.value.y); // stage point
+															var lpt:Point = ts.globalToLocal(spt); //local point
+															
+															ttapID++;
+															var ttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y,gestureID:ntapID});
+															//if (ts.tiO.pointEvents) 
+															ts.tiO.frame.gestureEventArray.push(ttap_event);
+															return; 
+														}
+													}
+												}
+											}
+											//////////////////////////////////////////////////
+										}
+	
+									}
+								}
+						}
+					}	
+		}
+		
+
+		////////////////////////////////////////////////////////////
+		// VISUAL EVENT TIMLINE WOULD HELP
+		public function countTapEvents(key:String):void // count taps each frame
+		{
+			if (ts.trace_debug_mode) trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
+			tapEventCount = 0;
+			var tap_countTime:int = 5;
+			var tap_number:int = ts.gO.pOList[key].n;
+			var tap_x_mean:Number = 0
+			var tap_y_mean:Number = 0;
+				
+				// count in current frame
+				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+					
+					for (var p:int = 0; p < gestureEventArray.length; p++) 
+					{
+						//trace("gesture:",gestureEventArray[p].type)
+						if (gestureEventArray[j].type =="tap")
+							{
+								tapEventCount++;
+								tap_x_mean += gestureEventArray[j].value.x;
+								tap_y_mean += gestureEventArray[j].value.y;
+							}
+					}
+				
+				//count history
+				for (var i:int = 0; i < tap_countTime; i++) // 20 fames block for single tap
+						{
+						if (ts.tiO.history[i])
+						{
+						//trace("finding taps",tapEventCount);
+						gestureEventArray = ts.tiO.history[i].gestureEventArray;
+					
+								for (var j:int = 0; j < gestureEventArray.length; j++) 
+								{
+									//trace("gesture:",gestureEventArray[j].type)
+									if (gestureEventArray[j].type =="tap")
+									{
+										tapEventCount++;
+										tap_x_mean += gestureEventArray[j].value.x;
+										tap_y_mean += gestureEventArray[j].value.y;
+									}
+								}
+							}
+					}
+					
+					// check totals
+					if (tapEventCount != 0) 
+					{
+						if ((tap_number == 0)||(tapEventCount == tap_number))
+						{
+							//trace("tap event count for last duration",tapEventCount);
+							var spt:Point = new Point (tap_x_mean/tapEventCount, tap_y_mean/tapEventCount); // stage point average
+							var lpt:Point = ts.globalToLocal(spt); //local point average
+							ntapID++;
+							var ntap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:spt.x, y:spt.y,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:ntapID, n:tapEventCount } )
+							ts.dispatchEvent(ntap_event);
+							//if (ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ntap_event);
 						}
 					}
 		}
 		
-		public function findTimelineTripleTapEvent(event:TouchEvent):void
+		
+		public function countDoubleTapEvents(key:String):void // count taps each frame
 		{
-			if (ts.trace_debug_mode) 	trace("find tripple taps---------------------------------------------------------");
+			if (ts.trace_debug_mode) trace("find n-dtaps---------------------------------------------------------",ts.gO.pOList[key].n);
 			
-				var tap_count:int = 0;
-				var ttap_time:int = Math.ceil(ts.gO.pOList["triple_tap"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001);
-				var ttap_dist:int = ts.gO.pOList["triple_tap"].point_translation_threshold;
+			dtapEventCount = 0;
+			var dtap_countTime:int = 50;// NEED TO OPTOMIZE TIME
+			var dtap_number:int = ts.gO.pOList[key].n;
+			var dtap_x_mean:Number = 0
+			var dtap_y_mean:Number = 0;
 				
-				for (var i:int = 1; i < 2*ttap_time; i++) 
+				// count in current frame
+				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+					
+					for (var p:int = 0; p < gestureEventArray.length; p++) 
 					{
-					if (ts.tiO.history[i])
-					{
-						var pointEventArray:Array = ts.tiO.history[i].pointEventArray;
+						//trace(gestureEventArray[j].type)
+						if (gestureEventArray[j].type =="double_tap")
+							{
+								dtapEventCount++;
+								dtap_x_mean += gestureEventArray[j].value.x;
+								dtap_y_mean += gestureEventArray[j].value.y;
+							}
+					}
 				
-							for (var j:int = 0; j < pointEventArray.length; j++) 
+				//count history
+				for (var i:int = 0; i < dtap_countTime; i++) // 20 fames block for single tap
+						{
+						if (ts.tiO.history[i])
+						{
+						//trace("finding taps",tapEventCount);
+						gestureEventArray = ts.tiO.history[i].gestureEventArray;
+					
+								for (var j:int = 0; j < gestureEventArray.length; j++) 
 								{
-									var touch_event:Object = pointEventArray[j]
-									if (touch_event.type =="touchTap")
+									//trace("d gesture:",gestureEventArray[j].type)
+									if (gestureEventArray[j].type =="double_tap")
 									{
-										var distX:Number = Math.abs(event.stageX - touch_event.stageX);
-										var distY:Number = Math.abs(event.stageY - touch_event.stageY);
-										var spt:Point = new Point (touch_event.stageX, touch_event.stageY); // stage point
-										var lpt:Point = ts.globalToLocal(spt); //local point
-										
-											
-										if ((distX < ttap_dist) && (distY < ttap_dist)) tap_count++;
+										dtapEventCount++;
+										dtap_x_mean += gestureEventArray[j].value.x;
+										dtap_y_mean += gestureEventArray[j].value.y;
 									}
 								}
+							}
+					}
+					
+					if (dtapEventCount != 0) 
+					{
+						//trace("dtap event count", dtapEventCount)
+						
+						if ((dtap_number == 0)||(dtapEventCount == dtap_number))
+						{
+						//trace("double tap event count for last duration", dtapEventCount);
+						var spt2:Point = new Point (dtap_x_mean/dtapEventCount, dtap_y_mean/dtapEventCount); // stage point average
+						var lpt2:Point = ts.globalToLocal(spt2); //local point average
+						ndtapID++;
+						var ndtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt2.x, y:spt2.y,  stageX:spt2.x , stageY:spt2.y, localX:lpt2.x , localY:lpt2.y, gestureID:ndtapID,n:dtapEventCount} )
+						ts.dispatchEvent(ndtap_event);
+						// confuses counter // need to move taps to touch event layer
+						//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ndtap_event);
 						}
 					}
-					if (tap_count == 2)
-					{ 
-						//trace("triple tap", i, j, touch_event.touchPointID, distX, distY);
-						ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageX, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, touchPointID:touch_event.touchPointID } ));
-						if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:touch_event.stageX, y:touch_event.stageY, touchPointID:touch_event.touchPointID } ));
+		}
+		
+		public function countTripleTapEvents(key:String):void // count taps each frame
+		{
+			if (ts.trace_debug_mode) 	trace("find n-ttaps---------------------------------------------------------",ts.gO.pOList[key].n);
+			
+			ttapEventCount = 0;
+			var ttap_countTime:int = 60;	// NEED TO OPTOMIZE TIME				
+			var ttap_number:int = ts.gO.pOList[key].n;
+			var ttap_x_mean:Number = 0
+			var ttap_y_mean:Number = 0;
+				
+				// count in current frame
+				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+					
+					for (var p:int = 0; p < gestureEventArray.length; p++) 
+					{
+						//trace(gestureEventArray[j].type)
+						if (gestureEventArray[j].type =="triple_tap")
+							{
+								ttapEventCount++;
+								ttap_x_mean += gestureEventArray[j].value.x;
+								ttap_y_mean += gestureEventArray[j].value.y;
+							}
 					}
+				
+				//count history
+				for (var i:int = 0; i < ttap_countTime; i++) // 20 fames block for single tap
+						{
+						if (ts.tiO.history[i])
+						{
+						//trace("finding taps",tapEventCount);
+						gestureEventArray = ts.tiO.history[i].gestureEventArray;
+					
+								for (var j:int = 0; j < gestureEventArray.length; j++) 
+								{
+									//trace("t gesture:",gestureEventArray[j].type)
+									if (gestureEventArray[j].type =="triple_tap")
+									{
+										ttapEventCount++;
+										ttap_x_mean += gestureEventArray[j].value.x;
+										ttap_y_mean += gestureEventArray[j].value.y;
+									}
+								}
+							}
+					}
+					
+					// check totals
+					//trace(tapEventCount);
+					
+					if (ttapEventCount != 0) 
+					{
+						//trace("ttap event count", dtapEventCount)
+						if ((ttap_number == 0)||(ttapEventCount == ttap_number))
+						{
+						//trace("triple tap event count for last duration", ttapEventCount);
+						var spt3:Point = new Point (ttap_x_mean/ttapEventCount, ttap_y_mean/ttapEventCount); // stage point average
+						var lpt3:Point = ts.globalToLocal(spt3); //local point average
+						nttapID++;
+						var nttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt3.x, y:spt3.y,  stageX:spt3.x , stageY:spt3.y, localX:lpt3.x , localY:lpt3.y, gestureID:nttapID, n:ttapEventCount} )
+							ts.dispatchEvent(nttap_event);
+							//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(nttap_event);
+					}
+				}
+				
+				//trace("gesture block----------------------------------------------------------------")
 		}
 		
 		public function findTimelineGestures():void
