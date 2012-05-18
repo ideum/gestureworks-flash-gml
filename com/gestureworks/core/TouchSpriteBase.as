@@ -407,7 +407,7 @@ package com.gestureworks.core
 				if (!target)
 					target = event.target; // object that got hit, used for our non-tuio gesture events
 				if (!target)
-					target = this; // itself, used for mouse simulation
+					target = this; 
 				
 				var parent:* = target.parent;										
 			
@@ -497,9 +497,7 @@ package com.gestureworks.core
 			// create new point object
 			var pointObject:PointObject  = new PointObject();
 			var historyArray:Array = new Array();
-				
-				trace(pointObject);
-			
+							
 				point = new Object();
 					pointObject.point=point;	
 					pointObject.object = this; // sets primary touch object/cluster
