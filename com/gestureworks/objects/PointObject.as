@@ -75,6 +75,17 @@ package com.gestureworks.objects
 			_holdCount = value;
 		}
 		
+		// hold lock 
+		private var _holdLock:Boolean = false;
+		public function get holdLock():Boolean
+		{
+			return _holdLock;
+		}
+		public function set holdLock(value:Boolean):void
+		{
+			_holdLock = value;
+		}
+		
 		///////////////////////////////////////////////////
 		// DIRECT REFERENCE TO THE TOUCH OBJECT THAT "OWNS" THE TOUCH POINT
 		// primary touch object (should be target)

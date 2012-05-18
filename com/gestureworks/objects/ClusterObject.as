@@ -221,6 +221,41 @@ package com.gestureworks.objects
 		{
 			_orient_dy = value;
 		}
+		
+		
+		// hold_x---------------------
+		private var _hold_x:Number = 0;
+		public function get hold_x():Number
+		{
+			return _hold_x;
+		}
+		public function set hold_x(value:Number):void
+		{
+			_hold_x = value;
+		}
+		// hold_y---------------------
+		private var _hold_y:Number = 0;
+		public function get hold_y():Number
+		{
+			return _hold_y;
+		}
+		public function set hold_y(value:Number):void
+		{
+			_hold_y = value;
+		}
+		
+		// c_locked---------------------
+		private var _locked:int = 0;
+		public function get locked():int
+		{
+			return _locked;
+		}
+		public function set locked(value:int):void
+		{
+			_locked = value;
+		}
+		
+		
 		/////////////////////////////////////////////////
 		// velocities
 		/////////////////////////////////////////////////
