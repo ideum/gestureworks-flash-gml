@@ -110,7 +110,17 @@ package com.gestureworks.core
 			if ((_dN != 0)&&(_clusterEvents)) manageClusterEventDispatch();
 			
 			// GESTURE OBJECT UPDATE
-			if ((_N == 0) && (_dN < 0)) gO.release = true;
+			if ((_N == 0) && (_dN < 0)) 
+			{
+				gO.release = true;
+			}
+			if (_N != 0) 
+			{
+				gO.start = true;
+				gO.complete = false;
+				gO.release = false;
+			}
+			
 		}
 		/**
 		 * @private
