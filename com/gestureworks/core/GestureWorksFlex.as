@@ -49,11 +49,12 @@ package com.gestureworks.core
 		public function GestureWorksFlex(cmlSettingsPath:String = null)
 		{
 			super();
-			if(cmlSettingsPath) settingsPath = cmlSettingsPath;
 			
 			// added to auto-switch to simulator
 			// -Charles (7/17/2012)
 			if (!supportsTouch) simulator = true;
+			
+			if(cmlSettingsPath) settingsPath = cmlSettingsPath;
 		}
 		
 		public function get gwComplete():Boolean{return _gwComplete;}
@@ -105,6 +106,7 @@ package com.gestureworks.core
 		{
 			CML.Objects = CMLLoader.settings;
 			startGmlParse();
+			
 			var simString:String = CML.Objects.@simulator;
 			
 			key = CMLLoader.settings.@key;
