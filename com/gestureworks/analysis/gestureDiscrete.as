@@ -70,8 +70,8 @@ package com.gestureworks.analysis
 		{
 			if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
 			
-			var tap_time:int = 10//Math.ceil(gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);;
-			var tap_dist:int = 10//ts.gO.pOList[key].point_translation_threshold;
+			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
+			var tap_dist:int = ts.gO.pOList[key].point_translation_threshold;//10
 			
 			var pointEventArray:Array = ts.tiO.frame.pointEventArray
 				
@@ -147,8 +147,8 @@ package com.gestureworks.analysis
 		{
 			//if (ts.trace_debug_mode) trace("find d taps---------------------------------------------------------");
 		
-				var dtap_time:int = 20//Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001);
-				var dtap_dist:int = 20//ts.gO.pOList[key].point_translation_threshold;
+				var dtap_time:int = Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20frames
+				var dtap_dist:int = ts.gO.pOList[key].point_translation_threshold;//20px
 				var	gestureEventArray:Array = new Array();
 				
 				// find tap pairs 
@@ -190,8 +190,8 @@ package com.gestureworks.analysis
 		{
 			//if (ts.trace_debug_mode) trace("find t taps---------------------------------------------------------");
 		
-				var ttap_time:int = 20//Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //15 => 250ms
-				var ttap_dist:int = 20//ts.gO.pOList[key].point_translation_threshold;
+				var ttap_time:int = Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20
+				var ttap_dist:int = ts.gO.pOList[key].point_translation_threshold;//20
 				var	gestureEventArray:Array = new Array();
 				
 				// find tap pairs // dont need current frame as never double tap in a single frame
