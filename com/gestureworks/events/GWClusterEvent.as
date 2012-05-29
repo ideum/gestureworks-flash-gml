@@ -21,6 +21,7 @@ import flash.events.Event;
 	public class GWClusterEvent extends Event
 	{
 		public var value:Object;
+		//public var data:Object;
 		
 		public static var C_ADD:String = "c_add";
 		public static var C_REMOVE:String = "c_remove";
@@ -48,7 +49,7 @@ import flash.events.Event;
 
 		override public function clone():Event
 		{
-			return new GWClusterEvent(type, value, bubbles, cancelable);
+			return new GWClusterEvent(type, value, bubbles, cancelable); // add data object
 		}
 
 	}

@@ -82,7 +82,13 @@ package com.gestureworks.analysis
 		private var thumbID:int;
 		private var orient_dx:Number = 0; // cluster orientation vector
 		private var orient_dy:Number = 0; // cluster orientation vector
+		private var swipe_dx:Number = 0; // cluster orientation vector
+		private var swipe_dy:Number = 0; // cluster orientation vector
+		private var flick_dx:Number = 0; // cluster orientation vector
+		private var flick_dy:Number = 0; // cluster orientation vector
 		//private var hand:String = "left";
+		
+		private var path_data:Array;
 		
 		// velocity // first order change in cluster properties wrt
 		private	var c_dx:Number = 0; // cluster position change x
@@ -213,6 +219,8 @@ package com.gestureworks.analysis
 			//ddw
 			//dh 
 			//ddh
+			
+			path_data = new Array();
 		}
 		
 		public function findCluster():void
@@ -285,8 +293,13 @@ package com.gestureworks.analysis
 			
 			c_emx = 0;
 			c_emy = 0;
+			
 			orient_dx = 0;
 			orient_dy = 0;
+			swipe_dx = 0;
+			swipe_dy = 0;
+			flick_dx = 0;
+			flick_dy = 0;
 			
 			//first diff
 			c_dx = 0;
@@ -316,6 +329,8 @@ package com.gestureworks.analysis
 			c_hold_x_mean = 0;
 			c_hold_y_mean = 0;
 			//c_locked = LN;
+			
+			//path_data = new Array();
 		}
 		
 		private function clusterProperties():void
@@ -359,6 +374,8 @@ package com.gestureworks.analysis
 						var	hold_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold * 0.001 * GestureWorks.application.frameRate);
 						var hold_number:int = ts.gO.pOList[key].n;
 						
+						//trace(hold_dist,hold_time,hold_number)
+						
 							for (i = 0; i < N; i++)
 								{
 								if ((Math.abs(pointList[i].history[0].dx) < hold_dist) && (Math.abs(pointList[i].history[0].dy) < hold_dist))
@@ -382,14 +399,38 @@ package com.gestureworks.analysis
 											}
 								}
 						if(LN){
-						c_hold_x_mean *= 1/LN//k0;
-						c_hold_y_mean *= 1/LN//k0;
+							c_hold_x_mean *= 1/LN//k0;
+							c_hold_y_mean *= 1/LN//k0;
 						}
 						else {
 							c_hold_x_mean = 0;
 							c_hold_y_mean = 0;
 						}
 					}
+			}	
+			
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+			// BASIC STROKE LISTENING // ALGORITHM // type STROKE
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			if (ts.gO.pOList[key].gesture_type == "stroke"){
+
+					if ((ts.gO.pOList[key])&&(ts.gestureList[key])&&(N==1))
+					{
+						//trace("hitory length",pointList[0].history.length)
+						var path:Array = new Array()
+							for (i = 0; i < pointList[0].history.length; i++)
+								{
+								//trace("--",pointList[0].history[i].x, pointList[0].history[i].y)
+								path.push(new Point(pointList[0].history[i].x,pointList[0].history[i].y));
+								}
+							path_data = path; 
+					
+						//path_data = [0,2]//ts.cO.pointArray;
+					}
+					//trace("point array", ts.cO.pointArray[0].history[0].x)
+					//trace("point list",pointList[0].history[0].x)
+					
+					
 			}	
 				
 			///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -650,23 +691,26 @@ package com.gestureworks.analysis
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			// BASIC FLICK CONTROL // ALGORITHM
 			///////////////////////////////////////////////////////////////////////////////////////////////////
-			// CHECK FOR ACCELERATION
 			
-			// IF ABOVE ACCEL THREHOLD RETURN 
+			// SHOULD BE DISCRETE ON RELEASE
+			// CHECK FOR ACCELERATION
+			// IF ABOVE ACCEL THREHOLD RETURN GESTURE
 			if (ts.gO.pOList[key].gesture_type == "flick")
 			{
 				if (ts.trace_debug_mode) trace("cluster flick algorithm");
 				
-				if ((ts.gO.pOList["flick"])&&(ts.gestureList[key]))
+				if ((ts.gO.pOList[key])&&(ts.gestureList[key]))
 				{
 					ts.gO.pOList[key]["flick_dx"].clusterDelta = 0; 
 					ts.gO.pOList[key]["flick_dy"].clusterDelta = 0; 
 				
 				if((N >= ts.gO.pOList[key].nMin)&&(N <= ts.gO.pOList[key].nMax))
 				{
-					var flick_dx:Number = 0;
-					var flick_dy:Number = 0;
+					//var flick_dx:Number = 0;
+					//var flick_dy:Number = 0;
 					var flick_threshold:Number = ts.gO.pOList[key].cluster_acceleration_threshold; //accleration threshold
+					
+					//trace("accel:",flick_threshold)
 					
 					////////////////////////////////////////////////////////////////////////////////////////////////////////
 					var flick_h:int = 3;
@@ -709,6 +753,7 @@ package com.gestureworks.analysis
 					// assign value to property object
 					ts.gO.pOList[key]["flick_dx"].clusterDelta = flick_dx;
 					ts.gO.pOList[key]["flick_dy"].clusterDelta = flick_dy;
+					
 					//trace("flick, velocity",flick_etmVel.x,flick_etmVel.y,flick_etm_accel.x,flick_etm_accel.y,flick_threshold,flick_dx,flick_dy)
 					}
 				}
@@ -716,6 +761,7 @@ package com.gestureworks.analysis
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			// BASIC SWIPE CONTROL // ALGORITHM
 			///////////////////////////////////////////////////////////////////////////////////////////////////
+			// SHOULD BE DISCRETE GESTURE ON RELEASE
 			// CONST VELOCITY CHECK FOR LARGE CHNAGES IN ACCEL
 			// RETURN VELOCITY OF SWIPE IN X AND Y
 			if (ts.gO.pOList[key].gesture_type == "swipe")
@@ -730,10 +776,11 @@ package com.gestureworks.analysis
 					if((N >= ts.gO.pOList[key].nMin)&&(N <= ts.gO.pOList[key].nMax))
 					{
 				
-					var swipe_dx:Number = 0; 
-					var swipe_dy:Number = 0;
+					//var swipe_dx:Number = 0; 
+					//var swipe_dy:Number = 0;
 					var swipe_threshold:Number = ts.gO.pOList[key].cluster_acceleration_threshold;// acceleration threshold
 					
+					//trace(swipe_threshold)
 					////////////////////////////////////////////////////////////////////////////////////////////////////
 					var swipe_h:int = 6;
 					var swipe_etmVel:Point = findMeanTemporalVelocity(swipe_h); //ensamble temporal mean velocity
@@ -743,10 +790,10 @@ package com.gestureworks.analysis
 					//////////////////////////////////////////////////////////////////
 					// STANDARD OPERATION	
 					///////////////////////////////////////////////////////////////////
-					if (!findMeanInstAcceleration_comlpete) 
+					if (!findMeanInstAcceleration_comlpete) //spelling
 					{
 						findMeanInstAcceleration();
-						findMeanInstAcceleration_comlpete = true;
+						findMeanInstAcceleration_comlpete = true; // spelling
 					}
 					////////////////////////////////////////////////////////////////////
 					
@@ -758,6 +805,7 @@ package com.gestureworks.analysis
 					{
 						swipe_dx = swipe_etmVel.x;
 						swipe_dy = swipe_etmVel.y;
+						//trace("what??",swipe_etmAccel.x,swipe_etmAccel.y)
 					}
 					//else if (Math.abs(swipe_etmAccel.x) < swipe_threshold) 
 					//{
@@ -774,9 +822,12 @@ package com.gestureworks.analysis
 					// NEEDS TO RETURN ACCELERATION ALSO
 					// NEED MULTIPLE FIELDS FOR CLUSTER DELTA
 					
+					//REQUIRE MIN HISTORY OF 20 FRAMES TO REDUCE INIT TOUCH JERK ACCIDENTAL TRIGGER
+					
 					// assign value to property object
 					ts.gO.pOList[key]["swipe_dx"].clusterDelta = swipe_dx;
 					ts.gO.pOList[key]["swipe_dy"].clusterDelta = swipe_dy;
+					
 					//trace("swipe, velocity",swipe_etmVel.x,swipe_etmVel.y,swipe_etmAccel.x,swipe_etmAccel.y,swipe_threshold)
 					}
 				}
@@ -784,8 +835,10 @@ package com.gestureworks.analysis
 			///////////////////////////////////////////////////////////////////////////////////////////////////
 			// BASIC SCROLL CONTROL // ALGORITHM
 			///////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			// CONTINUOUSLY
 			// MIN TRANSLATION IN X AND Y
-			// RETURN AVERAGE ENSABLE TEMPORAL VELOCITY
+			// RETURN AVERAGE ENSABLE TEMPORAL VELOCITY 
 			if (ts.gO.pOList[key].gesture_type == "scroll")
 			{
 				if (ts.trace_debug_mode) trace("cluster scroll algorithm");
@@ -915,8 +968,13 @@ package com.gestureworks.analysis
 			//cO.hand = hand;
 			ts.cO.mx = c_emx;
 			ts.cO.my = c_emy;
+			
 			ts.cO.orient_dx = orient_dx;
 			ts.cO.orient_dy = orient_dy;
+			ts.cO.swipe_dx = swipe_dx;
+			ts.cO.swipe_dy = swipe_dy;
+			ts.cO.flick_dx = flick_dx;
+			ts.cO.flick_dy = flick_dy;
 		
 			/////////////////////////
 			// first diff
@@ -950,6 +1008,11 @@ package com.gestureworks.analysis
 			ts.cO.hold_x = c_hold_x_mean;
 			ts.cO.hold_y = c_hold_y_mean;
 			ts.cO.locked = LN;
+			
+			ts.cO.path_data = path_data
+			///////////////////////////
+			
+			
 		}
 		
 		////////////////////////////////////////////////////////////

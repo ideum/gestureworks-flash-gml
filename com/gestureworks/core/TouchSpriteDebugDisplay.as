@@ -44,7 +44,7 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var cluster_orient:DebugClusterOrientation;
-		//private var cluster_vectordata:DebugClusterVectorData;
+		private var cluster_vectordata:DebugClusterVectorData;
 		/**
 		* @private
 		*/
@@ -110,7 +110,7 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var clusterOrientationOn:Boolean = false;
-		//private var clusterVectorDataOn:Boolean = false;
+		private var clusterVectorDataOn:Boolean = false;
 		/**
 		* @private
 		*/
@@ -227,7 +227,7 @@ package com.gestureworks.core
 		for (var i:int = 0; i < numLayers; i++) {
 			var type:String = cml.DebugKit.DebugLayer[i].attribute("type")
 		
-			//if (type == "point_vectors") pointVectorsOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "point_vectors") pointVectorsOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			if (type == "point_shapes") pointShapesOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			
 			if (type == "cluster_box") clusterBoxOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
@@ -235,7 +235,8 @@ package com.gestureworks.core
 			if (type == "cluster_center") clusterCenterOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			if (type == "cluster_rotation") clusterRotationOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			if (type == "cluster_web") clusterWebOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "cluster_orientation") clusterOrientationOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_orientation") clusterOrientationOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
+			
 			//if (type == "cluster_vector_data") clusterVectorDataOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			//if (type == "cluster_line_chart") clusterChartOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
 			//if (type == "cluster_data_list") clusterDataOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
@@ -316,6 +317,7 @@ package com.gestureworks.core
 							cluster_rotation.setStyles();
 						debug_display.addChild(cluster_rotation);
 					}
+					
 					/*
 					if(clusterVectorDataOn){
 						// create cluster vectors
@@ -440,13 +442,13 @@ package com.gestureworks.core
 				if (_N == 1) 
 				{
 					if (touchObjectPivotOn) touchObject_pivot.drawVectors();
-					if (touchObjectPivotOn) touchObject_pivot.drawVectors();
 				}
 				
 				if (_N >= 1) 
 				{
 					if(pointShapesOn)cluster_points.drawPoints();
-					//if (pointVectorsOn) cluster_vectors.drawVectors();
+					if (pointVectorsOn) cluster_vectors.drawVectors();
+					//if (clusterVectorDataOn) cluster_vectordata.drawVectorData();
 					if (touchObjectTransformOn) touchObject_transform.drawTransform();
 					//if (clusterChartOn) cluster_chart.drawChart();
 					

@@ -70,6 +70,9 @@ package com.gestureworks.managers
 				object.complete = gestureObject.complete;
 				object.release = gestureObject.release;
 				
+				// gesture object lists
+				//object.pOList = gestureObject.pOList;
+				
 			//trace("gesture hist",object.dx,gestureObject.dx );
 			return object;
 		}

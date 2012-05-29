@@ -69,8 +69,8 @@ package com.gestureworks.managers
 				object.dtheta = clusterObject.dtheta;
 				
 				// second order primary deltas
-				//object.ddx = clusterObject.ddx;
-				//object.ddy = clusterObject.ddy;
+				object.ddx = clusterObject.ddx;
+				object.ddy = clusterObject.ddy;
 				
 				// core cluster events
 				//object.add = clusterObject.add;
@@ -85,6 +85,20 @@ package com.gestureworks.managers
 				//object.jolt = clusterObject.jolt;
 				//object.split= clusterObject.split;
 				//object.merge = clusterObject.merge;
+				
+				// STANDARD CLUSTER CALCS
+				object.orient_dx = clusterObject.orient_dx;
+				object.orient_dy = clusterObject.orient_dy;
+				object.flick_dx = clusterObject.flick_dx;
+				object.flick_dy = clusterObject.flick_dy;
+				object.swipe_dx = clusterObject.swipe_dx;
+				object.swipe_dy = clusterObject.swipe_dy;
+				
+				//object.pointArray = [2, 3]//;
+				
+				object.path_data = clusterObject.path_data;
+				
+				//trace(clusterObject.pointArray[0].x)
 
 			return object;
 		}

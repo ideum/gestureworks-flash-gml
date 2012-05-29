@@ -28,15 +28,19 @@ package com.gestureworks.utils.debug
 		private var obj:Object;
 		private var clusterObject:Object;
 		private var pointList:Object;
+		private var path_data:Array = new Array();
 		private var N:int;
 		private var touchObjectID:int = 0;
-		private var hist:int =0;
+		private var hist:int = 0;
+		private var ts:Object;
 			
 		public function DebugClusterVectors(_id:Number)
 		{
-			//trace("init cluster point vectos");
+			//trace("init cluster point vectors");
 			touchObjectID = _id;
 			clusterObject = GestureGlobals.gw_public::clusters[touchObjectID];
+			
+			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
 			
 			hist = 15;
 
@@ -48,7 +52,7 @@ package com.gestureworks.utils.debug
 				obj.displayOn = false;
 	
 				obj.stroke_thickness = 3;
-				obj.stroke_color = 0xFFFFFF;
+				obj.stroke_color = 0xFFAE1F;
 				obj.stroke_alpha = 1;
 				obj.fill_color = 0xFFFFFF;
 				obj.fill_alpha = 1;
@@ -63,6 +67,9 @@ package com.gestureworks.utils.debug
 	
 	public function drawVectors():void
 	{
+		//trace("drawing point vectors");
+		
+		path_data = clusterObject.path_data 
 		pointList = clusterObject.pointArray
 		N = pointList.length
 
@@ -120,9 +127,33 @@ package com.gestureworks.utils.debug
 							graphics.drawRect(pointList[i].history[j].x, pointList[i].history[j].y, obj.width, obj.width);
 						}
 					}
-				}	
+				}
+				
+				if((N)&&(path_data[0])){
+				// draw srtoke
+				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
+				
+					graphics.moveTo(path_data[0].x, path_data[0].y)
+					graphics.lineStyle(obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
+					
+					for (var p:int = 0; p < path_data.length ; p++) 
+					{
+						graphics.lineTo(path_data[p].x, path_data[p].y);
+					}
+					
+					// reference path
+					var ref_path:Array = ts.gO.pOList["stroke"].path
+					graphics.moveTo(ref_path[0].x, ref_path[0].y)
+					graphics.lineStyle(obj.stroke_thickness, 0xFF0000, obj.stroke_alpha);
+					
+					for (var q:int = 0; q < ref_path.length ; q++) 
+					{
+						graphics.lineTo(ref_path[q].x, ref_path[q].y);
+					}
+					
+				}
+				
 		}
-	//	}
 	
 public function clear():void
 	{
@@ -141,9 +172,9 @@ public function clear():void
 				//trace("vector display style");
 				
 				//obj.displayOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")//3;
-				obj.stroke_thickness = cml.DebugKit.DebugLayer[i].attribute("stroke_thickness")//3;
-				obj.stroke_color = cml.DebugKit.DebugLayer[i].attribute("stroke_color")//0xFFFFFF;
-				obj.stroke_alpha = cml.DebugKit.DebugLayer[i].attribute("stroke_alpha")//1;
+				//obj.stroke_thickness = cml.DebugKit.DebugLayer[i].attribute("stroke_thickness")//3;
+				//obj.stroke_color = cml.DebugKit.DebugLayer[i].attribute("stroke_color")//0xFFFFFF;
+				//obj.stroke_alpha = cml.DebugKit.DebugLayer[i].attribute("stroke_alpha")//1;
 				obj.fill_color = cml.DebugKit.DebugLayer[i].attribute("fill_color")//0xFFFFFF;
 				obj.fill_alpha = cml.DebugKit.DebugLayer[i].attribute("fill_alpha")//1;
 				obj.fill_type = cml.DebugKit.DebugLayer[i].attribute("fill_type")//"solid";

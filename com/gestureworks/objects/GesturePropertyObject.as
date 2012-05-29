@@ -190,5 +190,28 @@ package com.gestureworks.objects
 			_nMin = value;
 		}
 		
+		
+		// path_match---------------------
+		private var _path_match:Boolean = false;
+		public function get path_match():Boolean
+		{
+			return _path_match;
+		}
+		public function set path_match(value:Boolean):void
+		{
+			_path_match = value;
+		}
+		
+		// path---------------------
+		private var _path:Array = new Array();
+		public function get v():Array
+		{
+			return _path;
+		}
+		public function set path(value:Array):void
+		{
+			_path = value;
+		}
+		
 	}
 }

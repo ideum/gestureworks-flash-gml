@@ -21,6 +21,7 @@ package com.gestureworks.utils
 	import com.gestureworks.objects.PropertyObject;
 	import com.gestureworks.objects.GesturePropertyObject;
 	import com.gestureworks.objects.GestureObject;
+	import flash.geom.Point;
 	
 	//import com.gestureworks.utils.Yolotzin;
 	import com.gestureworks.core.GML;
@@ -74,7 +75,8 @@ package com.gestureworks.utils
 									"hold":true, 
 									"tap":true,   
 									"double_tap":true,  
-									"triple_tap":true
+									"triple_tap":true,
+									"stroke":true
 									};			
 
 						
@@ -131,7 +133,51 @@ package com.gestureworks.utils
 															pOList[gesture_id].point_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_threshold"));
 															pOList[gesture_id].point_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_threshold"));
 															//pOList[gesture_id].point_jolt_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.points.attribute("jolt_threshold"));
-														}	
+															
+															//pOList[gesture_id].path = String(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("path"));
+															var path_string_svg:String = String(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("path_svg"));
+															var path_string_pts:String = String(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("path_pts"));
+															
+															/*
+															if (path_string_svg) 
+															{
+															//trace("parse svg path");
+															var pathArray:Array = new Array();
+															var stringArray:Array = path_string_svg.split("L"); 												
+																													
+																for(var m:int=0; m<stringArray.length;m++)
+																{
+																	var coordArray:Array = stringArray[m].split(" "); 
+																	pathArray[m] = new Point(coordArray[1],coordArray[2]);
+																}
+																pOList[gesture_id].path = pathArray
+															}*/
+															
+															
+															if (path_string_pts) 
+															{
+															//trace("parse pt path");
+															var pathArray:Array = new Array();
+															var stringArray:Array = path_string_pts.split(","); 												
+															
+															for(var m:int=0; m<=stringArray.length/2;m=m+2)
+																{
+																	var xsp:Array= stringArray[m].split("(x=");
+																	var ysp:Array = stringArray[m + 1].split("y=");
+																	var ysp_sp:Array = ysp[1].split(")")
+																	//trace(xsp[1], ysp_sp[0])
+																	var x:Number = 200*xsp[1];
+																	var y:Number = 200*ysp_sp[0];
+
+																	pathArray.push(new Point(x,y));
+																}
+																pOList[gesture_id].path = pathArray
+															}
+															
+															
+														}
+									
+														
 														// if cluster action defined
 														if (gml.Gesture_set[0].Gesture[i].match.action.initial.cluster)
 														{
@@ -255,7 +301,7 @@ package com.gestureworks.utils
 							}
 							gO.pOList = pOList;
 							
-							traceGesturePropertyList()
+						//	traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		

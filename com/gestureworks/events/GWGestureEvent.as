@@ -50,6 +50,8 @@ package com.gestureworks.events
 		//public static var STROKE_SHAPE:String = "shape";
 		//public static var STROKE_NUMBER:String = "number";
 		
+		public static var STROKE:String = "stroke";
+		
 		//public static var ANCHOR:String = "anchor";
 		//public static var ANCHOR_TAP:String = "anchor";
 		//public static var ANCHOR_ROTATE:String = "anchor";
@@ -92,7 +94,7 @@ package com.gestureworks.events
 
 		override public function clone():Event
 		{
-			return new GWGestureEvent(type, value, bubbles, cancelable);
+			return new GWGestureEvent(type, value, bubbles, cancelable); // add data object
 		}
 
 	}

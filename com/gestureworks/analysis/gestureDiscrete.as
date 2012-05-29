@@ -26,6 +26,11 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
+	
+	import com.gestureworks.analysis.paths.PathCollection;
+	import com.gestureworks.analysis.paths.PathCollectionIterator; PathCollectionIterator;
+	//import com.gestureworks.analysis.paths.PathDictionary; PathDictionary;
+	import com.gestureworks.analysis.paths.PathProcessor; PathProcessor;
 		
 	public class gestureDiscrete
 	{
@@ -68,7 +73,7 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
-			if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
+			//if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
 			
 			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
 			var tap_dist:int = ts.gO.pOList[key].point_translation_threshold;//10
@@ -120,7 +125,9 @@ package com.gestureworks.analysis
 										{
 											var dx0:Number = Math.abs(pointEventArray[j].stageX - event.stageX)
 											var dy0:Number = Math.abs(pointEventArray[j].stageY - event.stageY)
-																
+											
+											//trace(dx0,dy0)
+											
 											if ((dx0 < tap_dist) && (dy0 < tap_dist))
 											{
 												// add tap event to gesture timeline 
@@ -444,6 +451,24 @@ package com.gestureworks.analysis
 				}
 				
 				//trace("gesture block----------------------------------------------------------------")
+		}
+		
+		// stroke analysis
+		public function findStrokeGesture(key:String):void
+		{
+			var path:String = ts.gO.pOList[key].path;
+			var path_match:Boolean = ts.gO.pOList[key].path_match;
+			var N:int = ts.gO.pOList[key].n;
+			
+			trace("ref data",key, N, path_match, path);
+			///////////////////////////////////
+			// compare to captured path
+			///////////////////////////////////
+			trace("capturePath", ts.cO.history[0].path_data.length, ts.cO.history[0].path_data)
+			
+			
+			
+		
 		}
 		
 		public function findTimelineGestures():void

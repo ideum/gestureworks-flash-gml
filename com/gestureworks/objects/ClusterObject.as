@@ -464,6 +464,68 @@ package com.gestureworks.objects
 			_hand = value;
 		}
 		
+		
+		///////////////////////////////////////////////
+		// test
+		// common custom cluster calcs
+		
+		
+		// flick_dx ------------------
+		private var _flick_dx:Number = 0;
+		public function get flick_dx():Number
+		{
+			return _flick_dx;
+		}
+		public function set flick_dx(value:Number):void
+		{
+			_flick_dx = value;
+		}
+		// flick_dy ------------------
+		private var _flick_dy:Number = 0;
+		public function get flick_dy():Number
+		{
+			return _flick_dy;
+		}
+		public function set flick_dy(value:Number):void
+		{
+			_flick_dy = value;
+		}
+		// swipe_dx ------------------
+		private var _swipe_dx:Number = 0;
+		public function get swipe_dx():Number
+		{
+			return _swipe_dx;
+		}
+		public function set swipe_dx(value:Number):void
+		{
+			_swipe_dx = value;
+		}
+		// swipe_dy ------------------
+		private var _swipe_dy:Number = 0;
+		public function get swipe_dy():Number
+		{
+			return _swipe_dy;
+		}
+		public function set swipe_dy(value:Number):void
+		{
+			_swipe_dy = value;
+		}
+		
+		// path_data
+		private var _path_data:Array = new Array();
+		public function get path_data():Array
+		{
+			return _path_data;
+		}
+		public function set path_data(value:Array):void
+		{
+			_path_data = value;
+		}	
+		
+		
+		//////////////////////////////////////////////
+		
+		
 		///////////////////////////////////////////////
 		// CLUSTER EVENT LOGIC
 		///////////////////////////////////////////////

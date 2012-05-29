@@ -56,7 +56,7 @@ package com.gestureworks.utils.debug
 		public function DebugClusterVectorData(ID:Number)
 		{
 			//super();
-			//trace("init cluster vector");
+			trace("init cluster vector");
 			
 			id = ID;
 			clusterObject = GestureGlobals.gw_public::clusters[id];
