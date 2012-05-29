@@ -51,7 +51,7 @@ package com.gestureworks.core
 			super();
 			
 			// added to auto-switch to simulator
-			// -Charles (7/17/2012)
+			// -Charles (5/17/2012)
 			if (!supportsTouch) simulator = true;
 			
 			if(cmlSettingsPath) settingsPath = cmlSettingsPath;

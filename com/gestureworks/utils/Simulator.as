@@ -21,7 +21,7 @@ package com.gestureworks.utils
 	public class Simulator 
 	{		
 		public static function initialize(simulator:Boolean = false):void
-		{			
+		{	
 			if (GestureWorks.hasCML) 
 			{
 				var simString:String = CML.Objects.@simulator;
@@ -30,16 +30,9 @@ package com.gestureworks.utils
 						
 			GestureWorks.supportsTouch = !simulator;
 			
-			if (!GestureWorks.supportsTouch) {
+			if (simulator)
 				trace("simulator is on");
-				Simulator.on = true;
-			}
 		}
-		
-		// Added this property, to do conditional checks in TouchSpriteBase
-		// Currently, this is actually the same as GestureWorks.supportsTouch, but adding this seems to be more clear
-		// - Charles (5/16/2012)
-		public static var on:Boolean = false;
 		
 	}
 }

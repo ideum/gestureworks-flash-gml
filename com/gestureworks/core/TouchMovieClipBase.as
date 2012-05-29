@@ -442,7 +442,7 @@ package com.gestureworks.core
 						}
 						else {
 							// added the !mouseChildren in order to simluator to work properly -charles (5/17/2012)
-							if (2 == event.eventPhase && !Simulator.on) { //targeting phase
+							if (2 == event.eventPhase && !mouseChildren) { //targeting phase
 								assignPoint(event);
 								//event.stopPropagation(); // allows touch down and tap
 							 }
