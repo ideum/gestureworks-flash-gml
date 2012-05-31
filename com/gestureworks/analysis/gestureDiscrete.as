@@ -27,10 +27,10 @@ package com.gestureworks.analysis
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	
-	import com.gestureworks.analysis.paths.PathCollection;
-	import com.gestureworks.analysis.paths.PathCollectionIterator; PathCollectionIterator;
+	//import com.gestureworks.analysis.paths.PathCollection;
+	//import com.gestureworks.analysis.paths.PathCollectionIterator; PathCollectionIterator;
 	//import com.gestureworks.analysis.paths.PathDictionary; PathDictionary;
-	import com.gestureworks.analysis.paths.PathProcessor; PathProcessor;
+	//import com.gestureworks.analysis.paths.PathProcessor; PathProcessor;
 		
 	public class gestureDiscrete
 	{

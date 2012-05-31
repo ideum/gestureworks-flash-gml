@@ -704,19 +704,6 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var _gestureTouchInertia:Boolean = false;
-		/**
-		* Determins whether touch inertia is processed on the touchSprite.
-		*/
-		public function get gestureTouchInertia():Boolean{return _gestureTouchInertia;}
-		public function set gestureTouchInertia(value:Boolean):void
-		{
-			_gestureTouchInertia=value;
-		}
-		
-		/**
-		* @private
-		*/
 		public var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
 		/**
 		* Determins whether release inertia is given to gestureEvents on the touchSprite.

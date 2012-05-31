@@ -37,7 +37,7 @@ package com.gestureworks.core
 		// public override
 		///////////////////////////////////////////
 		
-		public var inertialDampingOn:Boolean = false;
+		public var inertialDampingOn:Boolean = false;//false
 		
 		public function TouchSpriteProcessor():void
 		{
@@ -88,6 +88,7 @@ package com.gestureworks.core
 		*/
 		public function applyNoiseSuppression():void 
 		{
+			
 			if (_deltaFilterOn)
 			{	
 				// property list loop
@@ -103,10 +104,11 @@ package com.gestureworks.core
 								{
 									var estDelta:Number = gO.pOList[i][j].noise_filterMatrix.next(gO.pOList[i][j].clusterDelta);
 									gO.pOList[i][j].processDelta = gO.pOList[i][j].filter_factor * estDelta + (1 - gO.pOList[i][j].filter_factor) * gO.pOList[i][j].clusterDelta;
-									if(trace_debug_mode) trace("	applying filter:",i,j, "	cluster delta:",gO.pOList[i][j].clusterDelta, "	estinmated delta:",estDelta, "	filter factor:",gO.pOList[i][j].filter_factor)
+									//if (trace_debug_mode) 
+									trace("	applying filter:",i,j, "	cluster delta:",gO.pOList[i][j].clusterDelta, "	estinmated delta:",estDelta, "	filter factor:",gO.pOList[i][j].filter_factor)
 								}
 								else gO.pOList[i][j].processDelta = gO.pOList[i][j].clusterDelta;
-								if (trace_debug_mode) trace("process data ", i, j, gO.pOList[i][j].clusterDelta,gO.pOList[i][j].processDelta);
+								//if (trace_debug_mode) trace("process data ", i, j, gO.pOList[i][j].clusterDelta,gO.pOList[i][j].processDelta);
 							}
 						}
 					}
@@ -178,6 +180,20 @@ package com.gestureworks.core
 		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
 		public function set deltaFilterOn(value:Boolean):void
 		{
+			_deltaFilterOn=value;
+		}
+		
+		/**
+		* @private
+		*/
+		private var _gestureTouchInertia:Boolean = false;
+		/**
+		* Determins whether touch inertia is processed on the touchSprite.
+		*/
+		public function get gestureTouchInertia():Boolean{return _gestureTouchInertia;}
+		public function set gestureTouchInertia(value:Boolean):void
+		{
+			_gestureTouchInertia = value;
 			_deltaFilterOn=value;
 		}
 		
