@@ -29,7 +29,7 @@ package com.gestureworks.tuio
 	import flash.ui.*;
 	import flash.display.*
 	import flash.utils.*;
-	
+	import org.tuio.adapters.*;	
 	import com.gestureworks.managers.SocketTouchManager;
 	
 	public class TUIOManager extends Sprite
@@ -50,10 +50,7 @@ package com.gestureworks.tuio
 		public function TUIOManager() 
 		{			
 			super();
-						
-			if (stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
-			
+									
 			try
 			{
 				var UDPConnector:Class = getDefinitionByName("org.tuio.connectors.UDPConnector") as Class;
@@ -61,13 +58,17 @@ package com.gestureworks.tuio
 			}
 			catch (e:Error)
 			{
-				throw new Error("TUIO is currently only supported in AIR, if you are trying to utilize TUIO, please make sure that you have included this statement into your Main Document class:  ' import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR; '. ");
+				throw new Error("TUIO is currently only supported in AIR, if you are trying to utilize TUIO, please make sure that you have included this statement into your Main Document class:  'import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR;'. ");
 			}
 			
+			if (stage) init();
+			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 			
 		private function init(event:Event = null):void 
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
@@ -85,16 +86,26 @@ package com.gestureworks.tuio
 			windowW = stage.nativeWindow.width;
 			*/
 						
-			Multitouch.inputMode = MultitouchInputMode.NONE;			
+			Multitouch.inputMode = MultitouchInputMode.NONE;		
 			var tc:TuioClient = new TuioClient(udpConnector);
-			var tm:TuioManager = TuioManager.init(stage);
+			
 			
 			//var mta:MouseTuioAdapter = new MouseTuioAdapter(stage);
 			//var tDbg:TuioDebug = TuioDebug.init(stage);
 			//mta.addListener(tDbg);
+		
+			//var nta:NativeTuioAdapter = new NativeTuioAdapter(stage);
+			//var tDbg:TuioDebug = TuioDebug.init(stage);
+			var tm:TuioManager = TuioManager.init(stage);
+			//tm.dispatchNativeTouchEvents = true;
+			
+			//nta.addListener(tm);
+			//nta.addListener(tDbg);
+			
+
 			
 			tc.addListener(tm);
-			tc.addListener(TuioDebug.init(stage))
+			//tc.addListener(tDbg);
 			tm.addEventListener(TuioEvent.ADD, pointAddedHandler);
 			tm.addEventListener(TuioEvent.UPDATE, pointUpdatedHandler);
 			tm.addEventListener(TuioEvent.REMOVE, pointRemovedHandler);
@@ -102,6 +113,8 @@ package com.gestureworks.tuio
 		
 		private function pointAddedHandler(e:TuioEvent):void
 		{
+			//trace("point added");
+			
 			var object:Object = new Object();
 			object.touchPointID = e.tuioContainer.sessionID;
 			object.x = e.tuioContainer.x * stage.stageWidth; 
@@ -110,7 +123,9 @@ package com.gestureworks.tuio
 		}
 		
 		private function pointUpdatedHandler(e:TuioEvent):void
-		{			
+		{
+			//trace("point update");
+			
 			var object:Object = new Object();
 			object.touchPointID = e.tuioContainer.sessionID;
 			object.x = e.tuioContainer.x * stage.stageWidth;
@@ -119,7 +134,9 @@ package com.gestureworks.tuio
 		}
 		
 		private function pointRemovedHandler(e:TuioEvent):void
-		{			
+		{
+			//trace("point removed");
+			
 			var object:Object = new Object();
 			object.touchPointID = e.tuioContainer.sessionID;
 			object.x = e.tuioContainer.x * stage.stageWidth;

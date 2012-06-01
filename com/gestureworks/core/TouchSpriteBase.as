@@ -47,6 +47,8 @@ package com.gestureworks.core
 	
 	import com.gestureworks.utils.Simulator;
 	
+	import org.tuio.TuioTouchEvent;
+	
 	/**
 	 * The TouchSpriteBase class is the base class for all touch and gestures enabled
 	 * Sprites that require additional display list management. 
@@ -102,10 +104,14 @@ package com.gestureworks.core
          private function initBase():void 
          {
 			//trace("create touchsprite base");
-					
-				    // add touch event listener 
-					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			
+					// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
+					if (GestureWorks.activeTUIO)					
+						addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+					if (GestureWorks.supportsTouch)
+						addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+					else
+						addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 									
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -289,6 +295,18 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
+		private function onTuioTouchDown(e:TuioTouchEvent):void
+		{			
+			var pointID:int = e.tuioContainer.sessionID;		
+			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
+			
+			// currentTarget seems to work here, b/c there is filtering going on within onTouchDown
+			// normally this would be the target, but Tuio library doesn't recognize mouseChildren = false
+			onTouchDown(event, e.currentTarget);					
+		}		
+		/**
+		 * @private
+		 */
 		private var _touchChildren:Boolean = false;
 		public function get touchChildren():Boolean{return _touchChildren;}
 		public function set touchChildren(value:Boolean):void
@@ -385,32 +403,30 @@ package com.gestureworks.core
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent, target:*=null):void
-		{			
-				//trace("touchBegin");
-			
+		{				
 				//////////////////
 				// new stuff
 				//////////////////
 				
 				// if target gets passed it takes precendence, otherwise try to find it
-				// currently target gets passed in as argument for our global hit test 
+				// currently target gets passed in as argument for our global hit test
+				// if no target is found then bail
 				if (!target)
 					target = event.target; // object that got hit, used for our non-tuio gesture events
 				if (!target)
-					target = this; 
+					return;
 				
-				
+					
 				var parent:* = target.parent;										
-			
 				
 				//trace("target: ", target.id, "parent: ", target.parent)
-				//trace(event.target, event.stageX, event.localX);
+				//trace(target, event.stageX, event.localX);
 				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 				
 				///////////////
 				// native touch
 				///////////////
-				if (GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				if (1)
 				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
 				// -Charles (5/16/2012)
 				{					
@@ -457,9 +473,9 @@ package com.gestureworks.core
 							 }
 						}	
 				}
-				////////////////
-				// mouse events
-				////////////////
+				///////////////////////////////////////
+				// mouse events - no longer used
+				/////////////////////////////////////////
 				else {
 					assignPoint(event);
 					return										

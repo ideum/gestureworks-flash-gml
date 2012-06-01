@@ -25,22 +25,30 @@ package com.gestureworks.managers
 	{		
 		public static function add(object:Object):void
 		{
+			/*
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, object.touchPointID, false, object.x, object.y);			
-			var hitObject:DisplayObject = HitTestManager.instance.hitTest(GestureWorks.application, object.x, object.y);
+			var hitObject:DisplayObject = HitTestManager.instance.hitTest(GestureWorks.application, object.x, object.y, "down");
 			if (hitObject && hitObject is TouchSprite)
-				TouchSprite(hitObject).onTouchDown(event, hitObject);			
+				TouchSprite(hitObject).onTouchDown(event, hitObject);
+			*/
 		}
 		
 		public static function update(object:Object):void
 		{
+			
+			//var hitObject:DisplayObject = HitTestManager.instance.hitTest(GestureWorks.application, object.x, object.y, "move");									
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, object.touchPointID, false, object.x, object.y);
 			TouchManager.onTouchMove(event);
+			
 		}
 		
 		public static function remove(object:Object):void
 		{
+			
+			//var hitObject:DisplayObject = HitTestManager.instance.hitTest(GestureWorks.application, object.x, object.y, "up");						
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_END, true, false, object.touchPointID, false, object.x, object.y);
 			TouchManager.onTouchUp(event);
+			
 		}		
 	}
 }

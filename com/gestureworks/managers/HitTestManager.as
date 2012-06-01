@@ -26,43 +26,34 @@ package com.gestureworks.managers
 			return _instance; 
 		}
 				
-		public function hitTest(container:DisplayObjectContainer, hitX:int, hitY:int):DisplayObject
-		{			
+		public function hitTest(container:DisplayObjectContainer, hitX:int, hitY:int, type:String="down"):DisplayObject
+		{
+			
 			var child:DisplayObject;
 			var hitObject:DisplayObject = null;
-					
+			
 			recursion(container);
 			
 			function recursion(container:DisplayObjectContainer):void
 			{
-				for (var i:int=container.numChildren-1; i>=0; i--)
-				{ 
-					if (debug) trace(child, i);
+				for (var i:int=0; i<container.numChildren; i++)
+				{
 					child = container.getChildAt(i);
-							
-					if (child is TouchSprite && !(child["mouseChildren"] || child["touchChildren"]) && child.hitTestPoint(hitX, hitY))
+										
+					if (type=="down" && child is TouchSprite && child.hitTestPoint(hitX, hitY))
 					{
 						hitObject = child;
-						return;
 					}
-					else if (child.hasEventListener(MouseEvent.MOUSE_DOWN) && child.hitTestPoint(hitX, hitY))
-					{
-						hitObject = child;
-						hitObject.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false));
-						return;
-					}
-					else if (child.hasEventListener(TouchEvent.TOUCH_BEGIN) && child.hitTestPoint(hitX, hitY))
-					{
-						hitObject = child;
-						hitObject.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN, true, false));
-						return;
-					}
-					else if (child is DisplayObjectContainer)
+			
+					if (child is DisplayObjectContainer)
 					{
 						recursion(DisplayObjectContainer(child));
-					}
+					}					
 				}	
-			}			
+			}
+			
+			
+			
 			return hitObject;
 		}
 				
