@@ -61,14 +61,47 @@ package com.gestureworks.core
 			//trace("create touchsprite interface");
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onEnterFrame, false, 0, true);
 			
+			// init gesrtures
+			//this.addEventListener(Event.ADDED_TO_STAGE, initGestures);
+			
+			// move to initGestures
+			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
+			
+			
 			//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); 
-			
-			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate);
-			
 			//var myTimer:Timer = new Timer(20, 0);
 				//myTimer.addEventListener(TimerEvent.TIMER, timerHandler, false,10,false);
 				//myTimer.start();
+				
+			
 		}
+		
+		
+		private function initGestures(event:Event):void  
+		{
+			// automatically set up gesture list
+			// using gesture listeners
+			// match to type names in GML
+			
+			//var gestureEventListener:Boolean = false;
+			
+			//if (hasEventListener(GWGestureEvent.EVENT)) trace("gestures");
+			
+			if (hasEventListener(GWGestureEvent.DRAG)) trace("has drag listener");
+			if (hasEventListener(GWGestureEvent.SCALE)) trace("has scale listener");
+			if (hasEventListener(GWGestureEvent.ROTATE)) trace("has rotate listener");
+			
+			if (hasEventListener(GWGestureEvent.CUSTOM.NEW_GESTURE)) trace("has custom listener");
+			if (hasEventListener(GWGestureEvent.CUSTOM.SEED_GESTURE)) trace("has seed listener");
+			if (hasEventListener(GWGestureEvent.CUSTOM.EXAMPLE_GESTURE)) trace("has example listener");
+			
+			if (hasEventListener(GWGestureEvent.CUSTOM.N_DRAG)) trace("has n-drag listener");
+			if (hasEventListener(GWGestureEvent.CUSTOM.THREE_FINGER_DRAG)) trace("has 3-finger-drag listener");
+			
+			// dispatch gesture list update event
+			
+		}
+		
 		////////////////////////////////////////////////////////////
 		// Properties: Private
 		////////////////////////////////////////////////////////////
