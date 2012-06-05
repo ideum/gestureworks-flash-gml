@@ -21,7 +21,7 @@ package com.gestureworks.events
 	public class GWGestureEvent extends Event
 	{
 		public var value:Object;
-		
+		public var data:Object;
 		
 		public static var GESTURELIST_UPDATE:String = "gesturelist update";
 		public static var START:String = "start";
@@ -43,14 +43,12 @@ package com.gestureworks.events
 		public static var DOUBLE_TAP:String = "double_tap";
 		public static var TRIPLE_TAP:String = "triple_tap";
 		
-		
+		public static var STROKE:String = "stroke";
 		//public static var STROKE_LETTER:String = "letter";
 		//public static var STROKE_GREEK:String = "greek";
 		//public static var STROKE_SYMBOL:String = "symbol";
 		//public static var STROKE_SHAPE:String = "shape";
 		//public static var STROKE_NUMBER:String = "number";
-		
-		public static var STROKE:String = "stroke";
 		
 		//public static var ANCHOR:String = "anchor";
 		//public static var ANCHOR_TAP:String = "anchor";
@@ -77,7 +75,10 @@ package com.gestureworks.events
 		public static var CUSTOM:Object = 
 			{
 				SEED_GESTURE:"seed gesture",
-				EXAMPLE_GESTURE:"example gesture"
+				NEW_GESTURE:"new gesture",
+				EXAMPLE_GESTURE:"example gesture",
+				N_DRAG:"n-drag",
+				THREE_FINGER_DRAG:"3-finger-drag"
 			};
 	
 		
@@ -89,7 +90,8 @@ package com.gestureworks.events
 		{
 			//trace(type,CUSTOM.NEW_GESTURE); 
 			super(type, bubbles, cancelable);
-			value=data;
+			value = data;
+			//data=data;
 		}
 
 		override public function clone():Event

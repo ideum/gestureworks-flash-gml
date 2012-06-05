@@ -101,7 +101,7 @@ package com.gestureworks.analysis
 								// uses touchEnd id and position
 								//trace("Current Frame TAP", pointEventArray[p].touchPointID);
 								tapID ++;
-								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID } );
+								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
 								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(tap_event);
 								ts.onGestureTap(tap_event);
 								return; // must exit if finds as do not want to refind
@@ -134,7 +134,7 @@ package com.gestureworks.analysis
 												// uses touchEnd id and position
 												//trace("History TAP", pointEventArray[j].touchPointID);
 												tapID ++;
-												var tap_event0:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID } );
+												var tap_event0:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
 												//if (ts.tiO.pointEvents)
 												ts.tiO.frame.gestureEventArray.push(tap_event0);
 												ts.onGestureTap(tap_event0);
@@ -181,7 +181,7 @@ package com.gestureworks.analysis
 											var lpt:Point = ts.globalToLocal(spt); //local point
 											
 											dtapID++;
-											var dtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:dtapID});
+											var dtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:dtapID, id:key});
 											//if (ts.tiO.pointEvents) 
 											ts.tiO.frame.gestureEventArray.push(dtap_event);
 											return; 
@@ -243,7 +243,7 @@ package com.gestureworks.analysis
 															var lpt:Point = ts.globalToLocal(spt); //local point
 															
 															ttapID++;
-															var ttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y,gestureID:ntapID});
+															var ttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y,gestureID:ntapID, id:key});
 															//if (ts.tiO.pointEvents) 
 															ts.tiO.frame.gestureEventArray.push(ttap_event);
 															return; 
@@ -316,7 +316,7 @@ package com.gestureworks.analysis
 							var spt:Point = new Point (tap_x_mean/tapEventCount, tap_y_mean/tapEventCount); // stage point average
 							var lpt:Point = ts.globalToLocal(spt); //local point average
 							ntapID++;
-							var ntap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:spt.x, y:spt.y,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:ntapID, n:tapEventCount } )
+							var ntap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:spt.x, y:spt.y,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:ntapID, n:tapEventCount , id:key} )
 							ts.dispatchEvent(ntap_event);
 							//if (ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ntap_event);
 						}
@@ -379,7 +379,7 @@ package com.gestureworks.analysis
 						var spt2:Point = new Point (dtap_x_mean/dtapEventCount, dtap_y_mean/dtapEventCount); // stage point average
 						var lpt2:Point = ts.globalToLocal(spt2); //local point average
 						ndtapID++;
-						var ndtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt2.x, y:spt2.y,  stageX:spt2.x , stageY:spt2.y, localX:lpt2.x , localY:lpt2.y, gestureID:ndtapID,n:dtapEventCount} )
+						var ndtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt2.x, y:spt2.y,  stageX:spt2.x , stageY:spt2.y, localX:lpt2.x , localY:lpt2.y, gestureID:ndtapID,n:dtapEventCount, id:key} )
 						ts.dispatchEvent(ndtap_event);
 						// confuses counter // need to move taps to touch event layer
 						//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ndtap_event);
@@ -444,7 +444,7 @@ package com.gestureworks.analysis
 						var spt3:Point = new Point (ttap_x_mean/ttapEventCount, ttap_y_mean/ttapEventCount); // stage point average
 						var lpt3:Point = ts.globalToLocal(spt3); //local point average
 						nttapID++;
-						var nttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt3.x, y:spt3.y,  stageX:spt3.x , stageY:spt3.y, localX:lpt3.x , localY:lpt3.y, gestureID:nttapID, n:ttapEventCount} )
+						var nttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt3.x, y:spt3.y,  stageX:spt3.x , stageY:spt3.y, localX:lpt3.x , localY:lpt3.y, gestureID:nttapID, n:ttapEventCount, id:key} )
 							ts.dispatchEvent(nttap_event);
 							//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(nttap_event);
 					}
