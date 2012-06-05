@@ -96,6 +96,7 @@ package com.gestureworks.core
 			
 			// set mouseChildren to default false
 			mouseChildren = false; //false
+			//mouseEnabled = false;
 			
 			initBase();
         }
