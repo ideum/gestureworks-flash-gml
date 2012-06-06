@@ -46,6 +46,8 @@ package com.gestureworks.core
 	
 	import com.gestureworks.utils.Simulator;
 	
+	import org.tuio.TuioTouchEvent;
+	
 	/**
 	 * The TouchMovieClipBase class is the base class for all touch and gestures enabled
 	 * MovieClips that require additional display list management. 
@@ -93,9 +95,13 @@ package com.gestureworks.core
          {
 			//trace("create touchmovieclip base");
 					
-				    // add touch event listener
-					if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false,0,true); // bubbles up when nested
-					else addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+					// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
+					if (GestureWorks.activeTUIO)					
+						addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+					if (GestureWorks.supportsTouch)
+						addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+					else
+						addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -267,6 +273,19 @@ package com.gestureworks.core
 			var pointID:int = MousePoint.getID();			
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
 			onTouchDown(event, e.target);
+		}
+		
+		/**
+		 * @private
+		 */
+		private function onTuioTouchDown(e:TuioTouchEvent):void
+		{			
+			var pointID:int = e.tuioContainer.sessionID;		
+			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
+			
+			// currentTarget seems to work here, b/c there is filtering going on within onTouchDown
+			// normally this would be the target, but Tuio library doesn't recognize mouseChildren = false
+			onTouchDown(event, e.currentTarget);					
 		}
 		
 		/**

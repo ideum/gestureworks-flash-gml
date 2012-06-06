@@ -307,17 +307,17 @@ package com.gestureworks.utils
 		
 		public function traceGesturePropertyList():void
 		{
-			trace("new display object created in gesture parser util");
+			//trace("new display object created in gesture parser util");
 			
 			for (var i:String in pOList)
 				{
-					trace("	new gesture object:");
+					//trace("	new gesture object:");
 					for (var j:String in pOList[i])
 					{
-							trace("		property item:",i,j,"__",pOList[i][j]);
+							//trace("		property item:",i,j,"__",pOList[i][j]);
 					}
 				}
-				trace("gesture object parsing complete");
+				//trace("gesture object parsing complete");
 		}
 	}
 }
