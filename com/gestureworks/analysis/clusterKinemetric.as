@@ -212,7 +212,7 @@ package com.gestureworks.analysis
 			//dddy_threshold_min = 0.001;
 			//dddy_threshold_max = 15;
 			
-			//ADD FOR CLUSTER PRESURE CHANGE
+			//ADD FOR CLUSTER PRESURE CHANGE0xFFAE1F
 			//dp 
 			//ddp 
 			//ADD FOR CLUSTER AVERAGE POINT SIZE CHANGE
@@ -253,31 +253,16 @@ package com.gestureworks.analysis
 					//trace("LOCKED",LN)
 					//////////////////////
 
-					//clusterProperties();
-					
-					/////////////////////////////////////////////////////
-					// controls marhsaling of touchmove events in cluster
-					/////////////////////////////////////////////////////
-					
-					//h = 1;
-					//h0 = 1 / N;
-					//if (GestureGlobals.touchMoveMarshallOn) h0 = 1;
-					//else h0 = 
-					
-					
 					/*
 					if (LN) 
 					{
 					N1 = LN - 1;
 					k0 = 1 / LN;
 					k1 = 1/N1;
-					clusterProperties();
 					
 					if (LN == 0) k1 = 0;
 					}
 					*/
-					
-					
 					
 					mc = pointList[0].moveCount
 				}

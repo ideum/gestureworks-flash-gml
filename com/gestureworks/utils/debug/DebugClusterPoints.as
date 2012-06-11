@@ -49,7 +49,7 @@ package com.gestureworks.utils.debug
 				style.stroke_color = 0xFFAE1F;
 				style.stroke_alpha = 0.9;
 				style.fill_color = 0xFFAE1F;
-				style.fill_alpha = 0.9;
+				style.fill_alpha = 1;
 				style.fill_type = "solid";
 				style.shape = "ring";
 				style.radius = 12;

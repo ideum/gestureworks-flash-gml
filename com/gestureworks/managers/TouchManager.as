@@ -58,23 +58,23 @@ package com.gestureworks.managers
 		public static var touchObjects:Dictionary = new Dictionary();
 		
 		
-		// initializes touchManager...
+		// initializes touchManager
 		gw_public static function initialize():void
-		{
-			
-			//var touchFrameInterval:Number = 16.7;//16.7 60fps
-			
+		{	
 			points = GestureGlobals.gw_public::points;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
+			//DRIVES UPDATES ON POINT LIFETIME
 			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
+			
+			// DRIVES UPDATES ON TOUCH POINT PATHS
 			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			
+			// SINGLE GLOBAL CLOCK FOR TOUCH PROCESSING
+			// COMPILES TOUCH FRAMES
 			var myTimer:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
 				myTimer.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
 				myTimer.start();
-				
-			//touchObjects = GestureGlobals.gw_public::touchObjects;
 		}
 		
 		gw_public static function deInitialize():void
@@ -132,58 +132,39 @@ package com.gestureworks.managers
 		
 	
 		// the Stage TOUCH_MOVE event.	
+		// DRIVES POINT PATH UPDATES
 		public static function onTouchMove(event:TouchEvent):void
 		{			
-			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUC OBJECT CALCULATIONS
+			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			var pointObject:PointObject = points[event.touchPointID];
 			
 			if (pointObject)
-			{
-				//trace(GestureWorks.simulator, GestureWorksCore.simulator)
-				//trace(GestureWorks.supportsTouch);
-				
+			{	
+				// UPDATE POINT POSITIONS
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					//trace("touchmove update");
 					pointObject.point.y = event.localY; // legacy
 					pointObject.point.x = event.localX; //legacy
 					pointObject.y = event.localY;
 					pointObject.x = event.localX;
 				}
 				else
-				{
-					// UPDATE POINT POSITIONS
+				{	
 					pointObject.point.y = event.stageY; // legacy
 					pointObject.point.x = event.stageX; //legacy
 					pointObject.y = event.stageY;
 					pointObject.x = event.stageX;
 				}
-				
 				pointObject.moveCount ++;
 				
-				// UPDATE POINT HISTORY
+				// UPDATE POINT HISTORY 
+				// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
 				PointHistories.historyQueue(event);
-				
-				/*
-				// UPDATE TOUCH OBJECTS ASSOCIATED WITH POINT
-				for (var j:int = 0; j < pointObject.objectList.length; j++) // NEED TO COME UP WITH METHOD TO REMOVE OBJECTS THAT ARE NO LONGER ON STAGE
-				{
-					//var tO:Object = pointObject.object;
-					var tO:Object = pointObject.objectList[j];
-						tO.updateClusterAnalysis();
-						tO.updateProcessing();
-						tO.updateGestureAnalysis();
-						tO.updateTransformation();
-						//tO.updateDebugDisplay(); // resource intensive moved to on enter frame
-				}
-				
-				// update point history
-				*/
 			}	
 		}
 		
 		
-		// UPDATE ALL TOUCH OBJECTS
+		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:TimerEvent):void
 		{
 			//trace("touch frame");
@@ -197,21 +178,21 @@ package com.gestureworks.managers
 				//trace("hello", ts, ts.N);
 				ts.updateClusterCount();
 				
-				// update gesture threads if NOT touching
+				// update gesture pipelines if NOT touching
 				if (ts.N==0)
 				{
 					ts.updateGestureAnalysis();
 					ts.updateTransformation();
 					ts.updateGestureValues();
 				}
-				// update analysis and threads if touching
+				// update cluster analysis and gesture pipelines if touching
 				else {
 					//trace("cluster analysis");
 					ts.updateClusterAnalysis();
 					ts.updateProcessing();
 					ts.updateGestureAnalysis();
 					ts.updateTransformation();
-					ts.updateDebugDisplay();// resource intensive moved to on enter frame
+					ts.updateDebugDisplay();
 				}
 				
 				
@@ -228,10 +209,10 @@ package com.gestureworks.managers
 				}
 				
 			}
-			//event.updateAfterEvent();
 		}
 		
 		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
+	
 		public static function updatePointObject(event:TouchEvent):void
 		{
 			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
