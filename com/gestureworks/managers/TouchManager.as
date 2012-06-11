@@ -18,11 +18,7 @@ package com.gestureworks.managers
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
 	import flash.events.Event;
-	
-	import flash.events.*;
-	
-	//import flash.events.TimerEvent
-	
+	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.system.System;
 	
@@ -38,9 +34,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.TouchObject;
 	import com.gestureworks.managers.PointHistories;
-	
 	import com.gestureworks.utils.Simulator;
-	
 	
 	
 	/* 
@@ -194,7 +188,6 @@ package com.gestureworks.managers
 					ts.updateTransformation();
 					ts.updateDebugDisplay();
 				}
-				
 				
 				// move to timeline visualizer
 				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
