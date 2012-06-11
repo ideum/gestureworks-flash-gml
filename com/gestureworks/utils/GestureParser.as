@@ -76,7 +76,8 @@ package com.gestureworks.utils
 									"tap":true,   
 									"double_tap":true,  
 									"triple_tap":true,
-									"stroke":true
+									"stroke":true,
+									"manipulate":true
 									};			
 
 						
@@ -301,7 +302,7 @@ package com.gestureworks.utils
 							}
 							gO.pOList = pOList;
 							
-						//	traceGesturePropertyList()
+							traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		

@@ -507,20 +507,12 @@ package com.gestureworks.core
 					pointObject.event = event;
 					pointObject.id = pointCount;
 					pointObject.touchPointID = event.touchPointID;
-					
-					// set point init position
-					if (GestureWorks.supportsTouch && !GestureWorks.activeTUIO)
-					{
+				
 						//pointObject.point.x = event.stageX;
 						//pointObject.point.y = event.stageY;
-						pointObject.point.x = event.localX;
-						pointObject.point.y = event.localY;
-					}
-					else
-					{
-						pointObject.point.x = event.stageX;
-						pointObject.point.y = event.stageY;
-					}
+						pointObject.x = event.stageX;
+						pointObject.y = event.stageY;
+					//}
 				
 
 				_pointArray.push(pointObject);

@@ -115,12 +115,11 @@ package com.gestureworks.core
 				
 				if (!tiO.timelineOn)
 				{
-					if ((gO.pOList[key].gesture_type == "hold")||(gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
+					if ((gO.pOList[key].gesture_type == "stroke")||(gO.pOList[key].gesture_type == "swipe")||(gO.pOList[key].gesture_type == "flick")||(gO.pOList[key].gesture_type == "hold")||(gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
 					{
 						tiO.timelineOn = true;
 						tiO.pointEvents = true;
 						tiO.timelineInit = true;
-						GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
 						GestureGlobals.timelineHistoryCaptureLength = 80;
 					}
 					else {
@@ -128,6 +127,13 @@ package com.gestureworks.core
 						tiO.pointEvents = false;
 					}
 				}
+				
+				
+				if (gO.pOList[key].gesture_type == "stroke")
+				{
+					if ((gO.pOList[key]) && (gestureList[key])) GestureGlobals.pointHistoryCaptureLength = 150; // define in GML
+				}
+				
 			}	
 		}
 		
@@ -158,6 +164,7 @@ package com.gestureworks.core
 				}
 			}
 			if (!tiO.timelineInit) initTimeline();
+			else onGestureEnterTouchFrame();
 		}
 		/**
 		* @private
@@ -226,7 +233,7 @@ package com.gestureworks.core
 				{
 					if ((gO.pOList[key]) && (gestureList[key])) tapOn = true;
 				}
-				else tapOn = false;
+				//else tapOn = false;
 				
 				if (gO.pOList[key].gesture_type == "hold")
 				{
@@ -272,7 +279,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public function onGestureEnterFrame(event:GWEvent):void
+		public function onGestureEnterTouchFrame():void
 		{
 			//trace("on gesture eneter frame");
 			
@@ -317,6 +324,66 @@ package com.gestureworks.core
 							{
 								if ((gO.pOList[key]) && (gestureList[key])) gesture_disc.countTripleTapEvents(key);
 							}
+						
+						// gesture flick
+							if (gO.pOList[key].gesture_type == "flick")
+							{	
+								if ((gO.pOList[key])&&(gestureList[key]))
+								{
+									// CALLS PREVIOUSLY CALCULATED FLICK VALUE FROM LAST FRAME BEFORE RELEASE
+									var flick_dx:Number = cO.history[0].flick_dx//cO.history[0].ddx//gO.pOList[key]["flick_dx"].gestureDelta;
+									var flick_dy:Number = cO.history[0].flick_dy//cO.history[0].ddy//gO.pOList[key]["flick_dy"].gestureDelta;
+									var flick_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+									
+									if ((flick_dx) || (flick_dy))
+									{
+										//trace("flick",flick_dx,flick_dy);
+										dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N, id:key}));
+										if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N, id:key}));
+										}
+								}
+							}
+							
+							// gesture swipe
+							if (gO.pOList[key].gesture_type == "swipe")
+							{
+								if ((gO.pOList[key])&&(gestureList[key]))
+								{
+									if(cO.history[4]){
+										// calls previsouoly calculated swipe value from previous frame
+										// looks back before release to reduce release flicker
+										var swipe_dx:Number = cO.history[4].swipe_dx//cO.history[0].ddx//gO.pOList[key]["swipe_dx"].gestureDelta;
+										var swipe_dy:Number = cO.history[4].swipe_dy//cO.history[0].ddx//gO.pOList[key]["swipe_dy"].gestureDelta;
+										var swipe_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+								
+										if ((swipe_dx) || (swipe_dy))
+										{
+											//trace("swipe",swipe_dx,swipe_dy);
+											dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N, id:key}));
+											if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N, id:key}));
+										}
+									}
+								}
+							}
+							
+							// gesture stroke
+							if (gO.pOList[key].gesture_type == "stroke")
+							{
+								if ((gO.pOList[key])&&(gestureList[key]))
+								{
+									 gesture_disc.findStrokeGesture(key);
+									
+							
+									if (gO.pOList[key].path_match)
+									{
+										trace("stroke event");
+										var Gevent:GWGestureEvent = new GWGestureEvent(GWGestureEvent.STROKE, {n:N, id:key});
+										//dispatchEvent(Gevent);
+										//if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(Gevent);
+									}
+								}
+							}
+							
 						}
 						
 						// GESTURE OBJECT EVENTS
@@ -373,7 +440,7 @@ package com.gestureworks.core
 							var lpt:Point = globalToLocal(spt); //local point
 									
 							dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, N:holdLockCount} ));//touchPointID:pointList[i].point.touchPointID
-							if(tiO.pointEvents)tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: spt.x, y:spt.y, localX:lpt.x, localY:lpt.y, N:holdLockCount} ));//touchPointID:pointList[i].point.touchPointID
+							if(tiO.pointEvents)tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: spt.x, y:spt.y, localX:lpt.x, localY:lpt.y, N:holdLockCount, id:key} ));//touchPointID:pointList[i].point.touchPointID
 						}
 					}
 				}
@@ -396,8 +463,8 @@ package com.gestureworks.core
 						{
 							if (trace_debug_mode) trace("drag", drag_dx, drag_dy);
 							
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.DRAG, {dx: drag_dx, dy: drag_dy, stageX:cO.x, stageY:cO.y, localX:drag_pt.x, localY:drag_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DRAG, {dx:drag_dx, dy:drag_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.DRAG, {dx: drag_dx, dy: drag_dy, stageX:cO.x, stageY:cO.y, localX:drag_pt.x, localY:drag_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.DRAG, {dx:drag_dx, dy:drag_dy, n:N, id:key}));
 						}
 					}
 				}
@@ -414,8 +481,8 @@ package com.gestureworks.core
 						
 						if (rotate_dtheta)
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta: rotate_dtheta,stageX:cO.x, stageY:cO.y, localX:rotate_pt.x, localY:rotate_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta:rotate_dtheta, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta: rotate_dtheta,stageX:cO.x, stageY:cO.y, localX:rotate_pt.x, localY:rotate_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.ROTATE, {dtheta:rotate_dtheta, n:N, id:key}));
 						}
 					}
 				}
@@ -430,8 +497,8 @@ package com.gestureworks.core
 						
 						if ((scale_dsx)||(scale_dsy)) 
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCALE, {dsx: scale_dsx, dsy: scale_dsy, stageX:cO.x, stageY:cO.y, localX:scale_pt.x, localY:scale_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCALE, {dsx:scale_dsx, dsy:scale_dsy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCALE, {dsx: scale_dsx, dsy: scale_dsy, stageX:cO.x, stageY:cO.y, localX:scale_pt.x, localY:scale_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCALE, {dsx:scale_dsx, dsy:scale_dsy, n:N, id:key}));
 						}
 					}
 				}
@@ -448,8 +515,8 @@ package com.gestureworks.core
 						
 						if (pivot_dtheta)
 						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.PIVOT, {dtheta: pivot_dtheta,stageX:cO.x, stageY:cO.y, localX:pivot_pt.x, localY:pivot_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.PIVOT, {pivot_dtheta:pivot_dtheta, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.PIVOT, {dtheta: pivot_dtheta,stageX:cO.x, stageY:cO.y, localX:pivot_pt.x, localY:pivot_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.PIVOT, {pivot_dtheta:pivot_dtheta, n:N, id:key}));
 						}
 					}
 				}
@@ -468,8 +535,8 @@ package com.gestureworks.core
 						if ((orient_dx) || (orient_dy)) 
 						{
 							//trace("orient",orient_dx,orient_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.ORIENT, {dx: orient_dx, dy: orient_dy, stageX:cO.x, stageY:cO.y, localX:orient_pt.x, localY:orient_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.ORIENT, {dx:orient_dx, dy:orient_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.ORIENT, {dx: orient_dx, dy: orient_dy, stageX:cO.x, stageY:cO.y, localX:orient_pt.x, localY:orient_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.ORIENT, {dx:orient_dx, dy:orient_dy, n:N, id:key}));
 						}
 					}
 				}
@@ -487,12 +554,12 @@ package com.gestureworks.core
 						if ((scroll_dx) || (scroll_dy)) 
 						{
 							//trace("scroll",scroll_dx,scroll_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: scroll_dx, dy: scroll_dy, stageX:cO.x, stageY:cO.y, localX:scroll_pt.x, localY:scroll_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCROLL, {dx:scroll_dx, dy:scroll_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SCROLL, {dx: scroll_dx, dy: scroll_dy, stageX:cO.x, stageY:cO.y, localX:scroll_pt.x, localY:scroll_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SCROLL, {dx:scroll_dx, dy:scroll_dy, n:N, id:key}));
 						}
 					}
 				}
-				
+				/*
 				// flick gesture
 				if (gO.pOList[key].gesture_type == "flick")
 				{
@@ -506,8 +573,8 @@ package com.gestureworks.core
 						if ((flick_dx) || (flick_dy))
 						{
 							//trace("flick",flick_dx,flick_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx: flick_dx, dy: flick_dy, ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx: flick_dx, dy: flick_dy, ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N, id:key}));
 						}
 					}
 				}
@@ -524,12 +591,12 @@ package com.gestureworks.core
 						if ((swipe_dx) || (swipe_dy))
 						{
 							//trace("swipe",swipe_dx,swipe_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N, id:key}));
 						}
 					}
 				}
-				
+				*/
 				// 3d tilt gesture
 				if (gO.pOList[key].gesture_type == "tilt")
 				{
@@ -544,8 +611,8 @@ package com.gestureworks.core
 						if ((tilt_dx)||(tilt_dy))
 						{
 							//trace("tilt", tilt_dx, tilt_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.TILT,{dx: tilt_dx, dy: tilt_dy, stageX:cO.x, stageY:cO.y, localX:tilt_pt.x, localY:tilt_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TILT, {dx:tilt_dx, dy:tilt_dy, n:N}));
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.TILT,{dx: tilt_dx, dy: tilt_dy, stageX:cO.x, stageY:cO.y, localX:tilt_pt.x, localY:tilt_pt.y, n:N, id:key}));
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.TILT, {dx:tilt_dx, dy:tilt_dy, n:N, id:key}));
 						}
 					}
 				}

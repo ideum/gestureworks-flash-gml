@@ -330,12 +330,16 @@ package com.gestureworks.utils.debug
 		// look for active gestures
 			for (i in ts.gO.pOList)
 				{
+					var traceGesture:Boolean = false;
+					
 					for (j in ts.gO.pOList[i])
 					{
-						if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].gestureDelta != 0)) {
-						gestureEventList.push(i);
-						}
+						if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].gestureDelta != 0)) traceGesture = true;
 					}
+					if (traceGesture) gestureEventList.push(i);
+					traceGesture = false;
+					
+					//trace("--");
 				}
 		// remove duplicate entries for gestures with multitple properties
 		removeDuplicate(gestureEventList);

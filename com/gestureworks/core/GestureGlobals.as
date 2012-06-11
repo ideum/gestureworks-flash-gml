@@ -80,24 +80,20 @@ package com.gestureworks.core
 			_frameID=value;
 		}
 		
-		// touchMoveMarshallOn ------------------
+		private static var _touchFrameInterval:Number = 16.7//16.7;//60fps
 		/**
-		 * touchMoveMarshallOn.
+		 * frameID frame stamp relative to start of application.
 		 */
-		private static var _touchMoveMarshallOn:Boolean = false;
-		/**
-		 * touchMoveMarshallOn.
-		 */
-		public  static function get touchMoveMarshallOn():Boolean
+		public static function get touchFrameInterval():Number
 		{
-			return _touchMoveMarshallOn;
+			return _touchFrameInterval;
 		}
 		/**
-		 * touchMoveMarshallOn.
+		 * frameID frame stamp relative to start of application.
 		 */
-		public static function set touchMoveMarshallOn(value:Boolean):void
+		public static function set touchFrameInterval(value:Number):void
 		{
-			_touchMoveMarshallOn = value;
+			_touchFrameInterval=value;
 		}
 		
 		//  pointHistoryCaptureLength -------------------------------------

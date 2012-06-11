@@ -504,8 +504,10 @@ package com.gestureworks.core
 					pointObject.event = event;
 					pointObject.id = pointCount;
 					pointObject.touchPointID = event.touchPointID;
-					pointObject.point.x = event.stageX;
-					pointObject.point.y = event.stageY;
+					//pointObject.point.x = event.stageX;
+					//pointObject.point.y = event.stageY;
+					pointObject.x = event.stageX; //new
+					pointObject.y = event.stageY; //new
 
 				_pointArray.push(pointObject);
 				cO.pointArray = _pointArray;

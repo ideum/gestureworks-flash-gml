@@ -19,53 +19,86 @@ package com.gestureworks.managers
 	 * ...
 	 * @author Paul Lacey
 	 */
-	
+	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import flash.events.TouchEvent;
+	import flash.geom.Point;
 	
 	public class PointHistories 
 	{
 				
 		public static function historyQueue(event:TouchEvent):void
 		{
-			if(GestureGlobals.gw_public::points[event.touchPointID]){
-				var history:Array = GestureGlobals.gw_public::points[event.touchPointID].history;
-				history.unshift(historyObject(history[0].x,history[0].y,event));
+			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+			
+			//if () {
+			if (point) {
+				//var history:Array = GestureGlobals.gw_public::points[event.touchPointID].history;
+				//point.history.unshift(historyObject(point.history[0].x, point.history[0].y, event, point.history[0].frameID));
+				
+				point.history.unshift(historyObject(point.history[0].x, point.history[0].y, point.history[0].frameID, point.moveCount, event));
+				
+				//trace(history[0].moveCount,GestureGlobals.gw_public::points[event.touchPointID].moveCount)
 								
-				if (history.length-1>=GestureGlobals.pointHistoryCaptureLength)
+				if (point.history.length-1>=GestureGlobals.pointHistoryCaptureLength)
 				{
-					history.pop();
+					point.history.pop();
 				}
 			}
 		}
 		
 		// loads history object and returns value.
-		public static function historyObject(X:Number, Y:Number, event:TouchEvent):Object
+		//public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
+		public static function historyObject(X:Number, Y:Number, FrameID:int,moveCount:int,event:TouchEvent):Object
 		{
-			var object:Object = new Object();
+			var c0:Number = 1 / moveCount;
+			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+			var pt:Object = new Object();
 			//trace("point hist update",GestureGlobals.frameID);
 			//trace(event.stageX,event.stageY,event.localX,event.localY )
+
+				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
+				{
+					pt.frameID = GestureGlobals.frameID;
+					pt.x = event.localX;
+					pt.y = event.localY;
+					pt.dx = event.localX - X;
+					pt.dy = event.localY - Y;
+				}
+				else
+				{
+					pt.frameID = GestureGlobals.frameID;
+					pt.x = event.stageX;
+					pt.y = event.stageY;
+					pt.dx = event.stageX - X;
+					pt.dy = event.stageY - Y;
+				}
 			
-			if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
-			{
-				object.frameID = GestureGlobals.frameID;
-				object.x = event.localX;
-				object.y = event.localY;
-				object.dx = event.localX - X;
-				object.dy = event.localY - Y;
-			}
-			else
-			{
-				object.frameID = GestureGlobals.frameID;
-				object.x = event.stageX;
-				object.y = event.stageY;
-				object.dx = event.stageX - X;
-				object.dy = event.stageY - Y;
+			
+			//pt.DX += pt.dx;
+			//pt.DY += pt.dy;
+			point.DX += pt.dx;
+			point.DY += pt.dy;
+			
+			if (FrameID != GestureGlobals.frameID) {
+				point.DX = pt.dx;
+				point.DY = pt.dy;
+				point.moveCount = 1;
 			}
 			
-			return object;
+			//pt.DX = point.DX;
+			//pt.DY = point.DY;
+			//pt.moveCount = point.moveCount;
+			
+		//	trace(pt.DX,pt.DY, pt.dx,pt.dy)
+			
+			
+			
+			//trace("move count",object.moveCount)
+			//return object;
+			return pt;
 		}
 		
 	}

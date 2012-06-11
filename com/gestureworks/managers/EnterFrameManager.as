@@ -44,7 +44,7 @@ package com.gestureworks.managers
 			//trace("system gw enter frame");
 			
 			GestureWorks.application.dispatchEvent(new GWEvent(GWEvent.ENTER_FRAME));
-			GestureGlobals.frameID +=1;
+			//GestureGlobals.frameID +=1;
 		}
 		
 	}

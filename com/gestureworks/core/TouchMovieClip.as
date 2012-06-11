@@ -52,35 +52,16 @@ package com.gestureworks.core
 		 
         private function initTouchMovieClip():void 
         {	
-			//trace("create touchsprite interface");
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onEnterFrame);
 			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate);
-			
-			
-			
-			
-			
-		//	trace("cml item",cml_item, _cml_item);
-			
-			/*
-			if (_cml_item)
-			{
-				// for cml handled objects
-				gestureEvents = false;
-				disableNativeTransform = false;
-			}
-			else {
-				// for as3 handled object
-				gestureEvents = true;
-				disableNativeTransform = true;
-			}*/
 		}
+		
 		////////////////////////////////////////////////////////////
 		// Properties: Public
 		////////////////////////////////////////////////////////////
 		/**
 		 * @private
 		 */
+		/*
 		private function onEnterFrame(event:GWEvent):void 
 		{
 			//trace("TouchMovieClip update-----------------------------",GestureGlobals.frameID, N);
@@ -95,7 +76,7 @@ package com.gestureworks.core
 			}
 			else updateDebugDisplay();
 		}
-		
+		*/
 		
 		private function onGestureListUpdate(event:GWGestureEvent):void  
 		{

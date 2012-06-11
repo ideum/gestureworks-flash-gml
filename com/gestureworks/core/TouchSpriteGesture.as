@@ -27,6 +27,10 @@ package com.gestureworks.core
 	import com.gestureworks.managers.TimelineHistories;
 	import com.gestureworks.objects.FrameObject; 
 	
+	import flash.utils.Timer;
+	import flash.system.System;
+	import flash.events.*;
+	
 	public class TouchSpriteGesture extends TouchSpriteProcessor
 	{
 		/**
@@ -127,7 +131,6 @@ package com.gestureworks.core
 						tiO.timelineOn = true;
 						tiO.pointEvents = true;
 						tiO.timelineInit = true;
-						GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onGestureEnterFrame);
 						GestureGlobals.timelineHistoryCaptureLength = 80;
 					}
 					else {
@@ -153,7 +156,7 @@ package com.gestureworks.core
 		//////////////////////////////////////////////////////
 		private function updateTimelineGestureAnalysis():void
 		{
-			trace("update timeline gesture analysis");
+			//trace("update timeline gesture analysis");
 			if ((discGesturemetricsOn) && (tiO.timelineOn)) 
 			{
 					gesture_disc.findTimelineGestures();
@@ -178,7 +181,7 @@ package com.gestureworks.core
 			}
 			
 			if (!tiO.timelineInit) initTimeline();
-			//updateTimelineGestureAnalysis();
+			else onGestureEnterTouchFrame();
 		}
 		/**
 		* @private
@@ -244,7 +247,6 @@ package com.gestureworks.core
 		{
 			for (key in gO.pOList)
 			{
-				
 				if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
 				{
 					if ((gO.pOList[key]) && (gestureList[key])) tapOn = true;
@@ -295,7 +297,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public function onGestureEnterFrame(event:GWEvent):void
+		public function onGestureEnterTouchFrame():void
 		{
 			//trace("on gesture eneter frame");
 			

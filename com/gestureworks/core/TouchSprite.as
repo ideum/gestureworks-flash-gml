@@ -65,11 +65,11 @@ package com.gestureworks.core
 			//this.addEventListener(Event.ADDED_TO_STAGE, initGestures);
 			
 			// move to initGestures
-			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
+			//this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
 			
 			
 			//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); 
-			//var myTimer:Timer = new Timer(20, 0);
+			//var myTimer:Timer = new Timer(16.7, 0);
 				//myTimer.addEventListener(TimerEvent.TIMER, timerHandler, false,10,false);
 				//myTimer.start();
 				
@@ -109,10 +109,12 @@ package com.gestureworks.core
 		 * @private
 		 */
 		
+		 
 		private function onEnterFrame(event:GWEvent):void  
 		{
-			if (trace_debug_mode)  trace("TouchSprite update-----------------------------",GestureGlobals.frameID, N,System.totalMemory);
-			
+			//if (trace_debug_mode)  
+			//trace("TouchSprite update-----------------------------",GestureGlobals.frameID, N,System.totalMemory);
+			/*
 			updateClusterCount();
 			
 			if (N==0)
@@ -123,21 +125,31 @@ package com.gestureworks.core
 			}
 			else 
 			{
-			//updateClusterAnalysis();
-			//updateProcessing();
-			//updateGestureAnalysis();
-			//updateTransformation();
-			
-			updateDebugDisplay();
+				
+			updateClusterAnalysis();
+			updateProcessing();
+			updateGestureAnalysis();
+			updateTransformation();
 			}
+			
+			*/
+			//updateDebugDisplay();
 		}
 		
+		
 		/*
-		private function timerHandler(event:TimerEvent):void
+		public function timerHandler(event:TimerEvent):void
 		{
+			GestureGlobals.frameID +=1;
+			updateClusterCount();
 		  
-			if (N!=0)
+			if (N==0)
 			{
+				updateGestureAnalysis();
+				updateTransformation();
+				updateGestureValues();
+			}
+			else{
 				//trace("sprite timer");
 				updateClusterAnalysis();
 				updateProcessing();
@@ -146,7 +158,8 @@ package com.gestureworks.core
 				updateDebugDisplay();
 				//event.updateAfterEvent();
 			}
-		}*/
+		}
+		*/
 		
 		private function onGestureListUpdate(event:GWGestureEvent):void  
 		{

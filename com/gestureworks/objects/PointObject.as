@@ -53,6 +53,74 @@ package com.gestureworks.objects
 			_y = value;
 		}
 		
+		// dx
+		private var _dx:Number = 0;
+		public function get dx():Number
+		{
+			return _dx;
+		}
+		public function set dx(value:Number):void
+		{
+			_dx = value;
+		}
+		
+		// dy
+		private var _dy:Number = 0;
+		public function get dy():Number
+		{
+			return _dy;
+		}
+		public function set dy(value:Number):void
+		{
+			_dy = value;
+		}
+		
+		// DX
+		private var _DX:Number = 0;
+		public function get DX():Number
+		{
+			return _DX;
+		}
+		public function set DX(value:Number):void
+		{
+			_DX = value;
+		}
+		
+		// DY
+		private var _DY:Number = 0;
+		public function get DY():Number
+		{
+			return _DY;
+		}
+		public function set DY(value:Number):void
+		{
+			_DY = value;
+		}
+		
+		// frameIDID
+		private var _frameID:int;
+		public function get frameID():int
+		{
+			return _frameID;
+		}
+		public function set frameID(value:int):void
+		{
+			_frameID = value;
+		}
+		
+		// move count
+		// number move updates for point in frame
+		private var _moveCount:int =0;
+		public function get moveCount():int
+		{
+			return _moveCount;
+		}
+		public function set moveCount(value:int):void
+		{
+			_moveCount = value;
+		}
+		
+		
 		// hold monitor 
 		private var _holdMonitorOn:Boolean = false;
 		public function get holdMonitorOn():Boolean

@@ -529,11 +529,6 @@ package com.gestureworks.core
 	{
 		if (debug_display)
 			{
-			// move to timeline visualizer
-			// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
-			// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-			ClusterHistories.historyQueue(_touchObjectID);
-			TransformHistories.historyQueue(_touchObjectID);
 			clearDebugDisplay();
 			drawDebugDisplay();
 			}
