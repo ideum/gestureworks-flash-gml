@@ -143,7 +143,7 @@ package com.gestureworks.core
 				{
 					if ((gO.pOList[key]) && (gestureList[key])) GestureGlobals.pointHistoryCaptureLength = 150; // define in GML
 				}
-				trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
+				//trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
 			}	
 		}
 		
