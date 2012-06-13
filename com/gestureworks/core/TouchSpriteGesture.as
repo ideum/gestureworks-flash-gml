@@ -143,6 +143,7 @@ package com.gestureworks.core
 				{
 					if ((gO.pOList[key]) && (gestureList[key])) GestureGlobals.pointHistoryCaptureLength = 150; // define in GML
 				}
+				trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
 			}	
 		}
 		
@@ -176,7 +177,7 @@ package com.gestureworks.core
 				if (contGesturemetricsOn)
 				{
 					gesture_cont.findGestures();
-					if (_gestureEvents)manageGestureEventDispatch();
+					if (_gestureEvents) manageGestureEventDispatch();
 				}
 			}
 			
@@ -312,7 +313,7 @@ package com.gestureworks.core
 			
 			// MANAGE DICRETE EVENT DISPATCHING
 			// when released and if hasnt already fired
-			if (!discrete_dispatch_reset){
+			//if (!discrete_dispatch_reset){
 				
 					if ((gO.start)&&(_gestureEventStart)&&(!gesture_start_dispatched))
 					{
@@ -322,7 +323,7 @@ package com.gestureworks.core
 						gesture_start_dispatched = true;
 						//trace("start fired");
 					}
-				//trace(gO.release);
+				//trace("release",gO.release);
 					if (gO.release)
 					{
 						for (key in gO.pOList) 
@@ -348,17 +349,26 @@ package com.gestureworks.core
 							{	
 								if ((gO.pOList[key])&&(gestureList[key]))
 								{
+									
+									//if(cO.history[0]){
 									// CALLS PREVIOUSLY CALCULATED FLICK VALUE FROM LAST FRAME BEFORE RELEASE
-									var flick_dx:Number = cO.history[0].flick_dx//cO.history[0].ddx//gO.pOList[key]["flick_dx"].gestureDelta;
-									var flick_dy:Number = cO.history[0].flick_dy//cO.history[0].ddy//gO.pOList[key]["flick_dy"].gestureDelta;
+									//var flick_dx:Number = cO.history[0].flick_dx//cO.history[0].ddx//gO.pOList[key]["flick_dx"].gestureDelta;
+									//var flick_dy:Number = cO.history[0].flick_dy//cO.history[0].ddy//gO.pOList[key]["flick_dy"].gestureDelta;
+									//var flick_dx:Number = gO.pOList[key]["flick_dx"].gestureDelta;
+									//var flick_dy:Number = gO.pOList[key]["flick_dy"].gestureDelta;
+									var flick_dx:Number = gO.pOList[key]["flick_dx"].clusterDelta;
+									var flick_dy:Number = gO.pOList[key]["flick_dy"].clusterDelta;
 									var flick_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+									
+									//trace("flick gesture dispatch",flick_dx,flick_dy);
 									
 									if ((flick_dx) || (flick_dy))
 									{
 										//trace("flick",flick_dx,flick_dy);
 										dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N, id:key}));
 										if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N, id:key}));
-										}
+									}
+									//}
 								}
 							}
 							
@@ -367,12 +377,19 @@ package com.gestureworks.core
 							{
 								if ((gO.pOList[key])&&(gestureList[key]))
 								{
-									if(cO.history[4]){
+									
+									//if(cO.history[4]){
 										// calls previsouoly calculated swipe value from previous frame
 										// looks back before release to reduce release flicker
-										var swipe_dx:Number = cO.history[4].swipe_dx//cO.history[0].ddx//gO.pOList[key]["swipe_dx"].gestureDelta;
-										var swipe_dy:Number = cO.history[4].swipe_dy//cO.history[0].ddx//gO.pOList[key]["swipe_dy"].gestureDelta;
+										//var swipe_dx:Number = cO.history[4].swipe_dx//cO.history[0].ddx//gO.pOList[key]["swipe_dx"].gestureDelta;
+										//var swipe_dy:Number = cO.history[4].swipe_dy//cO.history[0].ddx//gO.pOList[key]["swipe_dy"].gestureDelta;
+										//var swipe_dx:Number = gO.pOList[key]["swipe_dx"].gestureDelta;
+										//var swipe_dy:Number = gO.pOList[key]["swipe_dy"].gestureDelta;
+										var swipe_dx:Number = gO.pOList[key]["swipe_dx"].clusterDelta;
+										var swipe_dy:Number = gO.pOList[key]["swipe_dy"].clusterDelta;
 										var swipe_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+										
+										//trace("swipe gesture dispatch",swipe_dx,swipe_dy);
 								
 										if ((swipe_dx) || (swipe_dy))
 										{
@@ -380,7 +397,7 @@ package com.gestureworks.core
 											dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N, id:key}));
 											if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N, id:key}));
 										}
-									}
+									//}
 								}
 							}
 							
@@ -416,7 +433,7 @@ package com.gestureworks.core
 					}
 				
 					discrete_dispatch_reset = true;
-			}
+		//	}
 			
 			// flick check
 			
@@ -430,7 +447,7 @@ package com.gestureworks.core
 		*/
 		public function gestureContinuousEventDispatch():void 
 		{	
-			if (trace_debug_mode) trace("continuous gesture event dispatch");
+			//if (trace_debug_mode) trace("continuous gesture event dispatch");
 			
 			/////////////////////////////////////////////////////////////
 			// for all continuously analyzed gestures on touch objects
@@ -456,7 +473,7 @@ package com.gestureworks.core
 						var hold_number:int = gO.pOList[key].n;
 						var holdLockCount:int = cO.locked;
 						
-						//trace(cO.hold_x,cO.hold_y);
+						//trace("hold count check",gO.pOList[key].n,holdLockCount,cO.hold_x,cO.hold_y);
 						if ((holdLockCount == hold_number) && (!gO.pOList[key].complete)) 
 						{
 							gO.pOList[key].complete = true;

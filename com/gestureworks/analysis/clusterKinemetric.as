@@ -81,6 +81,7 @@ package com.gestureworks.analysis
 		public var c_emx:Number = 0; // mean cluster position (used in orientation -thumb)
 		public var c_emy:Number = 0; //mean cluster position (used in orientation -thumb)
 		public var thumbID:int;
+		
 		public var orient_dx:Number = 0; // cluster orientation vector
 		public var orient_dy:Number = 0; // cluster orientation vector
 		public var swipe_dx:Number = 0; // cluster orientation vector
@@ -356,8 +357,8 @@ package com.gestureworks.analysis
 			ts.cO.orient_dy = orient_dy;
 			ts.cO.swipe_dx = swipe_dx;
 			ts.cO.swipe_dy = swipe_dy;
-			ts.cO.flick_dx = flick_dx;
-			ts.cO.flick_dy = flick_dy;
+			ts.cO.flick_dx = 0//flick_dx;
+			ts.cO.flick_dy = 0//flick_dy;
 		
 			/////////////////////////
 			// first diff
@@ -550,20 +551,16 @@ package com.gestureworks.analysis
 			path_data = path; 
 		}
 		
-		public function findLockedPoints():void
-		{
-			var hold_dist:int = ts.gO.pOList[key].point_translation_threshold;
-			//var hold_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold * 0.001 * GestureWorks.application.frameRate);
-			var	hold_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
-			var hold_number:int = ts.gO.pOList[key].n;
-						
-				//trace(hold_dist,hold_time,hold_number)
-						
+		public function findLockedPoints(hold_dist:Number, hold_time:Number, hold_number:Number):void
+		{					
 							for (i = 0; i < N; i++)
 								{
-								if ((Math.abs(pointList[i].history[0].dx) < hold_dist) && (Math.abs(pointList[i].history[0].dy) < hold_dist))
+								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
+								if ((Math.abs(pointList[i].dx) < hold_dist) && (Math.abs(pointList[i].dy) < hold_dist))
 									{
-									if (pointList[i].holdCount < hold_time) pointList[i].holdCount++;
+									if (pointList[i].holdCount < hold_time) {
+									
+										pointList[i].holdCount++;
 															
 										if (pointList[i].holdCount >= hold_time) 
 											{
@@ -580,6 +577,7 @@ package com.gestureworks.analysis
 											// CURRENTLY RESETS IF ANY POINT IN CLUSTER MOVES
 											//ts.gO.pOList[key].complete = false; 
 											}
+									}
 								}
 						if(LN){
 							c_hold_x_mean *= 1/LN//k0;
@@ -589,6 +587,8 @@ package com.gestureworks.analysis
 							c_hold_x_mean = 0;
 							c_hold_y_mean = 0;
 						}
+						
+						//trace(c_hold_x_mean,c_hold_y_mean,LN)
 		}
 		
 		public function findMeanInstTransformation():void
@@ -838,22 +838,27 @@ package com.gestureworks.analysis
 				c_etm_vel.x = 0;
 				c_etm_vel.y = 0;
 							
-			var t0:Number = 1 / (t*mc);
+			var t0:Number = 1 /t;
 					
 			for (i = 0; i < N; i++) 
 				{
-					if (pointList[i].history[t*mc])//&&(!pointList[i].holdLock))//edit
+					if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
 					{
-					for (j = 0; j < t*mc; j++) 
+					for (j = 0; j < t; j++) 
 						{
 						c_etm_vel.x += pointList[i].history[j].dx;
 						c_etm_vel.y += pointList[i].history[j].dy;
+						//trace(pointList[i].history[j].dx,pointList[i].history[j].dy)
 						}
 					}
 			}
 					
-			c_etm_vel.x *= k0*t0;
-			c_etm_vel.y *= k0*t0;
+			//trace("mean temp velocity", c_etm_vel.x, c_etm_vel.y);
+			
+			c_etm_vel.x *= k0 * t0;
+			c_etm_vel.y *= k0 * t0;
+			
+			
 		
 			return c_etm_vel;
 		} 
@@ -950,15 +955,15 @@ package com.gestureworks.analysis
 			var c_etm_accel:Point = new Point();
 				c_etm_accel.x = 0;
 				c_etm_accel.y = 0;
-			var t0:Number = 1 / (t*mc);
+			var t0:Number = 1 /t;
 						
 				for (i = 0; i < N; i++) 
 					{
-					if (pointList[i].history[t*mc])//&&(!pointList[i].holdLock))//edit
+					if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
 						{
 							// SIMPLIFIED DELTAS
 							// second diff of x anf y wrt t
-							for (j = 0; j < t*mc; j++) 
+							for (j = 0; j < t; j++) 
 							{
 								c_etm_accel.x += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
 								c_etm_accel.y += pointList[i].history[j].dy - pointList[i].history[j+1].dy;

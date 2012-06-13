@@ -175,6 +175,7 @@ package com.gestureworks.managers
 				// update gesture pipelines if NOT touching
 				if (ts.N==0)
 				{
+					//trace("relase??",ts.gO.release);
 					ts.updateGestureAnalysis();
 					ts.updateTransformation();
 					ts.updateGestureValues();

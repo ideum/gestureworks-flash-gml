@@ -198,7 +198,11 @@ package com.gestureworks.core
 						
 						if ((gO.pOList[key])&&(gestureList[key]))
 						{
-							cluster_kinemetric.findLockedPoints();
+							var hold_dist:int = gO.pOList[key].point_translation_threshold;
+							var	hold_time:int = Math.ceil(gO.pOList[key].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
+							var hold_number:int = gO.pOList[key].n;
+			
+							cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);
 						}
 				}	
 			
@@ -372,7 +376,7 @@ package com.gestureworks.core
 			// IF ABOVE ACCEL THREHOLD RETURN GESTURE
 			if (gO.pOList[key].gesture_type == "flick")
 			{
-				if (trace_debug_mode) trace("cluster flick algorithm");
+				//if (trace_debug_mode) trace("cluster flick algorithm");
 				
 				if ((gO.pOList[key])&&(gestureList[key]))
 				{
@@ -382,14 +386,14 @@ package com.gestureworks.core
 				if((_N >= gO.pOList[key].nMin)&&(_N <= gO.pOList[key].nMax))
 				{
 					var flick_threshold:Number = gO.pOList[key].cluster_acceleration_threshold; //accleration threshold
-					var flick_h:int = 3;
+					var flick_h:int = 6;
 					var flick_etm_accel:Point = cluster_kinemetric.findMeanTemporalAcceleration(flick_h); //ensamble temporal mean acceleration
 					var flick_etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(flick_h); // ensamble temporal mean velocity
 					
 					//////////////////////////////////////////////////////////////////
 					// STANDARD OPERATION	
 					///////////////////////////////////////////////////////////////////
-					cluster_kinemetric.findMeanInstAcceleration();
+					//cluster_kinemetric.findMeanInstAcceleration();
 					
 					// limits
 					if (Math.abs(flick_etm_accel.x) < flick_threshold) flick_etmVel.x = 0;
@@ -403,7 +407,8 @@ package com.gestureworks.core
 					// assign value to property object
 					gO.pOList[key]["flick_dx"].clusterDelta = flick_etmVel.x;
 					gO.pOList[key]["flick_dy"].clusterDelta = flick_etmVel.y;
-					//trace("flick, velocity",flick_etmVel.x,flick_etmVel.y,flick_etm_accel.x,flick_etm_accel.y,flick_threshold,flick_dx,flick_dy)
+					
+					//trace("flick, velocity",flick_etmVel.x,flick_etmVel.y,flick_etm_accel.x,flick_etm_accel.y,flick_threshold)
 					}
 				}
 			}
@@ -433,7 +438,7 @@ package com.gestureworks.core
 					//////////////////////////////////////////////////////////////////
 					// STANDARD OPERATION	
 					///////////////////////////////////////////////////////////////////
-					cluster_kinemetric.findMeanInstAcceleration();
+					//cluster_kinemetric.findMeanInstAcceleration();
 					
 					if (Math.abs(swipe_etmAccel.x) > swipe_threshold) swipe_etmAccel.x = 0;
 					if (Math.abs(swipe_etmAccel.y) > swipe_threshold) swipe_etmAccel.y = 0;
@@ -484,6 +489,7 @@ package com.gestureworks.core
 			
 					gO.pOList[key]["scroll_dx"].clusterDelta = etmVel.x; 
 					gO.pOList[key]["scroll_dy"].clusterDelta = etmVel.y;
+					
 					//trace("scroll, velocity",etmVel.x,etmVel.y)
 					}
 				}

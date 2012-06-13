@@ -191,7 +191,11 @@ package com.gestureworks.core
 						
 						if ((gO.pOList[key])&&(gestureList[key]))
 						{
-							cluster_kinemetric.findLockedPoints();
+							var hold_dist:int = gO.pOList[key].point_translation_threshold;
+							var	hold_time:int = Math.ceil(gO.pOList[key].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
+							var hold_number:int = gO.pOList[key].n;
+			
+							cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);
 						}
 				}	
 			
@@ -382,7 +386,7 @@ package com.gestureworks.core
 					//////////////////////////////////////////////////////////////////
 					// STANDARD OPERATION	
 					///////////////////////////////////////////////////////////////////
-					cluster_kinemetric.findMeanInstAcceleration();
+					//cluster_kinemetric.findMeanInstAcceleration();
 					
 					// limits
 					if (Math.abs(flick_etm_accel.x) < flick_threshold) flick_etmVel.x = 0;
@@ -426,7 +430,7 @@ package com.gestureworks.core
 					//////////////////////////////////////////////////////////////////
 					// STANDARD OPERATION	
 					///////////////////////////////////////////////////////////////////
-					cluster_kinemetric.findMeanInstAcceleration();
+					//cluster_kinemetric.findMeanInstAcceleration();
 					
 					if (Math.abs(swipe_etmAccel.x) > swipe_threshold) swipe_etmAccel.x = 0;
 					if (Math.abs(swipe_etmAccel.y) > swipe_threshold) swipe_etmAccel.y = 0;
