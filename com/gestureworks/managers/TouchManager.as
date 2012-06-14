@@ -118,10 +118,38 @@ package com.gestureworks.managers
 					{
 						tO.pointArray[i].id = i;
 					}
+					
+					////////////////////////////////////////////////////////
+					//FORCES IMMEDIATE UPDATE ON TOUCH UP
+					//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
+					
+					// UPDATE CLUSTER COUNT
+					tO.updateClusterCount();
+					
+					// update gesture pipelines if NOT touching
+					if (tO.N==0)
+					{
+						tO.gO.release = true;
+						tO.updateGestureAnalysis();
+						tO.updateTransformation();
+						tO.updateGestureValues();
+					}
+					// update cluster analysis and gesture pipelines if touching
+					else {
+						//trace("cluster analysis");
+						tO.updateClusterAnalysis();
+						tO.updateProcessing();
+						tO.updateGestureAnalysis();
+						tO.updateTransformation();
+						tO.updateDebugDisplay();
+					}
+					////////////////////////////////////////////////////////
 				}
 			}
 			// DELETE FROM GLOBAL POINT LIST
 			delete points[event.touchPointID];
+			
+			
 		}
 		
 	
@@ -175,7 +203,6 @@ package com.gestureworks.managers
 				// update gesture pipelines if NOT touching
 				if (ts.N==0)
 				{
-					//trace("relase??",ts.gO.release);
 					ts.updateGestureAnalysis();
 					ts.updateTransformation();
 					ts.updateGestureValues();

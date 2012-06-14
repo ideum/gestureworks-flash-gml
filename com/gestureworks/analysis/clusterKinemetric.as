@@ -42,7 +42,7 @@ package com.gestureworks.analysis
 		
 		private var touchObjectID:int;
 		private var ts:Object;//private var ts:TouchSprite;
-		private var pointList:Object;
+		public var pointList:Object;
 		private var gml:XMLList;
 		
 		private var key:String;
@@ -241,7 +241,11 @@ package com.gestureworks.analysis
 					k0 = 1 / N;
 					k1 = 1 / N1;
 					if (N == 0) k1 = 0;
-					pointList = ts.cO.pointArray
+					pointList = ts.cO.pointArray;
+					
+				
+					
+					
 					
 					///////////////////////
 					// locked points
@@ -264,8 +268,7 @@ package com.gestureworks.analysis
 					if (LN == 0) k1 = 0;
 					}
 					*/
-					
-					mc = pointList[0].moveCount
+					mc = pointList[0].moveCount;
 				}
 				
 				else resetVars();
@@ -326,7 +329,7 @@ package com.gestureworks.analysis
 			c_hold_y_mean = 0;
 			//c_locked = LN;
 			
-			//path_data = new Array();
+			path_data = new Array();
 		}
 		
 		public function pushClusterObjectProperties():void

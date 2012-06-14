@@ -408,12 +408,13 @@ package com.gestureworks.core
 								{
 									 gesture_disc.findStrokeGesture(key);
 									
-							
-									if (gO.pOList[key].path_match)
+									var stroke_threshold:Number = 0.90;
+									var stroke_prob:Number = gO.pOList[key].path_match;
+									if (stroke_prob>stroke_threshold)
 									{
 										trace("stroke event");
-										var Gevent:GWGestureEvent = new GWGestureEvent(GWGestureEvent.STROKE, {n:N});
-										//dispatchEvent(Gevent);
+										var Gevent:GWGestureEvent = new GWGestureEvent(GWGestureEvent.STROKE, {n:N, probability:stroke_prob});
+										dispatchEvent(Gevent);
 										//if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(Gevent);
 									}
 								}

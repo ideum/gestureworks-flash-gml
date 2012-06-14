@@ -472,9 +472,11 @@ package com.gestureworks.analysis
 			///////////////////////////////////
 			// compare to captured path
 			///////////////////////////////////
-			trace("capturePath", ts.cO.history[0].path_data.length, ts.cO.history[0].path_data)
+			//trace("capturePath", ts.cO.history[0].path_data.length, ts.cO.history[0].path_data)
+			//trace("capturePath", ts.cO.history[0].path_data.length, ts.cO.history[0].path_data)
 			
-			
+			//trace(ts.cO.history[0].path_data)
+			trace(ts.cO.path_data)
 			
 		
 		}

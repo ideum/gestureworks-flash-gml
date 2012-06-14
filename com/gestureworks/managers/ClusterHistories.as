@@ -97,7 +97,7 @@ package com.gestureworks.managers
 				//object.pointArray = [2, 3]//;
 				
 				object.path_data = clusterObject.path_data;
-				
+				//trace(object.path_data)
 				//trace(clusterObject.pointArray[0].x)
 
 			return object;
