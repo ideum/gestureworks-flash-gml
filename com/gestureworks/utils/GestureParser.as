@@ -308,7 +308,7 @@ package com.gestureworks.utils
 							}
 							gO.pOList = pOList;
 							
-							traceGesturePropertyList()
+						//	traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
