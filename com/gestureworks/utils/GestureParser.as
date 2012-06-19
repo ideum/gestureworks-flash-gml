@@ -17,6 +17,8 @@ package com.gestureworks.utils
 {
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.managers.TouchManager;
+	
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.PropertyObject;
 	import com.gestureworks.objects.GesturePropertyObject;
@@ -80,8 +82,13 @@ package com.gestureworks.utils
 									"manipulate":true
 									};			
 
-						
-						
+						// re-set gesture processing rate
+						var processing_rate:Number = gml.attribute("processing_rate");
+						if (processing_rate) 
+						{
+							GestureGlobals.touchFrameInterval = processing_rate;
+							TouchManager.gw_public::resetGlobalClock;
+						}
 						var gestureNum:int = gml.Gesture_set[0].Gesture.length();
 						
 							for (var i:int = 0; i < gestureNum; i++) 
@@ -118,6 +125,7 @@ package com.gestureworks.utils
 											
 											pOList[gesture_id] = new Object();
 											//trace("gesture:", gesture_id);
+												//pOList[gesture_id].processing_rate = processing_rate;
 												pOList[gesture_id].gesture_id = gesture_id;
 												pOList[gesture_id].gesture_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
 												pOList[gesture_id].algorithm = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.library.attribute("module"));
@@ -174,8 +182,6 @@ package com.gestureworks.utils
 																}
 																pOList[gesture_id].path = pathArray
 															}
-															
-															
 														}
 									
 														
@@ -312,13 +318,13 @@ package com.gestureworks.utils
 			
 			for (var i:String in pOList)
 				{
-					//trace("	new gesture object:");
+					trace("	new gesture object:");
 					for (var j:String in pOList[i])
 					{
-							//trace("		property item:",i,j,"__",pOList[i][j]);
+							trace("		property item:",i,j,"__",pOList[i][j]);
 					}
 				}
-				//trace("gesture object parsing complete");
+				trace("gesture object parsing complete");
 		}
 	}
 }

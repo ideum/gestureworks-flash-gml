@@ -26,6 +26,8 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureWorksCore;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	import com.gestureworks.core.GML;
+	
 	import com.gestureworks.utils.ArrangePoints;
 	import com.gestureworks.managers.TouchUpdateManager;
 	import com.gestureworks.managers.PointHistories;
@@ -50,11 +52,13 @@ package com.gestureworks.managers
 	{
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
-		
+		public static var globalClock:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
 		
 		// initializes touchManager
 		gw_public static function initialize():void
 		{	
+			//trace("touch frame processing rate:",GestureGlobals.touchFrameInterval);
+			
 			points = GestureGlobals.gw_public::points;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
@@ -66,9 +70,13 @@ package com.gestureworks.managers
 			
 			// SINGLE GLOBAL CLOCK FOR TOUCH PROCESSING
 			// COMPILES TOUCH FRAMES
-			var myTimer:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
-				myTimer.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
-				myTimer.start();
+			globalClock.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
+			globalClock.start();
+		}
+		
+		gw_public static function resetGlobalClock():void
+		{
+			globalClock = new Timer(GestureGlobals.touchFrameInterval, 0);
 		}
 		
 		gw_public static function deInitialize():void

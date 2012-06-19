@@ -301,6 +301,7 @@ package com.gestureworks.core
 						dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
 						if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
 						gO.start = false;
+						gO.release = false;
 						gesture_start_dispatched = true;
 						//trace("start fired");
 					}
@@ -397,13 +398,15 @@ package com.gestureworks.core
 							
 						}
 						
-						// GESTURE OBJECT EVENTS
+						// release gesture
 						if ((gO.release)&&(_gestureEventRelease))//&&(!gesture_release_dispatched))
 						{
 							dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
 							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
 							gO.release = false;
+							gO.start = false;
 							gesture_start_dispatched = false;
+							//gesture_release_dispatched = true;
 							//trace("release fired");
 						}
 					}
@@ -441,17 +444,41 @@ package com.gestureworks.core
 					{	
 						var hold_number:int = gO.pOList[key].n;
 						var holdLockCount:int = cO.locked;
+						var spt:Point //= new Point ();
+						var lpt:Point //= new Point ();
 						
-						//trace(cO.hold_x,cO.hold_y);
-						if ((holdLockCount == hold_number) && (!gO.pOList[key].complete)) 
-						{
-							gO.pOList[key].complete = true;
+						if (!gO.pOList[key].complete) {
 							
-							var spt:Point = new Point (cO.hold_x, cO.hold_y); // stage point
-							var lpt:Point = globalToLocal(spt); //local point
-									
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, n:holdLockCount} ));//touchPointID:pointList[i].point.touchPointID
-							if(tiO.pointEvents)tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: spt.x, y:spt.y, localX:lpt.x, localY:lpt.y, n:holdLockCount, id:key} ));//touchPointID:pointList[i].point.touchPointID
+							if (hold_number == 0) {
+								if (holdLockCount!=0)
+								{
+								trace("hold count check n hold", gO.pOList[key].n, holdLockCount, cO.hold_x, cO.hold_y);
+								
+								gO.pOList[key].complete = true;
+								
+								spt = new Point (cO.hold_x, cO.hold_y); // stage point
+								lpt = globalToLocal(spt); //local point
+										
+								dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, n:holdLockCount, id:key} ));//touchPointID:pointList[i].point.touchPointID
+								if(tiO.pointEvents)tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: spt.x, y:spt.y, localX:lpt.x, localY:lpt.y, n:hold_number, id:key} ));//touchPointID:pointList[i].point.touchPointID
+								}
+							}
+							
+							else {
+								if (holdLockCount == hold_number)
+								{
+								trace("hold count check hold", gO.pOList[key].n, holdLockCount, cO.hold_x, cO.hold_y);
+								
+								gO.pOList[key].complete = true;
+								
+								spt = new Point (cO.hold_x, cO.hold_y); // stage point
+								lpt = globalToLocal(spt); //local point
+										
+								dispatchEvent(new GWGestureEvent(GWGestureEvent.HOLD, { x:spt.x, y:spt.y, stageX:spt.x, stageY:spt.y, localX:lpt.x, localY:lpt.y, n:holdLockCount, id:key} ));//touchPointID:pointList[i].point.touchPointID
+								if(tiO.pointEvents)tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.HOLD, { x: spt.x, y:spt.y, localX:lpt.x, localY:lpt.y, n:hold_number, id:key} ));//touchPointID:pointList[i].point.touchPointID
+							
+								}
+							}
 						}
 					}
 				}

@@ -80,7 +80,7 @@ package com.gestureworks.core
 			_frameID=value;
 		}
 		
-		private static var _touchFrameInterval:Number = 16.7//16.7;//60fps
+		private static var _touchFrameInterval:Number = 16.7;//60fps
 		/**
 		 * frameID frame stamp relative to start of application.
 		 */

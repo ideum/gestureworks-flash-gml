@@ -23,6 +23,7 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Simulator;
 	import com.gestureworks.tuio.TUIO;
 	import com.gestureworks.core.CML;
+	import com.gestureworks.core.GML;
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;

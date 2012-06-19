@@ -247,16 +247,7 @@ package com.gestureworks.analysis
 					
 					
 					
-					///////////////////////
-					// locked points
-					//////////////////////
-					LN = 0;
-					for (i = 0; i < N; i++)
-					{
-						if (pointList[i].holdLock) LN++;
-					}
-					//trace("LOCKED",LN)
-					//////////////////////
+					
 
 					/*
 					if (LN) 
@@ -555,7 +546,10 @@ package com.gestureworks.analysis
 		}
 		
 		public function findLockedPoints(hold_dist:Number, hold_time:Number, hold_number:Number):void
-		{					
+		{			
+					///////////////////////////////
+					// check for locked points
+					///////////////////////////////
 							for (i = 0; i < N; i++)
 								{
 								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
@@ -582,6 +576,23 @@ package com.gestureworks.analysis
 											}
 									}
 								}
+								
+					///////////////////////
+					// count locked points
+					//////////////////////
+						LN = 0;
+						for (i = 0; i < N; i++)
+						{
+							if (pointList[i].holdLock) LN++;
+						}
+					//trace("LOCKED",LN)
+					//////////////////////	
+								
+								
+								
+								
+								
+								
 						if(LN){
 							c_hold_x_mean *= 1/LN//k0;
 							c_hold_y_mean *= 1/LN//k0;
