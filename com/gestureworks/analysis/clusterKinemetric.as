@@ -242,23 +242,6 @@ package com.gestureworks.analysis
 					k1 = 1 / N1;
 					if (N == 0) k1 = 0;
 					pointList = ts.cO.pointArray;
-					
-				
-					
-					
-					
-					
-
-					/*
-					if (LN) 
-					{
-					N1 = LN - 1;
-					k0 = 1 / LN;
-					k1 = 1/N1;
-					
-					if (LN == 0) k1 = 0;
-					}
-					*/
 					mc = pointList[0].moveCount;
 				}
 				
@@ -586,12 +569,7 @@ package com.gestureworks.analysis
 							if (pointList[i].holdLock) LN++;
 						}
 					//trace("LOCKED",LN)
-					//////////////////////	
-								
-								
-								
-								
-								
+					//////////////////////			
 								
 						if(LN){
 							c_hold_x_mean *= 1/LN//k0;

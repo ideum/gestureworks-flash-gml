@@ -34,7 +34,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.PropertyObject;
 	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.objects.ProcessObject;
+	//import com.gestureworks.objects.ProcessObject;
 	import com.gestureworks.objects.GestureObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
@@ -73,7 +73,7 @@ package com.gestureworks.core
 		
 		// internal public 
 		public var cO:ClusterObject;
-		public var pO:ProcessObject;
+		//public var pO:ProcessObject;
 		public var gO:GestureObject;
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
@@ -122,9 +122,9 @@ package com.gestureworks.core
 						// CREATES A NEW PROCESS OBJECT FOT THE TOUCHSPRITE
 						// A VEHICLE TO CONTAIN CORE PROCESSED (FILTERED) CLUSTER VALUES
 						/////////////////////////////////////////////////////////////////////////
-						pO = new ProcessObject();
-							pO.id = touchObjectID;
-						GestureGlobals.gw_public::processes[_touchObjectID] = pO;
+						//pO = new ProcessObject();
+						//	pO.id = touchObjectID;
+						//GestureGlobals.gw_public::processes[_touchObjectID] = pO;
 						
 						/////////////////////////////////////////////////////////////////////////
 						// CREATERS A NEW GESTURE OBJECT

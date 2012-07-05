@@ -259,7 +259,7 @@ package com.gestureworks.core
 					affine_modifier = this.transform.matrix;
 						affine_modifier.translate( - t_x, - t_y);
 						affine_modifier.rotate(dtheta);
-						affine_modifier.scale(1 + ds, 1 + ds);	
+						affine_modifier.scale(1 + dsx, 1 + dsy);	
 						affine_modifier.translate( dx + t_x, dy + t_y);
 					this.transform.matrix =  affine_modifier
 					transformAffineDebugPoints();

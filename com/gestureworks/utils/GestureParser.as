@@ -124,6 +124,8 @@ package com.gestureworks.utils
 											//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 											
 											pOList[gesture_id] = new Object();
+											//pOList[gesture_id] = new GesturePropertyObject();
+											
 											//trace("gesture:", gesture_id);
 												//pOList[gesture_id].processing_rate = processing_rate;
 												pOList[gesture_id].gesture_id = gesture_id;
@@ -308,7 +310,7 @@ package com.gestureworks.utils
 							}
 							gO.pOList = pOList;
 							
-						//	traceGesturePropertyList()
+						traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		

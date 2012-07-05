@@ -178,8 +178,9 @@ package com.gestureworks.core
 				}
 			}
 			
-			if (!tiO.timelineInit) initTimeline();
-			else onGestureEnterTouchFrame();
+			//if (!tiO.timelineInit) initTimeline();
+			//else 
+			//onGestureEnterTouchFrame();
 		}
 		/**
 		* @private
@@ -231,6 +232,10 @@ package com.gestureworks.core
 				//ONLY FIRES IF TOUCHING OBJECT 
 				discrete_dispatch_reset = false
 				gestureContinuousEventDispatch();
+				
+				if (!tiO.timelineInit) initTimeline();
+			//else 
+			onGestureEnterTouchFrame();
 		}
 		
 		
@@ -297,7 +302,9 @@ package com.gestureworks.core
 		*/
 		public function onGestureEnterTouchFrame():void
 		{
-			//trace("on gesture eneter frame");
+			//trace("on gesture enter frame");
+			
+			
 			
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
@@ -475,7 +482,7 @@ package com.gestureworks.core
 				// hold gesture
 				if (gO.pOList[key].gesture_type == "hold")
 				{
-					if ((gO.pOList[key]) && (gestureList[key])) 
+					if ((gO.pOList[key]) && (gestureList[key]))
 					{	
 						var hold_number:int = gO.pOList[key].n;
 						var holdLockCount:int = cO.locked;
@@ -634,47 +641,6 @@ package com.gestureworks.core
 						}
 					}
 				}
-				
-				// flick gesture
-				// MOVED TO RELEASE
-				/*
-				if (gO.pOList[key].gesture_type == "flick")
-				{
-					if ((gO.pOList[key])&&(gestureList[key]))
-					{
-						var flick_dx:Number = gO.pOList[key]["flick_dx"].gestureDelta;
-						var flick_dy:Number = gO.pOList[key]["flick_dy"].gestureDelta;
-						var flick_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-						
-						if ((flick_dx) || (flick_dy))
-						{
-							//trace("flick",flick_dx,flick_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N}));
-						
-						}
-					}
-				}*/
-
-				// swipe gesture 
-				// MOVED TO RELEASE
-				/*
-				if (gO.pOList[key].gesture_type == "swipe")
-				{
-					if ((gO.pOList[key])&&(gestureList[key]))
-					{
-						var swipe_dx:Number = gO.pOList[key]["swipe_dx"].gestureDelta;
-						var swipe_dy:Number = gO.pOList[key]["swipe_dy"].gestureDelta;
-						var swipe_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-				
-						if ((swipe_dx) || (swipe_dy))
-						{
-							//trace("swipe",swipe_dx,swipe_dy);
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N}));
-							if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N}));
-						}
-					}
-				}*/
 				
 				// 3d tilt gesture
 				if (gO.pOList[key].gesture_type == "tilt")

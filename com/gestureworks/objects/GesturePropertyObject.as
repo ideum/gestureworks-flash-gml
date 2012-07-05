@@ -55,6 +55,8 @@ package com.gestureworks.objects
 		////////////////////////////////////////////////////////
 		// general cluster thresholds
 		///////////////////////////////////////////////////////
+		
+		
 		private var _cluster_translation_threshold:Number = 0;
 		public function get cluster_translation_threshold():Number
 		{
@@ -157,7 +159,7 @@ package com.gestureworks.objects
 		{
 			_point_interevent_duration_threshold = value;
 		}
-
+		
 		// n---------------------
 		private var _n:int = 0;
 		public function get n():int
@@ -191,6 +193,7 @@ package com.gestureworks.objects
 		}
 		
 		
+		
 		// path_match---------------------
 		private var _path_match:Boolean = false;
 		public function get path_match():Boolean
@@ -212,6 +215,44 @@ package com.gestureworks.objects
 		{
 			_path = value;
 		}
+		
+		///////////////////////////////////////////////////
+		// GESTURE EVENT LOGIC
+		///////////////////////////////////////////////////
+		
+		
+		// start
+		private var _start:Boolean = false;
+		public function get start():Boolean
+		{
+			return _start;
+		}
+		public function set start(value:Boolean):void
+		{
+			_start = value;
+		}
+		
+		// complete
+		private var _complete:Boolean = false;
+		public function get complete():Boolean
+		{
+			return _complete;
+		}
+		public function set complete(value:Boolean):void
+		{
+			_complete = value;
+		}
+		// release
+		private var _release:Boolean = false;
+		public function get release():Boolean
+		{
+			return _release;
+		}
+		public function set release(value:Boolean):void
+		{
+			_release = value;
+		}
+		
 		
 	}
 }

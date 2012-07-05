@@ -356,8 +356,10 @@ package com.gestureworks.core
 				///////////////////////////////////////////////////////////////////////////////////
 				// leave scalar values untouched
 				//ds = (_scaleX - super.scaleX);
+				
 				dsx = (_scaleX - super.scaleX);
 				dsy = dsx//(_scaleY - super.scaleY);
+				
 				dtheta = (_rotation - super.rotation) * DEG_RAD;
 				
 				dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
@@ -367,7 +369,7 @@ package com.gestureworks.core
 				
 				if (affine) 
 				 {
-					 if (trace_debug_mode)  trace("trans $ affine",touchObjectID)
+					 if (trace_debug_mode) trace("trans $ affine",touchObjectID)
 					affine_modifier = this.transform.matrix;
 						affine_modifier.translate( - t_x, - t_y);
 						affine_modifier.rotate(dtheta);

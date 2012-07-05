@@ -97,7 +97,7 @@ package com.gestureworks.objects
 			_DY = value;
 		}
 		
-		// frameIDID
+		// frameID
 		private var _frameID:int;
 		public function get frameID():int
 		{
@@ -192,6 +192,8 @@ package com.gestureworks.objects
 			_objectList=value;
 		}
 		
+		
+		// MAY NEED REMOVE
 		// point
 		private var _point:*;
 		public function get point():*
@@ -203,6 +205,7 @@ package com.gestureworks.objects
 			_point = value;
 		}
 	
+		// MAY NEED REMOVE
 		// event
 		private var _event:TouchEvent;
 		public function get event():TouchEvent

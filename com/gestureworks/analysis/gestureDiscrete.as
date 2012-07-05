@@ -337,6 +337,7 @@ package com.gestureworks.analysis
 			if (ts.trace_debug_mode) trace("find n-dtaps---------------------------------------------------------",ts.gO.pOList[key].n);
 			
 			dtapEventCount = 0;
+			
 			var dtap_countTime:int = 50;// NEED TO OPTOMIZE TIME
 			var dtap_number:int = ts.gO.pOList[key].n;
 			var dtap_x_mean:Number = 0

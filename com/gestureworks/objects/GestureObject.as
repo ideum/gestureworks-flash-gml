@@ -54,6 +54,8 @@ package com.gestureworks.objects
 		// OBJECT PROPERTIES
 		//////////////////////////////////////////////////
 		
+		/*
+		
 		// x---------------------
 		private var _x:Number = 0;
 		public function get x():Number
@@ -303,7 +305,7 @@ package com.gestureworks.objects
 		{
 			_dtheta = value;
 		}
-		
+		*/
 		
 		////////////////////////////////////////////////////
 		// OVERRIDE LOGIC
