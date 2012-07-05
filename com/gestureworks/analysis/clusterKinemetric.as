@@ -672,13 +672,11 @@ package com.gestureworks.analysis
 							var deltax:Number = Math.abs(c_dx);
 							var deltay:Number = Math.abs(c_dy);
 							
-							//if ((deltax > x_threshold_min) && (deltax < x_threshold_max)) 
-							c_dx *= k0;
-							//else c_dx = 0;
+							if ((deltax > x_threshold_min) && (deltax < x_threshold_max)) c_dx *= k0;
+							else c_dx = 0;
 							
-							//if ((deltay > y_threshold_min) && (deltay < y_threshold_max)) 
-							c_dy *= k0;
-							//else c_dy = 0
+							if ((deltay > y_threshold_min) && (deltay < y_threshold_max)) c_dy *= k0;
+							else c_dy = 0
 						}
 						else {
 							c_dx *= k0;

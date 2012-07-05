@@ -155,8 +155,10 @@ package com.gestureworks.analysis
 									{
 										if ((Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min) || ( Math.abs(ts.gO.pOList[i][j].gestureDelta) > ts.gO.pOList[i][j].delta_max))
 										{
-											ts.gO.pOList[i][j].gestureDelta = 0;
-											//if (ts.trace_debug_mode) trace("delta threshold met, set to zero",i)
+											trace("delta threshold met, set to zero",i,ts.gO.pOList[i][j].gestureDelta)
+											//ts.gO.pOList[i][j].gestureDelta = 0;
+											//if (ts.trace_debug_mode) 
+											
 										}
 									}
 									
