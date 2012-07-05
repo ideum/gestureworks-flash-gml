@@ -56,12 +56,13 @@ package com.gestureworks.managers
 			var c0:Number = 1 / moveCount;
 			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
 			var pt:Object = new Object();
+			var currentFrameID:int = GestureGlobals.frameID
 			//trace("point hist update",GestureGlobals.frameID);
 			//trace(event.stageX,event.stageY,event.localX,event.localY )
 
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					pt.frameID = GestureGlobals.frameID;
+					pt.frameID = currentFrameID;
 					pt.x = event.localX;
 					pt.y = event.localY;
 					pt.dx = event.localX - X;
@@ -69,7 +70,7 @@ package com.gestureworks.managers
 				}
 				else
 				{
-					pt.frameID = GestureGlobals.frameID;
+					pt.frameID = currentFrameID;
 					pt.x = event.stageX;
 					pt.y = event.stageY;
 					pt.dx = event.stageX - X;
@@ -77,16 +78,23 @@ package com.gestureworks.managers
 				}
 			
 			
-			//pt.DX += pt.dx;
-			//pt.DY += pt.dy;
-			point.DX += pt.dx;
-			point.DY += pt.dy;
+				//pt.DX += pt.dx;
+				//pt.DY += pt.dy;
+				//point.DX += pt.dx;
+				//point.DY += pt.dy;
 			
-			if (FrameID != GestureGlobals.frameID) {
+			if (FrameID == currentFrameID) 
+			{
+				point.DX += pt.dx;
+				point.DY += pt.dy;
+			}
+			else {
 				point.DX = pt.dx;
 				point.DY = pt.dy;
 				point.moveCount = 1;
 			}
+			
+			
 			
 			//pt.DX = point.DX;
 			//pt.DY = point.DY;
