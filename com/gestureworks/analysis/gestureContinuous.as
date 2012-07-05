@@ -136,6 +136,7 @@ package com.gestureworks.analysis
 								if ((ts.gO.pOList[i][j] is PropertyObject))
 								{
 									/////////////////////////////////////////
+									// MULTIPLY FILTER
 									// map filter properties
 									if (ts.trace_debug_mode) trace("process data", i, j, ts.gO.pOList[i][j].processDelta);
 									
@@ -148,6 +149,7 @@ package com.gestureworks.analysis
 									
 									
 									/////////////////////////////////////////
+									// DELTA FILTER
 									// limit gesture deltas
 									if (ts.trace_debug_mode) trace("delta threshold", ts.gO.pOList[i][j].delta_threshold);
 									
@@ -163,7 +165,8 @@ package com.gestureworks.analysis
 									}
 									
 									////////////////////////////////////////
-									// limit gesture values
+									// VALUE FILTER
+									// limit gesture values 
 									if (ts.gO.pOList[i][j].boundaryOn) 
 									{
 										//trace(ts.gO.pOList[i][j].boundaryOn,ts.gO.pOList[i][j].boundary_min,ts.gO.pOList[i][j].boundary_max);
@@ -213,6 +216,7 @@ package com.gestureworks.analysis
 									}
 									
 									/////////////////////////////////////////////
+									// 
 									// map transform properties
 									if (ts.gO.pOList[i][j].target_id) 
 									{
@@ -232,7 +236,8 @@ package com.gestureworks.analysis
 									//////////////////////////////////////////////////////////////////////////////////////////////////////////
 									// dynamic delta properties
 									//////////////////////////////////////////////////////////////////////////////////////////////////////////
-						
+									
+									// MAP GESTURE PROPERTIES
 									// map gesture object into transform object
 									for (i in ts.gO.pOList)
 										{
