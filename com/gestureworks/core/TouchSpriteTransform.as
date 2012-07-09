@@ -362,9 +362,9 @@ package com.gestureworks.core
 				
 				dtheta = (_rotation - super.rotation) * DEG_RAD;
 				
-				dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
-				dthetaY = (_rotationY - super.rotationY)* DEG_RAD;
-				dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;
+			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
+			//	dthetaY = (_rotationY - super.rotationY)* DEG_RAD;
+			//	dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;
 				
 				
 				if (affine) 

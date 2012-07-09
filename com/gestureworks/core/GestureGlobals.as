@@ -41,15 +41,11 @@ package com.gestureworks.core
 		/**
 		 * Contains a dictionary of all point histories present to the framework.
 		 */
-		gw_public static var pointHistory:Dictionary = new Dictionary();
+		//gw_public static var pointHistory:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all clusters present to the framework.
 		 */
 		gw_public static var clusters:Dictionary = new Dictionary();
-		/**
-		 * Contains a dictionary of all processes present to the framework.
-		 */
-		gw_public static var processes:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all gestures present to the framework.
 		 */
@@ -62,6 +58,13 @@ package com.gestureworks.core
 		 * Contains a dictionary of all timelines objects present to the framework.
 		 */
 		gw_public static var timelines:Dictionary = new Dictionary();
+		
+		
+		
+		
+		
+		
+		
 		
 		// frameID frame stamp relative to start of application ------------
 		private static var _frameID:int = 0;//int.MAX_VALUE

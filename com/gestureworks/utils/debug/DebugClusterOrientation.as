@@ -75,7 +75,7 @@ package com.gestureworks.utils.debug
 						{
 							if (pointList[i].id == cO.thumbID)
 							{	
-								graphics.drawCircle(pointList[i].point.x, pointList[i].point.y, 40);
+								graphics.drawCircle(pointList[i].x, pointList[i].y, 40);
 							}
 						}
 					

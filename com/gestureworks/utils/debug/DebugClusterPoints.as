@@ -26,6 +26,7 @@ package com.gestureworks.utils.debug
 		private static var cml:XMLList;
 		public var style:Object; // public allows override of cml values
 		private var cO:Object;
+		//private var ts:Object;
 		private var pointList:Object;
 		private var NumPoints:Number;
 		private var id:Number = 0;
@@ -78,8 +79,11 @@ package com.gestureworks.utils.debug
 				
 				for (var i:int = 0; i < NumPoints; i++) 
 				{
-					var x:Number = pointList[i].point.x
-					var y:Number = pointList[i].point.y
+					//var x:Number = pointList[i].point.x
+					//var y:Number = pointList[i].point.y
+					
+					var x:Number = pointList[i].x
+					var y:Number = pointList[i].y
 				
 					//////////////////////////////////////////////////////////////////////
 					// shape outlines
@@ -103,7 +107,7 @@ package com.gestureworks.utils.debug
 					if (style.shape == "triangle") {
 						//trace("triangle");
 							graphics.moveTo (x - style.radius, y -style.radius);
-							graphics.lineTo (x, style.pointList[i].point.y + style.radius);
+							graphics.lineTo (x, style.pointList[i].y + style.radius);
 							graphics.lineTo (x + style.radius, y - style.radius);
 							graphics.lineTo (x - style.radius, y -style.radius);
 						

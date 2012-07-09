@@ -26,6 +26,7 @@ package com.gestureworks.utils.debug
 	private static var cml:XMLList;
 	private var obj:Object;
 	private var cO:Object;
+	//private var ts:Object;
 	private var pointList:Object;
 	private var NumPoints:Number;
 	private var id:Number = 0;

@@ -178,15 +178,15 @@ package com.gestureworks.managers
 				// UPDATE POINT POSITIONS
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					pointObject.point.y = event.localY; // legacy
-					pointObject.point.x = event.localX; //legacy
+					//--pointObject.point.y = event.localY; // legacy debugger
+					//--pointObject.point.x = event.localX; //legacy debugger
 					pointObject.y = event.localY;
 					pointObject.x = event.localX;
 				}
 				else
 				{	
-					pointObject.point.y = event.stageY; // legacy
-					pointObject.point.x = event.stageX; //legacy
+					//--pointObject.point.y = event.stageY; // legacy debugger
+					//--pointObject.point.x = event.stageX; //legacy debugger
 					pointObject.y = event.stageY;
 					pointObject.x = event.stageX;
 				}
@@ -254,8 +254,8 @@ package com.gestureworks.managers
 			
 			if (pointObject)
 			{
-				pointObject.point.y = event.stageY; // legacy
-				pointObject.point.x = event.stageX; //legacy
+				//pointObject.point.y = event.stageY; // legacy
+				//pointObject.point.x = event.stageX; //legacy
 				pointObject.y = event.stageY;
 				pointObject.x = event.stageX;
 			}	

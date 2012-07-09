@@ -67,13 +67,17 @@ package com.gestureworks.core
 	
 	public class TouchMovieClipBase extends MovieClip
 	{
-		public var point:*;
+		/**
+		 * @private
+		 */
 		public var gml:XMLList;
+		/**
+		 * @private
+		 */
 		public var cml:XMLList;
 		
 		// internal public 
 		public var cO:ClusterObject;
-		//public var pO:ProcessObject;
 		public var gO:GestureObject;
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
@@ -117,14 +121,7 @@ package com.gestureworks.core
 						cO = new ClusterObject();
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
-						
-						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW PROCESS OBJECT FOT THE TOUCHSPRITE
-						// A VEHICLE TO CONTAIN CORE PROCESSED (FILTERED) CLUSTER VALUES
-						/////////////////////////////////////////////////////////////////////////
-						//pO = new ProcessObject();
-						//	pO.id = touchObjectID;
-						//GestureGlobals.gw_public::processes[_touchObjectID] = pO;
+				
 						
 						/////////////////////////////////////////////////////////////////////////
 						// CREATERS A NEW GESTURE OBJECT
@@ -497,37 +494,34 @@ package com.gestureworks.core
 		private function assignPoint(event:TouchEvent):void // asigns point
 		{
 			// create new point object
-			var pointObject:PointObject  = new PointObject();
-			var historyArray:Array = new Array();
-										
-				point = new Object();
-					pointObject.point=point;	
-					pointObject.object = this; // sets primary touch object/cluster
-					pointObject.objectList.push(this); // seeds cluster/touch object list
-					pointObject.event = event;
-					pointObject.id = pointCount;
-					pointObject.touchPointID = event.touchPointID;
+			var pointObject:PointObject  = new PointObject();					
+				pointObject.object = this; // sets primary touch object/cluster
+				pointObject.objectList.push(this); // seeds cluster/touch object list
 				
-						//pointObject.point.x = event.stageX;
-						//pointObject.point.y = event.stageY;
-						pointObject.x = event.stageX;
-						pointObject.y = event.stageY;
-					//}
+				pointObject.id = pointCount;
+				pointObject.touchPointID = event.touchPointID;
+				pointObject.x = event.stageX;
+				pointObject.y = event.stageY;
 				
-
+				//update touch object point list
 				_pointArray.push(pointObject);
+				
+				// update cluster object point list
 				cO.pointArray = _pointArray;
-				//cO.pointArray.push(pointObject);
+				
 				// increment point count on touch object
 				pointCount++;
 				
-				// add touch down to touch object gesture event timeline
-				if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
+				
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 
 				// regisiter touch point with touchmanager
 				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
+				
 				else MouseManager.gw_public::registerMousePoint(event);
+				
+				// add touch down to touch object gesture event timeline
+				if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
 
 				//trace("point array length", _pointArray.length);
 		}

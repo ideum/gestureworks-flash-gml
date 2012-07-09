@@ -58,25 +58,6 @@ package com.gestureworks.core
 		////////////////////////////////////////////////////////////
 		// Properties: Public
 		////////////////////////////////////////////////////////////
-		/**
-		 * @private
-		 */
-		/*
-		private function onEnterFrame(event:GWEvent):void 
-		{
-			//trace("TouchMovieClip update-----------------------------",GestureGlobals.frameID, N);
-			
-			updateClusterCount();
-			
-			if (N==0)
-			{	
-				updateGestureAnalysis();
-				updateTransformation();
-				updateGestureValues();
-			}
-			else updateDebugDisplay();
-		}
-		*/
 		
 		private function onGestureListUpdate(event:GWGestureEvent):void  
 		{

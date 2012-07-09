@@ -27,7 +27,7 @@ package com.gestureworks.utils
 		{
 			var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
 			
-			trace("arrange function splice delete",pointObject.id,event.touchPointID,pointObject.object);
+			//trace("arrange function splice delete",pointObject.id,event.touchPointID,pointObject.object);
 			
 			pointObject.object.pointArray.splice(pointObject.id, 1);
 			pointObject.object.pointCount--;

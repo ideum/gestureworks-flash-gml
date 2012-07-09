@@ -84,10 +84,20 @@ package com.gestureworks.utils
 
 						// re-set gesture processing rate
 						var processing_rate:Number = gml.attribute("processing_rate");
+						var matchDisplayFR:Boolean = gml.attribute("match_display_frame_rate") == "true" ?true:false;
+						
 						if (processing_rate) 
 						{
-							GestureGlobals.touchFrameInterval = processing_rate;
+							if (matchDisplayFR)
+								{
+								GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
+								}
+							else{
+								GestureGlobals.touchFrameInterval = processing_rate;
+								}
 							TouchManager.gw_public::resetGlobalClock;
+							
+							trace("touch frame interval",GestureGlobals.touchFrameInterval);
 						}
 						var gestureNum:int = gml.Gesture_set[0].Gesture.length();
 						
@@ -310,7 +320,7 @@ package com.gestureworks.utils
 							}
 							gO.pOList = pOList;
 							
-						traceGesturePropertyList()
+						//traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		

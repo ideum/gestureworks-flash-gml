@@ -53,27 +53,15 @@ package com.gestureworks.core
 		{
 			super();
 			initTouchSprite();
-	
         }
 		 
-        private function initTouchSprite():void 
+       private function initTouchSprite():void 
         {	
-			//trace("create touchsprite interface");
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, onEnterFrame, false, 0, true);
-			
 			// init gesrtures
 			//this.addEventListener(Event.ADDED_TO_STAGE, initGestures);
 			
 			// move to initGestures
-			//this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
-			
-			
-			//if (GestureWorks.supportsTouch) addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); 
-			//var myTimer:Timer = new Timer(16.7, 0);
-				//myTimer.addEventListener(TimerEvent.TIMER, timerHandler, false,10,false);
-				//myTimer.start();
-				
-			
+			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
 		}
 		
 		
@@ -109,71 +97,11 @@ package com.gestureworks.core
 		 * @private
 		 */
 		
-		 
-		private function onEnterFrame(event:GWEvent):void  
-		{
-			//if (trace_debug_mode)  
-			//trace("TouchSprite update-----------------------------",GestureGlobals.frameID, N,System.totalMemory);
-			/*
-			updateClusterCount();
-			
-			if (N==0)
-			{	
-				updateGestureAnalysis();
-				updateTransformation();
-				updateGestureValues();
-			}
-			else 
-			{
-				
-			updateClusterAnalysis();
-			updateProcessing();
-			updateGestureAnalysis();
-			updateTransformation();
-			}
-			
-			*/
-			//updateDebugDisplay();
-		}
-		
-		
-		/*
-		public function timerHandler(event:TimerEvent):void
-		{
-			GestureGlobals.frameID +=1;
-			updateClusterCount();
-		  
-			if (N==0)
-			{
-				updateGestureAnalysis();
-				updateTransformation();
-				updateGestureValues();
-			}
-			else{
-				//trace("sprite timer");
-				updateClusterAnalysis();
-				updateProcessing();
-				updateGestureAnalysis();
-				updateTransformation();
-				updateDebugDisplay();
-				//event.updateAfterEvent();
-			}
-		}
-		*/
-		
 		private function onGestureListUpdate(event:GWGestureEvent):void  
 		{
 			//trace("gesturelist update");
 			this.initTimeline();
 		}
-		
-		//override public function onTouchDown(event:TouchEvent):void
-		//{
-			//trace("t down		", "TARGET:	", event.target.name, "		CURRENT TARGET:	", event.currentTarget.name);
-			
-			// assign touchpoint cluster
-			//assignEvent(event);
-		//}
 		
 	}
 }

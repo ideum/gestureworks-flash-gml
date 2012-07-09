@@ -85,7 +85,7 @@ package com.gestureworks.utils.debug
 							for (var j:int=0; j<n; j++){
 								if(i!=j){
 									//trace(i,j)
-									DrawDashLine(5, 5, pointList[i].point.x, pointList[i].point.y, pointList[j].point.x, pointList[j].point.y, obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
+									DrawDashLine(5, 5, pointList[i].x, pointList[i].y, pointList[j].x, pointList[j].y, obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
 								}
 							}
 					}
@@ -95,8 +95,8 @@ package com.gestureworks.utils.debug
 							for (var l:int=0; l<n; l++){
 								if(k!=l){
 									//trace(i,j)
-										graphics.moveTo(pointList[k].point.x,pointList[k].point.y);
-										graphics.lineTo(pointList[l].point.x, pointList[l].point.y);
+										graphics.moveTo(pointList[k].x,pointList[k].y);
+										graphics.lineTo(pointList[l].x, pointList[l].y);
 								}
 							}
 					}
@@ -108,13 +108,13 @@ package com.gestureworks.utils.debug
 				if(obj.line_type =="dashed"){
 					for (var m:int = 0; m < n; m++) 
 					{
-						DrawDashLine(5, 5, x, y, pointList[m].point.x, pointList[m].point.y, obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
+						DrawDashLine(5, 5, x, y, pointList[m].x, pointList[m].y, obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
 					}	
 				}
 				if(obj.line_type =="solid"){
 					for (var p:int = 0; p < n; p++) {
 							graphics.moveTo(x,y);
-							graphics.lineTo(pointList[p].point.x, pointList[p].point.y);
+							graphics.lineTo(pointList[p].x, pointList[p].y);
 						}
 				}
 		}

@@ -116,10 +116,10 @@ package com.gestureworks.tuio
 			//trace("point added");
 			
 			var object:Object = new Object();
-			object.touchPointID = e.tuioContainer.sessionID;
-			object.x = e.tuioContainer.x * stage.stageWidth; 
-			object.y = e.tuioContainer.y * stage.stageHeight;
-			SocketTouchManager.add(object);
+				object.touchPointID = e.tuioContainer.sessionID;
+				object.x = e.tuioContainer.x * stage.stageWidth; 
+				object.y = e.tuioContainer.y * stage.stageHeight;
+				SocketTouchManager.add(object);
 		}
 		
 		private function pointUpdatedHandler(e:TuioEvent):void
@@ -127,10 +127,10 @@ package com.gestureworks.tuio
 			//trace("point update");
 			
 			var object:Object = new Object();
-			object.touchPointID = e.tuioContainer.sessionID;
-			object.x = e.tuioContainer.x * stage.stageWidth;
-			object.y = e.tuioContainer.y * stage.stageHeight;
-			SocketTouchManager.update(object);
+				object.touchPointID = e.tuioContainer.sessionID;
+				object.x = e.tuioContainer.x * stage.stageWidth;
+				object.y = e.tuioContainer.y * stage.stageHeight;
+				SocketTouchManager.update(object);
 		}
 		
 		private function pointRemovedHandler(e:TuioEvent):void
@@ -138,10 +138,10 @@ package com.gestureworks.tuio
 			//trace("point removed");
 			
 			var object:Object = new Object();
-			object.touchPointID = e.tuioContainer.sessionID;
-			object.x = e.tuioContainer.x * stage.stageWidth;
-			object.y = e.tuioContainer.y * stage.stageHeight;
-			SocketTouchManager.remove(object);
+				object.touchPointID = e.tuioContainer.sessionID;
+				object.x = e.tuioContainer.x * stage.stageWidth;
+				object.y = e.tuioContainer.y * stage.stageHeight;
+				SocketTouchManager.remove(object);
 		}
 				
 		private function map(v:Number, a:Number, b:Number, x:Number=0, y:Number=1):Number 

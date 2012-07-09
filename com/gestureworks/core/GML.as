@@ -24,9 +24,9 @@ package com.gestureworks.core
 	{
 		public static var Gestures:XML =
 		
-		<Gestures processing_rate="16.7">
-		
-		<Gesture_set gesture_set_name="n-manipulate">
+	<Gestures processing_rate="16.7" match_display_frame_rate="true">
+	
+	<Gesture_set gesture_set_name="n-manipulate">
 		
 			<Gesture id="n-drag" type="drag">
 				<comment>The 'n-drag' gesture can be activated by any number of touch points. When a touch down is recognized on a touch object the position
@@ -60,8 +60,8 @@ package com.gestureworks.core
 				<mapping>
 					<update>
 						<gesture_event>
-							<property ref="drag_dx" target="x" delta_threshold="true" delta_min="0.01" delta_max="100"/>
-							<property ref="drag_dy" target="y" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+							<property ref="drag_dx" target="x" delta_threshold="false" delta_min="0.01" delta_max="500"/>
+							<property ref="drag_dy" target="y" delta_threshold="false" delta_min="0.01" delta_max="500"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -163,8 +163,8 @@ package com.gestureworks.core
 				<mapping>
 					<update>
 						<gesture_event>
-							<property ref="scale_dsx" target="scaleX" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
-							<property ref="scale_dsy" target="scaleY" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
+							<property ref="scale_dsx" target="scaleX" func="linear" factor="0.0033" delta_threshold="false" delta_min="0.0001" delta_max="1"/>
+							<property ref="scale_dsy" target="scaleY" func="linear" factor="0.0033" delta_threshold="false" delta_min="0.0001" delta_max="1"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -178,7 +178,7 @@ package com.gestureworks.core
 					<action>
 						<initial>
 							<point event_duration_threshold="500" translation_threshold="2"/>
-							<cluster point_number="1"/>
+							<cluster point_number="0"/>
 						</initial>
 					</action>
 				</match>	
@@ -510,7 +510,7 @@ package com.gestureworks.core
 			
 			
 			
-				<Gesture id="n-flick" type="flick">
+			<Gesture id="n-flick" type="flick">
 				<comment>The 'n-flick' gesture can be activated by any number of touch points. When a touch down is recognized on a touch object, the velocity and 
 				acceleration of the touch points are tracked. If acceleration of the cluster is above the acceleration threshold a flick event is dispatched.</comment>
 				<match>
@@ -671,8 +671,8 @@ package com.gestureworks.core
 				</analysis>	
 				<processing>
 					<inertial_filter>
-						<property ref="scroll_dx"/>
-						<property ref="scroll_dy"/>
+						<property ref="scroll_dx" release_inertia="true" friction="0.994"/>
+						<property ref="scroll_dy" release_inertia="true" friction="0.994"/>
 					</inertial_filter>
 				</processing>
 				<mapping>
@@ -706,7 +706,7 @@ package com.gestureworks.core
 				</analysis>	
 				<processing>
 					<inertial_filter>
-						<property ref="scroll_dx"/>
+						<property ref="scroll_dx" />
 						<property ref="scroll_dy"/>
 					</inertial_filter>
 				</processing>
@@ -885,8 +885,8 @@ package com.gestureworks.core
 				<mapping>
 					<update>
 						<gesture_event>
-							<property ref="drag_dx" target="x" delta_threshold="true" delta_min="0.01" delta_max="100"/>
-							<property ref="drag_dy" target="y" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+							<property ref="drag_dx" target="x" delta_threshold="false" delta_min="0.01" delta_max="100"/>
+							<property ref="drag_dy" target="y" delta_threshold="false" delta_min="0.01" delta_max="100"/>
 							<property ref="scale_dsx" target="scaleX" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
 							<property ref="scale_dsy" target="scaleY" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
 							<property ref="rotate_dtheta" target="rotation" delta_threshold="true" delta_min="0.01" delta_max="20"/>

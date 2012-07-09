@@ -68,10 +68,8 @@ package com.gestureworks.core
 	
 	public class TouchSpriteBase extends Sprite
 	{
-		/**
-		 * @private
-		 */
-		public var point:*;
+		//public var point:Point;
+		//public var point:*;
 		/**
 		 * @private
 		 */
@@ -122,20 +120,12 @@ package com.gestureworks.core
 					//if (GestureGlobals.analyzeCluster)
 						//{
 						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW CLUSTER OBJECT FOT THE TOUCHSPRITE
+						// CREATES A NEW CLUSTER OBJECT FOR THE TOUCHSPRITE
 						// HANDLES CORE GEOMETRIC RAW PROPERTIES OF THE CLUSTER
 						/////////////////////////////////////////////////////////////////////////
 						cO = new ClusterObject();
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
-						
-						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW PROCESS OBJECT FOT THE TOUCHSPRITE
-						// A VEHICLE TO CONTAIN CORE PROCESSED (FILTERED) CLUSTER VALUES
-						/////////////////////////////////////////////////////////////////////////
-						//pO = new ProcessObject();
-						//	pO.id = touchObjectID;
-						//GestureGlobals.gw_public::processes[_touchObjectID] = pO;
 						
 						/////////////////////////////////////////////////////////////////////////
 						// CREATERS A NEW GESTURE OBJECT
@@ -494,34 +484,35 @@ package com.gestureworks.core
 		private function assignPoint(event:TouchEvent):void // asigns point
 		{
 			// create new point object
-			var pointObject:PointObject  = new PointObject();
-			var historyArray:Array = new Array();
-							
-				point = new Object();
-					pointObject.point=point;	
-					pointObject.object = this; // sets primary touch object/cluster
-					pointObject.objectList.push(this); // seeds cluster/touch object list
-					pointObject.event = event;
-					pointObject.id = pointCount;
-					pointObject.touchPointID = event.touchPointID;
-					//pointObject.point.x = event.stageX;
-					//pointObject.point.y = event.stageY;
-					pointObject.x = event.stageX; //new
-					pointObject.y = event.stageY; //new
-
+			var pointObject:PointObject  = new PointObject();	
+				pointObject.object = this; // sets primary touch object/cluster
+				pointObject.objectList.push(this); // seeds cluster/touch object list
+				pointObject.id = pointCount; // NEEDED FOR THUMBID
+				//pointObject.event = event;
+				pointObject.touchPointID = event.touchPointID;
+				pointObject.x = event.stageX;
+				pointObject.y = event.stageY; 
+				
+				//ADD TO LOCAL POINT LIST
 				_pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
 				cO.pointArray = _pointArray;
-				//cO.pointArray.push(pointObject);
-				// increment point count on touch object
+				
+				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
+				
+				/////////////////////////////////////////////////////////////////////////
+				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
+				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER
+				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
+				// REGISTER MOUSE POINT WITH MOUSE MANAGER
+				else MouseManager.gw_public::registerMousePoint(event);
+				////////////////////////////////////////////////////////////////////////
 				
 				// add touch down to touch object gesture event timeline
 				if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
-				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
-
-				// regisiter touch point with touchmanager
-				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
-				else MouseManager.gw_public::registerMousePoint(event);
 
 				//trace("point array length", _pointArray.length);
 				
@@ -531,18 +522,18 @@ package com.gestureworks.core
 		{
 				// assign existing point object
 				var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID]
-				// add this touch object to touchobject list on point
-				pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+					// add this touch object to touchobject list on point
+					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 	
 				//ADD TO LOCAL POINT LIST
 				_pointArray.push(pointObject);
 				
-				//UPDATE POINT LOCAL COUNT
-				pointCount++;
-				
 				//UPDATE LOCAL CLUSTER OBJECT
 				//touch object point list and cluster point list should be consolodated
 				cO.pointArray = _pointArray;
+				
+				//UPDATE POINT LOCAL COUNT
+				pointCount++;
 				
 				// add touch down to touch object gesture event timeline
 				if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array

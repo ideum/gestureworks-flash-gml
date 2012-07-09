@@ -38,9 +38,10 @@ package com.gestureworks.utils.debug
 		{
 			//trace("init cluster point vectors");
 			touchObjectID = _id;
-			clusterObject = GestureGlobals.gw_public::clusters[touchObjectID];
+			//clusterObject = GestureGlobals.gw_public::clusters[touchObjectID];
 			
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
+			clusterObject = ts.cO
 			
 			hist = 15;
 

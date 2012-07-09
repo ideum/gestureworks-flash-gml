@@ -456,6 +456,7 @@ package com.gestureworks.core
 						//if (clusterDataOn) cluster_data_view.drawDataList();
 						//if (gestureDataOn) gesture_datalist.drawDataList();
 						//if (touchObjectDataOn) touchObject_datalist.drawDataList();
+						
 						if (clusterDataViewOn) cluster_data_view.drawDataView();
 						if (gestureDataViewOn) gesture_data_view.drawDataView();
 						if (touchObjectDataViewOn) touchObject_data_view.drawDataView();
