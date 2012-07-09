@@ -59,7 +59,7 @@ package com.gestureworks.utils
 			byteLoaderContext.allowCodeImport = true;
 			byteLoader.loadBytes(bytes, byteLoaderContext);
 		}
-		
+
 		private function completeHandler(event:Event):void
 		{
 			splitString(event.target.data);

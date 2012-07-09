@@ -62,6 +62,8 @@ package com.gestureworks.managers
 		{
 			super();
 			
+			trace("mode manager");
+			
 			_r = r;
 			
 			key = k;

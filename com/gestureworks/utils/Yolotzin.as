@@ -18,8 +18,8 @@ package com.gestureworks.utils
 {
 	import flash.display.Loader;
 	import flash.display.Sprite;
-	import com.gestureworks.utils.CompileDate;
-	import com.gestureworks.utils.SwfByteLoader;
+	import com.gestureworks.utils.CompileDate; //-no longer used, c.veasey 7/6/12
+	import com.gestureworks.utils.SwfByteLoader; //-no longer used, c.veasey 7/6/12
 	import com.gestureworks.events.BinaryEvent;
 	import com.gestureworks.core.CML;
 	import com.gestureworks.utils.Tpyrcne;
@@ -59,7 +59,7 @@ package com.gestureworks.utils
 		private static var c:*;
 		public static var o:*;
 		
-		public function Yolotzin() { super(); }
+		public function Yolotzin() { super();}
 		
 		tgrqzd function qftgtopiuqewer(ro:*, ke:*, se:*):void
 		{
@@ -68,7 +68,7 @@ package com.gestureworks.utils
 			r = ro;
 			k = ke;
 			s = se;
-			
+		
 			testCompileDate(ke);
 		}
 		
@@ -89,15 +89,17 @@ package com.gestureworks.utils
 		}
 		
 		private var inRunTime:Boolean;
+		
+		
 		private function testCompileDate(keyString:String):void
-		{			
+		{
 			if (keyString == "")
 			{
 				mode = -2;
 				completed = true;
 				return;
 			}
-			
+						
 			c = CompileDate.from(r);
 			
 			var cDate:Date;
@@ -112,7 +114,7 @@ package com.gestureworks.utils
 				var minutes:String = date.slice(14, 16);
 				var seconds:String = date.slice(17, 19);
 				cDate = new Date(year, month, day, hours, minutes, seconds);
-				//trace("isFlash:",year, month, day, hours, minutes, seconds)
+				trace("isFlash:",year, month, day, hours, minutes, seconds)
 			}
 			else
 			{
@@ -152,5 +154,6 @@ package com.gestureworks.utils
 				completed = true;
 			}
 		}
+		
 	}
 }

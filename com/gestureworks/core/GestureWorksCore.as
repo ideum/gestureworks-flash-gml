@@ -120,7 +120,6 @@ package com.gestureworks.core
 			GestureWorks.supportsTouch = Multitouch.supportsTouchEvents;
 			
 			GestureWorks.application = stage;
-			
 			initialized = true;
 			
 			if (settingsPath) create();

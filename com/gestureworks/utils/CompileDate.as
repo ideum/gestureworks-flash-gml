@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.utils 
 {
+	
 	import com.codeazur.as3swf.SWF;
 	import com.codeazur.as3swf.SWFData;
 	import com.codeazur.as3swf.data.SWFRawTag;
@@ -22,7 +23,7 @@ package com.gestureworks.utils
 	import com.codeazur.as3swf.tags.TagEnd;
 	import com.codeazur.as3swf.tags.TagProductInfo;
 	import com.codeazur.as3swf.tags.TagMetadata;
-	
+
 	/* 
 		
 		IMPORTANT NOTE TO DEVELOPER **********************************************
@@ -42,7 +43,8 @@ package com.gestureworks.utils
 		public static var isFlash:Boolean;
 		
 		public static function from(r:*):String
-		{			
+		{
+			
 			var swf:SWF = new SWF(r.loaderInfo.bytes);
 			
 			for (var i:uint = 0; i < swf.tags.length; i++)
@@ -68,13 +70,14 @@ package com.gestureworks.utils
 					var productInfo:TagProductInfo = swf.tags[i] as TagProductInfo;
 					
 					compileDate = productInfo.compileDate.toString();
-					
-					isFlash =  false;
+										
+					isFlash = false;
 				}
 				
 			}
 			
 			return compileDate;
+			
 		}
 	}
 }
