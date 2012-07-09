@@ -85,6 +85,10 @@ package com.gestureworks.utils
 						// re-set gesture processing rate
 						var processing_rate:Number = gml.attribute("processing_rate");
 						var matchDisplayFR:Boolean = gml.attribute("match_display_frame_rate") == "true" ?true:false;
+						var max_point_number:int = gml.attribute("max_point_number");
+						
+						if (max_point_number) GestureGlobals.max_point_count = max_point_number;
+						else GestureGlobals.max_point_count = 1000;
 						
 						if (processing_rate) 
 						{
@@ -99,6 +103,9 @@ package com.gestureworks.utils
 							
 							trace("touch frame interval",GestureGlobals.touchFrameInterval);
 						}
+						else GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
+						
+						
 						var gestureNum:int = gml.Gesture_set[0].Gesture.length();
 						
 							for (var i:int = 0; i < gestureNum; i++) 

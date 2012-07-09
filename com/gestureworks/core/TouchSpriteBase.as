@@ -502,13 +502,30 @@ package com.gestureworks.core
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
 				
+				/*
+				var count:int = 0;
+				for each(var point:Object in GestureGlobals.gw_public::points)
+				//for each(var ts:Object in touchObjects)
+					{
+					count++;
+					//trace("what")
+					}
+				trace(count);
+				//return count;
+				*/
+				
+				//if(count<2){
 				/////////////////////////////////////////////////////////////////////////
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
+				TouchManager.gw_public::registerTouchPoint(event);
 				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
 				else MouseManager.gw_public::registerMousePoint(event);
+				//}
+				
+				
 				////////////////////////////////////////////////////////////////////////
 				
 				// add touch down to touch object gesture event timeline

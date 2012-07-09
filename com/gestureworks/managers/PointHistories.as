@@ -38,7 +38,9 @@ package com.gestureworks.managers
 				//var history:Array = GestureGlobals.gw_public::points[event.touchPointID].history;
 				//point.history.unshift(historyObject(point.history[0].x, point.history[0].y, event, point.history[0].frameID));
 				
-				point.history.unshift(historyObject(point.history[0].x, point.history[0].y, point.history[0].frameID, point.moveCount, event));
+				//point.history.unshift(historyObject(point.history[0].x, point.history[0].y, point.history[0].frameID, point.moveCount, event, point));
+				
+				point.history.unshift(historyObject(point.history[0].x, point.history[0].y,event,point.history[0].frameID));
 				
 				//trace(history[0].moveCount,GestureGlobals.gw_public::points[event.touchPointID].moveCount)
 								
@@ -51,7 +53,9 @@ package com.gestureworks.managers
 		
 		// loads history object and returns value.
 		//public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
-		public static function historyObject(X:Number, Y:Number, FrameID:int,moveCount:int,event:TouchEvent):Object
+	//	public static function historyObject(X:Number, Y:Number, FrameID:int, moveCount:int, event:TouchEvent, point:PointObject):Object
+		
+		public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
 		{
 			//var c0:Number = 1 / moveCount;
 			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
@@ -76,8 +80,10 @@ package com.gestureworks.managers
 					pt.dx = event.stageX - X;
 					pt.dy = event.stageY - Y;
 				}
+				
+				if (FrameID != currentFrameID) point.moveCount = 1;
 
-			
+			/*
 			if (FrameID == currentFrameID) 
 			{
 				point.DX += pt.dx;
@@ -88,6 +94,7 @@ package com.gestureworks.managers
 				point.DY = pt.dy;
 				point.moveCount = 1;
 			}
+			*/
 			
 			return pt;
 		}

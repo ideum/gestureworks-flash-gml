@@ -605,8 +605,13 @@ package com.gestureworks.analysis
 								for (i = 0; i < N; i++) 
 								{	
 									// translate
-									c_dx += pointList[i].DX;
-									c_dy += pointList[i].DY;
+									//c_dx += pointList[i].DX;
+									//c_dy += pointList[i].DY;
+									
+									c_dx += pointList[i].dx;
+									c_dy += pointList[i].dy;
+									
+									trace(pointList[i].moveCount)
 									
 									if (pointList[i + 1]){
 										if ((pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
@@ -662,8 +667,10 @@ package com.gestureworks.analysis
 								if (pointList[i])//&&(!pointList[i].holdLock))// edit
 								{
 									// SIMPLIFIED DELTA
-									c_dx += pointList[i].DX;
-									c_dy += pointList[i].DY;
+									//c_dx += pointList[i].DX;
+									//c_dy += pointList[i].DY;
+									c_dx += pointList[i].dx;
+									c_dy += pointList[i].dy;
 								}	
 						}
 						

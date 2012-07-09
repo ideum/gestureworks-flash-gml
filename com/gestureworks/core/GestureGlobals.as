@@ -85,19 +85,36 @@ package com.gestureworks.core
 		
 		private static var _touchFrameInterval:Number = 16.7;//60fps
 		/**
-		 * frameID frame stamp relative to start of application.
+		 * returns touch frame interval, time between touch processing cycles.
 		 */
 		public static function get touchFrameInterval():Number
 		{
 			return _touchFrameInterval;
 		}
 		/**
-		 * frameID frame stamp relative to start of application.
+		 * sets touch frame interval, time between touch processing cycles
 		 */
 		public static function set touchFrameInterval(value:Number):void
 		{
 			_touchFrameInterval=value;
 		}
+		
+		private static var _max_point_count:int = 1000;
+		/**
+		 * returns max number of tracked touch points.
+		 */
+		public static function get max_point_count():int
+		{
+			return _max_point_count;
+		}
+		/**
+		 * sets max number of tracked touch points.
+		 */
+		public static function set max_point_count(value:int):void
+		{
+			_max_point_count=value;
+		}
+		
 		
 		//  pointHistoryCaptureLength -------------------------------------
 		private static var _pointHistoryCaptureLength:int = 8;//int.MAX_VALUE

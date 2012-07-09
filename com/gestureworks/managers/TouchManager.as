@@ -86,6 +86,19 @@ package com.gestureworks.managers
 		}
 		
 		
+		public static function pointCount():int {
+			
+			var count:int = 0;
+			for each(var point:Object in points)
+			//for each(var ts:Object in touchObjects)
+				{
+				count++;
+				//trace("what")
+				}
+			//trace(count);
+			return count;
+		} 
+		
 		// registers touch point via touchSprite
 		gw_public static function registerTouchPoint(event:TouchEvent):void
 		{
@@ -93,8 +106,21 @@ package com.gestureworks.managers
 			// DO NOT REGISTER IF OVER THRESHOLD
 			// 1000 IS DEFAULT MAX
 			
-			if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,GestureGlobals.frameID,0,event))
-			else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID,0,event));
+			//trace(pointCount())
+			
+			//if (pointCount()<2){
+
+			//if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,GestureGlobals.frameID,0,event,points[event.touchPointID]))
+			//else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID, 0, event, points[event.touchPointID]));
+			
+			if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,event,GestureGlobals.frameID))
+			else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event,GestureGlobals.frameID));
+
+			
+			//}
+			//else return
+			
+			
 		}
 		
 		// stage on TOUCH_UP.
