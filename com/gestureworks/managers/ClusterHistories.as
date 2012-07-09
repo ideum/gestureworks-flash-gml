@@ -89,10 +89,6 @@ package com.gestureworks.managers
 				// STANDARD CLUSTER CALCS
 				object.orient_dx = clusterObject.orient_dx;
 				object.orient_dy = clusterObject.orient_dy;
-				object.flick_dx = clusterObject.flick_dx;
-				object.flick_dy = clusterObject.flick_dy;
-				object.swipe_dx = clusterObject.swipe_dx;
-				object.swipe_dy = clusterObject.swipe_dy;
 				
 				//object.pointArray = [2, 3]//;
 				

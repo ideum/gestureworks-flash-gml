@@ -29,7 +29,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.utils.ArrangePoints;
-	import com.gestureworks.managers.TouchUpdateManager;
+	//import com.gestureworks.managers.TouchUpdateManager;
 	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.managers.TouchManager;

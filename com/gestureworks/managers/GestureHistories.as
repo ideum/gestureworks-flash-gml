@@ -66,9 +66,9 @@ package com.gestureworks.managers
 				/////////////////////////////////////////////////
 				// core gesture events
 				/////////////////////////////////////////////////
-				object.start = gestureObject.start;
-				object.complete = gestureObject.complete;
-				object.release = gestureObject.release;
+				//object.start = gestureObject.start;
+				//object.complete = gestureObject.complete;
+				//object.release = gestureObject.release;
 				
 				// gesture object lists
 				//object.pOList = gestureObject.pOList;

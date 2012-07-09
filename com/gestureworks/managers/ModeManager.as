@@ -186,7 +186,7 @@ package com.gestureworks.managers
 			}
 			
 			TouchManager.gw_public::initialize();
-			TouchUpdateManager.gw_public::initialize();
+			//TouchUpdateManager.gw_public::initialize();
 			MouseManager.gw_public::initialize();
 			ObjectManager.gw_public::initialize();
 			EnterFrameManager.gw_public::initialize();

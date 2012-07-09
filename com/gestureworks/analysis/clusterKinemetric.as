@@ -84,10 +84,10 @@ package com.gestureworks.analysis
 		
 		public var orient_dx:Number = 0; // cluster orientation vector
 		public var orient_dy:Number = 0; // cluster orientation vector
-		public var swipe_dx:Number = 0; // cluster orientation vector
-		public var swipe_dy:Number = 0; // cluster orientation vector
-		public var flick_dx:Number = 0; // cluster orientation vector
-		public var flick_dy:Number = 0; // cluster orientation vector
+	//	public var swipe_dx:Number = 0; // cluster orientation vector
+		//public var swipe_dy:Number = 0; // cluster orientation vector
+		//public var flick_dx:Number = 0; // cluster orientation vector
+		//public var flick_dy:Number = 0; // cluster orientation vector
 		//private var hand:String = "left";
 		
 		private var path_data:Array;
@@ -268,10 +268,10 @@ package com.gestureworks.analysis
 			
 			orient_dx = 0;
 			orient_dy = 0;
-			swipe_dx = 0;
-			swipe_dy = 0;
-			flick_dx = 0;
-			flick_dy = 0;
+			//swipe_dx = 0;
+			//swipe_dy = 0;
+			//flick_dx = 0;
+			//flick_dy = 0;
 			
 			//first diff
 			c_dx = 0;
@@ -330,12 +330,14 @@ package com.gestureworks.analysis
 			ts.cO.mx = c_emx;
 			ts.cO.my = c_emy;
 			
+			//////////////////////////////////
+			////////////////////////////////////
 			ts.cO.orient_dx = orient_dx;
 			ts.cO.orient_dy = orient_dy;
-			ts.cO.swipe_dx = swipe_dx;
-			ts.cO.swipe_dy = swipe_dy;
-			ts.cO.flick_dx = 0//flick_dx;
-			ts.cO.flick_dy = 0//flick_dy;
+			//ts.cO.swipe_dx = swipe_dx;
+			//ts.cO.swipe_dy = swipe_dy;
+			//ts.cO.flick_dx = 0//flick_dx;
+			//ts.cO.flick_dy = 0//flick_dy;
 		
 			/////////////////////////
 			// first diff

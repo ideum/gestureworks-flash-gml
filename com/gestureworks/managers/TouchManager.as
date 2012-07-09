@@ -29,7 +29,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GML;
 	
 	import com.gestureworks.utils.ArrangePoints;
-	import com.gestureworks.managers.TouchUpdateManager;
+	//import com.gestureworks.managers.TouchUpdateManager;
 	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.events.GWEvent;
 	
@@ -85,9 +85,14 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 		}
 		
+		
 		// registers touch point via touchSprite
 		gw_public static function registerTouchPoint(event:TouchEvent):void
 		{
+			// CHECK GLOBAL MAX POINT COUNT HERE
+			// DO NOT REGISTER IF OVER THRESHOLD
+			// 1000 IS DEFAULT MAX
+			
 			if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,GestureGlobals.frameID,0,event))
 			else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID,0,event));
 		}
