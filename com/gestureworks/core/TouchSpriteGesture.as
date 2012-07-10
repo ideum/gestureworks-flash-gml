@@ -421,7 +421,7 @@ package com.gestureworks.core
 									var stroke_prob:Number = gO.pOList[key].path_match;
 									if (stroke_prob>stroke_threshold)
 									{
-										trace("stroke event");
+										//trace("stroke event");
 										var Gevent:GWGestureEvent = new GWGestureEvent(GWGestureEvent.STROKE, {n:N, probability:stroke_prob});
 										dispatchEvent(Gevent);
 										//if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(Gevent);
@@ -495,7 +495,7 @@ package com.gestureworks.core
 							if (hold_number == 0) {
 								if (holdLockCount!=0)
 								{
-								trace("hold count check n hold", gO.pOList[key].n, holdLockCount, cO.hold_x, cO.hold_y);
+								//trace("hold count check n hold", gO.pOList[key].n, holdLockCount, cO.hold_x, cO.hold_y);
 								
 								gO.pOList[key].complete = true;
 								
@@ -510,7 +510,7 @@ package com.gestureworks.core
 							else {
 								if (holdLockCount == hold_number)
 								{
-								trace("hold count check hold", gO.pOList[key].n, holdLockCount, cO.hold_x, cO.hold_y);
+								//trace("hold count check hold", gO.pOList[key].n, holdLockCount, cO.hold_x, cO.hold_y);
 								
 								gO.pOList[key].complete = true;
 								

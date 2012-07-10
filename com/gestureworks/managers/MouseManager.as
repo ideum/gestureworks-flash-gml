@@ -74,7 +74,10 @@ package com.gestureworks.managers
 			//trace("register mouse point");
 			//TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID, 0, event, TouchManager.points[event.touchPointID]));
 			
-			TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY,event,GestureGlobals.frameID));
+			//TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event, GestureGlobals.frameID));
+			
+			TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event));
+			
 				
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);

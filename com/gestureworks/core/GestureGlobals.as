@@ -83,7 +83,7 @@ package com.gestureworks.core
 			_frameID=value;
 		}
 		
-		private static var _touchFrameInterval:Number = 16.7;//60fps
+		private static var _touchFrameInterval:Number = 16;//60fps
 		/**
 		 * returns touch frame interval, time between touch processing cycles.
 		 */

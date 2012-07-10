@@ -105,12 +105,9 @@ package com.gestureworks.core
 			//trace("create touchsprite base");
 			
 					// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
-					if (GestureWorks.activeTUIO)					
-						addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-					if (GestureWorks.supportsTouch)
-						addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					else
-						addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+					if (GestureWorks.activeTUIO)		addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+					if (GestureWorks.supportsTouch)		addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+					else								addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 									
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -514,19 +511,13 @@ package com.gestureworks.core
 				//return count;
 				*/
 				
-				//if(count<2){
-				/////////////////////////////////////////////////////////////////////////
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
+				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				TouchManager.gw_public::registerTouchPoint(event);
-				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
+				if (GestureWorks.supportsTouch) 	TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				else MouseManager.gw_public::registerMousePoint(event);
-				//}
-				
-				
-				////////////////////////////////////////////////////////////////////////
+				else 								MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline
 				if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	

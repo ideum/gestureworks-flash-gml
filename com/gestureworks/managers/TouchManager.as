@@ -52,7 +52,8 @@ package com.gestureworks.managers
 	{
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
-		public static var globalClock:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
+		//public static var globalClock:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
+		//public static var globalClock:Timer = new Timer(60, 0);
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -70,13 +71,16 @@ package com.gestureworks.managers
 			
 			// SINGLE GLOBAL CLOCK FOR TOUCH PROCESSING
 			// COMPILES TOUCH FRAMES
-			globalClock.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
-			globalClock.start();
+			//globalClock.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
+			//globalClock.start();
+			
+			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler2);
 		}
 		
 		gw_public static function resetGlobalClock():void
 		{
-			globalClock = new Timer(GestureGlobals.touchFrameInterval, 0);
+			//globalClock = new Timer(GestureGlobals.touchFrameInterval, 0);
+			//globalClock = new Timer(2000, 0);
 		}
 		
 		gw_public static function deInitialize():void
@@ -113,9 +117,10 @@ package com.gestureworks.managers
 			//if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,GestureGlobals.frameID,0,event,points[event.touchPointID]))
 			//else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID, 0, event, points[event.touchPointID]));
 			
-			if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,event,GestureGlobals.frameID))
-			else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event,GestureGlobals.frameID));
-
+			//if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,event,GestureGlobals.frameID))
+			//else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event, GestureGlobals.frameID));
+			
+			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))
 			
 			//}
 			//else return
@@ -199,6 +204,8 @@ package com.gestureworks.managers
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			var pointObject:PointObject = points[event.touchPointID];
 			
+			//trace("touch move event");
+			
 			if (pointObject)
 			{	
 				// UPDATE POINT POSITIONS
@@ -228,7 +235,53 @@ package com.gestureworks.managers
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:TimerEvent):void
 		{
-			//trace("touch frame");
+			//trace("touch frame process ----------------------------------------------");
+			
+			//INCREMENT TOUCH FRAME id
+			GestureGlobals.frameID += 1;
+			
+			// update all touch objects in display list
+			for each(var ts:Object in touchObjects)
+			{
+				//trace("hello", ts, ts.N);
+				ts.updateClusterCount();
+				
+				// update gesture pipelines if NOT touching
+				if (ts.N==0)
+				{
+					ts.updateGestureAnalysis();
+					ts.updateTransformation();
+					ts.updateGestureValues();
+				}
+				// update cluster analysis and gesture pipelines if touching
+				else {
+					//trace("cluster analysis");
+					ts.updateClusterAnalysis();
+					ts.updateProcessing();
+					ts.updateGestureAnalysis();
+					ts.updateTransformation();
+					ts.updateDebugDisplay();
+				}
+				
+				// move to timeline visualizer
+				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
+				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
+				if (ts.debug_display)
+				{
+					//UPDATE CLUSTER HISTORIES
+					ClusterHistories.historyQueue(ts.touchObjectID);
+					
+					//UPDATE TRANSFORM HISTORIES
+					TransformHistories.historyQueue(ts.touchObjectID);
+				}
+				
+			}
+		}
+		
+		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
+		public static function touchFrameHandler2(event:GWEvent):void
+		{
+			//trace("touch frame process ----------------------------------------------");
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;

@@ -100,12 +100,9 @@ package com.gestureworks.core
 			//trace("create touchmovieclip base");
 					
 					// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
-					if (GestureWorks.activeTUIO)					
-						addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-					if (GestureWorks.supportsTouch)
-						addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					else
-						addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+					if (GestureWorks.activeTUIO)		addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+					if (GestureWorks.supportsTouch) 	addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+					else								addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -121,7 +118,6 @@ package com.gestureworks.core
 						cO = new ClusterObject();
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
-				
 						
 						/////////////////////////////////////////////////////////////////////////
 						// CREATERS A NEW GESTURE OBJECT

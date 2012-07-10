@@ -90,20 +90,20 @@ package com.gestureworks.utils
 						if (max_point_number) GestureGlobals.max_point_count = max_point_number;
 						else GestureGlobals.max_point_count = 1000;
 						
-						if (processing_rate) 
-						{
-							if (matchDisplayFR)
-								{
-								GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
-								}
-							else{
-								GestureGlobals.touchFrameInterval = processing_rate;
-								}
-							TouchManager.gw_public::resetGlobalClock;
+						//if (processing_rate) 
+						//{
+							//if (matchDisplayFR)
+							//	{
+								//GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
+							//	}
+							//else{
+								//GestureGlobals.touchFrameInterval = processing_rate;
+							//	}
+							//TouchManager.gw_public::resetGlobalClock;
 							
-							trace("touch frame interval",GestureGlobals.touchFrameInterval);
-						}
-						else GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
+							//trace("touch frame interval",GestureGlobals.touchFrameInterval);
+						//}
+						//else GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
 						
 						
 						var gestureNum:int = gml.Gesture_set[0].Gesture.length();
