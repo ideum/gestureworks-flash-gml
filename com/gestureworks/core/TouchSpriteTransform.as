@@ -145,7 +145,9 @@ package com.gestureworks.core
 				if (_N != 0)
 				{
 					if(!trO.init_center_point) initTransformPoints();
+					////////////////////////
 					restartGestureTween();
+					///////////////////////
 					if (_disableNativeTransform){
 						if (!_disableAffineTransform) $applyTransform(true);
 					}

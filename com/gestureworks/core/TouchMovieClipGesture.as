@@ -178,15 +178,18 @@ package com.gestureworks.core
 				{
 					if (contGesturemetricsOn) 
 					{
-						gesture_cont.applyGestureValueTween(); 			// decay gesture deltas
+						gesture_cont.processTweenPipeline();
+						
+						
+						//--gesture_cont.applyGestureValueTween(); 			// decay gesture deltas
 						//gesture_cont.limitGestureProperties();			// ensure limits are not exceeded
 						
 						///////////////////////////////////
-						gesture_cont.mapTransformLimits();
-						gesture_cont.limitGestureValues();
+						//--gesture_cont.mapTransformLimits();
+						//--gesture_cont.limitGestureValues();
 						///////////////////////////////////
 						
-						gesture_cont.mapTransformProperties();
+						//--gesture_cont.mapTransformProperties();
 						//gesture_cont.limitTransformProperties();
 						if (_gestureEvents) manageGestureEventDispatch();		// dispatch gesture events
 					}
