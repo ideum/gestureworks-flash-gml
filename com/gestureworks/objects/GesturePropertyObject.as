@@ -220,6 +220,16 @@ package com.gestureworks.objects
 		// GESTURE EVENT LOGIC
 		///////////////////////////////////////////////////
 		
+		// start
+		private var _activeEvent:Boolean = false;
+		public function get activeEvent():Boolean
+		{
+			return _activeEvent;
+		}
+		public function set activeEvent(value:Boolean):void
+		{
+			_activeEvent = value;
+		}
 		
 		// start
 		private var _start:Boolean = false;

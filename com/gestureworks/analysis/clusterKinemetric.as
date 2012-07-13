@@ -599,6 +599,7 @@ package com.gestureworks.analysis
 				c_dsx = 0;
 				c_dsy = 0;
 				c_dtheta = 0;
+				//trace("cluster- porcessing", c_dx,c_dy);
 				}
 							else 
 							{

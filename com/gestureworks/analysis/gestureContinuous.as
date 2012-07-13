@@ -133,6 +133,9 @@ package com.gestureworks.analysis
 				{
 					if (ts.gestureList[i])
 					{
+						// deactivate by default
+						ts.gO.pOList[i].activeEvent = false;
+						
 						for (j in ts.gO.pOList[i])
 						{
 								if ((ts.gO.pOList[i][j] is PropertyObject))
@@ -162,6 +165,7 @@ package com.gestureworks.analysis
 									//ts.gO.pOList[i][j].release_inertia_count = 0;
 									//if (ts.trace_debug_mode) trace("restart tween");
 									
+									//ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
 									
 									/////////////////////////////////////////
 									// MULTIPLY FILTER
@@ -174,6 +178,9 @@ package com.gestureworks.analysis
 									}
 									else if (ts.gO.pOList[i][j].func_factor) ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].func_factor * ts.gO.pOList[i][j].processDelta;
 									else ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
+									
+									
+									
 									
 									
 									/////////////////////////////////////////
@@ -191,6 +198,7 @@ package com.gestureworks.analysis
 											
 										}
 									}
+									
 									
 									////////////////////////////////////////
 									// VALUE FILTER
@@ -252,9 +260,9 @@ package com.gestureworks.analysis
 										ts.trO[ts.gO.pOList[i][j].target_id] = 0;
 									}
 									
-									
-									
-									
+									// active gesture event switch
+									if (ts.gO.pOList[i][j].gestureDelta != 0) ts.gO.pOList[i].activeEvent = true;
+								
 								}
 						}	
 				}
@@ -394,7 +402,7 @@ package com.gestureworks.analysis
 										if ((Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min) || ( Math.abs(ts.gO.pOList[i][j].gestureDelta) > ts.gO.pOList[i][j].delta_max))
 										{
 											//trace("delta threshold met, set to zero",i,ts.gO.pOList[i][j].gestureDelta)
-											//ts.gO.pOList[i][j].gestureDelta = 0;
+											ts.gO.pOList[i][j].gestureDelta = 0;
 											//if (ts.trace_debug_mode) 
 											
 										}
@@ -461,7 +469,9 @@ package com.gestureworks.analysis
 									}
 									
 									
-									
+									// active gesture event switch
+									if (ts.gO.pOList[i][j].gestureDelta == 0) ts.gO.pOList[i].activeEvent = false;
+									else ts.gO.pOList[i].activeEvent = true;
 									
 								}
 						}	

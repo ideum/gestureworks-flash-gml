@@ -28,6 +28,7 @@ package com.gestureworks.events
 		public static var COMPLETE:String = "complete";
 		public static var RELEASE:String = "release";
 				
+		public static var MANIPULATE:String = "manipulate";
 		public static var DRAG:String = "drag";
 		public static var SWIPE:String = "swipe";
 		public static var SCROLL:String = "scroll";
@@ -89,6 +90,7 @@ package com.gestureworks.events
 		public function GWGestureEvent(type:String, data:Object, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
 			//trace(type,CUSTOM.NEW_GESTURE); 
+			
 			super(type, bubbles, cancelable);
 			value = data;
 			//data=data;

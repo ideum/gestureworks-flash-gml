@@ -86,6 +86,11 @@ package com.gestureworks.core
 			if (hasEventListener(GWGestureEvent.CUSTOM.N_DRAG)) trace("has n-drag listener");
 			if (hasEventListener(GWGestureEvent.CUSTOM.THREE_FINGER_DRAG)) trace("has 3-finger-drag listener");
 			
+			
+			//TEST THIS
+			//if(willTrigger)
+			
+			
 			// dispatch gesture list update event
 			
 		}

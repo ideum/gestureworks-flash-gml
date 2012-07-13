@@ -53,7 +53,7 @@ package com.gestureworks.managers
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		//public static var globalClock:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
-		//public static var globalClock:Timer = new Timer(60, 0);
+		//public static var globalClock:Timer = new Timer(8, 0);
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -229,6 +229,8 @@ package com.gestureworks.managers
 				// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
 				PointHistories.historyQueue(event);
 			}	
+			
+			//touchFrameHandler3(event);
 		}
 		
 		
@@ -280,6 +282,52 @@ package com.gestureworks.managers
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler2(event:GWEvent):void
+		{
+			//trace("touch frame process ----------------------------------------------");
+			
+			//INCREMENT TOUCH FRAME id
+			GestureGlobals.frameID += 1;
+			
+			// update all touch objects in display list
+			for each(var ts:Object in touchObjects)
+			{
+				//trace("hello", ts, ts.N);
+				ts.updateClusterCount();
+				
+				// update gesture pipelines if NOT touching
+				if (ts.N==0)
+				{
+					ts.updateGestureAnalysis();
+					ts.updateTransformation();
+					ts.updateGestureValues();
+				}
+				// update cluster analysis and gesture pipelines if touching
+				else {
+					//trace("cluster analysis");
+					ts.updateClusterAnalysis();
+					ts.updateProcessing();
+					ts.updateGestureAnalysis();
+					ts.updateTransformation();
+					ts.updateDebugDisplay();
+				}
+				
+				// move to timeline visualizer
+				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
+				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
+				if (ts.debug_display)
+				{
+					//UPDATE CLUSTER HISTORIES
+					ClusterHistories.historyQueue(ts.touchObjectID);
+					
+					//UPDATE TRANSFORM HISTORIES
+					TransformHistories.historyQueue(ts.touchObjectID);
+				}
+				
+			}
+		}
+		
+		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
+		public static function touchFrameHandler3(event:TouchEvent):void
 		{
 			//trace("touch frame process ----------------------------------------------");
 			

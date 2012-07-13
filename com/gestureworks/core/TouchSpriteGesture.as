@@ -26,6 +26,7 @@ package com.gestureworks.core
 	
 	import com.gestureworks.managers.TimelineHistories;
 	import com.gestureworks.objects.FrameObject; 
+	import com.gestureworks.objects.PropertyObject;
 	
 	import flash.utils.Timer;
 	import flash.system.System;
@@ -139,6 +140,8 @@ package com.gestureworks.core
 					}
 				}
 				
+				//MAKE GML PROGRAMMABLE SET GLOBAL POINT HISTORY
+				
 				if (gO.pOList[key].gesture_type == "stroke")
 				{
 					if ((gO.pOList[key]) && (gestureList[key])) GestureGlobals.pointHistoryCaptureLength = 150; // define in GML
@@ -158,10 +161,10 @@ package com.gestureworks.core
 		private function updateTimelineGestureAnalysis():void
 		{
 			//trace("update timeline gesture analysis");
-			if ((discGesturemetricsOn) && (tiO.timelineOn)) 
-			{
+			//if ((discGesturemetricsOn) && (tiO.timelineOn)) 
+			//{
 					gesture_disc.findTimelineGestures();
-			}
+			//}
 		}
 		/**
 		* @private
@@ -219,14 +222,14 @@ package com.gestureworks.core
 		*/
 		public function restartGestureTween():void
 		{
-			if (contGesturemetricsOn) gesture_cont.restartGestureTween();
+			gesture_cont.restartGestureTween();
 		}
 		/**
 		* @private
 		*/
 		public function resetGestureTween():void
 		{
-			if (contGesturemetricsOn) gesture_cont.resetGestureTween();
+			gesture_cont.resetGestureTween();
 		}
 		/**
 		* @private
@@ -234,12 +237,18 @@ package com.gestureworks.core
 		private function manageGestureEventDispatch():void 
 		{
 				//ONLY FIRES IF TOUCHING OBJECT 
-				discrete_dispatch_reset = false
-				gestureContinuousEventDispatch();
+				//--discrete_dispatch_reset = false
 				
-				if (!tiO.timelineInit) initTimeline();
+				
+				//gestureContinuousEventDispatch();
+				//onGestureEnterTouchFrame();
+				
+				
+				//--if (!tiO.timelineInit) initTimeline();
 			//else 
-			onGestureEnterTouchFrame();
+			
+			onEnterTouchFrame();
+			
 		}
 		
 		
@@ -252,19 +261,17 @@ package com.gestureworks.core
 		*/
 		public function onTouchEnd(event:TouchEvent):void
 		{
+			trace("touch end");
 			for (key in gO.pOList)
 			{
 				if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
 				{
 					if ((gO.pOList[key]) && (gestureList[key])) tapOn = true;
 				}
-				//else tapOn = false;
 				
-				if (gO.pOList[key].gesture_type == "hold")
-				{
-					if ((gO.pOList[key]) && (gestureList[key])) gO.pOList[key].complete = false;  // resets hold gesture
-				}
+				if (gO.pOList[key].gesture_type == "hold")	gO.pOList[key].complete = false;  // resets hold gesture
 			}
+			
 			
 			if (tapOn) gesture_disc.findGestureTap(event,key); // tap event pairs
 			
@@ -278,37 +285,20 @@ package com.gestureworks.core
 			for (key in gO.pOList) 
 			{	
 				// double taps
-				if (gO.pOList[key].gesture_type == "double_tap")
-				{
-					if ((gO.pOList[key]) && (gestureList[key])) 
-					{
-					gesture_disc.findGestureDoubleTap(event, key);
-					
-					}
-				}
-				
+				if (gO.pOList[key].gesture_type == "double_tap") 	gesture_disc.findGestureDoubleTap(event, key);
 				// triple taps
-				if (gO.pOList[key].gesture_type == "triple_tap")
-				{
-					if ((gO.pOList[key]) && (gestureList[key])) 
-					{
-					gesture_disc.findGestureTripleTap(event,key);
-					}
-				}
+				if (gO.pOList[key].gesture_type == "triple_tap")	gesture_disc.findGestureTripleTap(event,key);
+
 			}
 		}
 		
 		
-		
-		
-		/**
-		* @private
-		*/
-		public function onGestureEnterTouchFrame():void
-		{
+	
+		//public function onGestureEnterTouchFrame():void
+		//{
 			//trace("on gesture enter frame");
 			
-			
+			/*
 			
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
@@ -334,13 +324,22 @@ package com.gestureworks.core
 							gesture_start_dispatched = true;
 							//trace("start fired");
 						}
-					
+				*/
+						
+				
+					///////////////////////////////////////////////////////
+					// release event trigger
+					///////////////////////////////////////////////////////
 
 					//trace("release",gO.release);
+					/*
+					
 					if (gO.release)
 					{	
 						for (key in gO.pOList) 
 						{	
+							
+							
 							//tap counter
 							if (gO.pOList[key].gesture_type == "tap")
 							{
@@ -356,6 +355,7 @@ package com.gestureworks.core
 							{
 								if ((gO.pOList[key]) && (gestureList[key])) gesture_disc.countTripleTapEvents(key);
 							}
+							
 							
 							// gesture flick
 							if (gO.pOList[key].gesture_type == "flick")
@@ -448,12 +448,12 @@ package com.gestureworks.core
 						}
 					}
 				
-					discrete_dispatch_reset = true;
+					//discrete_dispatch_reset = true;
 		//	}
 			
 			// flick check
-			
-		}
+			*/
+		//}
 		
 		//////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -461,14 +461,29 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public function gestureContinuousEventDispatch():void 
+		public function onEnterTouchFrame():void 
 		{	
 			//if (trace_debug_mode) trace("continuous gesture event dispatch");
 			
-			/////////////////////////////////////////////////////////////
-			// for all continuously analyzed gestures on touch objects
-			/////////////////////////////////////////////////////////////
+			//trace("dispatch--------------------------");
+
+			// MANAGE TIMELINE
+			if (tiO.timelineOn)
+			{
+				if (trace_debug_mode) trace("timeline frame update");
+				TimelineHistories.historyQueue(clusterID);			// push histories 
+				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
+			}
 			
+			// start gesturing
+			if ((gO.start)&&(_gestureEventStart))
+			{
+				dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
+				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
+				gO.start = false;
+				gO.release = false;
+				//trace("start fired");
+			}
 			
 			// gesture OBJECT complete event
 			if ((gO.complete)&&(_gestureEventComplete))
@@ -479,15 +494,135 @@ package com.gestureworks.core
 				//trace("complete fired");
 			}
 			
+			/////////////////////////////////////////////////////////////////////////////////////////////////
+			// discrete gestures
+			/////////////////////////////////////////////////////////////////////////////////////////////////
 			else {
-			
+				
 			for (key in gO.pOList) 
-			{	
+						{
+			
+				if (gO.release)
+					{
+				//	trace("discrete release");
+						
+							//tap counter
+							if (gO.pOList[key].gesture_type == "tap")
+							{
+								gesture_disc.countTapEvents(key);
+							}
+							// double tap counter
+							if (gO.pOList[key].gesture_type == "double_tap")
+							{
+								gesture_disc.countDoubleTapEvents(key);
+							}
+							// triple tap counter
+							if (gO.pOList[key].gesture_type == "triple_tap")
+							{
+								 gesture_disc.countTripleTapEvents(key);
+							}
+							
+							
+							// gesture flick
+							if (gO.pOList[key].gesture_type == "flick")
+							{	
+								if ((gO.pOList[key])&&(gestureList[key]))
+								{
+									
+									//if(cO.history[0]){
+									// CALLS PREVIOUSLY CALCULATED FLICK VALUE FROM LAST FRAME BEFORE RELEASE
+									//var flick_dx:Number = cO.history[0].flick_dx//cO.history[0].ddx//gO.pOList[key]["flick_dx"].gestureDelta;
+									//var flick_dy:Number = cO.history[0].flick_dy//cO.history[0].ddy//gO.pOList[key]["flick_dy"].gestureDelta;
+									//var flick_dx:Number = gO.pOList[key]["flick_dx"].gestureDelta;
+									//var flick_dy:Number = gO.pOList[key]["flick_dy"].gestureDelta;
+									var flick_dx:Number = gO.pOList[key]["flick_dx"].clusterDelta;
+									var flick_dy:Number = gO.pOList[key]["flick_dy"].clusterDelta;
+									var flick_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+									
+									//trace("flick gesture dispatch",flick_dx,flick_dy);
+									
+									if ((flick_dx) || (flick_dy))
+									{
+										//trace("flick",flick_dx,flick_dy);
+										dispatchEvent(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:flick_pt.x, localY:flick_pt.y, n:N, id:key}));
+										if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.FLICK, {dx:flick_dx, dy:flick_dy, n:N, id:key}));
+									}
+									//}
+								}
+							}
+							
+							// gesture swipe
+							if (gO.pOList[key].gesture_type == "swipe")
+							{
+								if ((gO.pOList[key])&&(gestureList[key]))
+								{
+									
+									//if(cO.history[4]){
+										// calls previsouoly calculated swipe value from previous frame
+										// looks back before release to reduce release flicker
+										//var swipe_dx:Number = cO.history[4].swipe_dx//cO.history[0].ddx//gO.pOList[key]["swipe_dx"].gestureDelta;
+										//var swipe_dy:Number = cO.history[4].swipe_dy//cO.history[0].ddx//gO.pOList[key]["swipe_dy"].gestureDelta;
+										//var swipe_dx:Number = gO.pOList[key]["swipe_dx"].gestureDelta;
+										//var swipe_dy:Number = gO.pOList[key]["swipe_dy"].gestureDelta;
+										var swipe_dx:Number = gO.pOList[key]["swipe_dx"].clusterDelta;
+										var swipe_dy:Number = gO.pOList[key]["swipe_dy"].clusterDelta;
+										var swipe_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+										
+										//trace("swipe gesture dispatch",swipe_dx,swipe_dy);
+								
+										if ((swipe_dx) || (swipe_dy))
+										{
+											//trace("swipe",swipe_dx,swipe_dy);
+											dispatchEvent(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy,ddx:cO.ddx, ddy:cO.ddy, stageX:cO.x, stageY:cO.y, localX:swipe_pt.x, localY:swipe_pt.y, n:N, id:key}));
+											if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.SWIPE, {dx:swipe_dx, dy:swipe_dy, n:N, id:key}));
+										}
+									//}
+								}
+							}
+							
+							// gesture stroke
+							if (gO.pOList[key].gesture_type == "stroke")
+							{
+								if ((gO.pOList[key])&&(gestureList[key]))
+								{
+									 gesture_disc.findStrokeGesture(key);
+									
+									var stroke_threshold:Number = 0.90;
+									var stroke_prob:Number = gO.pOList[key].path_match;
+									if (stroke_prob>stroke_threshold)
+									{
+										//trace("stroke event");
+										var Gevent:GWGestureEvent = new GWGestureEvent(GWGestureEvent.STROKE, {n:N, probability:stroke_prob});
+										dispatchEvent(Gevent);
+										//if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(Gevent);
+									}
+								}
+							}
+							
+						// release gesture
+						if ((gO.release)&&(_gestureEventRelease))//&&(!gesture_release_dispatched))
+						{
+							dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+							gO.release = false;
+							gO.start = false;
+							gesture_start_dispatched = false;
+						}
+							
+					}
+			
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			// continuos gesture events
+			//////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			else {	
+				//trace("continuous");
+				
 				// hold gesture
 				if (gO.pOList[key].gesture_type == "hold")
 				{
-					if ((gO.pOList[key]) && (gestureList[key]))
-					{	
+					//if ((gO.pOList[key]) && (gestureList[key]))
+					//{	
 						var hold_number:int = gO.pOList[key].n;
 						var holdLockCount:int = cO.locked;
 						var spt:Point //= new Point ();
@@ -526,10 +661,136 @@ package com.gestureworks.core
 							
 								}
 							}
+						//}
+					}
+				}
+				//////////////////////////////////////////////////////////////////////////////
+				// 
+				//trace("testing all attached gestures");
+					
+						if (gO.pOList[key].activeEvent) 
+						{
+							// transform center point
+							var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+							// transform vector components
+							// 
+							
+							var Data:Object = new Object();
+							var DIM:String = ""; 
+							
+								//construct standard properties
+								Data["id"] = new Object();
+								Data["id"] = key;
+								
+								Data["n"] = new Object();
+								Data["n"] = N;
+								
+								Data["stageX"] = new Object();
+								Data["stageX"] = cO.x;
+								
+								Data["stageY"] = new Object();
+								Data["stageY"] = cO.y;
+								
+								Data["x"] = new Object();
+								Data["x"] = cO.x;
+								
+								Data["y"] = new Object();
+								Data["y"] = cO.y;
+								
+								Data["localX"] = new Object();
+								Data["localX"] = trans_pt.x;
+								
+								Data["localY"] = new Object();
+								Data["localY"] = trans_pt.y;
+								
+								// construc tgesture object dependant properties
+								for (DIM in gO.pOList[key])
+								{
+									//trace(gO.pOList[key][DIM]);
+									if (gO.pOList[key][DIM] is PropertyObject) 
+									{
+										Data[DIM] = new Object();
+										Data[DIM] = Number(gO.pOList[key][DIM].gestureDelta);	
+										//trace(DIM,Data[DIM])
+									}
+								}
+							
+							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].gesture_type, Data);
+							dispatchEvent(GWEVENT);
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(GWEVENT);
+						}
+				///////////////////////////////////////////////////////////////////////
+				
+				/*
+				// manipulate gesture
+				if (gO.pOList[key].gesture_type == "manipulate")
+				{
+					trace("trying");
+					if ((gO.pOList[key])&&(gestureList[key]))
+					{
+						//var m_drag_dx:Number = gO.pOList[key]["drag_dx"].gestureDelta;
+						//var m_drag_dy:Number = gO.pOList[key]["drag_dy"].gestureDelta;
+						//var m_rotate_dtheta:Number = gO.pOList[key]["rotate_dtheta"].gestureDelta;
+						//var m_scale_dsx:Number = gO.pOList[key]["scale_dsx"].gestureDelta;
+						//var m_scale_dsy:Number = gO.pOList[key]["scale_dsy"].gestureDelta;
+						//var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+						
+						if (gO.pOList[key].activeEvent) 
+						{
+							var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
+							var Data:Object = new Object();
+							var DIM:String = ""; 
+							
+								//construct standard properties
+								Data["id"] = new Object();
+								Data["id"] = key;
+								
+								Data["n"] = new Object();
+								Data["n"] = N;
+								
+								Data["stageX"] = new Object();
+								Data["stageX"] = cO.x;
+								
+								Data["stageY"] = new Object();
+								Data["stageY"] = cO.y;
+								
+								Data["x"] = new Object();
+								Data["x"] = cO.x;
+								
+								Data["y"] = new Object();
+								Data["y"] = cO.y;
+								
+								Data["localX"] = new Object();
+								Data["localX"] = trans_pt.x;
+								
+								Data["localY"] = new Object();
+								Data["lcalY"] = trans_pt.y;
+								
+								
+								
+								// construc tgesture object dependant properties
+								for (DIM in gO.pOList[key])
+								{
+									//trace(gO.pOList[key][DIM]);
+									if (gO.pOList[key][DIM] is PropertyObject) 
+									{
+										Data[DIM] = new Object();
+										Data[DIM] = Number(gO.pOList[key][DIM].gestureDelta);	
+									//	trace(DIM,Data[DIM])
+									}
+								}
+							//trace("data",Data);
+							//var test:String = "GWGestureEvent.MANIPULATE";
+							//var GWEVENT:GWGestureEvent = new GWGestureEvent("manipulate", { dx: m_drag_dx, dy: m_drag_dy, dtheta: m_rotate_dtheta, dsx: m_scale_dsx, dsy: m_scale_dsy, stageX:cO.x, stageY:cO.y, localX:trans_pt.x, localY:trans_pt.y, n:N, id:key } );
+							//var GWEVENT:GWGestureEvent = new GWGestureEvent("manipulate", { data:Data, stageX:cO.x, stageY:cO.y, localX:trans_pt.x, localY:trans_pt.y, n:N, id:key } );
+							//var GWEVENT:GWGestureEvent = new GWGestureEvent("manipulate", Data);
+							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].gesture_type, Data);
+							
+							dispatchEvent(GWEVENT);
+							if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(GWEVENT);
 						}
 					}
 				}
-				
 				
 				// drag gesture
 				if (gO.pOList[key].gesture_type == "drag")
@@ -663,9 +924,10 @@ package com.gestureworks.core
 					}
 				}
 				
-
+				*/
 			}
-			}
+		}
+		}
 
 				/////// split
 				
