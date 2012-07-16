@@ -53,7 +53,8 @@ package com.gestureworks.utils
 			for (var i:int = 0; i < data1.length; i += 2) data2.push("0x" + data1[i] + data1[i + 1]);
 				
 			for (var j:int = 0; j < data2.length; j++) bytes[j] = data2[j];
-				
+			
+			
 			var byteLoader:Loader = new Loader();
 			byteLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, byteLoaderCompleteHandler);
 			byteLoaderContext.allowCodeImport = true;

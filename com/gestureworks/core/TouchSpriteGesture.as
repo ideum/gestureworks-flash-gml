@@ -503,7 +503,9 @@ package com.gestureworks.core
 		public function get gestureEventRelease():Boolean{return _gestureEventRelease;}
 		public function set gestureEventRelease(value:Boolean):void
 		{
-			_gestureEventRelease=value;
+			_gestureEventRelease = value;
+			
+			
 		}
 		
 		/**
