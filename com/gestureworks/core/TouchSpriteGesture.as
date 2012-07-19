@@ -123,33 +123,13 @@ package com.gestureworks.core
 		{
 			gesture_disc.findTimelineGestures();
 		}
-		/**
-		* @private
-		*/
-		public function updateGestureAnalysis():void
-		{	
-			if (trace_debug_mode) trace("update gesture analysis");
-			gesture_cont.findGestures();
-			
-			// dispatch gesture events
-			if (_gestureEvents) manageGestureEventDispatch();
-			//}
+		
+		public function updateGesturePipeline():void
+		{
+			gesture_cont.processPipeline();
+			if (_gestureEvents) manageGestureEventDispatch();	
 		}
 		
-		/**
-		* @private
-		*/
-		public function updateGestureValues():void
-		{
-			if ((gestureReleaseInertia)&&(gO.gestureTweenOn)&&(gO.gestureRelease))
-				{
-				if(trace_debug_mode) trace("update gesture values");
-				gesture_cont.processTweenPipeline();
-				
-				// dispatch gesture events
-				if (_gestureEvents) manageGestureEventDispatch();		
-				}
-		}
 		/**
 		* @private
 		*/
@@ -182,15 +162,13 @@ package com.gestureworks.core
 		*/
 		public function onTouchEnd(event:TouchEvent):void
 		{
-			/*
-			trace("touch end");
-			for (key in gO.pOList)
-			{
-			if (gO.pOList[key].gesture_type == "hold")	gO.pOList[key].complete = false;  // resets hold gesture
-			}
-			*/
-			if (tapOn) gesture_disc.findGestureTap(event,key); // tap event pairs
+			for (key in gO.pOList) 
+			{	
+			if ((gO.pOList[key].gesture_type == "tap")&&(tapOn)) 	gesture_disc.findGestureTap(event,key) ; // tap event pairs
 			
+			//fix
+			if (gO.pOList[key].gesture_type == "hold")				gO.pOList[key].complete = false;  // resets hold gesture
+			}
 		}
 		
 		/**
@@ -243,6 +221,7 @@ package com.gestureworks.core
 				dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
 				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
 				gO.complete = false;
+				
 				//trace("complete fired");
 			}
 			
@@ -256,24 +235,16 @@ package com.gestureworks.core
 			
 				if (gO.release)
 					{
-				//	trace("discrete release");
+					//trace("discrete release",gO.pOList[key].gesture_type );
 						
 							//tap counter
-							if (gO.pOList[key].gesture_type == "tap")
-							{
-								gesture_disc.countTapEvents(key);
-							}
-							// double tap counter
-							if (gO.pOList[key].gesture_type == "double_tap")
-							{
-								gesture_disc.countDoubleTapEvents(key);
-							}
-							// triple tap counter
-							if (gO.pOList[key].gesture_type == "triple_tap")
-							{
-								 gesture_disc.countTripleTapEvents(key);
-							}
+							if (gO.pOList[key].gesture_type == "tap")			gesture_disc.countTapEvents(key);
 							
+							// double tap counter
+							if (gO.pOList[key].gesture_type == "double_tap") 	gesture_disc.countDoubleTapEvents(key);
+							
+							// triple tap counter
+							if (gO.pOList[key].gesture_type == "triple_tap") 	gesture_disc.countTripleTapEvents(key);
 							
 							// gesture flick
 							if (gO.pOList[key].gesture_type == "flick")
@@ -344,7 +315,6 @@ package com.gestureworks.core
 						{
 							dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
 							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-							gO.release = false;
 							gO.start = false;
 						}
 					}
@@ -400,10 +370,13 @@ package com.gestureworks.core
 				}
 				//////////////////////////////////////////////////////////////////////////////
 				// 
-				//trace("testing all attached gestures");
+				
 					
 						if (gO.pOList[key].activeEvent) 
 						{
+							
+							//trace("testing all attached gestures",gO.pOList[key].activeEvent, key);
+							
 							// transform center point
 							var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
 							// transform vector components
@@ -455,6 +428,9 @@ package com.gestureworks.core
 						}
 			}
 		}
+			// so release is only sent once and other gestures dependent on it only get dispatched once
+			gO.release = false;
+			
 		}
 
 				/////// split
@@ -535,6 +511,17 @@ package com.gestureworks.core
 		public function set gestureReleaseInertia(value:Boolean):void
 		{
 			_gestureReleaseInertia=value;
+		}
+		
+		//gestures tweening
+		public var _gestureTweenOn:Boolean = false;
+		public function get gestureTweenOn():Boolean
+		{
+			return _gestureTweenOn;
+		}
+		public function set gestureTweenOn(value:Boolean):void
+		{
+			_gestureTweenOn = value;
 		}
 	}
 }
