@@ -147,7 +147,7 @@ package com.gestureworks.core
 					if (!trO.init_center_point) initTransformPoints();
 					
 					////////////////////////
-					restartGestureTween();
+					//restartGestureTween();
 					///////////////////////
 					
 					if (_disableNativeTransform){
@@ -160,7 +160,9 @@ package com.gestureworks.core
 					if (_transformEvents) manageTransformEventDispatch();
 					if (trace_debug_mode)trace("update", _touchObjectID)
 				}
-				else if ((_N == 0) && (_gestureTweenOn)&&(_gestureReleaseInertia)) 
+				
+				else if ((_N == 0) && (_gestureTweenOn) && (_gestureReleaseInertia)) 
+				//else if (_N == 0) //&& (_gestureTweenOn)&&(_gestureReleaseInertia)) 
 				{
 					//////////////////////////
 					//updateGestureValues();

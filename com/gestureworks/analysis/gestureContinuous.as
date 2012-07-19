@@ -293,7 +293,7 @@ package com.gestureworks.analysis
 			// confirm gesture complete 
 			// check no gesture is tweening
 			//NOTE WILL MAKE GESTURE OBJECT SPECIFIC
-			if (!ts.gestureTweenOn) ts.gO.complete = true;
+			//if (!ts.gestureTweenOn) ts.gO.complete = true;
 			
 			
 							if (!ts.disableNativeTransform){
@@ -424,7 +424,7 @@ package com.gestureworks.analysis
 		// SHOULD TARGET GESTURE OBJECT AND DIMENTION DIRECT AS ABOVE
 		public function restartGestureTween():void
 		{
-			ts.gestureTweenOn = true;
+			//ts.gestureTweenOn = true;
 			
 			for (i in ts.gO.pOList)
 				{
@@ -440,6 +440,7 @@ package com.gestureworks.analysis
 							}
 						}
 					//}
+					
 				}
 			//trace("gesture tween restarted");
 		}

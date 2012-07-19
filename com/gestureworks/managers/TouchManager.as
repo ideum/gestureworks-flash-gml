@@ -175,7 +175,7 @@ package com.gestureworks.managers
 					{
 						tO.gO.release = true;
 						
-					
+					/*
 						if (!tO.gestureTweenOn)
 						{
 							// zero all deltas
@@ -189,7 +189,11 @@ package com.gestureworks.managers
 							tO.updateGesturePipeline();
 							tO.updateTransformation();
 							tO.updateTransformation();
-						}
+						}*/
+						tO.updateClusterAnalysis();
+							tO.updateProcessing();
+							tO.updateGesturePipeline();
+							tO.updateTransformation();
 					}
 					// update cluster analysis and gesture pipelines if touching
 					else {
@@ -312,7 +316,7 @@ package com.gestureworks.managers
 				
 				// update gesture pipelines if NOT touching
 				if (ts.N == 0) {
-					
+					/*
 					if (!ts.gestureTweenOn)
 						{
 							// zero all deltas
@@ -325,8 +329,13 @@ package com.gestureworks.managers
 							//trace("pipeline tween")
 							ts.updateGesturePipeline();
 							ts.updateTransformation();
-							ts.updateTransformation();
 						}
+					*/
+					
+							ts.updateClusterAnalysis();
+							ts.updateProcessing();
+							ts.updateGesturePipeline();
+							ts.updateTransformation();
 					
 				}
 				// update cluster analysis and gesture pipelines if touching

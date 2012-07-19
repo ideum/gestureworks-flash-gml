@@ -278,7 +278,7 @@ package com.gestureworks.analysis
 		// VISUAL EVENT TIMLINE WOULD HELP
 		public function countTapEvents(key:String):void // count taps each frame
 		{
-			if (ts.trace_debug_mode) trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
+			//if (ts.trace_debug_mode) trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
 			tapEventCount = 0;
 			var tap_countTime:int = 5;
 			var tap_number:int = ts.gO.pOList[key].n;
