@@ -302,14 +302,14 @@ package com.gestureworks.managers
 				// update gesture pipelines if NOT touching
 				if ((ts.N==0)&&(ts.gestureTweenOn))
 				{
-					trace("pipeline tween")
+					//trace("pipeline tween")
 					ts.updateGesturePipeline();
 					ts.updateTransformation();
 				}
 				// update cluster analysis and gesture pipelines if touching
 				else if (ts.N!=0)
 				{
-					trace("pipeline gesture calc");
+					//trace("pipeline gesture calc");
 					ts.updateClusterAnalysis();
 					ts.updateProcessing();
 					ts.updateGesturePipeline();

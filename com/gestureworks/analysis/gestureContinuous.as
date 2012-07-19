@@ -315,7 +315,7 @@ package com.gestureworks.analysis
 		
 		public  function processPipeline():void
 		{
-			trace("processing pipeline");
+			//trace("processing pipeline");
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// core transform properties //default map for direct gesture manipulations

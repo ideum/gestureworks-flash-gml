@@ -75,10 +75,7 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
-			if (ts.trace_debug_mode) 	trace("find taps---------------------------------------------------------", key);
-
-			
-			
+			//if (ts.trace_debug_mode) 	trace("find taps---------------------------------------------------------", key);
 			
 			var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
 			//var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10

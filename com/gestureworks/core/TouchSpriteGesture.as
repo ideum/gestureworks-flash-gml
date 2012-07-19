@@ -76,7 +76,7 @@ package com.gestureworks.core
 
 			// analyze for descrete gesture sequence/series
 			gesture_disc = new gestureDiscrete(touchObjectID);
-			
+			//initTimeline();
 			// analyze for gesture conflict/compliment
 		}
 		
@@ -85,6 +85,7 @@ package com.gestureworks.core
 		*/
 		public function initTimeline():void
 		{
+			trace("init timeline");
 			for (key in gO.pOList)
 			{
 				
@@ -98,10 +99,12 @@ package com.gestureworks.core
 						GestureGlobals.timelineHistoryCaptureLength = 80;	
 					}
 					
-					if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
-					{
-					tapOn = true;
-					}
+					
+				}
+				
+				if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
+				{
+				tapOn = true;
 				}
 				
 				//MAKE GML PROGRAMMABLE SET GLOBAL POINT HISTORY
@@ -164,7 +167,7 @@ package com.gestureworks.core
 		{
 			for (key in gO.pOList) 
 			{	
-			if ((gO.pOList[key].gesture_type == "tap")&&(tapOn)) 	gesture_disc.findGestureTap(event,key) ; // tap event pairs
+			if ((gO.pOList[key].gesture_type == "tap") && (tapOn)) 	gesture_disc.findGestureTap(event, key) ; // tap event pairs
 			
 			//fix
 			if (gO.pOList[key].gesture_type == "hold")				gO.pOList[key].complete = false;  // resets hold gesture
@@ -183,7 +186,7 @@ package com.gestureworks.core
 				// double taps
 				if (gO.pOList[key].gesture_type == "double_tap") 	gesture_disc.findGestureDoubleTap(event, key);
 				// triple taps
-				if (gO.pOList[key].gesture_type == "triple_tap")	gesture_disc.findGestureTripleTap(event,key);
+				//if (gO.pOList[key].gesture_type == "triple_tap")	gesture_disc.findGestureTripleTap(event,key);
 
 			}
 		}
