@@ -661,6 +661,12 @@ package com.gestureworks.analysis
 					// translation values 
 					// finds how far the cluster has moved between the current frame and a frame in history
 					
+					if (N == 1) 
+						{
+						c_dx = pointList[0].DX;
+						c_dy = pointList[0].DY;
+						}
+					else {
 					
 						c_dx = 0;
 						c_dy = 0;
@@ -695,6 +701,8 @@ package com.gestureworks.analysis
 							c_dy *= k0;
 						}
 						////////////////////////////////////////////////////////////////////////////////////////////	
+					}
+						trace("drag calc kine",c_dx,c_dy);
 		}
 		
 		public function findMeanInstSeparation():void
@@ -1058,8 +1066,10 @@ package com.gestureworks.analysis
 		
 		public function findInstPivot(pivot_threshold:Number):Number
 		{
+				
+				
 			var pivot_dtheta:Number = 0;
-			//var pivot_threshold:Number = ts.gO.pOList[key].cluster_rotation_threshold;	
+			var pivot_threshold:Number = 0//ts.gO.pOList[key].cluster_rotation_threshold;	
 			var x_c:Number = 0
 			var y_c:Number = 0
 					
@@ -1089,8 +1099,9 @@ package com.gestureworks.analysis
 									if (theta_diff>300) theta_diff = theta_diff -360; //trace("Flicker +ve")
 									if (theta_diff<-300) theta_diff = 360 + theta_diff; //trace("Flicker -ve");
 									
+									/*
 									//pivot thresholds
-									if (Math.abs(theta_diff) > pivot_threshold)
+									if (Math.abs(theta_diff) > 0.5*pivot_threshold)
 									{	
 										// weighted effect
 										pivot_dtheta = theta_diff * Math.pow(pdist, 2.2);
@@ -1099,8 +1110,13 @@ package com.gestureworks.analysis
 										c_py = pointList[0].history[0].y;
 									}
 									else pivot_dtheta = 0; 
+									*/
+									
+									pivot_dtheta = theta_diff * Math.pow(pdist, 2.2);
+								
 									//trace("c_dtheta",c_dtheta, dx, dy, ds)
 								}
+								
 			return pivot_dtheta;			
 		} 
 		
