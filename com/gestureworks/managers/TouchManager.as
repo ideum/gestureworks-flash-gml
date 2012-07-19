@@ -174,8 +174,22 @@ package com.gestureworks.managers
 					if (tO.N==0)
 					{
 						tO.gO.release = true;
-						tO.updateGesturePipeline();
-						tO.updateTransformation();
+						
+					
+						if (!tO.gestureTweenOn)
+						{
+							// zero all deltas
+							tO.updateClusterAnalysis();
+							tO.updateProcessing();
+							tO.updateGesturePipeline();
+							tO.updateTransformation();
+						}
+						else {
+							//trace("pipeline tween")
+							tO.updateGesturePipeline();
+							tO.updateTransformation();
+							tO.updateTransformation();
+						}
 					}
 					// update cluster analysis and gesture pipelines if touching
 					else {
@@ -298,19 +312,22 @@ package com.gestureworks.managers
 				
 				// update gesture pipelines if NOT touching
 				if (ts.N == 0) {
-					if (ts.gestureTweenOn)
-					{
-					//trace("pipeline tween")
-					ts.updateGesturePipeline();
-					ts.updateTransformation();
-					}
-					else {
-					//trace("pipeline tween")
-					ts.updateClusterAnalysis();
-					ts.updateProcessing();
-					ts.updateGesturePipeline();
-					ts.updateTransformation();
-					}
+					
+					if (!ts.gestureTweenOn)
+						{
+							// zero all deltas
+							ts.updateClusterAnalysis();
+							ts.updateProcessing();
+							ts.updateGesturePipeline();
+							ts.updateTransformation();
+						}
+						else {
+							//trace("pipeline tween")
+							ts.updateGesturePipeline();
+							ts.updateTransformation();
+							ts.updateTransformation();
+						}
+					
 				}
 				// update cluster analysis and gesture pipelines if touching
 				else

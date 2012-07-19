@@ -113,6 +113,19 @@ package com.gestureworks.analysis
 			// map dynamic cluster deltas results into gesture object
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
+			
+			for (i in ts.gO.pOList)
+				{	
+						for (j in ts.gO.pOList[i])
+						{
+								if ((ts.gO.pOList[i][j] is PropertyObject))
+								{
+									//ts.gO.pOList[i][j].clusterDelta = 0;
+									ts.gO.pOList[i][j].gestureDelta = 0;
+								}
+						}
+				}
+			
 			for (i in ts.gO.pOList)
 				{
 					if (ts.gestureList[i])
@@ -137,6 +150,7 @@ package com.gestureworks.analysis
 									
 									//trace("cluster delta",i,j,ts.gO.pOList[i][j].clusterDelta);
 									
+									//if (i=="n-drag") trace(i,ts.gO.pOList[i][j].clusterDelta,ts.gO.pOList[i][j].gestureDelta)
 									
 									/*
 									////////////////////////////////////////////
@@ -175,7 +189,7 @@ package com.gestureworks.analysis
 										ts.gO.pOList[i][j].gestureDelta = functionGenerator(ts.gO.pOList[i][j].func, ts.gO.pOList[i][j].gestureDelta , ts.gO.pOList[i][j].func_factor);
 									}
 									else if (ts.gO.pOList[i][j].func_factor) ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].func_factor * ts.gO.pOList[i][j].gestureDelta;
-									else ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].gestureDelta;
+									//else ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].gestureDelta;
 								
 									
 									
@@ -329,6 +343,7 @@ package com.gestureworks.analysis
 			// shut down
 			ts.gestureTweenOn = false;
 			
+			/*
 			//Open back up if release inertia still on 
 			for (i in ts.gO.pOList)
 			{
@@ -338,6 +353,7 @@ package com.gestureworks.analysis
 				if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i][j].release_inertiaOn)) ts.gestureTweenOn = true;
 				}
 			}
+			*/
 		}
 		
 		private function functionGenerator(type:String,b:Number,k:Number):Number {

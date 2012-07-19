@@ -231,7 +231,7 @@ package com.gestureworks.core
 							gO.pOList[key]["drag_dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
 							gO.pOList[key]["drag_dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
 							
-							trace("drag calc tscluster", gO.pOList[key]["drag_dx"].clusterDelta,gO.pOList[key]["drag_dy"].clusterDelta);
+							//trace("drag calc tscluster", gO.pOList[key]["drag_dx"].clusterDelta,gO.pOList[key]["drag_dy"].clusterDelta);
 						}
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////

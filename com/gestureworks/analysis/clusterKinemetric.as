@@ -702,7 +702,7 @@ package com.gestureworks.analysis
 						}
 						////////////////////////////////////////////////////////////////////////////////////////////	
 					}
-						trace("drag calc kine",c_dx,c_dy);
+						//trace("drag calc kine",c_dx,c_dy);
 		}
 		
 		public function findMeanInstSeparation():void
