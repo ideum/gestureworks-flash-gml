@@ -599,9 +599,9 @@ package com.gestureworks.analysis
 				c_dsx = 0;
 				c_dsy = 0;
 				c_dtheta = 0;
-				//trace("cluster- porcessing", c_dx,c_dy);
+				trace("cluster- porcessing", c_dx,c_dy);
 				}
-							else 
+				else
 							{
 								for (i = 0; i < N; i++) 
 								{	
@@ -647,7 +647,8 @@ package com.gestureworks.analysis
 								c_dy *= k0;
 								c_ds *= k1;
 								c_dtheta *= k1;
-							}
+				}
+							//trace()
 		}
 		
 		// NEED TO REMOVE HO AND HISTORY COMPONENET
@@ -659,6 +660,7 @@ package com.gestureworks.analysis
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// translation values 
 					// finds how far the cluster has moved between the current frame and a frame in history
+					
 					
 						c_dx = 0;
 						c_dy = 0;
@@ -674,7 +676,7 @@ package com.gestureworks.analysis
 									//c_dy += pointList[i].dy;
 								}	
 						}
-						
+						//trace("inst trans", c_dx);
 						//////////// apply delta thresholds for change in x and y ////////////////////////////////////////////
 						
 						if (transThresholds) 

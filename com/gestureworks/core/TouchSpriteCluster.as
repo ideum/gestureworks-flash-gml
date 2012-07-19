@@ -136,7 +136,6 @@ package com.gestureworks.core
 				//trace("update cluster analysis")
 				updateClusterCount();
 				if (kinemetricsOn) findCluster()
-					//cluster_kinemet;ric.findCluster();
 				//if(vectormetricsOn)cluster_vectormetric.findPath();
 				if ((_clusterEvents)&&(_N)) manageClusterPropertyEventDispatch();
 		}
@@ -144,7 +143,7 @@ package com.gestureworks.core
 		
 		public function findCluster():void 
 		{
-			//trace("TouchSpriteCluster findcluster update-----------------------------",GestureGlobals.frameID, N);
+			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, N);
 			
 			cluster_kinemetric.findCluster();
 			cluster_kinemetric.resetVars();
@@ -156,6 +155,7 @@ package com.gestureworks.core
 			
 			for (key in gO.pOList)
 			{
+				//trace(gO.pOList[key].algorithm, _N, gO.pOList[key].n)
 				
 				// zero cluster deltas
 				var DIM:String = ""; 
@@ -194,10 +194,10 @@ package com.gestureworks.core
 						//////////////////////////////////////////////////////////////////////////////////////////////////
 						if (gO.pOList[key].algorithm == "hold")
 						{
-							if (trace_debug_mode) trace("cluster hold algorithm");
-						
-							var hold_dist:int = gO.pOList[key].point_translation_threshold;
-							var	hold_time:int = Math.ceil(gO.pOList[key].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
+							//if (trace_debug_mode) trace("cluster hold algorithm");
+							
+							var hold_dist:int = gO.pOList[key]["hold_x"].point_translation_threshold;
+							var	hold_time:int = Math.ceil(gO.pOList[key]["hold_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
 							// change to _N
 							var hold_number:int = gO.pOList[key].n;
 			
@@ -220,7 +220,7 @@ package com.gestureworks.core
 						//////////////////////////////////////////////////////////////////////////////////////////////////
 						if (gO.pOList[key].algorithm == "drag"){
 						
-							if (trace_debug_mode) trace("cluster drag algorithm");
+							if (trace_debug_mode)trace("cluster drag algorithm",gO.pOList[key]["drag_dx"].clusterDelta);
 							
 							cluster_kinemetric.findMeanInstTranslation();
 									
@@ -297,7 +297,7 @@ package com.gestureworks.core
 						// IF ABOVE ACCEL THREHOLD RETURN GESTURE
 						if (gO.pOList[key].algorithm == "flick")
 						{
-							var flick_threshold:Number = gO.pOList[key].cluster_acceleration_threshold; //accleration threshold
+							var flick_threshold:Number = gO.pOList[key]["flick_dx"].cluster_acceleration_threshold; //accleration threshold
 							var flick_h:int = 6;
 							var flick_etm_accel:Point = cluster_kinemetric.findMeanTemporalAcceleration(flick_h); //ensamble temporal mean acceleration
 							var flick_etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(flick_h); // ensamble temporal mean velocity
@@ -328,7 +328,7 @@ package com.gestureworks.core
 						{
 							if (trace_debug_mode) trace("cluster swipe algorithm");
 							
-							var swipe_threshold:Number = gO.pOList[key].cluster_acceleration_threshold;// acceleration threshold
+							var swipe_threshold:Number = gO.pOList[key]["swipe_dx"].cluster_acceleration_threshold;// acceleration threshold
 							var swipe_h:int = 6;
 							var swipe_etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(swipe_h); //ensamble temporal mean velocity
 							var swipe_etmAccel:Point = cluster_kinemetric.findMeanTemporalAcceleration(swipe_h); //ensamble temporal mean velocity
@@ -364,7 +364,7 @@ package com.gestureworks.core
 							
 							var scroll_dx:Number = 0; 
 							var scroll_dy:Number = 0;
-							var scroll_threshold:Number = gO.pOList[key].cluster_translation_threshold; // acceleration threshold
+							var scroll_threshold:Number = gO.pOList[key]["scroll_dx"].cluster_translation_threshold; // acceleration threshold
 							var scroll_h:int = 6;
 							var etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(scroll_h); //ensamble temporal mean 
 								
@@ -390,7 +390,7 @@ package com.gestureworks.core
 							if (trace_debug_mode) trace("cluster tilt algorithm"); 
 							
 							// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
-							var tilt_threshold:Number = gO.pOList[key].cluster_separation_threshold;
+							var tilt_threshold:Number = gO.pOList[key]["tilt_dx"].cluster_separation_threshold;
 									
 							//////////////////////////////////////////////////////////////////
 							// STANDARD OPERATION	

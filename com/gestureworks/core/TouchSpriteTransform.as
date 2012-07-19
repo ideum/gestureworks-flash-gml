@@ -144,10 +144,12 @@ package com.gestureworks.core
 
 				if (_N != 0)
 				{
-					if(!trO.init_center_point) initTransformPoints();
+					if (!trO.init_center_point) initTransformPoints();
+					
 					////////////////////////
 					restartGestureTween();
 					///////////////////////
+					
 					if (_disableNativeTransform){
 						if (!_disableAffineTransform) $applyTransform(true);
 					}
@@ -158,9 +160,13 @@ package com.gestureworks.core
 					if (_transformEvents) manageTransformEventDispatch();
 					if (trace_debug_mode)trace("update", _touchObjectID)
 				}
-				else if ((_N == 0) && (gO.gestureTweenOn)&&(_gestureReleaseInertia)) 
+				else if ((_N == 0) && (_gestureTweenOn)&&(_gestureReleaseInertia)) 
 				{
-					updateGestureValues();
+					//////////////////////////
+					//updateGestureValues();
+					//updateGesturePipeline();
+					///////////////////////////
+					
 					if (_disableNativeTransform) {
 						if (!_disableAffineTransform) $applyTransform(false);	
 					}
@@ -172,7 +178,7 @@ package com.gestureworks.core
 					if (trace_debug_mode)trace("inertia", _touchObjectID)
 				}
 				
-				else if ((_N == 0) && (!gO.gestureTweenOn)&&(!_transformComplete)) 
+				else if ((_N == 0) && (!_gestureTweenOn)&&(!_transformComplete)) 
 				{
 					_transformComplete = true;
 					_transformStart = false;

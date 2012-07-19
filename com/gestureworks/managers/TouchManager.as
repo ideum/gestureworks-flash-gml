@@ -174,16 +174,18 @@ package com.gestureworks.managers
 					if (tO.N==0)
 					{
 						tO.gO.release = true;
-						tO.updateGestureAnalysis();
+						tO.updateGesturePipeline();
+						//tO.updateGestureAnalysis();
 						tO.updateTransformation();
-						tO.updateGestureValues();
+						//tO.updateGestureValues();
 					}
 					// update cluster analysis and gesture pipelines if touching
 					else {
 						//trace("cluster analysis");
 						tO.updateClusterAnalysis();
 						tO.updateProcessing();
-						tO.updateGestureAnalysis();
+						//tO.updateGestureAnalysis();
+						tO.updateGesturePipeline();
 						tO.updateTransformation();
 						tO.updateDebugDisplay();
 					}
@@ -251,16 +253,18 @@ package com.gestureworks.managers
 				// update gesture pipelines if NOT touching
 				if (ts.N==0)
 				{
-					ts.updateGestureAnalysis();
+					ts.updateGesturePipeline();
+					//ts.updateGestureAnalysis();
 					ts.updateTransformation();
-					ts.updateGestureValues();
+					//ts.updateGestureValues();
 				}
 				// update cluster analysis and gesture pipelines if touching
 				else {
 					//trace("cluster analysis");
 					ts.updateClusterAnalysis();
 					ts.updateProcessing();
-					ts.updateGestureAnalysis();
+					ts.updateGesturePipeline();
+					//ts.updateGestureAnalysis();
 					ts.updateTransformation();
 					ts.updateDebugDisplay();
 				}
@@ -279,6 +283,7 @@ package com.gestureworks.managers
 				
 			}
 		}
+		
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler2(event:GWEvent):void
@@ -295,18 +300,19 @@ package com.gestureworks.managers
 				ts.updateClusterCount();
 				
 				// update gesture pipelines if NOT touching
-				if (ts.N==0)
+				if ((ts.N==0)&&(ts.gestureTweenOn))
 				{
-					ts.updateGestureAnalysis();
+					trace("pipeline tween")
+					ts.updateGesturePipeline();
 					ts.updateTransformation();
-					ts.updateGestureValues();
 				}
 				// update cluster analysis and gesture pipelines if touching
-				else {
-					//trace("cluster analysis");
+				else if (ts.N!=0)
+				{
+					trace("pipeline gesture calc");
 					ts.updateClusterAnalysis();
 					ts.updateProcessing();
-					ts.updateGestureAnalysis();
+					ts.updateGesturePipeline();
 					ts.updateTransformation();
 					ts.updateDebugDisplay();
 				}
@@ -325,7 +331,7 @@ package com.gestureworks.managers
 				
 			}
 		}
-		
+		/*
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler3(event:TouchEvent):void
 		{
@@ -370,7 +376,7 @@ package com.gestureworks.managers
 				}
 				
 			}
-		}
+		}*/
 		
 		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
 	

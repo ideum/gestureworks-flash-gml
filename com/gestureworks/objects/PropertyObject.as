@@ -67,6 +67,114 @@ package com.gestureworks.objects
 		}
 		
 		////////////////////////////////////////////////////////
+		// general cluster thresholds
+		///////////////////////////////////////////////////////
+		
+		private var _cluster_translation_threshold:Number = 0;
+		public function get cluster_translation_threshold():Number
+		{
+			return _cluster_translation_threshold;
+		}
+		public function set cluster_translation_threshold(value:Number):void
+		{
+			_cluster_translation_threshold = value;
+		}
+		
+		private var _cluster_separation_threshold:Number = 0;
+		public function get cluster_separation_threshold():Number
+		{
+			return _cluster_separation_threshold;
+		}
+		public function set cluster_separation_threshold(value:Number):void
+		{
+			_cluster_separation_threshold = value;
+		}
+		
+		private var _cluster_rotation_threshold:Number = 0;
+		public function get cluster_rotation_threshold():Number
+		{
+			return _cluster_rotation_threshold;
+		}
+		public function set cluster_rotation_threshold(value:Number):void
+		{
+			_cluster_rotation_threshold = value;
+		}
+		
+		private var _cluster_acceleration_threshold:Number = 0;
+		public function get cluster_acceleration_threshold():Number
+		{
+			return _cluster_acceleration_threshold;
+		}
+		public function set cluster_acceleration_threshold(value:Number):void
+		{
+			_cluster_acceleration_threshold = value;
+		}
+		
+		private var _cluster_event_duration_threshold:Number = 0;
+		public function get cluster_event_duration_threshold():Number
+		{
+			return _cluster_event_duration_threshold;
+		}
+		public function set cluster_event_duration_threshold(value:Number):void
+		{
+			_cluster_event_duration_threshold = value;
+		}
+		
+		private var _cluster_interevent_duration_threshold:Number = 0;
+		public function get cluster_interevent_duration_threshold():Number
+		{
+			return _cluster_interevent_duration_threshold;
+		}
+		public function set cluster_interevent_duration_threshold(value:Number):void
+		{
+			_cluster_interevent_duration_threshold = value;
+		}
+		
+		////////////////////////////////////////////////////////
+		// general cluster thresholds
+		///////////////////////////////////////////////////////
+		private var _point_translation_threshold:Number = 0;
+		public function get point_translation_threshold():Number
+		{
+			return _point_translation_threshold;
+		}
+		public function set point_translation_threshold(value:Number):void
+		{
+			_point_translation_threshold = value;
+		}
+		
+		private var _point_acceleration_threshold:Number = 0;
+		public function get point_acceleration_threshold():Number
+		{
+			return _point_acceleration_threshold;
+		}
+		public function set point_acceleration_threshold(value:Number):void
+		{
+			_point_acceleration_threshold = value;
+		}
+		
+		private var _point_event_duration_threshold:Number = 0;
+		public function get point_event_duration_threshold():Number
+		{
+			return _point_event_duration_threshold;
+		}
+		public function set point_event_duration_threshold(value:Number):void
+		{
+			_point_event_duration_threshold = value;
+		}
+		
+		private var _point_interevent_duration_threshold:Number = 0;
+		public function get point_interevent_duration_threshold():Number
+		{
+			return _point_interevent_duration_threshold;
+		}
+		public function set point_interevent_duration_threshold(value:Number):void
+		{
+			_point_interevent_duration_threshold = value;
+		}
+		
+		////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////
 		private var _clusterValue:Number = 0;
 		public function get clusterValue():Number
 		{
@@ -353,5 +461,41 @@ package com.gestureworks.objects
 			_release_inertia_Maxcount = value;
 		}
 		
+		
+		// path_match---------------------
+		private var _path_match:Boolean = false;
+		public function get path_match():Boolean
+		{
+			return _path_match;
+		}
+		public function set path_match(value:Boolean):void
+		{
+			_path_match = value;
+		}
+
+		// path---------------------
+		private var _path:Array = new Array();
+		public function get path():Array
+		{
+			return _path;
+		}
+		public function set path(value:Array):void
+		{
+			_path = value;
+		}
+		
+		
+		/*
+		//gesture transform
+		private var _gestureTransformOn:Boolean;
+		public function get gestureTransformOn():Boolean
+		{
+			return _gestureTransformOn;
+		}
+		public function set gestureTransformOn(value:Boolean):void
+		{
+			_gestureTransformOn = value;
+		}
+		*/
 	}
 }

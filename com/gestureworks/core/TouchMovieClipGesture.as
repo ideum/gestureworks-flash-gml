@@ -154,12 +154,13 @@ package com.gestureworks.core
 		public function updateGestureAnalysis():void
 		{
 			
-			if ((N) || (!gO.gestureTweenOn)) 
+			if ((N) || (!gestureTweenOn)) 
 			{
 				if (trace_debug_mode) trace("update gesture analysis");
 				if (contGesturemetricsOn)
 				{
-					gesture_cont.findGestures();
+					//gesture_cont.findGestures();
+					gesture_cont.processPipeline();
 					if (_gestureEvents)manageGestureEventDispatch();
 				}
 			}
@@ -174,23 +175,11 @@ package com.gestureworks.core
 			if (gestureReleaseInertia) 
 			{
 				if(trace_debug_mode) trace("update gesture values");
-				if ((gO.gestureTweenOn)&&(gO.gestureRelease))
+				if ((gestureTweenOn)&&(gO.release))
 				{
 					if (contGesturemetricsOn) 
 					{
-						gesture_cont.processTweenPipeline();
-						
-						
-						//--gesture_cont.applyGestureValueTween(); 			// decay gesture deltas
-						//gesture_cont.limitGestureProperties();			// ensure limits are not exceeded
-						
-						///////////////////////////////////
-						//--gesture_cont.mapTransformLimits();
-						//--gesture_cont.limitGestureValues();
-						///////////////////////////////////
-						
-						//--gesture_cont.mapTransformProperties();
-						//gesture_cont.limitTransformProperties();
+						gesture_cont.processPipeline();
 						if (_gestureEvents) manageGestureEventDispatch();		// dispatch gesture events
 					}
 				}
@@ -731,6 +720,21 @@ package com.gestureworks.core
 		public function set gestureReleaseInertia(value:Boolean):void
 		{
 			_gestureReleaseInertia=value;
+		}
+		
+		////////////////////////////////////////////////////
+		// OVERRIDE LOGIC
+		////////////////////////////////////////////////////
+		
+		//gestures tweening
+		public var _gestureTweenOn:Boolean = false;
+		public function get gestureTweenOn():Boolean
+		{
+			return _gestureTweenOn;
+		}
+		public function set gestureTweenOn(value:Boolean):void
+		{
+			_gestureTweenOn = value;
 		}
 	}
 }

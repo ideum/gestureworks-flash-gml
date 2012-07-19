@@ -75,10 +75,16 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
-			if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------");
-			//var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
-			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10
-			var tap_dist:int = ts.gO.pOList[key].point_translation_threshold;//10
+			if (ts.trace_debug_mode) 	trace("find taps---------------------------------------------------------", key);
+
+			
+			
+			
+			var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
+			//var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10
+			var tap_dist:int = ts.gO.pOList[key]["tap_x"].point_translation_threshold;//10
+			
+			
 			
 			var pointEventArray:Array = ts.tiO.frame.pointEventArray
 				
@@ -154,11 +160,12 @@ package com.gestureworks.analysis
 		
 		public function findGestureDoubleTap(event:GWGestureEvent,key:String):void
 		{
-			if (ts.trace_debug_mode)trace("find d taps---------------------------------------------------------");
+			//if (ts.trace_debug_mode)trace("find d taps---------------------------------------------------------");
 		
-				//var dtap_time:int = Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20frames
-				var dtap_time:int = Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
-				var dtap_dist:int = ts.gO.pOList[key].point_translation_threshold;//20px
+				var dtap_time:int = Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20frames
+				//var dtap_time:int = Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
+				var dtap_dist:int = ts.gO.pOList[key]["double_tap_x"].point_translation_threshold;//20px
+				
 				var	gestureEventArray:Array = new Array();
 				
 				//trace(dtap_time);
@@ -202,9 +209,10 @@ package com.gestureworks.analysis
 		{
 			if (ts.trace_debug_mode) trace("find t taps---------------------------------------------------------");
 		
-				//var ttap_time:int = Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20
-				var ttap_time:int = Math.ceil(ts.gO.pOList[key].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
-				var ttap_dist:int = ts.gO.pOList[key].point_translation_threshold;//20
+				var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20
+				//var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
+				var ttap_dist:int = ts.gO.pOList[key]["triple_tap_x"].point_translation_threshold;//20
+				
 				var	gestureEventArray:Array = new Array();
 				
 					//trace(ttap_time);
