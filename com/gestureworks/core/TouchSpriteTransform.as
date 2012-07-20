@@ -70,6 +70,8 @@ package com.gestureworks.core
 		
 		private var transform_3d:Boolean = true;
 		
+		private var centerTransform:Boolean = false;
+		
 		
 		public function TouchSpriteTransform():void
 		{
@@ -150,6 +152,8 @@ package com.gestureworks.core
 					//restartGestureTween();
 					///////////////////////
 					
+					centerTransform = false;
+					
 					if (_disableNativeTransform){
 						if (!_disableAffineTransform) $applyTransform(true);
 					}
@@ -169,10 +173,12 @@ package com.gestureworks.core
 					//updateGesturePipeline();
 					///////////////////////////
 					
+					centerTransform = true;
+					
 					if (_disableNativeTransform) {
-						if (!_disableAffineTransform) $applyTransform(false);	
+						if (!_disableAffineTransform) $applyTransform(true);	//false
 					}
-					else applyNativeTransform(false);
+					else applyNativeTransform(true); // false
 					
 					_transformComplete = false;
 					_transformStart = false;
@@ -225,7 +231,11 @@ package com.gestureworks.core
 				parent_modifier = parent.transform.matrix.clone();
 					//parent_modifier.concat(grand_parent_mod)
 					parent_modifier.invert();
-				var pt:Point = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+				var pt:Point //= parent_modifier.transformPoint(new Point(trO.x, trO.y));
+				
+				if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+				else pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
+				
 				
 				var vector_mod:Matrix = new Matrix ();
 				var vdr:Number = -(this.parent.rotation)* DEG_RAD//+ this.parent.parent.rotation)* DEG_RAD
@@ -244,8 +254,15 @@ package com.gestureworks.core
 			}
 			else {	
 					// do not pre transform
-					t_x =  trO.x;
-					t_y =  trO.y;
+					if (centerTransform) 
+					{
+						t_x = trO.transAffinePoints[4].x
+						t_y = trO.transAffinePoints[4].y
+					}
+					else {
+						t_x = trO.x;
+						t_y = trO.y;
+					}
 					dx =   trO.dx;
 					dy =   trO.dy;
 			}
@@ -343,6 +360,7 @@ package com.gestureworks.core
 					//trace("parent transfrom", this.parent.transform.matrix);
 					parent_modifier = this.parent.transform.matrix.clone();
 						parent_modifier.invert();
+						
 					var $pt:Point = parent_modifier.transformPoint(new Point(trO.x, trO.y));
 					
 					var $r_mod:Matrix = new Matrix ();
@@ -360,8 +378,15 @@ package com.gestureworks.core
 				}
 				else {	
 						// do not pre transform // super override method
+						
+						if (centerTransform) {
+							t_x = trO.transAffinePoints[4].x
+							t_y = trO.transAffinePoints[4].y
+						}
+						else {
 						t_x = trO.x;
 						t_y = trO.y;
+						}
 						dx = (_x - super.x);
 						dy = (_y - super.y);
 				}
@@ -651,7 +676,7 @@ package com.gestureworks.core
 					trans_affine_points[1] =  modifier.transformPoint(trO.affinePoints[1]);
 					trans_affine_points[2] =  modifier.transformPoint(trO.affinePoints[2]);
 					trans_affine_points[3] =  modifier.transformPoint(trO.affinePoints[3]);
-					trans_affine_points[4] =  modifier.transformPoint(trO.affinePoints[4]);
+					trans_affine_points[4] =  modifier.transformPoint(trO.affinePoints[4]); // trans formed center point
 				trO.transAffinePoints = trans_affine_points;
 				}
 		}

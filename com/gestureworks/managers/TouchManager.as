@@ -191,15 +191,11 @@ package com.gestureworks.managers
 				// UPDATE POINT POSITIONS
 				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
 				{
-					//--pointObject.point.y = event.localY; // legacy debugger
-					//--pointObject.point.x = event.localX; //legacy debugger
 					pointObject.y = event.localY;
 					pointObject.x = event.localX;
 				}
 				else
 				{	
-					//--pointObject.point.y = event.stageY; // legacy debugger
-					//--pointObject.point.x = event.stageX; //legacy debugger
 					pointObject.y = event.stageY;
 					pointObject.x = event.stageX;
 				}
@@ -275,25 +271,6 @@ package com.gestureworks.managers
 				tO.updateProcessing();
 				tO.updateGesturePipeline();
 				tO.updateTransformation();
-				
-				
-				/*
-				// update gesture pipelines if NOT touching
-				if ((tO.N ==0) && (tO.gestureTweenOn))
-					{
-					//trace("pipeline tween")
-					//tO.updateGesturePipeline();
-					//tO.updateTransformation();
-					}
-				// update cluster analysis and gesture pipelines if touching
-				else
-				{
-					//trace("pipeline gesture calc");
-					tO.updateClusterAnalysis();
-					tO.updateProcessing();
-					tO.updateGesturePipeline();
-					tO.updateTransformation();
-				}*/
 		}
 		
 		
@@ -305,8 +282,6 @@ package com.gestureworks.managers
 			
 			if (pointObject)
 			{
-				//pointObject.point.y = event.stageY; // legacy
-				//pointObject.point.x = event.stageX; //legacy
 				pointObject.y = event.stageY;
 				pointObject.x = event.stageX;
 			}	

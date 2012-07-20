@@ -231,6 +231,16 @@ package com.gestureworks.objects
 			_gestureDelta = value;
 		}
 		
+		private var _gestureDeltaCache:Number = 0;
+		public function get gestureDeltaCache():Number
+		{
+			return _gestureDeltaCache;
+		}
+		public function set gestureDeltaCache(value:Number):void
+		{
+			_gestureDeltaCache = value;
+		}
+		
 		// functional relationship between raw value and gesture value
 		private var _func:String = "linear";
 		public function get func():String

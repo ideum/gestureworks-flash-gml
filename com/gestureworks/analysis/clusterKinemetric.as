@@ -638,6 +638,9 @@ package com.gestureworks.analysis
 											
 										}
 									}
+									else {
+										
+									}
 								}
 								
 								// FIND C_DSX AND C_DSY AGGREGATE THEN AS A LAST STEP FIND THE SQUARE OF THE DISTANCE BETWEEN TO GET C_DS
@@ -1082,6 +1085,7 @@ package com.gestureworks.analysis
 					
 								if ((pointList[0].history[0]) && (pointList[0].history[1])) 
 								{		
+									
 									// find touch point translation vector
 									var dxh:Number = pointList[0].history[1].x - x_c;
 									var dyh:Number = pointList[0].history[1].y - y_c;
@@ -1099,20 +1103,21 @@ package com.gestureworks.analysis
 									if (theta_diff>300) theta_diff = theta_diff -360; //trace("Flicker +ve")
 									if (theta_diff<-300) theta_diff = 360 + theta_diff; //trace("Flicker -ve");
 									
-									/*
+									
 									//pivot thresholds
-									if (Math.abs(theta_diff) > 0.5*pivot_threshold)
+									if (Math.abs(theta_diff) > pivot_threshold)
 									{	
 										// weighted effect
-										pivot_dtheta = theta_diff * Math.pow(pdist, 2.2);
+										//pivot_dtheta = theta_diff //* Math.pow(pdist, 2.2);
+										pivot_dtheta = theta_diff*Math.pow(pdist, 2);
 										
 										c_px = pointList[0].history[0].x;
 										c_py = pointList[0].history[0].y;
 									}
 									else pivot_dtheta = 0; 
-									*/
 									
-									pivot_dtheta = theta_diff * Math.pow(pdist, 2.2);
+									
+									//pivot_dtheta = theta_diff * Math.pow(pdist, 2.2);
 								
 									//trace("c_dtheta",c_dtheta, dx, dy, ds)
 								}
