@@ -74,7 +74,7 @@ package com.gestureworks.managers
 			//globalClock.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
 			//globalClock.start();
 			
-			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler2);
+			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
 		}
 		
 		gw_public static function resetGlobalClock():void
@@ -166,44 +166,7 @@ package com.gestureworks.managers
 					////////////////////////////////////////////////////////
 					//FORCES IMMEDIATE UPDATE ON TOUCH UP
 					//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
-					
-					// UPDATE CLUSTER COUNT
-					tO.updateClusterCount();
-					
-					// update gesture pipelines if NOT touching
-					if (tO.N==0)
-					{
-						tO.gO.release = true;
-						
-					/*
-						if (!tO.gestureTweenOn)
-						{
-							// zero all deltas
-							tO.updateClusterAnalysis();
-							tO.updateProcessing();
-							tO.updateGesturePipeline();
-							tO.updateTransformation();
-						}
-						else {
-							//trace("pipeline tween")
-							tO.updateGesturePipeline();
-							tO.updateTransformation();
-							tO.updateTransformation();
-						}*/
-						tO.updateClusterAnalysis();
-							tO.updateProcessing();
-							tO.updateGesturePipeline();
-							tO.updateTransformation();
-					}
-					// update cluster analysis and gesture pipelines if touching
-					else {
-						//trace("cluster analysis");
-						tO.updateClusterAnalysis();
-						tO.updateProcessing();
-						tO.updateGesturePipeline();
-						tO.updateTransformation();
-						tO.updateDebugDisplay();
-					}
+					updateTouchObject(tO);
 					////////////////////////////////////////////////////////
 				}
 			}
@@ -250,9 +213,8 @@ package com.gestureworks.managers
 			//touchFrameHandler3(event);
 		}
 		
-		/*
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
-		public static function touchFrameHandler(event:TimerEvent):void
+		public static function touchFrameHandler(event:GWEvent):void
 		{
 			//trace("touch frame process ----------------------------------------------");
 			
@@ -260,157 +222,81 @@ package com.gestureworks.managers
 			GestureGlobals.frameID += 1;
 			
 			// update all touch objects in display list
-			for each(var ts:Object in touchObjects)
+			for each(var tO:Object in touchObjects)
 			{
-				//trace("hello", ts, ts.N);
-				ts.updateClusterCount();
-				
-				// update gesture pipelines if NOT touching
-				if (ts.N==0)
-				{
-					ts.updateGesturePipeline();
-					//ts.updateGestureAnalysis();
-					ts.updateTransformation();
-					//ts.updateGestureValues();
-				}
-				// update cluster analysis and gesture pipelines if touching
-				else {
-					//trace("cluster analysis");
-					ts.updateClusterAnalysis();
-					ts.updateProcessing();
-					ts.updateGesturePipeline();
-					//ts.updateGestureAnalysis();
-					ts.updateTransformation();
-					ts.updateDebugDisplay();
-				}
+				// update touch,cluster and gesture processing
+				updateTouchObject(tO);
 				
 				// move to timeline visualizer
 				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
 				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-				if (ts.debug_display)
+				if (tO.debug_display)
 				{
 					//UPDATE CLUSTER HISTORIES
-					ClusterHistories.historyQueue(ts.touchObjectID);
+					ClusterHistories.historyQueue(tO.touchObjectID);
 					
 					//UPDATE TRANSFORM HISTORIES
-					TransformHistories.historyQueue(ts.touchObjectID);
+					TransformHistories.historyQueue(tO.touchObjectID);
+					
+					// update touch object debugger display
+					tO.updateDebugDisplay();
 				}
 				
 			}
 		}
-		*/
 		
-		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
-		public static function touchFrameHandler2(event:GWEvent):void
+		
+		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
+		
+		public static function updateTouchObject(tO:Object):void
 		{
-			//trace("touch frame process ----------------------------------------------");
-			
-			//INCREMENT TOUCH FRAME id
-			GestureGlobals.frameID += 1;
-			
-			// update all touch objects in display list
-			for each(var ts:Object in touchObjects)
-			{
 				//trace("hello", ts, ts.N);
-				ts.updateClusterCount();
+				tO.updateClusterCount();
 				
+				// NEED TO MAKE GESTURE OBJECT SPECIFIC
+				// SOLVE ROTATE FLICK TWEEN PROBLEM
+				
+				// CLUSTER ANALYSIS UPDATES AND PROCESSING MUST OCCURE BASED 
+				// THE NUMBER OF TOUCH POINTS 
+				// HOW THE TOUCH POINTS ACTIVATE OR DEACTIVATE GESTURE OBJECTS
+				// FOR EXAMPLE IF N=1
+				// ROTATE MUST BE TWEENING
+				// SCALE MUST BE TWEENING
+				// BUT DRAG MUST STILL BE CALCULATING
+				
+				// THERFOR GESTURE PIPELINE MUST SWITCH SOURCE DELTAS WHEN TWEENING
+				// IF TWEENING PULL LAST GESTURE DELTA AND PROCESS IN PIPELINE
+				// IF NOT TWEENING PULL NEW CLUSTER DELTA
+				
+				// THERFOR CLUSTER ANALYSIS IS N SPECICIFC AND SELF MAMANGED SWITCHING
+				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
+				// 
+				tO.updateClusterAnalysis();
+				tO.updateProcessing();
+				tO.updateGesturePipeline();
+				tO.updateTransformation();
+				
+				
+				/*
 				// update gesture pipelines if NOT touching
-				if (ts.N == 0) {
-					/*
-					if (!ts.gestureTweenOn)
-						{
-							// zero all deltas
-							ts.updateClusterAnalysis();
-							ts.updateProcessing();
-							ts.updateGesturePipeline();
-							ts.updateTransformation();
-						}
-						else {
-							//trace("pipeline tween")
-							ts.updateGesturePipeline();
-							ts.updateTransformation();
-						}
-					*/
-					
-							ts.updateClusterAnalysis();
-							ts.updateProcessing();
-							ts.updateGesturePipeline();
-							ts.updateTransformation();
-					
-				}
+				if ((tO.N ==0) && (tO.gestureTweenOn))
+					{
+					//trace("pipeline tween")
+					//tO.updateGesturePipeline();
+					//tO.updateTransformation();
+					}
 				// update cluster analysis and gesture pipelines if touching
 				else
 				{
 					//trace("pipeline gesture calc");
-					ts.updateClusterAnalysis();
-					ts.updateProcessing();
-					ts.updateGesturePipeline();
-					ts.updateTransformation();
-					ts.updateDebugDisplay();
-				}
-				
-				// move to timeline visualizer
-				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
-				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-				if (ts.debug_display)
-				{
-					//UPDATE CLUSTER HISTORIES
-					ClusterHistories.historyQueue(ts.touchObjectID);
-					
-					//UPDATE TRANSFORM HISTORIES
-					TransformHistories.historyQueue(ts.touchObjectID);
-				}
-				
-			}
+					tO.updateClusterAnalysis();
+					tO.updateProcessing();
+					tO.updateGesturePipeline();
+					tO.updateTransformation();
+				}*/
 		}
-		/*
-		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
-		public static function touchFrameHandler3(event:TouchEvent):void
-		{
-			//trace("touch frame process ----------------------------------------------");
-			
-			//INCREMENT TOUCH FRAME id
-			GestureGlobals.frameID += 1;
-			
-			// update all touch objects in display list
-			for each(var ts:Object in touchObjects)
-			{
-				//trace("hello", ts, ts.N);
-				ts.updateClusterCount();
-				
-				// update gesture pipelines if NOT touching
-				if (ts.N==0)
-				{
-					ts.updateGestureAnalysis();
-					ts.updateTransformation();
-					ts.updateGestureValues();
-				}
-				// update cluster analysis and gesture pipelines if touching
-				else {
-					//trace("cluster analysis");
-					ts.updateClusterAnalysis();
-					ts.updateProcessing();
-					ts.updateGestureAnalysis();
-					ts.updateTransformation();
-					ts.updateDebugDisplay();
-				}
-				
-				// move to timeline visualizer
-				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
-				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-				if (ts.debug_display)
-				{
-					//UPDATE CLUSTER HISTORIES
-					ClusterHistories.historyQueue(ts.touchObjectID);
-					
-					//UPDATE TRANSFORM HISTORIES
-					TransformHistories.historyQueue(ts.touchObjectID);
-				}
-				
-			}
-		}*/
 		
-		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
+		
 	
 		public static function updatePointObject(event:TouchEvent):void
 		{
@@ -425,25 +311,6 @@ package com.gestureworks.managers
 				pointObject.x = event.stageX;
 			}	
 		}
-		
-		//EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////////
-		public static function updateTouchObject(event:TouchEvent):void
-		{
-			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
-			var pointObject:Object = points[event.touchPointID];
-			
-			if (pointObject)
-			{
-				// UPDATE TOUCH OBJECT
-				var tO:Object = pointObject.object;//
-					tO.updateClusterAnalysis();
-					tO.updateProcessing();
-					tO.updateGestureAnalysis();
-					tO.updateTransformation();
-					tO.updateDebugDisplay(); // resource intensive moved to on enter frame
-			}	
-		}
-
 		
 	}
 }

@@ -113,7 +113,7 @@ package com.gestureworks.analysis
 			// map dynamic cluster deltas results into gesture object
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			
+			/*
 			for (i in ts.gO.pOList)
 				{	
 						for (j in ts.gO.pOList[i])
@@ -121,11 +121,12 @@ package com.gestureworks.analysis
 								if ((ts.gO.pOList[i][j] is PropertyObject))
 								{
 									//ts.gO.pOList[i][j].clusterDelta = 0;
-									ts.gO.pOList[i][j].gestureDelta = 0;
+									//ts.gO.pOList[i][j].gestureDelta = 0;
 								}
 						}
 				}
-			
+			*/
+				
 			for (i in ts.gO.pOList)
 				{
 					if (ts.gestureList[i])
@@ -139,65 +140,125 @@ package com.gestureworks.analysis
 								if ((ts.gO.pOList[i][j] is PropertyObject))
 								{
 									
-									/////////////////////////////////////////
+									///////////////////////////////////////////////////////////////////////////////////////////
 									// map filter properties
 									// PULLED REFERENCE TO PROCESS DELTA
-									/////////////////////////////////////////
+									///////////////////////////////////////////////////////////////////////////////////////////
 									//if (ts.gO.pOList[i][j].processDelta != 0) 
-									//ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
+									ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
 									
-									ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].clusterDelta;
 									
-									//trace("cluster delta",i,j,ts.gO.pOList[i][j].clusterDelta);
 									
-									//if (i=="n-drag") trace(i,ts.gO.pOList[i][j].clusterDelta,ts.gO.pOList[i][j].gestureDelta)
 									
-									/*
-									////////////////////////////////////////////
+									
+									//////////////////////////////////////////////////////////////////////////////////////////////
 									// process gesture tweens
-									///////////////////////////////////////////
+									/////////////////////////////////////////////////////////////////////////////////////////////
 									//if ((ts.N <= 1)&&(ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
-									if ((ts.N == 0)&&(ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
+									if (ts.N == 0)
+									//if (ts.N <= 1)
 									{
-										//trace("tweening in pipeline",i,j, ts.gO.pOList[i][j].release_inertiaOn);
-										
-											var count:int = ts.gO.pOList[i][j].release_inertia_count;
-											
-											if ((count > ts.gO.pOList[i][j].release_inertia_Maxcount)||(Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min))
+										if((ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
+										//if ((ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
+										{
+												var count:uint = ts.gO.pOList[i][j].release_inertia_count++;
+
+												//if ((count > po.release_inertia_Maxcount) || (Math.abs(po.gestureDelta) < po.delta_min))
+												//if (Math.abs(po.gestureDelta) < po.delta_min)
+												if (count > ts.gO.pOList[i][j].release_inertia_Maxcount)
 												{
-												ts.gO.pOList[i][j].release_inertiaOn = false;
-												ts.gO.pOList[i][j].gestureDelta = 0;
-												ts.gO.pOList[i][j].release_inertia_count = 0;
+													ts.gO.pOList[i][j].release_inertiaOn = false;
+													ts.gO.pOList[i][j].gestureDelta = 0;
+													ts.gO.pOList[i][j].release_inertia_count = 0;
+													//trace("tween limit zero delta",i,j,ts.gO.pOList[i][j].gestureDelta);
 												}
-											else {
-												//trace("tween min", i,j, ts.gO.pOList[i][j].release_inertia_factor,ts.gO.pOList[i][j].release_inertia_base,ts.gO.pOList[i][j].gestureDelta);
-										
-												ts.gO.pOList[i][j].release_inertiaOn = true;
-												ts.gO.pOList[i][j].gestureDelta *= ts.gO.pOList[i][j].release_inertia_factor * Math.pow(ts.gO.pOList[i][j].release_inertia_base, count);
-												ts.gO.pOList[i][j].release_inertia_count++;
-												}
-									}*/
-									
-									
-									
-									/////////////////////////////////////////
-									// MULTIPLY FILTER
-									/////////////////////////////////////////
-	
-									if ((ts.gO.pOList[i][j].func) && (ts.gO.pOList[i][j].func_factor)) 
-									{
-										ts.gO.pOList[i][j].gestureDelta = functionGenerator(ts.gO.pOList[i][j].func, ts.gO.pOList[i][j].gestureDelta , ts.gO.pOList[i][j].func_factor);
+												else {
+													ts.gO.pOList[i][j].release_inertiaOn = true;
+													ts.gO.pOList[i][j].gestureDelta *= ts.gO.pOList[i][j].release_inertia_factor * Math.pow(ts.gO.pOList[i][j].release_inertia_base, count);
+													//trace("tween ease delta", i,j,Math.abs(ts.gO.pOList[i][j].gestureDelta),ts.gO.pOList[i][j].delta_min,count > ts.gO.pOList[i][j].release_inertia_Maxcount,(Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min));
+													}
+										}
+										else {
+											ts.gO.pOList[i][j].gestureDelta = 0;
+											//trace("shut down zero delta",ts.gO.pOList[i][j].gestureDelta);
+										}
 									}
-									else if (ts.gO.pOList[i][j].func_factor) ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].func_factor * ts.gO.pOList[i][j].gestureDelta;
-									//else ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].gestureDelta;
+									
+									
+									
+									//////////////////////////////////////////////////////////////////////////////////
+									// rotate flick test
+									else if ((ts.N == 1) &&(i == "n-rotate"))
+									{
+										trace("test",ts.gO.pOList[i].n, i);
+										//if((ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
+										if ((ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
+										{
+											var count:uint = ts.gO.pOList[i][j].release_inertia_count++;
+
+												//if ((count > po.release_inertia_Maxcount) || (Math.abs(po.gestureDelta) < po.delta_min))
+												//if (Math.abs(po.gestureDelta) < po.delta_min)
+												if (count > ts.gO.pOList[i][j].release_inertia_Maxcount)
+												{
+													ts.gO.pOList[i][j].release_inertiaOn = false;
+													ts.gO.pOList[i][j].gestureDelta = 0;
+													ts.gO.pOList[i][j].release_inertia_count = 0;
+													trace("tween limit zero delta",i,j,ts.gO.pOList[i][j].gestureDelta);
+												}
+												else {
+													ts.gO.pOList[i][j].release_inertiaOn = true;
+													ts.gO.pOList[i][j].gestureDelta *= ts.gO.pOList[i][j].release_inertia_factor * Math.pow(ts.gO.pOList[i][j].release_inertia_base, count);
+													trace("tween ease delta", i,j,Math.abs(ts.gO.pOList[i][j].gestureDelta),ts.gO.pOList[i][j].delta_min,count > ts.gO.pOList[i][j].release_inertia_Maxcount,(Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min));
+													}
+										}
+										else {
+											//ts.gO.pOList[i][j].gestureDelta = 0;
+											//trace("shut down zero delta",ts.gO.pOList[i][j].gestureDelta);
+										}
+									}
+									/////////////////////////////////////////////////////////////////////////////////
+									
+									
+									else {
+										// restart tween dimention threads when touching
+										if (ts.gO.pOList[i][j].release_inertia)
+										{
+											ts.gO.pOList[i][j].release_inertiaOn = true;
+											ts.gO.pOList[i][j].release_inertia_count = 0;
+											//if (ts.trace_debug_mode) 
+											//trace("restart tween");
+										}
+									}
+									
+									
+									
+									
+									///////////////////////////////////////////////////////////////////////////////////////////
+									// MULTIPLY FILTER
+									// multiplies delta by a const of proportionality
+									// produces linear,quadartic,cubic or polynomial function
+									///////////////////////////////////////////////////////////////////////////////////////////
+									if (ts.gO.pOList[i][j].func_factor)
+									{
+										if (ts.gO.pOList[i][j].func) 
+										{
+											ts.gO.pOList[i][j].gestureDelta = functionGenerator(ts.gO.pOList[i][j].func, ts.gO.pOList[i][j].gestureDelta , ts.gO.pOList[i][j].func_factor);
+										}
+										else 
+										{
+											ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].func_factor * ts.gO.pOList[i][j].gestureDelta;
+										}
+									}
+						
 								
 									
 									
 									
-									/////////////////////////////////////////
+									///////////////////////////////////////////////////////////////////////////////////////////
 									// DELTA FILTER
-									// limit gesture deltas
-									/////////////////////////////////////////
+									// limits gesture deltas to delta min value
+									// reduces the number of events and unnesesary transformations by zeroing small deltas
+									//////////////////////////////////////////////////////////////////////////////////////////
 									
 									if (ts.trace_debug_mode) trace("delta threshold", ts.gO.pOList[i][j].delta_threshold);
 									
@@ -214,10 +275,12 @@ package com.gestureworks.analysis
 									
 									
 									
-									/////////////////////////////////////////
+									
+									////////////////////////////////////////////////////////////////////////////////////////////
 									// VALUE FILTER
 									// limit gesture values 
-									/////////////////////////////////////////
+									// allows for value bounds so that gestures mapped to known object properties can be managed
+									/////////////////////////////////////////////////////////////////////////////////////////////
 									
 									if (ts.gO.pOList[i][j].boundaryOn) 
 									{
@@ -239,9 +302,7 @@ package com.gestureworks.analysis
 												
 												//if ((ts.gO.pOList[i][j].target_id == "dx") || (ts.gO.pOList[i][j].target_id == "dy"))  xy_lock = true; 
 											}
-											
 										}
-										
 										if (Math.abs(ts.gO.pOList[i][j].gestureValue) > ts.gO.pOList[i][j].boundary_max) 
 										{
 											if (ts.gO.pOList[i][j].gestureDelta > 0) 
@@ -269,9 +330,11 @@ package com.gestureworks.analysis
 									
 									
 									
-									///////////////////////////////////////////////////////////////////////////////////////////////////////////
-									// 
+									
+									////////////////////////////////////////////////////////////////////////////////////////////////////
 									// map transform properties
+									// zero target of property map
+									////////////////////////////////////////////////////////////////////////////////////////////////////
 									if (ts.gO.pOList[i][j].target_id) 
 									{
 										// ENSURES ADDITIVE DELTAS DO NOT ACCUMILATE OUTSIDE OF EACH "FRAME"
@@ -279,9 +342,13 @@ package com.gestureworks.analysis
 									}
 									
 									
-									//// active gesture event switch
-									//if (ts.gO.pOList[i][j].gestureDelta == 0) ts.gO.pOList[i].activeEvent = false;
-									//else ts.gO.pOList[i].activeEvent = true;
+									
+									
+									////////////////////////////////////////////////////////////////////////////////////////////////////
+									// active gesture event switch
+									// deactivates gesture processing on gesture object if gesture deltas are zero for each dimention
+									// is overrriden when object is touched ( when cluster analysis occures
+									////////////////////////////////////////////////////////////////////////////////////////////////////
 									
 									// active gesture event switch
 									if (ts.gO.pOList[i][j].gestureDelta != 0) ts.gO.pOList[i].activeEvent = true;
@@ -290,60 +357,56 @@ package com.gestureworks.analysis
 				}
 			}
 			
-			// confirm gesture complete 
-			// check no gesture is tweening
-			//NOTE WILL MAKE GESTURE OBJECT SPECIFIC
-			//if (!ts.gestureTweenOn) ts.gO.complete = true;
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			// mapping defined native  property values
+			// map gesture object into transform object
+			////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			
-							if (!ts.disableNativeTransform){
-			
-									//////////////////////////////////////////////////////////////////////////////////////////////////////////
-									// dynamic delta properties
-									//////////////////////////////////////////////////////////////////////////////////////////////////////////
-									
-									// MAP GESTURE PROPERTIES
-									// map gesture object into transform object
-									for (i in ts.gO.pOList)
-										{
-											if (ts.gestureList[i]) // check exists on gesture list
-											{
-											for (j in ts.gO.pOList[i])
-											{
-												if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i][j].target_id))
-												{
-													
-													/////////////////////////////////////////
-													// map transform limits
-													if (ts.gO.pOList[i][j].target_id == "dsx") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_scaleX;
-													if (ts.gO.pOList[i][j].target_id == "dsy") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_scaleY;
-													if (ts.gO.pOList[i][j].target_id == "dtheta") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotation;
-													if (ts.gO.pOList[i][j].target_id == "dthetaX") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotationX;
-													if (ts.gO.pOList[i][j].target_id == "dthetaY") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotationY;
-													if (ts.gO.pOList[i][j].target_id == "dthetaZ") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotationZ;
-													if (ts.gO.pOList[i][j].target_id == "dx") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_x;
-													if (ts.gO.pOList[i][j].target_id == "dy") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_y;
-													
-													// ENSURE DELTAS MAPPED TO THE SAME PROPERTY ARE ADDITIVE IN A "FRAME"
-													ts.trO[ts.gO.pOList[i][j].target_id] += ts.gO.pOList[i][j].gestureDelta;
-													if (ts.trace_debug_mode) trace("gesture data", i, j, ts.gO.pOList[i][j].gestureDelta, ts.trO[ts.gO.pOList[i][j].target_id]);
-													
-													//trace("target_values", ts.trO[ts.gO.pOList[i][j].target_id]);
-												}
-											}
-										}
-										}
-										//trace("testing");
-								}
-			
+			if (!ts.disableNativeTransform)
+			{
+				for (i in ts.gO.pOList)
+					{
+					if (ts.gestureList[i]) // check exists on gesture list
+					{
+						for (j in ts.gO.pOList[i])
+							{
+							if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i][j].target_id))
+								{
+									// map transform limits
+									if (ts.gO.pOList[i][j].target_id == "dsx") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_scaleX;
+									if (ts.gO.pOList[i][j].target_id == "dsy") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_scaleY;
+									if (ts.gO.pOList[i][j].target_id == "dtheta") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotation;
+									if (ts.gO.pOList[i][j].target_id == "dthetaX") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotationX;
+									if (ts.gO.pOList[i][j].target_id == "dthetaY") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotationY;
+									if (ts.gO.pOList[i][j].target_id == "dthetaZ") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_rotationZ;
+									if (ts.gO.pOList[i][j].target_id == "dx") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_x;
+									if (ts.gO.pOList[i][j].target_id == "dy") ts.gO.pOList[i][j].gestureValue = ts.trO.obj_y;
 								
+									// ENSURE DELTAS MAPPED TO THE SAME PROPERTY ARE ADDITIVE IN A "FRAME"
+									ts.trO[ts.gO.pOList[i][j].target_id] += ts.gO.pOList[i][j].gestureDelta;
+									if (ts.trace_debug_mode) trace("gesture data", i, j, ts.gO.pOList[i][j].gestureDelta, ts.trO[ts.gO.pOList[i][j].target_id]);
+													
+									//trace("target_values", ts.trO[ts.gO.pOList[i][j].target_id]);
+									}
+								}
+							}
+					}
+				//trace("testing");
+			}
+			
+			
+			
+			
+			
+			
 			////////////////////////////////////////
 			// tween shut down check
+			// check no gesture is tweening
+			// confirm gesture complete 
 			////////////////////////////////////////
 			// shut down
 			ts.gestureTweenOn = false;
 			
-			/*
 			//Open back up if release inertia still on 
 			for (i in ts.gO.pOList)
 			{
@@ -353,7 +416,10 @@ package com.gestureworks.analysis
 				if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i][j].release_inertiaOn)) ts.gestureTweenOn = true;
 				}
 			}
-			*/
+			
+			//NOTE WILL NEED TO MAKE GESTURE OBJECT SPECIFIC
+			if (!ts.gestureTweenOn) ts.gO.complete = true;
+			
 		}
 		
 		private function functionGenerator(type:String,b:Number,k:Number):Number {
@@ -424,7 +490,7 @@ package com.gestureworks.analysis
 		// SHOULD TARGET GESTURE OBJECT AND DIMENTION DIRECT AS ABOVE
 		public function restartGestureTween():void
 		{
-			//ts.gestureTweenOn = true;
+			ts.gestureTweenOn = true;
 			
 			for (i in ts.gO.pOList)
 				{
@@ -432,7 +498,7 @@ package com.gestureworks.analysis
 					//{
 						for (j in ts.gO.pOList[i])
 						{
-							if (ts.gO.pOList[i][j] is PropertyObject)
+							if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i][j].release_inertia))
 							{
 								ts.gO.pOList[i][j].release_inertiaOn = true;
 								ts.gO.pOList[i][j].release_inertia_count = 0;

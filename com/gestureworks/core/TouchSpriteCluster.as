@@ -166,7 +166,7 @@ package com.gestureworks.core
 				}
 				
 				
-				//if(_N!=0){		
+				if(_N!=0){		
 				// check point number requirements
 				if((_N >= gO.pOList[key].nMin)&&(_N <= gO.pOList[key].nMax)||(_N == gO.pOList[key].n))
 				{
@@ -414,7 +414,7 @@ package com.gestureworks.core
 				}
 			}
 
-			//}
+			}
 			
 			cluster_kinemetric.pushClusterObjectProperties();
 		}

@@ -187,6 +187,8 @@ package com.gestureworks.core
 					if (_transformEvents) manageTransformEventDispatch();
 					if (trace_debug_mode)trace("none", _touchObjectID)
 				}
+				
+				
 	}
 		
 	////////////////////////////////////////////////////////////////////////////////
