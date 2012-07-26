@@ -75,7 +75,7 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
-			//if (ts.trace_debug_mode) 	trace("find taps---------------------------------------------------------", key);
+			//if (ts.trace_debug_mode) 	trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
 			//var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10
@@ -107,7 +107,7 @@ package com.gestureworks.analysis
 								//trace("Current Frame TAP", pointEventArray[p].touchPointID);
 								tapID ++;
 								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
-								if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(tap_event);
+								ts.tiO.frame.gestureEventArray.push(tap_event);
 								ts.onGestureTap(tap_event);
 								return; // must exit if finds as do not want to refind
 							}	

@@ -190,14 +190,14 @@ package com.gestureworks.core
 		*/
 		public function restartGestureTween():void
 		{
-			if (contGesturemetricsOn) gesture_cont.restartGestureTween();
+			//if (contGesturemetricsOn) gesture_cont.restartGestureTween();
 		}
 		/**
 		* @private
 		*/
 		public function resetGestureTween():void
 		{
-			if (contGesturemetricsOn) gesture_cont.resetGestureTween();
+			//if (contGesturemetricsOn) gesture_cont.resetGestureTween();
 		}
 		/**
 		* @private

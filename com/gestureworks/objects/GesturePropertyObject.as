@@ -41,7 +41,7 @@ package com.gestureworks.objects
 			_gesture_id = value;
 		}
 		
-		// gesture id
+		// algorithm id
 		private var _algorithm:String;
 		public function get algorithm():String
 		{
@@ -135,15 +135,15 @@ package com.gestureworks.objects
 			_release = value;
 		}
 		
-		// easing
-		private var _ease:Boolean = false;
-		public function get ease():Boolean
+		// passive
+		private var _passive:Boolean = false;
+		public function get passive():Boolean
 		{
-			return _ease;
+			return _passive;
 		}
-		public function set ease(value:Boolean):void
+		public function set passive(value:Boolean):void
 		{
-			_ease = value;
+			_passive = value;
 		}
 		
 		// complete

@@ -85,7 +85,7 @@ package com.gestureworks.core
 		*/
 		public function initTimeline():void
 		{
-			trace("init timeline");
+			
 			for (key in gO.pOList)
 			{
 				
@@ -112,6 +112,7 @@ package com.gestureworks.core
 
 				//trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
 			}	
+			trace("init timeline",tapOn);
 		}
 		
 		/**
@@ -138,14 +139,14 @@ package com.gestureworks.core
 		*/
 		public function restartGestureTween():void
 		{
-			gesture_cont.restartGestureTween();
+			//gesture_cont.restartGestureTween();
 		}
 		/**
 		* @private
 		*/
 		public function resetGestureTween():void
 		{
-			gesture_cont.resetGestureTween();
+			//gesture_cont.resetGestureTween();
 		}
 		/**
 		* @private
@@ -172,6 +173,8 @@ package com.gestureworks.core
 			//fix
 			if (gO.pOList[key].gesture_type == "hold")				gO.pOList[key].complete = false;  // resets hold gesture
 			}
+			
+			gO.release = true;
 		}
 		
 		/**
@@ -198,7 +201,7 @@ package com.gestureworks.core
 		{	
 			//if (trace_debug_mode) trace("continuous gesture event dispatch");
 			
-			//trace("dispatch--------------------------");
+			//trace("dispatch--------------------------",gO.release);
 
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
@@ -208,15 +211,25 @@ package com.gestureworks.core
 				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 			}
 			
-			// start gesturing
+			// start OBJECT complete event gesturing
 			if ((gO.start)&&(_gestureEventStart))
 			{
 				dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
 				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
 				gO.start = false;
-				gO.release = false;
 				//trace("start fired");
 			}
+			
+			
+			// gesture OBJECT release gesture
+			if ((gO.release)&&(_gestureEventRelease))
+			{
+				dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+				gO.release = false;
+				//trace("release fired");
+			}
+			
 			
 			// gesture OBJECT complete event
 			if ((gO.complete)&&(_gestureEventComplete))
@@ -224,30 +237,29 @@ package com.gestureworks.core
 				dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
 				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
 				gO.complete = false;
-				
 				//trace("complete fired");
 			}
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////
 			// discrete gestures
 			/////////////////////////////////////////////////////////////////////////////////////////////////
-			else {
+			//else {
 				
 			for (key in gO.pOList) 
 						{
 			
-				if (gO.release)
+				if (gO.release)//if (gO[key].release)
 					{
 					//trace("discrete release",gO.pOList[key].gesture_type );
 						
 							//tap counter
-							if (gO.pOList[key].gesture_type == "tap")			gesture_disc.countTapEvents(key);
+							if (gO.pOList[key].gesture_type == "tap")	gesture_disc.countTapEvents(key);
 							
 							// double tap counter
 							if (gO.pOList[key].gesture_type == "double_tap") 	gesture_disc.countDoubleTapEvents(key);
 							
 							// triple tap counter
-							if (gO.pOList[key].gesture_type == "triple_tap") 	gesture_disc.countTripleTapEvents(key);
+						//	if (gO.pOList[key].gesture_type == "triple_tap") 	gesture_disc.countTripleTapEvents(key);
 							
 							// gesture flick
 							if (gO.pOList[key].gesture_type == "flick")
@@ -312,18 +324,10 @@ package com.gestureworks.core
 										//if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(Gevent);
 									}
 							}
-							
-						// release gesture
-						if ((gO.release)&&(_gestureEventRelease))//&&(!gesture_release_dispatched))
-						{
-							dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-							gO.start = false;
-						}
 					}
 			
 			//////////////////////////////////////////////////////////////////////////////////////////////////
-			// continuos gesture events
+			// continuous gesture events
 			//////////////////////////////////////////////////////////////////////////////////////////////////
 			
 			else {	
@@ -432,14 +436,22 @@ package com.gestureworks.core
 			}
 		}
 			// so release is only sent once and other gestures dependent on it only get dispatched once
-			gO.release = false;
+			// NEED TO BREAK OUT RELEASE INTO GESTURE OBJECT SPECIFIC RELEASES (N MATCH BREAKING)
+			// AND HAVE GENERAL TOUCH RELEASE AND A GENERAL DISTCRETE DISPATCH COMPLETE WITHOUT FORCING RELEASE
+			// ALSO NEED A WAY TO TAP WHEN STILL TOUCHING (HOLD+TAP OR DRAG+TAP)
 			
-		}
-
+			// TAP DISPATCH MUST BE TRIGGERED ON GESTURE STATE NOT GLOABAL RELEASE STATE
+			gO.start = false;
+			gO.release = false;
+			gO.complete = false;
 				/////// split
 				
 				/////// anchor
-		}	
+			
+		}
+
+				
+		//}	
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//public  read / write

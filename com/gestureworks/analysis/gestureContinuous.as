@@ -113,19 +113,6 @@ package com.gestureworks.analysis
 			// map dynamic cluster deltas results into gesture object
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			/*
-			for (i in ts.gO.pOList)
-				{	
-						for (j in ts.gO.pOList[i])
-						{
-								if ((ts.gO.pOList[i][j] is PropertyObject))
-								{
-									//ts.gO.pOList[i][j].clusterDelta = 0;
-									//ts.gO.pOList[i][j].gestureDelta = 0;
-								}
-						}
-				}
-			*/
 				
 			for (i in ts.gO.pOList)
 				{
@@ -148,9 +135,9 @@ package com.gestureworks.analysis
 									ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
 									
 									
-									
-					
-									
+									////////////////////////////////////////////////////////////////////////////////////////////
+									// easing block
+									////////////////////////////////////////////////////////////////////////////////////////////
 									/////////////////////////////////////////////////////////////////////////
 									// select new gesture delta or cached delta based
 									// baes on N activity
@@ -160,8 +147,11 @@ package com.gestureworks.analysis
 										// zero if required
 										if ((ts.N >= ts.gO.pOList[i].nMin) && (ts.N <= ts.gO.pOList[i].nMax) || (ts.N == ts.gO.pOList[i].n)) 
 										{
-											//ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
+											// fill cache with new values
 											ts.gO.pOList[i][j].gestureDeltaCache = ts.gO.pOList[i][j].gestureDelta;
+											
+											// set phase to active
+											ts.gO.pOList[i].active = true;
 											
 											// RESTART MATCHED DORMANT TWEEN THREADS
 											if (ts.gO.pOList[i][j].release_inertia)
@@ -176,6 +166,9 @@ package com.gestureworks.analysis
 											// when not meeting gesture calc conditions
 											// but still touching use cached delta
 											ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].gestureDeltaCache;
+											
+											// set phase to passive
+											ts.gO.pOList[i].passive = true;
 										}
 									}
 									else {
@@ -226,6 +219,10 @@ package com.gestureworks.analysis
 									else if ((ts.N < ts.gO.pOList[i].nMin)||(ts.N > ts.gO.pOList[i].nMax))
 									
 									{
+										// set to passive phase
+										ts.gO.pOList[i].passive = true;
+										ts.gO.pOList[i].active = false;
+										
 										//trace("test",ts.N, i);
 										if((ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
 										//if ((ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
@@ -251,11 +248,13 @@ package com.gestureworks.analysis
 										}
 										else {
 											ts.gO.pOList[i][j].gestureDelta = 0;
+											ts.gO.pOList[i][j].gestureDeltaCache =0;
 											//trace("shut down zero delta",ts.gO.pOList[i][j].gestureDelta);
 										}
 									}
-									/////////////////////////////////////////////////////////////////////////////////
-									
+									///////////////////////////////////////////////////////////////////////////////////////////
+									// easing block
+									///////////////////////////////////////////////////////////////////////////////////////////
 									
 									
 									
@@ -424,31 +423,61 @@ package com.gestureworks.analysis
 			}
 			
 			
-			
+			// check release
+			//if (ts.N == 0) ts.gO.release = true;
 			
 			
 			
 			////////////////////////////////////////
-			// tween shut down check
+			// accumulate gesture states to set global gesture object state
 			// check no gesture is tweening
-			// confirm gesture complete 
+			// confirm gesture states
 			////////////////////////////////////////
-			// shut down
-			ts.gestureTweenOn = false;
+			if(ts.gO.active){
 			
-			//Open back up if release inertia still on 
-			for (i in ts.gO.pOList)
-			{
-			for (j in ts.gO.pOList[i])
+				// close tween
+				ts.gestureTweenOn = false;
+				
+				// reset gesture event states
+				//ts.gO.start = false;
+				//ts.gO.active = false;
+				//ts.gO.release = false;
+				//ts.gO.passive = false;
+				//ts.gO.complete = false;
+				
+				//Open back up if release inertia still on 
+				for (i in ts.gO.pOList)
 				{
-				//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].gestureDimensionTweenOn)) ts.gestureTweenOn = true;
-				if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i][j].release_inertiaOn)) ts.gestureTweenOn = true;
+				for (j in ts.gO.pOList[i])
+					{
+						// will move to internal dimention check
+						// 
+						//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].gestureDimensionTweenOn)) ts.gestureTweenOn = true;
+						if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].release_inertiaOn)) ts.gestureTweenOn = true;
+					}
+					
+					// gesture object state cumulation
+					// from zero +N // check if touching with required N if so then gesture has started
+					//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i].start)) ts.start = true;
+					// check if touching with required N
+					//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i].active)) ts.active = true;
+					// if not touching with required N then release from gesture
+					//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i].release)) ts.release = true;
+					// easing processes still occuring on thread?
+					//if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i].passive)) ts.passive = true;
+					// when all thread processes are finished?
+					//if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i].complete)) ts.complete = true;
+				}
+				
+				//NOTE WILL NEED TO MAKE GESTURE OBJECT SPECIFIC
+				// global logic
+				 if ((!ts.gestureTweenOn)&&(ts.gO.passive)||(!ts.gestureTweenOn)&&(ts.gO.release)) // must force state to wait for passive phase change
+				 {
+					ts.gO.active = false;
+					ts.gO.passive = false;
+					ts.gO.complete = true;
 				}
 			}
-			
-			//NOTE WILL NEED TO MAKE GESTURE OBJECT SPECIFIC
-			if (!ts.gestureTweenOn) ts.gO.complete = true;
-			
 		}
 		
 		private function functionGenerator(type:String,b:Number,k:Number):Number {
@@ -516,6 +545,7 @@ package com.gestureworks.analysis
 			//trace(j,po.gestureDelta,count);
 		}*/
 		
+		/*
 		// SHOULD TARGET GESTURE OBJECT AND DIMENTION DIRECT AS ABOVE
 		public function restartGestureTween():void
 		{
@@ -564,6 +594,6 @@ package com.gestureworks.analysis
 			//trace("gesture tween reset");
 		}
 		//////////////////////////////////////////////////////////////////////////////////
-		
+		*/
 	}
 }

@@ -108,23 +108,40 @@ package com.gestureworks.core
 			_N = cO.n;
 			
 			// CLUSTER OBJECT UPDATE
-			if (_dN < 0) cO.point_remove = true; 
-			if (_dN > 0) cO.point_add = true; 
+			if (_dN < 0) {
+				cO.point_remove = true;
+				cO.point_add = false;
+			}
+			if (_dN > 0) {
+				cO.point_remove = false;
+				cO.point_add = true;
+				
+				
+			}
 			if ((_dN < 0) && (_N == 0)) cO.remove = true; 
 			if ((_dN > 0) && (_N == 1)) cO.add = true; 
 			if ((_dN != 0)&&(_clusterEvents)) manageClusterEventDispatch();
 			
+			
+			///////////////////////////////////////////////////
+			// move to pipeline
+			///////////////////////////////////////////////////
 			// GESTURE OBJECT UPDATE
-			if ((_N == 0) && (_dN < 0)) 
-			{
+			if (_dN > 0) gO.start = true;
+			
+			if ((_N == 0) && (_dN < 0)) {
 				gO.release = true;
+				gO.passive = true;
 			}
+			
 			if (_N != 0) 
 			{
-				gO.start = true;
+				gO.active = true;
 				gO.complete = false;
 				gO.release = false;
 			}
+			///////////////////////////////////////////////////
+			
 			
 		}
 		/**
