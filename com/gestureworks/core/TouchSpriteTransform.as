@@ -64,11 +64,11 @@ package com.gestureworks.core
 		private var dtheta:Number =  0;
 		
 		// 3d
-		private var dthetaX:Number =  0;
-		private var dthetaY:Number =  0;
-		private var dthetaZ:Number =  0;
+		//private var dthetaX:Number =  0;
+		//private var dthetaY:Number =  0;
+		//private var dthetaZ:Number =  0;
 		
-		private var transform_3d:Boolean = true;
+		//private var transform_3d:Boolean = true;
 		
 		private var centerTransform:Boolean = false;
 		
@@ -107,9 +107,9 @@ package com.gestureworks.core
 			_height = super.height;
 			
 			//3d
-			_rotationX = super.rotationX;
-			_rotationY = super.rotationY;
-			_rotationZ = super.rotationZ;
+			//_rotationX = super.rotationX;
+			//_rotationY = super.rotationY;
+			//_rotationZ = super.rotationZ;
 			
 			
 			// update transform object properties
@@ -121,9 +121,9 @@ package com.gestureworks.core
 			trO.obj_width = _width;
 			trO.obj_height = _height;
 			
-			trO.obj_rotationX = _rotationX;
-			trO.obj_rotationY = _rotationY;
-			trO.obj_rotationZ = _rotationZ;
+			//trO.obj_rotationX = _rotationX;
+			//trO.obj_rotationY = _rotationY;
+			//trO.obj_rotationZ = _rotationZ;
 		}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,10 +148,6 @@ package com.gestureworks.core
 				{
 					if (!trO.init_center_point) initTransformPoints();
 					
-					////////////////////////
-					//restartGestureTween();
-					///////////////////////
-					
 					centerTransform = false;
 					
 					if (_disableNativeTransform){
@@ -166,7 +162,6 @@ package com.gestureworks.core
 				}
 				
 				else if ((_N == 0) && (_gestureTweenOn) && (_gestureReleaseInertia)) 
-				//else if (_N == 0) //&& (_gestureTweenOn)&&(_gestureReleaseInertia)) 
 				{
 					//////////////////////////
 					//updateGestureValues();
@@ -274,9 +269,9 @@ package com.gestureworks.core
 				dsy =  trO.dsx;// trO.dsy;
 				dtheta = trO.dtheta * DEG_RAD;
 				
-				dthetaX = trO.dthetaX //* DEG_RAD;
-				dthetaY = trO.dthetaY //* DEG_RAD;
-				dthetaZ = trO.dthetaZ //* DEG_RAD;
+				//dthetaX = trO.dthetaX //* DEG_RAD;
+				//dthetaY = trO.dthetaY //* DEG_RAD;
+				//dthetaZ = trO.dthetaZ //* DEG_RAD;
 				
 				///////////////////////////////////////////////////////////////////////////////////
 				// 3d test
@@ -477,7 +472,7 @@ package com.gestureworks.core
 				trO.y = tpt.y;
 		}
 		
-		
+		/*
 		// rotationX property
 		public function get $rotationX():Number{return _rotationX;}
 		public function set $rotationX(value:Number):void
@@ -497,7 +492,7 @@ package com.gestureworks.core
 			_rotationZ = value;
 		}
 		
-		
+		*/
 		
 		
 		/**

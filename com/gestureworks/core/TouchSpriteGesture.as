@@ -112,7 +112,7 @@ package com.gestureworks.core
 
 				//trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
 			}	
-			trace("init timeline",tapOn);
+			trace("init timeline",tapOn,tiO.timelineOn);
 		}
 		
 		/**
@@ -166,15 +166,25 @@ package com.gestureworks.core
 		*/
 		public function onTouchEnd(event:TouchEvent):void
 		{
+			var tapCalled:Boolean = false;
+			
 			for (key in gO.pOList) 
 			{	
-			if ((gO.pOList[key].gesture_type == "tap") && (tapOn)) 	gesture_disc.findGestureTap(event, key) ; // tap event pairs
+			if ((gO.pOList[key].gesture_type == "tap") && (tapOn) && (!tapCalled)) 
+			{	
+				gesture_disc.findGestureTap(event, key) ; // tap event pairs
+				tapCalled = true; // if called by another gesture using tap do not call again
+				//trace("trace find tap");
+			}
 			
 			//fix
 			if (gO.pOList[key].gesture_type == "hold")				gO.pOList[key].complete = false;  // resets hold gesture
 			}
 			
 			gO.release = true;
+			
+			
+			trace("touch end");
 		}
 		
 		/**
@@ -183,14 +193,23 @@ package com.gestureworks.core
 		public function onGestureTap(event:GWGestureEvent):void
 		{
 			//trace("on gesture tap");
+			var dtapCalled:Boolean = false;
+			var ttapCalled:Boolean = false;
 			
 			for (key in gO.pOList) 
 			{	
 				// double taps
-				if (gO.pOList[key].gesture_type == "double_tap") 	gesture_disc.findGestureDoubleTap(event, key);
+				if ((gO.pOList[key].gesture_type == "double_tap") && (!dtapCalled))	
+				{
+					gesture_disc.findGestureDoubleTap(event, key);
+					dtapCalled = true;
+				}
 				// triple taps
-				//if (gO.pOList[key].gesture_type == "triple_tap")	gesture_disc.findGestureTripleTap(event,key);
-
+				if ((gO.pOList[key].gesture_type == "triple_tap")&& (!ttapCalled))
+				{
+					gesture_disc.findGestureTripleTap(event, key);
+					ttapCalled = true;
+				}
 			}
 		}
 		
@@ -220,30 +239,10 @@ package com.gestureworks.core
 				//trace("start fired");
 			}
 			
-			
-			// gesture OBJECT release gesture
-			if ((gO.release)&&(_gestureEventRelease))
-			{
-				dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-				gO.release = false;
-				//trace("release fired");
-			}
-			
-			
-			// gesture OBJECT complete event
-			if ((gO.complete)&&(_gestureEventComplete))
-			{
-				dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
-				gO.complete = false;
-				//trace("complete fired");
-			}
-			
+
 			/////////////////////////////////////////////////////////////////////////////////////////////////
 			// discrete gestures
 			/////////////////////////////////////////////////////////////////////////////////////////////////
-			//else {
 				
 			for (key in gO.pOList) 
 						{
@@ -435,6 +434,29 @@ package com.gestureworks.core
 						}
 			}
 		}
+			
+			// RELEASE GESTURE SWITCHES OFF RELEASE STATE SO MUST PROCESS ALL RELEASE BASED GESTURES FIRST
+			// gesture OBJECT release gesture
+			if ((gO.release)&&(_gestureEventRelease))
+			{
+				dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+				gO.release = false;
+				//trace("release fired");
+			}
+			
+			
+			// gesture OBJECT complete event
+			if ((gO.complete)&&(_gestureEventComplete))
+			{
+				dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
+				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
+				gO.complete = false;
+				//trace("complete fired");
+			}
+		
+		
+		
 			// so release is only sent once and other gestures dependent on it only get dispatched once
 			// NEED TO BREAK OUT RELEASE INTO GESTURE OBJECT SPECIFIC RELEASES (N MATCH BREAKING)
 			// AND HAVE GENERAL TOUCH RELEASE AND A GENERAL DISTCRETE DISPATCH COMPLETE WITHOUT FORCING RELEASE

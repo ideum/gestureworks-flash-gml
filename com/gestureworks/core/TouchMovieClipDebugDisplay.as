@@ -44,7 +44,7 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var cluster_orient:DebugClusterOrientation;
-		//private var cluster_vectordata:DebugClusterVectorData;
+		private var cluster_vectordata:DebugClusterVectorData;
 		
 		private var cluster_web:DebugClusterWeb;
 		/**
@@ -221,7 +221,7 @@ package com.gestureworks.core
 		for (var i:int = 0; i < numLayers; i++) {
 			var type:String = cml.DebugKit.DebugLayer[i].attribute("type")
 		
-			//if (type == "point_vectors") pointVectorsOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "point_vectors") pointVectorsOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			if (type == "point_shapes") pointShapesOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			
 			if (type == "cluster_box") clusterBoxOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
@@ -441,7 +441,7 @@ package com.gestureworks.core
 				if (_N >= 1) 
 				{
 					if(pointShapesOn)cluster_points.drawPoints();
-					//if (pointVectorsOn) cluster_vectors.drawVectors();
+					if (pointVectorsOn) cluster_vectors.drawVectors();
 					if (touchObjectTransformOn) touchObject_transform.drawTransform();
 					//if (clusterChartOn) cluster_chart.drawChart();
 					
@@ -522,11 +522,6 @@ package com.gestureworks.core
 	{
 		if (debug_display)
 			{
-			// move to timeline visualizer
-			// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
-			// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-			ClusterHistories.historyQueue(_touchObjectID);
-			TransformHistories.historyQueue(_touchObjectID);
 			clearDebugDisplay();
 			drawDebugDisplay();
 			}

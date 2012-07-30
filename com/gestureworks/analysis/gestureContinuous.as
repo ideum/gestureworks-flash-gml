@@ -135,89 +135,58 @@ package com.gestureworks.analysis
 									ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
 									
 									
+									
+									
+									
+									
+									
+									
 									////////////////////////////////////////////////////////////////////////////////////////////
 									// easing block
 									////////////////////////////////////////////////////////////////////////////////////////////
-									/////////////////////////////////////////////////////////////////////////
-									// select new gesture delta or cached delta based
-									// baes on N activity
+						
+									// select new gesture delta or cached delta based // based on N activity
 									if (ts.N!=0)
 									{
 										//when touching calculate new deltas 
-										// zero if required
 										if ((ts.N >= ts.gO.pOList[i].nMin) && (ts.N <= ts.gO.pOList[i].nMax) || (ts.N == ts.gO.pOList[i].n)) 
 										{
 											// fill cache with new values
 											ts.gO.pOList[i][j].gestureDeltaCache = ts.gO.pOList[i][j].gestureDelta;
-											
-											// set phase to active
-											ts.gO.pOList[i].active = true;
 											
 											// RESTART MATCHED DORMANT TWEEN THREADS
 											if (ts.gO.pOList[i][j].release_inertia)
 											{
 												ts.gO.pOList[i][j].release_inertiaOn = true;
 												ts.gO.pOList[i][j].release_inertia_count = 0;
-												//if (ts.trace_debug_mode) 
-												//trace("restart tween");
+												//if (ts.trace_debug_mode) trace("restart tween");
 											}
+											
+											// set phase 
+											ts.gO.pOList[i].active = true;
+											ts.gO.pOList[i].passive = false;
 										}
 										else {
 											// when not meeting gesture calc conditions
 											// but still touching use cached delta
 											ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].gestureDeltaCache;
 											
-											// set phase to passive
+											// set phase
 											ts.gO.pOList[i].passive = true;
+											ts.gO.pOList[i].active = false;
 										}
 									}
 									else {
 										// when not touching use cached delta
 										ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].gestureDeltaCache;
-										//trace("deltacache",ts.gO.pOList[i][j].gestureDelta);
+										
+										// set phase
+										ts.gO.pOList[i].passive = true;
+										ts.gO.pOList[i].active = false;
 									}
 									
-									///////////////////////////////////////////////////////////////////////////
-									// when not touching tween gesture delta
-									if (ts.N == 0)
-									{
-										if((ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
-										//if ((ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
-										{
-												//trace("tween ");
-												var count:uint = ts.gO.pOList[i][j].release_inertia_count++;
-
-												//if ((count > po.release_inertia_Maxcount) || (Math.abs(po.gestureDelta) < po.delta_min))
-												//if (Math.abs(po.gestureDelta) < po.delta_min)
-												if (count > ts.gO.pOList[i][j].release_inertia_Maxcount)
-												{
-													ts.gO.pOList[i][j].release_inertiaOn = false;
-													ts.gO.pOList[i][j].gestureDelta = 0;
-													//ts.gO.pOList[i][j].gestureDeltaCache =0;
-													ts.gO.pOList[i][j].release_inertia_count = 0;
-													//trace("tween limit zero delta",i,j,ts.gO.pOList[i][j].gestureDelta);
-												}
-												else if (ts.gO.pOList[i][j].gestureDelta!=0){
-													ts.gO.pOList[i][j].release_inertiaOn = true;
-													ts.gO.pOList[i][j].gestureDelta *= ts.gO.pOList[i][j].release_inertia_factor * Math.pow(ts.gO.pOList[i][j].release_inertia_base, count);
-													//trace("release tween ease delta", i,j,ts.gO.pOList[i][j].release_inertia_factor,Math.abs(ts.gO.pOList[i][j].gestureDelta),ts.gO.pOList[i][j].release_inertia_base,ts.gO.pOList[i][j].delta_min,count > ts.gO.pOList[i][j].release_inertia_Maxcount,(Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min, count));
-													}
-										}
-										else {
-											ts.gO.pOList[i][j].gestureDelta = 0;
-											ts.gO.pOList[i][j].gestureDeltaCache =0;
-											//trace("shut down zero delta",ts.gO.pOList[i][j].gestureDelta);
-										}
-									}
-									
-									
-									//////////////////////////////////////////////////////////////////////////////////
-									// when touching
-									// but when not matching n values
-									// tween cached deltas 
-									
-									else if ((ts.N < ts.gO.pOList[i].nMin)||(ts.N > ts.gO.pOList[i].nMax))
-									
+									// when touching but when not matching n values // or when not touching // tween cached deltas 
+									if ((ts.N < ts.gO.pOList[i].nMin)||(ts.N > ts.gO.pOList[i].nMax)||(ts.N == 0))
 									{
 										// set to passive phase
 										ts.gO.pOList[i].passive = true;
@@ -225,7 +194,6 @@ package com.gestureworks.analysis
 										
 										//trace("test",ts.N, i);
 										if((ts.gestureTweenOn)&&(ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
-										//if ((ts.gO.pOList[i][j].release_inertiaOn)&&(ts.gO.pOList[i][j].release_inertia))
 										{
 											var count:uint = ts.gO.pOList[i][j].release_inertia_count++;
 
@@ -237,13 +205,10 @@ package com.gestureworks.analysis
 													ts.gO.pOList[i][j].gestureDelta = 0;
 													//ts.gO.pOList[i][j].gestureDeltaCache =0;
 													ts.gO.pOList[i][j].release_inertia_count = 0;
-													//trace("tween limit zero delta",i,j,ts.gO.pOList[i][j].gestureDelta);
 												}
 												else if (ts.gO.pOList[i][j].gestureDelta!=0){
 													ts.gO.pOList[i][j].release_inertiaOn = true;
 													ts.gO.pOList[i][j].gestureDelta *= ts.gO.pOList[i][j].release_inertia_factor * Math.pow(ts.gO.pOList[i][j].release_inertia_base, count);
-												//	trace("1 finger tween ease delta", i,j,ts.gO.pOList[i][j].release_inertia_factor,Math.abs(ts.gO.pOList[i][j].gestureDelta),ts.gO.pOList[i][j].release_inertia_base,ts.gO.pOList[i][j].delta_min,count > ts.gO.pOList[i][j].release_inertia_Maxcount,(Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min, count));
-											
 													}
 										}
 										else {

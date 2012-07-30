@@ -402,7 +402,7 @@ package com.gestureworks.core
 				if (!target)
 					target = event.target; // object that got hit, used for our non-tuio gesture events
 				if (!target)
-					target = this; 
+					return; 
 				
 				var parent:* = target.parent;										
 			
@@ -414,9 +414,9 @@ package com.gestureworks.core
 				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
 				// -Charles (5/16/2012)
 				
-				if (1)
-				{
-					if (_targeting) { // COMPLEX TARGETING
+					if (1)
+					{
+					//if (_targeting) { // COMPLEX TARGETING
 						if (targetParent) { //LEGACY SUPPORT
 							if ((target is TouchSprite) || (target is TouchMovieClip)) 
 							{								
@@ -459,24 +459,13 @@ package com.gestureworks.core
 								//event.stopPropagation(); // allows touch down and tap
 							 }
 						}
-						
 					}
 					// SIMPLE TARGETING
 					else 
 					{
-						return
 						assignPoint(event);
-						//event.stopPropagation();
+						return
 					}
-					
-				}
-				// mouse events
-				else {
-					return										
-					//assignPoint(event);
-					//event.stopPropagation();
-				}
-				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 		}
 		
 
@@ -493,7 +482,6 @@ package com.gestureworks.core
 			var pointObject:PointObject  = new PointObject();					
 				pointObject.object = this; // sets primary touch object/cluster
 				pointObject.objectList.push(this); // seeds cluster/touch object list
-				
 				pointObject.id = pointCount;
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
@@ -508,13 +496,14 @@ package com.gestureworks.core
 				// increment point count on touch object
 				pointCount++;
 				
-				
+				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 
-				// regisiter touch point with touchmanager
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER
 				if (GestureWorks.supportsTouch) TouchManager.gw_public::registerTouchPoint(event);
 				
-				else MouseManager.gw_public::registerMousePoint(event);
+				// REGISTER MOUSE POINT WITH MOUSE MANAGER
+				else 								MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline
 				if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
@@ -526,18 +515,18 @@ package com.gestureworks.core
 		{
 				// assign existing point object
 				var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID]
-				// add this touch object to touchobject list on point
-				pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+					// add this touch object to touchobject list on point
+					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 	
 				//ADD TO LOCAL POINT LIST
 				_pointArray.push(pointObject);
 				
-				//UPDATE POINT LOCAL COUNT
-				pointCount++;
-				
 				//UPDATE LOCAL CLUSTER OBJECT
 				//touch object point list and cluster point list should be consolodated
 				cO.pointArray = _pointArray;
+				
+				//UPDATE POINT LOCAL COUNT
+				pointCount++;
 				
 				// add touch down to touch object gesture event timeline
 				if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array

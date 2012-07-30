@@ -485,7 +485,6 @@ package com.gestureworks.core
 				pointObject.object = this; // sets primary touch object/cluster
 				pointObject.objectList.push(this); // seeds cluster/touch object list
 				pointObject.id = pointCount; // NEEDED FOR THUMBID
-				//pointObject.event = event;
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
 				pointObject.y = event.stageY; 
@@ -498,18 +497,6 @@ package com.gestureworks.core
 				
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
-				
-				/*
-				var count:int = 0;
-				for each(var point:Object in GestureGlobals.gw_public::points)
-				//for each(var ts:Object in touchObjects)
-					{
-					count++;
-					//trace("what")
-					}
-				trace(count);
-				//return count;
-				*/
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;

@@ -75,11 +75,13 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
-			//if (ts.trace_debug_mode) 	trace("find taps---------------------------------------------------------", key, ts.gO.release);
+			//if (ts.trace_debug_mode) 
+			trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
-			var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
+			// CHECK GML COMPATABILITY
+			var tap_time:int = 10//Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
 			//var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10
-			var tap_dist:int = ts.gO.pOList[key]["tap_x"].point_translation_threshold;//10
+			var tap_dist:int = 10//ts.gO.pOList[key]["tap_x"].point_translation_threshold;//10
 			
 			
 			
@@ -280,7 +282,7 @@ package com.gestureworks.analysis
 		{
 			//if (ts.trace_debug_mode) trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
 			tapEventCount = 0;
-			var tap_countTime:int = 5;
+			var tap_countTime:int = 6//6; // 5 collects all tap from the last five frames // 1 only ever collects 1 tap
 			var tap_number:int = ts.gO.pOList[key].n;
 			var tap_x_mean:Number = 0
 			var tap_y_mean:Number = 0;

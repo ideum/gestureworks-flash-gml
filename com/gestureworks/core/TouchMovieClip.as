@@ -18,7 +18,7 @@ package com.gestureworks.core
 {
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
-	import flash.display.Stage;
+	//import flash.display.Stage;
 	
 	
 	/**

@@ -17,14 +17,9 @@ package com.gestureworks.core
 {
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
-	import flash.display.Stage;
+	//import flash.display.Stage;
 	
 	import flash.events.*;
-	
-	//import flash.events.TimerEvent
-	
-	import flash.utils.Timer;
-	import flash.system.System;
 	
 	/**
 	 * The TouchSprite class is representative of total multi touch integration into 
@@ -57,9 +52,6 @@ package com.gestureworks.core
 		 
        private function initTouchSprite():void 
         {	
-			// init gesrtures
-			//this.addEventListener(Event.ADDED_TO_STAGE, initGestures);
-			
 			// move to initGestures
 			this.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
 		}
