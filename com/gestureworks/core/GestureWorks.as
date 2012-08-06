@@ -13,8 +13,11 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.core
 {
+	import com.gestureworks.components.CMLDisplay;
+	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import com.gestureworks.utils.CMLLoader;
@@ -72,6 +75,8 @@ package com.gestureworks.core
 	
 	public class GestureWorks extends GestureWorksCore
 	{
+		public static var cmlDisplays:Array = [];
+		
 		/**
 		 * Returns the current version of GestureWorks.
 		 */
@@ -139,7 +144,6 @@ package com.gestureworks.core
 			// added to auto-switch to simulator
 			// -Charles (7/17/2012)
 			if (!supportsTouch) simulator = true;
-			
 			if (cmlSettingsPath) settingsPath = cmlSettingsPath;
 		}
 		
@@ -162,8 +166,10 @@ package com.gestureworks.core
 				try
 				{
 					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.components.CMLDisplay") as Class;
-					var componentDisplay:* = new CMLDisplay();
-					addChild(componentDisplay);
+					
+					var tmp:Sprite = new CMLDisplay;
+					cmlDisplays.push(tmp);
+					addChild(tmp);
 				}
 				catch (e:Error)
 				{
@@ -184,6 +190,7 @@ package com.gestureworks.core
 			
 			gestureworksInit();
 		}
+		
 		
 		/**
 		 * 
@@ -206,28 +213,40 @@ package com.gestureworks.core
 			}
 		}
 		
+		
 		private function CMLLoaderComplete(event:Event):void
-		{
+		{			
 			CML.Objects = CMLLoader.settings;
-			key = CMLLoader.settings.@key;
-			if (CML.Objects.@simulator == "true") Simulator.initialize();
-			if (CML.Objects.@tuio == "true") TUIO.initialize();
+						
+			if (key.length < 1)
+				key = CMLLoader.settings.@key;
+				
+			if (CML.Objects.@simulator == "true") 
+				simulator = true;
+			
+			if (CML.Objects.@tuio == "true") 
+				tuio = true;
+		
 			startGmlParse();
 		}
 		
+		
 		private function startGmlParse():void
-		{
-			var gmlPath:String = CML.Objects.@gml;
+		{			
+			var gmlPath:String = gml;
 			
-			if (gmlPath == "")
-			{
+			if (!gml || gml.length <= 1)
+				gmlPath = CML.Objects.@gml;
+					
+			if (!gml || gml.length <= 1) {
 				loadModeManager();
-				return;
-			}
+				return;				
+			}		
 			
 			GMLParser.settingsPath = gmlPath;
 			GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
 		}
+		
 		
 		private function gmlParserComplete(event:Event):void
 		{
@@ -235,12 +254,13 @@ package com.gestureworks.core
 			loadModeManager();
 		}
 		
+		
 		private function loadModeManager():void
 		{
 			if (parent.toString() != "[Object Stage]") _root = parent.root;
 			modeManager = new ModeManager(_root, key)
 			addChild(modeManager);
 		}
-	
+		
 	}
 }

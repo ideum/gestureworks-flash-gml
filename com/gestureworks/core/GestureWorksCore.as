@@ -54,16 +54,52 @@ package com.gestureworks.core
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		private var _settingsPath:String;
-		public function get settingsPath():String{return _settingsPath;}
-		public function set settingsPath(value:String):void
+
+		private var _gml:String;
+		/**
+		 * Sets gml file path. Path is relevant to application.
+		 */
+		public function get gml():String{return _gml;}
+		public function set gml(value:String):void
 		{
-			if (_settingsPath == value) return;
+			if (_gml == value) return;
+			_gml = value;
+		}		
+		
+		
+		private var _cml:String;
+		/**
+		 * Sets gml file path. Path is relevant to application.
+		 */
+		public function get cml():String{return _cml;}
+		public function set cml(value:String):void
+		{
+			if (_cml == value) return;
+			if (value == "") {
+				_cml = value;
+				return;
+			}
+			
+			_cml = value;
 			_settingsPath = value;
-			if(initialized) create();
+			if (initialized) create();
 		}
 		
-		private var _fullscreen:Boolean;
+		
+		private var _settingsPath:String;
+		[Deprecated(replacement="cml")] 		
+		public function get settingsPath():String{return _cml;}
+		public function set settingsPath(value:String):void
+		{
+			cml = value;
+		}		
+		
+		
+		private var _fullscreen:Boolean = false;
+		/**
+		 * Sets the application to fullscreen
+		 * @default false
+		 */
 		public function get fullscreen():Boolean{return _fullscreen;}
 		public function set fullscreen(value:Boolean):void
 		{
@@ -78,7 +114,11 @@ package com.gestureworks.core
 			stage.align = StageAlign.TOP_LEFT;
 		}
 		
+		
 		private var _key:String;
+		/**
+		 * Sets GestureWorks or OpenExhibits license key
+		 */
 		public function get key():String{return _key;}
 		public function set key(value:String):void
 		{
@@ -86,24 +126,42 @@ package com.gestureworks.core
 			_key = value;
 		}
 		
-		private var _simulator:Boolean;
+		
+		private var _simulator:Boolean = false;
+		/**
+		 * Turns on the mouse simulator.
+		 * @default false
+		 */
 		public function get simulator():Boolean{return _simulator;}
 		public function set simulator(value:Boolean):void
 		{
 			if (simulator == value) return;
 			_simulator = value;
-			Simulator.initialize(simulator);
+			
+			if (simulator)
+				Simulator.initialize(simulator);
 		}
 		
-		private var _tuio:Boolean;
+		
+		private var _tuio:Boolean = false;
+		/**
+		 * Turns TUIO input on. Currently only supported in AIR.
+		 * @default false
+		 */
 		public function get tuio():Boolean{return _tuio;}
 		public function set tuio(value:Boolean):void
 		{
 			if (tuio == value) return;
 			_tuio = value;
-			if (_tuio) TUIO.initialize();
+			
+			if (_tuio) 
+				TUIO.initialize();
 		}
-					
+		
+		
+		
+		// private methods //
+		
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
@@ -131,6 +189,9 @@ package com.gestureworks.core
 			clearInterval(timeInterval);
 			create();
 		}
+		
+		
+		// protected //
 		
 		protected function create():void{}
 		protected function gestureworksInit():void{}
