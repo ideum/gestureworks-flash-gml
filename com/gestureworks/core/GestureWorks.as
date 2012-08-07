@@ -217,8 +217,8 @@ package com.gestureworks.core
 		private function CMLLoaderComplete(event:Event):void
 		{			
 			CML.Objects = CMLLoader.settings;
-						
-			if (key.length < 1)
+					
+			if (!key || (key && key.length < 1))
 				key = CMLLoader.settings.@key;
 				
 			if (CML.Objects.@simulator == "true") 
