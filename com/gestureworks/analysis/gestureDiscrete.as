@@ -77,7 +77,8 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
 		{
-			//if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------", key, ts.gO.release);
+			//if (ts.trace_debug_mode) 
+			trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			// CHECK GML COMPATABILITY
 			var tap_time:int = 10//Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
@@ -281,7 +282,8 @@ package com.gestureworks.analysis
 		// VISUAL EVENT TIMLINE WOULD HELP
 		public function countTapEvents(key:String):void // count taps each frame
 		{
-			//if (ts.trace_debug_mode) trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
+			//if (ts.trace_debug_mode) 
+			trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
 			tapEventCount = 0;
 			var tap_countTime:int = 6//6; // 5 collects all tap from the last five frames // 1 only ever collects 1 tap
 			var tap_number:int = ts.gO.pOList[key].n;
@@ -332,6 +334,7 @@ package com.gestureworks.analysis
 							var spt:Point = new Point (tap_x_mean/tapEventCount, tap_y_mean/tapEventCount); // stage point average
 							var lpt:Point = ts.globalToLocal(spt); //local point average
 							ntapID++;
+							
 							//-var ntap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:spt.x, y:spt.y,  stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:ntapID, n:tapEventCount , id:key} )
 							//-ts.dispatchEvent(ntap_event);
 							//if (ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ntap_event);

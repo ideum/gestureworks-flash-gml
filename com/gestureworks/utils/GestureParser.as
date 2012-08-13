@@ -198,10 +198,9 @@ package com.gestureworks.utils
 
 													pOList[gesture_id][property_id].property_id = property_id;
 													//pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("type"));
-													pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
 													pOList[gesture_id][property_id].property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("var"));
-													
-													trace(pOList[gesture_id][property_id].property_var);
+													pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
+
 														//pOList[gesture_id][property_id].clusterDelta = 0; 
 														//pOList[gesture_id][property_id].processDelta = 0; 
 														//pOList[gesture_id][property_id].gestureDelta = 0;

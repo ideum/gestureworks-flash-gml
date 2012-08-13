@@ -334,7 +334,7 @@ package com.gestureworks.core
 					// continuous gesture events always dispatch each processing frame
 					else if (gO.pOList[key].dispatch_type == "continuous")
 					{
-						//gO.pOList[key].dispatchEvent = true;
+						gO.pOList[key].dispatchEvent = true;
 					}
 
 					//trace(key,gO.pOList[key].complete,gO.pOList[key].dispatchEvent,gO.pOList[key].activeEvent,gO.pOList[key] );
@@ -373,6 +373,7 @@ package com.gestureworks.core
 			//////////////////////////////////////////////
 			for (key in gO.pOList) 
 				{	
+					//trace(gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
 					if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
 				}
 				

@@ -43,6 +43,18 @@ package com.gestureworks.objects
 		}
 		
 		////////////////////////////////////////////////////////
+		// property var
+		private var _property_var:String;
+		
+		public function get property_var():String
+		{
+			return _property_var;
+		}
+		public function set property_var(value:String):void
+		{
+			_property_var = value;
+		}
+		
 		
 		// property type
 		private var _property_type:String;
@@ -55,6 +67,7 @@ package com.gestureworks.objects
 			_property_type = value;
 		}
 		
+		
 		// property id
 		private var _property_id:String;
 		public function get property_id():String
@@ -66,16 +79,7 @@ package com.gestureworks.objects
 			_property_id = value;
 		}
 		
-		// property var
-		private var _property_var:String = "test";
-		public function get property_var():String
-		{
-			return _property_var;
-		}
-		public function set property_var(value:String):void
-		{
-			_property_var = value;
-		}
+		
 		
 		////////////////////////////////////////////////////////
 		// general cluster thresholds

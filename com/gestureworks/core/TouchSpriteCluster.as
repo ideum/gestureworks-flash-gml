@@ -278,10 +278,8 @@ package com.gestureworks.core
 								for (DIM in gO.pOList[key])
 								{
 									if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
-								}
-									
-									
-								}
+								}	
+							}
 						}
 				
 						/*
