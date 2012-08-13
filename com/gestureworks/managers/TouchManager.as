@@ -29,7 +29,6 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GML;
 	
 	import com.gestureworks.utils.ArrangePoints;
-	//import com.gestureworks.managers.TouchUpdateManager;
 	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.events.GWEvent;
 	
@@ -247,27 +246,10 @@ package com.gestureworks.managers
 		public static function updateTouchObject(tO:Object):void
 		{
 				//trace("hello", ts, ts.N);
-				tO.updateClusterCount();
-				
-				// NEED TO MAKE GESTURE OBJECT SPECIFIC
-				// SOLVE ROTATE FLICK TWEEN PROBLEM
-				
-				// CLUSTER ANALYSIS UPDATES AND PROCESSING MUST OCCURE BASED 
-				// THE NUMBER OF TOUCH POINTS 
-				// HOW THE TOUCH POINTS ACTIVATE OR DEACTIVATE GESTURE OBJECTS
-				// FOR EXAMPLE IF N=1
-				// ROTATE MUST BE TWEENING
-				// SCALE MUST BE TWEENING
-				// BUT DRAG MUST STILL BE CALCULATING
-				
-				// THERFOR GESTURE PIPELINE MUST SWITCH SOURCE DELTAS WHEN TWEENING
-				// IF TWEENING PULL LAST GESTURE DELTA AND PROCESS IN PIPELINE
-				// IF NOT TWEENING PULL NEW CLUSTER DELTA
-				
 				// THERFOR CLUSTER ANALYSIS IS N SPECICIFC AND SELF MAMANGED SWITCHING
 				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
-				// 
-				tO.updateClusterAnalysis();
+				
+				tO.updateClusterAnalysis(); // cluster count is in cluster analysis
 				tO.updateProcessing();
 				tO.updateGesturePipeline();
 				tO.updateTransformation();

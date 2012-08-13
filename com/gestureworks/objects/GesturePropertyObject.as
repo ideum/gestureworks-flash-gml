@@ -19,6 +19,29 @@ package com.gestureworks.objects
 	public class GesturePropertyObject extends Object 
 	{
 		
+		// activeEvent
+		private var _activeEvent:Boolean = false;
+		public function get activeEvent():Boolean
+		{
+			return _activeEvent;
+		}
+		public function set activeEvent(value:Boolean):void
+		{
+			_activeEvent = value;
+		}
+		
+		// dispatchEvent
+		private var _dispatchEvent:Boolean = false;
+		public function get dispatchEvent():Boolean
+		{
+			return _dispatchEvent;
+		}
+		public function set dispatchEvent(value:Boolean):void
+		{
+			_dispatchEvent = value;
+		}
+		
+		
 		// gesture type
 		private var _gesture_type:String;
 		public function get gesture_type():String
@@ -50,6 +73,28 @@ package com.gestureworks.objects
 		public function set algorithm(value:String):void
 		{
 			_algorithm = value;
+		}
+		
+		// algorithm type
+		private var _algorithm_type:String;
+		public function get algorithm_type():String
+		{
+			return _algorithm_type;
+		}
+		public function set algorithm_type(value:String):void
+		{
+			_algorithm_type = value;
+		}
+		
+		// algorithm class
+		private var _algorithm_class:String;
+		public function get algorithm_class():String
+		{
+			return _algorithm_class;
+		}
+		public function set algorithm_class(value:String):void
+		{
+			_algorithm_class = value;
 		}
 		
 		/////////////////////////////
@@ -87,17 +132,16 @@ package com.gestureworks.objects
 			_nMin = value;
 		}
 		
-		// activeEvent
-		private var _activeEvent:Boolean = false;
-		public function get activeEvent():Boolean
+		// event dipatch type
+		private var _dispatch_type:String;
+		public function get dispatch_type():String
 		{
-			return _activeEvent;
+			return _dispatch_type;
 		}
-		public function set activeEvent(value:Boolean):void
+		public function set dispatch_type(value:String):void
 		{
-			_activeEvent = value;
+			_dispatch_type = value;
 		}
-		
 		
 		///////////////////////////////////////////////////
 		// GESTURE EVENT PHASE LOGIC
@@ -157,6 +201,15 @@ package com.gestureworks.objects
 			_complete = value;
 		}
 		
-		
+		// data object
+		private var _data:Object = new Object();
+		public function get data():Object
+		{
+			return _data;
+		}
+		public function set data(value:Object):void
+		{
+			_data = value;
+		}
 	}
 }

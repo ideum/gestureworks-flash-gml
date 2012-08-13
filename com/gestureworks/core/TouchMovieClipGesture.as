@@ -184,13 +184,23 @@ package com.gestureworks.core
 		{
 			//trace("on gesture tap");
 			
+			var dtapCalled:Boolean = false;
+			var ttapCalled:Boolean = false;
+			
 			for (key in gO.pOList) 
 			{	
 				// double taps
-				if (gO.pOList[key].gesture_type == "double_tap") 	gesture_disc.findGestureDoubleTap(event, key);
+				if ((gO.pOList[key].gesture_type == "double_tap") && (!dtapCalled))	
+				{
+					gesture_disc.findGestureDoubleTap(event, key);
+					dtapCalled = true;
+				}
 				// triple taps
-				//if (gO.pOList[key].gesture_type == "triple_tap")	gesture_disc.findGestureTripleTap(event,key);
-
+				if ((gO.pOList[key].gesture_type == "triple_tap")&& (!ttapCalled))
+				{
+					gesture_disc.findGestureTripleTap(event, key);
+					ttapCalled = true;
+				}
 			}
 		}
 		
@@ -228,7 +238,7 @@ package com.gestureworks.core
 				
 			for (key in gO.pOList) 
 						{
-			
+				// discrete dispatch on release
 				if (gO.release)//if (gO[key].release)
 					{
 					//trace("discrete release",gO.pOList[key].gesture_type );
@@ -316,8 +326,11 @@ package com.gestureworks.core
 				//trace("continuous");
 				
 				// hold gesture
+				// DISCREATE DISPATCH ON MATCH
+				// CONTINUOUS ANALYSIS
 				// need sub cluster to properly handle hold_x, hold_y and holdLockCount
 				
+				/*
 				if (gO.pOList[key].gesture_type == "hold")
 				{
 					var hold_number:int = gO.pOList[key].n;
@@ -337,17 +350,18 @@ package com.gestureworks.core
 							}
 						}
 				}
+				*/
 				//////////////////////////////////////////////////////////////////////////////
 				// 
 				
-						if (gO.pOList[key].activeEvent) 
-						{
+				if (gO.pOList[key].activeEvent) 
+					{
 							
 							trace("testing all attached gestures",gO.pOList[key].activeEvent, key);
 							
 							// transform center point
 							var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-							// transform vector components
+							// transform vector components.. NOTE OCCURES AUTOMATICALLY WHEN USING NATIVE BUT NOT YET WITH GESTURE EVENTS
 							// 
 							
 							var Data:Object = new Object();
@@ -359,6 +373,15 @@ package com.gestureworks.core
 								
 								Data["n"] = new Object();
 								Data["n"] = N;
+								
+								Data["hold_n"] = new Object();
+								Data["hold_n"] = cO.hold_n;
+								
+								Data["hold_x"] = new Object();
+								Data["hold_x"] = cO.hold_x;
+								
+								Data["hold_y"] = new Object();
+								Data["hold_y"] = cO.hold_y;
 								
 								Data["stageX"] = new Object();
 								Data["stageX"] = cO.x;
@@ -398,6 +421,11 @@ package com.gestureworks.core
 						/////// split
 						
 						/////// anchor
+						
+						// close event for this dispatch cycle
+						gO.pOList[key].activeEvent = false;
+						// set gesture event phase logic
+						gO.pOList[key].complete = true;
 			}
 		}
 		

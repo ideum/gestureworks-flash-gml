@@ -146,7 +146,19 @@ package com.gestureworks.utils
 												//pOList[gesture_id].processing_rate = processing_rate;
 												pOList[gesture_id].gesture_id = gesture_id;
 												pOList[gesture_id].gesture_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
+												
 												pOList[gesture_id].algorithm = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.library.attribute("module"));
+												pOList[gesture_id].algorithm_class = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("class"));
+												pOList[gesture_id].algorithm_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("type"));
+												
+												pOList[gesture_id].dispatch_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch"));
+												pOList[gesture_id].dispatch_reset = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("reset"));
+												
+												pOList[gesture_id].dispatchEvent = false;
+												pOList[gesture_id].activeEvent = false;
+												pOList[gesture_id].complete = false;
+												
+												
 												
 												// if initial action defined
 													if (gml.Gesture_set[0].Gesture[i].match.action.initial)
@@ -187,7 +199,9 @@ package com.gestureworks.utils
 													pOList[gesture_id][property_id].property_id = property_id;
 													//pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("type"));
 													pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
+													pOList[gesture_id][property_id].property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("var"));
 													
+													trace(pOList[gesture_id][property_id].property_var);
 														//pOList[gesture_id][property_id].clusterDelta = 0; 
 														//pOList[gesture_id][property_id].processDelta = 0; 
 														//pOList[gesture_id][property_id].gestureDelta = 0;
@@ -261,10 +275,21 @@ package com.gestureworks.utils
 														if (gml.Gesture_set[0].Gesture[i].match.action.initial.cluster)
 														{
 															// set cluster action thresholds
-															pOList[gesture_id][property_id].cluster_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_threshold"));
-															pOList[gesture_id][property_id].cluster_rotation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_threshold"));
-															pOList[gesture_id][property_id].cluster_separation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_threshold"));
-															pOList[gesture_id][property_id].cluster_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_threshold"));
+															//pOList[gesture_id][property_id].cluster_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_threshold"));
+															//pOList[gesture_id][property_id].cluster_rotation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_threshold"));
+															//pOList[gesture_id][property_id].cluster_separation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_threshold"));
+															
+															pOList[gesture_id][property_id].cluster_translation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_min"));
+															pOList[gesture_id][property_id].cluster_translation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_max"));
+															
+															pOList[gesture_id][property_id].cluster_rotation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_min"));
+															pOList[gesture_id][property_id].cluster_rotation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_max"));
+															
+															pOList[gesture_id][property_id].cluster_separation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_min"));
+															pOList[gesture_id][property_id].cluster_separation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_max"));
+															
+															pOList[gesture_id][property_id].cluster_acceleration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_min"));
+															pOList[gesture_id][property_id].cluster_acceleration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_max"));
 														
 														}
 		

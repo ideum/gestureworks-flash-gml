@@ -119,7 +119,7 @@ package com.gestureworks.analysis
 					if (ts.gestureList[i])
 					{
 						// reset gesture event status
-						ts.gO.pOList[i].activeEvent = false;
+						//ts.gO.pOList[i].activeEvent = false; //TURNS OFF HOLD AND OTHER ACTIVE EVENTS THAT HAVE NOT DELTAS?? NEED ALTERNATIVE
 				
 						
 						for (j in ts.gO.pOList[i])

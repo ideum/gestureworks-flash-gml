@@ -27,7 +27,8 @@ package com.gestureworks.events
 		public static var START:String = "start";
 		public static var COMPLETE:String = "complete";
 		public static var RELEASE:String = "release";
-				
+		
+		// kine-metric
 		public static var MANIPULATE:String = "manipulate";
 		public static var DRAG:String = "drag";
 		public static var SWIPE:String = "swipe";
@@ -38,12 +39,23 @@ package com.gestureworks.events
 		public static var PIVOT:String = "pivot";
 		public static var TILT:String = "tilt";
 		public static var ORIENT:String = "orient";
-				
 		public static var HOLD:String = "hold";
+		public static var SPIRAL:String = "spiral";
+		public static var SPLIT:String = "split";
+		
+		// temproal-metric	
 		public static var TAP:String = "tap";
 		public static var DOUBLE_TAP:String = "double_tap";
 		public static var TRIPLE_TAP:String = "triple_tap";
+		//public static var PRESURE_TAP:String = "presure_tap";
+		//public static var RYTHM_TAP:String = "rythm_tap";
 		
+		// geo-metric
+		// public static var CLUSTER_TRIANGLE:String = "point_triangle";
+		// public static var CLUSTER_RECTANGLE:String = "point_rectagle";
+		// public static var CLUSTER_LINE:String = "point_line";
+		
+		// vector-metric
 		public static var STROKE:String = "stroke";
 		//public static var STROKE_LETTER:String = "letter";
 		//public static var STROKE_GREEK:String = "greek";
@@ -51,11 +63,21 @@ package com.gestureworks.events
 		//public static var STROKE_SHAPE:String = "shape";
 		//public static var STROKE_NUMBER:String = "number";
 		
-		//public static var ANCHOR:String = "anchor";
-		//public static var ANCHOR_TAP:String = "anchor";
-		//public static var ANCHOR_ROTATE:String = "anchor";
-		//public static var ANCHOR_SCALE:String = "anchor";
-		//public static var ANCHOR_FLICK:String = "anchor";
+		////////////////////////////////////////////////////////////
+		// serial gestures (anchor)// HOLD + TAP
+		////////////////////////////////////////////////////////////
+		
+		//public static var HOLD_TAP:String = "hold_tap";
+		//public static var HOLD_FLICK:String = "hold_drag";
+		//public static var HOLD_ROTATE:String = "hold_rotate";
+		//public static var HOLD_SCALE:String = "hold_scale";
+		//public static var HOLD_FLICK:String = "hold_flick";
+		//public static var HOLD_STROKE:String = "hold_stroke";
+		
+		
+		///////////////////////////////////////////////////////////
+		// gloabal gestures
+		///////////////////////////////////////////////////////////
 		
 		//public static var PULSE:String = "pulse";
 		//public static var FLEX:String = "flex";
@@ -73,7 +95,7 @@ package com.gestureworks.events
 		//public static var HOME:String = "home";
 		
 	
-		public static var CUSTOM:Object = 
+		public static var GML:Object = 
 			{
 				SEED_GESTURE:"seed gesture",
 				NEW_GESTURE:"new gesture",

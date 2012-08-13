@@ -71,12 +71,19 @@ package com.gestureworks.core
 			if (hasEventListener(GWGestureEvent.SCALE)) trace("has scale listener");
 			if (hasEventListener(GWGestureEvent.ROTATE)) trace("has rotate listener");
 			
-			if (hasEventListener(GWGestureEvent.CUSTOM.NEW_GESTURE)) trace("has custom listener");
-			if (hasEventListener(GWGestureEvent.CUSTOM.SEED_GESTURE)) trace("has seed listener");
-			if (hasEventListener(GWGestureEvent.CUSTOM.EXAMPLE_GESTURE)) trace("has example listener");
+			//if (hasEventListener(GWGestureEvent.CUSTOM.NEW_GESTURE)) trace("has custom listener");
+			//if (hasEventListener(GWGestureEvent.CUSTOM.SEED_GESTURE)) trace("has seed listener");
+			//if (hasEventListener(GWGestureEvent.CUSTOM.EXAMPLE_GESTURE)) trace("has example listener");
 			
-			if (hasEventListener(GWGestureEvent.CUSTOM.N_DRAG)) trace("has n-drag listener");
-			if (hasEventListener(GWGestureEvent.CUSTOM.THREE_FINGER_DRAG)) trace("has 3-finger-drag listener");
+			//if (hasEventListener(GWGestureEvent.CUSTOM.N_DRAG)) trace("has n-drag listener");
+			//if (hasEventListener(GWGestureEvent.CUSTOM.THREE_FINGER_DRAG)) trace("has 3-finger-drag listener");
+			
+			if (hasEventListener(GWGestureEvent.GML.NEW_GESTURE)) trace("has custom listener");
+			if (hasEventListener(GWGestureEvent.GML.SEED_GESTURE)) trace("has seed listener");
+			if (hasEventListener(GWGestureEvent.GML.EXAMPLE_GESTURE)) trace("has example listener");
+			
+			if (hasEventListener(GWGestureEvent.GML.N_DRAG)) trace("has n-drag listener");
+			if (hasEventListener(GWGestureEvent.GML.THREE_FINGER_DRAG)) trace("has 3-finger-drag listener");
 			
 			
 			//TEST THIS

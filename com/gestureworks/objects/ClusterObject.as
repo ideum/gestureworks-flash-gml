@@ -245,14 +245,14 @@ package com.gestureworks.objects
 		}
 		
 		// c_locked---------------------
-		private var _locked:int = 0;
-		public function get locked():int
+		private var _hold_n:int = 0;
+		public function get hold_n():int
 		{
-			return _locked;
+			return _hold_n;
 		}
-		public function set locked(value:int):void
+		public function set hold_n(value:int):void
 		{
-			_locked = value;
+			_hold_n = value;
 		}
 		
 		
@@ -354,6 +354,17 @@ package com.gestureworks.objects
 		public function set dtheta(value:Number):void
 		{
 			_dtheta = value;
+		}
+		
+		// pivot_dtheta ------------------
+		private var _pivot_dtheta:Number = 0;
+		public function get pivot_dtheta():Number
+		{
+			return _pivot_dtheta;
+		}
+		public function set pivot_dtheta(value:Number):void
+		{
+			_pivot_dtheta = value;
 		}
 		
 		// mdx---------------------

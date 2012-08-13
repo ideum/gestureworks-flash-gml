@@ -270,7 +270,7 @@ package com.gestureworks.core
 							gO.pOList[key]["rotate_dtheta"].clusterDelta = cluster_kinemetric.c_dtheta; //rotate_dtheta
 						}	
 						
-						
+						/*
 						
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -282,7 +282,7 @@ package com.gestureworks.core
 						
 							cluster_kinemetric.findMeanInstPosition();
 								
-							var pt:Point = cluster_kinemetric.findInstOrientation();
+							//var pt:Point = cluster_kinemetric.findInstOrientation();
 							
 							//NEED TO PUSH OUT ORIENTATION ANGLE
 							// TO CLUSTER ROTATION
@@ -290,7 +290,7 @@ package com.gestureworks.core
 							gO.pOList[key]["orient_dx"].clusterDelta = pt.x;
 							gO.pOList[key]["orient_dy"].clusterDelta = pt.y;
 						}
-						
+						*/
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// BASIC PIVOT CONTROL // ALGORITHM
@@ -298,10 +298,11 @@ package com.gestureworks.core
 			
 						if (gO.pOList[key].algorithm == "pivot")
 						{
-							if (trace_debug_mode) trace("cluster pivot algorithm");
+							//if (trace_debug_mode) 
+							trace("cluster pivot algorithm");
 
 							// assign value to property object
-							gO.pOList[key]["pivot_dtheta"].clusterDelta = cluster_kinemetric.findInstPivot(gO.pOList[key].cluster_rotation_threshold);//cluster_kinemetric.pivot_dtheta;
+						//	gO.pOList[key]["pivot_dtheta"].clusterDelta = cluster_kinemetric.findInstPivot(gO.pOList[key].cluster_rotation_threshold);//cluster_kinemetric.pivot_dtheta;
 							//trace("pivot");
 							}
 						
@@ -312,6 +313,7 @@ package com.gestureworks.core
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// SHOULD BE DISCRETE ON RELEASE CHECK FOR ACCELERATION
 						// IF ABOVE ACCEL THREHOLD RETURN GESTURE
+						/*
 						if (gO.pOList[key].algorithm == "flick")
 						{
 							var flick_threshold:Number = gO.pOList[key]["flick_dx"].cluster_acceleration_threshold; //accleration threshold
@@ -394,7 +396,7 @@ package com.gestureworks.core
 								
 							//trace("scroll, velocity",etmVel.x,etmVel.y)
 						}
-						
+						*/
 						
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -405,21 +407,19 @@ package com.gestureworks.core
 						if (gO.pOList[key].algorithm == "tilt")
 						{
 							if (trace_debug_mode) trace("cluster tilt algorithm"); 
+
+							cluster_kinemetric.findMeanInstSeparationXY();
 							
-							// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
-							var tilt_threshold:Number = gO.pOList[key]["tilt_dx"].cluster_separation_threshold;
-									
-							//////////////////////////////////////////////////////////////////
-							// STANDARD OPERATION	
-							///////////////////////////////////////////////////////////////////
-							var pt_tilt:Point = cluster_kinemetric.findMeanInstSeparationXY();
-									
-							if (Math.abs(pt_tilt.x) > tilt_threshold) pt_tilt.y = 0;
-							if (Math.abs(pt_tilt.y) > tilt_threshold) pt_tilt.x = 0;
-									
-							gO.pOList[key]["tilt_dx"].clusterDelta = pt_tilt.x; //tilt_dx
-							gO.pOList[key]["tilt_dy"].clusterDelta = pt_tilt.y; //tilt_dy
-							//trace("TILT seperation",c_dsx,c_dsy)
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) 
+								{
+									// min limits
+									if (Math.abs(cO[gO.pOList[key][DIM].property_var]) < gO.pOList[key][DIM].cluster_seperation_min) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+									else gO.pOList[key][DIM].clusterDelta = 0;
+								}
+							}
+							
 						}	
 				}
 			}

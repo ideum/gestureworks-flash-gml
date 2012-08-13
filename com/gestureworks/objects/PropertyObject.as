@@ -66,49 +66,101 @@ package com.gestureworks.objects
 			_property_id = value;
 		}
 		
+		// property var
+		private var _property_var:String = "test";
+		public function get property_var():String
+		{
+			return _property_var;
+		}
+		public function set property_var(value:String):void
+		{
+			_property_var = value;
+		}
+		
 		////////////////////////////////////////////////////////
 		// general cluster thresholds
 		///////////////////////////////////////////////////////
 		
-		private var _cluster_translation_threshold:Number = 0;
-		public function get cluster_translation_threshold():Number
+		private var _cluster_translation_min:Number = 0;
+		public function get cluster_translation_min():Number
 		{
-			return _cluster_translation_threshold;
+			return _cluster_translation_min;
 		}
-		public function set cluster_translation_threshold(value:Number):void
+		public function set cluster_translation_min(value:Number):void
 		{
-			_cluster_translation_threshold = value;
+			_cluster_translation_min = value;
 		}
-		
-		private var _cluster_separation_threshold:Number = 0;
-		public function get cluster_separation_threshold():Number
+		private var _cluster_translation_max:Number = 0;
+		public function get cluster_translation_max():Number
 		{
-			return _cluster_separation_threshold;
+			return _cluster_translation_max;
 		}
-		public function set cluster_separation_threshold(value:Number):void
+		public function set cluster_translation_max(value:Number):void
 		{
-			_cluster_separation_threshold = value;
-		}
-		
-		private var _cluster_rotation_threshold:Number = 0;
-		public function get cluster_rotation_threshold():Number
-		{
-			return _cluster_rotation_threshold;
-		}
-		public function set cluster_rotation_threshold(value:Number):void
-		{
-			_cluster_rotation_threshold = value;
+			_cluster_translation_max = value;
 		}
 		
-		private var _cluster_acceleration_threshold:Number = 0;
-		public function get cluster_acceleration_threshold():Number
+		private var _cluster_separation_min:Number = 0;
+		public function get cluster_separation_min():Number
 		{
-			return _cluster_acceleration_threshold;
+			return _cluster_separation_min;
 		}
-		public function set cluster_acceleration_threshold(value:Number):void
+		public function set cluster_separation_min(value:Number):void
 		{
-			_cluster_acceleration_threshold = value;
+			_cluster_separation_min = value;
 		}
+		private var _cluster_separation_max:Number = 0;
+		public function get cluster_separation_max():Number
+		{
+			return _cluster_separation_max;
+		}
+		public function set cluster_separation_max(value:Number):void
+		{
+			_cluster_separation_max = value;
+		}
+		
+		private var _cluster_rotation_min:Number = 0;
+		public function get cluster_rotation_min():Number
+		{
+			return _cluster_rotation_min;
+		}
+		public function set cluster_rotation_min(value:Number):void
+		{
+			_cluster_rotation_min = value;
+		}
+		private var _cluster_rotation_max:Number = 0;
+		public function get cluster_rotation_max():Number
+		{
+			return _cluster_rotation_max;
+		}
+		public function set cluster_rotation_max(value:Number):void
+		{
+			_cluster_rotation_max = value;
+		}
+		
+		private var _cluster_acceleration_min:Number = 0;
+		public function get cluster_acceleration_min():Number
+		{
+			return _cluster_acceleration_min;
+		}
+		public function set cluster_acceleration_min(value:Number):void
+		{
+			_cluster_acceleration_min = value;
+		}
+		
+		private var _cluster_acceleration_max:Number = 0;
+		public function get cluster_acceleration_max():Number
+		{
+			return _cluster_acceleration_max;
+		}
+		public function set cluster_acceleration_max(value:Number):void
+		{
+			_cluster_acceleration_max = value;
+		}
+		
+		
+		
+		
 		
 		private var _cluster_event_duration_threshold:Number = 0;
 		public function get cluster_event_duration_threshold():Number
@@ -175,6 +227,37 @@ package com.gestureworks.objects
 		
 		////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////
+		// gesture object vector
+		private var _clusterVector:Vector //=  new Vector.<Number>();
+		public function get clusterVector():Vector
+		{
+			return _clusterVector;
+		}
+		public function set clusterVector(value:Vector):void
+		{
+			_clusterVector = value;
+		}
+		private var _processVector:Vector //= new Vector.<Number>();;
+		public function get processVector():Vector
+		{
+			return _processVector;
+		}
+		public function set processVector(value:Vector):void
+		{
+			_processVector = value;
+		}
+		private var _gestureVector:Vector //= new Vector.<Number>();;
+		public function get gestureVector():Vector
+		{
+			return _gestureVector;
+		}
+		public function set gestureVector(value:Vector):void
+		{
+			_gestureVector = value;
+		}
+		
+		
+		//dimention values
 		private var _clusterValue:Number = 0;
 		public function get clusterValue():Number
 		{
@@ -203,6 +286,7 @@ package com.gestureworks.objects
 			_gestureValue = value;
 		}
 		
+		//dimention deltas
 		private var _clusterDelta:Number = 0;
 		public function get clusterDelta():Number
 		{
