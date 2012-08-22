@@ -407,7 +407,7 @@ package com.gestureworks.core
 					
 				var parent:* = target.parent;										
 				
-				//trace("target: ", target.id, "parent: ", target.parent)
+				//trace("target: ", target, "parent: ", target.parent,clusterBubbling)
 				//trace(target, event.stageX, event.localX);
 				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
 				
@@ -445,7 +445,8 @@ package com.gestureworks.core
 						}
 						
 						else if (_clusterBubbling)
-						{							
+						{		
+							//trace(event.eventPhase)
 							if (3 == event.eventPhase){ // bubling phase
 								assignPointClone(event);
 							}
@@ -516,7 +517,7 @@ package com.gestureworks.core
 		private function assignPointClone(event:TouchEvent):void // assigns point copy
 		{
 				// assign existing point object
-				var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID]
+				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
 					// add this touch object to touchobject list on point
 					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 	

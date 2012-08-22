@@ -213,8 +213,8 @@ package com.gestureworks.core
 				if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = 0;		
 				}
 				
-				
-				if(_N!=0){		
+				// processing algorithms when in touch
+				if(_N!=0){		// check kinemetric and if continuous analysis
 				// check point number requirements
 				if((_N >= gO.pOList[key].nMin)&&(_N <= gO.pOList[key].nMax)||(_N == gO.pOList[key].n))
 				{
@@ -280,6 +280,9 @@ package com.gestureworks.core
 									if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
 								}	
 							}
+							gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}
 				
 						/*
@@ -314,6 +317,10 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
 							}
+								
+								gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 							
 						}
 						
@@ -333,6 +340,10 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
 							}
+							
+								gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}
 	
 						
@@ -349,6 +360,9 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
 							}
+							gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}	
 						
 						
@@ -371,6 +385,10 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
 							}
+							
+							gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}
 						
 						
@@ -388,6 +406,10 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
 							}
+							
+							gO.pOList[key].x = cO.x;
+							gO.pOList[key].y = cO.y;
+							gO.pOList[key].n = cO.n;
 						}
 						
 						
@@ -436,8 +458,16 @@ package com.gestureworks.core
 									//else gO.pOList[key][DIM].clusterDelta = 0;
 									
 									gO.pOList[key][DIM].clusterDelta = flick_etm_vel[gO.pOList[key][DIM].property_var];
+									//trace("flick",gO.pOList[key][DIM].clusterDelta)
 								}
+								
+								gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
+								
 							}
+							
+							
 						}
 			
 						
@@ -602,6 +632,9 @@ package com.gestureworks.core
 						}	
 				}
 			}
+			//else {
+				//trace("processing algorithm when NOT touching");
+			//}
 
 			}
 			

@@ -213,7 +213,10 @@ package com.gestureworks.analysis
 										}
 										else {
 											ts.gO.pOList[i][j].gestureDelta = 0;
-											ts.gO.pOList[i][j].gestureDeltaCache =0;
+											
+											//NEED CHACHEING FOR FLICK AND SWIPE
+											//ts.gO.pOList[i][j].gestureDeltaCache = 0;
+											
 											//trace("shut down zero delta",ts.gO.pOList[i][j].gestureDelta);
 										}
 									}

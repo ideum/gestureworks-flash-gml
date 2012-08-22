@@ -97,25 +97,53 @@ package com.gestureworks.core
 		// internal public
 		public function updateClusterCount():void 
 		{
+			//trace("update cluster count");
+			
 			// FIND CLUSTER COUNT
 			cO.n = cO.pointArray.length
 			_dN = cO.n - _N;
 			_N = cO.n;
 			
+			
+			
 			// CLUSTER OBJECT UPDATE
-			if (_dN < 0) {
-				cO.point_remove = true;
-				cO.point_add = false;
+			
+			// reset cluster states
+			cO.point_remove = false;
+			cO.point_add = false;
+			cO.remove = false; 
+			cO.add = false;
+			
+			
+				if (_dN < 0) 
+				{
+					cO.point_remove = true;
+					//cO.point_add = false;
+					
+					if (_N == 0) 
+					{
+						cO.remove = true; 
+						//cO.add = false;
+					}
+				}
+				else if (_dN > 0) 
+				{
+					//cO.point_remove = false;
+					cO.point_add = true;
+					
+					if (_N != 0)
+					{
+						//cO.remove = false; 
+						cO.add = true; 
+					}
+				}
+			
+			if (_dN != 0)
+			{
+				if (_clusterEvents) manageClusterEventDispatch();
 			}
-			if (_dN > 0) {
-				cO.point_remove = false;
-				cO.point_add = true;
-				
-				
-			}
-			if ((_dN < 0) && (_N == 0)) cO.remove = true; 
-			if ((_dN > 0) && (_N == 1)) cO.add = true; 
-			if ((_dN != 0)&&(_clusterEvents)) manageClusterEventDispatch();
+			//trace(_dN, _N, cO.point_remove,cO.point_add,cO.remove,cO.add)
+			
 			
 			
 			///////////////////////////////////////////////////
@@ -124,18 +152,22 @@ package com.gestureworks.core
 			// GESTURE OBJECT UPDATE
 			if (_dN > 0) gO.start = true;
 			
-			if ((_N == 0) && (_dN < 0)) {
-				gO.release = true;
-				gO.passive = true;
-			}
-			
 			if (_N != 0) 
 			{
 				gO.active = true;
 				gO.complete = false;
 				gO.release = false;
 			}
+			else {
+				if (_dN < 0) 
+				{
+					gO.release = true;
+					gO.passive = true;
+				}
+			}
 			///////////////////////////////////////////////////
+			
+			//trace(_dN, _N, cO.point_remove);
 		}
 		/**
 		* @private
@@ -165,9 +197,6 @@ package com.gestureworks.core
 			
 			for (key in gO.pOList)
 			{
-				//trace(gO.pOList[key].algorithm, _N, gO.pOList[key].n)
-				
-				
 				// zero cluster deltas
 				var DIM:String = ""; 
 				for (DIM in gO.pOList[key])
@@ -175,8 +204,8 @@ package com.gestureworks.core
 				if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = 0;		
 				}
 				
-				
-				if(_N!=0){		
+				// processing algorithms when in touch
+				if(_N!=0){		// check kinemetric and if continuous analysis
 				// check point number requirements
 				if((_N >= gO.pOList[key].nMin)&&(_N <= gO.pOList[key].nMax)||(_N == gO.pOList[key].n))
 				{
@@ -192,13 +221,21 @@ package com.gestureworks.core
 						{
 							// apply algorithm
 							cluster_kinemetric.findMeanInstTransformation();
-		
+							
+							// gml controlled
 							// map cluster into gesture object pipeline
-							gO.pOList[key]["dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
-							gO.pOList[key]["dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
-							gO.pOList[key]["dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
-							gO.pOList[key]["dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
-							gO.pOList[key]["dtheta"].clusterDelta = cluster_kinemetric.c_dtheta; //rotate_dtheta
+							//gO.pOList[key]["dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
+							//gO.pOList[key]["dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
+							//gO.pOList[key]["dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
+							//gO.pOList[key]["dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
+							//gO.pOList[key]["dtheta"].clusterDelta = cluster_kinemetric.c_dtheta; //rotate_dtheta
+							
+							//GENERIC MAP
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+							}
+							
 						}
 						
 						
@@ -210,38 +247,72 @@ package com.gestureworks.core
 						{
 							//if (trace_debug_mode) trace("cluster hold algorithm");
 							
-							var hold_dist:int = gO.pOList[key]["hold_x"].point_translation_threshold;
-							var	hold_time:int = Math.ceil(gO.pOList[key]["hold_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
-							// change to _N
 							var hold_number:int = gO.pOList[key].n;
-			
+							var hold_dist:int = 0//gO.pOList[key]["hold_x"].point_translation_threshold;
+							var	hold_time:int = 0//Math.ceil(gO.pOList[key]["hold_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);	
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) {
+									hold_dist = gO.pOList[key][DIM].point_translation_threshold;
+									hold_time = Math.ceil(gO.pOList[key][DIM].point_event_duration_threshold / GestureGlobals.touchFrameInterval);
+								}
+							}
+							
 							cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);
+							
+
+							if(cO.hold_n)
+								{
+								gO.pOList[key].activeEvent = true;
+									
+								for (DIM in gO.pOList[key])
+								{
+									if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
+								}	
+							}
+							gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}
 				
-						
+						/*
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// BASIC STROKE LISTENING // ALGORITHM // type STROKE
 						//////////////////////////////////////////////////////////////////////////////////////////////////
 						if (gO.pOList[key].algorithm == "stroke")
 						{
-							cluster_kinemetric.findPath();	
+							var path:Object = cluster_kinemetric.findPath();
+							luster_kinemetric.c_path_data;
+							
+							gO.pOList[key]["path"].clusterVector = path["vector"]
 						}
-						
+						*/
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// BASIC DRAG CONTROL // ALGORITHM // type drag
 						//////////////////////////////////////////////////////////////////////////////////////////////////
 						if (gO.pOList[key].algorithm == "drag"){
 						
-							if (trace_debug_mode)trace("cluster drag algorithm",gO.pOList[key]["drag_dx"].clusterDelta);
+							//if (trace_debug_mode)trace("cluster drag algorithm",gO.pOList[key]["drag_dx"].clusterDelta);
 							
 							cluster_kinemetric.findMeanInstTranslation();
 									
-							gO.pOList[key]["drag_dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
-							gO.pOList[key]["drag_dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
+							//gO.pOList[key]["drag_dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
+							//gO.pOList[key]["drag_dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
 							
 							//trace("drag calc tscluster", gO.pOList[key]["drag_dx"].clusterDelta,gO.pOList[key]["drag_dy"].clusterDelta);
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
+							}
+								
+								gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
+							
 						}
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,8 +324,17 @@ package com.gestureworks.core
 							
 							cluster_kinemetric.findMeanInstSeparation();
 										
-							gO.pOList[key]["scale_dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
-							gO.pOList[key]["scale_dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
+							//gO.pOList[key]["scale_dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
+							//gO.pOList[key]["scale_dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+							}
+							
+								gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}
 	
 						
@@ -263,14 +343,20 @@ package com.gestureworks.core
 						//////////////////////////////////////////////////////////////////////////////////////////////////
 						if (gO.pOList[key].algorithm == "rotate")
 						{
-							if (trace_debug_mode) trace("cluster rotate algorithm");
+							//if (trace_debug_mode) trace("cluster rotate algorithm");
 					
 							cluster_kinemetric.findMeanInstRotation();
-									
-							gO.pOList[key]["rotate_dtheta"].clusterDelta = cluster_kinemetric.c_dtheta; //rotate_dtheta
+
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+							}
+							gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}	
 						
-						/*
+						
 						
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,19 +364,24 @@ package com.gestureworks.core
 						//////////////////////////////////////////////////////////////////////////////////////////////////
 						if (gO.pOList[key].algorithm == "orient")
 						{
-							if (trace_debug_mode) trace("cluster orientation algorithm");
+							//if (trace_debug_mode) trace("cluster orientation algorithm");
 						
-							cluster_kinemetric.findMeanInstPosition();
-								
-							//var pt:Point = cluster_kinemetric.findInstOrientation();
+							cluster_kinemetric.findMeanInstPosition();	
+							cluster_kinemetric.findInstOrientation();
 							
-							//NEED TO PUSH OUT ORIENTATION ANGLE
-							// TO CLUSTER ROTATION
+							//NEED TO PUSH OUT ORIENTATION ANGLE // TO CLUSTER ROTATION
 							// WILL BE MAPPED TO ROTATION FOR TRANSFROM OBJECT AND THEN TO TOUCHSPRITE NATIVELEY SNAP TO ORIENTATION 
-							gO.pOList[key]["orient_dx"].clusterDelta = pt.x;
-							gO.pOList[key]["orient_dy"].clusterDelta = pt.y;
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+							}
+							
+							gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
 						}
-						*/
+						
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// BASIC PIVOT CONTROL // ALGORITHM
@@ -298,13 +389,19 @@ package com.gestureworks.core
 			
 						if (gO.pOList[key].algorithm == "pivot")
 						{
-							//if (trace_debug_mode) 
-							trace("cluster pivot algorithm");
-
-							// assign value to property object
-						//	gO.pOList[key]["pivot_dtheta"].clusterDelta = cluster_kinemetric.findInstPivot(gO.pOList[key].cluster_rotation_threshold);//cluster_kinemetric.pivot_dtheta;
-							//trace("pivot");
+							//if (trace_debug_mode) trace("cluster pivot algorithm");
+							
+							cluster_kinemetric.findInstPivot(gO.pOList[key].cluster_rotation_min);
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
 							}
+							
+							gO.pOList[key].x = cO.x;
+							gO.pOList[key].y = cO.y;
+							gO.pOList[key].n = cO.n;
+						}
 						
 						
 						
@@ -313,26 +410,55 @@ package com.gestureworks.core
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// SHOULD BE DISCRETE ON RELEASE CHECK FOR ACCELERATION
 						// IF ABOVE ACCEL THREHOLD RETURN GESTURE
-						/*
 						if (gO.pOList[key].algorithm == "flick")
 						{
-							var flick_threshold:Number = gO.pOList[key]["flick_dx"].cluster_acceleration_threshold; //accleration threshold
-							var flick_h:int = 6;
-							var flick_etm_accel:Point = cluster_kinemetric.findMeanTemporalAcceleration(flick_h); //ensamble temporal mean acceleration
-							var flick_etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(flick_h); // ensamble temporal mean velocity
+							//var flick_threshold:Number = gO.pOList[key]["flick_dx"].cluster_acceleration_threshold; //accleration threshold
+							//var flick_h:int = 6;
+							
+							//var flick_etm_accel:Point = cluster_kinemetric.findMeanTemporalAcceleration(flick_h); //ensamble temporal mean acceleration
+							//var flick_etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(flick_h); // ensamble temporal mean velocity
 								
 							// limits
-							if (Math.abs(flick_etm_accel.x) < flick_threshold) flick_etmVel.x = 0;
-							if (Math.abs(flick_etm_accel.y) < flick_threshold) flick_etmVel.y = 0;;
+							//if (Math.abs(flick_etm_accel.x) < flick_threshold) flick_etmVel.x = 0;
+							//if (Math.abs(flick_etm_accel.y) < flick_threshold) flick_etmVel.y = 0;;
 								
 							// TODO ADD DISPATCH CHECK 
 							//REQUIRE MIN HISTORY OF 20 FRAMES TO REDUCE INIT TOUCH JERK ACCIDENTAL TRIGGER
-								
+							
+							//FIX TO GENERIC
 							// assign value to property object
-							gO.pOList[key]["flick_dx"].clusterDelta = flick_etmVel.x;
-							gO.pOList[key]["flick_dy"].clusterDelta = flick_etmVel.y;
-								
+							//gO.pOList[key]["flick_dx"].clusterDelta = flick_etm_vel.x;
+							//gO.pOList[key]["flick_dy"].clusterDelta = flick_etm_vel.y;
+							
 							//trace("flick, velocity",flick_etmVel.x,flick_etmVel.y,flick_etm_accel.x,flick_etm_accel.y,flick_threshold)
+							
+							// MUST EXTERANLIZE TO GML
+							var flick_h:int = 6;
+							var flick_etm_accel:Object = cluster_kinemetric.findMeanTemporalAcceleration(flick_h); //ensamble temporal mean acceleration
+							var flick_etm_vel:Object = cluster_kinemetric.findMeanTemporalVelocity(flick_h); // ensamble temporal mean velocity
+
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) 
+								{
+									//var property_var:String = gO.pOList[key][DIM].property_var;
+									//var flick_min:Number = gO.pOList[key][DIM].cluster_acceleration_min;
+									
+									// min limits
+									//if (Math.abs(flick_etm_accel[gO.pOList[key][DIM].property_var]) > gO.pOList[key][DIM].cluster_acceleration_min) gO.pOList[key][DIM].clusterDelta = flick_etm_vel[gO.pOList[key][DIM].property_var];
+									//else gO.pOList[key][DIM].clusterDelta = 0;
+									
+									gO.pOList[key][DIM].clusterDelta = flick_etm_vel[gO.pOList[key][DIM].property_var];
+									//trace("flick",gO.pOList[key][DIM].clusterDelta)
+								}
+								
+								gO.pOList[key].x = cO.x;
+								gO.pOList[key].y = cO.y;
+								gO.pOList[key].n = cO.n;
+								
+							}
+							
+							
 						}
 			
 						
@@ -343,12 +469,17 @@ package com.gestureworks.core
 						// SHOULD BE DISCRETE GESTURE ON RELEASE
 						// CONST VELOCITY CHECK FOR LARGE CHNAGES IN ACCEL
 						// RETURN VELOCITY OF SWIPE IN X AND Y
+						
+						
 						if (gO.pOList[key].algorithm == "swipe")
 						{
-							if (trace_debug_mode) trace("cluster swipe algorithm");
+							//if (trace_debug_mode) trace("cluster swipe algorithm");
 							
+							/*
+							//FIX TO GENERIC
 							var swipe_threshold:Number = gO.pOList[key]["swipe_dx"].cluster_acceleration_threshold;// acceleration threshold
 							var swipe_h:int = 6;
+							
 							var swipe_etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(swipe_h); //ensamble temporal mean velocity
 							var swipe_etmAccel:Point = cluster_kinemetric.findMeanTemporalAcceleration(swipe_h); //ensamble temporal mean velocity
 								
@@ -360,12 +491,34 @@ package com.gestureworks.core
 							// NEED MULTIPLE FIELDS FOR CLUSTER DELTA
 								
 							//REQUIRE MIN HISTORY OF 20 FRAMES TO REDUCE INIT TOUCH JERK ACCIDENTAL TRIGGER
-								
+							
+							//FIX TO GENERIC
 							// assign value to property object
 							gO.pOList[key]["swipe_dx"].clusterDelta = swipe_etmAccel.x;
 							gO.pOList[key]["swipe_dy"].clusterDelta = swipe_etmAccel.y;
 							
 							//trace("swipe, velocity",swipe_etmVel.x,swipe_etmVel.y,swipe_etmAccel.x,swipe_etmAccel.y,swipe_threshold)
+							*/
+							
+							var swipe_h:int = 6;
+							var swipe_etm_vel:Object = cluster_kinemetric.findMeanTemporalVelocity(swipe_h); //ensamble temporal mean velocity
+							var swipe_etm_accel:Object = cluster_kinemetric.findMeanTemporalAcceleration(swipe_h); //ensamble temporal mean velocity
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) 
+								{
+									
+									// max limits
+									//if (Math.abs(swipe_etm_accel[gO.pOList[key][DIM].property_var]) < gO.pOList[key][DIM].cluster_acceleration_max) gO.pOList[key][DIM].clusterDelta = swipe_etm_vel[gO.pOList[key][DIM].property_var];
+									//else gO.pOList[key][DIM].clusterDelta = 0;
+									
+									
+									gO.pOList[key][DIM].clusterDelta = swipe_etm_vel[gO.pOList[key][DIM].property_var];
+								}
+							}
+							
+							
 						}
 						
 						
@@ -377,26 +530,51 @@ package com.gestureworks.core
 						// CONTINUOUSLY
 						// MIN TRANSLATION IN X AND Y
 						// RETURN AVERAGE ENSABLE TEMPORAL VELOCITY 
+						
+						
 						if (gO.pOList[key].algorithm == "scroll")
 						{
-							if (trace_debug_mode) trace("cluster scroll algorithm");
+							//if (trace_debug_mode) trace("cluster scroll algorithm");
 							
-							var scroll_dx:Number = 0; 
-							var scroll_dy:Number = 0;
+							/*
+							//FIX TO GENERIC
 							var scroll_threshold:Number = gO.pOList[key]["scroll_dx"].cluster_translation_threshold; // acceleration threshold
+							//var scroll_dx:Number = 0; 
+							//var scroll_dy:Number = 0;
+							
 							var scroll_h:int = 6;
 							var etmVel:Point = cluster_kinemetric.findMeanTemporalVelocity(scroll_h); //ensamble temporal mean 
 								
 							// thresholds
 							if(Math.abs(etmVel.x) > scroll_threshold) etmVel.y = 0;
 							if(Math.abs(etmVel.y) > scroll_threshold) etmVel.x = 0;
-						
+							
+							//FIX TO GENERIC
 							gO.pOList[key]["scroll_dx"].clusterDelta = etmVel.x; 
 							gO.pOList[key]["scroll_dy"].clusterDelta = etmVel.y;
 								
 							//trace("scroll, velocity",etmVel.x,etmVel.y)
+							*/
+							
+							var scroll_h:int = 6;
+							var scroll_etm_vel:Object = cluster_kinemetric.findMeanTemporalVelocity(scroll_h); //ensamble temporal mean 
+							
+							
+							for (DIM in gO.pOList[key])
+							{
+								if (gO.pOList[key][DIM] is PropertyObject) 
+								{
+									// min limits
+									//if (Math.abs(scroll_etm_vel[gO.pOList[key][DIM].property_var]) < gO.pOList[key][DIM].cluster_acceleration_min) gO.pOList[key][DIM].clusterDelta = scroll_etm_vel[gO.pOList[key][DIM].property_var];
+									//else gO.pOList[key][DIM].clusterDelta = 0;
+									
+									gO.pOList[key][DIM].clusterDelta = scroll_etm_vel[gO.pOList[key][DIM].property_var];
+									
+								}
+							}
+							
 						}
-						*/
+					
 						
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -407,7 +585,25 @@ package com.gestureworks.core
 						if (gO.pOList[key].algorithm == "tilt")
 						{
 							if (trace_debug_mode) trace("cluster tilt algorithm"); 
-
+							
+							// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
+							
+							//FIX TO GENERIC
+							//var tilt_threshold:Number = gO.pOList[key]["tilt_dx"].cluster_separation_threshold;
+							
+							//////////////////////////////////////////////////////////////////
+							// STANDARD OPERATION	
+							///////////////////////////////////////////////////////////////////
+							//var pt_tilt:Point = cluster_kinemetric.findMeanInstSeparationXY();
+									
+							//if (Math.abs(pt_tilt.x) > tilt_threshold) pt_tilt.y = 0;
+							//if (Math.abs(pt_tilt.y) > tilt_threshold) pt_tilt.x = 0;
+									
+							//FIX TO GENERIC
+							//gO.pOList[key]["tilt_dx"].clusterDelta = pt_tilt.x; //tilt_dx
+							//gO.pOList[key]["tilt_dy"].clusterDelta = pt_tilt.y; //tilt_dy
+							//trace("TILT seperation",c_dsx,c_dsy)
+							
 							cluster_kinemetric.findMeanInstSeparationXY();
 							
 							for (DIM in gO.pOList[key])
@@ -415,14 +611,21 @@ package com.gestureworks.core
 								if (gO.pOList[key][DIM] is PropertyObject) 
 								{
 									// min limits
-									if (Math.abs(cO[gO.pOList[key][DIM].property_var]) < gO.pOList[key][DIM].cluster_seperation_min) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
-									else gO.pOList[key][DIM].clusterDelta = 0;
+									//if (Math.abs(scroll_etm_vel[gO.pOList[key][DIM].property_var]) < gO.pOList[key][DIM].cluster_seperation_min) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+									//else gO.pOList[key][DIM].clusterDelta = 0;
+									
+									gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+									
 								}
 							}
+							
 							
 						}	
 				}
 			}
+			//else {
+				//trace("processing algorithm when NOT touching");
+			//}
 
 			}
 			

@@ -132,6 +132,28 @@ package com.gestureworks.objects
 			_nMin = value;
 		}
 		
+		// match event
+		private var _match_TouchEvent:String;
+		public function get match_TouchEvent():String
+		{
+			return _match_TouchEvent;
+		}
+		public function set match_TouchEvent(value:String):void
+		{
+			_match_TouchEvent = value;
+		}
+		
+		// match event
+		private var _match_GestureEvent:String;
+		public function get match_GestureEvent():String
+		{
+			return _match_GestureEvent;
+		}
+		public function set match_GestureEvent(value:String):void
+		{
+			_match_GestureEvent = value;
+		}
+		
 		// event dipatch type
 		private var _dispatch_type:String;
 		public function get dispatch_type():String
@@ -141,6 +163,39 @@ package com.gestureworks.objects
 		public function set dispatch_type(value:String):void
 		{
 			_dispatch_type = value;
+		}
+		
+		// event dipatch mode
+		private var _dispatch_mode:String;
+		public function get dispatch_mode():String
+		{
+			return _dispatch_mode;
+		}
+		public function set dispatch_mode(value:String):void
+		{
+			_dispatch_mode = value;
+		}
+		
+		// event dipatch interval
+		private var _dispatch_interval:int;
+		public function get dispatch_interval():int
+		{
+			return _dispatch_interval;
+		}
+		public function set dispatch_interval(value:int):void
+		{
+			_dispatch_interval = value;
+		}
+		
+		// timer_count
+		private var _timer_count:int = 0;
+		public function get timer_count():int
+		{
+			return _timer_count;
+		}
+		public function set timer_count(value:int):void
+		{
+			_timer_count = value;
 		}
 		
 		///////////////////////////////////////////////////

@@ -147,18 +147,24 @@ package com.gestureworks.utils
 												pOList[gesture_id].gesture_id = gesture_id;
 												pOList[gesture_id].gesture_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
 												
+												pOList[gesture_id].match_touchEvent = String(gml.Gesture_set[0].Gesture[i].match.action.initial.event.attribute("touch_event"));
+												pOList[gesture_id].match_gestureEvent = String(gml.Gesture_set[0].Gesture[i].match.action.initial.event.attribute("gesture_event"));
+												
 												pOList[gesture_id].algorithm = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.library.attribute("module"));
 												pOList[gesture_id].algorithm_class = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("class"));
 												pOList[gesture_id].algorithm_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("type"));
 												
-												pOList[gesture_id].dispatch_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch"));
-												pOList[gesture_id].dispatch_reset = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("reset"));
+												pOList[gesture_id].dispatch_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_type"));
+												pOList[gesture_id].dispatch_mode = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_mode"));
+												pOList[gesture_id].dispatch_reset = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_reset"));
+												
+												pOList[gesture_id].dispatch_interval = Math.ceil(GestureWorks.application.frameRate * 0.001*int(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_interval")));
 												
 												pOList[gesture_id].dispatchEvent = false;
 												pOList[gesture_id].activeEvent = false;
 												pOList[gesture_id].complete = false;
 												
-												
+												pOList[gesture_id].timer_count = 0;
 												
 												// if initial action defined
 													if (gml.Gesture_set[0].Gesture[i].match.action.initial)
