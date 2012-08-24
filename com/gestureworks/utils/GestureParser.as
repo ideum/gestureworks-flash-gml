@@ -204,7 +204,8 @@ package com.gestureworks.utils
 
 													pOList[gesture_id][property_id].property_id = property_id;
 													//pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("type"));
-													pOList[gesture_id][property_id].property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("var"));
+													pOList[gesture_id][property_id].property_mvar = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_var"));
+													pOList[gesture_id][property_id].property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_result"));
 													pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
 
 														//pOList[gesture_id][property_id].clusterDelta = 0; 
@@ -224,10 +225,20 @@ package com.gestureworks.utils
 															///////////////////////////////
 															// set point action thresholds
 															///////////////////////////////
-															pOList[gesture_id][property_id].point_event_duration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_threshold"));
-															pOList[gesture_id][property_id].point_interevent_duration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_threshold"));
-															pOList[gesture_id][property_id].point_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_threshold"));
-															pOList[gesture_id][property_id].point_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_threshold"));
+															//pOList[gesture_id][property_id].point_event_duration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_threshold"));
+															//pOList[gesture_id][property_id].point_interevent_duration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_threshold"));
+															//pOList[gesture_id][property_id].point_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_threshold"));
+															//pOList[gesture_id][property_id].point_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_threshold"));
+															
+															pOList[gesture_id][property_id].point_event_duration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_min"));
+															pOList[gesture_id][property_id].point_event_duration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_max"));
+															pOList[gesture_id][property_id].point_interevent_duration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_min"));
+															pOList[gesture_id][property_id].point_interevent_duration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_max"));
+															pOList[gesture_id][property_id].point_translation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_min"));
+															pOList[gesture_id][property_id].point_translation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_max"));
+															pOList[gesture_id][property_id].point_acceleration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_min"));
+															pOList[gesture_id][property_id].point_acceleration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_max"));
+															
 															//pOList[gesture_id].point_jolt_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.points.attribute("jolt_threshold"));
 															
 															/////////////////////////////////////////
@@ -318,17 +329,8 @@ package com.gestureworks.utils
 														else if ((target == "y") || (target == "Y")) 				pOList[gesture_id][property_id].target_id = "dy";
 														else  pOList[gesture_id][property_id].target_id = "";
 														
-														// function map
-														pOList[gesture_id][property_id].func = String(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("func"));
-														pOList[gesture_id][property_id].func_factor = Number(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("factor"));
+								
 														
-														pOList[gesture_id][property_id].delta_threshold = gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("delta_threshold") == "true" ?true:false;
-														pOList[gesture_id][property_id].delta_max = Number(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("delta_max"));
-														pOList[gesture_id][property_id].delta_min = Number(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("delta_min"));
-														
-														pOList[gesture_id][property_id].boundaryOn = gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("boundaryOn") == "true" ?true:false;
-														pOList[gesture_id][property_id].boundary_max = Number(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("boundary_max"));
-														pOList[gesture_id][property_id].boundary_min = Number(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("boundary_min"));
 													}
 													// if processing exists
 													if (gml.Gesture_set[0].Gesture[i].processing)
@@ -358,6 +360,28 @@ package com.gestureworks.utils
 															pOList[gesture_id][property_id].release_inertia_base = Number(gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("friction"));
 															pOList[gesture_id][property_id].release_inertia_count = 0; //internal
 															pOList[gesture_id][property_id].release_inertia_Maxcount = 120;// internal
+														}
+														
+														// multiply filter
+														if (gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j])
+														{
+															pOList[gesture_id][property_id].multiplyOn = gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("multiplyOn")== "true" ?true:false;
+															pOList[gesture_id][property_id].func = String(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("func"));
+															pOList[gesture_id][property_id].func_factor = Number(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("factor"));
+														}
+														// delta filter
+														if (gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j])
+														{
+															pOList[gesture_id][property_id].delta_threshold = gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_threshold") == "true" ?true:false;
+															pOList[gesture_id][property_id].delta_max = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_max"));
+															pOList[gesture_id][property_id].delta_min = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_min"));
+														}
+														// value boundrary filter
+														if (gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j])
+														{
+															pOList[gesture_id][property_id].boundaryOn = gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundaryOn") == "true" ?true:false;
+															pOList[gesture_id][property_id].boundary_max = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_max"));
+															pOList[gesture_id][property_id].boundary_min = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_min"));
 														}
 													}
 													//trace("id	", gesture_id, property_id, pOList[gesture_id][property_id].id);

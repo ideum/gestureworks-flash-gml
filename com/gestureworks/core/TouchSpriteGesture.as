@@ -43,6 +43,7 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var key:String;
+		private var DIM:String = ""; 
 		private var tapOn:Boolean = false;
 		
 		private var timerCount:int = 0;
@@ -319,6 +320,9 @@ package com.gestureworks.core
 							}
 					}	
 					
+					///////////////////////////////////////////////////////////////////////////
+					// generic event pair search
+					
 					// IF EVENT B OCCURES
 					// GO BACK AND LOOK FOR EVENT A
 					//????????????????????????????????????????????????
@@ -326,7 +330,7 @@ package com.gestureworks.core
 					//{
 						
 					//}
-						
+					///////////////////////////////////////////////////////////////////////////	
 					
 					
 					/////////////////////////////////////////////////////////////////////////////////////////////
@@ -408,9 +412,11 @@ package com.gestureworks.core
 						////////////////////////////////////
 						if (gO.pOList[key].dispatch_type =="discrete")
 						{
+							//trace(gO.pOList[key].dispatch_mode,gO.pOList[key].dispatch_type,key)
 							if (gO.pOList[key].dispatch_mode =="cluster_remove")
 							{
-								if ((gO.release) && (!gO.pOList[key].complete)) gO.pOList[key].dispatchEvent = true;
+								if ((gO.release) && (!gO.pOList[key].complete)) gO.pOList[key].dispatchEvent = true;//gO.release
+					//trace("....",key,cO.remove)
 
 								////////////////////////////////////////////////////////////////////////////////////////
 								// must make generic
@@ -419,15 +425,28 @@ package com.gestureworks.core
 								// COPY CACHE INTO GESTURE DELTA
 								if (gO.pOList[key].gesture_type == "flick")
 								{	
-									gO.pOList[key]["flick_dx"].gestureDelta = gO.pOList[key]["flick_dx"].gestureDeltaCache;
-									gO.pOList[key]["flick_dy"].gestureDelta = gO.pOList[key]["flick_dy"].gestureDeltaCache;
+									for (DIM in gO.pOList[key])
+									{
+										if (gO.pOList[key][DIM] is PropertyObject) 
+										{
+										gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										}
+									}
 								}
 								
 								// COPY CACHE INTO GESTURE DELTA
 								if (gO.pOList[key].gesture_type == "swipe")
 								{	
-									gO.pOList[key]["swipe_dx"].gestureDelta = gO.pOList[key]["swipe_dx"].gestureDeltaCache;
-									gO.pOList[key]["swipe_dy"].gestureDelta = gO.pOList[key]["swipe_dy"].gestureDeltaCache;
+									
+									for (DIM in gO.pOList[key])
+									{
+										if (gO.pOList[key][DIM] is PropertyObject) 
+										{
+											gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+											gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										}
+									}
 								}
 								///////////////////////////////////////////////////////////////////////////////////////////
 							}
@@ -445,7 +464,7 @@ package com.gestureworks.core
 							
 							
 							
-							else //if (gO.pOList[key].dispatch_mode =="")
+							else if (gO.pOList[key].dispatch_mode =="")
 							{
 								// prime for dispatch
 								if (!gO.pOList[key].complete) gO.pOList[key].dispatchEvent = true;

@@ -978,6 +978,7 @@ package com.gestureworks.analysis
 			var data:Object = new Object();
 				data["etm_ddx"] = 0;
 				data["etm_ddy"] = 0;
+				
 			var t0:Number = 1 /t;
 						
 				for (i = 0; i < N; i++) 

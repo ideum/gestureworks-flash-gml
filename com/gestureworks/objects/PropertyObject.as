@@ -55,6 +55,19 @@ package com.gestureworks.objects
 			_property_var = value;
 		}
 		
+		////////////////////////////////////////////////////////
+		// property var
+		private var _property_mvar:String;
+		
+		public function get property_mvar():String
+		{
+			return _property_mvar;
+		}
+		public function set property_mvar(value:String):void
+		{
+			_property_mvar = value;
+		}
+		
 		
 		// property type
 		private var _property_type:String;
@@ -166,67 +179,126 @@ package com.gestureworks.objects
 		
 		
 		
-		private var _cluster_event_duration_threshold:Number = 0;
-		public function get cluster_event_duration_threshold():Number
+		private var _cluster_event_duration_min:Number = 0;
+		public function get cluster_event_duration_min():Number
 		{
-			return _cluster_event_duration_threshold;
+			return _cluster_event_duration_min;
 		}
-		public function set cluster_event_duration_threshold(value:Number):void
+		public function set cluster_event_duration_min(value:Number):void
 		{
-			_cluster_event_duration_threshold = value;
+			_cluster_event_duration_min = value;
 		}
 		
-		private var _cluster_interevent_duration_threshold:Number = 0;
-		public function get cluster_interevent_duration_threshold():Number
+		private var _cluster_event_duration_max:Number = 0;
+		public function get cluster_event_duration_max():Number
 		{
-			return _cluster_interevent_duration_threshold;
+			return _cluster_event_duration_max;
 		}
-		public function set cluster_interevent_duration_threshold(value:Number):void
+		public function set cluster_event_duration_max(value:Number):void
 		{
-			_cluster_interevent_duration_threshold = value;
+			_cluster_event_duration_max = value;
+		}
+		
+		
+		private var _cluster_interevent_duration_min:Number = 0;
+		public function get cluster_interevent_duration_min():Number
+		{
+			return _cluster_interevent_duration_min;
+		}
+		public function set cluster_interevent_duration_min(value:Number):void
+		{
+			_cluster_interevent_duration_min = value;
+		
+		}	
+		private var _cluster_interevent_duration_max:Number = 0;
+		public function get cluster_interevent_duration_max():Number
+		{
+			return _cluster_interevent_duration_max;
+		}
+		public function set cluster_interevent_duration_max(value:Number):void
+		{
+			_cluster_interevent_duration_max = value;
 		}
 		
 		////////////////////////////////////////////////////////
 		// general cluster thresholds
 		///////////////////////////////////////////////////////
-		private var _point_translation_threshold:Number = 0;
-		public function get point_translation_threshold():Number
+		private var _point_translation_min:Number = 0;
+		public function get point_translation_min():Number
 		{
-			return _point_translation_threshold;
+			return _point_translation_min;
 		}
-		public function set point_translation_threshold(value:Number):void
+		public function set point_translation_min(value:Number):void
 		{
-			_point_translation_threshold = value;
+			_point_translation_min = value;
 		}
-		
-		private var _point_acceleration_threshold:Number = 0;
-		public function get point_acceleration_threshold():Number
+		private var _point_translation_max:Number = 0;
+		public function get point_translation_max():Number
 		{
-			return _point_acceleration_threshold;
+			return _point_translation_max;
 		}
-		public function set point_acceleration_threshold(value:Number):void
+		public function set point_translation_max(value:Number):void
 		{
-			_point_acceleration_threshold = value;
-		}
-		
-		private var _point_event_duration_threshold:Number = 0;
-		public function get point_event_duration_threshold():Number
-		{
-			return _point_event_duration_threshold;
-		}
-		public function set point_event_duration_threshold(value:Number):void
-		{
-			_point_event_duration_threshold = value;
+			_point_translation_max = value;
 		}
 		
-		private var _point_interevent_duration_threshold:Number = 0;
-		public function get point_interevent_duration_threshold():Number
+		
+		private var _point_acceleration_min:Number = 0;
+		public function get point_acceleration_min():Number
 		{
-			return _point_interevent_duration_threshold;
+			return _point_acceleration_min;
 		}
-		public function set point_interevent_duration_threshold(value:Number):void
+		public function set point_acceleration_min(value:Number):void
 		{
-			_point_interevent_duration_threshold = value;
+			_point_acceleration_min = value;
+		}
+		private var _point_acceleration_max:Number = 0;
+		public function get point_acceleration_max():Number
+		{
+			return _point_acceleration_max;
+		}
+		public function set point_acceleration_max(value:Number):void
+		{
+			_point_acceleration_max = value;
+		}
+		
+		
+		private var _point_event_duration_min:Number = 0;
+		public function get point_event_duration_min():Number
+		{
+			return _point_event_duration_min;
+		}
+		public function set point_event_duration_min(value:Number):void
+		{
+			_point_event_duration_min = value;
+		}
+		private var _point_event_duration_max:Number = 0;
+		public function get point_event_duration_max():Number
+		{
+			return _point_event_duration_max;
+		}
+		public function set point_event_duration_max(value:Number):void
+		{
+			_point_event_duration_max = value;
+		}
+		
+		private var _point_interevent_duration_min:Number = 0;
+		public function get point_interevent_duration_min():Number
+		{
+			return _point_interevent_duration_min;
+		}
+		public function set point_interevent_duration_min(value:Number):void
+		{
+			_point_interevent_duration_min = value;
+		}
+		private var _point_interevent_duration_max:Number = 0;
+		public function get point_interevent_duration_max():Number
+		{
+			return _point_interevent_duration_max;
+		}
+		public function set point_interevent_duration_max(value:Number):void
+		{
+			_point_interevent_duration_max = value;
 		}
 		
 		////////////////////////////////////////////////////////
@@ -329,6 +401,19 @@ package com.gestureworks.objects
 			_gestureDeltaCache = value;
 		}
 		
+		//////////////////////////////////////////////////////
+		// multiply filter
+		//////////////////////////////////////////////////////
+		// constant of proportionality ---------------------
+		private var _multiplyOn:Boolean = false;
+		public function get multiplyOn():Boolean
+		{
+			return _multiplyOn;
+		}
+		public function set multiplyOn(value:Boolean):void
+		{
+			_multiplyOn = value;
+		}
 		// functional relationship between raw value and gesture value
 		private var _func:String = "linear";
 		public function get func():String
@@ -350,6 +435,10 @@ package com.gestureworks.objects
 			_func_factor = value;
 		}
 		
+		
+		////////////////////////////////////////////////////////////////
+		// delta filter
+		////////////////////////////////////////////////////////////////
 		// delta_threshold---------------------
 		private var _delta_threshold:Boolean = false;
 		public function get delta_threshold():Boolean
@@ -381,6 +470,9 @@ package com.gestureworks.objects
 			_delta_min = value;
 		}
 		
+		/////////////////////////////////////////////////////////
+		// value filter
+		//////////////////////////////////////////////////////////
 		// boundaryOn---------------------
 		private var _boundaryOn:Boolean = false;
 		public function get boundaryOn():Boolean
@@ -412,6 +504,11 @@ package com.gestureworks.objects
 			_boundary_min = value;
 		}
 		
+		
+		
+		////////////////////////////////////////////////////////
+		// noise filter
+		////////////////////////////////////////////////////////
 		// filterOn---------------------
 		private var _filterOn:Boolean = false;
 		public function get filterOn():Boolean
@@ -444,6 +541,9 @@ package com.gestureworks.objects
 			_noise_filterMatrix = value;
 		}
 		
+		//////////////////////////////////////////////////////////////
+		// touch inertia filter
+		//////////////////////////////////////////////////////////////
 		// touch_inertia---------------------
 		private var _touch_inertia:Boolean = false;
 		public function get touch_inertia():Boolean
@@ -497,6 +597,10 @@ package com.gestureworks.objects
 		{
 			_touch_inertia_spring = value;
 		}
+		
+		/////////////////////////////////////////////////////////
+		// release inertia filter
+		/////////////////////////////////////////////////////////
 		
 		// release_inertiaOn---------------------
 		private var _release_inertiaOn:Boolean = false;
@@ -582,18 +686,5 @@ package com.gestureworks.objects
 			_path = value;
 		}
 		
-		
-		/*
-		//gesture transform
-		private var _gestureTransformOn:Boolean;
-		public function get gestureTransformOn():Boolean
-		{
-			return _gestureTransformOn;
-		}
-		public function set gestureTransformOn(value:Boolean):void
-		{
-			_gestureTransformOn = value;
-		}
-		*/
 	}
 }
