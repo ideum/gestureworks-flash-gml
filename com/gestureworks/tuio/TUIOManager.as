@@ -91,7 +91,7 @@ package com.gestureworks.tuio
 			
 			
 			//var mta:MouseTuioAdapter = new MouseTuioAdapter(stage);
-			//var tDbg:TuioDebug = TuioDebug.init(stage);
+			var tDbg:TuioDebug = TuioDebug.init(stage);
 			//mta.addListener(tDbg);
 		
 			//var nta:NativeTuioAdapter = new NativeTuioAdapter(stage);
@@ -105,7 +105,7 @@ package com.gestureworks.tuio
 
 			
 			tc.addListener(tm);
-			//tc.addListener(tDbg);
+			tc.addListener(tDbg);
 			tm.addEventListener(TuioEvent.ADD, pointAddedHandler);
 			tm.addEventListener(TuioEvent.UPDATE, pointUpdatedHandler);
 			tm.addEventListener(TuioEvent.REMOVE, pointRemovedHandler);
