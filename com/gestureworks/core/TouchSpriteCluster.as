@@ -529,7 +529,7 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) 
 								{
-									trace(DIM,gO.pOList[key][DIM].property_mvar);
+									//trace(DIM,gO.pOList[key][DIM].property_mvar);
 									// max limits
 									if (Math.abs(d[gO.pOList[key][DIM].property_mvar]) < gO.pOList[key][DIM].cluster_acceleration_max) gO.pOList[key][DIM].clusterDelta = d[gO.pOList[key][DIM].property_var];
 									else gO.pOList[key][DIM].clusterDelta = 0;

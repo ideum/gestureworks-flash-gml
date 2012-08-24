@@ -416,7 +416,7 @@ package com.gestureworks.core
 							if (gO.pOList[key].dispatch_mode =="cluster_remove")
 							{
 								if ((gO.release) && (!gO.pOList[key].complete)) gO.pOList[key].dispatchEvent = true;//gO.release
-					//trace("....",key,cO.remove)
+					
 
 								////////////////////////////////////////////////////////////////////////////////////////
 								// must make generic
