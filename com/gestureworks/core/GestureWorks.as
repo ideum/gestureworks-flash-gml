@@ -30,7 +30,8 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
-		
+
+
 	/**
 		 * The GestureWorks class is the core class that can be accessed from all classes within.
 		 * It can be initialized as a super class, or as an instantiation; var gestureworks:GestureWorks = new GestureWorks();
@@ -47,7 +48,8 @@ package com.gestureworks.core
 		 * 		public class Main extends GestureWorks
 		 * 		{
 		 * 			super();
-		 * 			settingsPath = "library/cml/my_application_4.cml";
+		 * 			cml = "library/cml/my_application.cml";
+		 * 			gml = "library/gml/my_gestures.gml";
 		 * 			fullscreen = true;
 		 * 		}
 		 * 
@@ -75,6 +77,7 @@ package com.gestureworks.core
 	
 	public class GestureWorks extends GestureWorksCore
 	{
+		
 		public static var cmlDisplays:Array = [];
 		
 		/**
@@ -144,7 +147,7 @@ package com.gestureworks.core
 			// added to auto-switch to simulator
 			// -Charles (7/17/2012)
 			if (!supportsTouch) simulator = true;
-			if (cmlSettingsPath) settingsPath = cmlSettingsPath;
+			if (cmlSettingsPath) cml = cmlSettingsPath;
 		}
 		
 		/**
@@ -200,7 +203,7 @@ package com.gestureworks.core
 		 */
 		override protected function create():void
 		{
-			if (!settingsPath)
+			if (!cml)
 			{
 				loadModeManager();
 			}
@@ -208,7 +211,7 @@ package com.gestureworks.core
 			{
 				hasCML = true;
 				
-				CMLLoader.settingsPath = settingsPath;
+				CMLLoader.settingsPath = cml;
 				CMLLoader.addEventListener(CMLLoader.settingsPath, CMLLoaderComplete);
 			}
 		}
@@ -218,7 +221,7 @@ package com.gestureworks.core
 		{			
 			CML.Objects = CMLLoader.settings;
 					
-			if (!key || (key && key.length < 1))
+			if (!key || key.length < 1)
 				key = CMLLoader.settings.@key;
 				
 			if (CML.Objects.@simulator == "true") 
@@ -226,29 +229,30 @@ package com.gestureworks.core
 			
 			if (CML.Objects.@tuio == "true") 
 				tuio = true;
-		
+
+			if (CML.Objects.@fullscreen == "true") 
+				fullscreen = true;				
+				
 			startGmlParse();
 		}
 		
 		
 		private function startGmlParse():void
-		{			
-			var gmlPath:String = gml;
-			
+		{
 			if (!gml || gml.length <= 1)
-				gmlPath = CML.Objects.@gml;
-					
+				gml = CML.Objects.@gml;
+			
 			if (!gml || gml.length <= 1) {
 				loadModeManager();
-				return;				
-			}		
-			
-			GMLParser.settingsPath = gmlPath;
-			GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
+			}
+			else {
+				GMLParser.settingsPath = gml;
+				GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
+			}
 		}
 		
 		
-		private function gmlParserComplete(event:Event):void
+		private function gmlParserComplete(event:Event=null):void
 		{
 			GML.Gestures = GMLParser.settings;
 			loadModeManager();
@@ -257,6 +261,8 @@ package com.gestureworks.core
 		
 		private function loadModeManager():void
 		{
+			//trace(GML.Gestures);
+			
 			if (parent.toString() != "[Object Stage]") _root = parent.root;
 			modeManager = new ModeManager(_root, key)
 			addChild(modeManager);

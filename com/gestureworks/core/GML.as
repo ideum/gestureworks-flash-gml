@@ -42,8 +42,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="drag"/>
 						<returns>
-							<property id="drag_dx" var="dx"/>
-							<property id="drag_dy" var="dy"/>
+							<property id="drag_dx" module_result="dx"/>
+							<property id="drag_dy" module_result="dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -75,7 +75,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="0" point_number_min="1" point_number_max="5" translation_threshold="0"/>
+							<cluster point_number="0" point_number_min="1" point_number_max="5" translation_min="0"/>
 						</initial>
 					</action>
 				</match>	
@@ -83,7 +83,7 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="drag"/>
 						<returns>
-							<property id="drag_dx" var="dx"/>
+							<property id="drag_dx" module_result="dx"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -122,8 +122,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="drag"/>
 						<returns>
-							<property id="drag_dx" var="dx"/>
-							<property id="drag_dy" var="dy"/>
+							<property id="drag_dx" module_result="dx"/>
+							<property id="drag_dy" module_result="dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -151,7 +151,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="2" point_number_min="2" point_number_max="5" translation_threshold="0"/>
+							<cluster point_number="2" point_number_min="2" point_number_max="5" translation_min="0"/>
 						</initial>
 					</action>
 				</match>	
@@ -159,8 +159,8 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="translate"/>
 						<returns>
-							<property id="drag_dx" type="drag"/>
-							<property id="drag_dy" type="drag"/>
+							<property id="drag_dx" module_result="dx"/>
+							<property id="drag_dy" module_result="dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -173,12 +173,16 @@ package com.gestureworks.core
 						<property ref="drag_dx" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.996"/>
 						<property ref="drag_dy" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.996"/>
 					</inertial_filter>
+					<delta_filter>
+						<property ref="drag_dx" delta_threshold="false" delta_min="0.01" delta_max="100"/>
+						<property ref="drag_dy" delta_threshold="false" delta_min="0.01" delta_max="100"/>
+					</delta_filter>
 				</processing>
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="drag_dx" target="x" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="100"/>
-							<property ref="drag_dy" target="y" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+							<property ref="drag_dx" target="x"/>
+							<property ref="drag_dy" target="y"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -188,7 +192,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="1" point_number_min="2" point_number_max="5" translation_threshold="0"/>
+							<cluster point_number="1" point_number_min="2" point_number_max="5" translation_min="0"/>
 						</initial>
 					</action>
 				</match>	
@@ -196,8 +200,8 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="translate"/>
 						<returns>
-							<property id="drag_dx" type="drag"/>
-							<property id="drag_dy" type="drag"/>
+							<property id="drag_dx" module_result="dx"/>
+							<property id="drag_dy" module_result="dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -207,15 +211,15 @@ package com.gestureworks.core
 						<property ref="drag_dy" noise_filter="false" percent="0"/>
 					</noise_filter>
 					<inertial_filter>
-						<property ref="drag_dx" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.996"/>
-						<property ref="drag_dy" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.996"/>
+						<property ref="drag_dx" release_inertia="true" friction="0.996"/>
+						<property ref="drag_dy" release_inertia="true" friction="0.996"/>
 					</inertial_filter>
 				</processing>
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="drag_dx" target="x" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="100"/>
-							<property ref="drag_dy" target="y" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+							<property ref="drag_dx" target="x"/>
+							<property ref="drag_dy" target="y" />
 						</gesture_event>
 					</update>
 				</mapping>
@@ -225,7 +229,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="4" point_number_min="2" point_number_max="5" translation_threshold="0"/>
+							<cluster point_number="4" point_number_min="2" point_number_max="5" translation_min="0"/>
 						</initial>
 					</action>
 				</match>	
@@ -233,8 +237,8 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="translate"/>
 						<returns>
-							<property id="drag_dx" type="drag"/>
-							<property id="drag_dy" type="drag"/>
+							<property id="drag_dx" module_result="dx"/>
+							<property id="drag_dy" module_result="dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -244,15 +248,15 @@ package com.gestureworks.core
 						<property ref="drag_dy" noise_filter="false" percent="0"/>
 					</noise_filter>
 					<inertial_filter>
-						<property ref="drag_dx" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.996"/>
-						<property ref="drag_dy" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.996"/>
+						<property ref="drag_dx" release_inertia="true" friction="0.996"/>
+						<property ref="drag_dy" release_inertia="true" friction="0.996"/>
 					</inertial_filter>
 				</processing>
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="drag_dx" target="x" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="100"/>
-							<property ref="drag_dy" target="y" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+							<property ref="drag_dx" target="x"/>
+							<property ref="drag_dy" target="y"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -270,7 +274,7 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="rotate"/>
 						<returns>
-							<property id="rotate_dtheta" var="dtheta"/>
+							<property id="rotate_dtheta" module_result="dtheta"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -298,7 +302,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="2" point_number_min="" point_number_max="" rotatation_threshold="0"/>
+							<cluster point_number="2" point_number_min="" point_number_max="" rotatation_min="0"/>
 						</initial>
 					</action>
 				</match>
@@ -306,7 +310,7 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="rotate"/>
 						<returns>
-							<property id="rotate_dtheta" var="dtheta"/>
+							<property id="rotate_dtheta" module_result="dtheta"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -321,7 +325,7 @@ package com.gestureworks.core
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="rotate_dtheta" target="rotate" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="10"/>
+							<property ref="rotate_dtheta" target="rotate"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -331,7 +335,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="3" point_number_min="" point_number_max="" rotatation_threshold="0"/>
+							<cluster point_number="3" point_number_min="" point_number_max="" rotatation_min="0"/>
 						</initial>
 					</action>
 				</match>
@@ -339,7 +343,7 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="rotate"/>
 						<returns>
-							<property id="rotate_dtheta" var="dtheta"/>
+							<property id="rotate_dtheta" module_result="dtheta"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -354,7 +358,7 @@ package com.gestureworks.core
 				<mapping>
 					<update>
 						<gesture_event>
-							<property ref="rotate_dtheta" target="rotate" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="10"/>
+							<property ref="rotate_dtheta" target="rotate"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -364,7 +368,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="4" point_number_min="" point_number_max="" rotatation_threshold="0"/>
+							<cluster point_number="4" point_number_min="" point_number_max="" rotatation_min="0"/>
 						</initial>
 					</action>
 				</match>
@@ -372,7 +376,7 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="rotate"/>
 						<returns>
-							<property id="rotate_dtheta" var="dtheta"/>
+							<property id="rotate_dtheta" module_result="dtheta"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -387,7 +391,7 @@ package com.gestureworks.core
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="rotate_dtheta" target="rotate" func="linear" factor="1" delta_threshold="true" delta_min="0.01" delta_max="10"/>
+							<property ref="rotate_dtheta" target="rotate"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -407,8 +411,8 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="scale"/>
 						<returns>
-							<property id="scale_dsx" var="ds"/>
-							<property id="scale_dsy" var="ds"/>
+							<property id="scale_dsx" module_result="ds"/>
+							<property id="scale_dsy" module_result="ds"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -429,8 +433,8 @@ package com.gestureworks.core
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="scale_dsx" target="scaleX" func="linear" factor="0.0033"/>
-							<property ref="scale_dsy" target="scaleY" func="linear" factor="0.0033"/>
+							<property ref="scale_dsx" target="scaleX"/>
+							<property ref="scale_dsy" target="scaleY"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -440,7 +444,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="2" point_number_min="" point_number_max="" separation_threshold="0"/>
+							<cluster point_number="2" point_number_min="" point_number_max="" separation_min="0"/>
 						</initial>
 					</action>
 				</match>
@@ -448,8 +452,8 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="scale"/>
 						<returns>
-							<property ref="scale_dsx" var="ds"/>
-							<property ref="scale_dsy" var="ds"/>
+							<property ref="scale_dsx" module_result="ds"/>
+							<property ref="scale_dsy" module_result="ds"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -462,12 +466,20 @@ package com.gestureworks.core
 						<property ref="scale_dsx" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.99999"/>
 						<property ref="scale_dsy" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.99999"/>
 					</inertial_filter>
+					<delta_filter>
+						<property ref="scale_dsx" delta_threshold="false" delta_min="0.0001" delta_max="1"/>
+						<property ref="scale_dsy" delta_threshold="false" delta_min="0.0001" delta_max="1"/>
+					</delta_filter>
+					<multiply_filter>
+						<property ref="scale_dsx" multiply="false" func="linear" factor="0.0033"/>
+						<property ref="scale_dsy" multiply="false" func="linear" factor="0.0033"/>
+					</multiply_filter>
 				</processing>
 				<mapping>
 					<update>
 						<gesture_event>
-							<property ref="scale_dsx" target="scaleX" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
-							<property ref="scale_dsy" target="scaleY" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
+							<property ref="scale_dsx" target="scaleX"/>
+							<property ref="scale_dsy" target="scaleY"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -476,7 +488,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<cluster point_number="5" point_number_min="" point_number_max="" separation_threshold="0"/>
+							<cluster point_number="5" point_number_min="" point_number_max="" separation_min="0"/>
 						</initial>
 					</action>
 				</match>
@@ -484,8 +496,8 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="scale"/>
 						<returns>
-							<property ref="scale_dsx" var="ds"/>
-							<property ref="scale_dsy" var="ds"/>
+							<property ref="scale_dsx" module_result="ds"/>
+							<property ref="scale_dsy" module_result="ds"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -498,12 +510,20 @@ package com.gestureworks.core
 						<property ref="scale_dsx" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.99999"/>
 						<property ref="scale_dsy" touch_inertia="true" inertial_mass="3" release_inertia="true" friction="0.99999"/>
 					</inertial_filter>
+					<delta_filter>
+						<property ref="scale_dsx" delta_threshold="false" delta_min="0.0001" delta_max="1"/>
+						<property ref="scale_dsy" delta_threshold="false" delta_min="0.0001" delta_max="1"/>
+					</delta_filter>
+					<multiply_filter>
+						<property ref="scale_dsx" multiply="false" func="linear" factor="0.0033"/>
+						<property ref="scale_dsy" multiply="false" func="linear" factor="0.0033"/>
+					</multiply_filter>
 				</processing>
 				<mapping>
 					<update>
 						<gesture_event>
-							<property ref="scale_dsx" target="scaleX" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
-							<property ref="scale_dsy" target="scaleY" func="linear" factor="0.0033" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
+							<property ref="scale_dsx" target="scaleX"/>
+							<property ref="scale_dsy" target="scaleY"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -518,7 +538,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="500" translation_threshold="2"/>
+							<point event_duration_min="500" translation_max="2"/>
 							<cluster point_number="0" point_number_min="1" point_number_max="5"/>
 						</initial>
 					</action>
@@ -527,9 +547,9 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="hold"/>
 						<returns>
-							<property id="hold_x" var="x"/>
-							<property id="hold_y" var="y"/>
-							<property id="hold_n" var="n"/>
+							<property id="hold_x" module_result="x"/>
+							<property id="hold_y" module_result="y"/>
+							<property id="hold_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -549,7 +569,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="500" translation_threshold="2"/>
+							<point event_duration_min="500" translation_max="2"/>
 							<cluster point_number="0" point_number_min="1" point_number_max="5"/>
 						</initial>
 					</action>
@@ -558,9 +578,9 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="hold"/>
 						<returns>
-							<property id="hold_x" var="x"/>
-							<property id="hold_y" var="y"/>
-							<property id="hold_n" var="n"/>
+							<property id="hold_x" module_result="x"/>
+							<property id="hold_y" module_result="y"/>
+							<property id="hold_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -579,7 +599,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="500" translation_threshold="2"/>
+							<point event_duration_min="500" translation_max="2"/>
 							<cluster point_number="3"/>
 						</initial>
 					</action>
@@ -588,9 +608,9 @@ package com.gestureworks.core
 					<algorithm>
 						<library module="hold"/>
 						<returns>
-							<property id="hold_x" var="x"/>
-							<property id="hold_y" var="y"/>
-							<property id="hold_n" var="n"/>
+							<property id="hold_x" module_result="x"/>
+							<property id="hold_y" module_result="y"/>
+							<property id="hold_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -610,7 +630,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="200" translation_threshold="10"/>
+							<point event_duration_max="200" translation_max="10"/>
 							<event touch_event="touchEnd"/>
 						</initial>
 					</action>
@@ -619,9 +639,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="tap"/>
 						<returns>
-							<property id="tap_x" var="x"/>
-							<property id="tap_y" var="y"/>
-							<property id="tap_n" var="n"/>
+							<property id="tap_x" module_result="x"/>
+							<property id="tap_y" module_result="y"/>
+							<property id="tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -640,7 +660,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="200" translation_threshold="10"/>
+							<point event_duration_max="200" translation_max="10"/>
 							<cluster point_number="0"/>
 							<event touch_event="touchEnd"/>
 						</initial>
@@ -650,9 +670,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="tap"/>
 						<returns>
-							<property id="tap_x" var="x"/>
-							<property id="tap_y" var="y"/>
-							<property id="tap_n" var="n"/>
+							<property id="tap_x" module_result="x"/>
+							<property id="tap_y" module_result="y"/>
+							<property id="tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -672,7 +692,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="200" translation_threshold="10"/>
+							<point event_duration_max="200" translation_max="10"/>
 							<cluster point_number="3"/>
 							<event touch_event="touchEnd"/>
 						</initial>
@@ -682,9 +702,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="tap"/>
 						<returns>
-							<property id="tap_x" var="x"/>
-							<property id="tap_y" var="y"/>
-							<property id="tap_n" var="n"/>
+							<property id="tap_x" module_result="x"/>
+							<property id="tap_y" module_result="y"/>
+							<property id="tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -703,7 +723,7 @@ package com.gestureworks.core
 				<match >
 					<action type="discrete">
 						<initial>
-							<point event_duration_threshold="300" interevent_duration_threshold="300" translation_threshold="20"/>
+							<point event_duration_max="300" interevent_duration_max="300" translation_max="20"/>
 							<event gesture_event="tap"/>
 						</initial>
 					</action>
@@ -712,9 +732,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="double_tap"/>
 						<returns>
-							<property id="double_tap_x" var="x"/>
-							<property id="double_tap_y" var="y"/>
-							<property id="double_tap_n" var="n"/>
+							<property id="double_tap_x" module_result="x"/>
+							<property id="double_tap_y" module_result="y"/>
+							<property id="double_tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -733,7 +753,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="300" interevent_duration_threshold="300" translation_threshold="20"/>
+							<point event_duration_max="300" interevent_duration_max="300" translation_max="20"/>
 							<cluster point_number="0"/>
 							<event gesture_event="tap"/>
 						</initial>
@@ -743,9 +763,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="double_tap"/>
 						<returns>
-							<property id="double_tap_x" var="x"/>
-							<property id="double_tap_y" var="y"/>
-							<property id="double_tap_n" var="n"/>
+							<property id="double_tap_x" module_result="x"/>
+							<property id="double_tap_y" module_result="y"/>
+							<property id="double_tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -764,7 +784,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="300" interevent_duration_threshold="300" translation_threshold="20"/>
+							<point event_duration_max="300" interevent_duration_max="300" translation_max="20"/>
 							<cluster point_number="1"/>
 							<event gesture_event="tap"/>
 						</initial>
@@ -774,9 +794,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="double_tap"/>
 						<returns>
-							<property id="double_tap_x" var="x"/>
-							<property id="double_tap_y" var="y"/>
-							<property id="double_tap_n" var="n"/>
+							<property id="double_tap_x" module_result="x"/>
+							<property id="double_tap_y" module_result="y"/>
+							<property id="double_tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -795,7 +815,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="300" interevent_duration_threshold="300" translation_threshold="20"/>
+							<point event_duration_max="300" interevent_duration_max="300" translation_max="20"/>
 							<event gesture_event="tap"/>
 						</initial>
 					</action>
@@ -804,9 +824,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="triple_tap"/>
 						<returns>
-							<property id="triple_tap_x" var="x"/>
-							<property id="triple_tap_y" var="y"/>
-							<property id="triple_tap_n" var="n"/>
+							<property id="triple_tap_x" module_result="x"/>
+							<property id="triple_tap_y" module_result="y"/>
+							<property id="triple_tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>
@@ -825,7 +845,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="300" interevent_duration_threshold="300" translation_threshold="20"/>
+							<point event_duration_max="300" interevent_duration_max="300" translation_max="20"/>
 							<cluster point_number="0"/>
 							<event gesture_event="tap" />
 						</initial>
@@ -835,9 +855,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="triple_tap"/>
 						<returns>
-							<property id="triple_tap_x" var="x"/>
-							<property id="triple_tap_y" var="y"/>
-							<property id="triple_tap_n" var="n"/>
+							<property id="triple_tap_x" module_result="x"/>
+							<property id="triple_tap_y" module_result="y"/>
+							<property id="triple_tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>
@@ -846,6 +866,7 @@ package com.gestureworks.core
 						<gesture_event>
 							<property ref="triple_tap_x"/>
 							<property ref="triple_tap_y"/>
+							<property ref="triple_tap_n"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -855,7 +876,7 @@ package com.gestureworks.core
 				<match>
 					<action>
 						<initial>
-							<point event_duration_threshold="300" interevent_duration_threshold="300" translation_threshold="20"/>
+							<point event_duration_max="300" interevent_duration_max="300" translation_max="20"/>
 							<cluster point_number="1"/>
 							<event gesture_event="tap"/>
 						</initial>
@@ -865,9 +886,9 @@ package com.gestureworks.core
 					<algorithm class="temporalmetric" type="discrete">
 						<library module="triple_tap"/>
 						<returns>
-							<property id="triple_tap_x" var="x"/>
-							<property id="triple_tap_y" var="y"/>
-							<property id="triple_tap_n" var="n"/>
+							<property id="triple_tap_x" module_result="x"/>
+							<property id="triple_tap_y" module_result="y"/>
+							<property id="triple_tap_n" module_result="n"/>
 						</returns>
 					</algorithm>
 				</analysis>
@@ -876,6 +897,7 @@ package com.gestureworks.core
 						<gesture_event>
 							<property ref="triple_tap_x"/>
 							<property ref="triple_tap_y"/>
+							<property ref="triple_tap_n"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -890,7 +912,7 @@ package com.gestureworks.core
 					<action>
 						<initial>
 							<cluster point_number="0" point_number_min="1" point_number_max="5" acceleration_min="0.5"/>
-							<event touch_event="TouchEnd"/>
+							<event touch_event="touchEnd"/>
 						</initial>
 					</action>
 				</match>
@@ -898,8 +920,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="flick"/>
 						<returns>
-							<property id="flick_dx" var="etm_dx"/>
-							<property id="flick_dy" var="etm_dy"/>
+							<property id="flick_dx" module_result="etm_dx" module_var="etm_ddx"/>
+							<property id="flick_dy" module_result="etm_dy" module_var="etm_ddy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -926,7 +948,7 @@ package com.gestureworks.core
 					<action>
 						<initial>
 							<cluster point_number="0" point_number_min="1" point_number_max="5" acceleration_min="0.5"/>
-							<event touch_event="TouchEnd"/>
+							<event touch_event="touchEnd"/>
 						</initial>
 					</action>
 				</match>
@@ -934,8 +956,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="flick"/>
 						<returns>
-							<property id="flick_dx" var="etm_dx"/>
-							<property id="flick_dy" var="etm_dy"/>
+							<property id="flick_dx" module_result="etm_dx" module_var="etm_ddx"/>
+							<property id="flick_dy" module_result="etm_dy" module_var="etm_ddy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -946,7 +968,7 @@ package com.gestureworks.core
 					</inertial_filter>
 				</processing>
 				<mapping>
-					<update dispatch_type="discrete" reset="cluster_remove">
+					<update dispatch_type="discrete" dispatch_mode="cluster_remove" dispatch_reset="cluster_remove">
 						<gesture_event>
 							<property ref="flick_dx" target=""/>
 							<property ref="flick_dy" target=""/>
@@ -962,7 +984,7 @@ package com.gestureworks.core
 					<action>
 						<initial>
 							<cluster point_number="0" point_number_min="1" point_number_max="5" acceleration_max="0.5"/>
-							<event touch_event="TouchEnd"/>
+							<event touch_event="touchEnd"/>
 						</initial>
 					</action>
 				</match>
@@ -970,22 +992,28 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="swipe" />
 						<returns>
-							<property id="swipe_dx" var="etm_dx"/>
-							<property id="swipe_dy" var="etm_dy"/>
+							<property id="swipe_dx" module_result="etm_dx" module_var="etm_ddx"/>
+							<property id="swipe_dy" module_result="etm_dy" module_var="etm_ddy"/>
+							<property id="swipe_ddx" module_result="etm_ddx" module_var="etm_ddx"/>
+							<property id="swipe_ddy" module_result="etm_ddy" module_var="etm_ddy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
 				<processing>
-					<inertial_filter>
-						<property ref="swipe_dx" release_inertia="false" friction="0.99999"/>
-						<property ref="swipe_dy" release_inertia="false" friction="0.99999"/>
-					</inertial_filter>
+					<delta_filter>
+						<property ref="swipe_dx" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+						<property ref="swipe_dy" delta_threshold="true" delta_min="0.01" delta_max="100"/>
+						<property ref="swipe_ddx" delta_threshold="false" delta_min="0.01" delta_max="100"/>
+						<property ref="swipe_ddy" delta_threshold="false" delta_min="0.01" delta_max="100"/>
+					</delta_filter>
 				</processing>
 				<mapping>
-					<update dispatch_type="discrete">
+					<update dispatch_type="discrete" dispatch_mode="cluster_remove" dispatch_reset="cluster_remove">
 						<gesture_event>
 							<property ref="swipe_dx" target=""/>
 							<property ref="swipe_dy" target=""/>
+							<property ref="swipe_ddx" target=""/>
+							<property ref="swipe_ddy" target=""/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -998,7 +1026,7 @@ package com.gestureworks.core
 					<action>
 						<initial>
 							<cluster point_number="0" point_number_min="1" point_number_max="5" acceleration_max="0.01"/>
-							<event touch_event="TouchEnd"/>
+							<event touch_event="touchEnd"/>
 						</initial>
 					</action>
 				</match>
@@ -1006,8 +1034,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="swipe"/>
 						<returns>
-							<property id="swipe_dx" var="etm_dx"/>
-							<property id="swipe_dy" var="etm_dy"/>
+							<property id="swipe_dx" module_result="etm_dx" module_var="etm_ddx"/>
+							<property id="swipe_dy" module_result="etm_dy" module_var="etm_ddy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1018,7 +1046,7 @@ package com.gestureworks.core
 					</inertial_filter>
 				</processing>
 				<mapping>
-					<update dispatch_type="discrete">
+					<update dispatch_type="discrete" reset="cluster_remove">
 						<gesture_event>
 							<property ref="swipe_dx" target=""/>
 							<property ref="swipe_dy" target=""/>
@@ -1041,8 +1069,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="scroll"/>
 						<returns>
-							<property id="scroll_dx" var="etm_dx"/>
-							<property id="scroll_dy" var="etm_dy"/>
+							<property id="scroll_dx" module_result="etm_dx" module_var="etm_dx"/>
+							<property id="scroll_dy" module_result="etm_dy" module_var="etm_dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1080,8 +1108,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="scroll"/>
 						<returns>
-							<property id="scroll_dx" var="etm_dx"/>
-							<property id="scroll_dy" var="etm_dy"/>
+							<property id="scroll_dx" module_result="etm_dx" module_var="etm_dx"/>
+							<property id="scroll_dy" module_result="etm_dy" module_var="etm_dy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1118,8 +1146,8 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="tilt"/>
 						<returns>
-							<property id="tilt_dx" var="dsx"/>
-							<property id="tilt_dy" var="dsy"/>
+							<property id="tilt_dx" module_result="dsx"/>
+							<property id="tilt_dy" module_result="dsy"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1159,7 +1187,7 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="pivot"/>
 						<returns>
-							<property id="pivot_dtheta" var="pivot_dtheta"/>
+							<property id="pivot_dtheta" module_result="pivot_dtheta"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1177,7 +1205,7 @@ package com.gestureworks.core
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
-							<property ref="pivot_dtheta" target="rotate" func="linear" factor="0.00002" />
+							<property ref="pivot_dtheta" target="rotate"/>
 						</gesture_event>
 					</update>
 				</mapping>
@@ -1195,10 +1223,10 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="orient"/>
 						<returns>
-							<property id="dx" var="orient_dx"/>
-							<property id="dy" var="orient_dy"/>
-							<property id="orient_hand" var="hand"/>
-							<property id="orient_thumbID" var="thumbID"/>
+							<property id="dx" module_result="orient_dx"/>
+							<property id="dy" module_result="orient_dy"/>
+							<property id="orient_hand" module_result="hand"/>
+							<property id="orient_thumbID" module_result="thumbID"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1229,9 +1257,9 @@ package com.gestureworks.core
 					<algorithm class="vectormetric" type="continuous">
 						<library module="stroke"/>
 						<returns>
-							<property id="stroke_x" type="stroke" var=""/>
-							<property id="stroke_y" type="stroke" var=""/>
-							<property id="stroke_prob" type="stroke" var=""/>
+							<property id="stroke_x" module_result=""/>
+							<property id="stroke_y" module_result=""/>
+							<property id="stroke_prob" module_result="prob"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1260,11 +1288,11 @@ package com.gestureworks.core
 					<algorithm class="kinemetric" type="continuous">
 						<library module="manipulate"/>
 						<returns>
-							<property id="dx" var="dx"/>
-							<property id="dy" var="dy"/>
-							<property id="dsx" var="ds"/>
-							<property id="dsy" var="ds"/>
-							<property id="dtheta" var="dtheta"/>
+							<property id="dx" module_result="dx"/>
+							<property id="dy" module_result="dy"/>
+							<property id="dsx" module_result="ds"/>
+							<property id="dsy" module_result="ds"/>
+							<property id="dtheta" module_result="dtheta"/>
 						</returns>
 					</algorithm>
 				</analysis>	
@@ -1290,14 +1318,21 @@ package com.gestureworks.core
 						<property ref="dsy" delta_threshold="true" delta_min="0.0001" delta_max="1"/>
 						<property ref="dtheta" delta_threshold="true" delta_min="0.01" delta_max="20"/>
 					</delta_filter>
+					<multiply_filter>
+						<property ref="dx" multiply="false"/>
+						<property ref="dy" multiply="false"/>
+						<property ref="dsx" multiply="true" func="linear" factor="0.0033"/>
+						<property ref="dsy" multiply="true" func="linear" factor="0.0033"/>
+						<property ref="dtheta" multiply="false"/>
+					</multiply_filter>
 				</processing>
 				<mapping>
 					<update dispatch_type="continuous">
 						<gesture_event>
 							<property ref="dx" target="x"/>
 							<property ref="dy" target="y"/>
-							<property ref="dsx" target="scaleX" func="linear" factor="0.0033"/>
-							<property ref="dsy" target="scaleY" func="linear" factor="0.0033"/>
+							<property ref="dsx" target="scaleX"/>
+							<property ref="dsy" target="scaleY"/>
 							<property ref="dtheta" target="rotation"/>
 						</gesture_event>
 					</update>
@@ -1305,6 +1340,7 @@ package com.gestureworks.core
 			</Gesture>
 			
 		</Gesture_set>
+	
 	</Gestures>;
 
 	}

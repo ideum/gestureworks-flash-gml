@@ -180,7 +180,7 @@ package com.gestureworks.core
 			GestureWorks.application = stage;
 			initialized = true;
 			
-			if (settingsPath) create();
+			if (cml) create();
 			else timeInterval = setInterval(timerComplete, 500);
 		}
 		
