@@ -290,7 +290,14 @@ package com.gestureworks.core
 			
 			// currentTarget seems to work here, b/c there is filtering going on within onTouchDown
 			// normally this would be the target, but Tuio library doesn't recognize mouseChildren = false
-			onTouchDown(event, e.currentTarget);					
+			//onTouchDown(event, e.currentTarget);
+			
+			// this is the new technique, basically doing my own mouseChildren check 
+			// -Charles Veasey (9/5/2012)
+			if (!mouseChildren) { 
+				e.stopPropagation();
+				onTouchDown(event, this);
+			}	
 		}		
 		/**
 		 * @private
@@ -391,7 +398,7 @@ package com.gestureworks.core
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
 		public function onTouchDown(event:TouchEvent, target:*=null):void
-		{				
+		{			
 				//////////////////
 				// new stuff
 				//////////////////
@@ -403,7 +410,6 @@ package com.gestureworks.core
 					target = event.target; // object that got hit, used for our non-tuio gesture events
 				if (!target)
 					return;
-				
 					
 				var parent:* = target.parent;										
 				
