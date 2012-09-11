@@ -24,7 +24,7 @@ package com.gestureworks.managers
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import com.gestureworks.core.TouchSprite;
-	import com.gestureworks.core.TouchSpriteBase;
+	//import com.gestureworks.core.TouchSpriteBase;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;

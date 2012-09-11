@@ -21,6 +21,9 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.PropertyObject;
 	
+	import com.gestureworks.utils.NoiseFilter;
+	import com.gestureworks.objects.PropertyObject;
+	
 	/**
  * The TouchObject class is the base class for all touch enabled DisplayObjects. It
  * provides basic implementations for priortized gesture and touch processing as well as 
@@ -40,9 +43,12 @@ package com.gestureworks.analysis
 	 */
 		private var touchObjectID:int;
 		
+		//private var init:Boolean = false;
 		private var ts:Object;//private var ts:TouchSprite;
 		private var i:String;
 		private var j:String;
+		
+		public var inertialDampingOn:Boolean = false;//false
 		
 		// translation limits -------------//
 		/**
@@ -88,8 +94,31 @@ package com.gestureworks.analysis
 		public function init():void
 		{	
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
+			//initFilters();
 		}
 		
+		/*
+		public function initFilters():void
+			{
+				//if(trace_debug_mode)trace("init touchsprite processor")
+				
+				for (i in ts.gO.pOList)
+				{
+					for (j in ts.gO.pOList[i])
+					{
+					if (ts.gO.pOList[i][j] is PropertyObject)
+					{
+						if (ts.gO.pOList[i][j].filterOn) 
+						{
+							if (ts.gO.pOList[i][j].filterOn) ts.gO.pOList[i][j].noise_filterMatrix = new NoiseFilter();
+							//if(trace_debug_mode)
+							trace("created filter object for:",j)
+						}
+					}
+					}
+				}
+			}
+		*/
 		public  function processPipeline():void
 		{
 			//trace("processing pipeline");
@@ -132,15 +161,29 @@ package com.gestureworks.analysis
 									// map filter properties
 									// PULLED REFERENCE TO PROCESS DELTA
 									///////////////////////////////////////////////////////////////////////////////////////////
-									ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
+									//ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
+									//ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].clusterDelta;
 									
+									///////////////////////////////////////////////////////////////////////////////////////////
+									// NOISE FILTER BLOCK
+									///////////////////////////////////////////////////////////////////////////////////////////
 									
+									if (ts.gO.pOList[i][j].filterOn)
+									{
+										// init noise filter
+										if(!ts.gO.pOList[i][j].noise_filterMatrix) ts.gO.pOList[i][j].noise_filterMatrix = new NoiseFilter();
+										else {
+											var estDelta:Number = ts.gO.pOList[i][j].noise_filterMatrix.next(ts.gO.pOList[i][j].clusterDelta);
+											ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].filter_factor * estDelta + (1 - ts.gO.pOList[i][j].filter_factor) * ts.gO.pOList[i][j].clusterDelta;
+											//trace("	applying filter:",i,j, "	cluster delta:",gO.pOList[i][j].clusterDelta, "	estinmated delta:",estDelta, "	filter factor:",gO.pOList[i][j].filter_factor)
+										}
+									}
+									else ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].clusterDelta;
 									
+
+									//trace("pipe",ts.gO.pOList[i][j].clusterDelta,ts.gO.pOList[i][j].gestureDelta)
 									
-									
-									
-									
-									
+
 									////////////////////////////////////////////////////////////////////////////////////////////
 									// easing block
 									////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,13 +303,17 @@ package com.gestureworks.analysis
 									
 									if (ts.gO.pOList[i][j].delta_threshold)
 									{
+										/*
 										if ((Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min) || ( Math.abs(ts.gO.pOList[i][j].gestureDelta) > ts.gO.pOList[i][j].delta_max))
 										{
 											//trace("delta threshold met, set to zero",i,ts.gO.pOList[i][j].gestureDelta)
 											ts.gO.pOList[i][j].gestureDelta = 0;
 											//if (ts.trace_debug_mode) 
 											
-										}
+										}*/
+										
+										if (Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min) ts.gO.pOList[i][j].gestureDelta = 0;
+										if ( Math.abs(ts.gO.pOList[i][j].gestureDelta) > ts.gO.pOList[i][j].delta_max) ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].delta_max;
 									}
 									
 									

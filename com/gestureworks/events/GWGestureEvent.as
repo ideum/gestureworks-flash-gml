@@ -98,10 +98,8 @@ package com.gestureworks.events
 		public static var GML:Object = 
 			{
 				SEED_GESTURE:"seed gesture",
-				NEW_GESTURE:"new gesture",
-				EXAMPLE_GESTURE:"example gesture",
-				N_DRAG:"n-drag",
-				THREE_FINGER_DRAG:"3-finger-drag"
+				EXAMPLE_GESTURE:"example gesture"
+				//N_CUSTOM:"N_CUSTOM"
 			};
 	
 		
@@ -111,7 +109,7 @@ package com.gestureworks.events
 
 		public function GWGestureEvent(type:String, data:Object, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
-			//trace(type,CUSTOM.NEW_GESTURE); 
+			//trace(type,GML.NEW_GESTURE); 
 			
 			super(type, bubbles, cancelable);
 			value = data;

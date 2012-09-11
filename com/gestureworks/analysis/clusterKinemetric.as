@@ -659,11 +659,11 @@ package com.gestureworks.analysis
 					
 					if (N == 1) 
 						{
-						c_dx = pointList[0].DX;
-						c_dy = pointList[0].DY;
+							c_dx = pointList[0].DX;
+							c_dy = pointList[0].DY;
 						}
-					else {
-					
+					else if (N > 1)
+					{
 						c_dx = 0;
 						c_dy = 0;
 						
@@ -680,6 +680,7 @@ package com.gestureworks.analysis
 						}
 						//trace("inst trans", c_dx);
 						//////////// apply delta thresholds for change in x and y ////////////////////////////////////////////
+						
 						
 						if (transThresholds) 
 						{
@@ -698,7 +699,8 @@ package com.gestureworks.analysis
 						}
 						////////////////////////////////////////////////////////////////////////////////////////////	
 					}
-						//trace("drag calc kine",c_dx,c_dy);
+					
+					//	trace("drag calc kine",c_dx,c_dy);
 		}
 		
 		public function findMeanInstSeparation():void
@@ -708,7 +710,12 @@ package com.gestureworks.analysis
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// finds the change in the separation of the cluster between the current frame and a previous frame in history
 					
-					
+					if (N == 1) 
+						{
+						c_ds = 0;
+						}
+					else if (N > 1)
+					{
 						c_ds = 0;
 						//c_dsx = 0;
 						//c_dsy = 0;
@@ -716,7 +723,7 @@ package com.gestureworks.analysis
 						for (i = 0; i < N; i++) 
 						{
 						//i = 0;
-							if ((N > i + 1)&&(N > 1))
+							if (N > i + 1)
 							{
 								if ((pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
 								{		
@@ -728,7 +735,7 @@ package com.gestureworks.analysis
 								}
 							}
 						}
-						
+					
 						// FIND C_DSX AND C_DSY AGGREGATE THEN AS A LAST STEP FIND THE SQUARE OF THE DISTANCE BETWEEN TO GET C_DS
 						//c_ds = Math.sqrt(c_dsx*c_dsx + c_dsy*c_dsy)
 						
@@ -745,6 +752,7 @@ package com.gestureworks.analysis
 						}
 						//trace("ds", c_ds);
 						//////////////////////////////////////////////////////////////////////////////////////////////////////	
+					}
 		}
 		public function findMeanInstSeparationXY():void//Point
 		{
@@ -753,42 +761,52 @@ package com.gestureworks.analysis
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// finds the change in the separation of the cluster between the current frame and a previous frame in history
 						//var pt_sepXY:Point = new Point();
-						c_dsx = 0;
-						c_dsy = 0;
-							
-						for (i = 0; i < N; i++) 
+						
+						
+						if (N == 1) 
 						{
-							//i = 0;
-							if ((N > i + 1)&&(N > 1))
-							{
-								if ((pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
-								{		
-								// SIMPLIFIED DELTA 
-								//c_dsx += (pointList[0].history[0].x - pointList[i + 1].history[0].x) - (pointList[0].history[h].x - pointList[i + 1].history[h].x)*h0;
-								//c_dsy += (pointList[0].history[0].y - pointList[i + 1].history[0].y) - (pointList[0].history[h].y - pointList[i + 1].history[h].y) * h0;
-								c_dsx += (pointList[0].history[0].x - pointList[i + 1].history[0].x) - (pointList[0].history[mc].x - pointList[i + 1].history[mc].x);
-								c_dsy += (pointList[0].history[0].y - pointList[i + 1].history[0].y) - (pointList[0].history[mc].y - pointList[i + 1].history[mc].y);
+							c_dsx = 0;
+							c_dsy = 0;
+						}
+						
+						else if (N > 1)
+						{
+							c_dsx = 0;
+							c_dsy = 0;
+								
+								for (i = 0; i < N; i++) 
+								{
+									//i = 0;
+									if (N > i + 1)
+									{
+										if ((pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
+										{		
+										// SIMPLIFIED DELTA 
+										//c_dsx += (pointList[0].history[0].x - pointList[i + 1].history[0].x) - (pointList[0].history[h].x - pointList[i + 1].history[h].x)*h0;
+										//c_dsy += (pointList[0].history[0].y - pointList[i + 1].history[0].y) - (pointList[0].history[h].y - pointList[i + 1].history[h].y) * h0;
+										c_dsx += (pointList[0].history[0].x - pointList[i + 1].history[0].x) - (pointList[0].history[mc].x - pointList[i + 1].history[mc].x);
+										c_dsy += (pointList[0].history[0].y - pointList[i + 1].history[0].y) - (pointList[0].history[mc].y - pointList[i + 1].history[mc].y);
+										}
+									}
 								}
+							
+							////////////////////// apply delta thresholds for change in separation in x and y direction /////////////////////////////////
+							if (sepThresholds)
+							{
+								var deltasx:Number = Math.abs(c_dsx);
+								var deltasy:Number = Math.abs(c_dsy);
+
+								if ((deltasx > sepx_threshold_min) && (deltasx < sepx_threshold_max)) c_dsx *= k1;
+								else c_dsx = 0;
+								
+								if ((deltasy > sepy_threshold_min) && (deltasy < sepy_threshold_max)) c_dsy *= k1;
+								else c_dsy = 0;
+							}
+							else {
+								c_dsx *= k1;
+								c_dsy *= k1;
 							}
 						}
-						
-						////////////////////// apply delta thresholds for change in separation in x and y direction /////////////////////////////////
-						if (sepThresholds)
-						{
-							var deltasx:Number = Math.abs(c_dsx);
-							var deltasy:Number = Math.abs(c_dsy);
-
-							if ((deltasx > sepx_threshold_min) && (deltasx < sepx_threshold_max)) c_dsx *= k1;
-							else c_dsx = 0;
-							
-							if ((deltasy > sepy_threshold_min) && (deltasy < sepy_threshold_max)) c_dsy *= k1;
-							else c_dsy = 0;
-						}
-						else {
-							c_dsx *= k1;
-							c_dsy *= k1;
-						}
-						
 						//pt_sepXY.x = c_dsx;
 						//pt_sepXY.y = c_dsy;
 						//////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -888,11 +906,18 @@ package com.gestureworks.analysis
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// finds the change in the rotation of the cluster between the current frame and a previous frame in history
 					
+						if (N==1) 
+						{
+							c_dtheta = 0;
+						}
+						
+						else if(N>1)
+						{
 						c_dtheta = 0;
 						
 						for (i = 0; i < N; i++) 
 						{
-							if ((N > i + 1)&&(N > 1))
+							if (N > i + 1)
 							{
 								if ((pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
 								{		
@@ -924,6 +949,7 @@ package com.gestureworks.analysis
 						}
 						else c_dtheta *= k1;
 						////////////////////////////////////////////////////////////////////////////////////////
+						}
 		}
 		
 		public function findMeanInstAcceleration():void

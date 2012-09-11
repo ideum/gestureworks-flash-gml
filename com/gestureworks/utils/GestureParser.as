@@ -154,6 +154,11 @@ package com.gestureworks.utils
 												pOList[gesture_id].algorithm_class = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("class"));
 												pOList[gesture_id].algorithm_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("type"));
 												
+												pOList[gesture_id].event_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.attribute("type"));
+												
+												// create static var in gesture event object
+												if (pOList[gesture_id].event_type == "custom") GWGestureEvent.GML[gesture_id.toUpperCase()] = gesture_id;
+											
 												pOList[gesture_id].dispatch_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_type"));
 												pOList[gesture_id].dispatch_mode = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_mode"));
 												pOList[gesture_id].dispatch_reset = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_reset"));

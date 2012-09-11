@@ -154,6 +154,17 @@ package com.gestureworks.objects
 			_match_GestureEvent = value;
 		}
 		
+		// event type
+		private var _event_type:String;
+		public function get event_type():String
+		{
+			return _event_type;
+		}
+		public function set event_type(value:String):void
+		{
+			_event_type = value;
+		}
+		
 		// event dipatch type
 		private var _dispatch_type:String;
 		public function get dispatch_type():String
