@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    TouchMovieClipGesture.as
+//  File:    TouchSpriteGesture.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
+	import flash.display.Sprite;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	
@@ -24,10 +25,14 @@ package com.gestureworks.core
 	import com.gestureworks.analysis.gestureDiscrete;
 	
 	import com.gestureworks.managers.TimelineHistories;
-	import com.gestureworks.objects.FrameObject;
+	import com.gestureworks.objects.FrameObject; 
 	import com.gestureworks.objects.PropertyObject;
 	
-	public class TouchMovieClipGesture extends TouchMovieClipProcessor
+	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.TimelineObject;
+	
+	public class TouchGesture extends Sprite
 	{
 		/**
 		* @private
@@ -43,19 +48,36 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var key:String;
+		private var DIM:String = ""; 
 		private var tapOn:Boolean = false;
+		
+		private var timerCount:int = 0;
+		
+		private var ts:Object;
+		private var id:int;
+		
+		private var cO:ClusterObject
+		private var gO:GestureObject;
+		private var tiO:TimelineObject;
 		/////////////////////////////////////////////////////////
 		
-		public function TouchMovieClipGesture():void
+		public function TouchGesture(touchObjectID:int):void
 		{
-			super();
+			//super();
+			id = touchObjectID;
+			ts = GestureGlobals.gw_public::touchObjects[id];
+			cO = ts.cO;
+			gO = ts.gO;
+			tiO = ts.tiO;
+			
 			initGesture();
          }
-		  
+		 
 		// initializers   
          public function initGesture():void 
          {
-			if(trace_debug_mode) trace("create touchMovieClip gesture layer");
+			//if(trace_debug_mode) trace("create touchsprite gesture");
+
 			initGestureAnalysis();
 		}
 		
@@ -64,13 +86,20 @@ package com.gestureworks.core
 		*/
 		public function initGestureAnalysis():void //clusterObject:Object
 		{
-			if(trace_debug_mode) trace("init gesture analysis", touchObjectID);
-
-			// analyze for continuous gesturing
-			gesture_cont = new gestureContinuous(touchObjectID);
+			//if (trace_debug_mode) trace("init gesture analysis", touchObjectID);
+			
+			// configure gesturelist from listener attachment
+			//if (hasEventListener(GWGestureEvent.DRAG)) trace("has drag listener");
+			//hasEventListener(GWGestureEvent.SCALE, scaleHandeler);
+			//hasEventListener(GWGestureEvent.ROTATE, rotateHandeler);
+			
+			gesture_cont = new gestureContinuous(id);
 
 			// analyze for descrete gesture sequence/series
-			gesture_disc = new gestureDiscrete(touchObjectID);	
+			gesture_disc = new gestureDiscrete(id);
+			
+			//initTimeline();
+			// analyze for gesture conflict/compliment
 		}
 		
 		/**
@@ -84,28 +113,24 @@ package com.gestureworks.core
 				
 				if (!tiO.timelineOn)
 				{
-					if ((gO.pOList[key].gesture_type == "stroke")||(gO.pOList[key].gesture_type == "swipe")||(gO.pOList[key].gesture_type == "flick")||(gO.pOList[key].gesture_type == "hold")||(gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
+					//if ((gO.pOList[key].gesture_type == "stroke") || (gO.pOList[key].gesture_type == "swipe") || (gO.pOList[key].gesture_type == "flick") || (gO.pOList[key].gesture_type == "hold") || (gO.pOList[key].gesture_type == "tap") || (gO.pOList[key].gesture_type == "double_tap") || (gO.pOList[key].gesture_type == "triple_tap"))
+					if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
 					{
 						tiO.timelineOn = true;
 						tiO.pointEvents = true;
 						tiO.timelineInit = true;
-						GestureGlobals.timelineHistoryCaptureLength = 80;	
+						GestureGlobals.timelineHistoryCaptureLength = 80;
+						tapOn = true;
 					}
-					
-					
 				}
 				
-				if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
-				{
-				tapOn = true;
-				}
 				
 				//MAKE GML PROGRAMMABLE SET GLOBAL POINT HISTORY
 				if (gO.pOList[key].gesture_type == "stroke") GestureGlobals.pointHistoryCaptureLength = 150; // define in GML
 
 				//trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
 			}	
-			trace("init timeline",tapOn);
+			//trace("init timeline",tapOn,tiO.timelineOn);
 		}
 		
 		/**
@@ -124,7 +149,7 @@ package com.gestureworks.core
 		public function updateGesturePipeline():void
 		{
 			gesture_cont.processPipeline();
-			if (_gestureEvents) manageGestureEventDispatch();	
+			if (ts.gestureEvents) manageGestureEventDispatch();	
 		}
 		
 		/**
@@ -146,6 +171,7 @@ package com.gestureworks.core
 		*/
 		private function manageGestureEventDispatch():void 
 		{
+			//trace("manage dispatch");
 			dispatchMode();
 			processTemoralMetric();
 			dispatchGestures();
@@ -258,7 +284,7 @@ package com.gestureworks.core
 						{
 						
 						// in current frame
-						for (var j:int = 0; j < tiO.frame.pointEventArray.length; j++) 
+						for (var j:int = 0; j < ts.tiO.frame.pointEventArray.length; j++) 
 								{
 								if (tiO.frame.pointEventArray[j].type == "touchEnd" ) 
 								{
@@ -313,6 +339,9 @@ package com.gestureworks.core
 							}
 					}	
 					
+					///////////////////////////////////////////////////////////////////////////
+					// generic event pair search
+					
 					// IF EVENT B OCCURES
 					// GO BACK AND LOOK FOR EVENT A
 					//????????????????????????????????????????????????
@@ -320,7 +349,7 @@ package com.gestureworks.core
 					//{
 						
 					//}
-						
+					///////////////////////////////////////////////////////////////////////////	
 					
 					
 					/////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,7 +373,7 @@ package com.gestureworks.core
 									gO.pOList[key].timer_count++
 								}
 								// double tap counter
-								if (gO.pOList[key].gesture_type == "double_tap") 
+								if (ts.gO.pOList[key].gesture_type == "double_tap") 
 								{
 									//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
 									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
@@ -395,6 +424,8 @@ package com.gestureworks.core
 		
 		public function dispatchMode():void 
 		{
+			//trace("dispatch mode");
+			
 			for (key in gO.pOList) 
 					{	
 						///////////////////////////////////
@@ -402,9 +433,11 @@ package com.gestureworks.core
 						////////////////////////////////////
 						if (gO.pOList[key].dispatch_type =="discrete")
 						{
+							//trace(gO.pOList[key].dispatch_mode,gO.pOList[key].dispatch_type,key)
 							if (gO.pOList[key].dispatch_mode =="cluster_remove")
 							{
-								if ((gO.release) && (!gO.pOList[key].complete)) gO.pOList[key].dispatchEvent = true;
+								if ((gO.release) && (!gO.pOList[key].complete)) gO.pOList[key].dispatchEvent = true;//gO.release
+					
 
 								////////////////////////////////////////////////////////////////////////////////////////
 								// must make generic
@@ -413,15 +446,28 @@ package com.gestureworks.core
 								// COPY CACHE INTO GESTURE DELTA
 								if (gO.pOList[key].gesture_type == "flick")
 								{	
-									gO.pOList[key]["flick_dx"].gestureDelta = gO.pOList[key]["flick_dx"].gestureDeltaCache;
-									gO.pOList[key]["flick_dy"].gestureDelta = gO.pOList[key]["flick_dy"].gestureDeltaCache;
+									for (DIM in gO.pOList[key])
+									{
+										if (gO.pOList[key][DIM] is PropertyObject) 
+										{
+										gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										}
+									}
 								}
 								
 								// COPY CACHE INTO GESTURE DELTA
 								if (gO.pOList[key].gesture_type == "swipe")
 								{	
-									gO.pOList[key]["swipe_dx"].gestureDelta = gO.pOList[key]["swipe_dx"].gestureDeltaCache;
-									gO.pOList[key]["swipe_dy"].gestureDelta = gO.pOList[key]["swipe_dy"].gestureDeltaCache;
+									
+									for (DIM in gO.pOList[key])
+									{
+										if (gO.pOList[key][DIM] is PropertyObject) 
+										{
+											gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+											gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										}
+									}
 								}
 								///////////////////////////////////////////////////////////////////////////////////////////
 							}
@@ -439,7 +485,7 @@ package com.gestureworks.core
 							
 							
 							
-							else //if (gO.pOList[key].dispatch_mode =="")
+							else if (gO.pOList[key].dispatch_mode =="")
 							{
 								// prime for dispatch
 								if (!gO.pOList[key].complete) gO.pOList[key].dispatchEvent = true;
@@ -459,6 +505,7 @@ package com.gestureworks.core
 		
 		public function dispatchReset():void 
 		{
+			//trace("dispatch reset ");
 			
 			for (key in gO.pOList) 
 					{	
@@ -476,7 +523,7 @@ package com.gestureworks.core
 						// when cluster has been removed
 						if (gO.pOList[key].dispatch_reset == "cluster_remove") 
 						{
-							if (N == 0)
+							if (ts.N == 0)
 							{
 								//trace("cluster remove reset")
 								gO.pOList[key].complete = false;
@@ -508,7 +555,7 @@ package com.gestureworks.core
 						}
 						
 						//when point removed reset
-						if (gO.pOList[key].dispatch_reset == "point_remove") // 
+						if (ts.gO.pOList[key].dispatch_reset == "point_remove") // 
 						{
 							//trace("--",dN,_N, cO.point_remove)
 							if(cO.point_remove) // point change
@@ -519,7 +566,7 @@ package com.gestureworks.core
 						}
 						
 						// AUTO RESET DISCRETE GESTURE
-						else if (gO.pOList[key].dispatch_reset == "") 
+						else if (ts.gO.pOList[key].dispatch_reset == "") 
 						{
 							//trace(key, "auto reset");
 							// auto reset each frame
@@ -536,21 +583,21 @@ package com.gestureworks.core
 		*/
 		public function dispatchGestures():void 
 		{	
-			//if (trace_debug_mode) trace("continuous gesture event dispatch");/trace("dispatch--------------------------",gO.release);
+			//if (trace_debug_mode) trace("continuous gesture event dispatch");//trace("dispatch--------------------------",gO.release);
 		
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
 			{
-				if (trace_debug_mode) trace("timeline frame update");
-				TimelineHistories.historyQueue(clusterID);			// push histories 
+				//if (trace_debug_mode) trace("timeline frame update");
+				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
 				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 			}
 			
 			// start OBJECT complete event gesturing
-			if ((gO.start)&&(_gestureEventStart))
+			if ((gO.start)&&(ts.gestureEventStart))
 			{
-				dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
+				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
+				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
 				gO.start = false;
 				//trace("start fired");
 			}
@@ -561,24 +608,24 @@ package com.gestureworks.core
 			for (key in gO.pOList) 
 				{	
 					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
-					if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
+					if ((ts.gO.pOList[key].activeEvent) && (ts.gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
 				}
 				
 			///////////////////////////////////////////////
 			// RELEASE GESTURE SWITCHES OFF RELEASE STATE SO MUST PROCESS ALL RELEASE BASED GESTURES FIRST
 			// gesture OBJECT release gesture
-			if ((gO.release)&&(_gestureEventRelease))
+			if ((gO.release)&&(ts.gestureEventRelease))
 			{
-				dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
 				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
 				gO.release = false;
 				//trace("release fired");
 			}
 			
 			// gesture OBJECT complete event
-			if ((gO.complete)&&(_gestureEventComplete))
+			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
-				dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
+				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
 				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
 				gO.complete = false;
 				//trace("complete fired");
@@ -600,7 +647,7 @@ package com.gestureworks.core
 							
 							// transform center point
 							//var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-							var trans_pt:Point = globalToLocal(new Point(gO.pOList[key].x, gO.pOList[key].y)); //local point
+							var trans_pt:Point = ts.globalToLocal(new Point(gO.pOList[key].x, gO.pOList[key].y)); //local point
 							// transform vector components
 							
 							//construct standard properties
@@ -672,7 +719,8 @@ package com.gestureworks.core
 								}
 							
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].gesture_type, Data);
-							dispatchEvent(GWEVENT);
+							ts.dispatchEvent(GWEVENT);
+
 							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(GWEVENT);
 							
 							/////// split
@@ -686,90 +734,6 @@ package com.gestureworks.core
 						// set gesture event phase logic
 						gO.pOList[key].complete = true;
 		}
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//public  read / write
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/**
-		* @private
-		*/
-		//public read write
-		private var _gestureEventStart:Boolean = true;
-		/**
-		* Indicates whether any gestureEvents have been started on the touchSprite.
-		*/
-		public function get gestureEventStart():Boolean{return _gestureEventStart;}
-		public function set gestureEventStart(value:Boolean):void
-		{
-			_gestureEventStart=value;
-		}
 		
-		
-		/**
-		* @private
-		*/
-		private var _gestureEventComplete:Boolean = true;
-		/**
-		* Indicates weather all gestureEvents have been completed on the touchSprite.
-		*/
-		public function get gestureEventComplete():Boolean{return _gestureEventComplete;}
-		public function set gestureEventComplete(value:Boolean):void
-		{
-			_gestureEventComplete=value;
-		}
-		
-		/**
-		* @private
-		*/
-		private var _gestureEventRelease:Boolean = true;
-		/**
-		* Indicates whether all touch points have been released on the touchSprite.
-		*/
-		public function get gestureEventRelease():Boolean{return _gestureEventRelease;}
-		public function set gestureEventRelease(value:Boolean):void
-		{
-			_gestureEventRelease = value;
-			
-			
-		}
-		
-		/**
-		* @private
-		*/
-		// NOW SET TO TRUE BY DEFAULT
-		// TURN OFF TO OPTOMIZE WHEN USING NATIVE
-		// TODO, AUTO ON WHEN ATTATCH LISTENERS
-		private var _gestureEvents:Boolean = true;
-		/**
-		* Determins whether gestureEvents are processed and dispatched on the touchSprite.
-		*/
-		public function get gestureEvents():Boolean{return _gestureEvents;}
-		public function set gestureEvents(value:Boolean):void
-		{
-			_gestureEvents=value;
-		}
-		
-		/**
-		* @private
-		*/
-		public var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
-		/**
-		* Determins whether release inertia is given to gestureEvents on the touchSprite.
-		*/
-		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set gestureReleaseInertia(value:Boolean):void
-		{
-			_gestureReleaseInertia=value;
-		}
-		
-		//gestures tweening
-		public var _gestureTweenOn:Boolean = false;
-		public function get gestureTweenOn():Boolean
-		{
-			return _gestureTweenOn;
-		}
-		public function set gestureTweenOn(value:Boolean):void
-		{
-			_gestureTweenOn = value;
-		}
 	}
 }

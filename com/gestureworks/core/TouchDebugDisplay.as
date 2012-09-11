@@ -22,7 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.ClusterHistories;
 	import com.gestureworks.managers.TransformHistories;
 
-	public class TouchSpriteDebugDisplay extends TouchSpriteTransform
+	public class TouchDebugDisplay //extends TouchSpriteBase
 	{
 		/**
 		* @private
@@ -181,9 +181,16 @@ package com.gestureworks.core
 		*/
 		private var displayRadius:int = 200;
 		
-		public function TouchSpriteDebugDisplay():void
+		private var ts:Object;
+		private var id:int
+		
+		public function TouchDebugDisplay(touchObjectID:int):void
 		{
-			super();
+			//super();
+			
+			id = touchObjectID;
+			ts = GestureGlobals.gw_public::touchObjects[id];
+			
 			
 			var debugOn:Boolean =true;//------------------------------------------------------------------------
 			
@@ -202,62 +209,62 @@ package com.gestureworks.core
 				initDebugVars();
 				initDebugDisplay();
 				
-				if (stage) addtostage();
-				else addEventListener(Event.ADDED_TO_STAGE, addtostage);
+				if (ts.stage) addtostage();
+				else ts.addEventListener(Event.ADDED_TO_STAGE, addtostage);
 		}
 		
 		 public function addtostage(e:Event = null):void 
         {
 			//trace("added to stage debug")
-			stage.addChild(debug_display);
+			ts.stage.addChild(debug_display);
 			
 		}
 		
 		public function initDebugVars():void
 		{
-		if (trace_debug_mode) trace("init debug cml vars");
+		//if (trace_debug_mode) trace("init debug cml vars");
 		
-		cml = new XMLList(CML.Objects)
-		var numLayers:int = cml.DebugKit.DebugLayer.length()
+		ts.cml = new XMLList(CML.Objects)
+		var numLayers:int = ts.cml.DebugKit.DebugLayer.length()
 			
-			displayOn = cml.DebugKit.attribute("displayOn") == "true" ?true:false;
-			viewAlwaysOn = cml.DebugKit.attribute("displayAlwaysOn") == "true" ?true:false;
-			displayRadius = int(cml.DebugKit.attribute("displayRadius"));
+			displayOn = ts.cml.DebugKit.attribute("displayOn") == "true" ?true:false;
+			viewAlwaysOn = ts.cml.DebugKit.attribute("displayAlwaysOn") == "true" ?true:false;
+			displayRadius = int(ts.cml.DebugKit.attribute("displayRadius"));
 		
 		for (var i:int = 0; i < numLayers; i++) {
-			var type:String = cml.DebugKit.DebugLayer[i].attribute("type")
+			var type:String = ts.cml.DebugKit.DebugLayer[i].attribute("type")
 		
-			if (type == "point_vectors") pointVectorsOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "point_shapes") pointShapesOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "point_vectors") pointVectorsOn = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "point_shapes") pointShapesOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			
-			if (type == "cluster_box") clusterBoxOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "cluster_circle") clusterCircleOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "cluster_center") clusterCenterOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "cluster_rotation") clusterRotationOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "cluster_web") clusterWebOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "cluster_orientation") clusterOrientationOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
+			if (type == "cluster_box") clusterBoxOn = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_circle") clusterCircleOn = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_center") clusterCenterOn = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_rotation") clusterRotationOn = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_web") clusterWebOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_orientation") clusterOrientationOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
 			
 			//if (type == "cluster_vector_data") clusterVectorDataOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			//if (type == "cluster_line_chart") clusterChartOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
 			//if (type == "cluster_data_list") clusterDataOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
-			if (type == "cluster_data_view") clusterDataViewOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "cluster_data_view") clusterDataViewOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			
 			//if (type == "gesture_data_list") gestureDataOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "gesture_data_view") gestureDataViewOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
+			if (type == "gesture_data_view") gestureDataViewOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
 			
 			//if (type == "processing_data_list") processingDataOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			//if (type == "processing_data_view") processingDataOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			
-			if (type == "touchobject_transform") touchObjectTransformOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "touchobject_pivot") touchObjectPivotOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
+			if (type == "touchobject_transform") touchObjectTransformOn = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "touchobject_pivot") touchObjectPivotOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
 			//if (type == "touchobject_data_list") touchObjectDataOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
-			if (type == "touchobject_data_view") touchObjectDataViewOn  = cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+			if (type == "touchobject_data_view") touchObjectDataViewOn  = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 		}
 					
 	}
 	public function initDebugDisplay():void 
 	{
-		if (trace_debug_mode) trace("init debug display",touchObjectID);
+		//if (trace_debug_mode) trace("init debug display",touchObjectID);
 					/////////////////////////////////////////////////////////////////
 					// piont display/
 					/////////////////////////////////////////////////////////////////
@@ -265,13 +272,13 @@ package com.gestureworks.core
 			{		
 					if(pointVectorsOn){
 						// create cluster point circles
-						cluster_vectors = new DebugClusterVectors(touchObjectID);
+						cluster_vectors = new DebugClusterVectors(id);
 							cluster_vectors.setStyles();
 						debug_display.addChild(cluster_vectors);
                		}
 					if(pointShapesOn){
 						// create cluster point circles
-						cluster_points = new DebugClusterPoints(touchObjectID);
+						cluster_points = new DebugClusterPoints(id);
 							cluster_points.setStyles();
 						debug_display.addChild(cluster_points);
 					}
@@ -282,38 +289,38 @@ package com.gestureworks.core
 					
 					if(clusterBoxOn){
 						// create cluster oultine box 
-						cluster_box = new DebugClusterBox(touchObjectID);
+						cluster_box = new DebugClusterBox(id);
 							cluster_box.setStyles();
 						debug_display.addChild(cluster_box);
 					}
 					if(clusterCircleOn){
 						// create cluster outline circle
-						cluster_circle = new DebugClusterCircle(touchObjectID);
+						cluster_circle = new DebugClusterCircle(id);
 							cluster_circle.setStyles();
 						debug_display.addChild(cluster_circle);
 					}
 					if(clusterWebOn){
 						// create cluster web
-						cluster_web = new DebugClusterWeb(touchObjectID);
+						cluster_web = new DebugClusterWeb(id);
 							cluster_web.setStyles();
 						debug_display.addChild(cluster_web);
 					}
 					if(clusterCenterOn){
 						// create cluster centers
-						cluster_center = new DebugClusterCenter(touchObjectID);
+						cluster_center = new DebugClusterCenter(id);
 							cluster_center.setStyles();
 							cluster_center.init();
 						debug_display.addChild(cluster_center);
 					}
 					if(clusterOrientationOn){
 						// create cluster orientation
-						cluster_orient = new DebugClusterOrientation(touchObjectID);
+						cluster_orient = new DebugClusterOrientation(id);
 							cluster_orient.setStyles();
 						debug_display.addChild(cluster_orient);
 					}
 					if(clusterRotationOn){
 						// create cluster outline circle
-						cluster_rotation = new DebugClusterRotation(touchObjectID);
+						cluster_rotation = new DebugClusterRotation(id);
 							cluster_rotation.setStyles();
 						debug_display.addChild(cluster_rotation);
 					}
@@ -346,7 +353,7 @@ package com.gestureworks.core
 					// simplified combined data table and line chart display
 					if(clusterDataViewOn){
 						// create cluster data list
-						cluster_data_view = new DebugClusterDataView(touchObjectID);
+						cluster_data_view = new DebugClusterDataView(id);
 							cluster_data_view.setStyles();
 							cluster_data_view.displayRadius = displayRadius;
 							cluster_data_view.init();
@@ -363,7 +370,7 @@ package com.gestureworks.core
 					///////////////////////////////////////
 					if(gestureDataViewOn){
 						// create cluster data list
-						gesture_data_view = new DebugGestureDataView(touchObjectID);
+						gesture_data_view = new DebugGestureDataView(id);
 							gesture_data_view.setStyles();
 							gesture_data_view.displayRadius = displayRadius;
 							gesture_data_view.init();
@@ -385,13 +392,13 @@ package com.gestureworks.core
 					////////////////////////////////////////////////////////////////////////
 					if(touchObjectTransformOn){
 						// create cluster data list
-						touchObject_transform = new DebugTouchObjectTransform(touchObjectID);
+						touchObject_transform = new DebugTouchObjectTransform(id);
 							touchObject_transform.setStyles();
 						debug_display.addChild(touchObject_transform);
 					}
 					if(touchObjectPivotOn){
 						// create cluster data list
-						touchObject_pivot = new DebugTouchObjectPivot(touchObjectID);
+						touchObject_pivot = new DebugTouchObjectPivot(id);
 							touchObject_pivot.setStyles();
 							touchObject_pivot.init();
 						debug_display.addChild(touchObject_pivot);
@@ -412,7 +419,7 @@ package com.gestureworks.core
 					//////////////////////////////////
 					if(touchObjectDataViewOn){
 						// create cluster data list
-						touchObject_data_view = new DebugTouchObjectDataView(touchObjectID);
+						touchObject_data_view = new DebugTouchObjectDataView(id);
 							touchObject_data_view.setStyles();
 							touchObject_data_view.displayRadius = displayRadius;
 							touchObject_data_view.init();
@@ -426,7 +433,7 @@ package com.gestureworks.core
 	*/
 	public function drawDebugDisplay():void
 	{
-		if (trace_debug_mode) trace("trying to draw display", N, touchObjectID);
+		//if (trace_debug_mode) trace("trying to draw display", N, touchObjectID);
 		
 		if ((displayOn)&&(debug_display))
 			{
@@ -437,14 +444,14 @@ package com.gestureworks.core
 				if (touchObjectDataViewOn) touchObject_data_view.drawDataView();
 			}
 			
-			if (_N)
+			if (ts.N)
 			{
-				if (_N == 1) 
+				if (ts.N == 1) 
 				{
 					if (touchObjectPivotOn) touchObject_pivot.drawVectors();
 				}
 				
-				if (_N >= 1) 
+				if (ts.N >= 1) 
 				{
 					if(pointShapesOn)cluster_points.drawPoints();
 					if (pointVectorsOn) cluster_vectors.drawVectors();
@@ -463,7 +470,7 @@ package com.gestureworks.core
 					}
 				}
 				
-				if (_N >= 2) 
+				if (ts.N >= 2) 
 				{
 					//if (clusterVectorDataOn) cluster_vectordata.drawVectorData();
 					if(clusterWebOn)cluster_web.drawWeb();
@@ -480,7 +487,7 @@ package com.gestureworks.core
 					//if (touchObjectDataViewOn) touchObject_data_view.drawDataView();
 				}
 				
-				 if (_N == 5) 
+				 if (ts.N == 5) 
 				{
 					if(clusterOrientationOn)cluster_orient.drawOrientation();
 				}
@@ -492,7 +499,7 @@ package com.gestureworks.core
 	*/
 	public function clearDebugDisplay():void
 	{
-		if(trace_debug_mode) trace("trying to clear debug display",touchObjectID)
+		//if(trace_debug_mode) trace("trying to clear debug display",touchObjectID)
 		
 		if ((displayOn)&&(debug_display))
 		{

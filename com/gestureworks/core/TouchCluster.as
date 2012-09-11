@@ -20,6 +20,10 @@ package com.gestureworks.core
 	import flash.geom.Point;
 	//import com.gestureworks.analysis.clusterVectormetric;
 	
+	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.TimelineObject;
+	
 	import com.gestureworks.objects.PropertyObject;
 	
 	//use namespace id_internal;
@@ -27,7 +31,7 @@ package com.gestureworks.core
 	/**
 	* @private
 	*/
-	public class TouchSpriteCluster extends TouchSpriteBase
+	public class TouchCluster
 	{
 		/**
 		* @private
@@ -41,11 +45,22 @@ package com.gestureworks.core
 		//private var vectoremetricsOn:Boolean = true;
 		
 		private var key:String;
+		private var ts:Object;
+		private var id:int;
 		
+		private var gO:GestureObject;
+		private var cO:ClusterObject
+		private var tiO:TimelineObject
 		
-		public function TouchSpriteCluster():void
+		public function TouchCluster(touchObjectID:int):void
 		{
-			super();
+			
+			id = touchObjectID;
+			ts = GestureGlobals.gw_public::touchObjects[id];
+			
+			gO = ts.gO;
+			cO = ts.cO;
+			
 			initCluster();
           }
 		  
@@ -57,7 +72,6 @@ package com.gestureworks.core
 		 */
         private function initCluster():void 
         {	
-				//trace("create touchsprite cluster analysis")
 				initClusterVars();
 				initClusterAnalysis();
 				initClusterAnalysisConfig();
@@ -79,7 +93,7 @@ package com.gestureworks.core
 				//trace("init cluster analysis", touchSprite_id);
 							
 					// analyzes and characterizes multi-point motion
-					if(kinemetricsOn)cluster_kinemetric = new clusterKinemetric(touchObjectID);
+					if(kinemetricsOn)cluster_kinemetric = new clusterKinemetric(id);
 
 					// analyzes and characterizes multi-point paths to match against established strokes
 					//if(vectormetricsOn)cluster_kinemetric = new Vectormetric(touchSpriteID);
@@ -106,8 +120,8 @@ package com.gestureworks.core
 			
 			// FIND CLUSTER COUNT
 			cO.n = cO.pointArray.length
-			_dN = cO.n - _N;
-			_N = cO.n;
+			ts.dN = cO.n - ts.N;
+			ts.N = cO.n;
 			
 			
 			
@@ -120,32 +134,32 @@ package com.gestureworks.core
 			cO.add = false;
 			
 			
-				if (_dN < 0) 
+				if (ts.dN < 0) 
 				{
 					cO.point_remove = true;
 					//cO.point_add = false;
 					
-					if (_N == 0) 
+					if (ts.N == 0) 
 					{
 						cO.remove = true; 
 						//cO.add = false;
 					}
 				}
-				else if (_dN > 0) 
+				else if (ts.dN > 0) 
 				{
 					//cO.point_remove = false;
 					cO.point_add = true;
 					
-					if (_N != 0)
+					if (ts.N != 0)
 					{
-						//cO.remove = false; 
-						cO.add = true; 
+					//cO.remove = false; 
+					cO.add = true; 
 					}
 				}
 			
-			if (_dN != 0)
+			if (ts.dN != 0)
 			{
-				if (_clusterEvents) manageClusterEventDispatch();
+				if (ts.clusterEvents) manageClusterEventDispatch();
 			}
 			//trace(_dN, _N, cO.point_remove,cO.point_add,cO.remove,cO.add)
 			
@@ -155,16 +169,16 @@ package com.gestureworks.core
 			// move to pipeline
 			///////////////////////////////////////////////////
 			// GESTURE OBJECT UPDATE
-			if (_dN > 0) gO.start = true;
+			if (ts.dN > 0) ts.gO.start = true;
 			
-			if (_N != 0) 
+			if (ts.N != 0) 
 			{
 				gO.active = true;
 				gO.complete = false;
 				gO.release = false;
 			}
 			else {
-				if (_dN < 0) 
+				if (ts.dN < 0) 
 				{
 					gO.release = true;
 					gO.passive = true;
@@ -185,13 +199,13 @@ package com.gestureworks.core
 				
 				if (kinemetricsOn) findCluster()
 				//if(vectormetricsOn)cluster_vectormetric.findPath();
-				if ((_clusterEvents)&&(_N)) manageClusterPropertyEventDispatch();
+				if ((ts.clusterEvents)&&(ts.N)) manageClusterPropertyEventDispatch();
 		}
 		
 		
 		public function findCluster():void 
 		{
-			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, N);
+			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, _N);
 			
 			cluster_kinemetric.findCluster();
 			cluster_kinemetric.resetVars();
@@ -214,9 +228,9 @@ package com.gestureworks.core
 				}
 				
 				// processing algorithms when in touch
-				if(_N!=0){		// check kinemetric and if continuous analysis
+				if(ts.N!=0){		// check kinemetric and if continuous analysis
 				// check point number requirements
-				if((_N >= gO.pOList[key].nMin)&&(_N <= gO.pOList[key].nMax)||(_N == gO.pOList[key].n))
+				if((ts.N >= gO.pOList[key].nMin)&&(ts.N <= gO.pOList[key].nMax)||(ts.N == gO.pOList[key].n))
 				{
 					//trace("call cluster calc",_N);
 					
@@ -242,7 +256,7 @@ package com.gestureworks.core
 							//GENERIC MAP
 							for (DIM in gO.pOList[key])
 							{
-								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+								if (gO.pOList[key][DIM] is PropertyObject)gO.pOList[key][DIM].clusterDelta = cO[ts.gO.pOList[key][DIM].property_var];
 							}
 							
 						}
@@ -277,10 +291,10 @@ package com.gestureworks.core
 									
 								for (DIM in gO.pOList[key])
 								{
-									if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
+									if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[ts.gO.pOList[key][DIM].property_var];				
 								}	
 							}
-							gO.pOList[key].x = cO.x;
+								gO.pOList[key].x = cO.x;
 								gO.pOList[key].y = cO.y;
 								gO.pOList[key].n = cO.n;
 						}
@@ -315,19 +329,22 @@ package com.gestureworks.core
 							
 							for (DIM in gO.pOList[key])
 							{
-								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];				
-							}
+								if (gO.pOList[key][DIM] is PropertyObject) {
+									gO.pOList[key][DIM].clusterDelta = cO[ts.gO.pOList[key][DIM].property_var];
+									//trace(ts.gO.pOList[key][DIM].clusterDelta);
+								}
 								
+							}
 								gO.pOList[key].x = cO.x;
 								gO.pOList[key].y = cO.y;
-								gO.pOList[key].n = cO.n;
-							
+								gO.pOList[key].n = cO.n;	
 						}
+						
 						
 						///////////////////////////////////////////////////////////////////////////////////////////////////
 						// BASIC SCALE CONTROL // ALGORITHM // type scale
 						//////////////////////////////////////////////////////////////////////////////////////////////////
-						if (gO.pOList[key].algorithm == "scale")
+						if (ts.gO.pOList[key].algorithm == "scale")
 						{
 							//if (trace_debug_mode) trace("cluster separation algorithm");
 							
@@ -336,9 +353,9 @@ package com.gestureworks.core
 							//gO.pOList[key]["scale_dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
 							//gO.pOList[key]["scale_dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
 							
-							for (DIM in gO.pOList[key])
+							for (DIM in ts.gO.pOList[key])
 							{
-								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
+								if (ts.gO.pOList[key][DIM] is PropertyObject) ts.gO.pOList[key][DIM].clusterDelta = ts.cO[ts.gO.pOList[key][DIM].property_var];
 							}
 							
 								gO.pOList[key].x = cO.x;
@@ -360,9 +377,9 @@ package com.gestureworks.core
 							{
 								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[gO.pOList[key][DIM].property_var];
 							}
-								gO.pOList[key].x = cO.x;
-								gO.pOList[key].y = cO.y;
-								gO.pOList[key].n = cO.n;
+								gO.pOList[key].x = ts.cO.x;
+								gO.pOList[key].y = ts.cO.y;
+								gO.pOList[key].n = ts.cO.n;
 						}	
 						
 						
@@ -515,6 +532,7 @@ package com.gestureworks.core
 							//trace("swipe, velocity",swipe_etmVel.x,swipe_etmVel.y,swipe_etmAccel.x,swipe_etmAccel.y,swipe_threshold)
 							*/
 							
+							
 							var swipe_h:int = 6;
 							var swipe_etm_vel:Object = cluster_kinemetric.findMeanTemporalVelocity(swipe_h); //ensamble temporal mean velocity
 							var swipe_etm_accel:Object = cluster_kinemetric.findMeanTemporalAcceleration(swipe_h); //ensamble temporal mean velocity
@@ -577,6 +595,8 @@ package com.gestureworks.core
 							//trace("scroll, velocity",etmVel.x,etmVel.y)
 							*/
 							
+							
+							
 							var scroll_h:int = 6;
 							var scroll_etm_vel:Object = cluster_kinemetric.findMeanTemporalVelocity(scroll_h); //ensamble temporal mean 
 							
@@ -605,7 +625,7 @@ package com.gestureworks.core
 						// RETURN DX AND DY
 						if (gO.pOList[key].algorithm == "tilt")
 						{
-							if (trace_debug_mode) trace("cluster tilt algorithm"); 
+							//if (trace_debug_mode) trace("cluster tilt algorithm"); 
 							
 							// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
 							
@@ -651,6 +671,7 @@ package com.gestureworks.core
 			}
 			
 			cluster_kinemetric.pushClusterObjectProperties();
+			
 		}
 		/**
 		 * @private
@@ -660,28 +681,28 @@ package com.gestureworks.core
 				// point added to cluster
 				if (cO.point_add)
 				{
-						dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, cO.n));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, cO.n));
 						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, cO.n));
 						cO.point_add = false;
 				}
 				// point removed cluster
-				if (cO.point_remove) 
+				if (ts.cO.point_remove) 
 				{
-						dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, cO.n));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, cO.n));
 						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, cO.n));
-						cO.point_remove = false;
+						ts.cO.point_remove = false;
 				}
 				// cluster add
-				if (cO.remove)
+				if (ts.cO.remove)
 				{
-						dispatchEvent(new GWClusterEvent(GWClusterEvent.C_REMOVE, cO.id));
-						if((tiO.timelineOn)&&(tiO.clusterEvents))tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_REMOVE, cO.id));
-						cO.remove = false;
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_REMOVE, cO.id));
+						if((tiO.timelineOn)&&(tiO.clusterEvents))ts.tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_REMOVE, cO.id));
+						ts.cO.remove = false;
 				}
 				// cluster remove
-				if (cO.add) 
+				if (ts.cO.add) 
 				{
-						dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ADD, cO.id));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ADD, cO.id));
 						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ADD, cO.id));
 						cO.add = false;
 				}	
@@ -695,47 +716,34 @@ package com.gestureworks.core
 				// cluster translate
 				if ((cO.dx!=0)||(cO.dy!=0)) 
 				{
-					dispatchEvent(new GWClusterEvent(GWClusterEvent.C_TRANSLATE, { dx:cO.dx, dy:cO.dy, n:cO.n }));
+					ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_TRANSLATE, { dx:cO.dx, dy:cO.dy, n:cO.n }));
 					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_TRANSLATE, { dx:cO.dx, dy:cO.dy, n:cO.n }));
 				}
 				// cluster rotate
 				if (cO.dtheta!=0)
 				{
-					dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ROTATE, {dtheta:cO.dtheta, n:cO.n }));
+					ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ROTATE, {dtheta:cO.dtheta, n:cO.n }));
 					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ROTATE, {dtheta:cO.dtheta, n:cO.n}));
 				}
 				//cluster separate
 				if ((cO.dsx!=0)||(cO.dsy!=0)) 
 				{
-					dispatchEvent(new GWClusterEvent(GWClusterEvent.C_SEPARATE, { dsx:cO.dsx, dsy: cO.dsy, n:cO.n }));
+					ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_SEPARATE, { dsx:cO.dsx, dsy: cO.dsy, n:cO.n }));
 					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_SEPARATE,{ dsx:cO.dsx, dsy:cO.dsy, n:cO.n }));
 				}
 				// cluster resize
 				if ((cO.dw!=0)||(cO.dh!=0)) 
 				{
-					dispatchEvent(new GWClusterEvent(GWClusterEvent.C_RESIZE, { dw:cO.dw, dh: cO.dh, n:cO.n }));
-					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_RESIZE, { dw: cO.dw, dh: cO.dh, n:cO.n }));
+					ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_RESIZE, { dw:cO.dw, dh:cO.dh, n:cO.n }));
+					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_RESIZE, { dw:cO.dw, dh:cO.dh, n:cO.n }));
 				}
 				/////////////////////////////////////////////////////////////////////////////
 				// cluster accelerate
 				if ((cO.ddx!=0)||(cO.ddy!=0))
 				{
-					dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ACCELERATE, { ddx:cO.ddx, ddy:cO.ddy, n:cO.n }));
+					ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ACCELERATE, { ddx:cO.ddx, ddy:cO.ddy, n:cO.n }));
 					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ACCELERATE, { ddx:cO.ddx, ddy:cO.ddy, n:cO.n }));
 				}
 		}	
-
-		/**
-		 * @private
-		 */
-		private var _clusterEvents:Boolean = false;
-		/**
-		* Determins whether clusterEvents are processed and dispatched on the touchSprite.
-		*/
-		public function get clusterEvents():Boolean{return _clusterEvents;}
-		public function set clusterEvents(value:Boolean):void
-		{
-			_clusterEvents=value;
-		}
 	}
 }
