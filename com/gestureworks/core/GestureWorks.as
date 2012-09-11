@@ -16,7 +16,6 @@
 
 package com.gestureworks.core
 {
-	import com.gestureworks.components.CMLDisplay;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
