@@ -16,9 +16,9 @@
 package com.gestureworks.core
 {
 	import com.gestureworks.events.GWClusterEvent;
-	import com.gestureworks.analysis.clusterKinemetric;
+	import com.gestureworks.analysis.KineMetric;
 	import flash.geom.Point;
-	//import com.gestureworks.analysis.clusterVectormetric;
+	//import com.gestureworks.analysis.VectorMetric;
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureObject;
@@ -36,7 +36,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var cluster_kinemetric:clusterKinemetric;
+		private var cluster_kinemetric:KineMetric;
 		//private var cluster_vectormetric:Vectormetric;
 		/**
 		* @private
@@ -93,7 +93,7 @@ package com.gestureworks.core
 				//trace("init cluster analysis", touchSprite_id);
 							
 					// analyzes and characterizes multi-point motion
-					if(kinemetricsOn)cluster_kinemetric = new clusterKinemetric(id);
+					if(kinemetricsOn)cluster_kinemetric = new KineMetric(id);
 
 					// analyzes and characterizes multi-point paths to match against established strokes
 					//if(vectormetricsOn)cluster_kinemetric = new Vectormetric(touchSpriteID);
@@ -211,8 +211,10 @@ package com.gestureworks.core
 			cluster_kinemetric.resetVars();
 			
 			cluster_kinemetric.findInstDimention();
-			cluster_kinemetric.findInstSeparation();
-			cluster_kinemetric.findInstAngle();
+			//cluster_kinemetric.findInstSeparation();
+			//cluster_kinemetric.findInstAngle();
+			
+			cluster_kinemetric.findMeanInstTransformation();
 			
 			
 			for (key in gO.pOList)
@@ -222,6 +224,7 @@ package com.gestureworks.core
 				
 				// zero cluster deltas
 				var DIM:String = ""; 
+				
 				for (DIM in gO.pOList[key])
 				{
 				if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = 0;		
@@ -243,15 +246,7 @@ package com.gestureworks.core
 						if (gO.pOList[key].algorithm == "manipulate")
 						{
 							// apply algorithm
-							cluster_kinemetric.findMeanInstTransformation();
-							
-							// gml controlled
-							// map cluster into gesture object pipeline
-							//gO.pOList[key]["dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
-							//gO.pOList[key]["dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
-							//gO.pOList[key]["dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
-							//gO.pOList[key]["dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
-							//gO.pOList[key]["dtheta"].clusterDelta = cluster_kinemetric.c_dtheta; //rotate_dtheta
+							//cluster_kinemetric.findMeanInstTransformation();
 							
 							//GENERIC MAP
 							for (DIM in gO.pOList[key])
@@ -259,6 +254,9 @@ package com.gestureworks.core
 								if (gO.pOList[key][DIM] is PropertyObject)gO.pOList[key][DIM].clusterDelta = cO[ts.gO.pOList[key][DIM].property_var];
 							}
 							
+							gO.pOList[key].x = cO.x;
+							gO.pOList[key].y = cO.y;
+							gO.pOList[key].n = cO.n;
 						}
 						
 						
@@ -320,7 +318,7 @@ package com.gestureworks.core
 						
 							//if (trace_debug_mode)trace("cluster drag algorithm",gO.pOList[key]["drag_dx"].clusterDelta);
 							
-							cluster_kinemetric.findMeanInstTranslation();
+						//	cluster_kinemetric.findMeanInstTranslation();
 									
 							//gO.pOList[key]["drag_dx"].clusterDelta = cluster_kinemetric.c_dx; // drag_dx
 							//gO.pOList[key]["drag_dy"].clusterDelta = cluster_kinemetric.c_dy; // drag_dy
@@ -329,11 +327,7 @@ package com.gestureworks.core
 							
 							for (DIM in gO.pOList[key])
 							{
-								if (gO.pOList[key][DIM] is PropertyObject) {
-									gO.pOList[key][DIM].clusterDelta = cO[ts.gO.pOList[key][DIM].property_var];
-									//trace(ts.gO.pOList[key][DIM].clusterDelta);
-								}
-								
+								if (gO.pOList[key][DIM] is PropertyObject) gO.pOList[key][DIM].clusterDelta = cO[ts.gO.pOList[key][DIM].property_var];
 							}
 								gO.pOList[key].x = cO.x;
 								gO.pOList[key].y = cO.y;
@@ -348,7 +342,7 @@ package com.gestureworks.core
 						{
 							//if (trace_debug_mode) trace("cluster separation algorithm");
 							
-							cluster_kinemetric.findMeanInstSeparation();
+						//	cluster_kinemetric.findMeanInstSeparation();
 										
 							//gO.pOList[key]["scale_dsx"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsx
 							//gO.pOList[key]["scale_dsy"].clusterDelta = cluster_kinemetric.c_ds; //scale_dsy
@@ -371,7 +365,7 @@ package com.gestureworks.core
 						{
 							//if (trace_debug_mode) trace("cluster rotate algorithm");
 					
-							cluster_kinemetric.findMeanInstRotation();
+						//	cluster_kinemetric.findMeanInstRotation();
 
 							for (DIM in gO.pOList[key])
 							{
@@ -557,6 +551,9 @@ package com.gestureworks.core
 								}
 							}
 							
+							gO.pOList[key].x = cO.x;
+							gO.pOList[key].y = cO.y;
+							gO.pOList[key].n = cO.n;
 							
 						}
 						
@@ -614,6 +611,10 @@ package com.gestureworks.core
 								}
 							}
 							
+							gO.pOList[key].x = cO.x;
+							gO.pOList[key].y = cO.y;
+							gO.pOList[key].n = cO.n;
+							
 						}
 					
 						
@@ -660,7 +661,9 @@ package com.gestureworks.core
 								}
 							}
 							
-							
+							gO.pOList[key].x = cO.x;
+							gO.pOList[key].y = cO.y;
+							gO.pOList[key].n = cO.n;
 						}	
 				}
 			}

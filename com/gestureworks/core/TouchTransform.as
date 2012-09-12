@@ -174,7 +174,7 @@ package com.gestureworks.core
 	public function transformManager():void 
 	{
 		//if (trace_debug_mode) trace("touch object transform");
-
+				
 				if (ts.N != 0)
 				{
 					if (!trO.init_center_point) initTransformPoints();
@@ -189,16 +189,11 @@ package com.gestureworks.core
 					ts.transformComplete = false;
 					ts.transformStart = true;
 					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (trace_debug_mode)trace("update", _touchObjectID)
+					//if (ts.trace_debug_mode)trace("update", ts.touchObjectID)
 				}
 				
 				else if ((ts.N == 0) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) 
 				{
-					//////////////////////////
-					//updateGestureValues();
-					//updateGesturePipeline();
-					///////////////////////////
-					
 					centerTransform = true;
 					
 					if (ts.disableNativeTransform) {
@@ -209,7 +204,7 @@ package com.gestureworks.core
 					ts.transformComplete = false;
 					ts.transformStart = false;
 					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (trace_debug_mode)trace("inertia", _touchObjectID)
+					//if (ts.trace_debug_mode)trace("inertia", ts.touchObjectID)
 				}
 				
 				else if ((ts.N == 0) && (!ts.gestureTweenOn)&&(!ts.transformComplete)) 
@@ -217,7 +212,7 @@ package com.gestureworks.core
 					ts.transformComplete = true;
 					ts.transformStart = false;
 					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (trace_debug_mode)trace("none", _touchObjectID)
+					//if (ts.trace_debug_mode)trace("none", ts.touchObjectID)
 				}
 				
 				
@@ -302,7 +297,7 @@ package com.gestureworks.core
 				// leave scalar values untouched
 				//ds =  trO.dsx;
 				dsx =  trO.dsx;
-				dsy =  trO.dsx;// trO.dsy;
+				dsy =  trO.dsy;// trO.dsy;
 				dtheta = trO.dtheta * DEG_RAD;
 				
 				//dthetaX = trO.dthetaX //* DEG_RAD;

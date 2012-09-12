@@ -21,8 +21,8 @@ package com.gestureworks.core
 	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
-	import com.gestureworks.analysis.gestureContinuous;
-	import com.gestureworks.analysis.gestureDiscrete;
+	import com.gestureworks.analysis.GesturePipeline;
+	import com.gestureworks.analysis.TemporalMetric;;
 	
 	import com.gestureworks.managers.TimelineHistories;
 	import com.gestureworks.objects.FrameObject; 
@@ -38,11 +38,11 @@ package com.gestureworks.core
 		* @private
 		*/
 		//internal public
-		public var gesture_cont:gestureContinuous;
+		public var gesture_cont:GesturePipeline;
 		/**
 		* @private
 		*/
-		public var gesture_disc:gestureDiscrete;
+		public var gesture_disc:TemporalMetric;
 		
 		/**
 		* @private
@@ -93,10 +93,10 @@ package com.gestureworks.core
 			//hasEventListener(GWGestureEvent.SCALE, scaleHandeler);
 			//hasEventListener(GWGestureEvent.ROTATE, rotateHandeler);
 			
-			gesture_cont = new gestureContinuous(id);
+			gesture_cont = new GesturePipeline(id);
 
 			// analyze for descrete gesture sequence/series
-			gesture_disc = new gestureDiscrete(id);
+			gesture_disc = new TemporalMetric(id);
 			
 			//initTimeline();
 			// analyze for gesture conflict/compliment

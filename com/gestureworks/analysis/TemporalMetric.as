@@ -32,7 +32,7 @@ package com.gestureworks.analysis
 	//import com.gestureworks.analysis.paths.PathDictionary; PathDictionary;
 	//import com.gestureworks.analysis.paths.PathProcessor; PathProcessor;
 		
-	public class gestureDiscrete
+	public class TemporalMetric
 	{
 		private var touchObjectID:int;
 		private var ts:Object;//	private var ts:TouchSprite;
@@ -59,7 +59,7 @@ package com.gestureworks.analysis
 		
 		private var DIM:String = ""; 
 		
-		public function gestureDiscrete(_id:int) {
+		public function TemporalMetric(_id:int) {
 			
 			touchObjectID = _id;
 			init();
