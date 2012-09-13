@@ -26,10 +26,10 @@ package com.gestureworks.core
 	
 	import com.gestureworks.managers.TimelineHistories;
 	import com.gestureworks.objects.FrameObject; 
-	import com.gestureworks.objects.PropertyObject;
+	import com.gestureworks.objects.DimensionObject;
 	
 	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	
 	public class TouchGesture extends Sprite
@@ -47,8 +47,9 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var key:String;
-		private var DIM:String = ""; 
+		private var gn:uint;
+		private var key:uint;
+		private var DIM:uint; 
 		private var tapOn:Boolean = false;
 		
 		private var timerCount:int = 0;
@@ -57,7 +58,7 @@ package com.gestureworks.core
 		private var id:int;
 		
 		private var cO:ClusterObject
-		private var gO:GestureObject;
+		private var gO:GestureListObject;
 		private var tiO:TimelineObject;
 		/////////////////////////////////////////////////////////
 		
@@ -107,8 +108,9 @@ package com.gestureworks.core
 		*/
 		public function initTimeline():void
 		{
-			
-			for (key in gO.pOList)
+			gn = gO.pOList.length;
+			for (key=0; key < gn; key++) 
+			//for (key in gO.pOList)
 			{
 				
 				if (!tiO.timelineOn)
@@ -172,6 +174,8 @@ package com.gestureworks.core
 		private function manageGestureEventDispatch():void 
 		{
 			//trace("manage dispatch");
+			gn = gO.pOList.length;
+			
 			dispatchMode();
 			processTemoralMetric();
 			dispatchGestures();
@@ -267,7 +271,9 @@ package com.gestureworks.core
 			var dtapCalled:Boolean = false;
 			var ttapCalled:Boolean = false;
 			
-			for (key in gO.pOList)
+			//gn = gO.pOList.length;
+			for (key=0; key < gn; key++) 
+			//for (key in gO.pOList)
 					{
 					
 					if ((gO.pOList[key].algorithm_class == "temporalmetric")&&(gO.pOList[key].algorithm_type == "discrete")){	
@@ -278,7 +284,7 @@ package com.gestureworks.core
 					// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
 					
 					//search for touch end events on timeline
-					if ((gO.pOList[key].match_touchEvent == "touchEnd")|| (gO.pOList[key].match_gestureEvent == "tap") )
+					if ((gO.pOList[key].match_TouchEvent == "touchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
 					{
 						if ((tiO.timelineOn) && (tiO.pointEvents) && (tiO.frame.pointEventArray))
 						{
@@ -294,7 +300,7 @@ package com.gestureworks.core
 									if ((tapOn) && (!tapCalled))
 									if((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")){
 									{	
-										gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], key) ; // tap event pairs
+										gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], gO.pOList[key].gesture_id) ; // tap event pairs
 										tapCalled = true; // if called by another gesture using tap do not call again
 										//trace("trace find tap");
 									}
@@ -305,7 +311,7 @@ package com.gestureworks.core
 					}
 					
 
-					if (gO.pOList[key].match_gestureEvent == "tap") 
+					if (gO.pOList[key].match_GestureEvent == "tap") 
 					{
 							if (tiO.history[0])
 							{
@@ -316,14 +322,14 @@ package com.gestureworks.core
 										// FIND TAP EVENT PAIRS
 										if ((gO.pOList[key].gesture_type == "double_tap") && (!dtapCalled))	
 										{
-											gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], key);
+											gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
 											dtapCalled = true;
 										}
 										
 										// FIND TAP EVENT TRIPLETS
 										if ((gO.pOList[key].gesture_type == "triple_tap")&& (!ttapCalled))
 										{
-											gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], key);
+											gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k],gO.pOList[key].gesture_id);
 											ttapCalled = true;
 										}
 										
@@ -367,7 +373,7 @@ package com.gestureworks.core
 									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval ) gO.pOList[key].timer_count = 0;
 									
 									if (gO.pOList[key].timer_count == 0) {
-										gesture_disc.countTapEvents(key);
+										gesture_disc.countTapEvents(gO.pOList[key].gesture_id);
 										//trace("count tap",gO.pOList[key].timer_count);
 									}
 									gO.pOList[key].timer_count++
@@ -379,7 +385,7 @@ package com.gestureworks.core
 									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
 									
 									if (gO.pOList[key].timer_count == 0) {
-										gesture_disc.countDoubleTapEvents(key);
+										gesture_disc.countDoubleTapEvents(gO.pOList[key].gesture_id);
 										//trace("count dtap",gO.pOList[key].timer_count);
 									}
 									gO.pOList[key].timer_count++
@@ -391,7 +397,7 @@ package com.gestureworks.core
 									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
 									
 									if (gO.pOList[key].timer_count == 0) {
-										gesture_disc.countTripleTapEvents(key);
+										gesture_disc.countTripleTapEvents(gO.pOList[key].gesture_id);
 										//trace("count dtap",gO.pOList[key].timer_count);
 									}
 									gO.pOList[key].timer_count++
@@ -425,9 +431,12 @@ package com.gestureworks.core
 		public function dispatchMode():void 
 		{
 			//trace("dispatch mode");
-			
-			for (key in gO.pOList) 
+			//gn = gO.pOList.length;
+			for (key=0; key < gn; key++) 
+			//for (key in gO.pOList) 
 					{	
+						var dn:uint = gO.pOList[key].dList.length;
+						
 						///////////////////////////////////
 						// set dispatch mode
 						////////////////////////////////////
@@ -438,6 +447,7 @@ package com.gestureworks.core
 							{
 								if ((gO.release) && (!gO.pOList[key].complete)) gO.pOList[key].dispatchEvent = true;//gO.release
 					
+					
 
 								////////////////////////////////////////////////////////////////////////////////////////
 								// must make generic
@@ -446,12 +456,13 @@ package com.gestureworks.core
 								// COPY CACHE INTO GESTURE DELTA
 								if (gO.pOList[key].gesture_type == "flick")
 								{	
-									for (DIM in gO.pOList[key])
+									for (DIM=0; DIM < dn; DIM++)
+									//for (DIM in gO.pOList[key])
 									{
-										if (gO.pOList[key][DIM] is PropertyObject) 
+										if (gO.pOList[key][DIM] is DimensionObject) 
 										{
-										gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
-										gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+										gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
+										gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
 										}
 									}
 								}
@@ -459,13 +470,13 @@ package com.gestureworks.core
 								// COPY CACHE INTO GESTURE DELTA
 								if (gO.pOList[key].gesture_type == "swipe")
 								{	
-									
-									for (DIM in gO.pOList[key])
+									for (DIM=0; DIM < dn; DIM++)
+									//for (DIM in gO.pOList[key])
 									{
-										if (gO.pOList[key][DIM] is PropertyObject) 
+										if (gO.pOList[key][DIM] is DimensionObject) 
 										{
-											gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
-											gO.pOList[key][DIM].gestureDelta = gO.pOList[key][DIM].gestureDeltaCache;
+											gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
+											gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
 										}
 									}
 								}
@@ -506,8 +517,9 @@ package com.gestureworks.core
 		public function dispatchReset():void 
 		{
 			//trace("dispatch reset ");
-			
-			for (key in gO.pOList) 
+			//gn = gO.pOList.length;
+			for (key=0; key < gn; key++) 
+			//for (key in gO.pOList) 
 					{	
 						
 					//trace("managing reset", key, gO.pOList[key].dispatch_type,gO.pOList[key].dispatch_reset,gO.pOList[key].complete);
@@ -605,7 +617,9 @@ package com.gestureworks.core
 			//////////////////////////////////////////////
 			// custom GML gesture events with active event
 			//////////////////////////////////////////////
-			for (key in gO.pOList) 
+			//gn = gO.pOList.length;
+			for (key=0; key < gn; key++) 
+			//for (key in gO.pOList) 
 				{	
 					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
 					if ((ts.gO.pOList[key].activeEvent) && (ts.gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
@@ -636,7 +650,7 @@ package com.gestureworks.core
 			gO.complete = false;			
 		}
 		
-		public function constructGestureEvents(key:String):void 
+		public function constructGestureEvents(key:uint):void 
 		{
 		
 							//trace(key);
@@ -647,16 +661,15 @@ package com.gestureworks.core
 							
 							// transform center point
 							//var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point
-							var trans_pt:Point = ts.globalToLocal(new Point(gO.pOList[key].x, gO.pOList[key].y)); //local point
+							var trans_pt:Point = ts.globalToLocal(new Point(gO.pOList[key].data.x, gO.pOList[key].data.y)); //local point
 							// transform vector components
 							
 							//construct standard properties
 							var Data:Object = new Object();
-							var DIM:String = ""; 
 							
 								// GESTURE OBJECT ID
 								Data["id"] = new Object();
-								Data["id"] = key;
+								Data["id"] = gO.pOList[key].gesture_id;//key;
 								
 								// gestureCount
 								// GESTURE EVENT ID
@@ -680,16 +693,16 @@ package com.gestureworks.core
 								
 								// location data
 								Data["stageX"] = new Object();
-								Data["stageX"] = gO.pOList[key].x//cO.x;
+								Data["stageX"] = gO.pOList[key].data.x//cO.x;
 								
 								Data["stageY"] = new Object();
-								Data["stageY"] = gO.pOList[key].y//cO.y;
+								Data["stageY"] = gO.pOList[key].data.y//cO.y;
 								
 								Data["x"] = new Object();
-								Data["x"] = gO.pOList[key].x//cO.x;
+								Data["x"] = gO.pOList[key].data.x//cO.x;
 								
 								Data["y"] = new Object();
-								Data["y"] = gO.pOList[key].y//cO.y;
+								Data["y"] = gO.pOList[key].data.y//cO.y;
 								
 								Data["localX"] = new Object();
 								Data["localX"] = trans_pt.x;
@@ -706,18 +719,18 @@ package com.gestureworks.core
 								// GESTURE DIM DATA OBJECT ?? ANY NUMBER OF CUSTOM NAMED VALUES FOR EACH DIM
 								
 								// construc tgesture object dependant properties
-								for (DIM in gO.pOList[key])
+								var dn:uint = gO.pOList[key].dList.length;
+								
+								//trace("dn",dn);
+								
+								for (DIM=0; DIM < dn; DIM++)
+								//for (DIM in gO.pOList[key].dList)
 								{
-									//trace(gO.pOList[key][DIM]);
-									if (gO.pOList[key][DIM] is PropertyObject) 
-									{
-										Data[DIM] = new Object();
-										Data[DIM] = Number(gO.pOList[key][DIM].gestureDelta);	
-										//Data[DIM] = Number(gO.pOList[key][DIM].gestureValue);	
-										//trace(DIM,Data[DIM])
-									}
+									Data[gO.pOList[key].dList[DIM].property_id] = new Object();
+									Data[gO.pOList[key].dList[DIM].property_id] = Number(gO.pOList[key].dList[DIM].gestureDelta);	
 								}
-							
+							//trace(gO.pOList[key].gesture_type,gO.pOList[key].gesture_id)
+								
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].gesture_type, Data);
 							ts.dispatchEvent(GWEVENT);
 

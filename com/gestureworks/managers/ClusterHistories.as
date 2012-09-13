@@ -32,7 +32,7 @@ package com.gestureworks.managers
 		
 		public static function historyQueue(ClusterID:Object):void//event:ClusterEvent
 		{
-			var history:Array = GestureGlobals.gw_public::clusters[ClusterID].history;
+			var history:Vector.<ClusterObject> = GestureGlobals.gw_public::clusters[ClusterID].history;
 			var clusterObject:ClusterObject = GestureGlobals.gw_public::clusters[ClusterID]
 		
 			history.unshift(historyObject(clusterObject));
@@ -44,17 +44,17 @@ package com.gestureworks.managers
 		}
 		
 		// loads history object and returns value.
-		public static function historyObject(clusterObject:Object):Object
+		public static function historyObject(clusterObject:ClusterObject):Object
 		{
-			var object:Object = new Object();
+			var object:ClusterObject = new ClusterObject();
 				
 				// native properties
 				object.n = clusterObject.n;
 				object.x = clusterObject.x;
 				object.y = clusterObject.y;
-				object.w = clusterObject.width;
-				object.h = clusterObject.height;
-				object.r = clusterObject.radius;
+				object.width = clusterObject.width;
+				object.height = clusterObject.height;
+				object.radius = clusterObject.radius;
 				object.orientation = clusterObject.orientation;
 				object.rotation = clusterObject.rotation;
 				object.separation = clusterObject.separation;

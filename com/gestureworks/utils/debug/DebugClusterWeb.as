@@ -20,16 +20,20 @@ package com.gestureworks.utils.debug
 	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.ClusterObject;
+
 
 	public class DebugClusterWeb extends Shape
 	{	
 		private static var cml:XMLList;
 		private var obj:Object;
-		private var clusterObject:Object;
-		private var pointList:Array;
+		private var clusterObject:ClusterObject;
+		private var pointList:Vector.<PointObject>;
+		
 		private var NumPoints:Number;
-		private var id:Number = 0;
-		private var n:Number = 0;
+		private var id:int = 0;
+		private var n:int = 0;
 		
 		
 		public function DebugClusterWeb(ID:Number)

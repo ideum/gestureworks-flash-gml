@@ -592,7 +592,7 @@ package com.gestureworks.objects
 			_remove = value;
 		}
 		///////////////////////////////////////////////
-
+		/*
 		//pointArray
 		private var _pointArray:Array = new Array();
 		public function get pointArray():Array
@@ -602,15 +602,25 @@ package com.gestureworks.objects
 		public function set pointArray(value:Array):void
 		{
 			_pointArray = value;
-		}	
+		}
+		*/
+		private var _pointArray:Vector.<PointObject> = new Vector.<PointObject>();
+		public function get pointArray():Vector.<PointObject>
+		{
+			return _pointArray;
+		}
+		public function set pointArray(value:Vector.<PointObject>):void
+		{
+			_pointArray = value;
+		}
 			
 		// cluster history
-		private var _history:Array = new Array();
-		public function get history():Array
+		private var _history:Vector.<ClusterObject> = new Vector.<ClusterObject>();
+		public function get history():Vector.<ClusterObject>
 		{
 			return _history;
 		}
-		public function set history(value:Array):void
+		public function set history(value:Vector.<ClusterObject>):void
 		{
 			_history = value;
 		}

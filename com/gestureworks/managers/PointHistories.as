@@ -45,7 +45,7 @@ package com.gestureworks.managers
 				
 				//trace(history[0].moveCount,GestureGlobals.gw_public::points[event.touchPointID].moveCount)
 								
-				if (point.history.length-1>=GestureGlobals.pointHistoryCaptureLength)
+				if ((point.history.length>1)&&point.history.length-1>=GestureGlobals.pointHistoryCaptureLength)
 				{
 					point.history.pop();
 				}
@@ -68,7 +68,7 @@ package com.gestureworks.managers
 			
 			//trace(" --point process");
 			
-			if (point.history[0]) 
+			if (point.history.length>=1)//(point.history[0]) 
 			{ 
 				//trace("history")
 				FrameID = point.history[0].frameID;

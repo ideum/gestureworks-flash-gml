@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////
 //
 //  IDEUM
 //  Copyright 2011-2012 Ideum
@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    GestureObject.as
+//  File:    GesturePropertyObject.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -15,24 +15,213 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
-		
+	
 	public class GestureObject extends Object 
 	{
-		// ID
-		private var _id:int;
-		public function get id():int
+		
+		// activeEvent
+		private var _activeEvent:Boolean = false;
+		public function get activeEvent():Boolean
 		{
-			return _id;
+			return _activeEvent;
 		}
-		public function set id(value:int):void
+		public function set activeEvent(value:Boolean):void
 		{
-			_id = value;
+			_activeEvent = value;
+		}
+		
+		// dispatchEvent
+		private var _dispatchEvent:Boolean = false;
+		public function get dispatchEvent():Boolean
+		{
+			return _dispatchEvent;
+		}
+		public function set dispatchEvent(value:Boolean):void
+		{
+			_dispatchEvent = value;
+		}
+		
+		
+		// gesture type
+		private var _gesture_type:String;
+		public function get gesture_type():String
+		{
+			return _gesture_type;
+		}
+		public function set gesture_type(value:String):void
+		{
+			_gesture_type = value;
+		}
+		
+		// gesture id
+		private var _gesture_id:String;
+		public function get gesture_id():String
+		{
+			return _gesture_id;
+		}
+		public function set gesture_id(value:String):void
+		{
+			_gesture_id = value;
+		}
+		
+		// algorithm id
+		private var _algorithm:String;
+		public function get algorithm():String
+		{
+			return _algorithm;
+		}
+		public function set algorithm(value:String):void
+		{
+			_algorithm = value;
+		}
+		
+		// algorithm type
+		private var _algorithm_type:String;
+		public function get algorithm_type():String
+		{
+			return _algorithm_type;
+		}
+		public function set algorithm_type(value:String):void
+		{
+			_algorithm_type = value;
+		}
+		
+		// algorithm class
+		private var _algorithm_class:String;
+		public function get algorithm_class():String
+		{
+			return _algorithm_class;
+		}
+		public function set algorithm_class(value:String):void
+		{
+			_algorithm_class = value;
+		}
+		
+		/////////////////////////////
+		// global gesture object properties
+		/////////////////////////////
+		
+		// n---------------------
+		private var _n:int = 0;
+		public function get n():int
+		{
+			return _n;
+		}
+		public function set n(value:int):void
+		{
+			_n = value;
+		}
+		// nMax---------------------
+		private var _nMax:int = 100;
+		public function get nMax():int
+		{
+			return _nMax;
+		}
+		public function set nMax(value:int):void
+		{
+			_nMax = value;
+		}
+		// nMin---------------------
+		private var _nMin:int = 0;
+		public function get nMin():int
+		{
+			return _nMin;
+		}
+		public function set nMin(value:int):void
+		{
+			_nMin = value;
+		}
+		
+		// match event
+		private var _match_TouchEvent:String;
+		public function get match_TouchEvent():String
+		{
+			return _match_TouchEvent;
+		}
+		public function set match_TouchEvent(value:String):void
+		{
+			_match_TouchEvent = value;
+		}
+		
+		// match event
+		private var _match_GestureEvent:String;
+		public function get match_GestureEvent():String
+		{
+			return _match_GestureEvent;
+		}
+		public function set match_GestureEvent(value:String):void
+		{
+			_match_GestureEvent = value;
+		}
+		
+		// event type
+		private var _event_type:String;
+		public function get event_type():String
+		{
+			return _event_type;
+		}
+		public function set event_type(value:String):void
+		{
+			_event_type = value;
+		}
+		
+		// event dipatch type
+		private var _dispatch_type:String;
+		public function get dispatch_type():String
+		{
+			return _dispatch_type;
+		}
+		public function set dispatch_type(value:String):void
+		{
+			_dispatch_type = value;
+		}
+		
+		// event dipatch mode
+		private var _dispatch_mode:String;
+		public function get dispatch_mode():String
+		{
+			return _dispatch_mode;
+		}
+		public function set dispatch_mode(value:String):void
+		{
+			_dispatch_mode = value;
+		}
+		
+		private var _dispatch_reset:String;
+		public function get dispatch_reset():String
+		{
+			return _dispatch_reset;
+		}
+		public function set dispatch_reset(value:String):void
+		{
+			_dispatch_reset = value;
+		}
+		
+		// event dipatch interval
+		private var _dispatch_interval:int;
+		public function get dispatch_interval():int
+		{
+			return _dispatch_interval;
+		}
+		public function set dispatch_interval(value:int):void
+		{
+			_dispatch_interval = value;
+		}
+		
+		// timer_count
+		private var _timer_count:int = 0;
+		public function get timer_count():int
+		{
+			return _timer_count;
+		}
+		public function set timer_count(value:int):void
+		{
+			_timer_count = value;
 		}
 		
 		///////////////////////////////////////////////////
-		// GESTURE EVENT LOGIC
+		// GESTURE EVENT PHASE LOGIC
 		///////////////////////////////////////////////////
-		
 		// start
 		private var _start:Boolean = false;
 		public function get start():Boolean
@@ -44,7 +233,7 @@ package com.gestureworks.objects
 			_start = value;
 		}
 		
-		// active // uses active touch data to esablish gesture object values
+		// active
 		private var _active:Boolean = false;
 		public function get active():Boolean
 		{
@@ -66,7 +255,7 @@ package com.gestureworks.objects
 			_release = value;
 		}
 		
-		// passive // easing and other passive processes that use cached gesture object values
+		// passive
 		private var _passive:Boolean = false;
 		public function get passive():Boolean
 		{
@@ -88,22 +277,26 @@ package com.gestureworks.objects
 			_complete = value;
 		}
 		
-		//////////////////////////////////////////////////////////////
-		// a list of dynamic GML cnofigfured gesture property objects
-		// for the touchsprite
-		//////////////////////////////////////////////////////////////
+		// data object
+		private var _data:Object = new Object();
+		public function get data():Object
+		{
+			return _data;
+		}
+		public function set data(value:Object):void
+		{
+			_data = value;
+		}
+		// data object
+		private var _dList:Vector.<DimensionObject> = new Vector.<DimensionObject>();
+		public function get dList():Vector.<DimensionObject>
+		{
+			return _dList;
+		}
+		public function set dList(value:Vector.<DimensionObject>):void
+		{
+			_dList = value;
+		}
 		
-		//property Object List
-		private var _pOList:Object = new Object();
-		public function get pOList():Object
-		{
-			return _pOList;
-		}
-		public function set pOList(value:Object):void
-		{
-			_pOList = value;
-		}
-
 	}
-
 }

@@ -20,9 +20,9 @@ package com.gestureworks.utils
 	import com.gestureworks.managers.TouchManager;
 	
 	import com.gestureworks.core.gw_public;
-	import com.gestureworks.objects.PropertyObject;
-	import com.gestureworks.objects.GesturePropertyObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.GestureListObject;
 	import flash.geom.Point;
 	
 	//import com.gestureworks.utils.Yolotzin;
@@ -32,10 +32,10 @@ package com.gestureworks.utils
 	
 	public class GestureParser //extends Sprite
 	{
-		public var gO:GestureObject;
+		public var gOList:GestureListObject;
 		public var gestureList:Object;
 		public var gestureTypeList:Object;
-		private var pOList:Object;
+		private var gList:Vector.<GestureObject>;
 		public var gml:XMLList;
 		
 		public function GestureParser():void
@@ -60,9 +60,9 @@ package com.gestureworks.utils
 			
 			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
 			
-			gO = GestureGlobals.gw_public::gestures[ID];
+			gOList = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);
-			pOList = new Object;
+			gList = new Vector.<GestureObject>;
 			
 				gestureTypeList = { 
 									"drag":true, 
@@ -108,6 +108,7 @@ package com.gestureworks.utils
 						
 						var gestureNum:int = gml.Gesture_set[0].Gesture.length();
 						
+						
 							for (var i:int = 0; i < gestureNum; i++) 
 							{
 								var gesture_id:String = String(gml.Gesture_set[0].Gesture[i].attribute("id"));
@@ -139,37 +140,38 @@ package com.gestureworks.utils
 											// create new gesture object for handling gesture data structure
 											//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 											
-											pOList[gesture_id] = new Object();
+											var gO:GestureObject = new GestureObject();
+											
+											//pOList[gesture_id] = new GestureObject();
 											//pOList[gesture_id] = new GesturePropertyObject();
 											
 											//trace("gesture:", gesture_id);
-												//pOList[gesture_id].processing_rate = processing_rate;
-												pOList[gesture_id].gesture_id = gesture_id;
-												pOList[gesture_id].gesture_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
 												
-												pOList[gesture_id].match_touchEvent = String(gml.Gesture_set[0].Gesture[i].match.action.initial.event.attribute("touch_event"));
-												pOList[gesture_id].match_gestureEvent = String(gml.Gesture_set[0].Gesture[i].match.action.initial.event.attribute("gesture_event"));
-												
-												pOList[gesture_id].algorithm = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.library.attribute("module"));
-												pOList[gesture_id].algorithm_class = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("class"));
-												pOList[gesture_id].algorithm_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("type"));
-												
-												pOList[gesture_id].event_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.attribute("type"));
+												gO.gesture_id = gesture_id;
+												gO.gesture_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
+
+												// MATHICNG CRITERIA
+												gO.match_TouchEvent = String(gml.Gesture_set[0].Gesture[i].match.action.initial.event.attribute("touch_event"));
+												gO.match_GestureEvent = String(gml.Gesture_set[0].Gesture[i].match.action.initial.event.attribute("gesture_event"));
+											
+												// EVENT CRITERIA
+												gO.event_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.attribute("type"));
 												
 												// create static var in gesture event object
-												if (pOList[gesture_id].event_type == "custom") GWGestureEvent.GML[gesture_id.toUpperCase()] = gesture_id;
-											
-												pOList[gesture_id].dispatch_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_type"));
-												pOList[gesture_id].dispatch_mode = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_mode"));
-												pOList[gesture_id].dispatch_reset = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_reset"));
+												if (gO.event_type == "custom") GWGestureEvent.GML[gesture_id.toUpperCase()] = gesture_id;
 												
-												pOList[gesture_id].dispatch_interval = Math.ceil(GestureWorks.application.frameRate * 0.001*int(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_interval")));
+												// DISPATCH CRITERIA
+												gO.dispatch_type = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_type"));
+												gO.dispatch_mode = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_mode"));
+												gO.dispatch_reset = String(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_reset"));
 												
-												pOList[gesture_id].dispatchEvent = false;
-												pOList[gesture_id].activeEvent = false;
-												pOList[gesture_id].complete = false;
+												gO.dispatch_interval = Math.ceil(GestureWorks.application.frameRate * 0.001*int(gml.Gesture_set[0].Gesture[i].mapping.update.attribute("dispatch_interval")));
 												
-												pOList[gesture_id].timer_count = 0;
+												gO.dispatchEvent = false;
+												gO.activeEvent = false;
+												gO.complete = false;
+												
+												gO.timer_count = 0;
 												
 												// if initial action defined
 													if (gml.Gesture_set[0].Gesture[i].match.action.initial)
@@ -190,28 +192,37 @@ package com.gestureworks.utils
 																nMax = int(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("point_number_min"));
 																nMin = int(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("point_number_max"));
 															}
-															pOList[gesture_id].n = n
-															pOList[gesture_id].nMin = nMax;
-															pOList[gesture_id].nMax = nMin;
+															gO.n = n
+															gO.nMin = nMax;
+															gO.nMax = nMin;
 														}
 													}
 												
+											
+								
+											//ALGORITHM SPEC
+											gO.algorithm = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.library.attribute("module"));
+											gO.algorithm_class = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("class"));
+											gO.algorithm_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.attribute("type"));
+												
+											
 											///////////////////////////////////////////////////////////////////////////////
 											// properties of each property object of the gesture
+											// 
 											//////////////////////////////////////////////////////////////////////////////
-												
 											for (var j:int = 0; j < propertyNum; j++) {
 												var property_id:String = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("id"));
 												
 												// create new property object on gesture object
 												// note each thread has independent pipeline to display object property
-												pOList[gesture_id][property_id] = new PropertyObject();
+												var dO:DimensionObject = new DimensionObject();
+												//gO.dList[property_id] = new DimensionObject();
 
-													pOList[gesture_id][property_id].property_id = property_id;
+													dO.property_id = property_id;
 													//pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("type"));
-													pOList[gesture_id][property_id].property_mvar = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_var"));
-													pOList[gesture_id][property_id].property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_result"));
-													pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
+													dO.property_mvar = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_var"));
+													dO.property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_result"));
+													dO.property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
 
 														//pOList[gesture_id][property_id].clusterDelta = 0; 
 														//pOList[gesture_id][property_id].processDelta = 0; 
@@ -235,14 +246,14 @@ package com.gestureworks.utils
 															//pOList[gesture_id][property_id].point_translation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_threshold"));
 															//pOList[gesture_id][property_id].point_acceleration_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_threshold"));
 															
-															pOList[gesture_id][property_id].point_event_duration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_min"));
-															pOList[gesture_id][property_id].point_event_duration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_max"));
-															pOList[gesture_id][property_id].point_interevent_duration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_min"));
-															pOList[gesture_id][property_id].point_interevent_duration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_max"));
-															pOList[gesture_id][property_id].point_translation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_min"));
-															pOList[gesture_id][property_id].point_translation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_max"));
-															pOList[gesture_id][property_id].point_acceleration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_min"));
-															pOList[gesture_id][property_id].point_acceleration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_max"));
+															dO.point_event_duration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_min"));
+															dO.point_event_duration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("event_duration_max"));
+															dO.point_interevent_duration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_min"));
+															dO.point_interevent_duration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("interevent_duration_max"));
+															dO.point_translation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_min"));
+															dO.point_translation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("translation_max"));
+															dO.point_acceleration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_min"));
+															dO.point_acceleration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("acceleration_max"));
 															
 															//pOList[gesture_id].point_jolt_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.points.attribute("jolt_threshold"));
 															
@@ -286,7 +297,7 @@ package com.gestureworks.utils
 
 																	pathArray.push(new Point(x,y));
 																}
-																pOList[gesture_id][property_id].path = pathArray
+																dO.path = pathArray
 															}
 														}
 														
@@ -300,52 +311,37 @@ package com.gestureworks.utils
 															//pOList[gesture_id][property_id].cluster_rotation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_threshold"));
 															//pOList[gesture_id][property_id].cluster_separation_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_threshold"));
 															
-															pOList[gesture_id][property_id].cluster_translation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_min"));
-															pOList[gesture_id][property_id].cluster_translation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_max"));
+															dO.cluster_translation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_min"));
+															dO.cluster_translation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("translation_max"));
 															
-															pOList[gesture_id][property_id].cluster_rotation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_min"));
-															pOList[gesture_id][property_id].cluster_rotation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_max"));
+															dO.cluster_rotation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_min"));
+															dO.cluster_rotation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("rotation_max"));
 															
-															pOList[gesture_id][property_id].cluster_separation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_min"));
-															pOList[gesture_id][property_id].cluster_separation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_max"));
+															dO.cluster_separation_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_min"));
+															dO.cluster_separation_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("separation_max"));
 															
-															pOList[gesture_id][property_id].cluster_acceleration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_min"));
-															pOList[gesture_id][property_id].cluster_acceleration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_max"));
+															dO.cluster_acceleration_min = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_min"));
+															dO.cluster_acceleration_max = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.cluster.attribute("acceleration_max"));
 														
 														}
 		
 													}
 													
-													// if mapping exists 
-													if (gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j])
-													{
-														// target translator
-														var target:String = String(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("target"));
-															
-														if ((target == "dsx") || (target == "dsy") || (target == "dx") || (target == "dy") || (target == "dtheta")|| (target == "dthetaX") || (target == "dthetaY") || (target == "dthetaZ")) pOList[gesture_id][property_id].target_id = target;
-														else if ((target == "scaleX")||(target == "scalex")) 		pOList[gesture_id][property_id].target_id = "dsx";
-														else if ((target == "scaleY")||(target == "scaley")) 		pOList[gesture_id][property_id].target_id = "dsy";
-														else if (target == "scale")									pOList[gesture_id][property_id].target_id = "ds";
-														else if ((target == "rotate") || (target == "rotation")) 		pOList[gesture_id][property_id].target_id = "dtheta";
-														else if ((target == "rotateX") || (target == "rotationX")) 		pOList[gesture_id][property_id].target_id = "dthetaX";
-														else if ((target == "rotateY") || (target == "rotationY")) 		pOList[gesture_id][property_id].target_id = "dthetaY";
-														else if ((target == "rotateZ") || (target == "rotationZ")) 		pOList[gesture_id][property_id].target_id = "dthetaZ";
-														else if ((target == "x")||(target == "X")) 					pOList[gesture_id][property_id].target_id = "dx";
-														else if ((target == "y") || (target == "Y")) 				pOList[gesture_id][property_id].target_id = "dy";
-														else  pOList[gesture_id][property_id].target_id = "";
-														
-								
-														
-													}
+													
+													
+													////////////////////////////////////////////////////////////////////////////////////////////
+													// FILTER BLOCK
+													/////////////////////////////////////////////////////////////////////////////////////////////
+													
 													// if processing exists
 													if (gml.Gesture_set[0].Gesture[i].processing)
 													{
 														// noise filtering exists
 														if (gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j])
 														{
-															pOList[gesture_id][property_id].filterOn = gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("noise_filter") == "true" ?true:false;
-															pOList[gesture_id][property_id].noise_filterMatrix;
-															pOList[gesture_id][property_id].filter_factor = Number((gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("percent"))*0.01);
+															dO.noise_filter = gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("noise_filter") == "true" ?true:false;
+															dO.noise_filterMatrix;
+															dO.filter_factor = Number((gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("percent"))*0.01);
 														}
 														
 														//inertia filter exists
@@ -359,38 +355,68 @@ package com.gestureworks.utils
 															//pOList[gesture_id][property_id].touch_inertia_spring 
 															
 															// release inertia
-															pOList[gesture_id][property_id].release_inertia = gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("release_inertia") == "true" ?true:false;
-															pOList[gesture_id][property_id].release_inertiaOn = false; // internal dynamic setting
-															pOList[gesture_id][property_id].release_inertia_factor = 1; // internal
-															pOList[gesture_id][property_id].release_inertia_base = Number(gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("friction"));
-															pOList[gesture_id][property_id].release_inertia_count = 0; //internal
-															pOList[gesture_id][property_id].release_inertia_Maxcount = 120;// internal
+															dO.release_inertia_filter = gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("release_inertia") == "true" ?true:false;
+															dO.release_inertiaOn = false; // internal dynamic setting
+															dO.release_inertia_factor = 1; // internal
+															dO.release_inertia_base = Number(gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("friction"));
+															dO.release_inertia_count = 0; //internal
+															dO.release_inertia_Maxcount = 120;// internal
 														}
 														
 														// multiply filter
 														if (gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j])
 														{
-															pOList[gesture_id][property_id].multiplyOn = gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("multiplyOn")== "true" ?true:false;
-															pOList[gesture_id][property_id].func = String(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("func"));
-															pOList[gesture_id][property_id].func_factor = Number(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("factor"));
+															dO.multiply_filter = gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("multiply")== "true" ?true:false;
+															dO.func = String(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("func"));
+															dO.func_factor = Number(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("factor"));
 														}
 														// delta filter
 														if (gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j])
 														{
-															pOList[gesture_id][property_id].delta_threshold = gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_threshold") == "true" ?true:false;
-															pOList[gesture_id][property_id].delta_max = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_max"));
-															pOList[gesture_id][property_id].delta_min = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_min"));
+															dO.delta_filter = gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_threshold") == "true" ?true:false;
+															dO.delta_max = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_max"));
+															dO.delta_min = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_min"));
 														}
 														// value boundrary filter
 														if (gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j])
 														{
-															pOList[gesture_id][property_id].boundaryOn = gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundaryOn") == "true" ?true:false;
-															pOList[gesture_id][property_id].boundary_max = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_max"));
-															pOList[gesture_id][property_id].boundary_min = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_min"));
+															dO.boundary_filter = gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary") == "true" ?true:false;
+															dO.boundary_max = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_max"));
+															dO.boundary_min = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_min"));
 														}
 													}
+													
+													
+													////////////////////////////////////////////////////////////////////////////////////////////
+													// MAPPING BLOCK
+													/////////////////////////////////////////////////////////////////////////////////////////////
+													
+													// if mapping exists 
+													if (gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j])
+													{
+														// target translator
+														var target:String = String(gml.Gesture_set[0].Gesture[i].mapping.update.gesture_event.property[j].attribute("target"));
+															
+														if ((target == "dsx") || (target == "dsy") || (target == "dx") || (target == "dy") || (target == "dtheta")|| (target == "dthetaX") || (target == "dthetaY") || (target == "dthetaZ")) dO.target_id = target;
+														else if ((target == "scaleX")||(target == "scalex")) 		dO.target_id = "dsx";
+														else if ((target == "scaleY")||(target == "scaley")) 		dO.target_id = "dsy";
+														else if (target == "scale")									dO.target_id = "ds";
+														else if ((target == "rotate") || (target == "rotation")) 		dO.target_id = "dtheta";
+														else if ((target == "rotateX") || (target == "rotationX")) 		dO.target_id = "dthetaX";
+														else if ((target == "rotateY") || (target == "rotationY")) 		dO.target_id = "dthetaY";
+														else if ((target == "rotateZ") || (target == "rotationZ")) 		dO.target_id = "dthetaZ";
+														else if ((target == "x")||(target == "X")) 					dO.target_id = "dx";
+														else if ((target == "y") || (target == "Y")) 				dO.target_id = "dy";
+														else  dO.target_id = "";	
+													}
+													
 													//trace("id	", gesture_id, property_id, pOList[gesture_id][property_id].id);
+													gO.dList.push(dO);
 												}
+												
+												
+												// PUSH GESTURE OBJECT INTO GESTURE LIT VECTOR
+												gList.push(gO);
 											}
 											}
 											//////////////////////////////////////////////////////////////////////////////////
@@ -398,7 +424,7 @@ package com.gestureworks.utils
 									}
 								}
 							}
-							gO.pOList = pOList;
+							gOList.pOList = gList;
 							
 						//traceGesturePropertyList()
 		}
@@ -407,13 +433,16 @@ package com.gestureworks.utils
 		public function traceGesturePropertyList():void
 		{
 			//trace("new display object created in gesture parser util");
+			var gn:uint = gOList.pOList.length;
 			
-			for (var i:String in pOList)
+			for (var i:uint = 0; i < gn; i++ )
 				{
 					trace("	new gesture object:");
-					for (var j:String in pOList[i])
+					var dn:uint = gOList.pOList[i].dList.length;
+					
+					for (var j:uint = 0; j < dn; j++ )
 					{
-							trace("		property item:",i,j,"__",pOList[i][j]);
+							trace("		property item:",i,j,"__",gList[i].dList[j]);
 					}
 				}
 				trace("gesture object parsing complete");

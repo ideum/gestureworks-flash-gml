@@ -81,7 +81,9 @@ package com.gestureworks.utils.debug
 			
 		for (var i:int = 0; i < N; i++) 
 			{
-			var available:Boolean = pointList[i].history[hist]
+			var available:Boolean
+			
+			if (pointList[i].history.length > hist) available = true//pointList[i].history[hist]
 	
 			if (obj.shape == "line") {
 					if (available) {

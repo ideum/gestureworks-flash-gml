@@ -36,10 +36,10 @@ package com.gestureworks.core
 	import com.gestureworks.managers.MouseManager;
 	
 	import com.gestureworks.objects.PointObject;
-	import com.gestureworks.objects.PropertyObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.ClusterObject;
 	//import com.gestureworks.objects.ProcessObject;
-	import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	
@@ -84,7 +84,7 @@ package com.gestureworks.core
 		
 		// internal public 
 		public var cO:ClusterObject;
-		public var gO:GestureObject;
+		public var gO:GestureListObject;
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
 		
@@ -139,7 +139,7 @@ package com.gestureworks.core
 						// CREATERS A NEW GESTURE OBJECT
 						// A VEHICLE TO CONTAIN CORE GESTURE VALUES
 						/////////////////////////////////////////////////////////////////////////
-						gO = new GestureObject();
+						gO = new GestureListObject();
 							gO.id = touchObjectID;
 						GestureGlobals.gw_public::gestures[_touchObjectID] = gO;
 						
@@ -187,12 +187,18 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		public var _pointArray:Array = new Array(); // read only
-		public function get pointArray():Array { return _pointArray; }
-		public function set pointArray(value:Array):void
-		{
-			_pointArray=value;
-		}
+		//public var _pointArray:Array = new Array(); // read only
+		//public function get pointArray():Array { return _pointArray; }
+		//public function set pointArray(value:Array):void
+		//{
+			//_pointArray=value;
+		//}
+		
+		
+		
+		public var _pointArray:Vector.<PointObject> = new Vector.<PointObject>(); // read only
+		public function get pointArray():Vector.<PointObject> { return _pointArray; }
+		
 		/**
 		 * @private
 		 */

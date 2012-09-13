@@ -26,7 +26,7 @@ package com.gestureworks.utils.debug
 	import com.gestureworks.core.CML;
 	//import com.gestureworks.objects.ClusterObject;
 	//import com.gestureworks.objects.GestureObject;
-	import com.gestureworks.objects.PropertyObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.utils.AddSimpleText;
 
 	public class DebugGestureDataView extends Sprite
@@ -334,7 +334,7 @@ package com.gestureworks.utils.debug
 					
 					for (j in ts.gO.pOList[i])
 					{
-						if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].gestureDelta != 0)) traceGesture = true;
+						if ((ts.gO.pOList[i][j] is DimensionObject) && (ts.gO.pOList[i][j].gestureDelta != 0)) traceGesture = true;
 					}
 					if (traceGesture) gestureEventList.push(i);
 					traceGesture = false;

@@ -230,12 +230,12 @@ package com.gestureworks.objects
 		
 		
 		// history
-		private var _history:Array = new Array();
-		public function get history():Array
+		private var _history:Vector.<PointObject> = new Vector.<PointObject>();
+		public function get history():Vector.<PointObject>
 		{
 			return _history;
 		}
-		public function set history(value:Array):void
+		public function set history(value:Vector.<PointObject>):void
 		{
 			_history = value;
 		}
