@@ -171,7 +171,7 @@ package com.gestureworks.core
 					tc = new TouchCluster(touchObjectID);
 					tg = new TouchGesture(touchObjectID);
 					tt = new TouchTransform(touchObjectID);
-					td = new TouchDebugDisplay(touchObjectID);
+					//td = new TouchDebugDisplay(touchObjectID);
 					
 		}
 		
