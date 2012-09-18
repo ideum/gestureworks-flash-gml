@@ -209,8 +209,8 @@ package com.gestureworks.analysis
 														//}
 														
 														// set phase 
-														gO.pOList[i].active = true;
 														gO.pOList[i].passive = false;
+														gO.pOList[i].active = true;
 														//trace("touch active",i,j);
 													}
 													else {
@@ -246,21 +246,22 @@ package com.gestureworks.analysis
 													if(gO.pOList[i].dList[j].release_inertiaOn)//&&(gO.pOList[i][j].release_inertia_filter)
 													{
 														var count:uint = gO.pOList[i].dList[j].release_inertia_count++;
-
-															//if ((count > po.release_inertia_Maxcount) || (Math.abs(po.gestureDelta) < po.delta_min))
-															//if (Math.abs(po.gestureDelta) < po.delta_min)
-															if (count > gO.pOList[i].dList[j].release_inertia_Maxcount)
+															
+															if (gO.pOList[i].dList[j].gestureDelta != 0)
+															{
+																//gO.pOList[i].dList[j].release_inertiaOn = true;
+																gO.pOList[i].dList[j].gestureDelta *= gO.pOList[i].dList[j].release_inertia_factor * Math.pow(gO.pOList[i].dList[j].release_inertia_base, count);
+															}
+															
+															//trace("gdelta",Math.abs(gO.pOList[i].dList[j].gestureDelta),gO.pOList[i].dList[j].delta_min);
+															
+															if ((count > gO.pOList[i].dList[j].release_inertia_Maxcount)||(Math.abs(gO.pOList[i].dList[j].gestureDelta) < gO.pOList[i].dList[j].delta_min))
 															{
 																gO.pOList[i].dList[j].release_inertiaOn = false;
 																gO.pOList[i].dList[j].gestureDelta = 0;
 																//ts.gO.pOList[i][j].gestureDeltaCache =0;
 																gO.pOList[i].dList[j].release_inertia_count = 0;
 															}
-															else if (gO.pOList[i].dList[j].gestureDelta!=0){
-																gO.pOList[i].dList[j].release_inertiaOn = true;
-																gO.pOList[i].dList[j].gestureDelta *= gO.pOList[i].dList[j].release_inertia_factor * Math.pow(gO.pOList[i].dList[j].release_inertia_base, count);
-																}
-																//trace("?");
 													}
 													else {
 														gO.pOList[i].dList[j].gestureDelta = 0;
@@ -332,7 +333,7 @@ package com.gestureworks.analysis
 											
 											if (ts.gO.pOList[i].dList[j].boundary_filter) 
 											{
-												//trace(ts.gO.pOList[i][j].boundaryOn,ts.gO.pOList[i][j].boundary_min,ts.gO.pOList[i][j].boundary_max);
+												//trace(ts.gO.pOList[i].dList[j].boundary_filter,ts.gO.pOList[i].dList[j].boundary_min,ts.gO.pOList[i].dList[j].boundary_max);
 												//trace(ts.gO.pOList[i][j].gestureValue);
 												//trace(ts.gO.pOList[i][j].target_id,ts.gO.pOList[i][j].gestureValue);
 												
@@ -402,6 +403,8 @@ package com.gestureworks.analysis
 									
 									// active gesture event switch
 									if (gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].activeEvent = true;
+									
+									trace("gesturedelta",gO.pOList[i].dList[j].gestureDelta)
 								}
 						}	
 				//}
@@ -479,8 +482,8 @@ package com.gestureworks.analysis
 				for (i=0; i < gn; i++) 
 				//for (i in gO.pOList)
 				{
-					var dn:uint = gO.pOList[i].dList.length;
-					for (j=0; j < dn; j++) 	
+					var dn0:uint = gO.pOList[i].dList.length;
+					for (j=0; j < dn0; j++) 	
 					//for (j in gO.pOList[i].dList)
 					{
 						// will move to internal dimention check

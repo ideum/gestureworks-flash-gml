@@ -107,6 +107,10 @@ package com.gestureworks.analysis
 		public var c_dsy:Number = 0; //custer vert scale change
 		public var c_dtheta:Number = 0; // cluster angle change
 		
+		public	var c_etm_dx:Number = 0; // cluster position change x
+		public	var c_etm_dy:Number = 0; // cluster position change y
+		
+		
 		// acceleration //second order change in cluster properties wrt time
 		public	var c_ddx:Number = 0; 
 		public	var c_ddy:Number = 0;
@@ -117,6 +121,9 @@ package com.gestureworks.analysis
 		//private var c_ddsx:Number = 0; 
 		//private	var c_ddsy:Number = 0; 
 		//private var c_ddtheta:Number = 0; 
+		
+		public	var c_etm_ddx:Number = 0; // cluster position change x
+		public	var c_etm_ddy:Number = 0; // cluster position change y
 		
 		// jerk or jolt  // third order change in cluster properties wrt time
 		//private	var c_dddx:Number = 0;  
@@ -199,9 +206,14 @@ package com.gestureworks.analysis
 			c_dsy = 0;
 			c_dtheta = 0;
 			
+			c_etm_dx = 0;
+			c_etm_dy = 0;
+			
 			// second diff
 			c_ddx = 0;
 			c_ddy = 0;
+			c_etm_ddx = 0;
+			c_etm_ddy = 0;
 		}
 		
 		public function pushClusterObjectProperties():void
@@ -247,6 +259,9 @@ package com.gestureworks.analysis
 			cO.dsx = c_dsx;
 			cO.dsy = c_dsy;
 			
+			cO.etm_dx = c_etm_dx;
+			cO.etm_dy = c_etm_dy;
+			
 			////////////////////////
 			// second diff
 			////////////////////////
@@ -259,6 +274,9 @@ package com.gestureworks.analysis
 			//cO.ddsx = c_ddsx;
 			//cO.ddsy = c_ddsy;
 			//cO.ddtheta = c_ddtheta;
+			
+			cO.etm_ddx = c_etm_ddx;
+			cO.etm_ddy = c_etm_ddy;
 			
 			////////////////////////////
 			// sub cluster analysis
@@ -342,7 +360,7 @@ package com.gestureworks.analysis
 							}
 							
 							
-							//separation
+							// inst separation and rotation
 							if ((pointList[0].history[0]) && (pointList[i].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
 							{
 								var dxs:Number = pointList[0].history[0].x - pointList[i].history[0].x;
@@ -520,8 +538,7 @@ package com.gestureworks.analysis
 									//trace(pointList[i].moveCount)
 
 									//if ((N > i + 1) && (pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
-									if ((N > i + 1) && (pointList[0].history.length >
-									mc) && (pointList[i + 1].history.length>mc))
+									if ((N > i + 1) && (pointList[0].history.length > mc) && (pointList[i + 1].history.length>mc))
 										{		
 										// scale 
 										sx += pointList[0].history[0].x - pointList[i + 1].history[0].x;
@@ -542,8 +559,8 @@ package com.gestureworks.analysis
 										// rotate
 										
 										var dtheta:Number = 0;
-										var theta0:Number = calcAngle((pointList[0].history[0].x - pointList[i+1].history[0].x), (pointList[0].history[0].y - pointList[i+1].history[0].y));
-										var theta1:Number = calcAngle((pointList[0].history[mc].x - pointList[i+1].history[mc].x), (pointList[0].history[mc].y - pointList[i+1].history[mc].y));
+										var theta0:Number = calcAngle(sx, sy);
+										var theta1:Number = calcAngle(sx_mc, sy_mc);
 											
 										if ((theta0 != 0) && (theta1 != 0)) 
 											{
@@ -789,7 +806,7 @@ package com.gestureworks.analysis
 		
 		
 		//public function findMeanTemporalVelocity(t:int):Point
-		public function findMeanTemporalVelocity(t:int):Object
+		public function findMeanTemporalVelocity():void
 		{
 		/////////////////////// mean velocity of cluster // OPERATION /////////////////////////////////////////
 					
@@ -797,23 +814,29 @@ package com.gestureworks.analysis
 				//c_etm_vel.x = 0;
 				//c_etm_vel.y = 0;
 				
-			var c_etm_vel:Object = new Object();
-				c_etm_vel["etm_dx"] = 0;
-				c_etm_vel["etm_dy"] = 0;
-							
-			var t0:Number = 1 /t;
+			//var c_etm_vel:Object = new Object();
+				//c_etm_vel["etm_dx"] = 0;
+				//c_etm_vel["etm_dy"] = 0;
+				
+				c_etm_dx = 0;
+				c_etm_dy = 0;
+			
+			var t:uint = 6;
+			var t0:Number = 1 /6;
 					
 			for (i = 0; i < N; i++) 
 				{
-					if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
+					//if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
+					//if (pointList.length > i)
+					if(pointList[i].history.length>t)
 					{
 					for (j = 0; j < t; j++) 
 						{
 						//c_etm_vel.x += pointList[i].history[j].dx;
 						//c_etm_vel.y += pointList[i].history[j].dy;
 						
-						c_etm_vel["etm_dx"] += pointList[i].history[j].dx;
-						c_etm_vel["etm_dy"] += pointList[i].history[j].dy;
+						c_etm_dx += pointList[i].history[j].dx;
+						c_etm_dy += pointList[i].history[j].dy;
 						//trace(pointList[i].history[j].dx,pointList[i].history[j].dy)
 						}
 					}
@@ -823,14 +846,14 @@ package com.gestureworks.analysis
 			
 			//c_etm_vel.x *= k0 * t0;
 			//c_etm_vel.y *= k0 * t0;
-			c_etm_vel["etm_dx"] *= k0 * t0;
-			c_etm_vel["etm_dy"] *= k0 * t0;
+			c_etm_dx *= k0 * t0;
+			c_etm_dy *= k0 * t0;
 
-			return c_etm_vel;
+			//return c_etm_vel;
 		} 
 		
 		//public function findMeanTemporalAcceleration(t:int):Point
-		public function findMeanTemporalAcceleration(t:int):Object
+		public function findMeanTemporalAcceleration():void
 		{
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// cluster acceleration x y // OPERATION
@@ -840,15 +863,17 @@ package com.gestureworks.analysis
 				//c_etm_accel.x = 0;
 				//c_etm_accel.y = 0;
 				
-			var data:Object = new Object();
-				data["etm_ddx"] = 0;
-				data["etm_ddy"] = 0;
-				
-			var t0:Number = 1 /t;
+			//var data:Object = new Object();
+				//data["etm_ddx"] = 0;
+				//data["etm_ddy"] = 0;
+			var t:uint = 6;
+			var t0:Number = 1 /6;
 						
 				for (i = 0; i < N; i++) 
 					{
-					if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
+					//if (pointList[i].history[t])//&&(!pointList[i].holdLock))//edit
+					//if (pointList.length > i)
+					if(pointList[i].history.length>t)
 						{
 							// SIMPLIFIED DELTAS
 							// second diff of x anf y wrt t
@@ -856,18 +881,18 @@ package com.gestureworks.analysis
 							{
 								//c_etm_accel.x += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
 								//c_etm_accel.y += pointList[i].history[j].dy - pointList[i].history[j + 1].dy;
-								data["etm_ddx"] += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
-								data["etm_ddy"] += pointList[i].history[j].dy - pointList[i].history[j+1].dy;
+								c_etm_ddy += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
+								c_etm_ddy += pointList[i].history[j].dy - pointList[i].history[j+1].dy;
 							}
 						}
 					}
 						
 					//c_etm_accel.x *= k0 * t0;
 					//c_etm_accel.y *= k0 * t0;
-					data["etm_ddx"] *= k0 * t0;
-					data["etm_ddy"] *= k0 * t0;
+					c_etm_ddy *= k0 * t0;
+					c_etm_ddy *= k0 * t0;
 						
-				return data;
+				//return data;
 		}
 		
 		public function findInstOrientation():void 
@@ -882,7 +907,8 @@ package com.gestureworks.analysis
 						
 							for (i = 0; i < N; i++) 
 								{
-									if (pointList[i].history[0]) 
+									if (pointList[i].history[0])
+									//if(pointList.length>i)
 									{
 										handArray[i] = new Array();
 										handArray[i].id = pointList[i].id; // set point id

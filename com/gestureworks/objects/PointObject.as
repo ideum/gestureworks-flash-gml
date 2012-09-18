@@ -191,19 +191,6 @@ package com.gestureworks.objects
 		{
 			_objectList=value;
 		}
-		
-		
-		// MAY NEED REMOVE
-		// point
-		private var _point:*;
-		public function get point():*
-		{
-			return _point;
-		}
-		public function set point(value:*):void
-		{
-			_point = value;
-		}
 	
 		// MAY NEED REMOVE
 		// event

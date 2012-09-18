@@ -42,30 +42,31 @@ package com.gestureworks.objects
 			_target_id = value;
 		}
 		
-		////////////////////////////////////////////////////////
-		// property var
-		private var _property_var:String;
-		
-		public function get property_var():String
-		{
-			return _property_var;
-		}
-		public function set property_var(value:String):void
-		{
-			_property_var = value;
-		}
 		
 		////////////////////////////////////////////////////////
-		// property var
-		private var _property_mvar:String;
+		// property result name
+		private var _property_result:String;
 		
-		public function get property_mvar():String
+		public function get property_result():String
 		{
-			return _property_mvar;
+			return _property_result;
 		}
-		public function set property_mvar(value:String):void
+		public function set property_result(value:String):void
 		{
-			_property_mvar = value;
+			_property_result = value;
+		}
+		
+		////////////////////////////////////////////////////////
+		// property var array
+		private var _property_vars:Array = new Array();
+		
+		public function get property_vars():Array
+		{
+			return _property_vars;
+		}
+		public function set property_vars(value:Array):void
+		{
+			_property_vars = value;
 		}
 		
 		

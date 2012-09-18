@@ -57,7 +57,7 @@ package com.gestureworks.analysis
 		private var dtapEventCount:int = 0;
 		private var ttapEventCount:int = 0;
 		
-		private var DIM:String = ""; 
+		private var DIM:uint; 
 		
 		public function TemporalMetric(_id:int) {
 			
@@ -75,9 +75,10 @@ package com.gestureworks.analysis
 		}
 		
 		
-		public function findGestureTap(event:TouchEvent, key:String ):void // each time there is a touchEnd
+		public function findGestureTap(event:TouchEvent, key:int ):void // each time there is a touchEnd
 		{
-			//if (ts.trace_debug_mode) trace("find taps---------------------------------------------------------", key, ts.gO.release);
+			//if (ts.trace_debug_mode) 
+			//trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			// CHECK GML COMPATABILITY
 			var tap_time:int = 10//Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
@@ -162,7 +163,7 @@ package com.gestureworks.analysis
 		}
 		
 		
-		public function findGestureDoubleTap(event:GWGestureEvent,key:String):void
+		public function findGestureDoubleTap(event:GWGestureEvent,key:int):void
 		{
 			//if (ts.trace_debug_mode)
 			//trace("find d taps---------------------------------------------------------");
@@ -178,13 +179,13 @@ package com.gestureworks.analysis
 				// find tap pairs 
 				// dont need current frame as never double tap in a single frame
 				// LOOK IN HISTORY
-				for (var i:int = 0; i < dtap_time; i++) 
+				for (var i:uint = 0; i < dtap_time; i++) 
 					{
 					if (ts.tiO.history[i])
 					{
 					gestureEventArray = ts.tiO.history[i].gestureEventArray;
 
-							for (var j:int = 0; j < gestureEventArray.length; j++) 
+							for (var j:uint = 0; j < gestureEventArray.length; j++) 
 								{
 									if ((gestureEventArray[j].type =="tap")&&(event.value.gestureID != gestureEventArray[j].value.gestureID)) // so as no tto count self
 									{
@@ -211,7 +212,7 @@ package com.gestureworks.analysis
 		}
 		
 		
-		public function findGestureTripleTap(event:GWGestureEvent,key:String):void
+		public function findGestureTripleTap(event:GWGestureEvent,key:int):void
 		{
 			if (ts.trace_debug_mode) trace("find t taps---------------------------------------------------------");
 		
@@ -225,13 +226,13 @@ package com.gestureworks.analysis
 				
 				// find tap pairs // dont need current frame as never double tap in a single frame
 				// LOOK IN HISTORY
-				for (var i:int = 0; i < ttap_time; i++) 
+				for (var i:uint = 0; i < ttap_time; i++) 
 					{
 					if (ts.tiO.history[i])
 					{
 					gestureEventArray = ts.tiO.history[i].gestureEventArray;
 
-							for (var j:int = 0; j < gestureEventArray.length; j++) 
+							for (var j:uint = 0; j < gestureEventArray.length; j++) 
 								{
 									//trace(gestureEventArray[j].type,event.value.gestureID,gestureEventArray[j].value.gestureID);
 									if ((gestureEventArray[j].type =="tap")&&(event.value.gestureID != gestureEventArray[j].value.gestureID))
@@ -244,7 +245,7 @@ package com.gestureworks.analysis
 										{
 											//////////////////////////////////////////////////
 											//trace("T TAP Pair", dx1,dy1);
-											for (var k:int = i; k < (i+ttap_time); k++) 
+											for (var k:uint = i; k < (i+ttap_time); k++) 
 												{
 													
 													
@@ -252,7 +253,7 @@ package com.gestureworks.analysis
 												{
 												var gestureEventArray2:Array = ts.tiO.history[k].gestureEventArray;
 												
-												for (var q:int = 0; q < gestureEventArray2.length; q++) 
+												for (var q:uint = 0; q < gestureEventArray2.length; q++) 
 												{
 													if ((gestureEventArray2[q].type =="tap")&&(event.value.gestureID!=gestureEventArray2[q].value.gestureID)&&(gestureEventArray[j].value.gestureID != gestureEventArray2[q].value.gestureID))
 													{
@@ -290,24 +291,26 @@ package com.gestureworks.analysis
 
 		////////////////////////////////////////////////////////////
 		// VISUAL EVENT TIMLINE WOULD HELP
-		public function countTapEvents(key:String):void // count taps each frame
+		public function countTapEvents(key:uint):void // count taps each frame
 		{
 			//if (ts.trace_debug_mode) 
 			//trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
 			tapEventCount = 0;
 			//var tap_countTime:int = Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001);//10
-			var tap_countTime:int =ts.gO.pOList[key].dispatch_interval;//10
+			var tap_countTime:int = ts.gO.pOList[key].dispatch_interval;//10
 			
 			//trace(Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001))
 			//var buffer:int = 4;
 			var tap_number:int = ts.gO.pOList[key].n;
 			var tap_x_mean:Number = 0
 			var tap_y_mean:Number = 0;
+			
+			var dn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
 				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
 					
-					for (var p:int = 0; p < gestureEventArray.length; p++) 
+					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
 						//trace("gesture:",gestureEventArray[p].type)
 						if (gestureEventArray[j].type =="tap")
@@ -319,7 +322,7 @@ package com.gestureworks.analysis
 					}
 				
 					//count history
-					for (var i:int = 0; i < tap_countTime; i++) // 20 fames block for single tap
+					for (var i:uint = 0; i < tap_countTime; i++) // 20 fames block for single tap
 						{
 						if (ts.tiO.history[i])
 						{
@@ -341,13 +344,6 @@ package com.gestureworks.analysis
 					
 					
 					
-					
-					
-					
-					
-					
-					
-					
 					// check totals
 					if (tapEventCount != 0) 
 					{
@@ -363,41 +359,37 @@ package com.gestureworks.analysis
 							//if (ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ntap_event);
 							
 							ts.gO.pOList[key].activeEvent = true;
+
+							//for (DIM=0; DIM < dn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_var];
 							
-							// push data into gesture object 
-							//ts.gO.pOList[key].x = spt.x;
-							//ts.gO.pOList[key].y = spt.y;
-							//ts.gO.pOList[key].n = tapEventCount;
+							var d:Object = new Object();
+								d["x"] = spt.x;
+								d["y"] = spt.y;
+								d["n"] = tapEventCount;
 							
-							//ts.gO.pOList[key]["tap_x"].gestureValue = spt.x;
-							//ts.gO.pOList[key]["tap_y"].gestureValue = spt.y;
-							//ts.gO.pOList[key]["tap_n"].gestureValue = tapEventCount;
+							ts.gO.pOList[key].data.x = spt.x;
+							ts.gO.pOList[key].data.y = spt.y;
 							
-							/*
-							
-							for (DIM in ts.gO.pOList[key])
+							for (DIM = 0; DIM < dn; DIM++)
 							{
-								if (ts.gO.pOList[key][DIM] is PropertyObject) 
-								{
-									ts.gO.pOList[key][DIM].gestureDelta = cO[gO.pOList[key][DIM].property_var];
-								}
+								ts.gO.pOList[key].dList[DIM].gestureDelta = d[ts.gO.pOList[key].dList[DIM].property_result];
+								
+								
+								//if(ts.gO.pOList[key].dList[DIM].property_id =="tap_x")	ts.gO.pOList[key].dList[DIM].gestureDelta = spt.x;
+								//if(ts.gO.pOList[key].dList[DIM].property_id =="tap_y")	ts.gO.pOList[key].dList[DIM].gestureDelta = spt.y;
+								//if(ts.gO.pOList[key].dList[DIM].property_id =="tap_n")	ts.gO.pOList[key].dList[DIM].gestureDelta = tapEventCount;
 							}
-							*/
+							//trace("count tap0", spt.x, spt.y, tapEventCount, ts.gO.pOList[key].activeEvent);
 							
-							ts.gO.pOList[key].x = spt.x;
-							ts.gO.pOList[key].y = spt.y;
-							
-							ts.gO.pOList[key]["tap_x"].gestureDelta = spt.x;
-							ts.gO.pOList[key]["tap_y"].gestureDelta = spt.y;
-							ts.gO.pOList[key]["tap_n"].gestureDelta = tapEventCount;
-							
-							//trace("tap",spt.x,spt.y,tapEventCount)
+							//ts.gO.pOList[key].activeEvent = true;
 						}
+						//trace(tap_number,tapEventCount);
 					}
+					//trace("count tap",ts.gO.pOList[key].activeEvent)
 		}
 		
 		
-		public function countDoubleTapEvents(key:String):void // count taps each frame
+		public function countDoubleTapEvents(key:int):void // count taps each frame
 		{
 			//if (ts.trace_debug_mode)trace("find n-dtaps---------------------------------------------------------",ts.gO.pOList[key].n);
 			
@@ -409,11 +401,12 @@ package com.gestureworks.analysis
 			var dtap_number:int = ts.gO.pOList[key].n;
 			var dtap_x_mean:Number = 0
 			var dtap_y_mean:Number = 0;
+			var ddn = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
 				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
 					
-					for (var p:int = 0; p < gestureEventArray.length; p++) 
+					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
 						//trace(gestureEventArray[j].type)
 						if (gestureEventArray[j].type =="double_tap")
@@ -425,14 +418,14 @@ package com.gestureworks.analysis
 					}
 				
 				//count history
-				for (var i:int = 0; i < dtap_countTime; i++) // 20 fames block for single tap
+				for (var i:uint = 0; i < dtap_countTime; i++) // 20 fames block for single tap
 						{
 						if (ts.tiO.history[i])
 						{
 						//trace("finding taps",tapEventCount);
 						gestureEventArray = ts.tiO.history[i].gestureEventArray;
 					
-								for (var j:int = 0; j < gestureEventArray.length; j++) 
+								for (var j:uint = 0; j < gestureEventArray.length; j++) 
 								{
 									//trace("d gesture:",gestureEventArray[j].type)
 									if (gestureEventArray[j].type =="double_tap")
@@ -469,19 +462,21 @@ package com.gestureworks.analysis
 						//ts.gO.pOList[key].y = spt2.y;
 						//ts.gO.pOList[key].n = dtapEventCount;
 						
-						ts.gO.pOList[key].x = spt2.x;
-						ts.gO.pOList[key].y = spt2.y;
+						for (DIM=0; DIM < ddn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
 						
-						ts.gO.pOList[key]["double_tap_x"].gestureDelta = spt2.x;
-						ts.gO.pOList[key]["double_tap_y"].gestureDelta = spt2.y;
-						ts.gO.pOList[key]["double_tap_n"].gestureDelta = dtapEventCount
+						ts.gO.pOList[key].data.x = spt2.x;
+						ts.gO.pOList[key].data.y = spt2.y;
+						
+						//ts.gO.pOList[key].dList["double_tap_x"].gestureDelta = spt2.x;
+						//ts.gO.pOList[key].dList["double_tap_y"].gestureDelta = spt2.y;
+						//ts.gO.pOList[key].dList["double_tap_n"].gestureDelta = dtapEventCount
 						
 						//trace("dtap",spt2.x,spt2.y,dtapEventCount)
 						}
 					}
 		}
 		
-		public function countTripleTapEvents(key:String):void // count taps each frame
+		public function countTripleTapEvents(key:int):void // count taps each frame
 		{
 			//if (ts.trace_debug_mode) 	trace("find n-ttaps---------------------------------------------------------",ts.gO.pOList[key].n);
 			
@@ -490,6 +485,7 @@ package com.gestureworks.analysis
 			var ttap_number:int = ts.gO.pOList[key].n;
 			var ttap_x_mean:Number = 0
 			var ttap_y_mean:Number = 0;
+			var tdn = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
 				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
@@ -506,7 +502,7 @@ package com.gestureworks.analysis
 					}
 				
 				//count history
-				for (var i:int = 0; i < ttap_countTime; i++) // 20 fames block for single tap
+				for (var i:uint = 0; i < ttap_countTime; i++) // 20 fames block for single tap
 						{
 						if (ts.tiO.history[i])
 						{
@@ -550,14 +546,16 @@ package com.gestureworks.analysis
 						//ts.gO.pOList[key].gestureID = nttapID;
 						ts.gO.pOList[key].activeEvent = true;
 						
+						for (DIM=0; DIM < tdn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
+						
 						// map to gesture object
-						ts.gO.pOList[key].x = spt3.x;
-						ts.gO.pOList[key].y = spt3.y;
+						ts.gO.pOList[key].data.x = spt3.x;
+						ts.gO.pOList[key].data.y = spt3.y;
 						//ts.gO.pOList[key].n = ttapEventCount;
 						
-						ts.gO.pOList[key]["triple_tap_x"].gestureDelta = spt3.x;
-						ts.gO.pOList[key]["triple_tap_y"].gestureDelta = spt3.y;
-						ts.gO.pOList[key]["triple_tap_n"].gestureDelta = ttapEventCount
+						//ts.gO.pOList[key].dList["triple_tap_x"].gestureDelta = spt3.x;
+						//ts.gO.pOList[key].dList["triple_tap_y"].gestureDelta = spt3.y;
+						//ts.gO.pOList[key].dList["triple_tap_n"].gestureDelta = ttapEventCount
 					}
 				}
 				
@@ -565,7 +563,7 @@ package com.gestureworks.analysis
 		}
 		
 		// stroke analysis
-		public function findStrokeGesture(key:String):void
+		public function findStrokeGesture(key:int):void
 		{
 			var path:String = ts.gO.pOList[key].path;
 			var path_match:Boolean = ts.gO.pOList[key].path_match;

@@ -476,56 +476,48 @@ package com.gestureworks.objects
 		}
 		
 		
-		///////////////////////////////////////////////
-		// test
-		// common custom cluster calcs
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// refactor out ----------------------------------------------------------------------------------------------
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/*
-		// flick_dx ------------------
-		private var _flick_dx:Number = 0;
-		public function get flick_dx():Number
+		// etm_ddx ------------------
+		private var _etm_dx:Number = 0;
+		public function get etm_dx():Number
 		{
-			return _flick_dx;
+			return _etm_dx;
 		}
-		public function set flick_dx(value:Number):void
+		public function set etm_dx(value:Number):void
 		{
-			_flick_dx = value;
+			_etm_dx = value;
 		}
-		// flick_dy ------------------
-		private var _flick_dy:Number = 0;
-		public function get flick_dy():Number
+		// ddy ------------------
+		private var _etm_dy:Number = 0;
+		public function get etm_dy():Number
 		{
-			return _flick_dy;
+			return _etm_dy;
 		}
-		public function set flick_dy(value:Number):void
+		public function set etm_dy(value:Number):void
 		{
-			_flick_dy = value;
+			_etm_dy = value;
 		}
-		// swipe_dx ------------------
-		private var _swipe_dx:Number = 0;
-		public function get swipe_dx():Number
+		
+		// etm_ddx ------------------
+		private var _etm_ddx:Number = 0;
+		public function get etm_ddx():Number
 		{
-			return _swipe_dx;
+			return _etm_ddx;
 		}
-		public function set swipe_dx(value:Number):void
+		public function set etm_ddx(value:Number):void
 		{
-			_swipe_dx = value;
+			_etm_ddx = value;
 		}
-		// swipe_dy ------------------
-		private var _swipe_dy:Number = 0;
-		public function get swipe_dy():Number
+		// ddy ------------------
+		private var _etm_ddy:Number = 0;
+		public function get etm_ddy():Number
 		{
-			return _swipe_dy;
+			return _etm_ddy;
 		}
-		public function set swipe_dy(value:Number):void
+		public function set etm_ddy(value:Number):void
 		{
-			_swipe_dy = value;
+			_etm_ddy = value;
 		}
-		*/
+		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// refactor out ----------------------------------------------------------------------------------------------

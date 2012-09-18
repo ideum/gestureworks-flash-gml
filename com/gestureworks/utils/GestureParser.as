@@ -220,17 +220,36 @@ package com.gestureworks.utils
 
 													dO.property_id = property_id;
 													//pOList[gesture_id][property_id].property_type = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("type"));
-													dO.property_mvar = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_var"));
-													dO.property_var = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("module_result"));
+													
+													dO.property_result = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.returns.property[j].attribute("result"));
 													dO.property_type = String(gml.Gesture_set[0].Gesture[i].attribute("type"));
-
-														//pOList[gesture_id][property_id].clusterDelta = 0; 
-														//pOList[gesture_id][property_id].processDelta = 0; 
-														//pOList[gesture_id][property_id].gestureDelta = 0;
+													
+													// create variable objects
+													var varNum:uint = uint(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables.length());
+													for (var k:int = 0; k < varNum; k++) 
+													{
+														/*
+														var varObj:Object = new Object(); ;
+															varObj["return"] = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("return"));
+															varObj["var"] = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var"));
+															varObj["min"] = Number(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_min"));
+															varObj["max"] = Number(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"));
+														//dO.property_vars[k] = varObj;*/
 														
-														//pOList[gesture_id][property_id].clusterValue = 0;
-														//pOList[gesture_id][property_id].processValue = 0;
-														//pOList[gesture_id][property_id].gestureValue = 0;
+														var variable:Object = new Object();
+															variable["return"] = new Object();
+															variable["return"] = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("return"));
+															variable["var"] = new Object();
+															variable["var"] = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var"));
+															variable["min"] = new Object();
+															variable["min"] = Number(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_min"));
+															variable["max"] = new Object();
+															variable["max"] = Number(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"));
+														dO.property_vars[k] = variable;
+														
+														trace(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"))
+													}
+									
 														
 													
 													if (gml.Gesture_set[0].Gesture[i].match.action.initial)
@@ -332,11 +351,14 @@ package com.gestureworks.utils
 													////////////////////////////////////////////////////////////////////////////////////////////
 													// FILTER BLOCK
 													/////////////////////////////////////////////////////////////////////////////////////////////
+													// MUST MAKE GENERIC
+													// CREATE FILTER OBJECTS
+													// FILL FILTER VARS
 													
 													// if processing exists
 													if (gml.Gesture_set[0].Gesture[i].processing)
 													{
-														// noise filtering exists
+														// noise filtering
 														if (gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j])
 														{
 															dO.noise_filter = gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("noise_filter") == "true" ?true:false;
@@ -344,7 +366,18 @@ package com.gestureworks.utils
 															dO.filter_factor = Number((gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("percent"))*0.01);
 														}
 														
-														//inertia filter exists
+														//release inertia filter
+														if (gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j])
+														{
+															dO.release_inertia_filter = gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("release_inertia_filter") == "true" ?true:false;
+															dO.release_inertiaOn = false; // internal dynamic setting
+															dO.release_inertia_factor = 1; // internal
+															dO.release_inertia_base = Number(gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("friction"));
+															dO.release_inertia_count = 0; //internal
+															dO.release_inertia_Maxcount = 120;// internal
+														}
+														
+														/*
 														if (gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j])
 														{
 															// touch inertia
@@ -353,36 +386,28 @@ package com.gestureworks.utils
 															//pOList[gesture_id][property_id].touch_inertia_factor = 1//gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("inertial_mass");
 															//pOList[gesture_id][property_id].touch_inertia_mass 
 															//pOList[gesture_id][property_id].touch_inertia_spring 
-															
-															// release inertia
-															dO.release_inertia_filter = gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("release_inertia") == "true" ?true:false;
-															dO.release_inertiaOn = false; // internal dynamic setting
-															dO.release_inertia_factor = 1; // internal
-															dO.release_inertia_base = Number(gml.Gesture_set[0].Gesture[i].processing.inertial_filter.property[j].attribute("friction"));
-															dO.release_inertia_count = 0; //internal
-															dO.release_inertia_Maxcount = 120;// internal
-														}
+														}*/
 														
 														// multiply filter
 														if (gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j])
 														{
-															dO.multiply_filter = gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("multiply")== "true" ?true:false;
+															dO.multiply_filter = gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("multiply_filter")== "true" ?true:false;
 															dO.func = String(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("func"));
 															dO.func_factor = Number(gml.Gesture_set[0].Gesture[i].processing.multiply_filter.property[j].attribute("factor"));
 														}
 														// delta filter
 														if (gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j])
 														{
-															dO.delta_filter = gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_threshold") == "true" ?true:false;
+															dO.delta_filter = gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_filter") == "true" ?true:false;
 															dO.delta_max = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_max"));
 															dO.delta_min = Number(gml.Gesture_set[0].Gesture[i].processing.delta_filter.property[j].attribute("delta_min"));
 														}
 														// value boundrary filter
-														if (gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j])
+														if (gml.Gesture_set[0].Gesture[i].processing.boundary_filter.property[j])
 														{
-															dO.boundary_filter = gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary") == "true" ?true:false;
-															dO.boundary_max = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_max"));
-															dO.boundary_min = Number(gml.Gesture_set[0].Gesture[i].processing.value_filter.property[j].attribute("boundary_min"));
+															dO.boundary_filter = gml.Gesture_set[0].Gesture[i].processing.boundary_filter.property[j].attribute("boundary_filter") == "true" ?true:false;
+															dO.boundary_max = Number(gml.Gesture_set[0].Gesture[i].processing.boundary_filter.property[j].attribute("boundary_max"));
+															dO.boundary_min = Number(gml.Gesture_set[0].Gesture[i].processing.boundary_filter.property[j].attribute("boundary_min"));
 														}
 													}
 													
