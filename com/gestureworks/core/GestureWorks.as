@@ -204,7 +204,7 @@ package com.gestureworks.core
 		{
 			if (!cml)
 			{
-				loadModeManager();
+				startGmlParse();
 			}
 			else
 			{
@@ -237,7 +237,7 @@ package com.gestureworks.core
 		
 		
 		private function startGmlParse():void
-		{
+		{			
 			if (!gml || gml.length <= 1)
 				gml = CML.Objects.@gml;
 			
