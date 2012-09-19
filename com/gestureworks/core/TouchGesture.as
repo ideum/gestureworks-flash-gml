@@ -21,7 +21,7 @@ package com.gestureworks.core
 	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
-	import com.gestureworks.analysis.GesturePipeline;
+	//import com.gestureworks.analysis.GesturePipeline;
 	import com.gestureworks.analysis.TemporalMetric;;
 	
 	import com.gestureworks.managers.TimelineHistories;
@@ -38,7 +38,7 @@ package com.gestureworks.core
 		* @private
 		*/
 		//internal public
-		public var gesture_cont:GesturePipeline;
+		//public var gesture_cont:GesturePipeline;
 		/**
 		* @private
 		*/
@@ -55,7 +55,7 @@ package com.gestureworks.core
 		private var timerCount:int = 0;
 		
 		private var ts:Object;
-		private var id:int;
+		private var id:uint;
 		
 		private var cO:ClusterObject
 		private var gO:GestureListObject;
@@ -94,12 +94,11 @@ package com.gestureworks.core
 			//hasEventListener(GWGestureEvent.SCALE, scaleHandeler);
 			//hasEventListener(GWGestureEvent.ROTATE, rotateHandeler);
 			
-			gesture_cont = new GesturePipeline(id);
-
 			// analyze for descrete gesture sequence/series
 			gesture_disc = new TemporalMetric(id);
 			
-			//initTimeline();
+			
+			//initTimeline(); // must init after parsing
 			// analyze for gesture conflict/compliment
 		}
 		
@@ -148,11 +147,6 @@ package com.gestureworks.core
 			gesture_disc.findTimelineGestures();
 		}
 		
-		public function updateGesturePipeline():void
-		{
-			gesture_cont.processPipeline();
-			if (ts.gestureEvents) manageGestureEventDispatch();	
-		}
 		
 		/**
 		* @private
@@ -171,7 +165,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private function manageGestureEventDispatch():void 
+		public function manageGestureEventDispatch():void 
 		{
 			//trace("manage dispatch-----------------------------");
 			gn = gO.pOList.length;
@@ -755,7 +749,7 @@ package com.gestureworks.core
 								{
 									Data[gO.pOList[key].dList[DIM].property_id] = new Object();
 									Data[gO.pOList[key].dList[DIM].property_id] = Number(gO.pOList[key].dList[DIM].gestureDelta);	
-									trace(gO.pOList[key].dList[DIM].gestureDeltaCache);
+									//trace(gO.pOList[key].dList[DIM].gestureDeltaCache);
 								}
 							//trace(gO.pOList[key].gesture_type,gO.pOList[key].gesture_id)
 								

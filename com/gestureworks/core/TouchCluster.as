@@ -418,7 +418,7 @@ package com.gestureworks.core
 									
 								}
 								
-								trace(cO["etm_dx"],cO["etm_dy"],cO["etm_ddx"],cO["etm_ddy"] )
+								//trace("touchcluster",cO["etm_dx"],cO["etm_dy"],cO["etm_ddx"],cO["etm_ddy"] )
 							}
 				
 							
@@ -611,7 +611,7 @@ package com.gestureworks.core
 							//{
 								for (DIM = 0; DIM < dn; DIM++) {
 									gO.pOList[key].dList[DIM].clusterDelta = cO[gO.pOList[key].dList[DIM].property_result];
-									trace("cluster delta",gO.pOList[key].dList[DIM].clusterDelta)
+									//trace("cluster delta",gO.pOList[key].dList[DIM].clusterDelta)
 								}
 								
 									gO.pOList[key].data.x = cO.x;

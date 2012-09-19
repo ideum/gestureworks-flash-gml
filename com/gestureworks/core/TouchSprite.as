@@ -29,7 +29,9 @@ package com.gestureworks.core
 	import com.gestureworks.core.GML;
 	
 	import com.gestureworks.core.TouchCluster;
+	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchGesture;
+	import com.gestureworks.core.TouchTransform;
 	
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.managers.ObjectManager;
@@ -38,16 +40,13 @@ package com.gestureworks.core
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.ClusterObject;
-	//import com.gestureworks.objects.ProcessObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	
 	import com.gestureworks.utils.GestureParser;
 	import com.gestureworks.utils.MousePoint;
-	
 	import com.gestureworks.events.GWGestureEvent;
-	
 	import com.gestureworks.utils.Simulator;
 	
 	import org.tuio.TuioTouchEvent;
@@ -89,6 +88,7 @@ package com.gestureworks.core
 		public var trO:TransformObject;
 		
 		public var tc:TouchCluster;
+		public var tp:TouchPipeline;
 		public var tg:TouchGesture;
 		public var tt:TouchTransform;
 		public var td:TouchDebugDisplay;
@@ -102,14 +102,11 @@ package com.gestureworks.core
 			// set mouseChildren to default false
 			mouseChildren = false; //false
 			//mouseEnabled = false;
-			
-			initBase();
-			
-			
+			preinitBase();
         }
 		  
 		// initializers
-         private function initBase():void 
+         private function preinitBase():void 
          {
 			//trace("create touchsprite base");
 					addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
@@ -165,16 +162,18 @@ package com.gestureworks.core
 							tiO.gestureEvents = false; // pushes gesture events into timleine
 							tiO.transformEvents = false; // pushes transform events into timeline
 						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
+						
 					//}
-					
-					
-					tc = new TouchCluster(touchObjectID);
-					tg = new TouchGesture(touchObjectID);
-					tt = new TouchTransform(touchObjectID);
-					td = new TouchDebugDisplay(touchObjectID);
-					
 		}
 		
+		 private function initBase():void 
+		{
+										tc = new TouchCluster(touchObjectID);
+										tp = new TouchPipeline(touchObjectID);
+					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
+										tt = new TouchTransform(touchObjectID);
+					if(debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
+		}
 		
 		////////////////////////////////////////////////////////////////
 		// public read only
@@ -302,7 +301,9 @@ package com.gestureworks.core
 				gp.gestureList = gestureList;
 				gp.parse(touchObjectID);
 				
-				if(trace_debug_mode) gp.traceGesturePropertyList();
+				if (trace_debug_mode) gp.traceGesturePropertyList();
+				
+			initBase();
 		}
 		/**
 		 * @private
@@ -547,7 +548,7 @@ package com.gestureworks.core
 				else 								MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline
-				if((tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
+				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
 
 				//trace("point array length", _pointArray.length);
 				
@@ -571,7 +572,7 @@ package com.gestureworks.core
 				pointCount++;
 				
 				// add touch down to touch object gesture event timeline
-				if ((tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
+				if ((tiO)&&(tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
 				
 				//trace("point array length",_pointArray.length, pointObject, pointObject.objectList.length);
 		}
@@ -712,7 +713,8 @@ package com.gestureworks.core
 		
 		public function updateGesturePipeline():void
 		{
-			tg.updateGesturePipeline();
+			if (tp) tp.processPipeline();
+			if (tg) tg.manageGestureEventDispatch();
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////
@@ -903,15 +905,20 @@ package com.gestureworks.core
 	
 	public function updateDebugDisplay():void
 	{
-		if(td){
-			td.updateDebugDisplay()
-		}
+		if(td) td.updateDebugDisplay()
 	}
 	
 	private function onGestureListUpdate(event:GWGestureEvent):void  
 		{
-			//trace("gesturelist update");
-			tg.initTimeline();
+			trace("gesturelist update");
+			if (tg) tg.initTimeline();
+		}
+		
+		private var _debugDisplay:Boolean = false;
+		public function get debugDisplay():Boolean {return _debugDisplay;}	
+		public function set debugDisplay(value:Boolean):void
+		{
+			_debugDisplay = value;
 		}
 		
 	}

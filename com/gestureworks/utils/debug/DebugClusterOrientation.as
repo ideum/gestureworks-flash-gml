@@ -29,7 +29,7 @@ package com.gestureworks.utils.debug
 		private var obj:Object;
 		private var cO:ClusterObject;
 		private var pointList:Object;
-		private var NumPoints:Number;
+		private var NumPoints:int;
 		
 		private var _x:Number = 0
 		private var _y: Number = 0

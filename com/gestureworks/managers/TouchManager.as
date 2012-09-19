@@ -143,12 +143,12 @@ package com.gestureworks.managers
 					
 					// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
 					//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
-					tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
+					if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
 					//UPDATE DEBUG DISPLAY // clear local debug display
 					if ((tO.td)&&(tO.td.debug_display) && (tO.cO)) tO.td.clearDebugDisplay(); // clear display
 					
 					// analyze for taps
-					tO.tg.onTouchEnd(event);
+					if (tO.tg) tO.tg.onTouchEnd(event);
 					
 					// REMOVE POINT FROM LOCAL LIST
 					tO.pointArray.splice(pointObject.id, 1);
@@ -250,7 +250,6 @@ package com.gestureworks.managers
 				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
 				
 				tO.updateClusterAnalysis(); // cluster count is in cluster analysis
-				//tO.updateProcessing();
 				tO.updateGesturePipeline();
 				tO.updateTransformation();
 		}

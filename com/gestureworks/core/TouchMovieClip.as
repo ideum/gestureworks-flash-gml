@@ -29,7 +29,9 @@ package com.gestureworks.core
 	import com.gestureworks.core.GML;
 	
 	import com.gestureworks.core.TouchCluster;
+	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchGesture;
+	import com.gestureworks.core.TouchTransform;
 	
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.managers.ObjectManager;
@@ -87,6 +89,7 @@ package com.gestureworks.core
 		public var trO:TransformObject;
 		
 		public var tc:TouchCluster;
+		public var tp:TouchPipeline;
 		public var tg:TouchGesture;
 		public var tt:TouchTransform;
 		public var td:TouchDebugDisplay;
@@ -98,11 +101,11 @@ package com.gestureworks.core
 			super();
 			// set mouseChildren to default
 			mouseChildren = false;
-			initBase();
+			preinitBase();
         }
 		  
 		// initializers
-         private function initBase():void 
+         private function preinitBase():void 
          {
 			//trace("create touchmovieclip base");
 			
@@ -160,10 +163,27 @@ package com.gestureworks.core
 						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
 					//}
 					
+		}
+		
+		 private function initBase():void 
+		{
 					tc = new TouchCluster(touchObjectID);
-					tg = new TouchGesture(touchObjectID);
+					tp = new TouchPipeline(touchObjectID);
+					
+					
+					//if (gestureEvents) {
+						tg = new TouchGesture(touchObjectID);
+						//trace(gestureEvents);
+					//}
+					
 					tt = new TouchTransform(touchObjectID);
-					td = new TouchDebugDisplay(touchObjectID);
+					
+					//debugdisplayOn = true
+					
+					if(debugdisplayOn){
+						td = new TouchDebugDisplay(touchObjectID);
+						trace(debugdisplayOn);
+					}
 		}
 		
 		
@@ -284,7 +304,9 @@ package com.gestureworks.core
 				gp.gestureList = gestureList;
 				gp.parse(touchObjectID);
 				
-				if(trace_debug_mode) gp.traceGesturePropertyList();
+				if (trace_debug_mode) gp.traceGesturePropertyList();
+				
+				initBase()
 		}
 		/**
 		 * @private
@@ -698,7 +720,8 @@ package com.gestureworks.core
 		
 		public function updateGesturePipeline():void
 		{
-			tg.updateGesturePipeline();
+			if (tp) tp.processPipeline();
+			if (tg) tg.manageGestureEventDispatch();
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////
@@ -892,6 +915,13 @@ package com.gestureworks.core
 		{
 			//trace("gesturelist update");
 			if(tg) tg.initTimeline();
+		}
+		
+		private var _debugdisplayOn:Boolean = false;
+		public function get debugdisplayOn():Boolean {return _debugdisplayOn;}	
+		public function set debugdisplayOn(value:Boolean):void
+		{
+			_debugdisplayOn = value;
 		}
 	
 	}

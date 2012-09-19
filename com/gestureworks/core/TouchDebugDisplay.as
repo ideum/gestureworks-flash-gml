@@ -22,7 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.ClusterHistories;
 	import com.gestureworks.managers.TransformHistories;
 
-	public class TouchDebugDisplay //extends TouchSpriteBase
+	public class TouchDebugDisplay
 	{
 		/**
 		* @private
@@ -31,7 +31,6 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public var displayOn:Boolean = false;
 		/**
 		* @private
 		*/
@@ -186,18 +185,9 @@ package com.gestureworks.core
 		
 		public function TouchDebugDisplay(touchObjectID:int):void
 		{
-			//super();
-			
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			
-			
-			var debugOn:Boolean =true;//------------------------------------------------------------------------
-			
-			if(debugOn){
-				initDebug();
-			}
-			else return
+			initDebug();
           }
 		  
 		// initializers    
@@ -227,7 +217,7 @@ package com.gestureworks.core
 		ts.cml = new XMLList(CML.Objects)
 		var numLayers:int = ts.cml.DebugKit.DebugLayer.length()
 			
-			displayOn = ts.cml.DebugKit.attribute("displayOn") == "true" ?true:false;
+			ts.debugdisplayOn = ts.cml.DebugKit.attribute("displayOn") == "true" ?true:false;
 			viewAlwaysOn = ts.cml.DebugKit.attribute("displayAlwaysOn") == "true" ?true:false;
 			displayRadius = int(ts.cml.DebugKit.attribute("displayRadius"));
 		
@@ -268,7 +258,7 @@ package com.gestureworks.core
 					/////////////////////////////////////////////////////////////////
 					// piont display/
 					/////////////////////////////////////////////////////////////////
-			if (displayOn)
+			if (ts.debugdisplayOn)
 			{		
 					if(pointVectorsOn){
 						// create cluster point circles
@@ -435,7 +425,7 @@ package com.gestureworks.core
 	{
 		//if (trace_debug_mode) trace("trying to draw display", N, touchObjectID);
 		
-		if ((displayOn)&&(debug_display))
+		if ((ts.debugdisplayOn)&&(debug_display))
 			{
 			if (viewAlwaysOn) 
 			{
@@ -501,7 +491,7 @@ package com.gestureworks.core
 	{
 		//if(trace_debug_mode) trace("trying to clear debug display",touchObjectID)
 		
-		if ((displayOn)&&(debug_display))
+		if ((ts.debugdisplayOn)&&(debug_display))
 		{
 			if(pointVectorsOn)cluster_vectors.clear();
 			if (pointShapesOn) cluster_points.clear();

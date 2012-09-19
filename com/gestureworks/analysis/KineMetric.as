@@ -46,19 +46,14 @@ package com.gestureworks.analysis
 		private var touchObjectID:int;
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
-		//public var pointList:Object;
-		//public var pointList:Array;
-		
 		public var pointList:Vector.<PointObject>;
 		
-		
 		private var gml:XMLList;
-		
 		private var key:String;
 		
 		// number in group
-		private var N:int = 0;
-		private var N1:int = 0;
+		private var N:uint = 0;
+		private var N1:uint = 0;
 		private var k0:Number  = 0;
 		private var k1:Number  = 0;
 		private var i:uint = 0;
@@ -90,7 +85,7 @@ package com.gestureworks.analysis
 		public var thumbID:int;
 		public var orient_dx:Number = 0; // cluster orientation vector
 		public var orient_dy:Number = 0; // cluster orientation vector
-		private var hand:int = 0; // 0 left, 1 right//
+		private var hand:uint = 0; // 0 left, 1 right//
 		
 		private var pivot_dtheta:Number = 0;
 		
@@ -164,9 +159,6 @@ package com.gestureworks.analysis
 					pointList = cO.pointArray;
 					mc = pointList[0].moveCount;
 				}
-				
-				//else resetVars();
-				//return
 		}
 		
 		
@@ -902,8 +894,6 @@ package com.gestureworks.analysis
 				var maxAngle:Number = 0;
 				var dist:Number = 0;
 				var angle:Number = 180;
-				
-				//var pt_orient:Point = new Point();
 						
 							for (i = 0; i < N; i++) 
 								{
@@ -913,7 +903,6 @@ package com.gestureworks.analysis
 										handArray[i] = new Array();
 										handArray[i].id = pointList[i].id; // set point id
 									
-										
 										// find distance between center of cluster and finger tip
 										var dxe:Number = (pointList[i].history[0].x - c_px);
 										var dye:Number = (pointList[i].history[0].y - c_py);
@@ -928,20 +917,14 @@ package com.gestureworks.analysis
 
 										for (var q:int = 0; q < N; q++) 
 										{
-											if (i != q)
-											{
-												if (pointList[q].history[0])
+											if ((i != q)&&(pointList[q].history[0]))
 												{
 												var dxq:Number = (pointList[q].history[0].x - c_px);
 												var dyq:Number = (pointList[q].history[0].y - c_py);
 												angle = dotProduct(dxe, dye, dxq, dyq)*RAD_DEG;
 												
-												if (angle < handArray[i].angle)
-												{
-													handArray[i].angle = angle;
+												if (angle < handArray[i].angle) handArray[i].angle = angle;
 												}
-											}
-										}
 										}
 									//trace("finger", handArray[i].id, handArray[i].dist, handArray[i].angle) // point list
 									
@@ -969,7 +952,6 @@ package com.gestureworks.analysis
 									orient_dy += (pointList[i].history[0].y - c_py) * k1;
 								}
 						}
-			//return pt_orient;
 		}
 		
 		public function findInstPivot(pivot_threshold:Number):void
