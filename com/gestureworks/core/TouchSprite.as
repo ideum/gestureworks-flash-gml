@@ -620,7 +620,7 @@ package com.gestureworks.core
 		
 		public function updateClusterAnalysis():void
 		{
-			tc.updateClusterAnalysis();
+			if(tc) tc.updateClusterAnalysis();
 		}
 		
 		////////////////////////////////////////////////////////////////////////////
