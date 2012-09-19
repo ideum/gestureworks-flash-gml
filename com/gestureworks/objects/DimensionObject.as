@@ -402,6 +402,16 @@ package com.gestureworks.objects
 			_gestureDeltaCache = value;
 		}
 		
+		private var _gestureDeltaArray:Array = new Array();
+		public function get gestureDeltaArray():Array
+		{
+			return _gestureDeltaArray;
+		}
+		public function set gestureDeltaArray(value:Array):void
+		{
+			_gestureDeltaArray = value;
+		}
+		
 		//////////////////////////////////////////////////////
 		// multiply filter
 		//////////////////////////////////////////////////////
