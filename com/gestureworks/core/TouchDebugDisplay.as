@@ -217,7 +217,7 @@ package com.gestureworks.core
 		ts.cml = new XMLList(CML.Objects)
 		var numLayers:int = ts.cml.DebugKit.DebugLayer.length()
 			
-			ts.debugdisplayOn = ts.cml.DebugKit.attribute("displayOn") == "true" ?true:false;
+			ts.debugDisplay = ts.cml.DebugKit.attribute("displayOn") == "true" ?true:false;
 			viewAlwaysOn = ts.cml.DebugKit.attribute("displayAlwaysOn") == "true" ?true:false;
 			displayRadius = int(ts.cml.DebugKit.attribute("displayRadius"));
 		
@@ -258,7 +258,7 @@ package com.gestureworks.core
 					/////////////////////////////////////////////////////////////////
 					// piont display/
 					/////////////////////////////////////////////////////////////////
-			if (ts.debugdisplayOn)
+			if (ts.debugDisplay)
 			{		
 					if(pointVectorsOn){
 						// create cluster point circles
@@ -425,7 +425,7 @@ package com.gestureworks.core
 	{
 		//if (trace_debug_mode) trace("trying to draw display", N, touchObjectID);
 		
-		if ((ts.debugdisplayOn)&&(debug_display))
+		if ((ts.debugDisplay)&&(debug_display))
 			{
 			if (viewAlwaysOn) 
 			{
@@ -491,7 +491,7 @@ package com.gestureworks.core
 	{
 		//if(trace_debug_mode) trace("trying to clear debug display",touchObjectID)
 		
-		if ((ts.debugdisplayOn)&&(debug_display))
+		if ((ts.debugDisplay)&&(debug_display))
 		{
 			if(pointVectorsOn)cluster_vectors.clear();
 			if (pointShapesOn) cluster_points.clear();

@@ -167,23 +167,11 @@ package com.gestureworks.core
 		
 		 private function initBase():void 
 		{
-					tc = new TouchCluster(touchObjectID);
-					tp = new TouchPipeline(touchObjectID);
-					
-					
-					//if (gestureEvents) {
-						tg = new TouchGesture(touchObjectID);
-						//trace(gestureEvents);
-					//}
-					
-					tt = new TouchTransform(touchObjectID);
-					
-					//debugdisplayOn = true
-					
-					if(debugdisplayOn){
-						td = new TouchDebugDisplay(touchObjectID);
-						trace(debugdisplayOn);
-					}
+										tc = new TouchCluster(touchObjectID);
+										tp = new TouchPipeline(touchObjectID);
+					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
+										tt = new TouchTransform(touchObjectID);
+					if(debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		
