@@ -358,12 +358,19 @@ package com.gestureworks.utils
 													// if processing exists
 													if (gml.Gesture_set[0].Gesture[i].processing)
 													{
+														/*
 														// noise filtering
 														if (gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j])
 														{
 															dO.noise_filter = gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("noise_filter") == "true" ?true:false;
 															dO.noise_filterMatrix;
 															dO.filter_factor = Number((gml.Gesture_set[0].Gesture[i].processing.noise_filter.property[j].attribute("percent"))*0.01);
+														}*/
+														
+														if (gml.Gesture_set[0].Gesture[i].processing.mean_filter.property[j])
+														{
+															dO.mean_filter = gml.Gesture_set[0].Gesture[i].processing.mean_filter.property[j].attribute("mean_filter") == "true" ?true:false;
+															dO.mean_filter_frames = uint(gml.Gesture_set[0].Gesture[i].processing.mean_filter.property[j].attribute("frames"));
 														}
 														
 														//release inertia filter

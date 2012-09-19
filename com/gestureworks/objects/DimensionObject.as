@@ -515,8 +515,31 @@ package com.gestureworks.objects
 			_boundary_min = value;
 		}
 		
+		////////////////////////////////////////////////////////
+		// mean filter
+		////////////////////////////////////////////////////////
+		// mean filter---------------------
+		private var _mean_filter:Boolean = false;
+		public function get mean_filter():Boolean
+		{
+			return _mean_filter;
+		}
+		public function set mean_filter(value:Boolean):void
+		{
+			_mean_filter = value;
+		}
+		// filter_factor---------------------
+		private var _mean_filter_frames:uint = 0;
+		public function get mean_filter_frames():uint
+		{
+			return _mean_filter_frames;
+		}
+		public function set mean_filter_frames(value:uint):void
+		{
+			_mean_filter_frames = value;
+		}
 		
-		
+		/*
 		////////////////////////////////////////////////////////
 		// noise filter
 		////////////////////////////////////////////////////////
@@ -550,8 +573,9 @@ package com.gestureworks.objects
 		public function set noise_filterMatrix(value:NoiseFilter):void
 		{
 			_noise_filterMatrix = value;
-		}
+		}*/
 		
+		/*
 		//////////////////////////////////////////////////////////////
 		// touch inertia filter
 		//////////////////////////////////////////////////////////////
@@ -608,7 +632,7 @@ package com.gestureworks.objects
 		{
 			_touch_inertia_spring = value;
 		}
-		
+		*/
 		/////////////////////////////////////////////////////////
 		// release inertia filter
 		/////////////////////////////////////////////////////////

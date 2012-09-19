@@ -166,47 +166,47 @@ package com.gestureworks.core
 									// turn of all filters 
 									if(1){
 									
-											///////////////////////////////////////////////////////////////////////////////////////////
-											// NOISE FILTER BLOCK
-											///////////////////////////////////////////////////////////////////////////////////////////
 											
-											if (gO.pOList[i].dList[j].noise_filter)
+											///////////////////////////////////////////////////////////
+											// average filter
+											///////////////////////////////////////////////////////////
+											
+											if (gO.pOList[i].dList[j].mean_filter)
 											{
-												// init noise filter
-												/*
-												if(!gO.pOList[i].dList[j].noise_filterMatrix) gO.pOList[i].dList[j].noise_filterMatrix = new NoiseFilter();
-												else {
-													var estDelta:Number = gO.pOList[i].dList[j].noise_filterMatrix.next(gO.pOList[i].dList[j].clusterDelta);
-													gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].filter_factor * estDelta + (1 - gO.pOList[i].dList[j].filter_factor) * gO.pOList[i].dList[j].clusterDelta;
-													//trace("	applying filter:",i,j, "	cluster delta:",gO.pOList[i][j].clusterDelta, "	estinmated delta:",estDelta, "	filter factor:",gO.pOList[i][j].filter_factor)
-												}*/
-												
-												///////////////////////////////////////////////////////////
-												// average filter
-												///////////////////////////////////////////////////////////
 												if(!gO.pOList[i].dList[j].gestureDeltaArray) gO.pOList[i].dList[j].gestureDeltaArray = new Array();
 												var hist:uint = 8;
 												var ln:uint =  gO.pOList[i].dList[j].gestureDeltaArray.length;
 												var ln0:Number = 1 / ln;
 												var delta:Number = gO.pOList[i].dList[j].clusterDelta
+												var mvar:Number = 0;
 												
 												gO.pOList[i].dList[j].gestureDeltaArray.push(delta);
 												if (ln >= hist) gO.pOList[i].dList[j].gestureDeltaArray.shift();
 												
-												if (ln == hist)
-												{
-													var mvar:Number = 0;
-													for (var p:int = 0; p < ln; p++){ mvar += gO.pOList[i].dList[j].gestureDeltaArray[p];}
-													mvar *= ln0;
-													
-													if(mvar) gO.pOList[i].dList[j].gestureDelta = mvar;
-												}
-												else gO.pOList[i].dList[j].gestureDelta = 0;
-												////////////////////////////////////////////////////////////
-												
+	
+												for (var p:int = 0; p < ln; p++){ mvar += gO.pOList[i].dList[j].gestureDeltaArray[p];}
+												mvar *= ln0;
+												if(mvar) gO.pOList[i].dList[j].gestureDelta = mvar;	
 											}
 											else gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
 											
+											
+											///////////////////////////////////////////////////////////////////////////////////////////
+											// NOISE FILTER BLOCK
+											///////////////////////////////////////////////////////////////////////////////////////////
+											/*
+											if (gO.pOList[i].dList[j].noise_filter)
+											{
+												// init noise filter
+												if(!gO.pOList[i].dList[j].noise_filterMatrix) gO.pOList[i].dList[j].noise_filterMatrix = new NoiseFilter();
+												else {
+													var estDelta:Number = gO.pOList[i].dList[j].noise_filterMatrix.next(gO.pOList[i].dList[j].clusterDelta);
+													gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].filter_factor * estDelta + (1 - gO.pOList[i].dList[j].filter_factor) * gO.pOList[i].dList[j].clusterDelta;
+													//trace("	applying filter:",i,j, "	cluster delta:",gO.pOList[i][j].clusterDelta, "	estinmated delta:",estDelta, "	filter factor:",gO.pOList[i][j].filter_factor)
+												}
+											}
+											else gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
+											*/
 
 											//trace("pipe",ts.gO.pOList[i][j].clusterDelta,ts.gO.pOList[i][j].gestureDelta)
 											
