@@ -131,7 +131,7 @@ package com.gestureworks.utils.debug
 						}
 					}
 				}
-				
+				/*
 				if((N)&&(path_data[0])){
 				// draw srtoke
 				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
@@ -155,7 +155,7 @@ package com.gestureworks.utils.debug
 					}
 					
 				}
-				
+				*/
 		}
 	
 public function clear():void

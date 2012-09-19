@@ -401,7 +401,7 @@ package com.gestureworks.analysis
 			var dtap_number:int = ts.gO.pOList[key].n;
 			var dtap_x_mean:Number = 0
 			var dtap_y_mean:Number = 0;
-			var ddn = ts.gO.pOList[key].dList.length;
+			var ddn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
 				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
@@ -485,7 +485,7 @@ package com.gestureworks.analysis
 			var ttap_number:int = ts.gO.pOList[key].n;
 			var ttap_x_mean:Number = 0
 			var ttap_y_mean:Number = 0;
-			var tdn = ts.gO.pOList[key].dList.length;
+			var tdn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
 				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray

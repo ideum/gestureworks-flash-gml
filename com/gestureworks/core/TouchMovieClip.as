@@ -40,7 +40,6 @@ package com.gestureworks.core
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.ClusterObject;
-	//import com.gestureworks.objects.ProcessObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
@@ -905,11 +904,11 @@ package com.gestureworks.core
 			if(tg) tg.initTimeline();
 		}
 		
-		private var _debugdisplayOn:Boolean = false;
-		public function get debugdisplayOn():Boolean {return _debugdisplayOn;}	
-		public function set debugdisplayOn(value:Boolean):void
+		private var _debugDisplay:Boolean = false;
+		public function get debugDisplay():Boolean {return _debugDisplay;}	
+		public function set debugDisplay(value:Boolean):void
 		{
-			_debugdisplayOn = value;
+			_debugDisplay = value;
 		}
 	
 	}

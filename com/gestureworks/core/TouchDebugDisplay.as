@@ -493,7 +493,7 @@ package com.gestureworks.core
 		
 		if ((ts.debugDisplay)&&(debug_display))
 		{
-			if(pointVectorsOn)cluster_vectors.clear();
+			if(pointVectorsOn) cluster_vectors.clear();
 			if (pointShapesOn) cluster_points.clear();
 			
 			if(clusterOrientationOn)cluster_orient.clear();

@@ -213,8 +213,8 @@ package com.gestureworks.core
 			gn = gO.pOList.length;
 			
 			
-			cluster_kinemetric.findCluster();
-			cluster_kinemetric.resetVars();
+			cluster_kinemetric.findClusterConstants();
+			cluster_kinemetric.resetCluster();
 			cluster_kinemetric.findInstDimention();
 			
 			//cluster_kinemetric.findMeanInstTransformation();
@@ -582,7 +582,7 @@ package com.gestureworks.core
 								//gO.pOList[key]["tilt_dy"].clusterDelta = pt_tilt.y; //tilt_dy
 								//trace("TILT seperation",c_dsx,c_dsy)
 								
-								cluster_kinemetric.findMeanInstSeparationXY();
+								cluster_kinemetric.findMeanInstSeparation();
 								
 								for (DIM=0; DIM < dn; DIM++)
 								//for (DIM in gO.pOList[key].dList)
@@ -628,7 +628,7 @@ package com.gestureworks.core
 
 			}
 			
-			cluster_kinemetric.pushClusterObjectProperties();
+			//cluster_kinemetric.pushClusterObjectProperties();
 			
 		}
 		/**
