@@ -238,8 +238,10 @@ package com.gestureworks.core
 		
 		private function startGmlParse():void
 		{			
-			if (!gml || gml.length <= 1)
-				gml = CML.Objects.@gml;
+			if (!gml || gml.length <= 1) {
+				if (CML.Objects)
+					gml = CML.Objects.@gml;
+			}	
 			
 			if (!gml || gml.length <= 1) {
 				loadModeManager();
