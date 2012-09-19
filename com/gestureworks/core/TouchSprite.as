@@ -172,8 +172,7 @@ package com.gestureworks.core
 										tp = new TouchPipeline(touchObjectID);
 					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
 										tt = new TouchTransform(touchObjectID);
-					//if (debugDisplay)	
-					td = new TouchDebugDisplay(touchObjectID);
+					if (debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
