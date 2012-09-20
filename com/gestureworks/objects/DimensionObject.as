@@ -15,8 +15,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
-	import com.gestureworks.utils.NoiseFilter;
-	import com.gestureworks.utils.InertialFilter;
+	//import com.gestureworks.utils.NoiseFilter;
+	//import com.gestureworks.utils.InertialFilter;
 	
 	public class DimensionObject extends Object 
 	{
