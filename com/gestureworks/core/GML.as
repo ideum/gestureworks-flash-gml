@@ -24,7 +24,7 @@ package com.gestureworks.core
 	{
 		public static var Gestures:XML =
 		
-	<Gestures processing_rate="16.7" match_display_frame_rate="true">
+	<Gestures processing_rate="16.7" match_display_frame_rate="false" max_point_number="2">
 
 	<Gesture_set gesture_set_name="n-manipulate">
 	
