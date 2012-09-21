@@ -323,9 +323,6 @@ package com.gestureworks.core
 					</algorithm>
 				</analysis>	
 				<processing>
-					<noise_filter>
-						<property ref="rotate_dtheta"  noise_filter="false" percent="80"/>
-					</noise_filter>
 					<inertial_filter>
 						<property ref="rotate_dtheta" release_inertia_filter="true" friction="0.9"/>
 					</inertial_filter>
@@ -359,9 +356,9 @@ package com.gestureworks.core
 					</algorithm>
 				</analysis>	
 				<processing>
-					<noise_filter>
-						<property ref="rotate_dtheta"  noise_filter="true" percent="30"/>
-					</noise_filter>
+					<mean_filter>
+						<property ref="rotate_dtheta"  mean_filter="true" frames="6"/>
+					</mean_filter>
 					<inertial_filter>
 						<property ref="rotate_dtheta" release_inertia_filter="true" friction="0.9"/>
 					</inertial_filter>
