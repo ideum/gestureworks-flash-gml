@@ -44,9 +44,7 @@ package com.gestureworks.core
 	 * A collection of gestures attached to this object.
 	 */
 		private var touchObjectID:int;
-		
-		//private var init:Boolean = false;
-		private var ts:Object;//private var ts:TouchSprite;
+		private var ts:Object;
 		private var gO:GestureListObject;
 		private var cO:ClusterObject;
 		private var trO:TransformObject;
@@ -54,34 +52,6 @@ package com.gestureworks.core
 		private var i:uint;
 		private var j:uint;
 		private var gn:uint
-		
-		public var inertialDampingOn:Boolean = false;//false
-		
-		// translation limits -------------//
-		/**
-		* @private
-		*/
-		
-		/*
-		private var transLimits:Boolean = false;
-		private	var x_max:Number = 600;
-		private	var x_min:Number = 0.05;
-		private	var y_max:Number = 600;
-		private	var y_min:Number = 0.05;
-		// scale limits --------------//
-		private	var scaleLimits:Boolean = true;
-		private	var scaleX_max:Number = 1;
-		private	var scaleX_min:Number = 0.3;
-		private	var scaleY_max:Number = 1;
-		private	var scaleY_min:Number = 0.3;
-		// rotation limits ----------------//
-		private	var rotLimits:Boolean = false;
-		private	var rotate_max:Number = 2*Math.PI;
-		private	var rotate_min:Number = 0;
-		*/
-		
-		// tween logic
-		//private var gestureTween:Boolean = true;
 
 		 /**
 		 *  Constructor.
@@ -104,8 +74,6 @@ package com.gestureworks.core
 			cO = ts.cO;
 			gO = ts.gO;
 			trO = ts.trO;
-			//initFilters();
-			
 		}
 		
 		public function processPipeline():void
@@ -113,60 +81,19 @@ package com.gestureworks.core
 			//trace("processing pipeline");
 			gn = gO.pOList.length;
 			
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// core transform properties //default map for direct gesture manipulations
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////
-									
-						trO.x =	cO.x;
-						trO.y =	cO.y;
-						trO.width = cO.width
-						trO.height = cO.height
-						trO.radius = cO.radius
-						trO.scale = cO.separation
-						trO.scaleX = cO.separationX
-						trO.scaleY = cO.separationY
-						trO.rotation = cO.rotation
-						trO.orientation = cO.orientation
-			
-			////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// map dynamic cluster deltas results into gesture object
-			////////////////////////////////////////////////////////////////////////////////////////////////////////
-			
-			
-				
-			//for (i in gO.pOList)
-			
 			for (i=0; i < gn; i++) 
 				{
-					
-					//if (ts.gestureList[i])
-					//{
-						// reset gesture event status
-						//ts.gO.pOList[i].activeEvent = false; //TURNS OFF HOLD AND OTHER ACTIVE EVENTS THAT HAVE NOT DELTAS?? NEED ALTERNATIVE
-				//trace("GestureGlobals");
-				
 				var dn:uint = gO.pOList[i].dList.length;
 				
 						for (j=0; j < dn; j++) 
-						//for (j in gO.pOList[i].dList)
 						{
-								//if ((gO.pOList[i].dList[j] is DimensionObject))
-								//{
+							// PULL DATA FROM CLUSTER
+							gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
 									
-									
-									///////////////////////////////////////////////////////////////////////////////////////////
-									// map filter properties
-									// PULLED REFERENCE TO PROCESS DELTA
-									///////////////////////////////////////////////////////////////////////////////////////////
-									//ts.gO.pOList[i][j].gestureDelta = ts.gO.pOList[i][j].processDelta;
-									//gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
-									
-									//trace("pipeline",gO.pOList[i].dList[j].gestureDelta,gO.pOList[i].dList[j].clusterDelta)
-									
+
 									// turn of all filters 
-									if(1){
-									
-											
+									if(ts.gestureFilters){
+
 											///////////////////////////////////////////////////////////
 											// average filter
 											///////////////////////////////////////////////////////////
@@ -177,7 +104,7 @@ package com.gestureworks.core
 												var hist:uint = 8;
 												var ln:uint =  gO.pOList[i].dList[j].gestureDeltaArray.length;
 												var ln0:Number = 1 / ln;
-												var delta:Number = gO.pOList[i].dList[j].clusterDelta
+												var delta:Number = gO.pOList[i].dList[j].gestureDelta
 												var mvar:Number = 0;
 												
 												gO.pOList[i].dList[j].gestureDeltaArray.push(delta);
@@ -188,8 +115,6 @@ package com.gestureworks.core
 												mvar *= ln0;
 												if(mvar) gO.pOList[i].dList[j].gestureDelta = mvar;	
 											}
-											else gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
-											
 											
 											///////////////////////////////////////////////////////////////////////////////////////////
 											// NOISE FILTER BLOCK
@@ -401,58 +326,63 @@ package com.gestureworks.core
 													//}
 													
 											}
-										///////////////////////////////////////////////////////////////////////////////////////////////
-										// END FILTER BLOCK
-										///////////////////////////////////////////////////////////////////////////////////////////////
-								
-									//}
-									
-									////////////////////////////////////////////////////////////////////////////////////////////////////
-									// map transform properties
-									// zero target of property map
-									////////////////////////////////////////////////////////////////////////////////////////////////////
-									if (gO.pOList[i].dList[j].target_id) 
-									{
-										// ENSURES ADDITIVE DELTAS DO NOT ACCUMILATE OUTSIDE OF EACH "FRAME"
-										trO[ts.gO.pOList[i].dList[j].target_id] = 0;
-									}
-									
-									
-									
-									
-									////////////////////////////////////////////////////////////////////////////////////////////////////
-									// active gesture event switch
-									// deactivates gesture processing on gesture object if gesture deltas are zero for each dimention
-									// is overrriden when object is touched ( when cluster analysis occures
-									////////////////////////////////////////////////////////////////////////////////////////////////////
-									
-									// active gesture event switch
-									if (gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].activeEvent = true;
-									
-									//trace("gesturedelta",gO.pOList[i].dList[j].gestureDelta)
+										
 								}
+								
+								///////////////////////////////////////////////////////////////////////////////////////////////
+								// END FILTER BLOCK
+								///////////////////////////////////////////////////////////////////////////////////////////////
+								
+								// ENSURES ADDITIVE DELTAS DO NOT ACCUMILATE OUTSIDE OF EACH "FRAME"
+								// 	MUST HAPPEN BEFIORE MAPPING OTHERWISE GESTURES THAT MAP DELTAS TO SAME VAR WILL BE OVERWITTEN
+								if (gO.pOList[i].dList[j].target_id) trO[ts.gO.pOList[i].dList[j].target_id] = 0;
+								
+								////////////////////////////////////////////////////////////////////////////////////////////////////
+								// active gesture event switch
+								// deactivates gesture processing on gesture object if gesture deltas are zero for each dimention
+								// is overrriden when object is touched ( when cluster analysis occures
+								////////////////////////////////////////////////////////////////////////////////////////////////////
+								if (gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].activeEvent = true;
+								//trace("gesturedelta",gO.pOList[i].dList[j].gestureDelta)
 						}	
-				//}
+						
+						
+									
 			}
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			// mapping defined native  property values
 			// map gesture object into transform object
 			////////////////////////////////////////////////////////////////////////////////////////////////////
-			
+			// NEEDS TO BE SPERATE FROM MAIN PROCESSING LOOPE SO THAT FLITERS CAN BE INDEPENDANTLY TURNED OFF
 			if (!ts.disableNativeTransform)
 			{
-				//var gn:uint = gO.pOList.length;
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// core transform properties //default map for direct gesture manipulations
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////
+									
+						trO.x =	cO.x;
+						trO.y =	cO.y;
+						trO.width = cO.width
+						trO.height = cO.height
+						trO.radius = cO.radius
+						trO.scale = cO.separation
+						trO.scaleX = cO.separationX
+						trO.scaleY = cO.separationY
+						trO.rotation = cO.rotation
+						trO.orientation = cO.orientation
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// map dynamic cluster deltas results into gesture object
+			////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+			
 				for (i=0; i < gn; i++) 
-				//for (i in gO.pOList)
 					{
-					//if (ts.gestureList[i]) // check exists on gesture list
-					//{
 						var dn:uint = gO.pOList[i].dList.length;
 						for (j=0; j < dn; j++) 
-						//for (j in gO.pOList[i].dList)
 							{
-							
 							if (gO.pOList[i].dList[j].target_id)
 								{
 									// map transform limits
@@ -471,17 +401,10 @@ package com.gestureworks.core
 													
 									//trace("target_values", ts.trO[ts.gO.pOList[i][j].target_id]);
 									}
-								}
-							//}
-							
+								}					
 					}
-				//trace("testing");
+				//trace("testing", trO.obj_rotation);	
 			}
-			
-			
-			// check release
-			//if (ts.N == 0) ts.gO.release = true;
-			
 			
 			
 			////////////////////////////////////////
@@ -489,45 +412,19 @@ package com.gestureworks.core
 			// check no gesture is tweening
 			// confirm gesture states
 			////////////////////////////////////////
-			if(gO.active){
-			
+			if (gO.active)
+			{
 				// close tween
 				ts.gestureTweenOn = false;
 				
-				// reset gesture event states
-				//ts.gO.start = false;
-				//ts.gO.active = false;
-				//ts.gO.release = false;
-				//ts.gO.passive = false;
-				//ts.gO.complete = false;
-				
-				//Open back up if release inertia still on 
-
-				//var gn:uint = gO.pOList.length;
+				// check for open tween
 				for (i=0; i < gn; i++) 
-				//for (i in gO.pOList)
 				{
-					var dn0:uint = gO.pOList[i].dList.length;
-					for (j=0; j < dn0; j++) 	
-					//for (j in gO.pOList[i].dList)
+					if (!ts.gestureTweenOn) // if desired condition not already met
 					{
-						// will move to internal dimention check
-						// 
-						//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i][j].gestureDimensionTweenOn)) ts.gestureTweenOn = true;
-						if ((gO.pOList[i].dList[j].release_inertiaOn)) ts.gestureTweenOn = true;
+						var dn0:uint = gO.pOList[i].dList.length;
+						for (j = 0; j < dn0; j++) if ((gO.pOList[i].dList[j].release_inertiaOn)) ts.gestureTweenOn = true;
 					}
-					
-					// gesture object state cumulation
-					// from zero +N // check if touching with required N if so then gesture has started
-					//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i].start)) ts.start = true;
-					// check if touching with required N
-					//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i].active)) ts.active = true;
-					// if not touching with required N then release from gesture
-					//if ((ts.gO.pOList[i][j] is PropertyObject) && (ts.gO.pOList[i].release)) ts.release = true;
-					// easing processes still occuring on thread?
-					//if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i].passive)) ts.passive = true;
-					// when all thread processes are finished?
-					//if ((ts.gO.pOList[i][j] is PropertyObject)&&(ts.gO.pOList[i].complete)) ts.complete = true;
 				}
 				
 				//NOTE WILL NEED TO MAKE GESTURE OBJECT SPECIFIC
@@ -539,6 +436,8 @@ package com.gestureworks.core
 					gO.complete = true;
 				}
 			}
+			
+			//////////////////////////////////////////////////////////////////////////////
 		}
 		
 		private function functionGenerator(type:String,b:Number,k:Number):Number {

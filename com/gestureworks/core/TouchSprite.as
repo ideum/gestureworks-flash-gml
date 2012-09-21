@@ -910,7 +910,7 @@ package com.gestureworks.core
 	
 	private function onGestureListUpdate(event:GWGestureEvent):void  
 		{
-			trace("gesturelist update");
+			//trace("gesturelist update");
 			if (tg) tg.initTimeline();
 		}
 		
@@ -919,6 +919,13 @@ package com.gestureworks.core
 		public function set debugDisplay(value:Boolean):void
 		{
 			_debugDisplay = value;
+		}
+		
+		private var _gestureFilters:Boolean = true;
+		public function get gestureFilters():Boolean {return _gestureFilters;}	
+		public function set gestureFilters(value:Boolean):void
+		{
+			_gestureFilters = value;
 		}
 		
 	}

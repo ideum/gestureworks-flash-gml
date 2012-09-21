@@ -904,12 +904,19 @@ package com.gestureworks.core
 			if(tg) tg.initTimeline();
 		}
 		
-		private var _debugDisplay:Boolean = false;
-		public function get debugDisplay():Boolean {return _debugDisplay;}	
-		public function set debugDisplay(value:Boolean):void
+	private var _debugDisplay:Boolean = false;
+	public function get debugDisplay():Boolean {return _debugDisplay;}	
+	public function set debugDisplay(value:Boolean):void
 		{
 			_debugDisplay = value;
 		}
 	
+	private var _gestureFilters:Boolean = true;
+	public function get gestureFilters():Boolean {return _gestureFilters;}	
+	public function set gestureFilters(value:Boolean):void
+		{
+			_gestureFilters = value;
+		}	
+		
 	}
 }

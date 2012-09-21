@@ -15,10 +15,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
-	//import flash.display.DisplayObject;
+	import flash.display.DisplayObject;
 	import flash.geom.Point;
 	import flash.geom.Matrix;
 	import flash.geom.Transform;
+	import flash.sampler.NewObjectSample;
 	
 	//import flash.geom.* ;
 	//import flash.geom.Matrix3D;
@@ -31,7 +32,7 @@ package com.gestureworks.core
 	
 	//import com.gestureworks.objects.ClusterObject;
 	//import com.gestureworks.objects.GestureObject;
-	import com.gestureworks.objects.TimelineObject;
+	//import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	
 	import flash.display.StageDisplayState;
@@ -81,11 +82,7 @@ package com.gestureworks.core
 		private var centerTransform:Boolean = false;
 		
 		private var ts:Object;
-		//private var gO:GestureObject;
-		//private var cO:ClusterObject
-		private var tiO:TimelineObject
 		private var trO:TransformObject;
-		
 		private var id:int;
 		
 		public function TouchTransform(touchObjectID:int):void
@@ -93,7 +90,6 @@ package com.gestureworks.core
             //super();
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			//cO = ts.cO;
 			trO = ts.trO;
 			
 			initTransform();
@@ -226,73 +222,50 @@ package com.gestureworks.core
 	*/
 	private function applyNativeTransform(affine:Boolean):void
 		{
-			///////////////////////////////////////////////////////////////////////////////////
-			if (ts.nestedTransform)
-			{
-				// pre transfrom to compensate for parent transform
-				//trace("parent transfrom", this.parent.transform.matrix);
-				//trace(this.parent, this.parent.parent)	
-				//var grand_parent_mod = this.parent.parent.transform.matrix.clone();
-				//parent_modifier = this.transform.concatenatedMatrix.clone();//this.parent.transform.matrix.clone();
-				//parent_modifier = transform.matrix.clone();//this.parent.transform.matrix.clone();
-				//parent_modifier = this.parent.transform.matrix.clone();
+			if (ts.parent)
+				{
+				// gives root cocatenated transfrom of parent space
+				parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
+				parent_modifier.invert();
+
+				var angle:Number = -(Math.atan(parent_modifier.c/parent_modifier.a))//Math.acos(parent_modifier.a)
+				var scalex:Number = parent_modifier.a/Math.cos(angle)
+				var scaley:Number = parent_modifier.a/Math.cos(angle)
 				
-				////////////////////////////////////////////////////////////////////////////////
-				// gives root cocatenated transfrom
-				//parent_modifier = this.transform.concatenatedMatrix.clone();
-				
-				// will give angle of rotation
-				//angle = Math.acos(parent_modifier.a/parent_modifier.d)
-				
-				// gives scale
-				//scalex = parent_modifier.a/Math.cos(angle)
-				//scaley = parent_modifier.a/Math.cos(angle)
-				///////////////////////////////////////////////////////////////////////////////
-				
-				//parent_modifier = parent.transform.matrix.clone();
-				parent_modifier = ts.parent.transform.matrix.clone();
-					//parent_modifier.concat(grand_parent_mod)
-					parent_modifier.invert();
-				var pt:Point //= parent_modifier.transformPoint(new Point(trO.x, trO.y));
-				
+				//TRANSFORM CENTER POINT OF TRANSFORMATION
+				var pt:Point
 				if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
 				else pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
 				
-				
+				// TRANSFORM TRANSFORMATION VECTOR
 				var vector_mod:Matrix = new Matrix ();
-				//var vdr:Number = -(this.parent.rotation)* DEG_RAD//+ this.parent.parent.rotation)* DEG_RAD
-				//var vdsx:Number = 1 / (this.parent.scaleX)//*this.parent.parent.scaleX)
-				//var vdsy:Number = 1 / (this.parent.scaleY)//*this.parent.parent.scaleY)
-				var vdr:Number = -(ts.parent.rotation)* DEG_RAD//+ this.parent.parent.rotation)* DEG_RAD
-				var vdsx:Number = 1 / (ts.parent.scaleX)//*this.parent.parent.scaleX)
-				var vdsy:Number = 1 / (ts.parent.scaleY)//*this.parent.parent.scaleY)
-				
-					vector_mod.rotate(vdr);
-					vector_mod.scale(vdsx ,vdsy);
+					vector_mod.rotate(angle);
+					vector_mod.scale(scalex ,scaley);
 				var tpt:Point = vector_mod.transformPoint(new Point(trO.dx, trO.dy));
-			
-					// translate center of transformation
+				//trace(ag,parent_modifier.a,parent_modifier.b,parent_modifier.c,parent_modifier.d, vdr)
+				
+				// translate center of transformation
 					t_x =  pt.x;
 					t_y =  pt.y;
-					// rotate translation vector
+				// rotate translation vector
 					dx =   tpt.x;
 					dy =   tpt.y;
-			}
-			else {	
-					// do not pre transform
-					if (centerTransform) 
-					{
-						t_x = trO.transAffinePoints[4].x
-						t_y = trO.transAffinePoints[4].y
-					}
-					else {
+				}
+				
+				else {	
+						// do not pre transform // super override method
+						if (centerTransform) {
+							t_x = trO.transAffinePoints[4].x
+							t_y = trO.transAffinePoints[4].y
+						}
+						else {
 						t_x = trO.x;
 						t_y = trO.y;
-					}
-					dx =   trO.dx;
-					dy =   trO.dy;
-			}
-			///////////////////////////////////////////////////////////////////////////////////
+						}
+						dx = (ts.dx);
+						dy = (ts.dy);
+				}
+				///////////////////////////////////////////////////////////////////////////////////
 			
 				// leave scalar values untouched
 				//ds =  trO.dsx;
@@ -387,24 +360,25 @@ package com.gestureworks.core
 		public function $applyTransform(affine:Boolean):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////
-				if (ts.nestedTransform)
+				if (ts.parent)
 				{
 					// pre transfrom to compensate for parent transforms
-					//trace("parent transfrom", this.parent.transform.matrix);
-					//parent_modifier = this.parent.transform.matrix.clone();
-					parent_modifier = ts.parent.transform.matrix.clone();
-						parent_modifier.invert();
-						
-					var $pt:Point = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+					parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
+					parent_modifier.invert();
 					
+					var $angle:Number = -(Math.atan(parent_modifier.c/parent_modifier.a))//Math.acos(parent_modifier.a)
+					var $scalex:Number = parent_modifier.a/Math.cos($angle)
+					var $scaley:Number = parent_modifier.a/Math.cos($angle)
+					
+					// TRANSFORM AFFINE POINT
+					var $pt:Point
+					if (!centerTransform) $pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+					else $pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
+					
+					// TRANSFORM VECTOR
 					var $r_mod:Matrix = new Matrix ();
-						//$r_mod.rotate(-this.parent.rotation * DEG_RAD);
-						//$r_mod.scale( 1 / this.parent.scaleX, 1 / this.parent.scaleY);
-						
-						$r_mod.rotate(-ts.parent.rotation * DEG_RAD);
-						$r_mod.scale( 1 / ts.parent.scaleX, 1 / ts.parent.scaleY);
-						
-					//var $tpt:Point = $r_mod.transformPoint(new Point((_x - super.x), (_y - super.y)));
+						$r_mod.rotate($angle);
+						$r_mod.scale($scalex ,$scaley);
 					var $tpt:Point = $r_mod.transformPoint(new Point((ts.__x - ts.x), (ts.__y - ts.y)));
 				
 						// translate center of transformation
@@ -416,7 +390,6 @@ package com.gestureworks.core
 				}
 				else {	
 						// do not pre transform // super override method
-						
 						if (centerTransform) {
 							t_x = trO.transAffinePoints[4].x
 							t_y = trO.transAffinePoints[4].y
@@ -425,20 +398,13 @@ package com.gestureworks.core
 						t_x = trO.x;
 						t_y = trO.y;
 						}
-						//dx = (_x - super.x);
-						//dy = (_y - super.y);
 						dx = (ts.__x - ts.x);
 						dy = (ts.__y - ts.y);
 				}
 				///////////////////////////////////////////////////////////////////////////////////
 				// leave scalar values untouched
-				//ds = (_scaleX - super.scaleX);
-				
-				//dsx = (_scaleX - super.scaleX);
 				dsx = (ts.__scaleX - ts.scaleX);
-				dsy = dsx//(_scaleY - super.scaleY);
-				
-				//dtheta = (_rotation - super.rotation) * DEG_RAD;
+				dsy = dsx
 				dtheta = (ts.__rotation - ts.rotation) * DEG_RAD;
 				
 			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
@@ -449,13 +415,11 @@ package com.gestureworks.core
 				if (affine) 
 				 {
 					// if (trace_debug_mode) trace("trans $ affine",touchObjectID)
-					//affine_modifier = this.transform.matrix;
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate( - t_x, - t_y);
 						affine_modifier.rotate(dtheta);
 						affine_modifier.scale(1 + dsx, 1 + dsy);	
 						affine_modifier.translate( dx + t_x, dy + t_y);
-					//this.transform.matrix =  affine_modifier
 					ts.transform.matrix =  affine_modifier
 					transformAffineDebugPoints();
 				 }
@@ -463,11 +427,7 @@ package com.gestureworks.core
 				 else
 				 {
 					//if (trace_debug_mode) trace("tween trans $ non affine",touchObjectID)
-					 affine_modifier = new Matrix;
-						//affine_modifier.rotate(super.rotation* DEG_RAD + dtheta);
-						//affine_modifier.scale(super.scaleX + ds, super.scaleY + ds);	
-						//affine_modifier.translate( super.x + dx, super.y + dy);
-					//this.transform.matrix =  affine_modifier
+					affine_modifier = new Matrix;
 					affine_modifier.rotate(ts.rotation* DEG_RAD + dtheta);
 						affine_modifier.scale(ts.scaleX + ds, ts.scaleY + ds);	
 						affine_modifier.translate( ts.x + dx, ts.y + dy);
@@ -507,28 +467,17 @@ package com.gestureworks.core
 		*/
 		private function initTransformPoints():void
 		{
-			
 			if (trO.transformPointsOn)
 				{	
 				// takes the pre-transformed inial properties of the display object and seeds the debug points//317 ,241//250, 190
 				//if(trace_debug_mode)trace("init center point", this.width,this.height);
 				
-				//var mem_modifier:Matrix = this.transform.matrix;
 				var mem_modifier:Matrix = ts.transform.matrix;
-				// revert initial transform
-				//var _modifier:Matrix = this.transform.matrix;
-						//_modifier.rotate(-this.rotation* DEG_RAD);
-					//	_modifier.scale(1 / this.scaleX, 1 / this.scaleY);	
-				//this.transform.matrix = _modifier
-				
 				var _modifier:Matrix = ts.transform.matrix;
 						_modifier.rotate(-ts.rotation* DEG_RAD);
 						_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
 				ts.transform.matrix = _modifier
-				
-				// find orifinal width and height
-				//trO.pre_init_width = this.width;
-				//trO.pre_init_height = this.height;
+			
 				trO.pre_init_width = ts.width;
 				trO.pre_init_height = ts.height;
 				
@@ -556,13 +505,13 @@ package com.gestureworks.core
 			
 			if (trO.transformPointsOn)
 				{	
-					var modifier:Matrix = new Matrix();
-					//var modifier:Matrix = this.transform.matrix;
+					//var modifier:Matrix = new Matrix();
+					//var modifier:Matrix = ts.transform.matrix;
 					///////////////////////////////////////////////////////////////////////////////
 					// DISAGREES WHEN TOUCHSPRITE NOT TOUCHMOVIECLIP
-					// modifier = transform.concatenatedMatrix.clone()
+					var modifier:Matrix = ts.transform.concatenatedMatrix.clone()
 					//////////////////////////////////////////////////////////////////////////////
-					
+					/*
 					if (ts.nestedTransform) 
 					{
 						var invert_parent_modifier:Matrix = parent_modifier.clone();
@@ -572,7 +521,7 @@ package com.gestureworks.core
 						modifier.concat(invert_parent_modifier);
 					}
 					else modifier = affine_modifier;
-					
+					*/
 					
 				// transform point net
 				var trans_affine_points:Array = new Array();
@@ -594,28 +543,28 @@ package com.gestureworks.core
 		
 				if ((ts.transformStart) && (ts.transformEventStart)) {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_START,id));
-					if((tiO.timelineOn)&&(tiO.transformEvents)) tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_START,id));
+					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_START,id));
 				}
 				if ((ts.transformComplete) && (ts.transformEventComplete))  {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_COMPLETE,id));
-					if((tiO.timelineOn)&&(tiO.transformEvents)) tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_COMPLETE,id));
+					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_COMPLETE,id));
 				}
 				
 				if ((dx != 0) || (dy != 0) || (dsx != 0) || (dsy != 0) || (dtheta != 0)) {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_TRANSFORM, { dx:dx, dy:dy, dsx: dsx, dsy:dsy, dtheta:dtheta } ));
-					if((tiO.timelineOn)&&(tiO.transformEvents)) tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_TRANSFORM, { dsx:dx, dy:dy, dsx: dsx, dsy:dsy, dtheta:dtheta }));
+					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_TRANSFORM, { dsx:dx, dy:dy, dsx: dsx, dsy:dsy, dtheta:dtheta }));
 				}
 				if ((dx != 0) || (dy != 0)) {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_TRANSLATE, { dx:dx, dy:dy } ));
-					if((tiO.timelineOn)&&(tiO.transformEvents)) tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_TRANSLATE, { dx:dx, dy:dy } ));
+					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_TRANSLATE, { dx:dx, dy:dy } ));
 				}
 				if (dtheta != 0) {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_ROTATE, { dtheta:dtheta } ));
-					if((tiO.timelineOn)&&(tiO.transformEvents)) tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_ROTATE, { dtheta:dtheta } ));
+					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_ROTATE, { dtheta:dtheta } ));
 				}
 				if ((dsx != 0) || (dsy != 0)) {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_SCALE, { dsx: dsx, dsy:dsy } ));
-					if((tiO.timelineOn)&&(tiO.transformEvents)) tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_SCALE, { dsx: dsx, dsy:dsy } ));
+					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_SCALE, { dsx: dsx, dsy:dsy } ));
 				}
 		}
 	}

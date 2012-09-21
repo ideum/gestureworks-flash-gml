@@ -258,7 +258,7 @@ package com.gestureworks.core
 
 							// BASIC PIVOT CONTROL // ALGORITHM
 							//if (gO.pOList[key].algorithm == "pivot")		cluster_kinemetric.findInstPivot(gO.pOList[key].cluster_rotation_min);
-							if (gO.pOList[key].algorithm == "pivot")		cluster_kinemetric.findInstPivot(0);
+							if (gO.pOList[key].algorithm == "pivot")		cluster_kinemetric.findInstPivot();//0
 							
 							
 							/*
