@@ -52,7 +52,7 @@ package com.gestureworks.cml.core
 			return _instance;	
 		}
 		
-		public var debug:Boolean = true;		
+		public var debug:Boolean = false;		
 		private static var GXMLComponent:Class;
 		public var defaultContainer:DisplayObjectContainer;
 		public static const COMPLETE:String = "COMPLETE";
