@@ -224,6 +224,7 @@ package com.gestureworks.core
 		{
 			if (ts.parent)
 				{
+				trace("native parent")
 				// gives root cocatenated transfrom of parent space
 				parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
 				parent_modifier.invert();
@@ -253,6 +254,7 @@ package com.gestureworks.core
 				}
 				
 				else {	
+					trace("native")
 						// do not pre transform // super override method
 						if (centerTransform) {
 							t_x = trO.transAffinePoints[4].x
@@ -362,6 +364,7 @@ package com.gestureworks.core
 				///////////////////////////////////////////////////////////////////////////////////
 				if (ts.parent)
 				{
+					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms
 					parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
 					parent_modifier.invert();
@@ -371,7 +374,8 @@ package com.gestureworks.core
 					var $scaley:Number = parent_modifier.a/Math.cos($angle)
 					
 					// TRANSFORM AFFINE POINT
-					var $pt:Point
+					
+					var $pt:Point;
 					if (!centerTransform) $pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
 					else $pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
 					
@@ -389,6 +393,7 @@ package com.gestureworks.core
 						dy =   $tpt.y;
 				}
 				else {	
+					//trace("$transform")
 						// do not pre transform // super override method
 						if (centerTransform) {
 							t_x = trO.transAffinePoints[4].x
@@ -411,9 +416,11 @@ package com.gestureworks.core
 			//	dthetaY = (_rotationY - super.rotationY)* DEG_RAD;
 			//	dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;
 				
+			trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
 				
 				if (affine) 
 				 {
+					//trace("$transforming");
 					// if (trace_debug_mode) trace("trans $ affine",touchObjectID)
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate( - t_x, - t_y);

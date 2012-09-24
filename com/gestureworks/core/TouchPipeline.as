@@ -355,15 +355,14 @@ package com.gestureworks.core
 			// map gesture object into transform object
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			// NEEDS TO BE SPERATE FROM MAIN PROCESSING LOOPE SO THAT FLITERS CAN BE INDEPENDANTLY TURNED OFF
-			if (!ts.disableNativeTransform)
-			{
+			
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// core transform properties //default map for direct gesture manipulations
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////
 									
-						trO.x =	cO.x;
-						trO.y =	cO.y;
+						trO.x =	cO.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						trO.y =	cO.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.width = cO.width
 						trO.height = cO.height
 						trO.radius = cO.radius
@@ -376,7 +375,8 @@ package com.gestureworks.core
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// map dynamic cluster deltas results into gesture object
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
+			if (!ts.disableNativeTransform)
+			{	
 			
 				for (i=0; i < gn; i++) 
 					{
