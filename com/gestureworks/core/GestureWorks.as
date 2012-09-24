@@ -29,6 +29,7 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
+	import com.gestureworks.cml.core.CMLParser;
 
 
 	/**
@@ -164,18 +165,18 @@ package com.gestureworks.core
 			_gwComplete = value;
 			
 			if (hasCML)
-			{
+			{				
 				try
 				{
-					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.components.CMLDisplay") as Class;
-					
+					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
+					CMLParser.instance;
 					var tmp:Sprite = new CMLDisplay;
 					cmlDisplays.push(tmp);
 					addChild(tmp);
 				}
 				catch (e:Error)
 				{
-					throw new Error("if you are trying to utilize CML and/or have included a settingsPath in your Main doc class, please make sure that you have included this statement into your Main Document class:  ' import com.gestureworks.components.CMLDisplay; CMLDisplay; '. ");
+					throw new Error("CML has not been properly intialized");
 				}
 			}
 			else
