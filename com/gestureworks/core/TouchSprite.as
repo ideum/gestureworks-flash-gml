@@ -816,34 +816,34 @@ package com.gestureworks.core
 		// $ affine transform methods
 		/////////////////////////////////////////////////////////////
 		// x property
-		public function get $x():Number {return __x;}
+		public function get $x():Number {return _$x;}
 		public function set $x(value:Number):void
 		{
-			__x = value;
+			_$x = value;
 		}
 		// y property
-		public function get $y():Number {return __y;}
+		public function get $y():Number {return _$y;}
 		public function set $y(value:Number):void
 		{
-			__y = value;
+			_$y = value;
 		}
 		// rotation property
-		public function get $rotation():Number{return __rotation;}
+		public function get $rotation():Number{return _$rotation;}
 		public function set $rotation(value:Number):void
 		{
-			__rotation = value;
+			_$rotation = value;
 		}
 		// scaleX property
-		public function get $scaleX():Number {return __scaleX;}
+		public function get $scaleX():Number {return _$scaleX;}
 		public function set $scaleX(value:Number):void
 		{
-			__scaleX = value;
+			_$scaleX = value;
 		}
 		// scaleY property
-		public function get $scaleY():Number {return __scaleY;}	
+		public function get $scaleY():Number {return _$scaleY;}	
 		public function set $scaleY(value:Number):void
 		{
-			__scaleY = value;
+			_$scaleY = value;
 		}
 		// affine transform point 
 		public function get $transformPoint():Point { return new Point(trO.x, trO.y);} 
@@ -877,13 +877,13 @@ package com.gestureworks.core
 		*/
 		
 		
-		public var __x:Number = 0;
-		public var __y:Number = 0;
-		public var __scaleX:Number = 1;
-		public var __scaleY:Number = 1;
-		public var __rotation:Number = 0;
-		public var __width:Number = 0;
-		public var __height:Number = 0;
+		public var _$x:Number = 0;
+		public var _$y:Number = 0;
+		public var _$scaleX:Number = 1;
+		public var _$scaleY:Number = 1;
+		public var _$rotation:Number = 0;
+		public var _$width:Number = 0;
+		public var _$height:Number = 0;
 		//private var t_x:Number = 0;
 		//private var t_y:Number =  0;
 		

@@ -60,9 +60,9 @@ package com.gestureworks.core
 		private var t_y:Number =  0;
 		
 		// 3d
-		private var _rotationX:Number = 0;
-		private var _rotationY:Number = 0;
-		private var _rotationZ:Number = 0;
+		//private var _rotationX:Number = 0;
+		//private var _rotationY:Number = 0;
+		//private var _rotationZ:Number = 0;
 		
 		// private	// differentials
 		private var dx:Number = 0;
@@ -122,13 +122,13 @@ package com.gestureworks.core
 			//_width = super.width;
 			//_height = super.height;
 			
-			ts.__x = ts.x;
-			ts.__y = ts.y;
-			ts.__scaleX = ts.scaleX;
-			ts.__scaleY = ts.scaleY;//0.5;
-			ts.__rotation = ts.rotation//45;	
-			ts.__width = ts.width;
-			ts.__height = ts.height;
+			ts._$x = ts.x;
+			ts._$y = ts.y;
+			ts._$scaleX = ts.scaleX;
+			ts._$scaleY = ts.scaleY;//0.5;
+			ts._$rotation = ts.rotation//45;	
+			ts._$width = ts.width;
+			ts._$height = ts.height;
 			
 			//3d
 			//_rotationX = super.rotationX;
@@ -142,11 +142,11 @@ package com.gestureworks.core
 				trO.obj_x = trO.transAffinePoints[4].x//_x
 				trO.obj_y = trO.transAffinePoints[4].y//_y	
 			}
-			trO.obj_scaleX = ts.__scaleX;
-			trO.obj_scaleY = ts.__scaleY;
-			trO.obj_rotation = ts.__rotation;
-			trO.obj_width = ts.__width;
-			trO.obj_height = ts.__height;
+			trO.obj_scaleX = ts._$scaleX;
+			trO.obj_scaleY = ts._$scaleY;
+			trO.obj_rotation = ts._$rotation;
+			trO.obj_width = ts._$width;
+			trO.obj_height = ts._$height;
 			
 			//trO.obj_rotationX = _rotationX;
 			//trO.obj_rotationY = _rotationY;
@@ -224,7 +224,7 @@ package com.gestureworks.core
 		{
 			if (ts.parent)
 				{
-				trace("native parent")
+				//trace("native parent")
 				// gives root cocatenated transfrom of parent space
 				parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
 				parent_modifier.invert();
@@ -254,7 +254,7 @@ package com.gestureworks.core
 				}
 				
 				else {	
-					trace("native")
+					//trace("native")
 						// do not pre transform // super override method
 						if (centerTransform) {
 							t_x = trO.transAffinePoints[4].x
@@ -383,7 +383,7 @@ package com.gestureworks.core
 					var $r_mod:Matrix = new Matrix ();
 						$r_mod.rotate($angle);
 						$r_mod.scale($scalex ,$scaley);
-					var $tpt:Point = $r_mod.transformPoint(new Point((ts.__x - ts.x), (ts.__y - ts.y)));
+					var $tpt:Point = $r_mod.transformPoint(new Point((ts._$x - ts.x), (ts._$y - ts.y)));
 				
 						// translate center of transformation
 						t_x =  $pt.x;
@@ -403,20 +403,20 @@ package com.gestureworks.core
 						t_x = trO.x;
 						t_y = trO.y;
 						}
-						dx = (ts.__x - ts.x);
-						dy = (ts.__y - ts.y);
+						dx = (ts._$x - ts.x);
+						dy = (ts._$y - ts.y);
 				}
 				///////////////////////////////////////////////////////////////////////////////////
 				// leave scalar values untouched
-				dsx = (ts.__scaleX - ts.scaleX);
+				dsx = (ts._$scaleX - ts.scaleX);
 				dsy = dsx
-				dtheta = (ts.__rotation - ts.rotation) * DEG_RAD;
+				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
 				
 			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
 			//	dthetaY = (_rotationY - super.rotationY)* DEG_RAD;
 			//	dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;
 				
-			trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
+			//trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
 				
 				if (affine) 
 				 {
