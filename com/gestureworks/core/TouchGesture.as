@@ -294,8 +294,8 @@ package com.gestureworks.core
 									{
 										
 										gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
-										gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
-									
+										//gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
+										//trace(gO.pOList[key].dList[DIM].gestureDeltaCache)
 									}
 								}
 								
@@ -307,7 +307,7 @@ package com.gestureworks.core
 									{
 										
 										gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
-										gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
+										//gO.pOList[key].dList[DIM].gestureDelta = gO.pOList[key].dList[DIM].gestureDeltaCache;
 										
 									}
 								}

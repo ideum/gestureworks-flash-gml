@@ -580,11 +580,11 @@ package com.gestureworks.analysis
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// cluster acceleration x y // OPERATION
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			cO.etm_ddy *= k0 * t0;
-			cO.etm_ddy *= k0 * t0;
+			cO.etm_ddx = 0;
+			cO.etm_ddy = 0;
 				
 			var t:uint = 6;
-			var t0:Number = 1 /6;
+			var t0:Number = 1 /t;
 						
 				for (i = 0; i < N; i++) 
 					{
@@ -594,13 +594,13 @@ package com.gestureworks.analysis
 							// second diff of x anf y wrt t
 							for (j = 0; j < t; j++) 
 							{
-								cO.etm_ddy += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
+								cO.etm_ddx += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
 								cO.etm_ddy += pointList[i].history[j].dy - pointList[i].history[j+1].dy;
 							}
 						}
 					}
-					cO.etm_ddy *= k0 * t0;
-					cO.etm_ddy *= k0 * t0;
+			cO.etm_ddx *= k0 * t0;
+			cO.etm_ddy *= k0 * t0;
 		}
 		
 		public function findInstOrientation():void 

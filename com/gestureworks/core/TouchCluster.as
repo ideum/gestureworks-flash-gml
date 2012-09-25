@@ -404,21 +404,24 @@ package com.gestureworks.core
 										
 										if ((gO.pOList[key].dList[DIM].property_vars[v]["min"]) && (cO[gO.pOList[key].dList[DIM].property_vars[v]["var"]] < gO.pOList[key].dList[DIM].property_vars[v]["min"])) 
 										{
-											//gO.pOList[key].activeEvent = false;
+											gO.pOList[key].activeEvent = false;
 										}
 										
 										if ((gO.pOList[key].dList[DIM].property_vars[v]["max"]) && (cO[gO.pOList[key].dList[DIM].property_vars[v]["var"]] > cO[gO.pOList[key].dList[DIM].property_vars[v]["max"]]))
 										{
-											//[gO.pOList[key].dList[DIM].property_vars[v]["return"]] = [gO.pOList[key].dList[DIM].property_vars[v]["var"]]
+											gO.pOList[key].dList[DIM].property_vars[v]["return"] = gO.pOList[key].dList[DIM].property_vars[v]["var"]
 										}
 										
 									}
 									
 									//if (Math.abs(flick_etm_accel[gO.pOList[key].dList[DIM].property_mvar]) < gO.pOList[key].dList[DIM].cluster_acceleration_min)  gO.pOList[key][DIM].property_result = 0;
-									
+										
+									//gO.pOList[key].dList[DIM].property_result = cO["etm_dx"];
+									//trace(gO.pOList[key].dList[DIM].property_result);
 								}
 								
-								//trace("touchcluster",cO["etm_dx"],cO["etm_dy"],cO["etm_ddx"],cO["etm_ddy"] )
+								//trace("touchcluster", cO["etm_dx"], cO["etm_dy"], cO["etm_ddx"], cO["etm_ddy"])
+								//trace("touchcluster",cO.etm_dx,cO.etm_dy,cO.etm_ddx,cO.etm_ddy )
 							}
 				
 							
@@ -618,7 +621,7 @@ package com.gestureworks.core
 									gO.pOList[key].data.y = cO.y;
 									gO.pOList[key].data.n = cO.n;
 									
-									
+								//trace("touchcluster end", cO["etm_dx"], cO["etm_dy"], cO["etm_ddx"], cO["etm_ddy"])
 							//}
 					}
 			}

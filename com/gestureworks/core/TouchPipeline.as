@@ -89,9 +89,13 @@ package com.gestureworks.core
 						{
 							// PULL DATA FROM CLUSTER
 							gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
-									
-
-									// turn of all filters 
+							//gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
+							
+							
+							ts.gestureFilters = false
+							
+							
+									// turn of all filters  //------------- may also want to turn off when delta is already zero????
 									if(ts.gestureFilters){
 
 											///////////////////////////////////////////////////////////
@@ -326,8 +330,18 @@ package com.gestureworks.core
 													//}
 													
 											}
+											
+											
 										
 								}
+								
+								/////////////////////////////////////////////////////////////////////////////
+								//fill cahche
+								//////////////////////////////////////////////////////////////////////////////
+								// cache reset only when delta is non zero 
+								// otherwise cluster delta is zerod and cache zerod before cched value is pushed into gesure event
+								if(gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
+								//trace("pipeline end", gO.pOList[i].dList[j].gestureDeltaCache)
 								
 								///////////////////////////////////////////////////////////////////////////////////////////////
 								// END FILTER BLOCK
