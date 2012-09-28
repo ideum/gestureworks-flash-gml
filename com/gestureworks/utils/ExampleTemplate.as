@@ -18,12 +18,10 @@ package com.gestureworks.utils
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
-			trace("Example template added to stage.");
 			createHeader();
 		}
 		
 		public function createHeader():void {
-			trace("creating header");
 			var backPane:GraphicElement = new GraphicElement();
 			
 			backPane.shape = "rectangle";
