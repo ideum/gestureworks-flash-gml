@@ -469,7 +469,8 @@ package com.gestureworks.core
 						else if ((_targetObject is TouchSprite)||(_targetObject is TouchMovieClip))
 						{							
 							// ASSIGN PRIMARY CLUSTER TO TARGET
-							_targetObject.assignPoint(event);							
+							_targetObject.assignPoint(event);
+							_targetList[j].broadcastTarget = true;
 						}
 						
 						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
@@ -478,9 +479,10 @@ package com.gestureworks.core
 							assignPoint(event);
 							
 							//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-							for (var j:int = 0; j < _targetList.length; j++) 
+							for (var j:uint = 0; j < _targetList.length; j++) 
 							{
 								_targetList[j].assignPointClone(event);
+								_targetList[j].broadcastTarget = true;
 							}
 						}
 						
@@ -802,6 +804,19 @@ package com.gestureworks.core
 		* @private
 		*/
 		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
+		private var _transformGestureVector:Boolean = false;
+		/**
+		* Determins whether transformations are handled internally (natively) on the touchSprite.
+		*/
+		public function get transformGestureVector():Boolean{return _transformGestureVector;}
+		public function set transformGestureVector(value:Boolean):void
+		{
+			_transformGestureVector=value;
+		}
+		/**
+		* @private
+		*/
+		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
 		private var _disableAffineTransform:Boolean = true;
 		/**
 		* Determins whether internal (native) transformations are affine (dynamically centered) on the touchSprite.
@@ -926,6 +941,14 @@ package com.gestureworks.core
 		public function set gestureFilters(value:Boolean):void
 		{
 			_gestureFilters = value;
+		}
+		
+		// BROAD CASTING TEST
+		private var _broadcastTarget:Boolean = false;
+		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
+		public function set broadcastTarget(value:Boolean):void
+		{
+			_broadcastTarget = value;
 		}
 		
 	}

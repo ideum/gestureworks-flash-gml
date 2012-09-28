@@ -222,6 +222,8 @@ package com.gestureworks.core
 	*/
 	private function applyNativeTransform(affine:Boolean):void
 		{
+			
+			//if ((ts.parent) && (ts.transformGestureVector))
 			if (ts.parent)
 				{
 				//trace("native parent")
@@ -264,9 +266,35 @@ package com.gestureworks.core
 						t_x = trO.x;
 						t_y = trO.y;
 						}
-						dx = (ts.dx);
-						dy = (ts.dy);
+						//dx = (ts.dx);
+						//dy = (ts.dy);
+						dx = (trO.dx);
+						dy = (trO.dy);
 				}
+	
+				//var local_pt:Point = ts.globalToLocal(new Point(trO.x,trO.y));
+					//trO.localx = local_pt.x;
+					//trO.localy = local_pt.y;
+				
+				//var local_pt:Point = ts.globalToLocal(trO.x,trO.y);
+					//trO.localx = local_pt.x;
+					//trO.localy = local_pt.y;
+					
+				if(!ts.broadcastTarget){
+					//trO.localx = trO.x-ts.x;
+					//trO.localy = trO.y-ts.y;
+					trace("pad",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
+				}
+					
+					
+				// broadcast center of trans
+				else
+				{
+					t_x = trO.localx //+ ts.x;
+					t_y = trO.localy //+ ts.y;
+					trace("target",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
+				}
+				
 				///////////////////////////////////////////////////////////////////////////////////
 			
 				// leave scalar values untouched
@@ -362,7 +390,7 @@ package com.gestureworks.core
 		public function $applyTransform(affine:Boolean):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////
-				if (ts.parent)
+				if ((ts.parent)&&(ts.transformGestureVector))
 				{
 					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms

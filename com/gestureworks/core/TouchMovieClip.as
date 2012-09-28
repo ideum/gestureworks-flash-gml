@@ -916,7 +916,16 @@ package com.gestureworks.core
 	public function set gestureFilters(value:Boolean):void
 		{
 			_gestureFilters = value;
-		}	
+		}
+		
+		
+		// BROAD CASTING TEST
+		private var _broadcastTarget:Boolean = false;
+		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
+		public function set broadcastTarget(value:Boolean):void
+		{
+			_broadcastTarget = value;
+		}
 		
 	}
 }

@@ -162,6 +162,9 @@ package com.gestureworks.managers
 						tO.pointArray[i].id = i;
 					}
 					
+					// update broadcast state
+					if(tO.N == 0) tO.broadcastTarget = false;
+					
 					////////////////////////////////////////////////////////
 					//FORCES IMMEDIATE UPDATE ON TOUCH UP
 					//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
@@ -255,7 +258,7 @@ package com.gestureworks.managers
 		}
 		
 		
-	
+		/*
 		public static function updatePointObject(event:TouchEvent):void
 		{
 			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
@@ -266,7 +269,7 @@ package com.gestureworks.managers
 				pointObject.y = event.stageY;
 				pointObject.x = event.stageX;
 			}	
-		}
+		}*/
 		
 	}
 }

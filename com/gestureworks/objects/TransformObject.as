@@ -60,6 +60,29 @@ package com.gestureworks.objects
 			_z = value;
 		}
 		
+		
+		// localx---------------------
+		private var _localx:Number = 0;
+		public function get localx():Number
+		{
+			return _localx;
+		}
+		public function set localx(value:Number):void
+		{
+			_localx = value;
+		}
+		// localy---------------------
+		private var _localy:Number = 0;
+		public function get localy():Number
+		{
+			return _localy;
+		}
+		public function set localy(value:Number):void
+		{
+			_localy = value;
+		}
+		
+		
 		// radius---------------------
 		private var _radius:Number = 0;
 		public function get radius():Number
@@ -185,6 +208,7 @@ package com.gestureworks.objects
 		{
 			_rotationZ = value;
 		}
+		
 		/////////////////////////////////////////////////
 		// object properties
 		/////////////////////////////////////////////////

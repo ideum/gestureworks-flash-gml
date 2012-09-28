@@ -26,6 +26,8 @@ package com.gestureworks.core
 	
 	//import com.gestureworks.utils.NoiseFilter;
 	
+	import flash.geom.Point;
+	
 	/**
  * The TouchObject class is the base class for all touch enabled DisplayObjects. It
  * provides basic implementations for priortized gesture and touch processing as well as 
@@ -90,10 +92,7 @@ package com.gestureworks.core
 							// PULL DATA FROM CLUSTER
 							gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
 							//gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
-							
-							
-							ts.gestureFilters = false
-							
+
 							
 									// turn of all filters  //------------- may also want to turn off when delta is already zero????
 									if(ts.gestureFilters){
@@ -377,6 +376,7 @@ package com.gestureworks.core
 									
 						trO.x =	cO.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.y =	cO.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						
 						trO.width = cO.width
 						trO.height = cO.height
 						trO.radius = cO.radius
@@ -385,6 +385,12 @@ package com.gestureworks.core
 						trO.scaleY = cO.separationY
 						trO.rotation = cO.rotation
 						trO.orientation = cO.orientation
+						
+						
+						trO.localx =100//cO.x-ts.x; 
+						trO.localy =100//cO.y - ts.y; 
+						
+						//trace("pipeline");
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// map dynamic cluster deltas results into gesture object
