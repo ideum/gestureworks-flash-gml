@@ -5,8 +5,6 @@ package com.gestureworks.utils
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
-	[SWF(width = "1280", height = "720", backgroundColor = "0x000000", frameRate = "30")]
-	
 	public class ExampleTemplate extends Sprite 
 	{
 		
@@ -20,11 +18,12 @@ package com.gestureworks.utils
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
-			
+			trace("Example template added to stage.");
 			createHeader();
 		}
 		
-		private function createHeader():void {
+		public function createHeader():void {
+			trace("creating header");
 			var backPane:GraphicElement = new GraphicElement();
 			
 			backPane.shape = "rectangle";
