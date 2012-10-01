@@ -339,7 +339,10 @@ package com.gestureworks.core
 								//////////////////////////////////////////////////////////////////////////////
 								// cache reset only when delta is non zero 
 								// otherwise cluster delta is zerod and cache zerod before cched value is pushed into gesure event
-								if(gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
+								if ((!ts.gestureReleaseInertia) && (!gO.pOList[i].dList[j].release_inertia_filter)) // so that ineertia cache is not overwirtten by flick and swipe mechanism
+								{
+									if(gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
+								}
 								//trace("pipeline end", gO.pOList[i].dList[j].gestureDeltaCache)
 								
 								///////////////////////////////////////////////////////////////////////////////////////////////

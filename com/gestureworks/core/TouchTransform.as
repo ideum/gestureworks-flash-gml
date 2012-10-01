@@ -283,7 +283,7 @@ package com.gestureworks.core
 				if(!ts.broadcastTarget){
 					//trO.localx = trO.x-ts.x;
 					//trO.localy = trO.y-ts.y;
-					trace("pad",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
+					//trace("pad",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
 				}
 					
 					
@@ -292,7 +292,7 @@ package com.gestureworks.core
 				{
 					t_x = trO.localx //+ ts.x;
 					t_y = trO.localy //+ ts.y;
-					trace("target",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
+					//trace("target",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
 				}
 				
 				///////////////////////////////////////////////////////////////////////////////////
@@ -390,7 +390,9 @@ package com.gestureworks.core
 		public function $applyTransform(affine:Boolean):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////
-				if ((ts.parent)&&(ts.transformGestureVector))
+				//if ((ts.parent)&&(ts.transformGestureVector))
+				//{
+				if (ts.parent)
 				{
 					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms
