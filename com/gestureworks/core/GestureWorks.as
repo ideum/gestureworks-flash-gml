@@ -29,7 +29,7 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
-	import com.gestureworks.cml.core.CMLParser;
+	//import com.gestureworks.cml.core.CMLParser;
 
 
 	/**
@@ -164,12 +164,14 @@ package com.gestureworks.core
 		{
 			_gwComplete = value;
 			
+			
 			if (hasCML)
-			{				
+			{	
+				
 				try
 				{
 					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
-					CMLParser.instance;
+					//CMLParser.instance;
 					var tmp:Sprite = new CMLDisplay;
 					cmlDisplays.push(tmp);
 					addChild(tmp);
@@ -178,6 +180,7 @@ package com.gestureworks.core
 				{
 					throw new Error("CML has not been properly intialized");
 				}
+				
 			}
 			else
 			{

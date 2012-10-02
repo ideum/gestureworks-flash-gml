@@ -403,8 +403,8 @@ package com.gestureworks.core
 			
 				for (i=0; i < gn; i++) 
 					{
-						var dn:uint = gO.pOList[i].dList.length;
-						for (j=0; j < dn; j++) 
+						var dn1:uint = gO.pOList[i].dList.length;
+						for (j=0; j < dn1; j++) 
 							{
 							if (gO.pOList[i].dList[j].target_id)
 								{
