@@ -1,9 +1,10 @@
 package com.gestureworks.utils
 {
-	import com.gestureworks.cml.element.GraphicElement;
-	import com.gestureworks.cml.element.TextElement;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
 	public class ExampleTemplate extends Sprite 
 	{
@@ -22,15 +23,13 @@ package com.gestureworks.utils
 		}
 		
 		public function createHeader():void {
-			var backPane:GraphicElement = new GraphicElement();
 			
-			backPane.shape = "rectangle";
+			var backPane:Sprite = new Sprite();
 			
-			backPane.width = 450;
-			backPane.height = 700;
-			
-			backPane.color = 0x111111;
-			backPane.lineStroke = 0;
+			backPane.graphics.beginFill(0x111111, 1);
+			backPane.graphics.lineStyle(10);
+			backPane.graphics.drawRect(0, 0, 450, 700);
+			backPane.graphics.endFill();
 			
 			backPane.y = 10;
 			
@@ -38,39 +37,51 @@ package com.gestureworks.utils
 		}
 		
 		public function createTitle(value:String):void {
-			var title:TextElement = new TextElement();
+			var title:TextField = new TextField();
 			
 			title.text = value;
+			title.embedFonts = true;
+			
+			var titleFmt:TextFormat = new TextFormat();
+			titleFmt.font = "OpenSansBold";
+			titleFmt.bold = true;
+			titleFmt.size = 20;
+			titleFmt.color = 0xffffff;
+			
+			title.setTextFormat(titleFmt);
 			
 			title.x = 30;
 			title.y = 30;
-			title.fontSize = 20;
 			title.width = 400;
-			title.color = 0xffffff;
 			title.selectable = false;
-			title.font = "OpenSansBold";
 			
 			addChild(title);
 		}
 		
 		public function createDesc(value:String):void {
-			var desc:TextElement = new TextElement();
-			
+			var desc:TextField = new TextField();
+			desc.embedFonts = true;
+			desc.multiline = true;
+			desc.wordWrap = true;
 			desc.htmlText = value;
 			
 			desc.x = 30;
 			desc.y = 60;
 			
-			desc.color = 0xffffff;
-			desc.fontSize = 16;
+			var descFmt:TextFormat = new TextFormat();
+			
+			descFmt.color = 0xffffff;
+			descFmt.size = 16;
+			
+			desc.selectable = false;
+			descFmt.align = TextFormatAlign.JUSTIFY;
+			descFmt.font = "OpenSansRegular";
+			descFmt.leading = -4.5;
+			
 			desc.width = 400;
 			desc.height = 1000;
-			desc.wordWrap = true;
-			desc.multiline = true;
-			desc.selectable = false;
-			desc.textAlign = "justify";
-			desc.font = "OpenSansRegular";
-			desc.leading = -4.5;
+			
+			desc.setTextFormat(descFmt);
 			
 			addChild(desc);
 		}
