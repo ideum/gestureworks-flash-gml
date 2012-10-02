@@ -628,8 +628,8 @@ package com.gestureworks.core
 			// start OBJECT complete event gesturing
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
-				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, gO.id));
-				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, gO.id));
+				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
+				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
 				gO.start = false;
 				//trace("start fired");
 			}
@@ -651,8 +651,8 @@ package com.gestureworks.core
 			// gesture OBJECT release gesture
 			if ((gO.release)&&(ts.gestureEventRelease))
 			{
-				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
-				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, gO.id));
+				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
+				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
 				gO.release = false;
 				//trace("release fired");
 			}
@@ -660,8 +660,8 @@ package com.gestureworks.core
 			// gesture OBJECT complete event
 			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
-				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, gO.id));
+				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE,{id:gO.id}));
+				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id}));
 				gO.complete = false;
 				//trace("complete fired");
 			}

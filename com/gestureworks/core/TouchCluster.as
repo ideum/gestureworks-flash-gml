@@ -64,6 +64,7 @@ package com.gestureworks.core
 			
 			gO = ts.gO;
 			cO = ts.cO;
+			tiO = ts.tiO;
 			
 			initCluster();
           }
@@ -642,29 +643,29 @@ package com.gestureworks.core
 				// point added to cluster
 				if (cO.point_add)
 				{
-						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, cO.n));
-						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, cO.n));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, {n:cO.n, id:"bob"}));
+						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_POINT_ADD, {n:cO.n}));
 						cO.point_add = false;
 				}
 				// point removed cluster
 				if (ts.cO.point_remove) 
 				{
-						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, cO.n));
-						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, cO.n));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, {n:cO.n}));
+						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_POINT_REMOVE, {n:cO.n}));
 						ts.cO.point_remove = false;
 				}
 				// cluster add
 				if (ts.cO.remove)
 				{
-						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_REMOVE, cO.id));
-						if((tiO.timelineOn)&&(tiO.clusterEvents))ts.tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_REMOVE, cO.id));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_REMOVE, {id:cO.id}));
+						if((tiO.timelineOn)&&(tiO.clusterEvents))ts.tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_REMOVE,  {id:cO.id}));
 						ts.cO.remove = false;
 				}
 				// cluster remove
 				if (ts.cO.add) 
 				{
-						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ADD, cO.id));
-						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ADD, cO.id));
+						ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ADD, {id:cO.id}));
+						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ADD,  {id:cO.id}));
 						cO.add = false;
 				}	
 		}

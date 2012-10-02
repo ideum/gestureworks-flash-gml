@@ -43,8 +43,7 @@ import flash.events.Event;
 		public function GWClusterEvent(type:String, data:Object, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-
-			value=data;
+			value = data;
 		}
 
 		override public function clone():Event

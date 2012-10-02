@@ -526,6 +526,7 @@ package com.gestureworks.utils.debug
 		dsy = clusterObject.dsy
 		dtheta = clusterObject.dtheta / 4;
 		
+		//hist = clusterObject.history.length 
 		
 		//NEED A BETTER GLOBAL POSITIONING SYSTEM FOR DEBUG
 		dist = (_r + displayRadius) * (1 / Math.sqrt(2));
@@ -649,8 +650,14 @@ package com.gestureworks.utils.debug
 					line_cluster_delta.graphics.lineStyle(1, dx_color, 1);
 					line_cluster_delta.graphics.moveTo(0, h0 / 2);
 					
+					if (clusterObject.history.length < 60) hist = clusterObject.history.length 
+					else hist = 60;
+					
+					
 					for (q = 0; q < hist; q++) {
-						if (clusterObject.history[q+1]) 
+						
+						//trace(clusterObject.history.length, hist,q)
+						if (q+1<hist-1) 
 						{
 							y0 = yscale * clusterObject.history[q].dx
 							y1 = yscale * clusterObject.history[q + 1].dx
@@ -674,7 +681,8 @@ package com.gestureworks.utils.debug
 					line_cluster_delta.graphics.moveTo(0, h0 *0.5);
 					
 					for (q = 0; q < hist; q++) {
-						if (clusterObject.history[q+1]) 
+						//if (clusterObject.history[q+1]) 
+						if (q+1<hist) 
 						{
 							y0 = yscale * clusterObject.history[q].dy
 							y1 = yscale * clusterObject.history[q + 1].dy
@@ -698,7 +706,8 @@ package com.gestureworks.utils.debug
 					line_cluster_delta.graphics.moveTo(0, h0*0.5);
 					
 					for (q = 0; q < hist; q++) {
-						if (clusterObject.history[q+1]) 
+						//if (clusterObject.history[q + 1]) 
+						if (q+1<hist) 
 						{
 							y0 = yscale * clusterObject.history[q].dsx 
 							y1 = yscale * clusterObject.history[q + 1].dsx
@@ -722,7 +731,8 @@ package com.gestureworks.utils.debug
 					line_cluster_delta.graphics.moveTo(0, h0 *0.5);
 					
 					for (q = 0; q < hist; q++) {
-						if (clusterObject.history[q+1]) 
+						//if (clusterObject.history[q + 1]) 
+						if (q+1<hist) 
 						{
 							y0 = yscale * clusterObject.history[q].dsy
 							y1 = yscale * clusterObject.history[q + 1].dsy
@@ -746,7 +756,8 @@ package com.gestureworks.utils.debug
 					line_cluster_delta.graphics.moveTo(0, h0*0.5);
 					
 					for (q = 0; q < hist; q++) {
-						if (clusterObject.history[q+1]) 
+						//if (clusterObject.history[q + 1]) 
+						if (q+1<hist) 
 						{
 							y0 = yscale * clusterObject.history[q].dtheta 
 							y1 = yscale * clusterObject.history[q + 1].dtheta

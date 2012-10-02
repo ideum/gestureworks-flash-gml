@@ -42,6 +42,9 @@ package com.gestureworks.utils.debug
 		private var i:String;
 		private var j:String;
 		
+		private var key:uint;
+		private var DIM:uint;
+		
 		private var gestureEventList:Array;
 	
 		
@@ -327,19 +330,28 @@ package com.gestureworks.utils.debug
 		var gestureString:String = "";
 		gestureEventList = new Array();
 		
+		
+		
+		var n:uint = ts.gO.pOList.length;
 		// look for active gestures
-			for (i in ts.gO.pOList)
+			
+			for (key = 0; key < n; key++)
+			//for (i in ts.gO.pOList)
 				{
 					var traceGesture:Boolean = false;
+					var dn:uint = ts.gO.pOList[key].dList.length;
 					
-					for (j in ts.gO.pOList[i])
+					for (DIM = 0; DIM < dn; DIM++)
+					//for (j in ts.gO.pOList[i])
 					{
-						if ((ts.gO.pOList[i][j] is DimensionObject) && (ts.gO.pOList[i][j].gestureDelta != 0)) traceGesture = true;
+						//if ((ts.gO.pOList[i][j] is DimensionObject) && (ts.gO.pOList[i]dList[j].gestureDelta != 0)) traceGesture = true;
+						if (ts.gO.pOList[key].dList[DIM].gestureDelta != 0) traceGesture = true;
 					}
-					if (traceGesture) gestureEventList.push(i);
+					if (traceGesture) gestureEventList.push(ts.gO.pOList[key].gesture_id);
+					
 					traceGesture = false;
 					
-					//trace("--");
+					//trace("--",key);
 				}
 		// remove duplicate entries for gestures with multitple properties
 		removeDuplicate(gestureEventList);
