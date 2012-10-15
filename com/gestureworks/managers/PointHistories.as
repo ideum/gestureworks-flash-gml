@@ -82,6 +82,7 @@ package com.gestureworks.managers
 					pt.y = event.localY;
 					pt.dx = event.localX - point.history[0].x;
 					pt.dy = event.localY - point.history[0].y;
+					//trace(pt.x,pt.y,pt.dx,pt.dy);
 				}
 				else
 				{
@@ -89,6 +90,8 @@ package com.gestureworks.managers
 					pt.y = event.stageY;
 					pt.dx = event.stageX - point.history[0].x;
 					pt.dy = event.stageY - point.history[0].y;
+					// NO SUB-PIXEL RESOLUTION
+					//trace(pt.x,pt.y,pt.dx,pt.dy,event.stageX,event.stageY);
 				}	
 				//trace(pt.dx,pt.dy,event.stageY,point.history[0].y,point.history[1].y,point.history[3].y)
 			}

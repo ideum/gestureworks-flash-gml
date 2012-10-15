@@ -145,28 +145,31 @@ package com.gestureworks.utils.debug
 	
 public function setStyles():void
 	{
-		cml = new XMLList(CML.Objects)
-		var numLayers:int = cml.DebugKit.DebugLayer.length()
-		
-		for (var i:int = 0; i < numLayers; i++) {
-			var type:String = String(cml.DebugKit.DebugLayer[i].attribute("type"));
-			var path:Object = cml.DebugKit.DebugLayer[i]
-		
-			if (type == "point_shapes") {
-				//trace("point display style");
-				if (path.attribute("stroke_thickness")!=undefined) 	style.stroke_thickness = int(path.attribute("stroke_thickness"))//3;
-				if (path.attribute("stroke_color")!=undefined)		style.stroke_color = String(path.attribute("stroke_color"))//0xFFFFFF;
-				if (path.attribute("stroke_alpha")!=undefined) 		style.stroke_alpha = Number(path.attribute("stroke_alpha"))//1;
-				if (path.attribute("fill_color")!=undefined) 		style.fill_color = String(path.attribute("fill_color"))//0xFFFFFF;
-				if (path.attribute("fill_alpha")!=undefined) 		style.fill_alpha = Number(path.attribute("fill_alpha"))//1;
-				if (path.attribute("fill_type")!=undefined) 		style.fill_type = String(path.attribute("fill_type"))//"solid";
-				if (path.attribute("shape")!=undefined) 			style.shape = String(path.attribute("shape"))//"circle-fill";
-				if (path.attribute("radius")!=undefined) 			style.radius = Number(path.attribute("radius"))//20;
-				if (path.attribute("height")!=undefined) 			style.height = Number(path.attribute("height"))//20;
-				if (path.attribute("width")!=undefined) 			style.width = Number(path.attribute("width"))//20;
-				if (path.attribute("filter")!=undefined) 			style.filter = String(path.attribute("filter"))//"glow";
-				
-				//trace(obj.filter)
+		if (CML.Objects != null)
+		{
+			cml = new XMLList(CML.Objects)
+			var numLayers:int = cml.DebugKit.DebugLayer.length()
+			
+			for (var i:int = 0; i < numLayers; i++) {
+				var type:String = String(cml.DebugKit.DebugLayer[i].attribute("type"));
+				var path:Object = cml.DebugKit.DebugLayer[i]
+			
+				if (type == "point_shapes") {
+					//trace("point display style");
+					if (path.attribute("stroke_thickness")!=undefined) 	style.stroke_thickness = int(path.attribute("stroke_thickness"))//3;
+					if (path.attribute("stroke_color")!=undefined)		style.stroke_color = String(path.attribute("stroke_color"))//0xFFFFFF;
+					if (path.attribute("stroke_alpha")!=undefined) 		style.stroke_alpha = Number(path.attribute("stroke_alpha"))//1;
+					if (path.attribute("fill_color")!=undefined) 		style.fill_color = String(path.attribute("fill_color"))//0xFFFFFF;
+					if (path.attribute("fill_alpha")!=undefined) 		style.fill_alpha = Number(path.attribute("fill_alpha"))//1;
+					if (path.attribute("fill_type")!=undefined) 		style.fill_type = String(path.attribute("fill_type"))//"solid";
+					if (path.attribute("shape")!=undefined) 			style.shape = String(path.attribute("shape"))//"circle-fill";
+					if (path.attribute("radius")!=undefined) 			style.radius = Number(path.attribute("radius"))//20;
+					if (path.attribute("height")!=undefined) 			style.height = Number(path.attribute("height"))//20;
+					if (path.attribute("width")!=undefined) 			style.width = Number(path.attribute("width"))//20;
+					if (path.attribute("filter")!=undefined) 			style.filter = String(path.attribute("filter"))//"glow";
+					
+					//trace(obj.filter)
+				}
 			}
 		}
 	}

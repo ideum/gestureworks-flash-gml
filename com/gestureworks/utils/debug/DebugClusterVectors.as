@@ -21,13 +21,19 @@ package com.gestureworks.utils.debug
 	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	
+	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.StrokeObject;
 
 	public class DebugClusterVectors extends Shape
 	{
 		private static var cml:XMLList;
 		private var obj:Object;
-		private var clusterObject:Object;
+		private var clusterObject:ClusterObject;
+		private var strokeObject:StrokeObject;
+		//private var pointList:Vector.<PointObject>;
 		private var pointList:Object;
+		
 		private var path_data:Array = new Array();
 		private var N:int;
 		private var touchObjectID:int = 0;
@@ -42,6 +48,7 @@ package com.gestureworks.utils.debug
 			
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
 			clusterObject = ts.cO
+			strokeObject = ts.sO
 			
 			hist = 15;
 
@@ -70,7 +77,8 @@ package com.gestureworks.utils.debug
 	{
 		//trace("drawing point vectors");
 		
-		path_data = clusterObject.path_data 
+		//path_data = clusterObject.path_data 
+		path_data = strokeObject.path_data 
 		pointList = clusterObject.pointArray
 		N = pointList.length
 
@@ -79,7 +87,7 @@ package com.gestureworks.utils.debug
 		
 		//if(obj.displayOn=="true"){
 			
-		for (var i:int = 0; i < N; i++) 
+		for (var i:uint = 0; i < N; i++) 
 			{
 			var available:Boolean
 			
@@ -97,7 +105,7 @@ package com.gestureworks.utils.debug
 			if (obj.shape == "curve") {
 					if (available) {
 
-						for (var j:int = 0; j < hist; j++) 
+						for (var j:uint = 0; j < hist; j++) 
 						{
 							if (j + 1 <= hist) {
 								obj.stroke_alpha = 0.08 * (hist - j)
@@ -111,7 +119,7 @@ package com.gestureworks.utils.debug
 			if (obj.shape == "ring") {
 					if (available) {
 						
-						for (var k:int = 0; k < hist; k++) 
+						for (var k:uint = 0; k < hist; k++) 
 						{
 							obj.stroke_alpha = 0.08 * (hist - j)
 							graphics.lineStyle(obj.stroke_thickness, obj.stroke_color,obj.stroke_alpha);
@@ -123,7 +131,7 @@ package com.gestureworks.utils.debug
 			if (obj.shape == "square") {
 					if (available) {
 						
-						for (var l:int = 0; l < hist; l++) 
+						for (var l:uint = 0; l < hist; l++) 
 						{
 							obj.stroke_alpha = 0.08 * (hist - j)
 							graphics.lineStyle(obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
@@ -131,31 +139,41 @@ package com.gestureworks.utils.debug
 						}
 					}
 				}
+				
+				
+				///////////////////////////////////////////////////////////////////////////////////////
 				/*
+				// draw stroke
 				if((N)&&(path_data[0])){
-				// draw srtoke
+				
 				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
 				
 					graphics.moveTo(path_data[0].x, path_data[0].y)
 					graphics.lineStyle(obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
 					
-					for (var p:int = 0; p < path_data.length ; p++) 
+					for (var p:uint = 0; p < path_data.length ; p++) 
 					{
 						graphics.lineTo(path_data[p].x, path_data[p].y);
 					}
 					
 					// reference path
-					var ref_path:Array = ts.gO.pOList["stroke"].path
-					graphics.moveTo(ref_path[0].x, ref_path[0].y)
-					graphics.lineStyle(obj.stroke_thickness, 0xFF0000, obj.stroke_alpha);
+					var gn:uint = ts.gO.pOList.length
 					
-					for (var q:int = 0; q < ref_path.length ; q++) 
+					for (var b:uint = 0; b < gn; b++ )
 					{
-						graphics.lineTo(ref_path[q].x, ref_path[q].y);
-					}
+						var ref_path:Array = ts.gO.pOList[b].gmlPath
+						//var ref_path:Array = ts.cO.path_data;
 					
-				}
-				*/
+						graphics.moveTo(ref_path[0].x, ref_path[0].y+150*b)
+						graphics.lineStyle(obj.stroke_thickness, 0xFF0000, obj.stroke_alpha);
+					
+						for (var q:uint = 0; q < ref_path.length ; q++) 
+						{
+							graphics.lineTo(ref_path[q].x, ref_path[q].y+150*b);
+						}
+					}
+				}*/
+				///////////////////////////////////////////////////////////////////////////////////////
 		}
 	
 public function clear():void

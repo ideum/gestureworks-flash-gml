@@ -78,8 +78,12 @@ package com.gestureworks.utils
 									"tap":true,   
 									"double_tap":true,  
 									"triple_tap":true,
+									"manipulate":true,
 									"stroke":true,
-									"manipulate":true
+									"stroke_letter":true,
+									"stroke_greek":true,
+									"stroke_shape":true,
+									"stroke_symbol":true
 									};			
 
 						// re-set gesture processing rate
@@ -111,14 +115,17 @@ package com.gestureworks.utils
 						for (var g:int = 0; g < gestureSetNum; g++) 
 							{
 						
-						var gestureNum:int = gml.Gesture_set[g].Gesture.length();
-						
+							var gestureNum:int = gml.Gesture_set[g].Gesture.length();
+							
+							
 						
 							for (var i:int = 0; i < gestureNum; i++) 
 							{
 								var gesture_id:String = String(gml.Gesture_set[g].Gesture[i].attribute("id"));
+								var gesture_set_id:String = String(gml.Gesture_set[g].attribute("id"));
 								var propertyNum:int = int(gml.Gesture_set[g].Gesture[i].analysis.algorithm.returns.property.length());
 								
+								//trace(gesture_set_id)
 								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 								// properties of the gesture 
 								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,8 +137,8 @@ package com.gestureworks.utils
 								// 	for all gestures listed for touchspriteID
 								for (key in gestureList)
 								{
-								// check for key match in gml
-								if (gesture_id == key)
+								// check for key match in gml // gesture sets set match
+								if ((gesture_id == key)||(gesture_set_id == key)) 
 								{	
 									var gtype:String = String(gml.Gesture_set[g].Gesture[i].attribute("type"));
 									
@@ -178,6 +185,9 @@ package com.gestureworks.utils
 												
 												gO.timer_count = 0;
 												
+												////////////////////////////////////////////////////////////////////////////////////////////////////////
+												// match critera
+												////////////////////////////////////////////////////////////////////////////////////////////////////////
 												// if initial action defined
 													if (gml.Gesture_set[g].Gesture[i].match.action.initial)
 													{
@@ -203,9 +213,108 @@ package com.gestureworks.utils
 														}
 													}
 												
+											//trace(gO.n,gO.nMin,nMax)
 											
-								
+											// if initial conditions
+											if (gml.Gesture_set[g].Gesture[i].match.action.initial)
+													{
+														// if point action defined
+														if (gml.Gesture_set[g].Gesture[i].match.action.initial.point)
+														{
+															///////////////////////////////
+															// set point action thresholds
+															///////////////////////////////
+															gO.point_event_duration_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("event_duration_min"));
+															gO.point_event_duration_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("event_duration_max"));
+															gO.point_interevent_duration_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("interevent_duration_min"));
+															gO.point_interevent_duration_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("interevent_duration_max"));
+															gO.point_translation_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("translation_min"));
+															gO.point_translation_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("translation_max"));
+															gO.point_acceleration_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("acceleration_min"));
+															gO.point_acceleration_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("acceleration_max"));
+															
+															//pOList[gesture_id].point_jolt_threshold = Number(gml.Gesture_set[0].Gesture[i].match.action.initial.point.points.attribute("jolt_threshold"));
+															
+															/////////////////////////////////////////
+															// set path data
+															/////////////////////////////////////////
+															//pOList[gesture_id].path = String(gml.Gesture_set[0].Gesture[i].match.action.initial.point.attribute("path"));
+															var path_string_svg:String = String(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("path_svg"));
+															var path_string_pts:String = String(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("path_pts"));
+															
+															/*
+															if (path_string_svg) 
+															{
+															//trace("parse svg path");
+															var pathArray:Array = new Array();
+															var stringArray:Array = path_string_svg.split("L"); 												
+																													
+																for(var m:int=0; m<stringArray.length;m++)
+																{
+																	var coordArray:Array = stringArray[m].split(" "); 
+																	pathArray[m] = new Point(coordArray[1],coordArray[2]);
+																}
+																pOList[gesture_id].path = pathArray
+															}*/
+															
+															
+															if (path_string_pts) 
+															{
+															//trace("parse pt path");
+															var pathArray:Array = new Array();
+															var stringArray:Array = path_string_pts.split(","); 												
+															var ln:uint = stringArray.length;
+															// debug
+															/*
+															for (var c:uint = 0; c < stringArray.length; c++)
+															{	
+																trace("raw:",stringArray[c])
+															}
+															trace("length",stringArray.length);
+															*/
+															
+															for(var m:int=0; m<ln;m=m+2)
+																{
+																	//trace(stringArray[m],stringArray[m+1])
+																	
+																	var xsp:Array= stringArray[m].split("(x=");
+																	var ysp:Array = stringArray[m + 1].split("y=");
+																	var ysp_sp:Array = ysp[1].split(")")
+																//trace(xsp[1], ysp_sp[0])
+																	var x:Number = 200*xsp[1];
+																	var y:Number = 200*ysp_sp[0];
+
+																	pathArray.push(new Point(x,y));
+																}
+																gO.gmlPath = pathArray
+															}
+														}
+														
+														//////////////////////////
+														// cluster properties
+														//////////////////////////
+														if (gml.Gesture_set[g].Gesture[i].match.action.initial.cluster)
+														{
+															gO.cluster_translation_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("translation_min"));
+															gO.cluster_translation_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("translation_max"));
+														
+															gO.cluster_rotation_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("rotation_min"));
+															gO.cluster_rotation_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("rotation_max"));
+															
+															gO.cluster_separation_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("separation_min"));
+															gO.cluster_separation_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("separation_max"));
+															
+															gO.cluster_acceleration_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("acceleration_min"));
+															gO.cluster_acceleration_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("acceleration_max"));
+														}
+		
+													}
+											
+											
+											/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 											//ALGORITHM SPEC
+											/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+											
 											gO.algorithm = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.library.attribute("module"));
 											gO.algorithm_class = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.attribute("class"));
 											gO.algorithm_type = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.attribute("type"));
@@ -233,30 +342,22 @@ package com.gestureworks.utils
 													var varNum:uint = uint(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables.length());
 													for (var k:int = 0; k < varNum; k++) 
 													{
-														/*
-														var varObj:Object = new Object(); ;
-															varObj["return"] = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("return"));
-															varObj["var"] = String(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var"));
-															varObj["min"] = Number(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_min"));
-															varObj["max"] = Number(gml.Gesture_set[0].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"));
-														//dO.property_vars[k] = varObj;*/
-														
 														var variable:Object = new Object();
-															variable["return"] = new Object();
 															variable["return"] = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("return"));
-															variable["var"] = new Object();
 															variable["var"] = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var"));
-															variable["min"] = new Object();
-															variable["min"] = Number(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_min"));
-															variable["max"] = new Object();
-															variable["max"] = Number(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"));
-														dO.property_vars[k] = variable;
+															variable["min"] = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_min"));
+															variable["max"] = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"));
 														
-														trace(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"))
+															
+															if (variable["min"] == "") variable["min"] = null;
+															if (variable["max"] == "") variable["max"] = null;
+
+														dO.property_vars[k] = variable;
+														//trace(gml.Gesture_set[g].Gesture[i].analysis.algorithm.variables[k].property[j].attribute("var_max"), variable["max"],dO.property_vars[k]["max"])
 													}
 									
 														
-													
+													/*
 													if (gml.Gesture_set[g].Gesture[i].match.action.initial)
 													{
 														// if point action defined
@@ -288,20 +389,9 @@ package com.gestureworks.utils
 															var path_string_svg:String = String(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("path_svg"));
 															var path_string_pts:String = String(gml.Gesture_set[g].Gesture[i].match.action.initial.point.attribute("path_pts"));
 															
-															/*
-															if (path_string_svg) 
-															{
-															//trace("parse svg path");
-															var pathArray:Array = new Array();
-															var stringArray:Array = path_string_svg.split("L"); 												
-																													
-																for(var m:int=0; m<stringArray.length;m++)
-																{
-																	var coordArray:Array = stringArray[m].split(" "); 
-																	pathArray[m] = new Point(coordArray[1],coordArray[2]);
-																}
-																pOList[gesture_id].path = pathArray
-															}*/
+															
+															
+															
 															
 															
 															if (path_string_pts) 
@@ -351,7 +441,7 @@ package com.gestureworks.utils
 		
 													}
 													
-													
+													*/
 													
 													////////////////////////////////////////////////////////////////////////////////////////////
 													// FILTER BLOCK
@@ -459,6 +549,7 @@ package com.gestureworks.utils
 											//////////////////////////////////////////////////////////////////////////////////
 											//////////////////////////////////////////////////////////////////////////////////
 									}
+									
 								}
 							} // gestures
 						}// gesture sets

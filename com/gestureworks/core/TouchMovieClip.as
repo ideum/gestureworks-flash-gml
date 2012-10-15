@@ -40,15 +40,14 @@ package com.gestureworks.core
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	
 	import com.gestureworks.utils.GestureParser;
 	import com.gestureworks.utils.MousePoint;
-	
 	import com.gestureworks.events.GWGestureEvent;
-	
 	import com.gestureworks.utils.Simulator;
 	
 	import org.tuio.TuioTouchEvent;
@@ -83,6 +82,7 @@ package com.gestureworks.core
 		
 		// internal public 
 		public var cO:ClusterObject;
+		public var sO:StrokeObject;
 		public var gO:GestureListObject;
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
@@ -129,6 +129,11 @@ package com.gestureworks.core
 						cO = new ClusterObject();
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
+				
+						
+						// create new stroke object
+						sO = new StrokeObject();
+							sO.id = touchObjectID;
 						
 						/////////////////////////////////////////////////////////////////////////
 						// CREATERS A NEW GESTURE OBJECT
@@ -925,6 +930,17 @@ package com.gestureworks.core
 		public function set broadcastTarget(value:Boolean):void
 		{
 			_broadcastTarget = value;
+		}
+		
+		public function updateTObjProcessing():void
+		{
+			if (tc) tc.updateClusterAnalysis();
+			if (tp) tp.processPipeline();
+			if (tg) tg.manageGestureEventDispatch();
+			if (tt){
+				tt.transformManager();
+				tt.updateLocalProperties();
+			}
 		}
 		
 	}

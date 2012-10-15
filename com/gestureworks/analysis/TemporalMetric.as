@@ -462,16 +462,20 @@ package com.gestureworks.analysis
 						//ts.gO.pOList[key].y = spt2.y;
 						//ts.gO.pOList[key].n = dtapEventCount;
 						
-						for (DIM=0; DIM < ddn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
-						
+						var dd:Object = new Object();
+								dd["x"] = spt2.x;
+								dd["y"] = spt2.y;
+								dd["n"] = dtapEventCount;
+								
+						// default x and y		
 						ts.gO.pOList[key].data.x = spt2.x;
 						ts.gO.pOList[key].data.y = spt2.y;
 						
-						//ts.gO.pOList[key].dList["double_tap_x"].gestureDelta = spt2.x;
-						//ts.gO.pOList[key].dList["double_tap_y"].gestureDelta = spt2.y;
-						//ts.gO.pOList[key].dList["double_tap_n"].gestureDelta = dtapEventCount
+						for (DIM = 0; DIM < ddn; DIM++) {
+							//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
+							ts.gO.pOList[key].dList[DIM].gestureDelta = dd[ts.gO.pOList[key].dList[DIM].property_result];
+						}
 						
-						//trace("dtap",spt2.x,spt2.y,dtapEventCount)
 						}
 					}
 		}
@@ -540,69 +544,31 @@ package com.gestureworks.analysis
 							//-ts.dispatchEvent(nttap_event);
 							
 							//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(nttap_event);
+						
+						var td:Object = new Object();
+								td["x"] = spt3.x;
+								td["y"] = spt3.y;
+								td["n"] = ttapEventCount;	
 							
 						// over write gesture object properties
-						//ts.gO.pOList[key].n = ttapEventCount;
+						
 						//ts.gO.pOList[key].gestureID = nttapID;
 						ts.gO.pOList[key].activeEvent = true;
-						
-						for (DIM=0; DIM < tdn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
-						
-						// map to gesture object
 						ts.gO.pOList[key].data.x = spt3.x;
 						ts.gO.pOList[key].data.y = spt3.y;
-						//ts.gO.pOList[key].n = ttapEventCount;
 						
-						//ts.gO.pOList[key].dList["triple_tap_x"].gestureDelta = spt3.x;
-						//ts.gO.pOList[key].dList["triple_tap_y"].gestureDelta = spt3.y;
-						//ts.gO.pOList[key].dList["triple_tap_n"].gestureDelta = ttapEventCount
+						for (DIM = 0; DIM < tdn; DIM++) {
+							//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
+							ts.gO.pOList[key].dList[DIM].gestureDelta = td[ts.gO.pOList[key].dList[DIM].property_result];
+						}
+						
+					
 					}
 				}
 				
 				//trace("gesture block----------------------------------------------------------------")
 		}
 		
-		// stroke analysis
-		public function findStrokeGesture(key:int):void
-		{
-			var path:String = ts.gO.pOList[key].path;
-			var path_match:Boolean = ts.gO.pOList[key].path_match;
-			var N:int = ts.gO.pOList[key].n;
-			
-			trace("ref data",key, N, path_match, path);
-			///////////////////////////////////
-			// compare to captured path
-			///////////////////////////////////
-			//trace("capturePath", ts.cO.history[0].path_data.length, ts.cO.history[0].path_data)
-			//trace("capturePath", ts.cO.history[0].path_data.length, ts.cO.history[0].path_data)
-			
-			//trace(ts.cO.history[0].path_data)
-			trace(ts.cO.path_data)
-			
-			
-			//////////////////////////////////////////////////////////
-			// gesture stroke
-			//////////////////////////////////////////////////////////
-							/*
-					if (gO.pOList[key].gesture_type == "stroke")
-								{
-										gesture_disc.findStrokeGesture(key);
-										
-										var stroke_threshold:Number = 0.90;
-										var stroke_prob:Number = ts.gO.pOList[key].path_match;
-										
-										if (stroke_prob>stroke_threshold)
-										{
-											//trace("stroke event");
-											//var Gevent:GWGestureEvent = new GWGestureEvent(GWGestureEvent.STROKE, {n:N, probability:stroke_prob});
-											//dispatchEvent(Gevent);
-											//if((tiO.timelineOn)&&(tiO.gestureEvents))tiO.frame.gestureEventArray.push(Gevent);
-											
-											ts.gO.pOList[key].activeEvent = true;
-										}
-								}*/
-		
-		}
 		
 		public function findTimelineGestures():void
 		{

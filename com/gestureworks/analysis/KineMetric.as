@@ -322,6 +322,9 @@ package com.gestureworks.analysis
 						//trace("cluster",hold_x,hold_y,LN,N)
 		}
 		
+		
+
+		
 		public function findMeanInstTransformation():void
 		{
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -555,7 +558,7 @@ package com.gestureworks.analysis
 			cO.etm_dx = 0;
 			cO.etm_dy = 0;
 			
-			var t:uint = 6;
+			var t:Number = 2;
 			var t0:Number = 1 /t;
 					
 			for (i = 0; i < N; i++) 
@@ -569,8 +572,8 @@ package com.gestureworks.analysis
 						}
 					}
 			}
-			cO.etm_dx *= k0 * t0;
-			cO.etm_dy *= k0 * t0;
+			//cO.etm_dx *= k0 * t0;
+			//cO.etm_dy *= k0 * t0;
 
 		} 
 		
@@ -582,8 +585,10 @@ package com.gestureworks.analysis
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			cO.etm_ddx = 0;
 			cO.etm_ddy = 0;
+			
+			
 				
-			var t:uint = 6;
+			var t:Number = 2;
 			var t0:Number = 1 /t;
 						
 				for (i = 0; i < N; i++) 
@@ -594,13 +599,16 @@ package com.gestureworks.analysis
 							// second diff of x anf y wrt t
 							for (j = 0; j < t; j++) 
 							{
-								cO.etm_ddx += pointList[i].history[j].dx - pointList[i].history[j+1].dx;
-								cO.etm_ddy += pointList[i].history[j].dy - pointList[i].history[j+1].dy;
+								cO.etm_ddx += pointList[i].history[j+1].dx- pointList[i].history[j].dx;
+								cO.etm_ddy += pointList[i].history[j + 1].dy -pointList[i].history[j].dy ;
+								//cO.etm_ddx += pointList[i].history[0].dx - pointList[i].history[1].dx;
+								//cO.etm_ddy += pointList[i].history[0].dy - pointList[i].history[1].dy;
 							}
 						}
 					}
-			cO.etm_ddx *= k0 * t0;
-			cO.etm_ddy *= k0 * t0;
+					trace(k0, t0);
+			//cO.etm_ddx *= k0 * t0;
+			//cO.etm_ddy *= k0 * t0;
 		}
 		
 		public function findInstOrientation():void 

@@ -57,16 +57,16 @@ package com.gestureworks.events
 		
 		// vector-metric
 		public static var STROKE:String = "stroke";
-		//public static var STROKE_LETTER:String = "letter";
-		//public static var STROKE_GREEK:String = "greek";
-		//public static var STROKE_SYMBOL:String = "symbol";
-		//public static var STROKE_SHAPE:String = "shape";
-		//public static var STROKE_NUMBER:String = "number";
+		public static var STROKE_LETTER:String = "stroke_letter";
+		public static var STROKE_GREEK:String = "stroke_greek";
+		public static var STROKE_SYMBOL:String = "stroke_symbol";
+		public static var STROKE_SHAPE:String = "stroke_shape";
+		public static var STROKE_NUMBER:String = "stroke_number";
+		
 		
 		////////////////////////////////////////////////////////////
 		// serial gestures (anchor)// HOLD + TAP
 		////////////////////////////////////////////////////////////
-		
 		//public static var HOLD_TAP:String = "hold_tap";
 		//public static var HOLD_FLICK:String = "hold_drag";
 		//public static var HOLD_ROTATE:String = "hold_rotate";

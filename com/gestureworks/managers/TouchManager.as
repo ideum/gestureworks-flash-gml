@@ -252,9 +252,11 @@ package com.gestureworks.managers
 				// THERFOR CLUSTER ANALYSIS IS N SPECICIFC AND SELF MAMANGED SWITCHING
 				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
 				
-				tO.updateClusterAnalysis(); // cluster count is in cluster analysis
-				tO.updateGesturePipeline();
-				tO.updateTransformation();
+				//tO.updateClusterAnalysis(); // cluster count is in cluster analysis
+				//tO.updateGesturePipeline();
+				//tO.updateTransformation();
+				
+				tO.updateTObjProcessing();
 		}
 		
 		

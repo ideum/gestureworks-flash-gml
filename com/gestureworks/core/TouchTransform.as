@@ -545,7 +545,6 @@ package com.gestureworks.core
 					//var modifier:Matrix = new Matrix();
 					//var modifier:Matrix = ts.transform.matrix;
 					///////////////////////////////////////////////////////////////////////////////
-					// DISAGREES WHEN TOUCHSPRITE NOT TOUCHMOVIECLIP
 					var modifier:Matrix = ts.transform.concatenatedMatrix.clone()
 					//////////////////////////////////////////////////////////////////////////////
 					/*

@@ -43,6 +43,16 @@ package com.gestureworks.objects
 		}
 		
 		
+		private var _activeDim:Boolean = true;
+		public function get activeDim():Boolean
+		{
+			return _activeDim;
+		}
+		public function set activeDim(value:Boolean):void
+		{
+			_activeDim = value;
+		}
+		
 		////////////////////////////////////////////////////////
 		// property result name
 		private var _property_result:String;
@@ -95,243 +105,7 @@ package com.gestureworks.objects
 		
 		
 		
-		////////////////////////////////////////////////////////
-		// general cluster thresholds
-		///////////////////////////////////////////////////////
 		
-		private var _cluster_translation_min:Number = 0;
-		public function get cluster_translation_min():Number
-		{
-			return _cluster_translation_min;
-		}
-		public function set cluster_translation_min(value:Number):void
-		{
-			_cluster_translation_min = value;
-		}
-		private var _cluster_translation_max:Number = 0;
-		public function get cluster_translation_max():Number
-		{
-			return _cluster_translation_max;
-		}
-		public function set cluster_translation_max(value:Number):void
-		{
-			_cluster_translation_max = value;
-		}
-		
-		private var _cluster_separation_min:Number = 0;
-		public function get cluster_separation_min():Number
-		{
-			return _cluster_separation_min;
-		}
-		public function set cluster_separation_min(value:Number):void
-		{
-			_cluster_separation_min = value;
-		}
-		private var _cluster_separation_max:Number = 0;
-		public function get cluster_separation_max():Number
-		{
-			return _cluster_separation_max;
-		}
-		public function set cluster_separation_max(value:Number):void
-		{
-			_cluster_separation_max = value;
-		}
-		
-		private var _cluster_rotation_min:Number = 0;
-		public function get cluster_rotation_min():Number
-		{
-			return _cluster_rotation_min;
-		}
-		public function set cluster_rotation_min(value:Number):void
-		{
-			_cluster_rotation_min = value;
-		}
-		private var _cluster_rotation_max:Number = 0;
-		public function get cluster_rotation_max():Number
-		{
-			return _cluster_rotation_max;
-		}
-		public function set cluster_rotation_max(value:Number):void
-		{
-			_cluster_rotation_max = value;
-		}
-		
-		private var _cluster_acceleration_min:Number = 0;
-		public function get cluster_acceleration_min():Number
-		{
-			return _cluster_acceleration_min;
-		}
-		public function set cluster_acceleration_min(value:Number):void
-		{
-			_cluster_acceleration_min = value;
-		}
-		
-		private var _cluster_acceleration_max:Number = 0;
-		public function get cluster_acceleration_max():Number
-		{
-			return _cluster_acceleration_max;
-		}
-		public function set cluster_acceleration_max(value:Number):void
-		{
-			_cluster_acceleration_max = value;
-		}
-		
-		
-		
-		
-		
-		private var _cluster_event_duration_min:Number = 0;
-		public function get cluster_event_duration_min():Number
-		{
-			return _cluster_event_duration_min;
-		}
-		public function set cluster_event_duration_min(value:Number):void
-		{
-			_cluster_event_duration_min = value;
-		}
-		
-		private var _cluster_event_duration_max:Number = 0;
-		public function get cluster_event_duration_max():Number
-		{
-			return _cluster_event_duration_max;
-		}
-		public function set cluster_event_duration_max(value:Number):void
-		{
-			_cluster_event_duration_max = value;
-		}
-		
-		
-		private var _cluster_interevent_duration_min:Number = 0;
-		public function get cluster_interevent_duration_min():Number
-		{
-			return _cluster_interevent_duration_min;
-		}
-		public function set cluster_interevent_duration_min(value:Number):void
-		{
-			_cluster_interevent_duration_min = value;
-		
-		}	
-		private var _cluster_interevent_duration_max:Number = 0;
-		public function get cluster_interevent_duration_max():Number
-		{
-			return _cluster_interevent_duration_max;
-		}
-		public function set cluster_interevent_duration_max(value:Number):void
-		{
-			_cluster_interevent_duration_max = value;
-		}
-		
-		////////////////////////////////////////////////////////
-		// general cluster thresholds
-		///////////////////////////////////////////////////////
-		private var _point_translation_min:Number = 0;
-		public function get point_translation_min():Number
-		{
-			return _point_translation_min;
-		}
-		public function set point_translation_min(value:Number):void
-		{
-			_point_translation_min = value;
-		}
-		private var _point_translation_max:Number = 0;
-		public function get point_translation_max():Number
-		{
-			return _point_translation_max;
-		}
-		public function set point_translation_max(value:Number):void
-		{
-			_point_translation_max = value;
-		}
-		
-		
-		private var _point_acceleration_min:Number = 0;
-		public function get point_acceleration_min():Number
-		{
-			return _point_acceleration_min;
-		}
-		public function set point_acceleration_min(value:Number):void
-		{
-			_point_acceleration_min = value;
-		}
-		private var _point_acceleration_max:Number = 0;
-		public function get point_acceleration_max():Number
-		{
-			return _point_acceleration_max;
-		}
-		public function set point_acceleration_max(value:Number):void
-		{
-			_point_acceleration_max = value;
-		}
-		
-		
-		private var _point_event_duration_min:Number = 0;
-		public function get point_event_duration_min():Number
-		{
-			return _point_event_duration_min;
-		}
-		public function set point_event_duration_min(value:Number):void
-		{
-			_point_event_duration_min = value;
-		}
-		private var _point_event_duration_max:Number = 0;
-		public function get point_event_duration_max():Number
-		{
-			return _point_event_duration_max;
-		}
-		public function set point_event_duration_max(value:Number):void
-		{
-			_point_event_duration_max = value;
-		}
-		
-		private var _point_interevent_duration_min:Number = 0;
-		public function get point_interevent_duration_min():Number
-		{
-			return _point_interevent_duration_min;
-		}
-		public function set point_interevent_duration_min(value:Number):void
-		{
-			_point_interevent_duration_min = value;
-		}
-		private var _point_interevent_duration_max:Number = 0;
-		public function get point_interevent_duration_max():Number
-		{
-			return _point_interevent_duration_max;
-		}
-		public function set point_interevent_duration_max(value:Number):void
-		{
-			_point_interevent_duration_max = value;
-		}
-		
-		////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////
-		// gesture object vector
-		private var _clusterVector:Vector //=  new Vector.<Number>();
-		public function get clusterVector():Vector
-		{
-			return _clusterVector;
-		}
-		public function set clusterVector(value:Vector):void
-		{
-			_clusterVector = value;
-		}
-		private var _processVector:Vector //= new Vector.<Number>();;
-		public function get processVector():Vector
-		{
-			return _processVector;
-		}
-		public function set processVector(value:Vector):void
-		{
-			_processVector = value;
-		}
-		private var _gestureVector:Vector //= new Vector.<Number>();;
-		public function get gestureVector():Vector
-		{
-			return _gestureVector;
-		}
-		public function set gestureVector(value:Vector):void
-		{
-			_gestureVector = value;
-		}
 		
 		
 		//dimention values
@@ -698,7 +472,7 @@ package com.gestureworks.objects
 			_release_inertia_Maxcount = value;
 		}
 		
-		
+		/*
 		// path_match---------------------
 		private var _path_match:Boolean = false;
 		public function get path_match():Boolean
@@ -709,17 +483,9 @@ package com.gestureworks.objects
 		{
 			_path_match = value;
 		}
-
-		// path---------------------
-		private var _path:Array = new Array();
-		public function get path():Array
-		{
-			return _path;
-		}
-		public function set path(value:Array):void
-		{
-			_path = value;
-		}
+		*/
+		
+		
 		
 	}
 }

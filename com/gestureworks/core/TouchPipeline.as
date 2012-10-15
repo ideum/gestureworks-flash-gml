@@ -21,6 +21,7 @@ package com.gestureworks.core
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
+	import com.gestureworks.objects.GestureObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.objects.DimensionObject;
 	
@@ -80,43 +81,52 @@ package com.gestureworks.core
 		
 		public function processPipeline():void
 		{
-			//trace("processing pipeline");
+			//trace("processing pipeline--------------------------------");
 			gn = gO.pOList.length;
 			
 			for (i=0; i < gn; i++) 
 				{
 				var dn:uint = gO.pOList[i].dList.length;
 				
+					var g:GestureObject = gO.pOList[i];
+					
 						for (j=0; j < dn; j++) 
 						{
+							var gDim:DimensionObject = g.dList[j];
+							
+							////////////////////////////////////////////////////////
+							//trace("pipeline in",gO.pOList[i].dList[j].clusterDelta);
+							////////////////////////////////////////////////////////
 							// PULL DATA FROM CLUSTER
-							gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].clusterDelta;
-							//gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
-
+							gDim.gestureDelta = gDim.clusterDelta;
+							
+							//gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta; // PRE FILTERED DELTA CACHE
+							//trace("push cache front pipe")
+							
 							
 									// turn of all filters  //------------- may also want to turn off when delta is already zero????
-									if(ts.gestureFilters){
+									if((ts.gestureFilters)&&(gDim.activeDim)){
 
 											///////////////////////////////////////////////////////////
 											// average filter
 											///////////////////////////////////////////////////////////
 											
-											if (gO.pOList[i].dList[j].mean_filter)
+											if (gDim.mean_filter)
 											{
-												if(!gO.pOList[i].dList[j].gestureDeltaArray) gO.pOList[i].dList[j].gestureDeltaArray = new Array();
+												if(!gDim.gestureDeltaArray) gDim.gestureDeltaArray = new Array();
 												var hist:uint = 8;
-												var ln:uint =  gO.pOList[i].dList[j].gestureDeltaArray.length;
+												var ln:uint =  gDim.gestureDeltaArray.length;
 												var ln0:Number = 1 / ln;
-												var delta:Number = gO.pOList[i].dList[j].gestureDelta
+												var delta:Number = gDim.gestureDelta
 												var mvar:Number = 0;
 												
-												gO.pOList[i].dList[j].gestureDeltaArray.push(delta);
-												if (ln >= hist) gO.pOList[i].dList[j].gestureDeltaArray.shift();
+												gDim.gestureDeltaArray.push(delta);
+												if (ln >= hist) gDim.gestureDeltaArray.shift();
 												
 	
-												for (var p:int = 0; p < ln; p++){ mvar += gO.pOList[i].dList[j].gestureDeltaArray[p];}
+												for (var p:int = 0; p < ln; p++){ mvar += gDim.gestureDeltaArray[p];}
 												mvar *= ln0;
-												if(mvar) gO.pOList[i].dList[j].gestureDelta = mvar;	
+												if(mvar) gDim.gestureDelta = mvar;	
 											}
 											
 											///////////////////////////////////////////////////////////////////////////////////////////
@@ -143,81 +153,84 @@ package com.gestureworks.core
 											// easing block
 											////////////////////////////////////////////////////////////////////////////////////////////
 											
-											if((ts.gestureReleaseInertia)&&(gO.pOList[i].dList[j].release_inertia_filter)){
+											if((ts.gestureReleaseInertia)&&(gDim.release_inertia_filter)){
 												// select new gesture delta or cached delta based // based on N activity
 												if (ts.N!=0)
 												{
 													//when touching calculate new deltas 
-													if ((ts.N >= ts.gO.pOList[i].nMin) && (ts.N <= ts.gO.pOList[i].nMax) || (ts.N == ts.gO.pOList[i].n)) 
+													if ((ts.N >= g.nMin) && (ts.N <= g.nMax) || (ts.N == g.n)) 
 													{
 														// fill cache with new values
-														gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
+														gDim.gestureDeltaCache = gDim.gestureDelta;
+														//trace("push cache inertia n!=0 match");
 														
 														// RESTART MATCHED DORMANT TWEEN THREADS
 														//if (gO.pOList[i][j].release_inertia_filter)
 														//{
-														gO.pOList[i].dList[j].release_inertiaOn = true;
-														gO.pOList[i].dList[j].release_inertia_count = 0;
+														gDim.release_inertiaOn = true;
+														gDim.release_inertia_count = 0;
 															//if (ts.trace_debug_mode) trace("restart tween");
 														//}
 														
 														// set phase 
-														gO.pOList[i].passive = false;
-														gO.pOList[i].active = true;
+														g.passive = false;
+														g.active = true;
 														//trace("touch active",i,j);
 													}
 													else {
 														// when not meeting gesture calc conditions
 														// but still touching use cached delta
-														gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].gestureDeltaCache;
+														gDim.gestureDelta = gDim.gestureDeltaCache;
+														//trace("pull chache inertia n==0 no match");
 														
 														// set phase
-														gO.pOList[i].passive = true;
-														gO.pOList[i].active = false;
+														g.passive = true;
+														g.active = false;
 														//trace("touch passive cache",i,j,gO.pOList[i][j].gestureDelta);
 													}
 												}
 												else {
 													// when not touching use cached delta
-													gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].gestureDeltaCache;
+													gDim.gestureDelta = gDim.gestureDeltaCache;
+													//trace("pull chache inertia  n==0 match");
 													
 													// set phase
-													gO.pOList[i].passive = true;
-													gO.pOList[i].active = false;
+													g.passive = true;
+													g.active = false;
 												}
 												
 												// when touching but when not matching n values // or when not touching // tween cached deltas 
-												if ((ts.N < gO.pOList[i].nMin)||(ts.N > gO.pOList[i].nMax)||(ts.N == 0))
+												if ((ts.N < g.nMin)||(ts.N > g.nMax)||(ts.N == 0))
 												{
 													// set to passive phase
-													gO.pOList[i].passive = true;
-													gO.pOList[i].active = false;
+													g.passive = true;
+													g.active = false;
 													
 													//trace("test",ts.N, i);
 													// gesturetweenon no longer needed
 													//if ((ts.gestureTweenOn) && (gO.pOList[i][j].release_inertiaOn) && (gO.pOList[i][j].release_inertia))
-													if(gO.pOList[i].dList[j].release_inertiaOn)//&&(gO.pOList[i][j].release_inertia_filter)
+													if(gDim.release_inertiaOn)//&&(gO.pOList[i][j].release_inertia_filter)
 													{
-														var count:uint = gO.pOList[i].dList[j].release_inertia_count++;
+														var count:uint = gDim.release_inertia_count++;
 															
-															if (gO.pOList[i].dList[j].gestureDelta != 0)
+															if (gDim.gestureDelta != 0)
 															{
 																//gO.pOList[i].dList[j].release_inertiaOn = true;
-																gO.pOList[i].dList[j].gestureDelta *= gO.pOList[i].dList[j].release_inertia_factor * Math.pow(gO.pOList[i].dList[j].release_inertia_base, count);
+																gDim.gestureDelta *= gDim.release_inertia_factor * Math.pow(gDim.release_inertia_base, count);
 															}
 															
 															//trace("gdelta",Math.abs(gO.pOList[i].dList[j].gestureDelta),gO.pOList[i].dList[j].delta_min);
 															
-															if ((count > gO.pOList[i].dList[j].release_inertia_Maxcount)||(Math.abs(gO.pOList[i].dList[j].gestureDelta) < gO.pOList[i].dList[j].delta_min))
+															if ((count > gDim.release_inertia_Maxcount)||(Math.abs(gDim.gestureDelta) < gDim.delta_min))
 															{
-																gO.pOList[i].dList[j].release_inertiaOn = false;
-																gO.pOList[i].dList[j].gestureDelta = 0;
+																gDim.release_inertiaOn = false;
+																gDim.gestureDelta = 0;
 																//ts.gO.pOList[i][j].gestureDeltaCache =0;
-																gO.pOList[i].dList[j].release_inertia_count = 0;
+																gDim.release_inertia_count = 0;
 															}
 													}
 													else {
-														gO.pOList[i].dList[j].gestureDelta = 0;
+														gDim.gestureDelta = 0;
 														
 														//NEED CHACHEING FOR FLICK AND SWIPE
 														//ts.gO.pOList[i][j].gestureDeltaCache = 0;
@@ -236,15 +249,15 @@ package com.gestureworks.core
 											// produces linear,quadartic,cubic or polynomial function
 											///////////////////////////////////////////////////////////////////////////////////////////
 											
-											if (gO.pOList[i].dList[j].multiply_filter)
+											if (gDim.multiply_filter)
 											{
-												if (gO.pOList[i].dList[j].func) 
+												if (gDim.func) 
 												{
-													gO.pOList[i].dList[j].gestureDelta = functionGenerator(gO.pOList[i].dList[j].func, gO.pOList[i].dList[j].gestureDelta , gO.pOList[i].dList[j].func_factor);
+													gDim.gestureDelta = functionGenerator(gDim.func, gDim.gestureDelta , gDim.func_factor);
 												}
 												else 
 												{
-													gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].func_factor * gO.pOList[i].dList[j].gestureDelta;
+													gDim.gestureDelta = gDim.func_factor * gDim.gestureDelta;
 												}
 											}
 								
@@ -260,7 +273,7 @@ package com.gestureworks.core
 											
 											if (ts.trace_debug_mode) trace("delta threshold", gO.pOList[i][j].delta_threshold);
 											
-											if (gO.pOList[i].dList[j].delta_filter)
+											if (gDim.delta_filter)
 											{
 												/*
 												if ((Math.abs(ts.gO.pOList[i][j].gestureDelta) < ts.gO.pOList[i][j].delta_min) || ( Math.abs(ts.gO.pOList[i][j].gestureDelta) > ts.gO.pOList[i][j].delta_max))
@@ -271,8 +284,8 @@ package com.gestureworks.core
 													
 												}*/
 												
-												if (Math.abs(gO.pOList[i].dList[j].gestureDelta) < gO.pOList[i].dList[j].delta_min) gO.pOList[i].dList[j].gestureDelta = 0;
-												if ( Math.abs(gO.pOList[i].dList[j].gestureDelta) > gO.pOList[i].dList[j].delta_max) gO.pOList[i].dList[j].gestureDelta = gO.pOList[i].dList[j].delta_max;
+												if (Math.abs(gDim.gestureDelta) < gDim.delta_min) gDim.gestureDelta = 0;
+												if ( Math.abs(gDim.gestureDelta) > gDim.delta_max) gDim.gestureDelta = gDim.delta_max;
 											}
 											
 											
@@ -284,17 +297,17 @@ package com.gestureworks.core
 											// allows for value bounds so that gestures mapped to known object properties can be managed
 											/////////////////////////////////////////////////////////////////////////////////////////////
 											
-											if (ts.gO.pOList[i].dList[j].boundary_filter) 
+											if (gDim.boundary_filter) 
 											{
 												//trace(ts.gO.pOList[i].dList[j].boundary_filter,ts.gO.pOList[i].dList[j].boundary_min,ts.gO.pOList[i].dList[j].boundary_max);
 												//trace(ts.gO.pOList[i][j].gestureValue);
 												//trace(ts.gO.pOList[i][j].target_id,ts.gO.pOList[i][j].gestureValue);
 												
-												if (Math.abs(gO.pOList[i].dList[j].gestureValue) < gO.pOList[i].dList[j].boundary_min)//
+												if (Math.abs(gDim.gestureValue) < gDim.boundary_min)//
 												{
-													if (gO.pOList[i].dList[j].gestureDelta < 0) 
+													if (gDim.gestureDelta < 0) 
 													{
-														gO.pOList[i].dList[j].gestureDelta = 0;
+														gDim.gestureDelta = 0;
 														//trace("below min");
 														//if ((ts.gO.pOList[i][j].target_id == "dx") || (ts.gO.pOList[i][j].target_id == "dy")) 
 														//ts.trO.dtheta = 0;
@@ -305,11 +318,11 @@ package com.gestureworks.core
 														//if ((ts.gO.pOList[i][j].target_id == "dx") || (ts.gO.pOList[i][j].target_id == "dy"))  xy_lock = true; 
 													}
 												}
-												if (Math.abs(gO.pOList[i].dList[j].gestureValue) > gO.pOList[i].dList[j].boundary_max) 
+												if (Math.abs(gDim.gestureValue) > gDim.boundary_max) 
 												{
-													if (gO.pOList[i].dList[j].gestureDelta > 0) 
+													if (gDim.gestureDelta > 0) 
 													{
-														gO.pOList[i].dList[j].gestureDelta = 0;
+														gDim.gestureDelta = 0;
 														//trace("above max");
 														//if ((ts.gO.pOList[i][j].target_id == "dx") || (ts.gO.pOList[i][j].target_id == "dy")) 
 														//ts.trO.dtheta = 0;
@@ -339,9 +352,15 @@ package com.gestureworks.core
 								//////////////////////////////////////////////////////////////////////////////
 								// cache reset only when delta is non zero 
 								// otherwise cluster delta is zerod and cache zerod before cched value is pushed into gesure event
-								if ((!ts.gestureReleaseInertia) && (!gO.pOList[i].dList[j].release_inertia_filter)) // so that ineertia cache is not overwirtten by flick and swipe mechanism
+								if ((!ts.gestureReleaseInertia) && (!gDim.release_inertia_filter)) // so that ineertia cache is not overwirtten by flick and swipe mechanism
 								{
-									if(gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta;
+									//if (gDim.gestureDelta != 0)
+									//if (gDim.clusterDelta != 0)
+									//if (g.activeEvent)
+									
+									// ONLY FILL CACHE WITH GENERATED VALUES
+									if (ts.N!=0) gDim.gestureDeltaCache = gDim.gestureDelta;
+									
 								}
 								//trace("pipeline end", gO.pOList[i].dList[j].gestureDeltaCache)
 								
@@ -351,15 +370,20 @@ package com.gestureworks.core
 								
 								// ENSURES ADDITIVE DELTAS DO NOT ACCUMILATE OUTSIDE OF EACH "FRAME"
 								// 	MUST HAPPEN BEFIORE MAPPING OTHERWISE GESTURES THAT MAP DELTAS TO SAME VAR WILL BE OVERWITTEN
-								if (gO.pOList[i].dList[j].target_id) trO[ts.gO.pOList[i].dList[j].target_id] = 0;
+								if (gDim.target_id) trO[gDim.target_id] = 0;
 								
 								////////////////////////////////////////////////////////////////////////////////////////////////////
 								// active gesture event switch
 								// deactivates gesture processing on gesture object if gesture deltas are zero for each dimention
 								// is overrriden when object is touched ( when cluster analysis occures
 								////////////////////////////////////////////////////////////////////////////////////////////////////
-								if (gO.pOList[i].dList[j].gestureDelta != 0) gO.pOList[i].activeEvent = true;
-								//trace("gesturedelta",gO.pOList[i].dList[j].gestureDelta)
+								if (gDim.gestureDelta != 0) g.activeEvent = true;
+								//trace("gesturedelta",gDim.gestureDelta)
+								
+								
+								//////////////////////////////////////////////////////////
+								//trace("pipeline out", gO.pOList[i].dList[j].gestureDelta);
+								//////////////////////////////////////////////////////////
 						}	
 						
 						

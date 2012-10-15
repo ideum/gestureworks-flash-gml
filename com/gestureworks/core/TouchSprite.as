@@ -40,6 +40,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
@@ -83,6 +84,7 @@ package com.gestureworks.core
 		
 		// internal public 
 		public var cO:ClusterObject;
+		public var sO:StrokeObject;
 		public var gO:GestureListObject;
 		public var tiO:TimelineObject;
 		public var trO:TransformObject;
@@ -131,6 +133,9 @@ package com.gestureworks.core
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
 						
+						// create new stroke object
+						sO = new StrokeObject();
+							sO.id = touchObjectID;
 						
 						/////////////////////////////////////////////////////////////////////////
 						// CREATERS A NEW GESTURE OBJECT
@@ -164,6 +169,9 @@ package com.gestureworks.core
 						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
 						
 					//}
+					
+					//if (debugDisplay)	
+					td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		 private function initBase():void 
@@ -949,6 +957,31 @@ package com.gestureworks.core
 		public function set broadcastTarget(value:Boolean):void
 		{
 			_broadcastTarget = value;
+		}
+		
+		public function updateTObjProcessing():void
+		{
+			//trace("touchsprite//update////////////////////////////");
+			
+			if (tc) tc.updateClusterAnalysis();
+			if (tp) tp.processPipeline();
+			if (tg) tg.manageGestureEventDispatch();
+			if (tt){
+				tt.transformManager();
+				tt.updateLocalProperties();
+			}
+			
+			
+			/*
+			tc.updateClusterAnalysis();
+			tp.processPipeline();
+			tg.manageGestureEventDispatch();
+			tt.transformManager();
+			tt.updateLocalProperties();
+			*/
+			
+			
+			
 		}
 		
 	}

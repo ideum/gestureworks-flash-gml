@@ -97,40 +97,289 @@ package com.gestureworks.objects
 			_algorithm_class = value;
 		}
 		
-		/////////////////////////////
-		// global gesture object properties
-		/////////////////////////////
+		// n_current---------------------
+		private var _n_current:int = 0;
+		public function get n_current():int{return _n_current;}
+		public function set n_current(value:int):void { _n_current = value; }
+		
+		// n_cache---------------------
+		private var _n_cache:int = 0;
+		public function get n_cache():int{return _n_cache;}
+		public function set n_cache(value:int):void{_n_cache = value;}
+		
+		
+		//////////////////////////////////////
+		// global gesture matching criteria
+		//////////////////////////////////////
 		
 		// n---------------------
 		private var _n:int = 0;
-		public function get n():int
-		{
-			return _n;
-		}
-		public function set n(value:int):void
-		{
-			_n = value;
-		}
+		public function get n():int{return _n;}
+		public function set n(value:int):void { _n = value; }
+		
 		// nMax---------------------
 		private var _nMax:int = 100;
-		public function get nMax():int
-		{
-			return _nMax;
-		}
-		public function set nMax(value:int):void
-		{
-			_nMax = value;
-		}
+		public function get nMax():int{return _nMax;}
+		public function set nMax(value:int):void { _nMax = value; }
+		
 		// nMin---------------------
 		private var _nMin:int = 0;
-		public function get nMin():int
+		public function get nMin():int{return _nMin;}
+		public function set nMin(value:int):void{_nMin = value;}
+		
+		
+		////////////////////////////////////////////////////////
+		// general cluster thresholds
+		///////////////////////////////////////////////////////
+		
+		private var _cluster_translation_min:Number = 0;
+		public function get cluster_translation_min():Number
 		{
-			return _nMin;
+			return _cluster_translation_min;
 		}
-		public function set nMin(value:int):void
+		public function set cluster_translation_min(value:Number):void
 		{
-			_nMin = value;
+			_cluster_translation_min = value;
 		}
+		private var _cluster_translation_max:Number = 0;
+		public function get cluster_translation_max():Number
+		{
+			return _cluster_translation_max;
+		}
+		public function set cluster_translation_max(value:Number):void
+		{
+			_cluster_translation_max = value;
+		}
+		
+		private var _cluster_separation_min:Number = 0;
+		public function get cluster_separation_min():Number
+		{
+			return _cluster_separation_min;
+		}
+		public function set cluster_separation_min(value:Number):void
+		{
+			_cluster_separation_min = value;
+		}
+		private var _cluster_separation_max:Number = 0;
+		public function get cluster_separation_max():Number
+		{
+			return _cluster_separation_max;
+		}
+		public function set cluster_separation_max(value:Number):void
+		{
+			_cluster_separation_max = value;
+		}
+		
+		private var _cluster_rotation_min:Number = 0;
+		public function get cluster_rotation_min():Number
+		{
+			return _cluster_rotation_min;
+		}
+		public function set cluster_rotation_min(value:Number):void
+		{
+			_cluster_rotation_min = value;
+		}
+		private var _cluster_rotation_max:Number = 0;
+		public function get cluster_rotation_max():Number
+		{
+			return _cluster_rotation_max;
+		}
+		public function set cluster_rotation_max(value:Number):void
+		{
+			_cluster_rotation_max = value;
+		}
+		
+		private var _cluster_acceleration_min:Number = 0;
+		public function get cluster_acceleration_min():Number
+		{
+			return _cluster_acceleration_min;
+		}
+		public function set cluster_acceleration_min(value:Number):void
+		{
+			_cluster_acceleration_min = value;
+		}
+		
+		private var _cluster_acceleration_max:Number = 0;
+		public function get cluster_acceleration_max():Number
+		{
+			return _cluster_acceleration_max;
+		}
+		public function set cluster_acceleration_max(value:Number):void
+		{
+			_cluster_acceleration_max = value;
+		}
+		
+		
+		
+		
+		
+		private var _cluster_event_duration_min:Number = 0;
+		public function get cluster_event_duration_min():Number
+		{
+			return _cluster_event_duration_min;
+		}
+		public function set cluster_event_duration_min(value:Number):void
+		{
+			_cluster_event_duration_min = value;
+		}
+		
+		private var _cluster_event_duration_max:Number = 0;
+		public function get cluster_event_duration_max():Number
+		{
+			return _cluster_event_duration_max;
+		}
+		public function set cluster_event_duration_max(value:Number):void
+		{
+			_cluster_event_duration_max = value;
+		}
+		
+		
+		private var _cluster_interevent_duration_min:Number = 0;
+		public function get cluster_interevent_duration_min():Number
+		{
+			return _cluster_interevent_duration_min;
+		}
+		public function set cluster_interevent_duration_min(value:Number):void
+		{
+			_cluster_interevent_duration_min = value;
+		
+		}	
+		private var _cluster_interevent_duration_max:Number = 0;
+		public function get cluster_interevent_duration_max():Number
+		{
+			return _cluster_interevent_duration_max;
+		}
+		public function set cluster_interevent_duration_max(value:Number):void
+		{
+			_cluster_interevent_duration_max = value;
+		}
+		
+		////////////////////////////////////////////////////////
+		// general cluster thresholds
+		///////////////////////////////////////////////////////
+		private var _point_translation_min:Number = 0;
+		public function get point_translation_min():Number
+		{
+			return _point_translation_min;
+		}
+		public function set point_translation_min(value:Number):void
+		{
+			_point_translation_min = value;
+		}
+		private var _point_translation_max:Number = 0;
+		public function get point_translation_max():Number
+		{
+			return _point_translation_max;
+		}
+		public function set point_translation_max(value:Number):void
+		{
+			_point_translation_max = value;
+		}
+		
+		
+		private var _point_acceleration_min:Number = 0;
+		public function get point_acceleration_min():Number
+		{
+			return _point_acceleration_min;
+		}
+		public function set point_acceleration_min(value:Number):void
+		{
+			_point_acceleration_min = value;
+		}
+		private var _point_acceleration_max:Number = 0;
+		public function get point_acceleration_max():Number
+		{
+			return _point_acceleration_max;
+		}
+		public function set point_acceleration_max(value:Number):void
+		{
+			_point_acceleration_max = value;
+		}
+		
+		
+		private var _point_event_duration_min:Number = 0;
+		public function get point_event_duration_min():Number
+		{
+			return _point_event_duration_min;
+		}
+		public function set point_event_duration_min(value:Number):void
+		{
+			_point_event_duration_min = value;
+		}
+		private var _point_event_duration_max:Number = 0;
+		public function get point_event_duration_max():Number
+		{
+			return _point_event_duration_max;
+		}
+		public function set point_event_duration_max(value:Number):void
+		{
+			_point_event_duration_max = value;
+		}
+		
+		private var _point_interevent_duration_min:Number = 0;
+		public function get point_interevent_duration_min():Number
+		{
+			return _point_interevent_duration_min;
+		}
+		public function set point_interevent_duration_min(value:Number):void
+		{
+			_point_interevent_duration_min = value;
+		}
+		private var _point_interevent_duration_max:Number = 0;
+		public function get point_interevent_duration_max():Number
+		{
+			return _point_interevent_duration_max;
+		}
+		public function set point_interevent_duration_max(value:Number):void
+		{
+			_point_interevent_duration_max = value;
+		}
+		
+		////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////
+		// gesture object vector
+		private var _clusterVector:Vector //=  new Vector.<Number>();
+		public function get clusterVector():Vector
+		{
+			return _clusterVector;
+		}
+		public function set clusterVector(value:Vector):void
+		{
+			_clusterVector = value;
+		}
+		private var _processVector:Vector //= new Vector.<Number>();;
+		public function get processVector():Vector
+		{
+			return _processVector;
+		}
+		public function set processVector(value:Vector):void
+		{
+			_processVector = value;
+		}
+		private var _gestureVector:Vector //= new Vector.<Number>();;
+		public function get gestureVector():Vector
+		{
+			return _gestureVector;
+		}
+		public function set gestureVector(value:Vector):void
+		{
+			_gestureVector = value;
+		}
+		
+		
+		// path-match---------------
+		private var _gmlPath:Array = new Array();
+		public function get gmlPath():Array
+		{
+			return _gmlPath;
+		}
+		public function set gmlPath(value:Array):void
+		{
+			_gmlPath = value;
+		}
+		
+		
+		
 		
 		// match event
 		private var _match_TouchEvent:String;
@@ -153,6 +402,10 @@ package com.gestureworks.objects
 		{
 			_match_GestureEvent = value;
 		}
+		
+		////////////////////////////////////////////////////////////////////////////////////
+		// end match criteria
+		////////////////////////////////////////////////////////////////////////////////////
 		
 		// event type
 		private var _event_type:String;
@@ -297,6 +550,7 @@ package com.gestureworks.objects
 		{
 			_dList = value;
 		}
+	
 		
 	}
 }
