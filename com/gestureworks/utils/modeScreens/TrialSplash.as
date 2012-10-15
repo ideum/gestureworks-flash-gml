@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 package com.gestureworks.utils.modeScreens 
-{
+{					
+	import com.gestureworks.managers.ModeManager;
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import com.gestureworks.utils.Yolotzin;
@@ -27,8 +28,8 @@ package com.gestureworks.utils.modeScreens
 	 */
 	public class TrialSplash extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/trial_splash.png")] private var Splash:Class;
-		[Embed(source = "../../../../../lib/assets/gw_trial_splash_no_date.png")] private var SplashNoDate:Class;
+		[Embed(source = "../../../../../lib/assets/gw_splash.png")]
+		private var SplashImage:Class;		
 		
 		public function TrialSplash(ignoreDateCountdown:Boolean=false) 
 		{
@@ -36,13 +37,13 @@ package com.gestureworks.utils.modeScreens
 			
 			if (ignoreDateCountdown)
 			{
-				splash = new SplashNoDate();
+				splash = new SplashImage;
 				addChild(splash);
 			}
 			
 			else
 			{
-				splash = new Splash();
+				splash = new SplashImage;
 				addChild(splash);				
 				
 				var button:SplashButton = new SplashButton(130, 30);

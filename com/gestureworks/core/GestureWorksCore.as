@@ -23,7 +23,6 @@ package com.gestureworks.core
 	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import com.gestureworks.text.DefaultFonts;
-	import com.gestureworks.text.MyFonts;
 	import flash.utils.setInterval;
 	import flash.utils.clearInterval;
 	import com.gestureworks.utils.Simulator;
@@ -167,7 +166,6 @@ package com.gestureworks.core
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			var df:DefaultFonts = new DefaultFonts();
-			var mf:MyFonts = new MyFonts();
 			
 			graphics.beginFill(0xFFFFFF,0);
 			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);

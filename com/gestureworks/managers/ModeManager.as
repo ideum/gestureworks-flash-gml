@@ -46,11 +46,7 @@ package com.gestureworks.managers
 	{
 		private var alphaDate:Date = new Date("Tue Dec 20 23:59:59 GMT-0700 2011");
 		private var modeImage:Sprite;
-		private var waterImage:Sprite;
-		
-		// this used to be the water mark on the right, we are no longer using this!
-		//private var watermark:Sprite;
-		
+		private var waterImage:Sprite;	
 		private var timer:Timer = new Timer(5000);
 		private var key:String;
 		private var timeInterval:uint;
@@ -62,10 +58,7 @@ package com.gestureworks.managers
 		{
 			super();
 			
-			trace("mode manager");
-			
 			_r = r;
-			
 			key = k;
 			
 			if (stage) init();
@@ -79,7 +72,7 @@ package com.gestureworks.managers
 				key = "";
 			}
 			
-			if (key == "cl3ar") 
+			else if (key == "cl3ar") 
 			{
 				Yolotzin.mode = 2;
 				complete();
@@ -131,7 +124,7 @@ package com.gestureworks.managers
 				timerCount = 6000 - (timeOut * 2000);
 			}
 			
-			if (Yolotzin.clear && Yolotzin.mode<2) modeImage = GestureWorks.isOpenExibits ? new OERunTimeSplashScreen() : new RunTimeSplashScreen();
+			if (Yolotzin.clear && Yolotzin.mode<2) modeImage = GestureWorks.isOpenExibits ? new OESplash() : new StandardSplash();
 			
 			if (modeImage) stage.addChild(modeImage);
 			if (modeImage) modeImage.x = (stage.stageWidth - modeImage.width) / 2;
@@ -145,16 +138,7 @@ package com.gestureworks.managers
 		private function timerComplete():void
 		{						
 			clearInterval(timeInterval);
-			
-			
-			// I don't know what this is? I think Matt commented this out sometime before he left
-			/*if (Yolotzin.mode == 4)
-			{
-				var compare:Number = TimeCompare.of(alphaDate, new Date());
-				if (compare < 0) return;				
-			}*/
-			
-			
+		
 			if (Yolotzin.mode >= 0)
 			{
 				if (modeImage) stage.removeChild(modeImage);
@@ -172,18 +156,6 @@ package com.gestureworks.managers
 				trialTimer.addEventListener(TrialTimer.COMPLETE, trialTimerComplete);
 				trialTimer.y = stage.stageHeight - 60;
 				trialTimer.x = 20;
-				
-				
-				// this used to be the water mark on the right, we are no longer using this!
-				/*
-				watermark = GestureWorks.isOpenExibits ? new OETrialWaterMark() : new TrialWaterMark();	
-				stage.addChild(watermark);
-				watermark.alpha = .707;
-				watermark.x = stage.stageWidth - watermark.width - 10;
-				watermark.y = stage.stageHeight  - watermark.height - 10;
-				*/
-				
-				
 				addEventListener(Event.ENTER_FRAME, keepOnTop);
 			}
 			
@@ -219,13 +191,14 @@ package com.gestureworks.managers
 			
 			switch (mode)
 			{
-				case -2:sprite = GestureWorks.isOpenExibits ? new OEUnregistered() : new Unregistered(); break;
-				case -1:sprite = GestureWorks.isOpenExibits ? new OETrialExpired() : new TrialExpired(); break;
-				case 0:sprite = GestureWorks.isOpenExibits ? new OETrialSplash(ignoreDateCountdown) : new TrialSplash(ignoreDateCountdown); break;
+				case -2:sprite = GestureWorks.isOpenExibits ? new OESplash() : new Unregistered(); break;
+				case -1:sprite = GestureWorks.isOpenExibits ? new OESplash() : new Unregistered(); break;
+				case 0:sprite = GestureWorks.isOpenExibits ? new OESplash() : new TrialSplash(ignoreDateCountdown); break;
 				case 1:sprite = GestureWorks.isOpenExibits ? new OESplash() : new StandardSplash(); break;
-				case 2:sprite = new ProSplash(); break;
-				case 3:sprite = new SiteSplash(); break;
-				case 4:sprite = new AlphaSplash(); break;
+				//these no longer relevant -charles
+				//case 2:sprite = new ProSplash(); break;
+				//case 3:sprite = new SiteSplash(); break;
+				//case 4:sprite = new AlphaSplash(); break;
 			}
 			
 			if (sprite) return sprite;

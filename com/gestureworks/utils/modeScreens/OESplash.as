@@ -16,23 +16,19 @@
 
 package com.gestureworks.utils.modeScreens 
 {
-	import flash.display.Sprite;
 	import flash.display.Bitmap;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import com.gestureworks.text.DefaultFonts;
-	
-	/**
-	 * ...
-	 * @author  
-	 */
+	import flash.display.Sprite;
+	import com.gestureworks.managers.ModeManager;
+
 	public class OESplash extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/oesplash.png")] private var Splash:Class;
+		
+		[Embed(source = "../../../../../lib/assets/oe_splash.png")] 
+		public var SplashImage:Class;
 		
 		public function OESplash() 
 		{
-			var splash:Bitmap = new Splash();
+			var splash:Bitmap = new SplashImage;
 			addChild(splash);
 		}
 		

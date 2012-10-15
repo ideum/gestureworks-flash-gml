@@ -29,8 +29,6 @@ package com.gestureworks.core
 	import com.gestureworks.utils.Yolotzin;
 	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
-	//import com.gestureworks.cml.core.CMLParser;
-
 
 	/**
 		 * The GestureWorks class is the core class that can be accessed from all classes within.
@@ -83,7 +81,7 @@ package com.gestureworks.core
 		/**
 		 * Returns the current version of GestureWorks.
 		 */
-		public static var version:String = "3.6.0";
+		public static var version:String = "3.5.0";
 		/**
 		 * Returns the current copyright information for GestureWorks.
 		 */
@@ -171,7 +169,6 @@ package com.gestureworks.core
 				try
 				{
 					var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
-					//CMLParser.instance;
 					var tmp:Sprite = new CMLDisplay;
 					cmlDisplays.push(tmp);
 					addChild(tmp);
@@ -198,6 +195,7 @@ package com.gestureworks.core
 		}
 		
 		
+
 		/**
 		 * 
 		 * protected function create().
@@ -265,9 +263,7 @@ package com.gestureworks.core
 		
 		
 		private function loadModeManager():void
-		{
-			//trace(GML.Gestures);
-			
+		{			
 			if (parent.toString() != "[Object Stage]") _root = parent.root;
 			modeManager = new ModeManager(_root, key)
 			addChild(modeManager);

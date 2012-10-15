@@ -13,34 +13,27 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.utils.modeScreens 
 {
+	import com.gestureworks.managers.ModeManager;
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	
-	/**
-	 * ...
-	 * @author  
-	 */
 	public class StandardSplash extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/standard_splash.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/gw_splash.png")]
+		private var SplashImage:Class;	
 		
 		public function StandardSplash() 
 		{
-			var splash:Bitmap = new Splash();
+			var splash:Bitmap = new SplashImage;
 			addChild(splash);
 			
 			var version:SplashVersion = new SplashVersion();
 			addChild(version);
 			version.x = 247;
 			version.y = 490;
-			
-			/*var button:SplashButton = new SplashButton(130, 30);
-			addChild(button);
-			
-			button.x = 200;
-			button.y = 195;*/
 		}
 		
 	}
