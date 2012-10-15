@@ -253,168 +253,174 @@ package com.gestureworks.core
 			for (key = 0; key < gn; key++) 
 			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
 			{
-				// set dim length
-				dn = gO.pOList[key].dList.length;
 				
-				// zero cluster deltas
-				for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+				// if gesture object is active in gesture list
+				if (ts.gestureList[gO.pOList[key].gesture_id])
+				{
 				
-				var g:GestureObject = gO.pOList[key];
-				
-				// processing algorithms when in touch
-				if(ts.N!=0){		// check kinemetric and if continuous analysis
-					// check point number requirements
-					if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
-					{
-						//trace("call cluster calc",ts.N);
-						
-						
-						// activate all by default
-						g.activeEvent = true;
-						
-						if (g.algorithm_class == "kinemetric")
+					// set dim length
+					dn = gO.pOList[key].dList.length;
+					
+					// zero cluster deltas
+					for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+					
+					var g:GestureObject = gO.pOList[key];
+					
+					// processing algorithms when in touch
+					if(ts.N!=0){		// check kinemetric and if continuous analysis
+						// check point number requirements
+						if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
 						{
-								//trace(gO.pOList[key].algorithm);
+							//trace("call cluster calc",ts.N);
 							
-								// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-								if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformation();
-								
-								// BASIC DRAG CONTROL // ALGORITHM // type drag
-								if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
-
-								// BASIC SCALE CONTROL // ALGORITHM // type scale
-								if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
 							
-								// BASIC ROTATE CONTROL // ALGORITHM // type rotate
-								if (g.algorithm == "rotate")		cluster_kinemetric.findMeanInstRotation();
-								
-								// BASIC ORIENTATION CONTROL // ALGORITHM
-								if (g.algorithm == "orient")		cluster_kinemetric.findInstOrientation();
-
-								// BASIC PIVOT CONTROL // ALGORITHM
-								if (g.algorithm == "pivot")		cluster_kinemetric.findInstPivot();
-								
-								///////////////////////////////////////////////////////////////////////////////////////
-								// CLUSTER PROEPRTY LIMIT CONTROLLED DELTAS
-								
-								// BASIC SCROLL CONTROL // ALGORITHM
-								// CONTINUOUS// MIN TRANSLATION IN X AND Y// VELOCITY MUST BE ABOVE MIN VALUE
-								// RETURN AVERAGE ENSABLE TEMPORAL VELOCITY 
-								if (g.algorithm == "scroll")	cluster_kinemetric.findMeanTemporalVelocity(); // ensamble temporal mean velocity
-
-								// BASIC TILT CONTROL // ALGORITHM
-								// CONTINUOUS// LOOK FOR SEPARATION OF CLUSTER IN X AND Y DIRECTION//SEPARATION MUST BE ABOVE MIN VALUE// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
-								// RETURN DX AND DY
-								if (g.algorithm == "tilt")	cluster_kinemetric.findMeanInstSeparation();
-								
-								// BASIC FLICK CONTROL // ALGORITHM
-								// SHOULD BE DISCRETE ON RELEASE // IF BETWEEN ACCEL THREHOLD RETURN GESTURE
-								if ((g.algorithm == "flick")||(g.algorithm == "swipe"))
-								{
-									cluster_kinemetric.findMeanTemporalVelocity(); // ensamble temporal mean velocity
-									cluster_kinemetric.findMeanTemporalAcceleration(); //ensamble temporal mean acceleration
-								}
-								
-								
-								///////////////////////////////////////////////////////////////////////////////////////////////////
-								// MOVE TO TEMPORAL METRIC
-								// BASIC HOLD CONTROL // ALGORITHM // type hold
-								if (g.algorithm == "hold")
-								{
-									//if (trace_debug_mode) trace("cluster hold algorithm");
+							// activate all by default
+							g.activeEvent = true;
 							
-									var hold_number:int = ts.N;//gO.pOList[key].n; // REDUNDANT AS ONLY CALLED IF MEETS N CRITERIA
-									var hold_dist:int = g.point_translation_max;
-									var	hold_time:int = Math.ceil(g.point_event_duration_min/ GestureGlobals.touchFrameInterval);
+							if (g.algorithm_class == "kinemetric")
+							{
+									//trace(gO.pOList[key].algorithm);
 								
-									cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);	
+									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
+									if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformation();
 									
-									if(!cO.hold_n)	g.activeEvent = false;
-		
-								}
-								
-								
+									// BASIC DRAG CONTROL // ALGORITHM // type drag
+									if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
 
-								///////////////////////////////////////////////////////////////////////////////////
-								// LIMIT DELTA BY CLUSTER VALUES
-								/////////////////////////////////////////////////////////////////////////////////////
-								g.activeEvent = false;
+									// BASIC SCALE CONTROL // ALGORITHM // type scale
+									if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
 								
-									for (DIM = 0; DIM < dn; DIM++) 
+									// BASIC ROTATE CONTROL // ALGORITHM // type rotate
+									if (g.algorithm == "rotate")		cluster_kinemetric.findMeanInstRotation();
+									
+									// BASIC ORIENTATION CONTROL // ALGORITHM
+									if (g.algorithm == "orient")		cluster_kinemetric.findInstOrientation();
+
+									// BASIC PIVOT CONTROL // ALGORITHM
+									if (g.algorithm == "pivot")		cluster_kinemetric.findInstPivot();
+									
+									///////////////////////////////////////////////////////////////////////////////////////
+									// CLUSTER PROEPRTY LIMIT CONTROLLED DELTAS
+									
+									// BASIC SCROLL CONTROL // ALGORITHM
+									// CONTINUOUS// MIN TRANSLATION IN X AND Y// VELOCITY MUST BE ABOVE MIN VALUE
+									// RETURN AVERAGE ENSABLE TEMPORAL VELOCITY 
+									if (g.algorithm == "scroll")	cluster_kinemetric.findMeanTemporalVelocity(); // ensamble temporal mean velocity
+
+									// BASIC TILT CONTROL // ALGORITHM
+									// CONTINUOUS// LOOK FOR SEPARATION OF CLUSTER IN X AND Y DIRECTION//SEPARATION MUST BE ABOVE MIN VALUE// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
+									// RETURN DX AND DY
+									if (g.algorithm == "tilt")	cluster_kinemetric.findMeanInstSeparation();
+									
+									// BASIC FLICK CONTROL // ALGORITHM
+									// SHOULD BE DISCRETE ON RELEASE // IF BETWEEN ACCEL THREHOLD RETURN GESTURE
+									if ((g.algorithm == "flick")||(g.algorithm == "swipe"))
 									{
-										var gdim:DimensionObject = g.dList[DIM];
-											gdim.activeDim = true; // ACTIVATE DIM
-										var res:String = gdim.property_result
-										
-										
-										////////////////////////////////////////////////////
-										// CHECK FOR CLUSTER PROEPERTY VALUE LIMITS IF EXIST
-										////////////////////////////////////////////////////
-										
-										// WHEN PROPERTY LIMITS ESTABLISHED
-										// ONLY USES ONE VAR PER PROPERTY BUT COULD BE EXTENDED
-										// STILL NEED TO MAP RETURN TO RESULT
-										if (gdim.property_vars[0])
-										{
-											var num:Number = Math.abs(cO[gdim.property_vars[0]["var"]]);
-											var dim_var:Number = 0;
-												
-											// when max and min
-											if ((gdim.property_vars[0]["min"] != null) && (gdim.property_vars[0]["max"] != null))
-											{
-												if ((num >= gdim.property_vars[0]["min"])&&(num <= gdim.property_vars[0]["max"]))	gdim.clusterDelta = cO[res];//dim_var = num;
-												else gdim.clusterDelta = 0;//dim_var = 0;
-											}
-											// when min
-											else if(gdim.property_vars[0]["min"] != null) 
-											{	
-												if (num >= gdim.property_vars[0]["min"])	{
-													gdim.clusterDelta = cO[res];//dim_var = num;
-													//trace("MIN",num)
-												}
-												else gdim.clusterDelta = 0//dim_var = 0;
-											}
-											// when max 
-											else if (gdim.property_vars[0]["max"] != null) 
-											{	
-												if (num <= gdim.property_vars[0]["max"])	gdim.clusterDelta = cO[res];//dim_var = num;
-												else gdim.clusterDelta = 0;//dim_var = 0;
-											}
-											// when no limits
-											else gdim.clusterDelta = cO[res];//dim_var = num;
-										}
-										//WHEN THERE ARE NO LIMITS IMPOSED
-										else gdim.clusterDelta = cO[res];//rtn_dim = 1;
-										/////////////////////////////////////////////////////////////
-										
-										
-										//CLOSE DIM IF NO VALUE
-										if (gdim.clusterDelta == 0) gdim.activeDim = false;
-										//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);
-										
-										// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
-										if (gdim.activeDim) g.activeEvent = true;
+										cluster_kinemetric.findMeanTemporalVelocity(); // ensamble temporal mean velocity
+										cluster_kinemetric.findMeanTemporalAcceleration(); //ensamble temporal mean acceleration
 									}
-
-
-									g.data.x = cO.x;
-									g.data.y = cO.y;
-									g.data.n = cO.n;
 									
-									//////////////////////////////////////////////////////////////////
-									//////////////////////////////////////////////////////////////////
 									
-									//if ((g.activeEvent) && (g.dispatchEvent))
-									//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
+									///////////////////////////////////////////////////////////////////////////////////////////////////
+									// MOVE TO TEMPORAL METRIC
+									// BASIC HOLD CONTROL // ALGORITHM // type hold
+									if (g.algorithm == "hold")
+									{
+										//if (trace_debug_mode) trace("cluster hold algorithm");
 								
-						}
-						///////////////////////////////////////////////////
-					}
-			}
-			//else {
-				//trace("processing algorithm when NOT touching");
-			//}
+										var hold_number:int = ts.N;//gO.pOList[key].n; // REDUNDANT AS ONLY CALLED IF MEETS N CRITERIA
+										var hold_dist:int = g.point_translation_max;
+										var	hold_time:int = Math.ceil(g.point_event_duration_min/ GestureGlobals.touchFrameInterval);
+									
+										cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);	
+										
+										if(!cO.hold_n)	g.activeEvent = false;
+			
+									}
+									
+									
 
+									///////////////////////////////////////////////////////////////////////////////////
+									// LIMIT DELTA BY CLUSTER VALUES
+									/////////////////////////////////////////////////////////////////////////////////////
+									g.activeEvent = false;
+									
+										for (DIM = 0; DIM < dn; DIM++) 
+										{
+											var gdim:DimensionObject = g.dList[DIM];
+												gdim.activeDim = true; // ACTIVATE DIM
+											var res:String = gdim.property_result
+											
+											
+											////////////////////////////////////////////////////
+											// CHECK FOR CLUSTER PROEPERTY VALUE LIMITS IF EXIST
+											////////////////////////////////////////////////////
+											
+											// WHEN PROPERTY LIMITS ESTABLISHED
+											// ONLY USES ONE VAR PER PROPERTY BUT COULD BE EXTENDED
+											// STILL NEED TO MAP RETURN TO RESULT
+											if (gdim.property_vars[0])
+											{
+												var num:Number = Math.abs(cO[gdim.property_vars[0]["var"]]);
+												var dim_var:Number = 0;
+													
+												// when max and min
+												if ((gdim.property_vars[0]["min"] != null) && (gdim.property_vars[0]["max"] != null))
+												{
+													if ((num >= gdim.property_vars[0]["min"])&&(num <= gdim.property_vars[0]["max"]))	gdim.clusterDelta = cO[res];//dim_var = num;
+													else gdim.clusterDelta = 0;//dim_var = 0;
+												}
+												// when min
+												else if(gdim.property_vars[0]["min"] != null) 
+												{	
+													if (num >= gdim.property_vars[0]["min"])	{
+														gdim.clusterDelta = cO[res];//dim_var = num;
+														//trace("MIN",num)
+													}
+													else gdim.clusterDelta = 0//dim_var = 0;
+												}
+												// when max 
+												else if (gdim.property_vars[0]["max"] != null) 
+												{	
+													if (num <= gdim.property_vars[0]["max"])	gdim.clusterDelta = cO[res];//dim_var = num;
+													else gdim.clusterDelta = 0;//dim_var = 0;
+												}
+												// when no limits
+												else gdim.clusterDelta = cO[res];//dim_var = num;
+											}
+											//WHEN THERE ARE NO LIMITS IMPOSED
+											else gdim.clusterDelta = cO[res];//rtn_dim = 1;
+											/////////////////////////////////////////////////////////////
+											
+											
+											//CLOSE DIM IF NO VALUE
+											if (gdim.clusterDelta == 0) gdim.activeDim = false;
+											//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);
+											
+											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
+											if (gdim.activeDim) g.activeEvent = true;
+										}
+
+
+										g.data.x = cO.x;
+										g.data.y = cO.y;
+										g.data.n = cO.n;
+										
+										//////////////////////////////////////////////////////////////////
+										//////////////////////////////////////////////////////////////////
+										
+										//if ((g.activeEvent) && (g.dispatchEvent))
+										//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
+									
+							}
+							///////////////////////////////////////////////////
+						}
+				}
+				//else {
+					//trace("processing algorithm when NOT touching");
+				//}
+
+				}
 			}
 		}
 

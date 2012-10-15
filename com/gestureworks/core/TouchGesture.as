@@ -275,25 +275,28 @@ package com.gestureworks.core
 			
 			for (key = 0; key < gn; key++) 
 			{
-				if (gO.pOList[key].gesture_type == "stroke")
-					{
-						if ((ts.cO.remove) && (!gO.pOList[key].complete)&&(!strokeCalled)) 
-							{
-							//trace("find stroke..", cO.path_data, cO.history[0].path_data);
-											
-							var pn:uint = sO.path_n;
-							// MAKES SURE PATH IS LONG ENOUGHT TO RESAMPLE
-							if (pn > 30)
-							{
-								ts.tc.cluster_vectormetric.normalizeSamplePath();
-								ts.tc.cluster_vectormetric.findStrokeGesture();
-								strokeCalled = true;
-								//trace("touch gesture call");
+				if (ts.gestureList[gO.pOList[key].gesture_id])
+				{
+					if (gO.pOList[key].gesture_type == "stroke")
+						{
+							if ((ts.cO.remove) && (!gO.pOList[key].complete)&&(!strokeCalled)) 
+								{
+								//trace("find stroke..", cO.path_data, cO.history[0].path_data);
+												
+								var pn:uint = sO.path_n;
+								// MAKES SURE PATH IS LONG ENOUGHT TO RESAMPLE
+								if (pn > 30)
+								{
+									ts.tc.cluster_vectormetric.normalizeSamplePath();
+									ts.tc.cluster_vectormetric.findStrokeGesture();
+									strokeCalled = true;
+									//trace("touch gesture call");
+								}
+								//else ts.tc.cluster_vectormetric.resetPathProperties();
 							}
-							//else ts.tc.cluster_vectormetric.resetPathProperties();
+						gO.pOList[key].complete = true;
 						}
-					gO.pOList[key].complete = true;
-					}
+				}
 			}
 		}
 		
@@ -308,170 +311,171 @@ package com.gestureworks.core
 			for (key=0; key < gn; key++) 
 			//for (key in gO.pOList)
 					{
-					
-					
-					if ((gO.pOList[key].algorithm_class == "temporalmetric")&&(gO.pOList[key].algorithm_type == "discrete")){	
-					
-					//trace("TEMPROAL METRIC");
-					// SEARCH FOR EVENT MATCH LIST	
-					
-					// AVOIDS THE NEED TO HAVE MORE EVENTS AND LISTENERS IN THE DISPLAY LIST
-					// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
-					
-					//search for touch end events on timeline
-					if ((gO.pOList[key].match_TouchEvent == "touchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
+					if (ts.gestureList[gO.pOList[key].gesture_id])
 					{
-						if ((tiO.timelineOn) && (tiO.pointEvents) && (tiO.frame.pointEventArray))
-						{
+						if ((gO.pOList[key].algorithm_class == "temporalmetric")&&(gO.pOList[key].algorithm_type == "discrete")){	
 						
-						// in current frame
-						for (var j:int = 0; j < ts.tiO.frame.pointEventArray.length; j++) 
-								{
-								if (tiO.frame.pointEventArray[j].type == "touchEnd" ) 
-								{
-									//trace("touch end")
-								
-									//FIND TOUCHBEGIN/TOUCHEND PAIRS
-									if ((tapOn) && (!tapCalled))
-									if((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")){
-									{	
-										//gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], gO.pOList[key].gesture_id) ; // tap event pairs
-										gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], key) ; // tap event pairs
-										tapCalled = true; // if called by another gesture using tap do not call again
-										//trace("trace find tap",gO.pOList[key].gesture_id);
-									}
-									}
-								}
-								}
-						}
-					}
-					
-
-					if (gO.pOList[key].match_GestureEvent == "tap") 
-					{
-							if (tiO.history[0])
+						//trace("TEMPROAL METRIC");
+						// SEARCH FOR EVENT MATCH LIST	
+						
+						// AVOIDS THE NEED TO HAVE MORE EVENTS AND LISTENERS IN THE DISPLAY LIST
+						// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
+						
+						//search for touch end events on timeline
+						if ((gO.pOList[key].match_TouchEvent == "touchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
+						{
+							if ((tiO.timelineOn) && (tiO.pointEvents) && (tiO.frame.pointEventArray))
 							{
-							for (var k:int = 0; k < tiO.history[0].gestureEventArray.length; k++) 
-								{
-									if (tiO.history[0].gestureEventArray[k].type == "tap" ) {
-										
-										// FIND TAP EVENT PAIRS
-										if ((gO.pOList[key].gesture_type == "double_tap") && (!dtapCalled))	
-										{
-											//gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
-											gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], key);
-											dtapCalled = true;
-										}
-										
-										// FIND TAP EVENT TRIPLETS
-										if ((gO.pOList[key].gesture_type == "triple_tap")&& (!ttapCalled))
-										{
-											//gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
-											gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], key);
-											ttapCalled = true;
-										}
-										
-										//???????????????????????????????????????????
-										// find hold and tap event pairs??
-										//if ((gO.pOList[key].gesture_type == "hold_tap")&& (!htapCalled))
-										//{
-											//gesture_disc.findGestureHoldTap(tiO.history[0].gestureEventArray[k], key);
-											//htapCalled = true;
-										//}
-									}
-								}
-							}
-					}	
-					
-					///////////////////////////////////////////////////////////////////////////
-					// generic event pair search
-					
-					// IF EVENT B OCCURES
-					// GO BACK AND LOOK FOR EVENT A
-					//????????????????????????????????????????????????
-					//if (gO.pOList[key].match_gestureEvent == "hold") 
-					//{
-						
-					//}
-					///////////////////////////////////////////////////////////////////////////	
-					
-					
-					/////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////////////
-				
-					/////////////////////////////////////////////////////////////////////////////////////////////////
-					// process discrete gestures batches for dispatch
-					/////////////////////////////////////////////////////////////////////////////////////////////////
-					if ((gO.pOList[key].dispatch_mode == "batch"))
-						{
-								//tap counter
-								if (gO.pOList[key].gesture_type == "tap") 
-								{
-									//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
-									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval ) gO.pOList[key].timer_count = 0;
-									
-									if (gO.pOList[key].timer_count == 0) {
-										//gesture_disc.countTapEvents(gO.pOList[key].gesture_id);
-										gesture_disc.countTapEvents(key);
-										//trace("count tap",gO.pOList[key].timer_count);
-										//trace("d mode", gO.pOList[key].dispatchEvent);
-										//
-										//DIPATCH EVENT LOCKES AND IS NOT ACTIVATED IN COUNT TAP EVENTS??
-										//
-								
-									}
-									gO.pOList[key].timer_count++
-								}
-								// double tap counter
-								if (gO.pOList[key].gesture_type == "double_tap") 
-								{
-									//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
-									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
-									
-									if (gO.pOList[key].timer_count == 0) {
-										//gesture_disc.countDoubleTapEvents(gO.pOList[key].gesture_id);
-										gesture_disc.countDoubleTapEvents(key);
-										//trace("count dtap",gO.pOList[key].timer_count);
-									}
-									gO.pOList[key].timer_count++
-								}
-												
-								// triple tap counter
-								if (gO.pOList[key].gesture_type == "triple_tap") 
-								{
-									if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
-									
-									if (gO.pOList[key].timer_count == 0) {
-										//gesture_disc.countTripleTapEvents(gO.pOList[key].gesture_id);
-										gesture_disc.countTripleTapEvents(key);
-										//trace("count dtap",gO.pOList[key].timer_count);
-									}
-									gO.pOList[key].timer_count++
-								}
-								
-								//trace("d mode",gO.pOList[key].dispatchEvent);
-						}
-						
-						///////////////////////////
-						// goes through current frame and dispatched current tap double tap and triple tap events direct from timeline.
-						/*
-						if ((gO.pOList[key].dispatch_mode == "stream"))
-						{
-							var gestureEventArray:Array = tiO.frame.gestureEventArray
 							
-							for (var p:int = 0; p < gestureEventArray.length; p++)
-								{
-								if((gO.pOList[key].gesture_type=="tap")||(gO.pOList[key].gesture_type=="double_tap")||(gO.pOList[key].gesture_type=="triple_tap")){
-								if (gO.pOList[key].gesture_type == gestureEventArray[p].type) dispatchEvent(gestureEventArray[p]);	
-								}
-								}
+							// in current frame
+							for (var j:int = 0; j < ts.tiO.frame.pointEventArray.length; j++) 
+									{
+									if (tiO.frame.pointEventArray[j].type == "touchEnd" ) 
+									{
+										//trace("touch end")
+									
+										//FIND TOUCHBEGIN/TOUCHEND PAIRS
+										if ((tapOn) && (!tapCalled))
+										if((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")){
+										{	
+											//gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], gO.pOList[key].gesture_id) ; // tap event pairs
+											gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], key) ; // tap event pairs
+											tapCalled = true; // if called by another gesture using tap do not call again
+											//trace("trace find tap",gO.pOList[key].gesture_id);
+										}
+										}
+									}
+									}
+							}
 						}
-						*/
+						
+
+						if (gO.pOList[key].match_GestureEvent == "tap") 
+						{
+								if (tiO.history[0])
+								{
+								for (var k:int = 0; k < tiO.history[0].gestureEventArray.length; k++) 
+									{
+										if (tiO.history[0].gestureEventArray[k].type == "tap" ) {
+											
+											// FIND TAP EVENT PAIRS
+											if ((gO.pOList[key].gesture_type == "double_tap") && (!dtapCalled))	
+											{
+												//gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
+												gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], key);
+												dtapCalled = true;
+											}
+											
+											// FIND TAP EVENT TRIPLETS
+											if ((gO.pOList[key].gesture_type == "triple_tap")&& (!ttapCalled))
+											{
+												//gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
+												gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], key);
+												ttapCalled = true;
+											}
+											
+											//???????????????????????????????????????????
+											// find hold and tap event pairs??
+											//if ((gO.pOList[key].gesture_type == "hold_tap")&& (!htapCalled))
+											//{
+												//gesture_disc.findGestureHoldTap(tiO.history[0].gestureEventArray[k], key);
+												//htapCalled = true;
+											//}
+										}
+									}
+								}
+						}	
+						
+						///////////////////////////////////////////////////////////////////////////
+						// generic event pair search
+						
+						// IF EVENT B OCCURES
+						// GO BACK AND LOOK FOR EVENT A
+						//????????????????????????????????????????????????
+						//if (gO.pOList[key].match_gestureEvent == "hold") 
+						//{
+							
+						//}
+						///////////////////////////////////////////////////////////////////////////	
 						
 						
-						
-						
-						
+						/////////////////////////////////////////////////////////////////////////////////////////////
+						/////////////////////////////////////////////////////////////////////////////////////////////
+					
+						/////////////////////////////////////////////////////////////////////////////////////////////////
+						// process discrete gestures batches for dispatch
+						/////////////////////////////////////////////////////////////////////////////////////////////////
+						if ((gO.pOList[key].dispatch_mode == "batch"))
+							{
+									//tap counter
+									if (gO.pOList[key].gesture_type == "tap") 
+									{
+										//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
+										if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval ) gO.pOList[key].timer_count = 0;
+										
+										if (gO.pOList[key].timer_count == 0) {
+											//gesture_disc.countTapEvents(gO.pOList[key].gesture_id);
+											gesture_disc.countTapEvents(key);
+											//trace("count tap",gO.pOList[key].timer_count);
+											//trace("d mode", gO.pOList[key].dispatchEvent);
+											//
+											//DIPATCH EVENT LOCKES AND IS NOT ACTIVATED IN COUNT TAP EVENTS??
+											//
+									
+										}
+										gO.pOList[key].timer_count++
+									}
+									// double tap counter
+									if (gO.pOList[key].gesture_type == "double_tap") 
+									{
+										//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
+										if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
+										
+										if (gO.pOList[key].timer_count == 0) {
+											//gesture_disc.countDoubleTapEvents(gO.pOList[key].gesture_id);
+											gesture_disc.countDoubleTapEvents(key);
+											//trace("count dtap",gO.pOList[key].timer_count);
+										}
+										gO.pOList[key].timer_count++
+									}
+													
+									// triple tap counter
+									if (gO.pOList[key].gesture_type == "triple_tap") 
+									{
+										if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
+										
+										if (gO.pOList[key].timer_count == 0) {
+											//gesture_disc.countTripleTapEvents(gO.pOList[key].gesture_id);
+											gesture_disc.countTripleTapEvents(key);
+											//trace("count dtap",gO.pOList[key].timer_count);
+										}
+										gO.pOList[key].timer_count++
+									}
+									
+									//trace("d mode",gO.pOList[key].dispatchEvent);
+							}
+							
+							///////////////////////////
+							// goes through current frame and dispatched current tap double tap and triple tap events direct from timeline.
+							/*
+							if ((gO.pOList[key].dispatch_mode == "stream"))
+							{
+								var gestureEventArray:Array = tiO.frame.gestureEventArray
+								
+								for (var p:int = 0; p < gestureEventArray.length; p++)
+									{
+									if((gO.pOList[key].gesture_type=="tap")||(gO.pOList[key].gesture_type=="double_tap")||(gO.pOList[key].gesture_type=="triple_tap")){
+									if (gO.pOList[key].gesture_type == gestureEventArray[p].type) dispatchEvent(gestureEventArray[p]);	
+									}
+									}
+							}
+							*/
+							
+							
+							
+							
+							
+						}
 					}
 				}
 		}
