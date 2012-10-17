@@ -73,7 +73,8 @@ package com.gestureworks.managers
 			//globalClock.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
 			//globalClock.start();
 			
-			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
+			// leave this on for all input types
+			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
 		}
 		
 		gw_public static function resetGlobalClock():void

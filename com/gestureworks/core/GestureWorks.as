@@ -76,7 +76,6 @@ package com.gestureworks.core
 	public class GestureWorks extends GestureWorksCore
 	{
 		
-		public static var cmlDisplays:Array = [];
 		
 		/**
 		 * Returns the current version of GestureWorks.
@@ -131,6 +130,7 @@ package com.gestureworks.core
 		private var _gwComplete:Boolean;
 		private var _root:* = root;
 		
+		public var cmlDisplays:Array = [];
 		
 		/**
 		 * 

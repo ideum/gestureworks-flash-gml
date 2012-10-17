@@ -272,7 +272,7 @@ package com.gestureworks.core
 		public function initDebugVars():void
 		{
 		//if (trace_debug_mode) 
-		trace("init debug cml vars");
+		//trace("init debug cml vars");
 		
 		//trace(_pointData,_panelData,_touchObjectData)
 		

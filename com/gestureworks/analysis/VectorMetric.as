@@ -79,7 +79,7 @@ package com.gestureworks.analysis
 			sO = ts.sO;
 			
 			//if (ts.trace_debug_mode) 
-			trace("init cluster vectormetric");
+			//trace("init cluster vectormetric");
 			
 			// ASSEMBLES PATH COLLECTION FROM GESTURE OBJECTS
 			getPathCollection();
