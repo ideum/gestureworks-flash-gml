@@ -112,8 +112,8 @@ package com.gestureworks.managers
 		public function complete():void
 		{					
 			var timerCount:int;
-			
-			if (key != "cl3ar" && !Yolotzin.clear)
+						
+			if (key != "cl3ar" && !Yolotzin.clear && Yolotzin.mode !=2 && Yolotzin.mode !=3)
 			{
 				modeImage = createModeImage(Yolotzin.mode);
 				
@@ -138,7 +138,7 @@ package com.gestureworks.managers
 		private function timerComplete():void
 		{						
 			clearInterval(timeInterval);
-		
+			
 			if (Yolotzin.mode >= 0)
 			{
 				if (modeImage) stage.removeChild(modeImage);
