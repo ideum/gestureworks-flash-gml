@@ -459,34 +459,50 @@ package com.gestureworks.analysis
 		
 		public function findMeanInstSeparation():void
 		{
+			
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// cluster separation //OPERATION
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// finds the change in the separation of the cluster between the current frame and a previous frame in history
 					cO.ds = 0;
-					//c_dsx = 0;
-					//c_dsy = 0;
+					cO.dsx = 0;
+					cO.dsy = 0;
 					
 					if (N > 1)
 					{	
+						var sx:Number = 0;
+						var sy:Number = 0;
+						var sx_mc:Number = 0;
+						var sy_mc:Number = 0;
+						
 						for (i = 0; i < N; i++) 
 						{
 							//if ((N > i + 1) && (pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
 							if ((N>i+1)&&(pointList[0].history.length>mc) && (pointList[i + 1].history.length>mc))
 							{		
-								// SIMPLIFIED DELTA
+								sx = Math.abs(pointList[0].history[0].x - pointList[i + 1].history[0].x);
+								sy = Math.abs(pointList[0].history[0].y - pointList[i + 1].history[0].y);
+								sx_mc = Math.abs(pointList[0].history[mc].x - pointList[i + 1].history[mc].x);
+								sy_mc = Math.abs(pointList[0].history[mc].y - pointList[i + 1].history[mc].y);
+								
 								//c_ds += (Math.sqrt((pointList[0].history[0].x - pointList[i + 1].history[0].x) * (pointList[0].history[0].x - pointList[i + 1].history[0].x) + (pointList[0].history[0].y - pointList[i + 1].history[0].y) * (pointList[0].history[0].y - pointList[i + 1].history[0].y)) - Math.sqrt((pointList[0].history[mc].x - pointList[i + 1].history[mc].x) * (pointList[0].history[mc].x - pointList[i + 1].history[mc].x) + (pointList[0].history[mc].y - pointList[i + 1].history[mc].y) * (pointList[0].history[mc].y - pointList[i + 1].history[mc].y)))
-								cO.ds += (Math.sqrt((pointList[0].history[0].x - pointList[i + 1].history[0].x) * (pointList[0].history[0].x - pointList[i + 1].history[0].x) + (pointList[0].history[0].y - pointList[i + 1].history[0].y) * (pointList[0].history[0].y - pointList[i + 1].history[0].y)) - Math.sqrt((pointList[0].history[mc].x - pointList[i + 1].history[mc].x) * (pointList[0].history[mc].x - pointList[i + 1].history[mc].x) + (pointList[0].history[mc].y - pointList[i + 1].history[mc].y) * (pointList[0].history[mc].y - pointList[i + 1].history[mc].y)))
+								cO.ds += (Math.sqrt(sx * sx + sy * sy) - Math.sqrt(sx_mc * sx_mc + sy_mc * sy_mc));
+								cO.dsx += (sx - sx_mc)//Math.sqrt(sx * sx - sx_mc * sx_mc);
+								cO.dsy += (sy - sy_mc)//Math.sqrt(sy * sy - sy_mc * sy_mc);
 							}
 						}
-					//c_dsx = c_ds;
-					//c_dsy = c_ds;
+					
 					//c_dsx = (sx - sx_mc)*k1;
 					//c_dsy = (sy - sy_mc)*k1;	
 						
 					//c_ds *= k1;	
-					cO.ds *= k1*sck;	
+					cO.ds *= k1 * sck;//(Math.sqrt(sx * sx + sy * sy) - Math.sqrt(sx_mc * sx_mc + sy_mc * sy_mc))*k1 * sck;
+					cO.dsx *= k1 * sck; //(sx - sx_mc)*k1 * sck;//(Math.sqrt((sx * sx) - (sx_mc * sx_mc)))*k1 * sck;//cO.ds;
+					cO.dsy *= k1 * sck; //(sy - sy_mc)*k1 * sck;//(Math.sqrt((sy * sy) - (sy_mc * sy_mc)))*k1 * sck;//cO.ds;
+					//trace("mean inst separation");
 					}
+					
+					
 		}	
 		
 		
