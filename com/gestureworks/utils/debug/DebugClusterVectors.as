@@ -159,6 +159,8 @@ package com.gestureworks.utils.debug
 					
 					// reference path
 					var gn:uint = ts.gO.pOList.length
+					var a:Number = 0.15;
+					var d:Number = 35;
 					
 					for (var b:uint = 0; b < gn; b++ )
 					{
@@ -167,12 +169,12 @@ package com.gestureworks.utils.debug
 						
 						if (ref_path[0])
 						{
-							graphics.moveTo(ref_path[0].x, ref_path[0].y+150*b)
-							graphics.lineStyle(obj.stroke_thickness, 0xFF0000, obj.stroke_alpha);
+							graphics.moveTo(a*ref_path[0].x, a*ref_path[0].y+d*b)
+							graphics.lineStyle(1, 0xFF0000, obj.stroke_alpha);
 						
 							for (var q:uint = 0; q < ref_path.length ; q++) 
 							{
-								graphics.lineTo(ref_path[q].x, ref_path[q].y+150*b);
+								graphics.lineTo(a*ref_path[q].x, a*ref_path[q].y+d*b);
 							}
 						}
 					}

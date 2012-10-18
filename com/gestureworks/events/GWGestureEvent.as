@@ -100,19 +100,11 @@ package com.gestureworks.events
 			{
 				//SEED_GESTURE:"seed gesture",
 			};
-	
-		
-		//public static var vars:Object { };
-		//trace("test", GestureGlobalVariables.GE.HOLD, GestureGlobalVariables.GE["hold"]);
-		//trace(GestureGlobalVariables.GE.NEWGESTURE);
 
 		public function GWGestureEvent(type:String, data:Object, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
-			//trace(type,GML.NEW_GESTURE); 
-			
 			super(type, bubbles, cancelable);
 			value = data;
-			//data=data;
 		}
 
 		override public function clone():Event

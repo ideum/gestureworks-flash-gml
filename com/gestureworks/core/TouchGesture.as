@@ -275,7 +275,7 @@ package com.gestureworks.core
 			
 			for (key = 0; key < gn; key++) 
 			{
-				//if (ts.gestureList[gO.pOList[key].gesture_id])
+				//if (ts.gestureList[gO.pOList[key].gesture_id])||(ts.gestureList[gO.pOList[key].gesture_set_id])) so can validate set
 				//{
 					if (gO.pOList[key].gesture_type == "stroke")
 						{
@@ -290,11 +290,19 @@ package com.gestureworks.core
 									ts.tc.cluster_vectormetric.normalizeSamplePath();
 									ts.tc.cluster_vectormetric.findStrokeGesture();
 									strokeCalled = true;
-									trace("touch gesture call");
+									//trace("touch gesture call stroke analysis");
 								}
 								//else ts.tc.cluster_vectormetric.resetPathProperties();
 							}
 						gO.pOList[key].complete = true;
+						}
+						
+					if (gO.pOList[key].gesture_type == "path")
+						{
+							trace("find path data");
+							// path layout tool
+							// resample based on number of touch object in group
+							// return point list to peg objects on path
 						}
 				//}
 			}
@@ -311,6 +319,8 @@ package com.gestureworks.core
 			for (key=0; key < gn; key++) 
 			//for (key in gO.pOList)
 					{
+						
+					//if (ts.gestureList[gO.pOList[key].gesture_id])||(ts.gestureList[gO.pOList[key].gesture_set_id]))// so can vaidate set
 					if (ts.gestureList[gO.pOList[key].gesture_id])
 					{
 						if ((gO.pOList[key].algorithm_class == "temporalmetric")&&(gO.pOList[key].algorithm_type == "discrete")){	
