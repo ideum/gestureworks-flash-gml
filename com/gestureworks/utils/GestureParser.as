@@ -170,7 +170,11 @@ package com.gestureworks.utils
 												gO.event_type = String(gml.Gesture_set[g].Gesture[i].mapping.update.gesture_event.attribute("type"));
 												
 												// create static var in gesture event object
-												if (gO.event_type == "custom") GWGestureEvent.GML[gesture_id.toUpperCase()] = gesture_id;
+												if (gO.event_type == "custom") {
+													GWGestureEvent.CUSTOM[gesture_id.toUpperCase()] = gesture_id;
+													gO.event_type = gesture_id
+													//trace("parser",gO.event_type);
+												}
 												
 												// DISPATCH CRITERIA
 												gO.dispatch_type = String(gml.Gesture_set[g].Gesture[i].mapping.update.attribute("dispatch_type"));

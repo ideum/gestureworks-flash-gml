@@ -142,12 +142,13 @@ package com.gestureworks.utils.debug
 				
 				
 				///////////////////////////////////////////////////////////////////////////////////////
-				/*
+				
 				// draw stroke
-				if((N)&&(path_data[0])){
+				if((N)&&(path_data)){
 				
 				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
-				
+					if (path_data[0])
+					{
 					graphics.moveTo(path_data[0].x, path_data[0].y)
 					graphics.lineStyle(obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
 					
@@ -163,16 +164,20 @@ package com.gestureworks.utils.debug
 					{
 						var ref_path:Array = ts.gO.pOList[b].gmlPath
 						//var ref_path:Array = ts.cO.path_data;
-					
-						graphics.moveTo(ref_path[0].x, ref_path[0].y+150*b)
-						graphics.lineStyle(obj.stroke_thickness, 0xFF0000, obj.stroke_alpha);
-					
-						for (var q:uint = 0; q < ref_path.length ; q++) 
+						
+						if (ref_path[0])
 						{
-							graphics.lineTo(ref_path[q].x, ref_path[q].y+150*b);
+							graphics.moveTo(ref_path[0].x, ref_path[0].y+150*b)
+							graphics.lineStyle(obj.stroke_thickness, 0xFF0000, obj.stroke_alpha);
+						
+							for (var q:uint = 0; q < ref_path.length ; q++) 
+							{
+								graphics.lineTo(ref_path[q].x, ref_path[q].y+150*b);
+							}
 						}
 					}
-				}*/
+					}
+				}
 				///////////////////////////////////////////////////////////////////////////////////////
 		}
 	
