@@ -38,12 +38,12 @@ package com.gestureworks.events
 		public static var SCALE:String = "scale";
 		public static var PIVOT:String = "pivot";
 		public static var TILT:String = "tilt";
-		public static var ORIENT:String = "orient";
-		public static var HOLD:String = "hold";
-		public static var SPIRAL:String = "spiral";
-		public static var SPLIT:String = "split";
 		
-		// temproal-metric	
+		//public static var SPIRAL:String = "spiral";
+		//public static var SPLIT:String = "split";
+		
+		// temproal-metric
+		public static var HOLD:String = "hold";
 		public static var TAP:String = "tap";
 		public static var DOUBLE_TAP:String = "double_tap";
 		public static var TRIPLE_TAP:String = "triple_tap";
@@ -51,6 +51,7 @@ package com.gestureworks.events
 		//public static var RYTHM_TAP:String = "rythm_tap";
 		
 		// geo-metric
+		public static var ORIENT:String = "orient";
 		// public static var CLUSTER_TRIANGLE:String = "point_triangle";
 		// public static var CLUSTER_RECTANGLE:String = "point_rectagle";
 		// public static var CLUSTER_LINE:String = "point_line";
@@ -95,11 +96,9 @@ package com.gestureworks.events
 		//public static var HOME:String = "home";
 		
 	
-		public static var GML:Object = 
+		public static var CUSTOM:Object = 
 			{
-				SEED_GESTURE:"seed gesture",
-				EXAMPLE_GESTURE:"example gesture"
-				//N_CUSTOM:"N_CUSTOM"
+				//SEED_GESTURE:"seed gesture",
 			};
 	
 		
