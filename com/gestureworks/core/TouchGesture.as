@@ -275,8 +275,8 @@ package com.gestureworks.core
 			
 			for (key = 0; key < gn; key++) 
 			{
-				if (ts.gestureList[gO.pOList[key].gesture_id])
-				{
+				//if (ts.gestureList[gO.pOList[key].gesture_id])
+				//{
 					if (gO.pOList[key].gesture_type == "stroke")
 						{
 							if ((ts.cO.remove) && (!gO.pOList[key].complete)&&(!strokeCalled)) 
@@ -290,13 +290,13 @@ package com.gestureworks.core
 									ts.tc.cluster_vectormetric.normalizeSamplePath();
 									ts.tc.cluster_vectormetric.findStrokeGesture();
 									strokeCalled = true;
-									//trace("touch gesture call");
+									trace("touch gesture call");
 								}
 								//else ts.tc.cluster_vectormetric.resetPathProperties();
 							}
 						gO.pOList[key].complete = true;
 						}
-				}
+				//}
 			}
 		}
 		
@@ -594,11 +594,8 @@ package com.gestureworks.core
 			//////////////////////////////////////////////
 			// custom GML gesture events with active event
 			//////////////////////////////////////////////
-			//gn = gO.pOList.length;
 			for (key=0; key < gn; key++) 
-			//for (key in gO.pOList) 
 				{	
-					//ts.gO.pOList[key].dispatchEvent = true;
 					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
 					if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
 				}
@@ -728,15 +725,13 @@ package com.gestureworks.core
 									Data[gO.pOList[key].dList[DIM].property_id] = Number(gO.pOList[key].dList[DIM].gestureDelta);	
 									//trace(gO.pOList[key].dList[DIM].gestureDeltaCache);
 								}
-							//trace(gO.pOList[key].gesture_type,gO.pOList[key].gesture_id)
 							
-							// OLD WAY
-							//var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].gesture_type, Data);
 							
 							// USES THE DEFINED EVENT TYPE
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
-							ts.dispatchEvent(GWEVENT);
 							
+							ts.dispatchEvent(GWEVENT);
+							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
 							//trace(GWEVENT)
 							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(GWEVENT);
 							

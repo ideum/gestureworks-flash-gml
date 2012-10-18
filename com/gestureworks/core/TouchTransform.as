@@ -162,7 +162,6 @@ package com.gestureworks.core
 	public function updateTransformation():void 
 	{
 		transformManager();
-		updateLocalProperties();
 	}
 	/**
 	* @private
@@ -344,7 +343,8 @@ package com.gestureworks.core
 				
 				 if (affine) 
 				 {
-					//if (trace_debug_mode) trace("gesture affine transform",touchObjectID);
+					//if (trace_debug_mode) 
+					//trace("gesture affine transform");
 					//affine_modifier = this.transform.matrix;
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate(-t_x+dx,-t_y+dy);
@@ -356,7 +356,8 @@ package com.gestureworks.core
 				}
 				else
 				{
-					///if (trace_debug_mode) trace("gesture tween non-affine transform",touchObjectID)
+					///if (trace_debug_mode) 
+					//trace("gesture tween non-affine transform")
 					//affine_modifier = this.transform.matrix;
 						//affine_modifier.translate(-super.x,-super.y);
 						//affine_modifier.rotate(dtheta);
@@ -451,7 +452,8 @@ package com.gestureworks.core
 				if (affine) 
 				 {
 					//trace("$transforming");
-					// if (trace_debug_mode) trace("trans $ affine",touchObjectID)
+					// if (trace_debug_mode) 
+					//trace("trans $ affine")
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate( - t_x, - t_y);
 						affine_modifier.rotate(dtheta);
@@ -463,7 +465,8 @@ package com.gestureworks.core
 				 
 				 else
 				 {
-					//if (trace_debug_mode) trace("tween trans $ non affine",touchObjectID)
+					//if (trace_debug_mode) 
+					//trace("tween trans $ non affine")
 					affine_modifier = new Matrix;
 					affine_modifier.rotate(ts.rotation* DEG_RAD + dtheta);
 						affine_modifier.scale(ts.scaleX + ds, ts.scaleY + ds);	
