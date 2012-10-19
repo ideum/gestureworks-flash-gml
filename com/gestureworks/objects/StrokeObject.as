@@ -52,6 +52,7 @@ package com.gestureworks.objects
 		}
 		
 		// path_data FOR UNISTROKES
+		// CONVERT TO VECTOR
 		private var _path_data:Array = new Array();
 		public function get path_data():Array
 		{
@@ -61,6 +62,7 @@ package com.gestureworks.objects
 		{
 			_path_data = value;
 		}
+		// CONVERT TO VECTOR
 		// NORMALIZED PATH DATA FOR UNISTROKES
 		private var _path_data_norm:Array = new Array();
 		public function get path_data_norm():Array

@@ -31,7 +31,7 @@ package com.gestureworks.objects
 		{
 			_id = value;
 		}
-		
+		/////////////////////////////////////////////
 		// x
 		private var _x:Number = 0;
 		public function get x():Number
@@ -52,6 +52,28 @@ package com.gestureworks.objects
 		{
 			_y = value;
 		}
+		
+		// width
+		private var _w:Number = 0;
+		public function get w():Number
+		{
+			return _w;
+		}
+		public function set w(value:Number):void
+		{
+			_w = value;
+		}
+		// height
+		private var _h:Number = 0;
+		public function get h():Number
+		{
+			return _h;
+		}
+		public function set h(value:Number):void
+		{
+			_h = value;
+		}
+		//////////////////////////////////////////////
 		
 		// dx
 		private var _dx:Number = 0;

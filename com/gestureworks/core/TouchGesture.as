@@ -285,7 +285,7 @@ package com.gestureworks.core
 												
 								var pn:uint = sO.path_n;
 								// MAKES SURE PATH IS LONG ENOUGHT TO RESAMPLE
-								if (pn > 30)
+								if (pn > 60)
 								{
 									ts.tc.cluster_vectormetric.normalizeSamplePath();
 									ts.tc.cluster_vectormetric.findStrokeGesture();

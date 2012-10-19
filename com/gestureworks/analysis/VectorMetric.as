@@ -123,8 +123,15 @@ package com.gestureworks.analysis
 			
 			for (i = 0; i < pn; i++)
 				{
+				// MAY NEED TO CONVERT TO BACK TO SIMPLE 3D POINTS
 				//trace("--",pointList[0].history[i].x, pointList[0].history[i].y)
-				path.push(new Point(pointList[0].history[i].x,pointList[0].history[i].y));
+				//path.push(new Object(pointList[0].history[i].x, pointList[0].history[i].y, pointList[0].history[i].w, pointList[0].history[i].h));
+				var tpt:Object = new Object()
+					tpt.x = pointList[0].history[i].x;
+					tpt.y = pointList[0].history[i].y;
+					tpt.w = pointList[0].history[i].w;
+					tpt.h = pointList[0].history[i].h;
+				path.push(tpt);
 				}
 			sO.path_data = path
 			sO.path_n = path.length;
@@ -370,8 +377,8 @@ package com.gestureworks.analysis
 		return d;
 	}
 	
-	public static function Distance(p1:Point, p2:Point):Number // finds the distance between two points
-	{
+	public static function Distance(p1:Object, p2:Object):Number // finds the distance between two points
+	{//CONVERTED FROM POINTS TO OBJECT
 		if ((p1) && (p2))
 		{
 			var dx:Number = p2.x - p1.x;

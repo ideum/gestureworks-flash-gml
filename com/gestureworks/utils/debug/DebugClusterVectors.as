@@ -147,17 +147,23 @@ package com.gestureworks.utils.debug
 				if((N)&&(path_data)){
 				
 				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
+					
+					// SAMPLE PATH
 					if (path_data[0])
 					{
 					graphics.moveTo(path_data[0].x, path_data[0].y)
-					graphics.lineStyle(obj.stroke_thickness, obj.stroke_color, obj.stroke_alpha);
+					
 					
 					for (var p:uint = 0; p < path_data.length ; p++) 
 					{
+						var t:Number = 0.1*(path_data[p].w + path_data[p].h) * 0.5 -5
+						//obj.stroke_thickness
+						//trace(t)
+						graphics.lineStyle(t, obj.stroke_color, obj.stroke_alpha);
 						graphics.lineTo(path_data[p].x, path_data[p].y);
 					}
 					
-					// reference path
+					// REFERNCE PATHS//////////////////////////////////////
 					var gn:uint = ts.gO.pOList.length
 					var a:Number = 0.15;
 					var d:Number = 35;
@@ -178,6 +184,7 @@ package com.gestureworks.utils.debug
 							}
 						}
 					}
+					///////////////////////////////////////////////////////
 					}
 				}
 				///////////////////////////////////////////////////////////////////////////////////////

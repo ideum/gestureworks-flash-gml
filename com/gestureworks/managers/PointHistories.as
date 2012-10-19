@@ -80,6 +80,8 @@ package com.gestureworks.managers
 				{
 					pt.x = event.localX;
 					pt.y = event.localY;
+					pt.w = event.sizeX;
+					pt.h = event.sizeY;
 					pt.dx = event.localX - point.history[0].x;
 					pt.dy = event.localY - point.history[0].y;
 					//trace(pt.x,pt.y,pt.dx,pt.dy);
@@ -88,6 +90,8 @@ package com.gestureworks.managers
 				{
 					pt.x = event.stageX;
 					pt.y = event.stageY;
+					pt.w = event.sizeX;
+					pt.h = event.sizeY;
 					pt.dx = event.stageX - point.history[0].x;
 					pt.dy = event.stageY - point.history[0].y;
 					// NO SUB-PIXEL RESOLUTION
@@ -108,11 +112,15 @@ package com.gestureworks.managers
 				{
 					pt.x = event.localX;
 					pt.y = event.localY;
+					pt.w = event.sizeX;
+					pt.h = event.sizeY;
 				}
 				else
 				{
 					pt.x = event.stageX;
 					pt.y = event.stageY;
+					pt.w = event.sizeX;
+					pt.h = event.sizeY;
 				}
 			}
 			
@@ -131,6 +139,9 @@ package com.gestureworks.managers
 				point.DY = pt.dy;
 				point.moveCount = 1;
 			}
+			
+			//var rad:Number = Math.max(event.sizeX, event.sizeY);
+			//trace("point augmentation data",event.sizeX,event.sizeY, rad);
 			
 			return pt;
 		}
