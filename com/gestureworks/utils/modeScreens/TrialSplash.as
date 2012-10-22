@@ -15,8 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 package com.gestureworks.utils.modeScreens 
-{					
-	import com.gestureworks.managers.ModeManager;
+{
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import com.gestureworks.utils.Yolotzin;
@@ -28,8 +27,8 @@ package com.gestureworks.utils.modeScreens
 	 */
 	public class TrialSplash extends Sprite 
 	{
-		[Embed(source = "../../../../../lib/assets/gw_splash.png")]
-		private var SplashImage:Class;		
+		[Embed(source = "../../../../../lib/assets/gw_splash.png")] private var Splash:Class;
+		[Embed(source = "../../../../../lib/assets/trial_splash.png")] private var SplashNoDate:Class;
 		
 		public function TrialSplash(ignoreDateCountdown:Boolean=false) 
 		{
@@ -37,13 +36,13 @@ package com.gestureworks.utils.modeScreens
 			
 			if (ignoreDateCountdown)
 			{
-				splash = new SplashImage;
+				splash = new SplashNoDate();
 				addChild(splash);
 			}
 			
 			else
 			{
-				splash = new SplashImage;
+				splash = new SplashNoDate();
 				addChild(splash);				
 				
 				var button:SplashButton = new SplashButton(130, 30);
@@ -53,11 +52,11 @@ package com.gestureworks.utils.modeScreens
 
 				var timeString:String = Yolotzin.trialLeft.toString();
 				if (timeString.length == 1)timeString = "0" + Yolotzin.trialLeft.toString();
-				var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 5);
+				var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 4);
 				timeLeft.selectable = false;
 				addChild(timeLeft);
-				timeLeft.x = 120;
-				timeLeft.y = 147;
+				timeLeft.x = 116;
+				timeLeft.y = 150;
 			}
 			
 			var version:SplashVersion = new SplashVersion();

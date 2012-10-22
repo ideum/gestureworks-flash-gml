@@ -21,7 +21,7 @@ package com.gestureworks.utils.modeScreens
 	{
 		private var textFormat:TextFormat = new TextFormat();
 		
-		public function SplashText(txt:String, size:Number=15, color:uint=0x000000, spacing:int=0, font:String="OpenSansRegular") 
+		public function SplashText(txt:String, size:Number=15, color:uint=0x000000, spacing:int=0, font:String="Arial") 
 		{
 			super();
 			
