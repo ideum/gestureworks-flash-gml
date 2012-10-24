@@ -241,10 +241,16 @@ package com.gestureworks.core
 											// reduces the number of events and unnesesary transformations by zeroing small deltas
 											//////////////////////////////////////////////////////////////////////////////////////////
 											
+											
 											if (gDim.delta_filter)
 											{
 												if (Math.abs(gDim.gestureDelta) < gDim.delta_min) gDim.gestureDelta = 0;
-												if ( Math.abs(gDim.gestureDelta) > gDim.delta_max) gDim.gestureDelta = gDim.delta_max;
+												
+												if (Math.abs(gDim.gestureDelta) > gDim.delta_max) 
+												{
+													if (gDim.gestureDelta < 0) gDim.gestureDelta = -gDim.delta_max;
+													if (gDim.gestureDelta > 0) gDim.gestureDelta = gDim.delta_max;
+												}
 											}
 											
 									
@@ -254,8 +260,11 @@ package com.gestureworks.core
 											// allows for value bounds so that gestures mapped to known object properties can be managed
 											/////////////////////////////////////////////////////////////////////////////////////////////
 											
-											if (gDim.boundary_filter) 
+											//COULD IN THEORY WORK WITH NON NATIVE TRANSFORMS BUT FOR NOW NO
+											if ((gDim.boundary_filter)&&(!ts.disableNativeTransform))
 											{	
+												//trace(gDim.gestureValue,trO.obj_x,gDim.target_id) 
+												
 												if (Math.abs(gDim.gestureValue) < gDim.boundary_min)
 												{
 													if (gDim.gestureDelta < 0) gDim.gestureDelta = 0;
@@ -264,13 +273,6 @@ package com.gestureworks.core
 												{
 													if (gDim.gestureDelta > 0) gDim.gestureDelta = 0;
 												}
-												//trace(xy_lock);
-												// rotate lock when out of xy bounds
-												//if ((ts.gO.pOList[i][j].target_id == "dtheta")&&(xy_lock)) 
-													//{
-														//ts.gO.pOList[i][j].gestureDelta = 0;
-														//trace("lock rotate");
-													//}
 											}
 
 								////////// END MAIN FILTER BLOCK ///////////////////////////////////////////////

@@ -156,9 +156,10 @@ package com.gestureworks.utils.debug
 					
 					for (var p:uint = 0; p < path_data.length ; p++) 
 					{
-						var t:Number = 0.1*(path_data[p].w + path_data[p].h) * 0.5 -5
+						var t:Number = 3//0.1*(path_data[p].w + path_data[p].h) * 0.5 -5
 						//obj.stroke_thickness
 						//trace(t)
+						//trace(path_data[p].w , path_data[p].h);
 						graphics.lineStyle(t, obj.stroke_color, obj.stroke_alpha);
 						graphics.lineTo(path_data[p].x, path_data[p].y);
 					}

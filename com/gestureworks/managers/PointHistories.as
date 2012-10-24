@@ -95,7 +95,11 @@ package com.gestureworks.managers
 					pt.dx = event.stageX - point.history[0].x;
 					pt.dy = event.stageY - point.history[0].y;
 					// NO SUB-PIXEL RESOLUTION
-					//trace(pt.x,pt.y,pt.dx,pt.dy,event.stageX,event.stageY);
+					//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
+					
+					//var sx:Number = event.sizeX * Math.exp(90)
+					//var sy:Number = event.sizeY*Math.exp(90)
+					//trace(event.sizeX,event.sizeY, event.pressure, sx,sy);
 				}	
 				//trace(pt.dx,pt.dy,event.stageY,point.history[0].y,point.history[1].y,point.history[3].y)
 			}
