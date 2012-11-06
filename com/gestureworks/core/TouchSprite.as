@@ -811,15 +811,15 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
-		private var _transformGestureVector:Boolean = false;
+		// default true so that all nested gestures are correct unless specidied
+		private var _transformGestureVectors:Boolean = true;
 		/**
 		* Determins whether transformations are handled internally (natively) on the touchSprite.
 		*/
-		public function get transformGestureVector():Boolean{return _transformGestureVector;}
-		public function set transformGestureVector(value:Boolean):void
+		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
+		public function set transformGestureVectors(value:Boolean):void
 		{
-			_transformGestureVector=value;
+			_transformGestureVectors=value;
 		}
 		/**
 		* @private
@@ -834,6 +834,14 @@ package com.gestureworks.core
 		{
 			_disableAffineTransform=value;
 		}
+		
+		private var _x_lock:Boolean = false;
+		public function get x_lock():Boolean {return _x_lock;}	
+		public function set x_lock(value:Boolean):void { _x_lock = value; }
+		
+		private var _y_lock:Boolean = false;
+		public function get y_lock():Boolean {return _y_lock;}	
+		public function set y_lock(value:Boolean):void{_y_lock = value;}
 		
 		/////////////////////////////////////////////////////////////
 		// $ affine transform methods
@@ -979,9 +987,6 @@ package com.gestureworks.core
 			tt.transformManager();
 			tt.updateLocalProperties();
 			*/
-			
-			
-			
 		}
 		
 	}

@@ -797,6 +797,29 @@ package com.gestureworks.core
 		{
 			_disableNativeTransform=value;
 		}
+		
+		/**
+		* @private
+		*/
+		// default true so that all nested gestures are correct unless specidied
+		private var _transformGestureVectors:Boolean = true;
+		/**
+		* Determins whether gesture vector transformations are handled internally (natively) on the touchSprite.
+		*/
+		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
+		public function set transformGestureVectors(value:Boolean):void
+		{
+			_transformGestureVectors=value;
+		}
+		
+		private var _x_lock:Boolean = false;
+		public function get x_lock():Boolean {return _x_lock;}	
+		public function set x_lock(value:Boolean):void { _x_lock = value; }
+		
+		private var _y_lock:Boolean = false;
+		public function get y_lock():Boolean {return _y_lock;}	
+		public function set y_lock(value:Boolean):void{_y_lock = value;}
+		
 		/**
 		* @private
 		*/

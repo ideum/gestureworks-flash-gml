@@ -607,7 +607,11 @@ package com.gestureworks.core
 			for (key=0; key < gn; key++) 
 				{	
 					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
+					// IF GESTURE EVENT
 					if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
+					// IF KEYBOARD EVENT
+					// BUILD // CONSTRUCT KEYBOARDEVENTS()
+					//dispatchEvent(new KeyboardEvent(KeyboardEvent.KEY_DOWN, true, false, charCodeRef, keyCode, 10));
 				}
 				
 			///////////////////////////////////////////////

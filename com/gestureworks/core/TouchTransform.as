@@ -45,6 +45,7 @@ package com.gestureworks.core
 		public var affine_modifier:Matrix;
 		//private var affine_modifier3D:Matrix3D;
 		public var parent_modifier:Matrix;
+		public var ref_frame_angle:Number = 0; 
 	
 		// private //local merged display object properties
 		/*
@@ -222,15 +223,19 @@ package com.gestureworks.core
 	private function applyNativeTransform(affine:Boolean):void
 		{
 			
-			//if ((ts.parent) && (ts.transformGestureVector))
-			if (ts.parent)
+			if ((ts.parent) && (ts.transformGestureVectors))
+			//if (ts.parent)
 				{
 				//trace("native parent")
 				// gives root cocatenated transfrom of parent space
 				parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
 				parent_modifier.invert();
 
-				var angle:Number = -(Math.atan(parent_modifier.c/parent_modifier.a))//Math.acos(parent_modifier.a)
+				var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
+				
+				//var angle:Number = -calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
+				
+				ref_frame_angle = angle;
 				var scalex:Number = parent_modifier.a/Math.cos(angle)
 				var scaley:Number = parent_modifier.a/Math.cos(angle)
 				
@@ -250,8 +255,8 @@ package com.gestureworks.core
 					t_x =  pt.x;
 					t_y =  pt.y;
 				// rotate translation vector
-					dx =   tpt.x;
-					dy =   tpt.y;
+					dx =  tpt.x;
+					dy =  tpt.y;
 				}
 				
 				else {	
@@ -265,11 +270,11 @@ package com.gestureworks.core
 						t_x = trO.x;
 						t_y = trO.y;
 						}
-						//dx = (ts.dx);
-						//dy = (ts.dy);
-						dx = (trO.dx);
-						dy = (trO.dy);
+						dx = trO.dx;
+						dy = trO.dy;
 				}
+				
+				
 	
 				//var local_pt:Point = ts.globalToLocal(new Point(trO.x,trO.y));
 					//trO.localx = local_pt.x;
@@ -295,9 +300,11 @@ package com.gestureworks.core
 				}
 				
 				///////////////////////////////////////////////////////////////////////////////////
-			
+				// lock properties from transform
+				if (ts.x_lock) { dx = 0 };
+				if (ts.y_lock) { dy = 0 };
+				
 				// leave scalar values untouched
-				//ds =  trO.dsx;
 				dsx =  trO.dsx;
 				dsy =  trO.dsy;// trO.dsy;
 				dtheta = trO.dtheta * DEG_RAD;
@@ -391,21 +398,23 @@ package com.gestureworks.core
 		public function $applyTransform(affine:Boolean):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////
-				//if ((ts.parent)&&(ts.transformGestureVector))
-				//{
-				if (ts.parent)
+				if ((ts.parent)&&(ts.transformGestureVectors))
+				//if (ts.parent)
 				{
 					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms
 					parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
 					parent_modifier.invert();
 					
-					var $angle:Number = -(Math.atan(parent_modifier.c/parent_modifier.a))//Math.acos(parent_modifier.a)
+					//var $angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
+					var $angle:Number = calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
+					
+					
+					ref_frame_angle = $angle;
 					var $scalex:Number = parent_modifier.a/Math.cos($angle)
 					var $scaley:Number = parent_modifier.a/Math.cos($angle)
 					
 					// TRANSFORM AFFINE POINT
-					
 					var $pt:Point;
 					if (!centerTransform) $pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
 					else $pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
@@ -437,6 +446,13 @@ package com.gestureworks.core
 						dx = (ts._$x - ts.x);
 						dy = (ts._$y - ts.y);
 				}
+				
+				
+				//////////////////////////////////////////////////
+				// property transform lock
+				if (ts.x_lock) { dx = 0 };
+				if (ts.y_lock) { dy = 0 };
+				
 				///////////////////////////////////////////////////////////////////////////////////
 				// leave scalar values untouched
 				dsx = (ts._$scaleX - ts.scaleX);
@@ -605,6 +621,20 @@ package com.gestureworks.core
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_SCALE, { dsx: dsx, dsy:dsy } ));
 					if((ts.tiO)&&(ts.tiO.timelineOn)&&(ts.tiO.transformEvents)) ts.tiO.frame.transformEventArray.push(new GWTransformEvent(GWTransformEvent.T_SCALE, { dsx: dsx, dsy:dsy } ));
 				}
+		}
+		
+		private static function calcAngle(adjacent:Number, opposite:Number):Number
+			{
+				if (adjacent == 0) return opposite < 0 ? 270 : 90 ;
+				if (opposite == 0) return adjacent < 0 ? 180 : 0 ;
+				
+				if(opposite > 0) return adjacent > 0 ? 360 + Math.atan(opposite / adjacent) * RAD_DEG : 180 - Math.atan(opposite / -adjacent) * RAD_DEG ;
+				else return adjacent > 0 ? 360 - Math.atan( -opposite / adjacent) * RAD_DEG : 180 + Math.atan( opposite / adjacent) * RAD_DEG ;
+				
+				//if(opposite > 0) return adjacent > 0 ? Math.atan(opposite / adjacent) * RAD_DEG : 180 - Math.atan(opposite / -adjacent) * RAD_DEG ;
+				//else return adjacent > 0 ? 360 - Math.atan( -opposite / adjacent) * RAD_DEG : Math.atan( opposite / adjacent) * RAD_DEG ;
+				
+				return 0;
 		}
 	}
 }
