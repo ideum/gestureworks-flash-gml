@@ -16,10 +16,10 @@
 package com.gestureworks.events
 {
 	import flash.events.Event;
-	//import flash.display.InteractiveObject;
-	//import flash.events.TouchEvent;
+	import flash.display.InteractiveObject;
+	import flash.events.TouchEvent;
 
-	public class GWTouchEvent extends Event//TouchEvent
+	public class GWTouchEvent extends TouchEvent
 	{
 		public static const TOUCH_BEGIN : String = "touchBegin";
 		public static const TOUCH_END : String = "touchEnd"
@@ -85,8 +85,8 @@ package com.gestureworks.events
 		//_isPrimaryTouchPoint = value;
 	//}
 	
-		//public function GWTouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, touchPointID:int = 0, isPrimaryTouchPoint:Boolean = false, localX:Number = NaN, localY:Number = NaN, sizeX:Number = NaN, sizeY:Number = NaN, pressure:Number = NaN, relatedObject:InteractiveObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, commandKey:Boolean = false, controlKey:Boolean = false)
-		public function GWTouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false)
+		public function GWTouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, touchPointID:int = 0, isPrimaryTouchPoint:Boolean = false, localX:Number = NaN, localY:Number = NaN, sizeX:Number = NaN, sizeY:Number = NaN, pressure:Number = NaN, relatedObject:InteractiveObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, commandKey:Boolean = false, controlKey:Boolean = false)
+		//public function GWTouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
 		}

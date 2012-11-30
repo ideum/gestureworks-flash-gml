@@ -456,7 +456,7 @@ package com.gestureworks.core
 				///////////////////////////////////////////////////////////////////////////////////
 				// leave scalar values untouched
 				dsx = (ts._$scaleX - ts.scaleX);
-				dsy = dsx
+				dsy = (ts._$scaleY - ts.scaleY);//dsx
 				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
 				
 			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
