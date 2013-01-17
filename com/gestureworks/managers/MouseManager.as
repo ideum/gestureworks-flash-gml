@@ -15,84 +15,71 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	import com.gestureworks.utils.SimulatorGraphic;
-	import flash.display.DisplayObject;
-	import flash.utils.Dictionary;
-	import flash.events.TouchEvent;
-	import flash.events.MouseEvent;
-	import flash.events.Event;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import com.gestureworks.core.TouchSprite;
-	//import com.gestureworks.core.TouchSpriteBase;
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
-	import com.gestureworks.utils.ArrangePoints;
-	//import com.gestureworks.managers.TouchUpdateManager;
-	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.managers.TouchManager;
-	import com.gestureworks.core.CML;
+	import com.gestureworks.utils.SimulatorGraphic;
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	
 	public class MouseManager
 	{
-		// simulator variables
-		public static var currentMousePoint:int;
-		private static var hold:Boolean;
-		private static var allowMouseStartDrag:Boolean = false;
+		private static var currentMousePoint:int;
 		private static var mousePointX:Number = 0;
 		private static var mousePointY:Number = 0;
-		private static var simGraphicColor:uint = 0xFFAE1F;
-		private static var simGraphicAlpha:Number = 1;
-		private static var simGraphicRadius:Number = 15;
+		private static var hold:Boolean;
+		private static var allowMouseStartDrag:Boolean = false;
 		
-		gw_public static function initialize():void
-		{
-			if (!GestureWorks.hasCML) return;
-			
-			var debugObjects:XMLList = CML.Objects.DebugKit.DebugLayer;
-			
-			//trace("dbo",debugObjects)
-			
-			//for (var i:int = 0; i < debugObjects.length(); i++)
-			//{
-				//trace(debugObjects[i],debugObjects[i].style.radius,debugObjects[i].style.fill_color,debugObjects[i].style.fill_alpha);
-				//if (debugObjects[i].@type == "point_shapes" && debugObjects[i].@displayOn=="true")
-				//{
-					
-					//if (debugObjects[i].@radius != "") simGraphicRadius = 15//debugObjects[i].style.radius;
-					//if (debugObjects[i].@fill_color != "") simGraphicColor = 0xFFAE1F//Number(debugObjects[i].style.fill_color);
-					//if (debugObjects[i].@fill_alpha != "") simGraphicAlpha = 1//Number(debugObjects[i].style.fill_alpha);
-				//}
-			//}
-		}
-						
-		// registers mouse point via touchSprite and a touchEvent.  please see TouchSpriteBase
-		gw_public static function registerMousePoint(event:TouchEvent):void
-		{				
-			//trace("register mouse point");
-			//TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID, 0, event, TouchManager.points[event.touchPointID]));
-			
-			//TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event, GestureGlobals.frameID));
-			
-			TouchManager.points[event.touchPointID].history.unshift(PointHistories.historyObject(event));
-			
+		
+		/**
+		 * Sets the simulator graphic color.
+		 * @default 0xFFAE1F
+		 */
+		public static var graphicColor:uint = 0xFFAE1F;
+		
+		/**
+		 * Sets the simulator graphic alpha.
+		 * @default 1.0
+		 */
+		public static var graphicAlpha:Number = 1;
+		
+		/**
+		 * Sets the simulator graphic radius
+		 * @default 15
+		 */
+		public static var graphicRadius:Number = 15;
 				
+		
+		
+		// initialization method, call through to TouchManager
+		gw_public static function initialize():void
+		{	
+			TouchManager.gw_public::initialize();
+		}
+			
+		
+		
+		/**
+		 * @private
+		 */
+		gw_public static function registerMousePoint(event:TouchEvent):void
+		{							
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);
-				
+			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);			
+			
+			TouchManager.gw_public::registerTouchPoint(event);
+		
 			currentMousePoint = event.touchPointID;
 			mousePointX = event.localX;
 			mousePointY = event.localY;
-			//mousePointX = event.stageX;
-			//mousePointY = event.stageY;
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
 		{			
-			//trace("Mouse up");
 			if (hold)
 			{
 				if (GestureWorks.isShift) 
@@ -125,8 +112,7 @@ package com.gestureworks.managers
 			
 			if (GestureWorks.isShift)
 			{
-				//trace("added circle");
-				var circleGraphic:SimulatorGraphic = new SimulatorGraphic(simGraphicColor, simGraphicRadius, simGraphicAlpha);
+				var circleGraphic:SimulatorGraphic = new SimulatorGraphic(graphicColor, graphicRadius, graphicAlpha);
 					circleGraphic.x = mousePointX;
 					circleGraphic.y = mousePointY;
 					circleGraphic.id = currentMousePoint
@@ -136,7 +122,7 @@ package com.gestureworks.managers
 				return;
 			}
 			
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, currentMousePoint, false, mousePointX, mousePointY);
+			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_END, true, false, currentMousePoint, false, mousePointX, mousePointY);
 			TouchManager.onTouchUp(event);
 		}
 		
@@ -151,26 +137,18 @@ package com.gestureworks.managers
 		
 		private static function onMouseMove(e:MouseEvent):void
 		{
-			
 			mousePointX = e.stageX;
 			mousePointY = e.stageY;
-			
-			//mousePointX = e.localX;
-			//mousePointY = e.localY;
-			
-			//trace("on mouse move",mousePointX);
 			
 			if (!allowMouseStartDrag) return;
 			if (!hold || e.target.toString()!="[object SimulatorGraphic]") return;
 			
-			//var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, e.target.id, false, mousePointX, mousePointY);
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, false, mousePointX, mousePointY);
 			TouchManager.onTouchMove(event);
 		}
 		
 		private static function mouseFrameHandler(e:Event):void
 		{
-			//trace("MouseEvent moving")
 			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, currentMousePoint, false, mousePointX, mousePointY);
 			TouchManager.onTouchMove(event);
 		}
