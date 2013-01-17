@@ -453,7 +453,7 @@ package com.gestureworks.core
 				if (!target)
 					return;
 					
-				var parent:* = target.parent;										
+				var parent:* = target.parent;	
 				
 				//trace("target: ", target, "parent: ", target.parent,clusterBubbling)
 				//trace(target, event.stageX, event.localX);
@@ -495,10 +495,14 @@ package com.gestureworks.core
 						}
 						
 						else if (_clusterBubbling)
-						{		
+						{	
 							//trace(event.eventPhase)
-							if (3 == event.eventPhase){ // bubling phase
-								assignPointClone(event);
+							if (3 == event.eventPhase) { // bubbling phase
+								
+								if (!(event.target is TouchSprite))
+									assignPoint(event);
+								else	
+									assignPointClone(event);
 							}
 							else if (2 == event.eventPhase) { //targeting phase
 								assignPoint(event);
