@@ -306,36 +306,9 @@ package com.gestureworks.core
 								</update>
 							</mapping>
 						</Gesture>
-							
-						
-						<Gesture id="2-finger-drag" type="drag">
-							<match>
-								<action>
-									<initial>
-										<cluster point_number="2"/>
-									</initial>
-								</action>
-							</match>	
-							<analysis>
-								<algorithm>
-									<library module="translate"/>
-									<returns>
-										<property id="drag_dx" result="dx"/>
-										<property id="drag_dy" result="dy"/>
-									</returns>
-								</algorithm>
-							</analysis>	
-							<mapping>
-								<update dispatch_type="continuous">
-									<gesture_event type="drag">
-										<property ref="drag_dx" target="x"/>
-										<property ref="drag_dy" target="y"/>
-									</gesture_event>
-								</update>
-							</mapping>
-						</Gesture>
-						
+																			
 						<Gesture id="1-finger-drag" type="drag">
+							<comment></comment>
 							<match>
 								<action>
 									<initial>
@@ -344,23 +317,51 @@ package com.gestureworks.core
 								</action>
 							</match>	
 							<analysis>
-								<algorithm>
-									<library module="translate"/>
+								<algorithm class="kinemetric" type="continuous">
+									<library module="drag"/>
 									<returns>
 										<property id="drag_dx" result="dx"/>
 										<property id="drag_dy" result="dy"/>
 									</returns>
 								</algorithm>
-							</analysis>	
+							</analysis>						
 							<mapping>
 								<update dispatch_type="continuous">
 									<gesture_event type="drag">
 										<property ref="drag_dx" target="x"/>
-										<property ref="drag_dy" target="y" />
+										<property ref="drag_dy" target="y"/>										
 									</gesture_event>
 								</update>
 							</mapping>
-						</Gesture>
+						</Gesture>	
+						
+						<Gesture id="2-finger-drag" type="drag">
+							<comment></comment>
+							<match>
+								<action>
+									<initial>
+										<cluster point_number="2"/>
+									</initial>
+								</action>
+							</match>	
+							<analysis>
+								<algorithm class="kinemetric" type="continuous">
+									<library module="drag"/>
+									<returns>
+										<property id="drag_dx" result="dx"/>
+										<property id="drag_dy" result="dy"/>
+									</returns>
+								</algorithm>
+							</analysis>						
+							<mapping>
+								<update dispatch_type="continuous">
+									<gesture_event type="drag">
+										<property ref="drag_dx" target="x"/>
+										<property ref="drag_dy" target="y"/>										
+									</gesture_event>
+								</update>
+							</mapping>
+						</Gesture>	
 						
 						<Gesture id="4-finger-drag" type="drag">
 							<match>
@@ -499,61 +500,96 @@ package com.gestureworks.core
 							</mapping>
 						</Gesture>
 			
-
-			
-								<Gesture id="2-finger-scale" type="scale">
-									<match>
-										<action>
-											<initial>
-												<cluster point_number="2"/>
-											</initial>
-										</action>
-									</match>
-									<analysis>
-										<algorithm>
-											<library module="scale"/>
-											<returns>
-												<property ref="scale_dsx" result="ds"/>
-												<property ref="scale_dsy" result="ds"/>
-											</returns>
-										</algorithm>
-									</analysis>	
-									<mapping>
-										<update>
-											<gesture_event  type="scale">
-												<property ref="scale_dsx" target="scaleX"/>
-												<property ref="scale_dsy" target="scaleY"/>
-											</gesture_event>
-										</update>
-									</mapping>
-								</Gesture>
+						<Gesture id="2-finger-scale" type="scale">
+							<match>
+								<action>
+									<initial>
+										<cluster point_number="2"/>
+									</initial>
+								</action>
+							</match>
+							<analysis>
+								<algorithm>
+									<library module="scale"/>
+									<returns>
+										<property ref="scale_dsx" result="ds"/>
+										<property ref="scale_dsy" result="ds"/>
+									</returns>
+								</algorithm>
+							</analysis>	
+							<mapping>
+								<update>
+									<gesture_event  type="scale">
+										<property ref="scale_dsx" target="scaleX"/>
+										<property ref="scale_dsy" target="scaleY"/>
+									</gesture_event>
+								</update>
+							</mapping>
+						</Gesture>
+						
+						<Gesture id="5-finger-scale" type="scale">
+							<match>
+								<action>
+									<initial>
+										<cluster point_number="5"/>
+									</initial>
+								</action>
+							</match>
+							<analysis>
+								<algorithm>
+									<library module="scale"/>
+									<returns>
+										<property ref="scale_dsx" result="ds"/>
+										<property ref="scale_dsy" result="ds"/>
+									</returns>
+								</algorithm>
+							</analysis>	
+							<mapping>
+								<update>
+									<gesture_event  type="scale">
+										<property ref="scale_dsx" target="scaleX"/>
+										<property ref="scale_dsy" target="scaleY"/>
+									</gesture_event>
+								</update>
+							</mapping>
+						</Gesture>
 								
-								<Gesture id="5-finger-scale" type="scale">
-									<match>
-										<action>
-											<initial>
-												<cluster point_number="5"/>
-											</initial>
-										</action>
-									</match>
-									<analysis>
-										<algorithm>
-											<library module="scale"/>
-											<returns>
-												<property ref="scale_dsx" result="ds"/>
-												<property ref="scale_dsy" result="ds"/>
-											</returns>
-										</algorithm>
-									</analysis>	
-									<mapping>
-										<update>
-											<gesture_event  type="scale">
-												<property ref="scale_dsx" target="scaleX"/>
-												<property ref="scale_dsy" target="scaleY"/>
-											</gesture_event>
-										</update>
-									</mapping>
-								</Gesture>
+					<Gesture id="1-finger-drag-inertia" type="drag">
+						<match>
+							<action>
+								<initial>
+									<cluster point_number="1"/>
+								</initial>
+							</action>
+						</match>	
+						<analysis>
+							<algorithm class="kinemetric" type="continuous">
+								<library module="drag"/>
+								<returns>
+									<property id="drag_dx" result="dx"/>
+									<property id="drag_dy" result="dy"/>
+								</returns>
+							</algorithm>
+						</analysis>	
+						<processing>
+							<inertial_filter>
+								<property ref="drag_dx" active="true" friction="0.9"/>
+								<property ref="drag_dy" active="true" friction="0.9"/>
+							</inertial_filter>
+							<delta_filter>
+								<property ref="drag_dx" active="true" delta_min="0.05" delta_max="500"/>
+								<property ref="drag_dy" active="true" delta_min="0.05" delta_max="500"/>
+							</delta_filter>
+						</processing>
+						<mapping>
+							<update dispatch_type="continuous">
+								<gesture_event type="drag">
+									<property ref="drag_dx" target="x"/>
+									<property ref="drag_dy" target="y"/>
+								</gesture_event>
+							</update>
+						</mapping>
+					</Gesture>								
 	
 	</Gesture_set>
 	
