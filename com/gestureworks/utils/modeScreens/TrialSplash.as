@@ -19,6 +19,7 @@ package com.gestureworks.utils.modeScreens
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import com.gestureworks.utils.Yolotzin;
+	import flash.events.Event;
 	import flash.text.TextField;
 	
 	/**
@@ -30,14 +31,16 @@ package com.gestureworks.utils.modeScreens
 		[Embed(source = "../../../../../lib/assets/gw_splash.png")] private var Splash:Class;
 		[Embed(source = "../../../../../lib/assets/trial_splash.png")] private var SplashNoDate:Class;
 		
+		private var splash:Bitmap;
 		public function TrialSplash(ignoreDateCountdown:Boolean=false) 
 		{
-			var splash:Bitmap;
 			
 			if (ignoreDateCountdown)
 			{
-				splash = new SplashNoDate();
+				splash = new Splash();
 				addChild(splash);
+				var button:SplashButton =  new SplashButton(130, 30);
+				addChild(button);
 			}
 			
 			else
@@ -51,7 +54,8 @@ package com.gestureworks.utils.modeScreens
 				button.y = 195;				
 
 				var timeString:String = Yolotzin.trialLeft.toString();
-				if (timeString.length == 1)timeString = "0" + Yolotzin.trialLeft.toString();
+				if (timeString.length == 1) timeString = "0" + Yolotzin.trialLeft.toString();
+				
 				var timeLeft:SplashText = new SplashText(timeString, 66, 0x000000, 4);
 				timeLeft.selectable = false;
 				addChild(timeLeft);
@@ -59,11 +63,11 @@ package com.gestureworks.utils.modeScreens
 				timeLeft.y = 150;
 			}
 			
-			var version:SplashVersion = new SplashVersion();
-			addChild(version);
-			version.x = 247;
-			version.y = 490;			
-		}
+			//var version:SplashVersion = new SplashVersion();
+			//addChild(version);
+			//version.x = 247;
+			//version.y = 490;			
+		}	
 		
 	}
 
