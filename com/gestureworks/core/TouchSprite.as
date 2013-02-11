@@ -104,6 +104,8 @@ package com.gestureworks.core
 			// set mouseChildren to default false
 			mouseChildren = false; //false
 			//mouseEnabled = false;
+			
+			debugDisplay = false;
 			preinitBase();
         }
 		  
@@ -169,9 +171,6 @@ package com.gestureworks.core
 						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
 						
 					//}
-					
-					if (debugDisplay)	
-						td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		 private function initBase():void 
@@ -180,7 +179,7 @@ package com.gestureworks.core
 										tp = new TouchPipeline(touchObjectID);
 					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
 										tt = new TouchTransform(touchObjectID);
-					//if (debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
+					if (debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
