@@ -15,22 +15,53 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.events
 {
-	import flash.events.Event;
+	import com.gestureworks.core.GestureWorks;
 	import flash.display.InteractiveObject;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import flash.utils.Dictionary;
+	import org.tuio.TuioTouchEvent;
 
-	public class GWTouchEvent extends TouchEvent
+	public class GWTouchEvent extends Event
 	{
-		public static const TOUCH_BEGIN : String = "touchBegin";
-		public static const TOUCH_END : String = "touchEnd"
-		public static const TOUCH_MOVE : String = "touchMove"
-		public static const TOUCH_OUT : String = "touchOut"
-		public static const TOUCH_OVER : String = "touchOver"
-		public static const TOUCH_ROLL_OUT : String = "touchRollOut"
-		public static const TOUCH_ROLL_OVER : String = "touchRollOver"
+		public static const TOUCH_BEGIN : String = "gwTouchBegin";
+		public static const TOUCH_END : String = "gwTouchEnd"
+		public static const TOUCH_MOVE : String = "gwTouchMove"
+		public static const TOUCH_OUT : String = "gwTouchOut"
+		public static const TOUCH_OVER : String = "gwTouchOver"
+		public static const TOUCH_ROLL_OUT : String = "gwTouchRollOut"
+		public static const TOUCH_ROLL_OVER : String = "gwTouchRollOver"			
 		
 		
+		private static var TOUCH_TYPE_MAP: Dictionary = new Dictionary(); 
 		
+		TOUCH_TYPE_MAP[TouchEvent] = new Object();
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_BEGIN] = TOUCH_BEGIN;		
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_END] = TOUCH_END;		
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_MOVE] = TOUCH_MOVE;		
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_OUT] = TOUCH_OUT;		
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_OVER] = TOUCH_OVER;		
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_ROLL_OUT] = TOUCH_ROLL_OUT;		
+		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_ROLL_OVER] = TOUCH_ROLL_OVER;		
+		
+		TOUCH_TYPE_MAP[TuioTouchEvent] = new Object();
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_DOWN] = TOUCH_BEGIN;		
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_UP] = TOUCH_END;		
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_MOVE] = TOUCH_MOVE;		
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_OUT] = TOUCH_OUT;		
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_OVER] = TOUCH_OVER;		
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.ROLL_OUT] = TOUCH_ROLL_OUT;		
+		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.ROLL_OVER] = TOUCH_ROLL_OVER;		
+		
+		TOUCH_TYPE_MAP[MouseEvent] = new Object();
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_DOWN] = TOUCH_BEGIN;		
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_UP] = TOUCH_END;		
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_MOVE] = TOUCH_MOVE;		
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_OUT] = TOUCH_OUT;		
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_OVER] = TOUCH_OVER;		
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.ROLL_OUT] = TOUCH_ROLL_OUT;		
+		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.ROLL_OVER] = TOUCH_ROLL_OVER;				
 		
 	/*
 	/**
@@ -86,9 +117,8 @@ package com.gestureworks.events
 	//}
 	
 		public function GWTouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, touchPointID:int = 0, isPrimaryTouchPoint:Boolean = false, localX:Number = NaN, localY:Number = NaN, sizeX:Number = NaN, sizeY:Number = NaN, pressure:Number = NaN, relatedObject:InteractiveObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, commandKey:Boolean = false, controlKey:Boolean = false)
-		//public function GWTouchEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false)
 		{
-			super(type, bubbles, cancelable);
+			super(resolveType(type), bubbles, cancelable);				
 		}
 
 		override public function clone():Event
@@ -96,10 +126,41 @@ package com.gestureworks.events
 			return new GWTouchEvent(type, bubbles, cancelable);
 		}
 		
+		/**
+		 * Translate touch type to GWTouchEvent type. 
+		 * @param	type  TUIO, native touch, mouse, or GWTouchEvent
+		 * @return
+		 */
+		private function resolveType(type:String):String
+		{
+			var key:Class = GestureWorks.activeTUIO ? TuioTouchEvent : GestureWorks.supportsTouch ? TouchEvent : MouseEvent;
+			var resolvedType:String = TOUCH_TYPE_MAP[key][type] ? TOUCH_TYPE_MAP[key][type] : type;
+			return resolvedType;
+		}
+		
+		/**
+		 * Translate GWTouchEvent to appropriate touch type.
+		 * @param	type
+		 * @return
+		 */
+		public static function eventType(type:String):String
+		{
+			var key:Class = GestureWorks.activeTUIO ? TuioTouchEvent : GestureWorks.supportsTouch ? TouchEvent : MouseEvent;			
+			var obj:Object = TOUCH_TYPE_MAP[key];
+			for (var a:String in obj)
+			{
+				if (obj[a] == type)
+					return a;
+			}
+			return null;
+		}
+		
 		/*public function updateAfterEvent():void
 		{
 			
 		}*/
+		
+		
 
 	}
 }

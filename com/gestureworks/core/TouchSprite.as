@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
+	import com.gestureworks.events.GWTouchEvent;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -990,6 +991,27 @@ package com.gestureworks.core
 			tt.transformManager();
 			tt.updateLocalProperties();
 			*/
+		}
+		
+		/**
+		 * Registers event listeners. Also processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
+		 * and dispatches appropriate events.
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 * @param	priority
+		 * @param	useWeakReference
+		 */
+		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
+		{
+			if (type.indexOf("gwTouch") > -1)
+			{				
+				super.addEventListener(GWTouchEvent.eventType(type), function(e:*):void {
+					dispatchEvent(new GWTouchEvent(e.type));
+				});
+			}
+			
+			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
 		
 	}

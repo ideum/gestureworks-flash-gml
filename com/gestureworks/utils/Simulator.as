@@ -27,8 +27,8 @@ package com.gestureworks.utils
 				var simString:String = CML.Objects.@simulator;
 				simulator = simString == "true" ? true : false;	
 			}
-						
-			GestureWorks.supportsTouch = !simulator;
+			
+			GestureWorks.activeSim = simulator;
 			
 			if (simulator)
 				trace("simulator is on");

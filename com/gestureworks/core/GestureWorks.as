@@ -106,6 +106,10 @@ package com.gestureworks.core
 		 */
 		public static var activeTUIO:Boolean;
 		/**
+		 * Returns whether simulation is activated.
+		 */
+		public static var activeSim:Boolean;
+		/**
 		 * @private
 		 */
 		public static var currentKeyCode:int;
