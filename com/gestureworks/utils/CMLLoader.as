@@ -58,8 +58,13 @@ package com.gestureworks.utils
 		}
 
 		private static function settingsLoader_completeHandler(event:Event):void
-		{			
-			settings=new XML(settingsLoader.data);
+		{	
+			try {
+				settings=new XML(settingsLoader.data);
+			}
+			catch (e:Error) {
+				throw new Error(e.message + " File Path: " + settingsPath);
+			}
 			
 			amountToShow=settings.GlobalSettings.amountToShow;
 			
@@ -71,7 +76,6 @@ package com.gestureworks.utils
 			}
 			
 			dispatchEvent(new Event(Event.COMPLETE));
-			
 			dispatchEvent(new Event(settingsPath));
 			
 			settingsLoader.removeEventListener(Event.COMPLETE, settingsLoader_completeHandler);
@@ -94,7 +98,6 @@ package com.gestureworks.utils
 			{
 				return;
 			}
-			
 			dispatch.removeEventListener(p_type, p_listener, p_useCapture);
 		}
 
