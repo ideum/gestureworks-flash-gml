@@ -167,7 +167,7 @@ package com.gestureworks.managers
 			KeyListener.gw_public::initialize();
 			
 			// add devices here
-			//MotionManager.gw_public::initialize();
+			MotionManager.gw_public::initialize();
 			SensorManager.gw_public::initialize();
 			
 			var p:* = parent;

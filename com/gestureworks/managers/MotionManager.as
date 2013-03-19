@@ -15,12 +15,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	import flash.sensors.Accelerometer;
+	//import flash.sensors.Accelerometer;
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
-	import flash.events.AccelerometerEvent;
+	//import flash.events.AccelerometerEvent;
 	import flash.utils.Timer;
 	import flash.system.System;
 	
@@ -42,24 +42,25 @@ package com.gestureworks.managers
 	
 	public class MotionManager
 	{	
-		public static var act:Accelerometer; 
+		//public static var act:Accelerometer; 
 		
 		// initializes touchManager
 		gw_public static function initialize():void
 		{	
 			
 			
-			trace("accel init")
+			trace("leap init here")
 			
 			
 			//if (Accelerometer.isSupported)
             //{
-				act = new Accelerometer();
-				act.addEventListener(AccelerometerEvent.UPDATE, accUpdateHandler);
+				//act = new Accelerometer();
+			//	act.addEventListener(AccelerometerEvent.UPDATE, accUpdateHandler);
 			//}
 			
 		}
 		
+		/*
 		public static function accUpdateHandler(event:AccelerometerEvent):void
         {
             trace("ax", event.accelerationX);
@@ -67,7 +68,7 @@ package com.gestureworks.managers
 			trace("az", event.accelerationZ);
 			trace("timestamp", event.timestamp);
         }
-		
+		*/
 		/*
 		gw_public static function deInitialize():void
 		{
