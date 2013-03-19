@@ -160,11 +160,15 @@ package com.gestureworks.managers
 			}
 			
 			TouchManager.gw_public::initialize();
-			//TouchUpdateManager.gw_public::initialize();
 			MouseManager.gw_public::initialize();
+			
 			ObjectManager.gw_public::initialize();
 			EnterFrameManager.gw_public::initialize();
 			KeyListener.gw_public::initialize();
+			
+			// add devices here
+			//MotionManager.gw_public::initialize();
+			SensorManager.gw_public::initialize();
 			
 			var p:* = parent;
 			if (p) p.gwComplete = true;

@@ -109,6 +109,7 @@ package com.gestureworks.core
 		 * Returns whether simulation is activated.
 		 */
 		public static var activeSim:Boolean;
+		
 		/**
 		 * @private
 		 */
@@ -263,6 +264,14 @@ package com.gestureworks.core
 		{
 			GML.Gestures = GMLParser.settings;
 			loadModeManager();
+			
+			// defined global settings for GML
+			//if (GML.Gestures.gloabl_settings.input.@motion == "true") 
+				motion = true;
+				
+			//if (GML.Gestures.gloabl_settings.input.@sensor == "true") 
+				sensor = true;
+			
 		}
 		
 		

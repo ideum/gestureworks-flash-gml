@@ -159,6 +159,42 @@ package com.gestureworks.core
 		
 		
 		
+		private var _motion:Boolean = false;
+		/**
+		 * Turns motion input on.Currently only supports Leap
+		 * @default false
+		 */
+		public function get motion():Boolean{return _motion;}
+		public function set motion(value:Boolean):void
+		{
+			if (motion == value) return;
+			_motion = value;
+			
+			//trace("init leap in GestureWorksCore.as");
+			//if (_motion) 
+				//LEAP.initialize();
+		}
+		
+		
+		private var _sensor:Boolean = false;
+		/**
+		 * Turns sensor input on. Currently only supports Accelerometer in Air.
+		 * @default false
+		 */
+		public function get sensor():Boolean{return _sensor;}
+		public function set sensor(value:Boolean):void
+		{
+			if (sensor == value) return;
+			_sensor = value;
+			
+			//trace("init accelerometer in GestureWorksCore.as");
+			//if (_sensor) 
+				//Acceelerometer.initialize();
+		}
+		
+		
+		
+		
 		// private methods //
 		
 		private function init(e:Event = null):void 
