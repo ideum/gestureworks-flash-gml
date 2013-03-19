@@ -16,6 +16,7 @@
 
 package com.gestureworks.core
 {
+	import com.gestureworks.managers.MotionManager;
 	import flash.ui.*;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -170,9 +171,8 @@ package com.gestureworks.core
 			if (motion == value) return;
 			_motion = value;
 			
-			//trace("init leap in GestureWorksCore.as");
-			//if (_motion) 
-				//LEAP.initialize();
+			if (_motion) 
+				MotionManager.gw_public::initialize();
 		}
 		
 		

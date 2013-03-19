@@ -15,6 +15,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.leapmotion.leap.events.LeapEvent;
+	import com.leapmotion.leap.LeapMotion;
+	import flash.sensors.Accelerometer;
 	//import flash.sensors.Accelerometer;
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
@@ -42,16 +45,20 @@ package com.gestureworks.managers
 	
 	public class MotionManager
 	{	
+		public static var leap:LeapMotion;
+				
 		//public static var act:Accelerometer; 
 		
-		// initializes touchManager
 		gw_public static function initialize():void
-		{	
+		{				
+			leap = new LeapMotion(); 
+			leap.controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
+			leap.controller.addEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
+			leap.controller.addEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
+			leap.controller.addEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
+			leap.controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
 			
-			
-			trace("leap init here")
-			
-			
+						
 			//if (Accelerometer.isSupported)
             //{
 				//act = new Accelerometer();
@@ -59,6 +66,32 @@ package com.gestureworks.managers
 			//}
 			
 		}
+		
+		public static function onInit( event:LeapEvent ):void
+		{
+			trace( "Leap Initialized" );
+		}
+
+		public static function onConnect( event:LeapEvent ):void
+		{
+			trace( "Leap Connected" );
+		}
+
+		public static function onDisconnect( event:LeapEvent ):void
+		{
+			trace( "Leap Disconnected" );
+		}
+
+		public static function onExit( event:LeapEvent ):void
+		{
+			trace( "Leap Exited" );
+		}
+		
+		
+		public static function onFrame(event:LeapEvent):void
+		{
+			trace("pointable count:", event.frame.pointables.length);
+		}			
 		
 		/*
 		public static function accUpdateHandler(event:AccelerometerEvent):void
@@ -68,7 +101,8 @@ package com.gestureworks.managers
 			trace("az", event.accelerationZ);
 			trace("timestamp", event.timestamp);
         }
-		*/
+		*/		
+		
 		/*
 		gw_public static function deInitialize():void
 		{
