@@ -35,6 +35,8 @@ package com.gestureworks.tuio
 	public class TUIOManager extends Sprite
 	{
 		private var udpConnector:*;
+		private var _tuioClient:TuioClient;
+		private var _tuioManager:TuioManager;
 		
 		private var screenW:int;
 		private var screenH:int;
@@ -87,7 +89,7 @@ package com.gestureworks.tuio
 			*/
 						
 			Multitouch.inputMode = MultitouchInputMode.NONE;		
-			var tc:TuioClient = new TuioClient(udpConnector);
+			_tuioClient = new TuioClient(udpConnector);
 			
 			
 			//var mta:MouseTuioAdapter = new MouseTuioAdapter(stage);
@@ -96,7 +98,7 @@ package com.gestureworks.tuio
 		
 			//var nta:NativeTuioAdapter = new NativeTuioAdapter(stage);
 			//var tDbg:TuioDebug = TuioDebug.init(stage);
-			var tm:TuioManager = TuioManager.init(stage);
+			_tuioManager = TuioManager.init(stage);
 			//tm.dispatchNativeTouchEvents = true;
 			
 			//nta.addListener(tm);
@@ -104,11 +106,11 @@ package com.gestureworks.tuio
 			
 
 			
-			tc.addListener(tm);
-			tc.addListener(tDbg);
-			tm.addEventListener(TuioEvent.ADD, pointAddedHandler);
-			tm.addEventListener(TuioEvent.UPDATE, pointUpdatedHandler);
-			tm.addEventListener(TuioEvent.REMOVE, pointRemovedHandler);
+			_tuioClient.addListener(_tuioManager);
+			_tuioClient.addListener(tDbg);
+			_tuioManager.addEventListener(TuioEvent.ADD, pointAddedHandler);
+			_tuioManager.addEventListener(TuioEvent.UPDATE, pointUpdatedHandler);
+			_tuioManager.addEventListener(TuioEvent.REMOVE, pointRemovedHandler);
 		}
 		
 		private function pointAddedHandler(e:TuioEvent):void
@@ -148,5 +150,8 @@ package com.gestureworks.tuio
 		{
 			return (v == a) ? x : (v - a) * (y - x) / (b - a) + x;
 		}
+		
+		public function get tuioManager():TuioManager { return _tuioManager; }
+		public function get tuioClient():TuioClient { return _tuioClient;}
 	}
 }
