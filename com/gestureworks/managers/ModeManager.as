@@ -149,7 +149,7 @@ package com.gestureworks.managers
 				addEventListener(Event.ENTER_FRAME, keepOnTop);
 			}
 			
-			if (Yolotzin.mode==0)
+			if (Yolotzin.mode==0 && (!GestureWorks.isOpenExibits))
 			{
 				trialTimer = new TrialTimer();
 				stage.addChild(trialTimer);
