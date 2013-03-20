@@ -22,6 +22,15 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.ClusterObject;
+	
+	import com.leapmotion.leap.events.LeapEvent;
+	import com.leapmotion.leap.LeapMotion;
+	
+	import com.leapmotion.leap.*;
+	import com.leapmotion.leap.events.*;
+	import com.leapmotion.leap.util.*;
+	
+	
 		
 	public class KineMetric
 	{
@@ -51,6 +60,11 @@ package com.gestureworks.analysis
 		private var sck:Number = 0.0044;
 		//pivot base const
 		private var pvk:Number = 0.00004;
+		
+		
+		private var fn:uint = 0;
+		private var rhfn:uint = 0;
+		private var lhfn:uint = 0;
 		
 		public function KineMetric(_id:int) 
 		{
@@ -83,27 +97,44 @@ package com.gestureworks.analysis
 					pointList = cO.pointArray;
 					mc = pointList[0].moveCount;
 				}
+				
+				// motion points
+				fn = ts.cO.fn
+				
+				//trace("total fingers", fn)
 		}
 		
 		public function resetCluster():void {
 
 			cO.x = 0;
 			cO.y = 0;
+			cO.z = 0;//-
 			cO.width = 0;
 			cO.height = 0;
+			cO.length = 0;//-
 			cO.radius = 0;
 			cO.separationX = 0;
 			cO.separationY = 0;
+			cO.separationZ = 0;//-
 			cO.rotation = 0;
+			cO.rotationX = 0;//-
+			cO.rotationY = 0;//-
+			cO.rotationZ = 0;//-
+			
 			cO.orientation =  0;
 			cO.thumbID = 0;
+			//cO.hand_normal = 0;
+			//cO.hand_radius = 0;
+			
 			cO.mx = 0;
 			cO.my = 0;
+			cO.mz = 0;//-
 			
 			//////////////////////////////////
 			////////////////////////////////////
 			cO.orient_dx = 0;
 			cO.orient_dy = 0;
+			cO.orient_dz = 0;//-
 			cO.pivot_dtheta = 0;
 		
 			/////////////////////////
@@ -112,27 +143,43 @@ package com.gestureworks.analysis
 			cO.dtheta = 0;
 			cO.dx = 0;
 			cO.dy = 0;
+			cO.dz = 0;//-
 			cO.ds = 0;
 			cO.dsx = 0;
 			cO.dsy = 0;
+			cO.dsz = 0;//-
 			cO.etm_dx = 0;
 			cO.etm_dy = 0;
+			cO.etm_dz = 0;//-
 			
 			////////////////////////
 			// second diff
 			////////////////////////
 			cO.ddx = 0;
 			cO.ddy = 0;
+			cO.ddz = 0;//-
 			
 			cO.etm_ddx = 0;
 			cO.etm_ddy = 0;
+			cO.etm_ddz = 0;//-
 			
 			////////////////////////////
 			// sub cluster analysis
 			////////////////////////////
 			cO.hold_x = 0;
 			cO.hold_y = 0;
+			cO.hold_z = 0;//-
 			cO.hold_n = 0;
+			
+			//accelerometer
+			//cO.ax =0
+			//cO.ay =0
+			//cO.az =0
+			//cO.atheta =0
+			//cO.dax =0
+			//cO.day =0
+			//cO.daz =0
+			//cO.datheta =0
 		}
 		
 		////////////////////////////////////////////////////////////
@@ -422,6 +469,87 @@ package com.gestureworks.analysis
 				}
 							//trace("transfromation",c_dx,c_dy, c_ds,c_dtheta)
 		}
+		
+		
+		
+		/////////////////////////////////
+		// sensor motion analysis
+		/////////////////////////////////
+		public function findSensorJolt():void
+		{
+			trace("accelerometer kinemetric");
+			
+			var snr:Vector.<Number> = cO.sensorArray;
+			
+			trace("timestamp", snr[0]);
+			/*	
+            trace("ax", event.accelerationX);
+            trace("ay", event.accelerationY);
+			trace("az", event.accelerationZ);
+			trace("timestamp", event.timestamp);
+			*/
+		}
+		/////////////////////////////////
+		// 3d motion analysis
+		/////////////////////////////////
+		public function findMeanInst3DMotionTransformation():void
+		{
+			
+		//trace("motion kinemetric");
+		var frame:Frame = cO.motionArray;
+		
+		trace("total hands", cO.hn);
+		trace("total fingers", cO.fn);
+		
+				trace("----------------------------------------");
+				//trace("id: ",	frame.id); 
+				//trace("timestamp: ",	frame.timestamp); 
+				//trace("hands: ",	frame.hands.length); 
+				//trace("finger: ",	frame.fingers.length);
+				//trace("tools: ",	frame.tools.length);
+				//trace("gestures: ",	frame.gestures().length);
+			
+				if ( frame.hands.length != 0 )
+				{
+					// Get the first hand
+					var hand:Hand = frame.hands[ 0 ];
+					
+					//// update h cluster shpere rad
+					//hand.sphereRadius
+					//hand.palmPosition
+					
+					//// Get the hand's normal vector and direction
+					//LeapMath.toDegrees(hand.direction.pitch)
+					//LeapMath.toDegrees(hand.palmNormal.roll)
+					//LeapMath.toDegrees(hand.direction.yaw)
+
+					// Check if the hand has any fingers
+					var fingers:Vector.<Finger> = hand.fingers;
+					
+					// push fingers to points list
+					if ( fingers.length != 0 )
+					{
+						// Calculate the hand's average finger tip position
+						for each ( var finger:Finger in fingers )
+						{
+						// update motion points in cluster
+						
+							trace("xyz", finger.tipPosition );
+							trace("length", finger.length);
+							//trace("height", finger.height);
+							trace("width", finger.width);
+							//cO.pointArray = finger;
+						}	
+					}
+					
+					
+				}
+			
+		}
+		
+		//////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		
 		
 		// NEED TO REMOVE HO AND HISTORY COMPONENET
 		// NEED TO MAKE STANDARD AND ALWAYS ON

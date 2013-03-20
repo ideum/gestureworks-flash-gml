@@ -17,6 +17,8 @@
 package com.gestureworks.core
 {
 	import com.gestureworks.managers.MotionManager;
+	import com.gestureworks.managers.SensorManager;
+	
 	import flash.ui.*;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -187,9 +189,8 @@ package com.gestureworks.core
 			if (sensor == value) return;
 			_sensor = value;
 			
-			//trace("init accelerometer in GestureWorksCore.as");
-			//if (_sensor) 
-				//Acceelerometer.initialize();
+			if (_sensor) 
+				SensorManager.gw_public::initialize();
 		}
 		
 		

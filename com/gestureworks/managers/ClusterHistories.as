@@ -50,27 +50,43 @@ package com.gestureworks.managers
 				
 				// native properties
 				object.n = clusterObject.n;
+				object.fn = clusterObject.fn;//- total motion finger number
+				object.rhfn = clusterObject.rhfn;//- right hand finger number
+				object.lhfn = clusterObject.lhfn;//- left hand finger number
+				
 				object.x = clusterObject.x;
 				object.y = clusterObject.y;
+				object.z = clusterObject.z; //-
+				
 				object.width = clusterObject.width;
 				object.height = clusterObject.height;
+				object.length = clusterObject.length;//-
+				
 				object.radius = clusterObject.radius;
 				object.orientation = clusterObject.orientation;
+				
 				object.rotation = clusterObject.rotation;
 				object.separation = clusterObject.separation;
+				
 				object.thumbID = clusterObject.thumbID;
 				
 				// first order primary deltas
 				object.dx = clusterObject.dx;
 				object.dy = clusterObject.dy;
+				object.dy = clusterObject.dz;
+				
 				object.ds = clusterObject.ds;
+				//object.d3ds = clusterObject.d3ds; //3d chang in sep
 				object.dsx = clusterObject.dsx;
 				object.dsy = clusterObject.dsy;
+				object.dsz = clusterObject.dsz; //-
+				
 				object.dtheta = clusterObject.dtheta;
 				
 				// second order primary deltas
 				object.ddx = clusterObject.ddx;
 				object.ddy = clusterObject.ddy;
+				object.ddz = clusterObject.ddz;//-
 				
 				// core cluster events
 				//object.add = clusterObject.add;
@@ -89,6 +105,7 @@ package com.gestureworks.managers
 				// STANDARD CLUSTER CALCS
 				object.orient_dx = clusterObject.orient_dx;
 				object.orient_dy = clusterObject.orient_dy;
+				object.orient_dz = clusterObject.orient_dz; // 
 				
 				//object.pointArray = [2, 3]//;
 				

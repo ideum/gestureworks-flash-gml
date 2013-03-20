@@ -201,6 +201,21 @@ package com.gestureworks.core
 			///////////////////////////////////////////////////
 			
 			//trace(_dN, _N, cO.point_remove);
+			
+			
+			
+			//motion point update
+			cO.hn = cO.motionArray.hands.length;
+			
+			if(cO.hn!=0){
+			//trace("hands",cO.hn)
+			
+			if (cO.hn == 2){ cO.fn = cO.motionArray.hands[0].fingers.length; + cO.motionArray.hands[1].fingers.length;}
+			else if (cO.hn == 1) cO.fn = cO.motionArray.hands[0].fingers.length;
+			else cO.fn = 0;
+			
+			//trace("total fingers", cO.fn)
+			}
 		}
 		/**
 		 * @private
@@ -218,6 +233,18 @@ package com.gestureworks.core
 				
 				if ((ts.clusterEvents)&&(ts.N)) manageClusterPropertyEventDispatch();
 		}
+		
+		
+		public function updateMotionClusterAnalysis():void
+			{
+				cluster_kinemetric.findMeanInst3DMotionTransformation();
+		}
+		
+		public function updateSensorClusterAnalysis():void
+			{
+				cluster_kinemetric.findSensorJolt();
+		}
+		
 		
 		public function getCluster():void 
 		{
