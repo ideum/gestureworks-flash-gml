@@ -501,22 +501,33 @@ package com.gestureworks.analysis
 		trace("total hands", cO.hn);
 		trace("total fingers", cO.fn);
 		
-				trace("----------------------------------------");
+				trace("--frame----------------------------------");
 				//trace("id: ",	frame.id); 
 				//trace("timestamp: ",	frame.timestamp); 
 				//trace("hands: ",	frame.hands.length); 
 				//trace("finger: ",	frame.fingers.length);
+				
 				//trace("tools: ",	frame.tools.length);
 				//trace("gestures: ",	frame.gestures().length);
+				
+				//frame.rotationAxis();
+				//frame.rotationAngle();
+				//frame.rotationMatrix()
+				//frame.scaleFactor();
+				//frame.translation();
+				//frame.isValid();
 			
 				if ( frame.hands.length != 0 )
 				{
+					
+					trace("--hand--");
 					// Get the first hand
 					var hand:Hand = frame.hands[ 0 ];
 					
 					//// update h cluster shpere rad
 					//hand.sphereRadius
 					//hand.palmPosition
+					//hand.direction
 					
 					//// Get the hand's normal vector and direction
 					//LeapMath.toDegrees(hand.direction.pitch)
@@ -532,13 +543,13 @@ package com.gestureworks.analysis
 						// Calculate the hand's average finger tip position
 						for each ( var finger:Finger in fingers )
 						{
-						// update motion points in cluster
-						
+							
+						trace("----finger--");	
+							// update motion points in cluster
 							trace("xyz", finger.tipPosition );
 							trace("length", finger.length);
-							//trace("height", finger.height);
 							trace("width", finger.width);
-							//cO.pointArray = finger;
+							
 						}	
 					}
 					
