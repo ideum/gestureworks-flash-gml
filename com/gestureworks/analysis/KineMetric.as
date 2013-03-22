@@ -761,7 +761,7 @@ package com.gestureworks.analysis
 							}
 						}
 					}
-					trace(k0, t0);
+					//trace(k0, t0);
 			//cO.etm_ddx *= k0 * t0;
 			//cO.etm_ddy *= k0 * t0;
 		}
