@@ -30,6 +30,7 @@ package com.gestureworks.objects
 			_id = value;
 		}
 		///////////////////////////////////////////////
+		// must update to vecotrs
 		
 		//pointEventArray
 		private var _pointEventArray:Array = new Array();

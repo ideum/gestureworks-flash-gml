@@ -37,6 +37,8 @@ package com.gestureworks.managers
 	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.utils.Simulator;
 	
+	import com.gestureworks.objects.FrameObject;
+	
 	
 	/* 
 	IMPORTANT NOTE TO DEVELOPER ********************************
@@ -132,21 +134,28 @@ package com.gestureworks.managers
 		public static function onTouchUp(event:TouchEvent):void
 		{
 			//trace("TouchEnd manager")
+			//trace("---------------------------------------------------");
 			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject)
 			{
+				//trace("pointID:",event.touchPointID,"length",pointObject.objectList.length,"event",event)
+				/////////////////////////////////////////////////////////////////////////////////////
+				/////////////////////////////////////////////////////////////////////////////////////
 				// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
 				for (var j:int = 0; j < pointObject.objectList.length; j++)
 				{
 					//trace("updating targets");
 					var tO:Object = pointObject.objectList[j];
 					
+					//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
+					//trace("tsprite:",tO, "pointlist",tO.N,tO.pointArray.length, tO.pointArray);
+					
 					// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
 					//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
 					if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
 					//UPDATE DEBUG DISPLAY // clear local debug display
-					if ((tO.td)&&(tO.td.debug_display) && (tO.cO)) tO.td.clearDebugDisplay(); // clear display
+					if ((tO.td) && (tO.td.debug_display) && (tO.cO)) 	tO.td.clearDebugDisplay(); // clear display
 					
 					// analyze for taps
 					if (tO.tg) tO.tg.onTouchEnd(event);
@@ -171,12 +180,16 @@ package com.gestureworks.managers
 					//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
 					updateTouchObject(tO);
 					////////////////////////////////////////////////////////
+					
+					//trace("to n", tO.N, "co n", tO.cO.n, "to pointArry length", tO.pointArray.length);
 				}
-			}
+				/////////////////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////
+				
 			// DELETE FROM GLOBAL POINT LIST
 			delete points[event.touchPointID];
-			
-			
+			}
+			//trace("--//--")
 		}
 		
 	
@@ -241,6 +254,10 @@ package com.gestureworks.managers
 					tO.updateDebugDisplay();
 				}
 				
+				
+				// clear frame 
+				// was just pushing events and never clearing object 
+				if(tO.tiO) tO.tiO.frame = new FrameObject();
 			}
 		}
 		
@@ -258,6 +275,41 @@ package com.gestureworks.managers
 				//tO.updateTransformation();
 				
 				tO.updateTObjProcessing();
+				
+				
+				// check for erroneous points
+				// kill after processing (just in case)
+				if (tO.N!=0) {
+					for (var i:int = 0; i < tO.N; i++) {
+						if (points[tO.pointArray[i].touchPointID] == undefined) {
+						
+							trace("kill zombe",tO,tO.cO,tO.cO.pointArray.length,tO.cO.pointArray.length,tO.pointArray[i].touchPointID,i);
+						
+							//tO.pointCount = 0;
+							//tO.cO.n = 0;
+							//tO.N = 0;
+							//tO.pointArray[i] = null;
+							//tO.cO.pointArray[i] = null;
+							
+							/*
+									// REMOVE POINT FROM LOCAL LIST
+									tO.pointArray.splice(tO.pointArray[i].touchPointID, 1);
+									
+									// REDUCE LOACAL POINT COUNT
+									tO.pointCount--;
+									
+									// UPDATE POINT ID 
+									for (var k:int = 0; k < tO.pointArray.length; k++)
+									{
+										tO.pointArray[k].id = k;
+									}
+								*/
+							
+							tO.cO.pointArray.length = 0; // best way to kill
+							return
+						}
+					}
+				}
 		}
 		
 		

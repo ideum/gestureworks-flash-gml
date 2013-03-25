@@ -210,7 +210,7 @@ package com.gestureworks.core
 		{
 			_pointData = value;
 		}
-		private var _panelData:Boolean = true;
+		private var _panelData:Boolean = false;
 		public function get panelData():Boolean
 		{
 			return _panelData;

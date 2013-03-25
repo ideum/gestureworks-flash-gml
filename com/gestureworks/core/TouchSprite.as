@@ -168,6 +168,8 @@ package com.gestureworks.core
 					//}
 					// bypass gml requirement for testing
 					initBase()
+					//if (debugDisplay)
+					//td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		 private function initBase():void 
@@ -495,7 +497,7 @@ package com.gestureworks.core
 							//trace(event.eventPhase)
 							if (3 == event.eventPhase) { // bubbling phase
 								
-								if (!(event.target is TouchSprite))
+								if (!((event.target is TouchSprite)||(event.target is TouchMovieClip)))//
 									assignPoint(event);
 								else	
 									assignPointClone(event);
@@ -534,11 +536,11 @@ package com.gestureworks.core
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = this; // sets primary touch object/cluster
-				pointObject.objectList.push(this); // seeds cluster/touch object list
 				pointObject.id = pointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
 				pointObject.y = event.stageY; 
+				pointObject.objectList.push(this); // seeds cluster/touch object list
 				
 				//ADD TO LOCAL POINT LIST
 				_pointArray.push(pointObject);
@@ -560,7 +562,7 @@ package com.gestureworks.core
 				// add touch down to touch object gesture event timeline
 				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
 
-				//trace("point array length", _pointArray.length);
+				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 				
 		}
 		
@@ -569,6 +571,7 @@ package com.gestureworks.core
 				// assign existing point object
 				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
 					// add this touch object to touchobject list on point
+					pointObject.touchPointID = event.touchPointID;//-??
 					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 	
 				//ADD TO LOCAL POINT LIST
@@ -584,7 +587,7 @@ package com.gestureworks.core
 				// add touch down to touch object gesture event timeline
 				if ((tiO)&&(tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
 				
-				//trace("point array length",_pointArray.length, pointObject, pointObject.objectList.length);
+				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
