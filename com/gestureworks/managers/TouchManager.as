@@ -283,15 +283,15 @@ package com.gestureworks.managers
 					for (var i:int = 0; i < tO.N; i++) {
 						if (points[tO.pointArray[i].touchPointID] == undefined) {
 						
-							trace("kill zombe",tO,tO.cO,tO.cO.pointArray.length,tO.cO.pointArray.length,tO.pointArray[i].touchPointID,i);
-						
-							//tO.pointCount = 0;
-							//tO.cO.n = 0;
-							//tO.N = 0;
-							//tO.pointArray[i] = null;
-							//tO.cO.pointArray[i] = null;
-							
-							/*
+							//trace("kill zombe",tO,tO.cO,tO.cO.pointArray.length,tO.cO.pointArray.length,tO.pointArray[i].touchPointID,i);
+
+								/*
+									tO.pointCount = 0;
+									tO.cO.n = 0;
+									tO.N = 0;
+									tO.pointArray[i] = null;
+									tO.cO.pointArray[i] = null;
+							 
 									// REMOVE POINT FROM LOCAL LIST
 									tO.pointArray.splice(tO.pointArray[i].touchPointID, 1);
 									
