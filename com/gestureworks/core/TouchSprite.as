@@ -15,16 +15,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.events.TouchEvent;
-	import flash.geom.Point;
-	import org.tuio.TuioTouchEvent;
-	
-	import com.gestureworks.cml.utils.CloneUtils;
-	import com.gestureworks.utils.GestureParser;
-	import com.gestureworks.utils.MousePoint;
-	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
@@ -32,19 +22,28 @@ package com.gestureworks.core
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchTransform;
-	
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.MouseManager;
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
-	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.utils.GestureParser;
+	import com.gestureworks.utils.MousePoint;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
+	import flash.geom.Point;
+	import org.tuio.TuioTouchEvent;
+	
+	
+	
+	
 
 	
 	/**
@@ -1019,7 +1018,10 @@ package com.gestureworks.core
 			if (type.indexOf("gwTouch") > -1)
 			{				
 				super.addEventListener(GWTouchEvent.eventType(type), function(e:*):void {
-					var data:Object = CloneUtils.deepCopyObject(e);					
+					var myBA:ByteArray = new ByteArray(); 
+					myBA.writeObject(e); 
+					myBA.position = 0; 
+					var data:Object = myBA.readObject(); 
 					dispatchEvent(new GWTouchEvent(e.type, data, e.bubbles, e.cancelable));
 				});
 			}
