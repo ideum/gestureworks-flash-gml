@@ -15,23 +15,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	import com.leapmotion.leap.events.LeapEvent;
-	import com.leapmotion.leap.LeapMotion;
-	
-	import com.leapmotion.leap.*;
-	import com.leapmotion.leap.events.*;
-	import com.leapmotion.leap.util.*;
 	
 	
-	import flash.sensors.Accelerometer;
+	
 
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
-	
 	import flash.utils.Timer;
 	import flash.system.System;
+	
+	import com.leapmotion.leap.events.LeapEvent;
+	import com.leapmotion.leap.LeapMotion;
 	
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureWorksCore;
@@ -51,16 +47,16 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.core.TouchSprite;
 	
+	
+	
+	
 	public class MotionManager
 	{	
 		public static var leap:LeapMotion;
 		public static var motionSprite:TouchSprite;
-		//public var motionSprite:TouchSprite;
 		
 		gw_public static function initialize():void
 		{			
-			//trace("motion manager init")
-			
 			leap = new LeapMotion(); 
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
@@ -70,7 +66,7 @@ package com.gestureworks.managers
 			
 			// create gloabal motion sprite
 			motionSprite = new TouchSprite();
-			GestureGlobals.motionSpriteID = motionSprite.id;
+			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
 	
 		}
 		
@@ -96,7 +92,7 @@ package com.gestureworks.managers
 		
 		public static function onFrame(event:LeapEvent):void
 		{
-			//trace("ms frame------------------------------------")
+			//trace("ms frame------------------------------------", event.frame)
 			// push frame data to global motionsprite
 				motionSprite.cO.motionArray = event.frame
 				

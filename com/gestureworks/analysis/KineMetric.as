@@ -18,20 +18,14 @@ package com.gestureworks.analysis
 	/**
  * @private
  */
-	import com.codeazur.as3swf.timeline.Frame;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.ClusterObject;
 	
-	import com.leapmotion.leap.events.LeapEvent;
-	import com.leapmotion.leap.LeapMotion;
-	
-	//import com.leapmotion.leap.*;
-	//import com.leapmotion.leap.events.*;
-	//import com.leapmotion.leap.util.*;
-	
 	import com.leapmotion.leap.Frame 
+	import com.leapmotion.leap.Finger 
+	import com.leapmotion.leap.Hand
 		
 	public class KineMetric
 	{
@@ -515,7 +509,7 @@ package com.gestureworks.analysis
 		{
 			
 		//trace("motion kinemetric");
-		//var frame:Frame = cO.motionArray;
+		var frame:Frame = cO.motionArray;
 		
 		//trace("total hands", cO.hn);
 		//trace("total fingers", cO.fn);
@@ -537,9 +531,9 @@ package com.gestureworks.analysis
 				//frame.translation();
 				//frame.isValid();
 			
-				//if ( frame.hands.length != 0 )
-			//	{
-					/*
+				if ( frame.hands.length != 0 )
+				{
+					
 					//trace("--hand--");
 					// Get the first hand
 					var hand:Hand = frame.hands[ 0 ];
@@ -567,7 +561,7 @@ package com.gestureworks.analysis
 						for each ( var finger:Finger in fingers )
 						{
 							cO.x += finger.tipPosition.x;
-							cO.y += finger.tipPosition.y;
+							cO.y += -finger.tipPosition.y;
 							//mot_x += finger.tipPosition.x;
 							//mot_y += -finger.tipPosition.y;
 							//cO.z += finger.tipPosition.z;
@@ -596,9 +590,13 @@ package com.gestureworks.analysis
 								if (cO.history[h]) {
 									cO.dx = (cO.x - cO.history[h].x) * hk; 
 									cO.dy = (cO.y - cO.history[h].y) * hk;
-									//cO.dx = (mot_x - cO.history[h].x)*hk; 
-									//cO.dy = (mot_y - cO.history[h].y)*hk;
+									//cO.dtheta = (cO.history[h].rotation - cO.history[h].rotation)*hk; 
+									//cO.dsy = (cO.history[h].scale - cO.history[h].scale)*hk;
 								}
+								
+								// stops erroneous slipping
+								if (Math.abs(cO.dx) > 10) cO.dx = 0;
+								if (Math.abs(cO.dy)>10) cO.dy = 0;
 								//else {
 									
 								//}
@@ -612,8 +610,8 @@ package com.gestureworks.analysis
 						//cO.dx = 0;
 						//cO.dy = 0;
 					}
-				*/	
-				//}
+					
+				}
 				
 				//cO.x = 0;
 				//cO.y = 0;
