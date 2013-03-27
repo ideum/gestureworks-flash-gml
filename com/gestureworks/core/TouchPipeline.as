@@ -81,8 +81,10 @@ package com.gestureworks.core
 		
 		public function processPipeline():void
 		{
-			//trace("processing pipeline--------------------------------");
+			
 			gn = gO.pOList.length;
+			//trace("processing pipeline--------------------------------",gn);
+			
 			
 			for (i=0; i < gn; i++) 
 				{
@@ -334,6 +336,7 @@ package com.gestureworks.core
 									
 						trO.x =	cO.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.y =	cO.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						//trO.z =	cO.z; // 3d
 						
 						trO.width = cO.width
 						trO.height = cO.height
@@ -341,7 +344,11 @@ package com.gestureworks.core
 						trO.scale = cO.separation
 						trO.scaleX = cO.separationX
 						trO.scaleY = cO.separationY
+						//trO.scaleZ = cO.separationZ//3d
 						trO.rotation = cO.rotation
+						//trO.rotationX = cO.rotationX//3d
+						//trO.rotationY = cO.rotationY//3d
+						//trO.rotationZ = cO.rotationZ//3d
 						trO.orientation = cO.orientation
 						
 						
@@ -366,18 +373,20 @@ package com.gestureworks.core
 									// map transform limits
 									if (gO.pOList[i].dList[j].target_id == "dsx") gO.pOList[i].dList[j].gestureValue = trO.obj_scaleX;
 									if (gO.pOList[i].dList[j].target_id == "dsy") gO.pOList[i].dList[j].gestureValue = trO.obj_scaleY;
+									if (gO.pOList[i].dList[j].target_id == "dsz") gO.pOList[i].dList[j].gestureValue = trO.obj_scaleZ;//3d
 									if (gO.pOList[i].dList[j].target_id == "dtheta") gO.pOList[i].dList[j].gestureValue = trO.obj_rotation;
-									//if (gO.pOList[i][j].target_id == "dthetaX") gO.pOList[i][j].gestureValue = trO.obj_rotationX;
-									//if (gO.pOList[i][j].target_id == "dthetaY") gO.pOList[i][j].gestureValue = trO.obj_rotationY;
-									//if (gO.pOList[i][j].target_id == "dthetaZ") gO.pOList[i][j].gestureValue = trO.obj_rotationZ;
+									if (gO.pOList[i].dList[j].target_id == "dthetaX") gO.pOList[i].dList[j].gestureValue = trO.obj_rotationX;//3d
+									if (gO.pOList[i].dList[j].target_id == "dthetaY") gO.pOList[i].dList[j].gestureValue = trO.obj_rotationY;//3d
+									if (gO.pOList[i].dList[j].target_id == "dthetaZ") gO.pOList[i].dList[j].gestureValue = trO.obj_rotationZ;//3d
 									if (gO.pOList[i].dList[j].target_id == "dx") gO.pOList[i].dList[j].gestureValue = trO.obj_x;
 									if (gO.pOList[i].dList[j].target_id == "dy") gO.pOList[i].dList[j].gestureValue = trO.obj_y;
+									if (gO.pOList[i].dList[j].target_id == "dz") gO.pOList[i].dList[j].gestureValue = trO.obj_z;//3d
 								
 									// ENSURE DELTAS MAPPED TO THE SAME PROPERTY ARE ADDITIVE IN A "FRAME"
 									trO[gO.pOList[i].dList[j].target_id] += gO.pOList[i].dList[j].gestureDelta;
 									if (ts.trace_debug_mode) trace("gesture data", i, j, gO.pOList[i].dList[j].gestureDelta, trO[ts.gO.pOList[i].dList[j].target_id]);
 													
-									//trace("target_values", ts.trO[ts.gO.pOList[i][j].target_id]);
+									//trace("target_values", ts.trO[ts.gO.pOList[i].dList[j].target_id]);
 									}
 								}					
 					}

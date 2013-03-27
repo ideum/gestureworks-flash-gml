@@ -60,11 +60,14 @@ package com.gestureworks.utils
 			
 			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
 			
+			trace("parsing gml");
+			
 			gOList = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);
 			gList = new Vector.<GestureObject>;
 			
 				gestureTypeList = { 
+									"translate":true, 
 									"drag":true, 
 									"scale":true, 
 									"rotate":true,
@@ -83,9 +86,21 @@ package com.gestureworks.utils
 									"stroke_letter":true,
 									"stroke_greek":true,
 									"stroke_shape":true,
-									"stroke_symbol":true
+									"stroke_symbol":true,
+									"3d_translate":true,
+									"3d_rotate":true, 
+									"3d_scale":true,
+									"3d_manipulate":true,
+									"3d_tilt":true,
+									"3d_swipe":true,
+									"3d_flick":true,
+									"3d_stroke":true,
+									"3d_tap":true,
+									"3d_hold":true,
+									"3d_double_tap":true 
 									};			
-
+						
+									/*
 						// re-set gesture processing rate
 						var processing_rate:Number = gml.attribute("processing_rate");
 						var matchDisplayFR:Boolean = gml.attribute("match_display_frame_rate") == "true" ?true:false;
@@ -108,7 +123,7 @@ package com.gestureworks.utils
 							//trace("touch frame interval",GestureGlobals.touchFrameInterval);
 						//}
 						//else GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
-						
+						*/
 						
 						var gestureSetNum:int = gml.Gesture_set.length();
 						
@@ -117,15 +132,15 @@ package com.gestureworks.utils
 						
 							var gestureNum:int = gml.Gesture_set[g].Gesture.length();
 							
-							
+							//trace("gesture number",gestureNum)
 						
 							for (var i:int = 0; i < gestureNum; i++) 
 							{
 								var gesture_id:String = String(gml.Gesture_set[g].Gesture[i].attribute("id"));
-								var gesture_set_id:String = String(gml.Gesture_set[g].attribute("id"));
+								var gesture_set_id:String = String(gml.Gesture_set[g].attribute("gesture_set_name"));
 								var propertyNum:int = int(gml.Gesture_set[g].Gesture[i].analysis.algorithm.returns.property.length());
 								
-								//trace(gesture_set_id)
+								//trace("gesture id",gesture_id,"gesture set id",gesture_set_id)
 								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 								// properties of the gesture 
 								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,10 +152,13 @@ package com.gestureworks.utils
 								// 	for all gestures listed for touchspriteID
 								for (key in gestureList)
 								{
+								//trace("key",key);
 								// check for key match in gml // gesture sets set match
 								if ((gesture_id == key)||(gesture_set_id == key)) 
 								{	
 									var gtype:String = String(gml.Gesture_set[g].Gesture[i].attribute("type"));
+									
+									//trace("gtype",gtype);
 									
 									// for all matches in cml gesturelist and gml 
 									for (type in gestureTypeList)
@@ -214,6 +232,17 @@ package com.gestureworks.utils
 															gO.n = n
 															gO.nMin = nMax;
 															gO.nMax = nMin;
+															
+															//////////////////////
+															//advanced cluster properties
+															///////////////////////
+															// cluster type
+															gO.cluster_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("cluster_type"));
+															// hand number
+															gO.hn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("hand_number")); 
+															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number")); 
+															
+															//trace("hand number",gO.hn,"finger number",gO.fn)
 														}
 													}
 												
@@ -323,7 +352,7 @@ package com.gestureworks.utils
 											gO.algorithm_class = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.attribute("class"));
 											gO.algorithm_type = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.attribute("type"));
 												
-											
+											//trace("algorithm",gO.algorithm)
 											///////////////////////////////////////////////////////////////////////////////
 											// properties of each property object of the gesture
 											// 
@@ -331,6 +360,7 @@ package com.gestureworks.utils
 											for (var j:int = 0; j < propertyNum; j++) {
 												var property_id:String = String(gml.Gesture_set[g].Gesture[i].analysis.algorithm.returns.property[j].attribute("id"));
 												
+												//trace("property id:",property_id)
 												// create new property object on gesture object
 												// note each thread has independent pipeline to display object property
 												var dO:DimensionObject = new DimensionObject();
@@ -528,9 +558,10 @@ package com.gestureworks.utils
 														// target translator
 														var target:String = String(gml.Gesture_set[g].Gesture[i].mapping.update.gesture_event.property[j].attribute("target"));
 															
-														if ((target == "dsx") || (target == "dsy") || (target == "dx") || (target == "dy") || (target == "dtheta")|| (target == "dthetaX") || (target == "dthetaY") || (target == "dthetaZ")) dO.target_id = target;
+														if ((target == "dsx") || (target == "dsy") || (target == "dsz") || (target == "dx") || (target == "dy") || (target == "dz")||(target == "dtheta")|| (target == "dthetaX") || (target == "dthetaY") || (target == "dthetaZ")) dO.target_id = target;
 														else if ((target == "scaleX")||(target == "scalex")) 		dO.target_id = "dsx";
-														else if ((target == "scaleY")||(target == "scaley")) 		dO.target_id = "dsy";
+														else if ((target == "scaleY") || (target == "scaley")) 		dO.target_id = "dsy";
+														else if ((target == "scaleZ")||(target == "scalez")) 		dO.target_id = "dsz";
 														else if (target == "scale")									dO.target_id = "ds";
 														else if ((target == "rotate") || (target == "rotation")) 		dO.target_id = "dtheta";
 														else if ((target == "rotateX") || (target == "rotationX")) 		dO.target_id = "dthetaX";
@@ -538,6 +569,7 @@ package com.gestureworks.utils
 														else if ((target == "rotateZ") || (target == "rotationZ")) 		dO.target_id = "dthetaZ";
 														else if ((target == "x")||(target == "X")) 					dO.target_id = "dx";
 														else if ((target == "y") || (target == "Y")) 				dO.target_id = "dy";
+														else if ((target == "z") || (target == "Z")) 				dO.target_id = "dz";
 														else  dO.target_id = "";	
 													}
 													

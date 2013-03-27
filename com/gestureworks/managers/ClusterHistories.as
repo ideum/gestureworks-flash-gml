@@ -114,6 +114,12 @@ package com.gestureworks.managers
 				
 				//trace(object.path_data)
 				//trace(clusterObject.pointArray[0].x)
+				
+				//MOTION FRAME DATA
+				object.motionArray = clusterObject.motionArray;
+				
+				//SENSOR ACCELEROMETER DATA
+				object.sensorArray = clusterObject.sensorArray;
 
 			return object;
 		}

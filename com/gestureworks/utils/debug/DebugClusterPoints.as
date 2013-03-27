@@ -20,6 +20,13 @@ package com.gestureworks.utils.debug
 	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	
+	import com.leapmotion.leap.events.LeapEvent;
+	import com.leapmotion.leap.LeapMotion;
+	
+	import com.leapmotion.leap.*;
+	import com.leapmotion.leap.events.*;
+	import com.leapmotion.leap.util.*;
 
 	public class DebugClusterPoints extends Shape
 	{
@@ -64,6 +71,8 @@ package com.gestureworks.utils.debug
 	{
 		pointList = cO.pointArray
 		NumPoints = pointList.length
+		
+		//trace("draw motion points");
 		
 		//if(obj.displayOn=="true"){
 			
@@ -138,8 +147,80 @@ package com.gestureworks.utils.debug
 							graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
 							graphics.endFill();
 					}
-				
 				}
+				
+				
+				/////////////////////////////////////////////////////////////////////
+				// motion points
+				///////////////////////////////////////////////////////////////////
+				if (cO.fn != 0)
+				{
+					//trace("--frame----------------------------------");
+					var frame:Frame = cO.motionArray;
+					
+					if ( frame.hands.length != 0 )
+					{
+					for (var h:int = 0; h < frame.hands.length; h++) {
+						
+							var hand:Hand = frame.hands[h];
+							// Check if the hand has any fingers
+							var fingers:Vector.<Finger> = hand.fingers;
+							
+							// push fingers to points list
+							if ( fingers.length != 0 )
+							{
+								// Calculate the hand's average finger tip position
+								for each ( var finger:Finger in fingers )
+								{
+								//trace("----finger--");	
+								var xm:Number = (finger.tipPosition.x) + stage.stageWidth*0.5;
+								var ym:Number = -(finger.tipPosition.y) + stage.stageHeight*0.5;
+								var zm:Number = (finger.tipPosition.z) * 0.2;
+								
+								var wm:Number = 1//(finger.width) *10;
+								//trace("length", finger.length);
+								//trace("width", finger.width);
+
+									if (style.shape == "ring") {
+										//trace("ring");
+											graphics.lineStyle(style.stroke_thickness, 0xFFFFFF, style.stroke_alpha);
+											graphics.drawCircle(xm ,ym, style.radius + 20 + zm);
+											
+											graphics.beginFill(0xFFFFFF, style.fill_alpha);
+											graphics.drawCircle(xm, ym, style.radius);
+											graphics.endFill();
+									}
+								}	
+								
+								////////////////////////////////////////////////////
+								//// draw hand data
+								////////////////////////////////////////////////////
+								var hx:Number = hand.palmPosition.x + stage.stageWidth*0.5;
+								var hy:Number = -(hand.palmPosition.y) + stage.stageHeight * 0.5;
+								var hz:Number = (hand.palmPosition.z) * 0.2;
+								var hr:Number = hand.sphereRadius * 0.5 + hz;
+								var sq_width:Number = 5;
+								
+									// palm radius
+									graphics.lineStyle(3, 0xFFFFFF, style.stroke_alpha);
+									graphics.drawCircle(hx , hy, hr);
+									// palm center
+									graphics.lineStyle(1, 0xFFFFFF, style.stroke_alpha);
+									graphics.drawRect(hx-sq_width,hy-sq_width,2*sq_width, 2*sq_width);
+							}
+					}
+					}	
+				}
+				
+				////////////////////////////////////////////////////////////////
+				// sensor points
+				////////////////////////////////////////////////////////////////
+				
+				
+				
+				
+				
+				/////////////////////////////////////////////////////////////////
 		}
 	//}
 	

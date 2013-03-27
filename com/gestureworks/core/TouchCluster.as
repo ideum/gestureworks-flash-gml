@@ -138,7 +138,6 @@ package com.gestureworks.core
 			ts.N = cO.n;
 			
 			
-			
 			// CLUSTER OBJECT UPDATE
 			
 			// reset cluster states
@@ -202,7 +201,9 @@ package com.gestureworks.core
 			
 			//trace(_dN, _N, cO.point_remove);
 			
-			
+			///////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////
+			////FIND MOTION CLUSTER COUNT
 			
 			//motion point update
 			cO.hn = cO.motionArray.hands.length;
@@ -216,6 +217,9 @@ package com.gestureworks.core
 			
 			//trace("total fingers", cO.fn)
 			}
+			//////////////////////////////////////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////////////////////////////////////
+			
 		}
 		/**
 		 * @private
@@ -237,12 +241,12 @@ package com.gestureworks.core
 		
 		public function updateMotionClusterAnalysis():void
 			{
-				cluster_kinemetric.findMeanInst3DMotionTransformation();
+				//cluster_kinemetric.findMeanInst3DMotionTransformation();
 		}
 		
 		public function updateSensorClusterAnalysis():void
 			{
-				cluster_kinemetric.findSensorJolt();
+				//cluster_kinemetric.findSensorJolt();
 		}
 		
 		
@@ -272,10 +276,12 @@ package com.gestureworks.core
 		{
 		//cluster_kinemetric.findMeanInstTransformation();
 		
-		//trace("-touch cluster -----------------------------");
+		
 			
 			gn = gO.pOList.length;
 			var dn:uint 
+			
+			//trace("-touch cluster -----------------------------",gn);
 			
 			for (key = 0; key < gn; key++) 
 			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
@@ -306,13 +312,14 @@ package com.gestureworks.core
 							
 							if (g.algorithm_class == "kinemetric")
 							{
-									//trace(gO.pOList[key].algorithm);
-								
+									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
+									
 									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
 									if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformation();
 									
 									// BASIC DRAG CONTROL // ALGORITHM // type drag
 									if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
+									if (g.algorithm == "translate")			cluster_kinemetric.findMeanInstTranslation();
 
 									// BASIC SCALE CONTROL // ALGORITHM // type scale
 									if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
@@ -443,6 +450,71 @@ package com.gestureworks.core
 							///////////////////////////////////////////////////
 						}
 				}
+				
+				// processing algorithms when in motion
+					if(ts.cO.fn!=0){		// check kinemetric and if continuous analysis
+						// check point number requirements
+						//if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
+						//{
+							//trace("call motion cluster calc",ts.cO.fn);
+
+							// activate all by default
+							g.activeEvent = true;
+							
+							if (g.algorithm_class == "kinemetric")
+							{
+									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
+									
+									// BASIC 3D DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
+									if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation();
+									
+									// BASIC 3D DRAG // ALGORITHM // type drag
+									//if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3dMotionTranslation();
+									if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3DMotionTransformation();
+									
+									///////////////////////////////////////////////////////////////////////////////////
+									// LIMIT DELTA BY CLUSTER VALUES
+									/////////////////////////////////////////////////////////////////////////////////////
+									g.activeEvent = false;
+									
+										for (DIM = 0; DIM < dn; DIM++) 
+										{
+											var gdim:DimensionObject = g.dList[DIM];
+												gdim.activeDim = true; // ACTIVATE DIM
+											var res:String = gdim.property_result
+											
+											//WHEN THERE ARE NO LIMITS IMPOSED
+											gdim.clusterDelta = cO[res];//rtn_dim = 1;
+
+											//CLOSE DIM IF NO VALUE
+											if (gdim.clusterDelta == 0) gdim.activeDim = false;
+											//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);
+											
+											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
+											if (gdim.activeDim) g.activeEvent = true;
+										}
+
+
+										g.data.x = cO.x;
+										g.data.y = cO.y;
+										g.data.z = cO.z;
+										g.data.hn = cO.hn;
+										g.data.fn = cO.fn;
+										
+										//////////////////////////////////////////////////////////////////
+										//////////////////////////////////////////////////////////////////
+										
+										//if ((g.activeEvent) && (g.dispatchEvent))
+										//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
+									
+							//}
+							///////////////////////////////////////////////////
+						}
+				}
+				
+				
+				
+				
 				//else {
 					//trace("processing algorithm when NOT touching");
 				//}

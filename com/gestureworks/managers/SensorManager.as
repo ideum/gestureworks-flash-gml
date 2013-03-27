@@ -52,16 +52,17 @@ package com.gestureworks.managers
 		// initializes touchManager
 		gw_public static function initialize():void
 		{	
-			trace("sensor manager init")
-			//if (Accelerometer.isSupported)
-            //{
+			
+			if (Accelerometer.isSupported)
+            {
+				trace("sensor manager init")
 				act = new Accelerometer();
 				act.addEventListener(AccelerometerEvent.UPDATE, accUpdateHandler);
 				
 				// create gloabal motion sprite
 				ms = new TouchSprite();
 			
-			//}
+			}
 		}
 		
 		public static function accUpdateHandler(event:AccelerometerEvent):void

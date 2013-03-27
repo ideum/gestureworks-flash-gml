@@ -245,7 +245,7 @@ package com.gestureworks.managers
 				if ((tO.td)&&(tO.td.debug_display))
 				{
 					//UPDATE CLUSTER HISTORIES
-					ClusterHistories.historyQueue(tO.touchObjectID);
+					//ClusterHistories.historyQueue(tO.touchObjectID);
 					
 					//UPDATE TRANSFORM HISTORIES
 					TransformHistories.historyQueue(tO.touchObjectID);

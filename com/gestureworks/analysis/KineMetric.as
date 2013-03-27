@@ -18,6 +18,7 @@ package com.gestureworks.analysis
 	/**
  * @private
  */
+	import com.codeazur.as3swf.timeline.Frame;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.PointObject;
@@ -26,11 +27,11 @@ package com.gestureworks.analysis
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
 	
-	import com.leapmotion.leap.*;
-	import com.leapmotion.leap.events.*;
-	import com.leapmotion.leap.util.*;
+	//import com.leapmotion.leap.*;
+	//import com.leapmotion.leap.events.*;
+	//import com.leapmotion.leap.util.*;
 	
-	
+	import com.leapmotion.leap.Frame 
 		
 	public class KineMetric
 	{
@@ -44,6 +45,8 @@ package com.gestureworks.analysis
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
 		public var pointList:Vector.<PointObject>;
+		//public var motionList:Frame;
+		//public var sensorList
 		
 		// number in group
 		private var N:uint = 0;
@@ -61,10 +64,13 @@ package com.gestureworks.analysis
 		//pivot base const
 		private var pvk:Number = 0.00004;
 		
-		
+		private var hn:uint = 0;
 		private var fn:uint = 0;
 		private var rhfn:uint = 0;
 		private var lhfn:uint = 0;
+		private var fn1:Number = 0;
+		private var fk0:Number = 0;
+		private var fk1:Number = 0;
 		
 		public function KineMetric(_id:int) 
 		{
@@ -84,7 +90,7 @@ package com.gestureworks.analysis
 		{
 				//if (ts.trace_debug_mode) trace("find cluster..............................",N);
 				
-				// get number of points in cluster
+				// get number of touch points in cluster
 				N = ts.cO.n;
 				LN = ts.cO.hold_n
 
@@ -98,10 +104,21 @@ package com.gestureworks.analysis
 					mc = pointList[0].moveCount;
 				}
 				
-				// motion points
+				// get motion points in frame
+				hn = ts.cO.hn
 				fn = ts.cO.fn
+				rhfn = ts.cO.rhfn
+				lhfn = ts.cO.lhfn
 				
-				//trace("total fingers", fn)
+				if (fn)
+				{
+					fn1 = fn - 1;
+					fk0 = 1 / fn;
+					fk1 = 1 / fn1;
+					if (fn == 0) fk1 = 0;
+					//motionList = cO.motionArray;
+					//mc = pointList[0].moveCount;
+				}
 		}
 		
 		public function resetCluster():void {
@@ -140,7 +157,9 @@ package com.gestureworks.analysis
 			/////////////////////////
 			// first diff
 			/////////////////////////
-			cO.dtheta = 0;
+			cO.dthetaX = 0;
+			cO.dthetaY = 0;
+			cO.dthetaZ = 0;
 			cO.dx = 0;
 			cO.dy = 0;
 			cO.dz = 0;//-
@@ -496,12 +515,13 @@ package com.gestureworks.analysis
 		{
 			
 		//trace("motion kinemetric");
-		var frame:Frame = cO.motionArray;
+		//var frame:Frame = cO.motionArray;
 		
-		trace("total hands", cO.hn);
-		trace("total fingers", cO.fn);
+		//trace("total hands", cO.hn);
+		//trace("total fingers", cO.fn);
 		
-				trace("--frame----------------------------------");
+				//trace("--frame----------------------------------");
+				
 				//trace("id: ",	frame.id); 
 				//trace("timestamp: ",	frame.timestamp); 
 				//trace("hands: ",	frame.hands.length); 
@@ -517,10 +537,10 @@ package com.gestureworks.analysis
 				//frame.translation();
 				//frame.isValid();
 			
-				if ( frame.hands.length != 0 )
-				{
-					
-					trace("--hand--");
+				//if ( frame.hands.length != 0 )
+			//	{
+					/*
+					//trace("--hand--");
 					// Get the first hand
 					var hand:Hand = frame.hands[ 0 ];
 					
@@ -540,21 +560,78 @@ package com.gestureworks.analysis
 					// push fingers to points list
 					if ( fingers.length != 0 )
 					{
-						// Calculate the hand's average finger tip position
+						var mot_x:Number = 0;
+						var mot_y:Number = 0;
+						
+						// Calculate the hand's average finger features
 						for each ( var finger:Finger in fingers )
 						{
+							cO.x += finger.tipPosition.x;
+							cO.y += finger.tipPosition.y;
+							//mot_x += finger.tipPosition.x;
+							//mot_y += -finger.tipPosition.y;
+							//cO.z += finger.tipPosition.z;
+							//cO.length += finger.length;
+						}
+						
+						cO.x *= fk0;
+						cO.y *= fk0;
+						//mot_x *= fk0;
+						//mot_y *= fk0;
+						
+						//cO.z *= fk0;
+						//cO.length *=fk0 
+						
+						
+							///////////////////////////////////////////
+							// velocity
+							//////////////////////////////////////////
 							
-						trace("----finger--");	
-							// update motion points in cluster
-							trace("xyz", finger.tipPosition );
-							trace("length", finger.length);
-							trace("width", finger.width);
-							
-						}	
+							if (cO.history) {
+								
+								//trace("cluster history length:", cO.history.length)	
+								var h:uint = 6;
+								var hk:Number = 1/6;
+								
+								if (cO.history[h]) {
+									cO.dx = (cO.x - cO.history[h].x) * hk; 
+									cO.dy = (cO.y - cO.history[h].y) * hk;
+									//cO.dx = (mot_x - cO.history[h].x)*hk; 
+									//cO.dy = (mot_y - cO.history[h].y)*hk;
+								}
+								//else {
+									
+								//}
+							}	
+							/////////////////////////////////////////
+
 					}
-					
-					
-				}
+					else {
+						cO.x =0;
+						cO.y =0;
+						//cO.dx = 0;
+						//cO.dy = 0;
+					}
+				*/	
+				//}
+				
+				//cO.x = 0;
+				//cO.y = 0;
+				
+				
+				
+				/////////////////////////////////////
+				// frame motion 
+				/////////////////////////////////////
+				
+				//if (cO.history[6]) {
+					//var since:Frame = cO.history[6].motionArray;
+					//trace("frame motion:",frame.translation(since));
+				//}
+				
+				
+				
+				trace("motion data:",GestureGlobals.motionframeID,fn,fk0,fk1,"pos:",cO.x,cO.y,"vel:",cO.dx,cO.dy);
 			
 		}
 		
@@ -761,7 +838,7 @@ package com.gestureworks.analysis
 							}
 						}
 					}
-					//trace(k0, t0);
+					trace(k0, t0);
 			//cO.etm_ddx *= k0 * t0;
 			//cO.etm_ddy *= k0 * t0;
 		}

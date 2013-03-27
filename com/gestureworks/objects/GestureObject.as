@@ -128,6 +128,24 @@ package com.gestureworks.objects
 		public function set nMin(value:int):void{_nMin = value;}
 		
 		
+		
+		// hand number---------------------
+		private var _hn:int = 0;
+		public function get hn():int{return _hn;}
+		public function set hn(value:int):void { _hn = value; }
+		
+		// finger number---------------------
+		private var _fn:int = 0;
+		public function get fn():int{return _fn;}
+		public function set fn(value:int):void { _fn = value; }
+		
+		// n---------------------
+		private var _cluster_type:String = "";
+		public function get cluster_type():String{return _cluster_type;}
+		public function set cluster_type(value:String):void { _cluster_type = value; }
+		
+		
+		
 		////////////////////////////////////////////////////////
 		// general cluster thresholds
 		///////////////////////////////////////////////////////

@@ -64,7 +64,9 @@ package com.gestureworks.core
 		
 		
 		
-		
+		private static var _motionSpriteID:int = 0;//
+		public static function get motionSpriteID():int{return _motionSpriteID;}
+		public static function set motionSpriteID(value:int):void{_motionSpriteID=value;}
 		
 		// frameID frame stamp relative to start of application ------------
 		private static var _frameID:int = 0;//int.MAX_VALUE
@@ -81,6 +83,23 @@ package com.gestureworks.core
 		public static function set frameID(value:int):void
 		{
 			_frameID=value;
+		}
+		
+		// frameID frame stamp relative to start of application ------------
+		private static var _motionframeID:uint = 0;//int.MAX_VALUE
+		/**
+		 * frameID frame stamp relative to start of application.
+		 */
+		public static function get motionframeID():uint
+		{
+			return _motionframeID;
+		}
+		/**
+		 * frameID frame stamp relative to start of application.
+		 */
+		public static function set motionframeID(value:uint):void
+		{
+			_motionframeID=value;
 		}
 		
 		private static var _touchFrameInterval:Number = 16;//60fps
@@ -134,7 +153,7 @@ package com.gestureworks.core
 		}
 		
 		//  clusterHistoryCaptureLength -------------------------------------
-		private static var _clusterHistoryCaptureLength:int = 0;//int.MAX_VALUE
+		private static var _clusterHistoryCaptureLength:int = 8;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
 		/**
 		 * Returns the current clusterHistoryCaptureLength.
 		 */

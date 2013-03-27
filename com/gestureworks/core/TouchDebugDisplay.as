@@ -578,6 +578,13 @@ package com.gestureworks.core
 					if(_clusterOrientationOn)cluster_orient.drawOrientation();
 				}
 			}
+			
+			// motion point
+			if (ts.cO.fn >= 1) 
+				{
+					//trace("drawDebugDisplay");
+					if (_pointShapesOn) cluster_points.drawPoints();
+				}
 		}
 	}
 	/**

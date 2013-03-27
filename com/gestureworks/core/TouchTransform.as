@@ -74,9 +74,9 @@ package com.gestureworks.core
 		private var dtheta:Number =  0;
 		
 		// 3d
-		//private var dthetaX:Number =  0;
-		//private var dthetaY:Number =  0;
-		//private var dthetaZ:Number =  0;
+		//private var dthetaX:Number =  0;//3d
+		//private var dthetaY:Number =  0;//3d
+		//private var dthetaZ:Number =  0;//3d
 		
 		//private var transform_3d:Boolean = true;
 		
@@ -107,8 +107,9 @@ package com.gestureworks.core
 			trO.transformPointsOn = true;
 			pre_InitTransformPoints();
 			
-			
 		}
+		
+		
 		/**
 		* @private
 		*/
@@ -132,9 +133,9 @@ package com.gestureworks.core
 			ts._$height = ts.height;
 			
 			//3d
-			//_rotationX = super.rotationX;
-			//_rotationY = super.rotationY;
-			//_rotationZ = super.rotationZ;
+			//_rotationX = super.rotationX;//3d
+			//_rotationY = super.rotationY;//3d
+			//_rotationZ = super.rotationZ;//3d
 			
 			
 			// update transform object properties
@@ -149,9 +150,9 @@ package com.gestureworks.core
 			trO.obj_width = ts._$width;
 			trO.obj_height = ts._$height;
 			
-			//trO.obj_rotationX = _rotationX;
-			//trO.obj_rotationY = _rotationY;
-			//trO.obj_rotationZ = _rotationZ;
+			//trO.obj_rotationX = _rotationX;//3d
+			//trO.obj_rotationY = _rotationY;//3d
+			//trO.obj_rotationZ = _rotationZ;//3d
 		}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,8 +171,11 @@ package com.gestureworks.core
 	public function transformManager():void 
 	{
 		//if (trace_debug_mode) trace("touch object transform");
+		
+		
 				
-				if (ts.N != 0)
+				
+				if ((ts.N != 0)||(ts.cO.fn!=0))
 				{
 					if (!trO.init_center_point) initTransformPoints();
 					
@@ -309,9 +313,9 @@ package com.gestureworks.core
 				dsy =  trO.dsy;// trO.dsy;
 				dtheta = trO.dtheta * DEG_RAD;
 				
-				//dthetaX = trO.dthetaX //* DEG_RAD;
-				//dthetaY = trO.dthetaY //* DEG_RAD;
-				//dthetaZ = trO.dthetaZ //* DEG_RAD;
+				//dthetaX = trO.dthetaX //* DEG_RAD;//3d
+				//dthetaY = trO.dthetaY //* DEG_RAD;//3d
+				//dthetaZ = trO.dthetaZ //* DEG_RAD;//3d
 				
 				///////////////////////////////////////////////////////////////////////////////////
 				// 3d test
@@ -383,9 +387,9 @@ package com.gestureworks.core
 				updateLocalProperties();
 				
 				//3d
-				//this.rotationX += dthetaX;
-				//this.rotationY += dthetaY;
-				//this.rotationZ += dthetaZ;
+				//this.rotationX += dthetaX;//3d
+				//this.rotationY += dthetaY;//3d
+				//this.rotationZ += dthetaZ;//3d
 			
 		}
 			 
@@ -459,9 +463,9 @@ package com.gestureworks.core
 				dsy = (ts._$scaleY - ts.scaleY);//dsx
 				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
 				
-			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;
-			//	dthetaY = (_rotationY - super.rotationY)* DEG_RAD;
-			//	dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;
+			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;//3d
+			//	dthetaY = (_rotationY - super.rotationY) * DEG_RAD;//3d
+			//	dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;//3d
 				
 			//trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
 				
@@ -494,9 +498,9 @@ package com.gestureworks.core
 				 updateLocalProperties();
 				 
 				 // 3d
-				 //rotationX += dthetaX;
-				 //rotationY += dthetaY;
-				// rotationZ += dthetaZ;
+				 //rotationX += dthetaX;//3d
+				 //rotationY += dthetaY;//3d
+				// rotationZ += dthetaZ;//3d
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////

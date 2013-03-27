@@ -90,6 +90,8 @@ package com.gestureworks.core
 		public var tt:TouchTransform;
 		public var td:TouchDebugDisplay;
 		
+		public var id:int;
+		
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
 		public function TouchSprite():void
@@ -118,6 +120,7 @@ package com.gestureworks.core
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
 					GestureGlobals.gw_public::touchObjects[_touchObjectID] = this;
+					id = _touchObjectID;
 					
 					// create generic analysis engine
 					//if (GestureGlobals.analyzeCluster)
@@ -982,16 +985,19 @@ package com.gestureworks.core
 		
 		public function updateTObjProcessing():void
 		{
-			//trace("touchsprite//update////////////////////////////");
 			
-			if (tc) tc.updateClusterAnalysis();
-			if (tp) tp.processPipeline();
-			if (tg) tg.manageGestureEventDispatch();
-			if (tt){
-				tt.transformManager();
-				tt.updateLocalProperties();
+			
+			//TEMP FOR 3D TESTING
+			if (cO.n != 0) {
+				trace("touchsprite//update////////////////////////////");
+				if (tc) tc.updateClusterAnalysis();
+				if (tp) tp.processPipeline();
+				if (tg) tg.manageGestureEventDispatch();
+				if (tt){
+					tt.transformManager();
+					tt.updateLocalProperties();
+				}
 			}
-			
 			
 			/*
 			tc.updateClusterAnalysis();

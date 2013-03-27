@@ -39,6 +39,15 @@ package com.gestureworks.objects
 			_id = value;
 		}
 		
+		private var _type:String;
+		public function get type():String
+		{
+			return _type;
+		}
+		public function set type(value:String):void
+		{
+			_type = value;
+		}
 		///////////////////////////////////////
 		// cluster properties//////////////////
 		///////////////////////////////////////
@@ -514,6 +523,39 @@ package com.gestureworks.objects
 		public function set dtheta(value:Number):void
 		{
 			_dtheta = value;
+		}
+		
+		// dthetax ------------------
+		private var _dthetaX:Number = 0;
+		public function get dthetaX():Number
+		{
+			return _dthetaX;
+		}
+		public function set dthetaX(value:Number):void
+		{
+			_dthetaX = value;
+		}
+		
+		// dthetay ------------------
+		private var _dthetaY:Number = 0;
+		public function get dthetaY():Number
+		{
+			return _dthetaY;
+		}
+		public function set dthetaY(value:Number):void
+		{
+			_dthetaY = value;
+		}
+		
+		// dthetaZ ------------------
+		private var _dthetaZ:Number = 0;
+		public function get dthetaZ():Number
+		{
+			return _dthetaZ;
+		}
+		public function set dthetaZ(value:Number):void
+		{
+			_dthetaZ = value;
 		}
 		
 		// pivot_dtheta ------------------

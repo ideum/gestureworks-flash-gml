@@ -81,6 +81,16 @@ package com.gestureworks.objects
 		{
 			_localy = value;
 		}
+		// localz---------------------3d//
+		private var _localz:Number = 0;
+		public function get localz():Number
+		{
+			return _localz;
+		}
+		public function set localz(value:Number):void
+		{
+			_localz = value;
+		}
 		
 		
 		// radius---------------------
@@ -114,6 +124,16 @@ package com.gestureworks.objects
 		{
 			_height = value;
 		}
+		// length---------------------3d//
+		private var _length:Number = 0;
+		public function get length():Number
+		{
+			return _length;
+		}
+		public function set length(value:Number):void
+		{
+			_length = value;
+		}
 		
 		// scale------------------
 		private var _scale:Number = 0;
@@ -145,6 +165,17 @@ package com.gestureworks.objects
 		{
 			_scaleY = value;
 		}
+		// scaleZ------------------3d//
+		private var _scaleZ:Number = 0;
+		public function get scaleZ():Number
+		{
+			return _scaleZ;
+		}
+		public function set scaleZ(value:Number):void
+		{
+			_scaleZ = value;
+		}
+		
 		// rotation---------------------
 		private var _rotation:Number = 0;
 		public function get rotation():Number
@@ -179,7 +210,7 @@ package com.gestureworks.objects
 		}
 		
 		
-		// rotation3D---------------------
+		// rotation3D---------------------3d//
 		private var _rotationX:Number = 0;
 		public function get rotationX():Number
 		{
@@ -232,7 +263,7 @@ package com.gestureworks.objects
 		{
 			_obj_y = value;
 		}
-		// z---------------------
+		// z---------------------3d//
 		private var _obj_z:Number = 0;
 		public function get obj_z():Number
 		{
@@ -264,6 +295,17 @@ package com.gestureworks.objects
 			_obj_height = value;
 		}
 		
+		// length---------------------3d//
+		private var _obj_length:Number = 0;
+		public function get obj_length():Number
+		{
+			return _obj_length;
+		}
+		public function set obj_length(value:Number):void
+		{
+			_obj_length = value;
+		}
+		
 		// scaleX------------------
 		private var _obj_scaleX:Number = 0;
 		public function get obj_scaleX():Number
@@ -284,6 +326,17 @@ package com.gestureworks.objects
 		{
 			_obj_scaleY = value;
 		}
+		// scaleZ------------------3d//
+		private var _obj_scaleZ:Number = 0;
+		public function get obj_scaleZ():Number
+		{
+			return _obj_scaleZ;
+		}
+		public function set obj_scaleZ(value:Number):void
+		{
+			_obj_scaleZ = value;
+		}
+		
 		// rotation---------------------
 		private var _obj_rotation:Number = 0;
 		public function get obj_rotation():Number
@@ -352,6 +405,17 @@ package com.gestureworks.objects
 			_dy = value;
 		}
 		
+		// dz---------------------3d//
+		private var _dz:Number = 0;
+		public function get dz():Number
+		{
+			return _dz;
+		}
+		public function set dz(value:Number):void
+		{
+			_dz = value;
+		}
+		
 		// dw---------------------
 		private var _dw:Number = 0;
 		public function get dw():Number
@@ -373,7 +437,7 @@ package com.gestureworks.objects
 			_dh = value;
 		}
 		
-		// dsx---------------------
+		// ds---------------------
 		private var _ds:Number = 0;
 		public function get ds():Number
 		{
@@ -405,6 +469,19 @@ package com.gestureworks.objects
 		{
 			_dsy = value;
 		}
+		// dsz---------------------3d//
+		private var _dsz:Number = 0;
+		public function get dsz():Number
+		{
+			return _dsz;
+		}
+		public function set dsz(value:Number):void
+		{
+			_dsz = value;
+		}
+		
+		
+		
 		// dtheta ------------------
 		private var _dtheta:Number = 0;
 		public function get dtheta():Number
@@ -435,7 +512,7 @@ package com.gestureworks.objects
 		{
 			_dthetaY = value;
 		}
-		// dthetaZ ------------------
+		// dthetaZ ------------------3d//
 		private var _dthetaZ:Number = 0;
 		public function get dthetaZ():Number
 		{

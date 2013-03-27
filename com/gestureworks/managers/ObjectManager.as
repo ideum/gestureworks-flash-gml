@@ -20,7 +20,6 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import flash.events.Event;
 	import com.gestureworks.core.gw_public;
-	//import com.gestureworks.core.TouchSpriteBase;
 	
 	public class ObjectManager 
 	{

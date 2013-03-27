@@ -18,10 +18,9 @@ package com.gestureworks.managers
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
 	
-		import com.leapmotion.leap.*;
+	import com.leapmotion.leap.*;
 	import com.leapmotion.leap.events.*;
 	import com.leapmotion.leap.util.*;
-	
 	
 	
 	import flash.sensors.Accelerometer;
@@ -50,17 +49,17 @@ package com.gestureworks.managers
 	import com.gestureworks.utils.Simulator;
 	
 	import com.gestureworks.objects.ClusterObject;
-	//import com.gestureworks.core.MotionSprite;
 	import com.gestureworks.core.TouchSprite;
 	
 	public class MotionManager
 	{	
 		public static var leap:LeapMotion;
-		public static var ms:TouchSprite;
+		public static var motionSprite:TouchSprite;
+		//public var motionSprite:TouchSprite;
 		
 		gw_public static function initialize():void
 		{			
-			trace("motion manager init")
+			//trace("motion manager init")
 			
 			leap = new LeapMotion(); 
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
@@ -70,7 +69,9 @@ package com.gestureworks.managers
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
 			
 			// create gloabal motion sprite
-			ms = new TouchSprite();
+			motionSprite = new TouchSprite();
+			GestureGlobals.motionSpriteID = motionSprite.id;
+	
 		}
 		
 		public static function onInit( event:LeapEvent ):void
@@ -95,19 +96,27 @@ package com.gestureworks.managers
 		
 		public static function onFrame(event:LeapEvent):void
 		{
+			//trace("ms frame------------------------------------")
 			// push frame data to global motionsprite
-				ms.cO.motionArray = event.frame	
+				motionSprite.cO.motionArray = event.frame
+				
+				// update motion frameID
+				GestureGlobals.motionframeID += 1;
+				
+				//UPDATE CLUSTER HISTORIES
+				ClusterHistories.historyQueue(motionSprite.touchObjectID);
 			
 			/////////////////////////////////
 			// update main gesture pipe
 			/////////////////////////////////
 				
-			if (ms.tc) ms.updateMotionClusterAnalysis()
-			if (ms.tp) ms.tp.processPipeline();
-			if (ms.tg) ms.tg.manageGestureEventDispatch();
-			if (ms.tt){
-				ms.tt.transformManager();
-				ms.tt.updateLocalProperties();
+			//if (ms.tc) ms.updateMotionClusterAnalysis()
+			if (motionSprite.tc) motionSprite.updateClusterAnalysis()
+			if (motionSprite.tp) motionSprite.tp.processPipeline();
+			if (motionSprite.tg) motionSprite.tg.manageGestureEventDispatch();
+			if (motionSprite.tt){
+				motionSprite.tt.transformManager();
+				motionSprite.tt.updateLocalProperties();
 			}
 		}
 		
