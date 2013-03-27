@@ -39,6 +39,7 @@ package com.gestureworks.core
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
+	import flash.utils.ByteArray;
 	import org.tuio.TuioTouchEvent;
 	
 	
@@ -1018,7 +1019,7 @@ package com.gestureworks.core
 			if (type.indexOf("gwTouch") > -1)
 			{				
 				super.addEventListener(GWTouchEvent.eventType(type), function(e:*):void {
-					var myBA:ByteArray = new ByteArray(); 
+					var myBA:ByteArray = new ByteArray();  
 					myBA.writeObject(e); 
 					myBA.position = 0; 
 					var data:Object = myBA.readObject(); 
