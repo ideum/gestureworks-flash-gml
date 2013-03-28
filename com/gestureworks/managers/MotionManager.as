@@ -73,6 +73,7 @@ package com.gestureworks.managers
 		public static function onInit( event:LeapEvent ):void
 		{
 			trace( "Leap Initialized" );
+			GestureWorks.activeMotion = true;
 		}
 
 		public static function onConnect( event:LeapEvent ):void
