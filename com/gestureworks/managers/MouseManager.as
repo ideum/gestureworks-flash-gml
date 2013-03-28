@@ -56,7 +56,8 @@ package com.gestureworks.managers
 		
 		// initialization method, call through to TouchManager
 		gw_public static function initialize():void
-		{	
+		{
+			if (!GestureWorks.activeSim) return;	
 			TouchManager.gw_public::initialize();
 		}
 			
@@ -66,10 +67,12 @@ package com.gestureworks.managers
 		 * @private
 		 */
 		gw_public static function registerMousePoint(event:TouchEvent):void
-		{							
+		{
+			if (!GestureWorks.activeSim) return;
+			
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);			
+			//GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);			
 			
 			TouchManager.gw_public::registerTouchPoint(event);
 		
@@ -79,7 +82,7 @@ package com.gestureworks.managers
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
-		{			
+		{
 			if (hold)
 			{
 				if (GestureWorks.isShift) 
