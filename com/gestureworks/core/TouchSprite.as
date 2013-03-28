@@ -981,12 +981,8 @@ package com.gestureworks.core
 		}
 		
 		public function updateTObjProcessing():void
-		{
-			
-			
-			//TEMP FOR 3D TESTING
-			if (cO.n != 0) {
-				trace("touchsprite//update////////////////////////////");
+		{			
+			if ( !(GestureWorks.activeMotion) || (GestureWorks.activeMotion && cO.n != 0) ) {
 				if (tc) tc.updateClusterAnalysis();
 				if (tp) tp.processPipeline();
 				if (tg) tg.manageGestureEventDispatch();
@@ -995,14 +991,6 @@ package com.gestureworks.core
 					tt.updateLocalProperties();
 				}
 			}
-			
-			/*
-			tc.updateClusterAnalysis();
-			tp.processPipeline();
-			tg.manageGestureEventDispatch();
-			tt.transformManager();
-			tt.updateLocalProperties();
-			*/
 		}
 		
 		/**
