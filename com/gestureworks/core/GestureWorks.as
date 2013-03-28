@@ -101,8 +101,10 @@ package com.gestureworks.core
 		 * Returns weather your device currently has touch support available.
 		 */
 		public static var supportsTouch:Boolean;
+	
+		
 		/**
-		 * Returns weather TUIO is activated.
+		 * Returns whether TUIO is activated.
 		 */
 		public static var activeTUIO:Boolean;
 		/**
@@ -110,9 +112,15 @@ package com.gestureworks.core
 		 */
 		public static var activeSim:Boolean;
 		/**
-		 * Returns whether Starling touch framework is activated
+		 * Returns whether the Starling touch framework is activated
 		 */
-		public static var starling:Boolean;		
+		public static var activeMotion:Boolean;		
+		/**
+		 * Returns whether the motion framework is activated
+		 */
+		public static var activeStarling:Boolean;	
+		
+		
 		
 		/**
 		 * @private
