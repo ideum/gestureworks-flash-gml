@@ -109,6 +109,10 @@ package com.gestureworks.core
 		 * Returns whether simulation is activated.
 		 */
 		public static var activeSim:Boolean;
+		/**
+		 * Returns whether Starling touch framework is activated
+		 */
+		public static var starling:Boolean;		
 		
 		/**
 		 * @private
