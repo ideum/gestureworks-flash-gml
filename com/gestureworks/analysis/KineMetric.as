@@ -254,7 +254,7 @@ package com.gestureworks.analysis
 						{
 							for (var j1:uint = 0; j1 < N; j1++)
 							{
-								if ((i != j1)&&(pointList[i].history[0]) && (pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
+								if ((i != j1)&& (pointList[i].history.length) && (pointList[i].history[0]) && (pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
 									{
 										//trace("dim",N);
 										var dx:Number = pointList[i].history[0].x - pointList[j1].history[0].x
@@ -293,7 +293,7 @@ package com.gestureworks.analysis
 							
 							
 							// inst separation and rotation
-							if ((pointList[0].history[0]) && (pointList[i].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
+							if ( (pointList[i].history.length) && (pointList[0].history[0]) && (pointList[i].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
 							{
 								var dxs:Number = pointList[0].history[0].x - pointList[i].history[0].x;
 								var dys:Number = pointList[0].history[0].y - pointList[i].history[0].y;
