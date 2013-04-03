@@ -293,7 +293,7 @@ package com.gestureworks.analysis
 							
 							
 							// inst separation and rotation
-							if ( (pointList[i].history.length) && (pointList[0].history[0]) && (pointList[i].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
+							if ( (pointList[i].history.length) && (pointList[0].history.length && pointList[0].history[0]) && (pointList[i].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
 							{
 								var dxs:Number = pointList[0].history[0].x - pointList[i].history[0].x;
 								var dys:Number = pointList[0].history[0].y - pointList[i].history[0].y;

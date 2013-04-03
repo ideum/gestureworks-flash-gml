@@ -29,7 +29,7 @@ package com.gestureworks.managers
 		
 		public function onInit( event:LeapEvent ):void
 		{ 
-			GestureWorks.activeMotion = true;
+			//GestureWorks.activeMotion = true;
 			if (debug)
 				trace("Leap Initialized");
 		}

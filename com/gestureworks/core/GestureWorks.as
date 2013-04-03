@@ -279,7 +279,7 @@ package com.gestureworks.core
 			
 			// defined global settings for GML
 			//if (GML.Gestures.gloabl_settings.input.@motion == "true") 
-				motion = true;
+				//motion = true;
 				
 			//if (GML.Gestures.gloabl_settings.input.@sensor == "true") 
 				sensor = true;
