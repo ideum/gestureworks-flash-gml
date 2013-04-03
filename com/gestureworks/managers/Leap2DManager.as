@@ -6,6 +6,7 @@ package com.gestureworks.managers
 	import com.leapmotion.leap.Pointable;
 	import com.leapmotion.leap.Vector3;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	/**
@@ -79,9 +80,51 @@ package com.gestureworks.managers
 		private function getTopDisplayObjectUnderPoint(point:Point):DisplayObject {
 			var targets:Array =  stage.getObjectsUnderPoint(point);
 			var item:DisplayObject = (targets.length > 0) ? targets[targets.length - 1] : stage;
+			item = resolveTarget(item);
 									
 			return item;
-		}				
+		}	
+		
+		/**
+		 * Determines the hit target based on mouseChildren settings of the ancestors
+		 * @param	target
+		 * @return
+		 */
+		private function resolveTarget(target:DisplayObject):DisplayObject {
+			var ancestors:Array = targetAncestors(target, new Array(target));			
+			var trueTarget:DisplayObject = target;
+			
+			for each(var t:DisplayObject in ancestors) {
+				if (t is DisplayObjectContainer && !DisplayObjectContainer(t).mouseChildren)
+				{
+					trueTarget = t;
+					break;
+				}
+			}
+			
+			return trueTarget;
+		}
+				
+		/**
+		 * Returns a list of the supplied target's ancestors sorted from highest to lowest
+		 * @param	target
+		 * @param	ancestors
+		 * @return
+		 */
+		private function targetAncestors(target:DisplayObject, ancestors:Array = null):Array {
+			
+			if (!ancestors)
+				ancestors = new Array();
+				
+			if (!target.parent || target.parent == target.root)
+				return ancestors;
+			else {
+				ancestors.unshift(target.parent);
+				ancestors = targetAncestors(target.parent, ancestors);
+			}
+			
+			return ancestors;
+		} 
 	}
 
 }
