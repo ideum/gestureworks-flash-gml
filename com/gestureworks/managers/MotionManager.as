@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    TouchManager.as
+//  File:    MotionManager.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -16,83 +16,29 @@
 package com.gestureworks.managers
 {
 	
-	
-	
-
-	import flash.utils.Dictionary;
-	import flash.events.TouchEvent;
-	import flash.events.Event;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	import flash.system.System;
-	
+	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.gw_public;
+	import com.gestureworks.core.TouchSprite;
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
 	
-	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.GestureWorksCore;
-	import com.gestureworks.core.GestureGlobals;
-	import com.gestureworks.core.gw_public;
-	import com.gestureworks.core.GML;
-	
-	import com.gestureworks.utils.ArrangePoints;
-	import com.gestureworks.managers.PointHistories;
-	import com.gestureworks.events.GWEvent;
-	
-	import com.gestureworks.objects.PointObject;
-	import com.gestureworks.objects.TouchObject;
-	import com.gestureworks.managers.PointHistories;
-	import com.gestureworks.utils.Simulator;
-	
-	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.core.TouchSprite;
-	
-	
-	
-	
-	public class MotionManager
+	public class MotionManager 
 	{	
-		public static var leap:LeapMotion;
+
+		public static var lmManager:LeapManager
 		public static var motionSprite:TouchSprite;
 		
 		gw_public static function initialize():void
-		{			
-			leap = new LeapMotion(); 
-			leap.controller.addEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
-			leap.controller.addEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
-			leap.controller.addEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
-			leap.controller.addEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
-			leap.controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
+		{						
+			lmManager = new Leap2DManager();
+			lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
 			
 			// create gloabal motion sprite
 			motionSprite = new TouchSprite();
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
-	
 		}
 		
-		public static function onInit( event:LeapEvent ):void
-		{
-			trace( "Leap Initialized" );
-			GestureWorks.activeMotion = true;
-		}
-
-		public static function onConnect( event:LeapEvent ):void
-		{
-			trace( "Leap Connected" );
-		}
-
-		public static function onDisconnect( event:LeapEvent ):void
-		{
-			trace( "Leap Disconnected" );
-		}
-
-		public static function onExit( event:LeapEvent ):void
-		{
-			trace( "Leap Exited" );
-		}
-		
-		public static function onFrame(event:LeapEvent):void
-		{
+		public static function onFrame(event:LeapEvent):void {
 			//trace("ms frame------------------------------------", event.frame)
 			// push frame data to global motionsprite
 				motionSprite.cO.motionArray = event.frame
@@ -114,8 +60,9 @@ package com.gestureworks.managers
 			if (motionSprite.tt){
 				motionSprite.tt.transformManager();
 				motionSprite.tt.updateLocalProperties();
-			}
+			}			
 		}
+		
 		
 	}
 }

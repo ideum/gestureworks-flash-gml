@@ -234,7 +234,7 @@ package com.gestureworks.analysis
 					
 					
 					
-					if ((N == 1)&&(pointList[0].history[0])) 
+					if ((N == 1)&& (pointList.length && pointList[0].history.length && pointList[0].history[0])) 
 					{
 						/*
 						c_px = pointList[0].history[0].x;
@@ -254,7 +254,7 @@ package com.gestureworks.analysis
 						{
 							for (var j1:uint = 0; j1 < N; j1++)
 							{
-								if ((i != j1)&& (pointList[i].history.length) && (pointList[i].history[0]) && (pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
+								if ((i != j1)&& pointList.length && (pointList[i].history.length) && (pointList[i].history[0]) && (pointList[j1].history.length && pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
 									{
 										//trace("dim",N);
 										var dx:Number = pointList[i].history[0].x - pointList[j1].history[0].x
