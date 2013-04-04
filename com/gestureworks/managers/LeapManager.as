@@ -42,7 +42,7 @@ package com.gestureworks.managers
 		{
 			if(debug)
 				trace( "Leap Disconnected" );
-			GestureWorks.application.stage.removeChild(this);								
+			//GestureWorks.application.stage.removeChild(this);								
 		}
 
 		public function onExit( event:LeapEvent ):void
