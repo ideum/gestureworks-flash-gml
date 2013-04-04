@@ -22,9 +22,6 @@ package com.gestureworks.managers
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
-			
-			GestureWorks.supportsTouch = false;
-			GestureWorks.application.stage.addChild(this);
 		}
 		
 		public function onInit( event:LeapEvent ):void
@@ -37,13 +34,15 @@ package com.gestureworks.managers
 		public function onConnect( event:LeapEvent ):void
 		{
 			if(debug)
-				trace( "Leap Connected" );
+				trace( "Leap Connected" );				
+			GestureWorks.application.stage.addChild(this);				
 		}
 
 		public function onDisconnect( event:LeapEvent ):void
 		{
 			if(debug)
 				trace( "Leap Disconnected" );
+			GestureWorks.application.stage.removeChild(this);								
 		}
 
 		public function onExit( event:LeapEvent ):void
