@@ -185,7 +185,7 @@ package com.gestureworks.managers
 		
 		private function trialTimerComplete(event:Event):void
 		{
-			if (!GestureWorks.supportsTouch) GestureWorks.supportsTouch = true;
+			if (!GestureWorks.activeNativeTouch) GestureWorks.activeNativeTouch= true;
 			TouchManager.gw_public::deInitialize();
 		}
 		

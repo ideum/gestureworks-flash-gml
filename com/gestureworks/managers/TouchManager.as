@@ -65,10 +65,10 @@ package com.gestureworks.managers
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
 			//DRIVES UPDATES ON POINT LIFETIME
-			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
+			if (GestureWorks.activeNativeTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
 			
 			// DRIVES UPDATES ON TOUCH POINT PATHS
-			if (GestureWorks.supportsTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			if (GestureWorks.activeNativeTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 			
 			// SINGLE GLOBAL CLOCK FOR TOUCH PROCESSING
 			// COMPILES TOUCH FRAMES

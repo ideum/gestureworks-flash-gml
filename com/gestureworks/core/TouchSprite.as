@@ -110,7 +110,7 @@ package com.gestureworks.core
 					
 					// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
 					if (GestureWorks.activeTUIO)		addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-					if (GestureWorks.supportsTouch)		addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+					if (GestureWorks.activeNativeTouch)		addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
 					else								addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 									
 					// Register touchObject with object manager, return object id
@@ -551,7 +551,7 @@ package com.gestureworks.core
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				if (GestureWorks.supportsTouch) 	TouchManager.gw_public::registerTouchPoint(event);
+				if (GestureWorks.activeNativeTouch) 	TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
 				else 								MouseManager.gw_public::registerMousePoint(event);
 				

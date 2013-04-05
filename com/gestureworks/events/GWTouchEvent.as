@@ -144,7 +144,7 @@ package com.gestureworks.events
 		 */
 		private function resolveType(type:String):String
 		{
-			var key:Class = GestureWorks.activeTUIO ? TuioTouchEvent : GestureWorks.supportsTouch ? TouchEvent : MouseEvent;
+			var key:Class = GestureWorks.activeTUIO ? TuioTouchEvent : GestureWorks.activeNativeTouch ? TouchEvent : MouseEvent;
 			var resolvedType:String = TOUCH_TYPE_MAP[key][type] ? TOUCH_TYPE_MAP[key][type] : type;
 			return resolvedType;
 		}
@@ -156,7 +156,7 @@ package com.gestureworks.events
 		 */
 		public static function eventType(type:String):String
 		{
-			var key:Class = GestureWorks.activeTUIO ? TuioTouchEvent : GestureWorks.supportsTouch ? TouchEvent : MouseEvent;			
+			var key:Class = GestureWorks.activeTUIO ? TuioTouchEvent : GestureWorks.activeNativeTouch ? TouchEvent : MouseEvent;			
 			var obj:Object = TOUCH_TYPE_MAP[key];
 			for (var a:String in obj)
 			{

@@ -56,6 +56,11 @@ package com.gestureworks.core
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
+		/**
+		 * Returns weather your device currently has touch support available.
+		 */
+		protected static var _supportsTouch:Boolean;
+		
 
 		private var _gml:String;
 		/**
@@ -160,8 +165,6 @@ package com.gestureworks.core
 				TUIO.initialize();
 		}
 		
-		
-		
 		private var _motion:Boolean = false;
 		/**
 		 * Turns motion input on.Currently only supports Leap
@@ -210,7 +213,8 @@ package com.gestureworks.core
 			
 			//Multitouch.inputMode = MultitouchInputMode.NONE;
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
-			GestureWorks.supportsTouch = Multitouch.supportsTouchEvents;
+			_supportsTouch = Multitouch.supportsTouchEvents;			
+			GestureWorks.activeNativeTouch = _supportsTouch;
 			
 			GestureWorks.application = stage;
 			initialized = true;

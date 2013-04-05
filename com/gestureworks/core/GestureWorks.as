@@ -97,10 +97,6 @@ package com.gestureworks.core
 		 * Var = stage.
 		 */
 		public static var application:Stage;
-		/**
-		 * Returns weather your device currently has touch support available.
-		 */
-		public static var supportsTouch:Boolean;
 	
 		
 		/**
@@ -112,13 +108,17 @@ package com.gestureworks.core
 		 */
 		public static var activeSim:Boolean;
 		/**
-		 * Returns whether the Starling touch framework is activated
+		 * Returns whether the motion framework is activated
 		 */
 		public static var activeMotion:Boolean;		
 		/**
-		 * Returns whether the motion framework is activated
+		 * Returns whether the Starling touch framework is activated
 		 */
 		public static var activeStarling:Boolean;	
+		/**
+		 * Returns whether native touch is activated
+		 */
+		public static var activeNativeTouch:Boolean;
 		
 		
 		
@@ -161,7 +161,7 @@ package com.gestureworks.core
 			
 			// added to auto-switch to simulator
 			// -Charles (7/17/2012)
-			if (!supportsTouch) simulator = true;
+			if (!activeNativeTouch) simulator = true;
 			if (cmlSettingsPath) cml = cmlSettingsPath;
 		}
 		
@@ -293,6 +293,11 @@ package com.gestureworks.core
 			modeManager = new ModeManager(_root, key)
 			addChild(modeManager);
 		}
+		
+		/**
+		 * Returns weather your device currently has touch support available.
+		 */
+		public static function get supportsTouch():Boolean { return _supportsTouch; }
 		
 	}
 }
