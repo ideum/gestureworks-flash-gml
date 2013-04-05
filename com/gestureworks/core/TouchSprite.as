@@ -34,12 +34,10 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
-	import com.gestureworks.utils.MousePoint;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
-	import flash.utils.ByteArray;
 	import org.tuio.TuioTouchEvent;
 	
 	
@@ -316,17 +314,15 @@ package com.gestureworks.core
 		 */
 		private function onMouseDown(e:MouseEvent):void
 		{			
-			var pointID:int = MousePoint.getID();			
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
-			onTouchDown(event, e.target);
+			var event:GWTouchEvent = new GWTouchEvent(e);
+			onTouchDown(event);
 		}
 		/**
 		 * @private
 		 */
 		private function onTuioTouchDown(e:TuioTouchEvent):void
 		{			
-			var pointID:int = e.tuioContainer.sessionID;		
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
+			var event:GWTouchEvent = new GWTouchEvent(e);			
 			
 			// currentTarget seems to work here, b/c there is filtering going on within onTouchDown
 			// normally this would be the target, but Tuio library doesn't recognize mouseChildren = false
@@ -1007,11 +1003,7 @@ package com.gestureworks.core
 			if (type.indexOf("gwTouch") > -1)
 			{				
 				super.addEventListener(GWTouchEvent.eventType(type), function(e:*):void {
-					var myBA:ByteArray = new ByteArray();  
-					myBA.writeObject(e); 
-					myBA.position = 0; 
-					var data:Object = myBA.readObject(); 
-					dispatchEvent(new GWTouchEvent(e.type, data, e.bubbles, e.cancelable));
+					dispatchEvent(new GWTouchEvent(e));
 				});
 			}
 			

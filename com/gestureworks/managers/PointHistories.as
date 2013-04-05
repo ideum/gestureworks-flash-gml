@@ -76,31 +76,18 @@ package com.gestureworks.managers
 				
 				//trace(FrameID,pt.frameID);
 				
-				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
-				{
-					pt.x = event.localX;
-					pt.y = event.localY;
-					pt.w = event.sizeX;
-					pt.h = event.sizeY;
-					pt.dx = event.localX - point.history[0].x;
-					pt.dy = event.localY - point.history[0].y;
-					//trace(pt.x,pt.y,pt.dx,pt.dy);
-				}
-				else
-				{
-					pt.x = event.stageX;
-					pt.y = event.stageY;
-					pt.w = event.sizeX;
-					pt.h = event.sizeY;
-					pt.dx = event.stageX - point.history[0].x;
-					pt.dy = event.stageY - point.history[0].y;
+				pt.x = event.stageX;
+				pt.y = event.stageY;
+				pt.w = event.sizeX;
+				pt.h = event.sizeY;
+				pt.dx = event.stageX - point.history[0].x;
+				pt.dy = event.stageY - point.history[0].y;
 					// NO SUB-PIXEL RESOLUTION
 					//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
 					
 					//var sx:Number = event.sizeX * Math.exp(90)
 					//var sy:Number = event.sizeY*Math.exp(90)
 					//trace(event.sizeX,event.sizeY, event.pressure, sx,sy);
-				}	
 				//trace(pt.dx,pt.dy,event.stageY,point.history[0].y,point.history[1].y,point.history[3].y)
 			}
 			
@@ -112,20 +99,10 @@ package com.gestureworks.managers
 				pt.dx = 0;
 				pt.dy = 0;
 				
-				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
-				{
-					pt.x = event.localX;
-					pt.y = event.localY;
-					pt.w = event.sizeX;
-					pt.h = event.sizeY;
-				}
-				else
-				{
-					pt.x = event.stageX;
-					pt.y = event.stageY;
-					pt.w = event.sizeX;
-					pt.h = event.sizeY;
-				}
+				pt.x = event.stageX;
+				pt.y = event.stageY;
+				pt.w = event.sizeX;
+				pt.h = event.sizeY;
 			}
 			
 			

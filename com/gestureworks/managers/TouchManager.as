@@ -205,16 +205,8 @@ package com.gestureworks.managers
 			if (pointObject)
 			{	
 				// UPDATE POINT POSITIONS
-				if (!GestureWorks.supportsTouch || GestureWorks.activeTUIO)
-				{
-					pointObject.y = event.localY;
-					pointObject.x = event.localX;
-				}
-				else
-				{	
-					pointObject.y = event.stageY;
-					pointObject.x = event.stageX;
-				}
+				pointObject.y = event.stageY;
+				pointObject.x = event.stageX;
 				pointObject.moveCount ++;
 				
 				// UPDATE POINT HISTORY 

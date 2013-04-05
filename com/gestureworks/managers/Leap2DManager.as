@@ -2,12 +2,12 @@ package com.gestureworks.managers
 {
 	import com.gestureworks.cml.utils.NumberUtils;
 	import com.gestureworks.core.TouchSprite;
+	import com.gestureworks.events.GWTouchEvent;
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.Pointable;
 	import com.leapmotion.leap.Vector3;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
-	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	/**
 	 * @author
@@ -41,7 +41,7 @@ package com.gestureworks.managers
 			for each(var aid:Number in activePoints) {
 				if (pids.indexOf(aid) == -1) {
 					temp.splice(temp.indexOf(aid), 1);
-					TouchManager.onTouchUp(new TouchEvent(TouchEvent.TOUCH_END, true, false, aid, false, event.frame.pointable(aid).tipPosition.x, event.frame.pointable(aid).tipPosition.y));
+					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false, event.frame.pointable(aid).tipPosition.x, event.frame.pointable(aid).tipPosition.y));
 					if(debug)
 						trace("REMOVED:", aid, event.frame.pointable(aid));					
 				}
@@ -58,14 +58,22 @@ package com.gestureworks.managers
 				if (activePoints.indexOf(pid) == -1) {
 					activePoints.push(pid);					
 					var obj:* = getTopDisplayObjectUnderPoint(point);
-					if (obj is TouchSprite)
-						obj.onTouchDown( new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y), obj);
+					if (obj is TouchSprite) {
+						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
+						ev.stageX = point.x;
+						ev.stageY = point.y;
+						ev.eventPhase = 2;
+						obj.onTouchDown(ev, obj);
+					}
 					
 					if(debug)
 						trace("ADDED:", pid, event.frame.pointable(pid));	
 				}
 				else {
-					TouchManager.onTouchMove(new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y));											
+					ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
+					ev.stageX = point.x;
+					ev.stageY = point.y;
+					TouchManager.onTouchMove(ev);											
 					if(debug)
 						trace("UPDATE:", pid, event.frame.pointable(pid));	
 				}
