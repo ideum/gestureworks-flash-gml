@@ -16,10 +16,36 @@ package com.gestureworks.managers
 	{				
 		private var activePoints:Array;
 		
-		public function Leap2DManager() 
+		private var minX:Number = -180;
+		private var maxX:Number = 180;
+		
+		private var minY:Number = 75;
+		private var maxY:Number = 270;
+		
+		private var minZ:Number = -110;
+		private var maxZ:Number = 200;
+		
+		/**
+		 * The Leap2DManager constructor allows arguments for screen and leap device calibration settings. The settings will map x and y Leap coordinate ranges to screen 
+		 * coordinates and the Leap z range to pressure. The calibration is only valid as long as the relative position of the Leap device and the monitor remain constant. 
+		 * @param	minX minimum Leap X coordinate
+		 * @param	maxX maximum Leap X coordinate
+		 * @param	minY minimum Leap Y coordinate
+		 * @param	maxY maximum Leap Y coordinate
+		 * @param	minZ minimum Leap Z coordinate
+		 * @param	maxZ maximum Leap Z coordinate
+		 */
+		public function Leap2DManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0, minZ:Number=0, maxZ:Number=0) 
 		{
 			super();
 			activePoints = new Array();
+			
+			if (minX) this.minX = minX;
+			if (maxX) this.maxX = maxX;
+			if (minY) this.minY = minY;
+			if (maxY) this.maxY = maxY;
+			if (minZ) this.minZ = minZ;
+			if (maxZ) this.maxZ = maxZ;
 		}
 		
 		/**
@@ -52,8 +78,12 @@ package com.gestureworks.managers
 			for each(var pid:Number in pids) {
 				var tip:Vector3 = event.frame.pointable(pid).tipPosition;
 				var point:Point = new Point();
-				point.x = NumberUtils.map(tip.x, -180, 180, 0, stage.stageWidth);
-				point.y = NumberUtils.map(tip.y, 75, 270, stage.stageHeight, 0);
+				point.x = NumberUtils.map(tip.x, minX, maxX, 0, stage.stageWidth);
+				point.y = NumberUtils.map(tip.y, minY, maxY, stage.stageHeight, 0);
+				var pressure:Number = NumberUtils.map(tip.z, minZ, maxZ, 0, 1);
+				
+				if (debug)
+					trace("tip z:", tip.z, pressure);
 
 				if (activePoints.indexOf(pid) == -1) {
 					activePoints.push(pid);					
@@ -63,6 +93,7 @@ package com.gestureworks.managers
 						ev.stageX = point.x;
 						ev.stageY = point.y;
 						ev.eventPhase = 2;
+						ev.pressure = pressure;
 						obj.onTouchDown(ev, obj);
 					}
 					
@@ -73,6 +104,7 @@ package com.gestureworks.managers
 					ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
 					ev.stageX = point.x;
 					ev.stageY = point.y;
+					ev.pressure = pressure;
 					TouchManager.onTouchMove(ev);											
 					if(debug)
 						trace("UPDATE:", pid, event.frame.pointable(pid));	
