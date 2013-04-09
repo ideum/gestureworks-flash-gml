@@ -16,18 +16,14 @@
 
 package com.gestureworks.core
 {
+	import com.gestureworks.core.CML;
+	import com.gestureworks.core.GML;
+	import com.gestureworks.managers.ModeManager;
+	import com.gestureworks.utils.CMLLoader;
+	import com.gestureworks.utils.GMLParser;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
-	import com.gestureworks.utils.CMLLoader;
-	import com.gestureworks.utils.GMLParser;
-	import com.gestureworks.managers.ModeManager;
-	import com.gestureworks.utils.Simulator;
-	import com.gestureworks.tuio.TUIO;
-	import com.gestureworks.core.CML;
-	import com.gestureworks.core.GML;
-	import com.gestureworks.utils.Yolotzin;
-	import flash.utils.ByteArray;
 	import flash.utils.getDefinitionByName;
 
 	/**
@@ -249,7 +245,13 @@ package com.gestureworks.core
 				tuio = true;
 
 			if (CML.Objects.@fullscreen == "true") 
-				fullscreen = true;				
+				fullscreen = true;	
+				
+			if (CML.Objects.@leap2D == "true") 
+				leap2D = true;
+			
+			if (CML.Objects.@leap3D == "true") 
+				leap3D = true;
 				
 			startGmlParse();
 		}

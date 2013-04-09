@@ -17,6 +17,7 @@ package com.gestureworks.managers
 {
 	
 	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.TouchSprite;
 	import com.leapmotion.leap.events.LeapEvent;
@@ -27,15 +28,23 @@ package com.gestureworks.managers
 
 		public static var lmManager:LeapManager
 		public static var motionSprite:TouchSprite;
+		public static var leapmode:String = "2d";
 		
 		gw_public static function initialize():void
-		{						
-			lmManager = new Leap2DManager();
-			lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+		{				
+			if(leapmode == "2d"){
+				lmManager = new Leap2DManager();
+				lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+			}
+			else if (leapmode == "3d"){
+				//lmManager = new Leap3DManager();
+				//lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+			}							
 			
 			// create gloabal motion sprite
 			motionSprite = new TouchSprite();
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
+			//GestureWorks.activeMotion = true;
 		}
 		
 		public static function onFrame(event:LeapEvent):void {

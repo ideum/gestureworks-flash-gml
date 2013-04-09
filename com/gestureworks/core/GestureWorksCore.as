@@ -179,8 +179,7 @@ package com.gestureworks.core
 			if (_motion) 
 				MotionManager.gw_public::initialize();
 		}
-		
-		
+				
 		private var _sensor:Boolean = false;
 		/**
 		 * Turns sensor input on. Currently only supports Accelerometer in Air.
@@ -196,8 +195,39 @@ package com.gestureworks.core
 				SensorManager.gw_public::initialize();
 		}
 		
+		private var _leap2D:Boolean = false;
+		/**
+		 * Turns leap 2D motion input on
+		 * @default false
+		 */
+		public function get leap2D():Boolean { return _leap2D; }
+		public function set leap2D(value:Boolean):void
+		{
+			if (_leap2D == value) return;
+			_leap2D = value;
+			
+			if (_leap2D){
+				MotionManager.leapmode = "2d";
+				motion = true;
+			}
+		}
 		
-		
+		private var _leap3D:Boolean = false;
+		/**
+		 * Turns leap 3D motion input on
+		 * @default false
+		 */
+		public function get leap3D():Boolean { return _leap3D; }
+		public function set leap3D(value:Boolean):void
+		{
+			if (_leap3D == value) return;
+			_leap3D = value;
+			
+			if (_leap3D){
+				MotionManager.leapmode = "3d";
+				motion = true;
+			}
+		}				
 		
 		// private methods //
 		
