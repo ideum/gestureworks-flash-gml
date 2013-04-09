@@ -60,7 +60,7 @@ package com.gestureworks.utils
 			
 			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
 			
-			trace("parsing gml");
+		//	trace("parsing gml");
 			
 			gOList = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);

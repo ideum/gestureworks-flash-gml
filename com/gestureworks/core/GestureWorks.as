@@ -292,7 +292,7 @@ package com.gestureworks.core
 		private function loadModeManager():void
 		{			
 			if (parent.toString() != "[Object Stage]") _root = parent.root;
-			modeManager = new ModeManager(_root, key)
+			modeManager = new ModeManager()
 			addChild(modeManager);
 		}
 		

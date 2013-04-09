@@ -122,10 +122,11 @@ package com.gestureworks.core
 		}
 		
 		
-		private var _key:String;
+		private var _key:String = "";
 		/**
-		 * Sets GestureWorks or OpenExhibits license key
+		 * Deprecated: Gestureworks no longer requires a key to use
 		 */
+		[Deprecated(replacement = "none")]	
 		public function get key():String{return _key;}
 		public function set key(value:String):void
 		{
@@ -241,7 +242,6 @@ package com.gestureworks.core
 			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 			graphics.endFill(); 
 			
-			//Multitouch.inputMode = MultitouchInputMode.NONE;
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			_supportsTouch = Multitouch.supportsTouchEvents;			
 			GestureWorks.activeNativeTouch = _supportsTouch;

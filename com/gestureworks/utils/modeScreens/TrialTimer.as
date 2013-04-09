@@ -25,7 +25,7 @@ package com.gestureworks.utils.modeScreens
 	public class TrialTimer extends Sprite 
 	{
 		public static var COMPLETE:String = "complete trial timer";
-		private var timerCompleteAmount:Number = 3600;
+		private var timerCompleteAmount:Number = 1800;
 		private var textString:String;
 		private var finalString:String;
 		private var timer:Timer;
@@ -37,13 +37,13 @@ package com.gestureworks.utils.modeScreens
 		
 		public function TrialTimer() 
 		{
-			textString = "Trial Mode ";
-			finalString = GestureWorks.isOpenExibits ? "Open Exhibits trial timer has expired" : "GestureWorks trial timer has expired";
+			textString = "Gestureworks Trial Mode: ";
+			finalString = "Trial timer has expired";
 			
 			createText();
 			updateTimerText(textString + "60:00");
 			
-			timer=new Timer(1000);
+			timer = new Timer(1000);
 			timer.addEventListener(TimerEvent.TIMER, updateDisplay);
 			timer.start();			
 		}
@@ -52,8 +52,7 @@ package com.gestureworks.utils.modeScreens
 		{			
 			updateTimerText(textString + formatTime(timerCompleteAmount));
 			
-			if (timerCompleteAmount==0)
-			{
+			if (timerCompleteAmount == 0) {
 				timer.stop();
 				timer.removeEventListener(TimerEvent.TIMER, updateDisplay);
 				timerText.text = finalString;
@@ -65,21 +64,16 @@ package com.gestureworks.utils.modeScreens
 		
 		private function formatTime(t:int):String
 		{
-			var s:int=Math.round(t);
-			var m:int=0;
-			if (s>0)
-			{
-				while (s > 59)
-				{
+			var s:int = Math.round(t);
+			var m:int = 0;
+			if (s > 0) {
+				while (s > 59) {
 					m++;
-					s-=60;
+					s -= 60;
 				}
-				
-				//return String((m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s);
 				return String((m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s);
 			}
-			else
-			{
+			else {
 				return "00:00";
 			}
 		}
@@ -90,36 +84,33 @@ package com.gestureworks.utils.modeScreens
 			var defaultFonts:DefaultFonts = new DefaultFonts;
 			
 			timerText = new TextField;	
-			timerText.y = -40;
+			timerText.y = 0;
 			timerText.antiAliasType = AntiAliasType.ADVANCED;
-			timerText.width = 300;
+			timerText.width = 800;
 			timerText.wordWrap = true;
 			timerText.embedFonts = true;
 			timerText.selectable = false;
+			timerText.background = false;
 			addChild(timerText);						
 			
 			readmeText = new TextField;
 			readmeText.antiAliasType = AntiAliasType.ADVANCED;
-			readmeText.width = 400;
+			readmeText.width = 500;
 			readmeText.wordWrap = true;
-			readmeText.text = "See the Read Me to license";
+			readmeText.y = 40;
+			readmeText.text = "Click to purchase.";
 			readmeText.embedFonts = true;
 			readmeText.selectable = false;
 			addChild(readmeText);
 			
-			formatBold = new TextFormat("OpenSansBold", 30, 0xFFFFFF);
-			formatRegular = new TextFormat("OpenSansRegular", 30, 0xFFFFFF);
-			
-			readmeText.setTextFormat(formatRegular, 0, 7);			
-			readmeText.setTextFormat(formatBold, 7, 15);				
-			readmeText.setTextFormat(formatRegular, 15, readmeText.text.length);				
+			formatRegular = new TextFormat("OpenSansRegular", 25, 0xFFFFFF);			
+			readmeText.setTextFormat(formatRegular);						
 		}
 		
 		private function updateTimerText(txt:String):void
 		{
 			timerText.text = txt;
-			timerText.setTextFormat(formatRegular, 0, txt.length-6);			
-			timerText.setTextFormat(formatBold, txt.length-6, txt.length);			
+			timerText.setTextFormat(formatRegular);
 		}
 		
 	}
