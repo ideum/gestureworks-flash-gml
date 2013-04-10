@@ -155,7 +155,7 @@ package com.gestureworks.core
 			_tuio = value;
 			
 			if (_tuio) 
-				TUIO.initialize();
+				TUIOManager.gw_public::initialize();
 		}
 		
 		private var _motion:Boolean = false;
@@ -234,8 +234,8 @@ package com.gestureworks.core
 			
 			GestureWorks.application = stage;
 			initialized = true;
-			
 			create();
+			
 		}		
 		
 		// protected //
