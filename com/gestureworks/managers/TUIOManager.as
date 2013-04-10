@@ -19,7 +19,6 @@ package com.gestureworks.managers
 	import com.gestureworks.core.*;
 	import com.gestureworks.events.*;
 	import com.gestureworks.managers.*;
-	import com.gestureworks.tuio.*;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.system.*;

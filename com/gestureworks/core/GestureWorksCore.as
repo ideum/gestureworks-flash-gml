@@ -16,15 +16,6 @@
 
 package com.gestureworks.core
 {
-	import com.gestureworks.managers.*;
-	import com.gestureworks.tuio.*;
-	import com.gestureworks.utils.*;
-	import flash.display.*;
-	import flash.events.*;
-	import flash.ui.*;
-	import flash.utils.*;
-	
-	
 	/*	
 		IMPORTANT NOTE TO DEVELOPER **********************************************
 		 
@@ -35,25 +26,44 @@ package com.gestureworks.core
 		DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
 		
 	*/
+		
+	import com.gestureworks.core.*;
+	import com.gestureworks.managers.*;
+	import com.gestureworks.utils.*;
+	import flash.display.*;
+	import flash.events.*;
+	import flash.ui.*;
+	import flash.utils.*;
+	
+	
 	public class GestureWorksCore extends Sprite
 	{		
-		protected var initialized:Boolean;
-		private var timeInterval:uint;
+		private var fontManager:FontManager;		
+		private var modeManager:ModeManager;
+		private var modeManagerInit:Boolean = true;		
+		private var _root:* = root;
+		private var cmlDisplays:Array;
 		
 		public function GestureWorksCore()
 		{
 			super();
-			FontManager
+			fontManager = new FontManager;			
+			modeManager = new ModeManager;
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
 		/**
-		 * Returns weather your device currently has touch support available.
+		 * Returns whether your device currently has touch support available.
 		 */
 		protected static var _supportsTouch:Boolean;
 		
-
+		/**
+		 * Returns whether gestureworks has initialized. 
+		 */
+		protected var initialized:Boolean = false;
+		
+		
 		private var _gml:String;
 		/**
 		 * Sets gml file path. Path is relevant to application.
@@ -63,35 +73,28 @@ package com.gestureworks.core
 		{
 			if (_gml == value) return;
 			_gml = value;
+			
+			if (_gml)
+				startGmlParse();
 		}		
 		
 		
 		private var _cml:String;
 		/**
-		 * Sets gml file path. Path is relevant to application.
+		 * Sets cml file path. Path is relevant to application.
 		 */
 		public function get cml():String{return _cml;}
 		public function set cml(value:String):void
 		{
 			if (_cml == value) return;
-			if (value == "") {
-				_cml = value;
-				return;
-			}
-			
+			if (value == "") return;
 			_cml = value;
-			_settingsPath = value;
-			if (initialized) create();
-		}
-		
-		
-		private var _settingsPath:String;
-		[Deprecated(replacement="cml")] 		
-		public function get settingsPath():String{return _cml;}
-		public function set settingsPath(value:String):void
-		{
-			cml = value;
-		}		
+			
+			if (_cml) {
+				if (!cmlDisplays) cmlDisplays = [];
+				startCmlParse();
+			}
+		}	
 		
 		
 		private var _fullscreen:Boolean = false;
@@ -116,7 +119,7 @@ package com.gestureworks.core
 		
 		private var _key:String = "";
 		/**
-		 * Deprecated: Gestureworks no longer requires a key to use
+		 * Deprecated: No longer requires a key.
 		 */
 		[Deprecated(replacement = "none")]	
 		public function get key():String{return _key;}
@@ -126,6 +129,40 @@ package com.gestureworks.core
 			_key = value;
 		}
 		
+		private var _auto:Boolean = false;
+		/**
+		 * Attempts to auto-select input type. Used to revert to the mouse
+		 * simulator when a touch device can not be found.
+		 * @default false
+		 */
+		public function get auto():Boolean { return _auto; }
+		public function set auto(value:Boolean):void
+		{
+			if (_auto == value) return;
+			_auto = value;
+			
+			if (!_auto && !GestureWorks.supportsTouch) 
+				simulator = true;			
+		}			
+		
+		private var _nativeTouch:Boolean = true;
+		/**
+		 * Overrides native touch input
+		 * @default true
+		 */
+		public function get nativeTouch():Boolean { return _leap3D; }
+		public function set nativeTouch(value:Boolean):void
+		{
+			if (_nativeTouch == value) return;
+			_nativeTouch = value;
+			
+			GestureWorks.activeNativeTouch = true;
+			
+			if (!_nativeTouch)
+				Multitouch.inputMode = MultitouchInputMode.NONE;
+			else	
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+		}	
 		
 		private var _simulator:Boolean = false;
 		/**
@@ -139,9 +176,8 @@ package com.gestureworks.core
 			_simulator = value;
 			
 			if (simulator)
-				Simulator.initialize(simulator);
+				Simulator.gw_public::initialize(simulator);
 		}
-		
 		
 		private var _tuio:Boolean = false;
 		/**
@@ -222,25 +258,103 @@ package com.gestureworks.core
 			}
 		}				
 		
+		
+		
 		// private methods //
 		
+		
+		
+		// INITIALIZATION METHOD
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			_supportsTouch = Multitouch.supportsTouchEvents;			
+			
 			GestureWorks.activeNativeTouch = _supportsTouch;
-			
 			GestureWorks.application = stage;
-			initialized = true;
-			create();
 			
+			loadModeManager();
+			
+			initialized = true;			
+			
+			dispatchEvent(new Event(GestureWorks.GESTUREWORKS_COMPLETE));			
+			gestureworksInit();			
 		}		
 		
-		// protected //
+		// loads the mode manager
+		private function loadModeManager():void
+		{			
+			addChild(modeManager);
+		}			
 		
-		protected function create():void{}
+		// loads current cml file
+		private function startCmlParse():void
+		{
+			CMLLoader.getInstance(cml).load(cml);
+			CMLLoader.getInstance(cml).addEventListener(CMLLoader.COMPLETE, CMLLoaderComplete);			
+		}
+		
+		// loads current gml file
+		private function startGmlParse():void
+		{			
+			GMLParser.settingsPath = gml;
+			GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
+		}
+		
+		// parse loaded cml file
+		private function CMLLoaderComplete(event:Event):void
+		{			
+			CML.Objects = CMLLoader.getInstance(cml).data;
+				
+			if (CML.Objects.@simulator == "true") 
+				simulator = true;
+			
+			if (CML.Objects.@tuio == "true") 
+				tuio = true;
+
+			if (CML.Objects.@fullscreen == "true") 
+				fullscreen = true;	
+				
+			if (CML.Objects.@leap2D == "true") 
+				leap2D = true;
+			
+			if (CML.Objects.@leap3D == "true") 
+				leap3D = true;
+			
+			try {
+				var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
+				var tmp:* = new CMLDisplay;
+				addChild(tmp);
+				tmp.init(CMLLoader.getInstance(cml).data);	
+				cmlDisplays.push(tmp);
+				
+			}
+			catch (e:Error) {
+				throw new Error("CML has not been properly intialized. You must make a renference to the CMLParser. ( e.g. CMLParser.addEventListener(CMLParser.COMPLETE, cmlInit); )");
+			}
+							
+			if (!gml && CML.Objects.@gml) {
+				_gml = CML.Objects.@gml;				
+				startGmlParse();
+			}
+		}
+		
+		// parse loaded gml file
+		private function gmlParserComplete(event:Event=null):void
+		{
+			GML.Gestures = GMLParser.settings;
+			
+			// defined global settings for GML
+			//if (GML.Gestures.gloabl_settings.input.@motion == "true") 
+				//motion = true;
+				
+			//if (GML.Gestures.gloabl_settings.input.@sensor == "true") 
+				//sensor = true;
+			
+		}
+		
 		protected function gestureworksInit():void{}
 	}
 }

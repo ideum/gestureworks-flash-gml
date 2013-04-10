@@ -1,115 +1,149 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  IDEUM
-//  Copyright 2011-2012 Ideum
-//  All Rights Reserved.
-//
-//  GestureWorks
-//
-//  File:    CMLLoader.as
-//  Authors:  Ideum
-//             
-//  NOTICE: Ideum permits you to use, modify, and distribute this file
-//  in accordance with the terms of the license agreement accompanying it.
-//
-////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.utils
 {
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-
+	import com.gestureworks.cml.events.StateEvent;
+	import flash.display.Loader;
+	import flash.events.*;
+	import flash.net.*;
+	import flash.utils.*;
+	
 	/**
-	 * This is the ImageParser class.
+	 * The CMLLoader class loads and stores a global reference to an external CML file.
 	 * 
-	 * @langversion 3.0
-	 * @playerversion AIR 2
-	 * @playerversion Flash 10
-	 * @playerversion Flash Lite 4
-	 * @productversion GestureWorks 2.0
+	 * @author Charles
 	 */
 	public class CMLLoader extends EventDispatcher
-	{
-		public static var settings:*;
-		private static var _settingsPath:String="";
-		public static var totalAmount:int;
-		public static var amountToShow:int;
-		private static var settingsLoader:URLLoader;
-		protected static var dispatch:EventDispatcher;
-		public static var content:Array = new Array();
-
-		public static function get settingsPath():String
+	{				
+		private var urlRequest:URLRequest;
+		
+		
+		/**
+		 * Constructor
+		 * @param	enforcer
+		 */	 
+		public function CMLLoader(enforcer:SingletonEnforcer)
 		{
-			return _settingsPath;
+			_isLoaded = false;
+		}	
+		
+		
+		/**
+		 * Holds class instances of the multiton
+		 */
+		static private var instances:Dictionary = new Dictionary;
+		
+		
+		/**
+		 * returns the XML loader key value
+		 * @param	key
+		 * @return
+		 */
+		public static function getInstance(key:*):CMLLoader
+		{
+			if (instances[key] == null)
+				CMLLoader.instances[key] = new CMLLoader(new SingletonEnforcer());
+			return CMLLoader.instances[key];
 		}
+		
 
-		public static function set settingsPath(value:String):void
+		/**
+		 * The COMPLETE string is dispatched when the file has loaded.
+		 */
+		static public const COMPLETE:String = "COMPLETE";	
+		
+		
+		private var _loader:URLLoader;
+		/**
+		 * Contains the loader
+		 */		
+		public function get loader():URLLoader {return _loader;}
+
+
+		public var _data:XML;
+		/**
+		 * Contains the loaded data
+		 */		
+		public function get data():XML {return _data;}		
+		
+		
+		private var _isLoaded:Boolean = false;
+		/**
+		 * Returns true if the file is loaded
+		 */
+		public function get isLoaded():Boolean {return _isLoaded;}	
+		
+		
+		private var _percentLoaded:Number;
+		/**
+		 * Returns the percentage loaded value
+		 */
+		public function get percentLoaded():Number { return _percentLoaded; }	
+		
+		
+		private var _src:String = "";		
+		/**
+		 * Sets the file source path
+		 */
+		public function get src():String {return _src;}
+		public function set src(value:String):void 
 		{
-			if (_settingsPath==value)
-			{
-				return;
-			}	
+			_src = value;
+		}	
+		
+		
+		// public methods
+				
+		
+		/**
+		 * Loads an external CML file
+		 * @param	url
+		 */
+		public function load(url:String):void
+		{
+			_src = url;
+			urlRequest = new URLRequest(url);
 			
-			settingsLoader = new URLLoader();
-			settingsLoader.addEventListener(Event.COMPLETE, settingsLoader_completeHandler);
-			_settingsPath=value;
-			settingsLoader.load(new URLRequest(_settingsPath));
-		}
+			_loader = new URLLoader();
+			_loader.addEventListener(Event.COMPLETE, onComplete);
+			_loader.addEventListener(ProgressEvent.PROGRESS, onProgress);						
+			_loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
+			_loader.load(urlRequest);
+		}		
+			
 
-		private static function settingsLoader_completeHandler(event:Event):void
-		{	
+		// private methods
+		
+		
+		private function onComplete(e:Event):void
+		{
+			_isLoaded = true;
+			_loader.removeEventListener(Event.COMPLETE, onComplete);
+			_loader.removeEventListener(ProgressEvent.PROGRESS, onProgress);							
+			_loader.removeEventListener(IOErrorEvent.IO_ERROR, onError);	
+			
 			try {
-				settings=new XML(settingsLoader.data);
+				_data = XML(_loader.data);	
 			}
-			catch (e:Error) {
-				throw new Error(e.message + " File Path: " + settingsPath);
-			}
-			
-			amountToShow=settings.GlobalSettings.amountToShow;
-			
-			totalAmount=settings.Content.Source.length();
-			
-			if(!amountToShow)
-			{
-				amountToShow=totalAmount;
+			catch (er:Error) {
+				throw new Error(er.message + " File Path: " + urlRequest.url);
 			}
 			
-			dispatchEvent(new Event(Event.COMPLETE));
-			dispatchEvent(new Event(settingsPath));
-			
-			settingsLoader.removeEventListener(Event.COMPLETE, settingsLoader_completeHandler);
-			settingsLoader=null;
+			dispatchEvent(new Event(CMLLoader.COMPLETE, false, false));
 		}
-
-		public static function addEventListener(p_type:String, p_listener:Function, p_useCapture:Boolean=false, p_priority:int=0, p_useWeakReference:Boolean=false):void
+	
+		
+		private function onProgress(e:ProgressEvent):void
 		{
-			if (dispatch==null)
-			{
-				dispatch = new EventDispatcher();
-			}
-			
-			dispatch.addEventListener(p_type, p_listener, p_useCapture, p_priority, p_useWeakReference);
-		}
+			_percentLoaded = e.bytesLoaded / e.bytesTotal;
+			dispatchEvent(new StateEvent(StateEvent.CHANGE, null, "percentLoaded", percentLoaded));
+		}	
 
-		public static function removeEventListener(p_type:String, p_listener:Function, p_useCapture:Boolean=false):void
+
+		private function onError(e:IOErrorEvent):void 
 		{
-			if (dispatch==null)
-			{
-				return;
-			}
-			dispatch.removeEventListener(p_type, p_listener, p_useCapture);
-		}
-
-		public static function dispatchEvent(event:Event):void
-		{
-			if (dispatch==null)
-			{
-				return;
-			}
-			
-			dispatch.dispatchEvent(event);
-		}
-
+			throw new Error(e.text);
+		}			
+		
 	}
 }
+
+class SingletonEnforcer{}

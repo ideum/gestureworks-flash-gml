@@ -15,23 +15,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.utils 
 {
-	import com.gestureworks.core.CML;
-	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.*;
+	import com.gestureworks.managers.*;
 	
 	public class Simulator 
 	{		
-		public static function initialize(simulator:Boolean = false):void
+		gw_public static function initialize():void
 		{	
-			if (GestureWorks.hasCML) 
-			{
-				var simString:String = CML.Objects.@simulator;
-				simulator = simString == "true" ? true : false;	
-			}
-			
-			GestureWorks.activeSim = simulator;
-			
-			if (simulator)
-				trace("simulator is on");
+			MouseManager.gw_public::initialize();		
+			KeyListener.gw_public::initialize();
+			GestureWorks.activeSim = true;			
+			trace("simulator is on");
 		}
 		
 	}

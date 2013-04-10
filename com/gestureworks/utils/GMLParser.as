@@ -21,13 +21,7 @@ package com.gestureworks.utils
 	import flash.events.EventDispatcher;
 
 	/**
-	 * This is the ImageParser class.
-	 * 
-	 * @langversion 3.0
-	 * @playerversion AIR 2
-	 * @playerversion Flash 10
-	 * @playerversion Flash Lite 4
-	 * @productversion GestureWorks 2.0
+	 * This is the GML Parser class.
 	 */
 	public class GMLParser extends EventDispatcher
 	{
