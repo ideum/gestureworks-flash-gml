@@ -80,9 +80,7 @@ package com.gestureworks.utils.modeScreens
 		
 		
 		private function createText():void
-		{
-			var defaultFonts:DefaultFonts = new DefaultFonts;
-			
+		{			
 			timerText = new TextField;	
 			timerText.y = 0;
 			timerText.antiAliasType = AntiAliasType.ADVANCED;

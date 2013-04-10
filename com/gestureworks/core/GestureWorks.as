@@ -76,7 +76,7 @@ package com.gestureworks.core
 		/**
 		 * Returns the current version of GestureWorks.
 		 */
-		public static var version:String = "3.5.0";
+		public static var version:String = "3.6.0";
 		/**
 		 * Returns the current copyright information for GestureWorks.
 		 */

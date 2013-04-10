@@ -26,14 +26,6 @@ package com.gestureworks.utils.modeScreens
 			var gestureWorksVersion:SplashText = new SplashText(GestureWorks.version, 14, 0xFFFFFF);
 			gestureWorksVersion.selectable = false;
 			addChild(gestureWorksVersion);
-			
-			/*
-			var gestureWorksCopyRight:SplashText = new SplashText(GestureWorks.copyright, 14, 0xFFFFFF);
-			gestureWorksCopyRight.selectable = false;
-			addChild(gestureWorksCopyRight);
-			gestureWorksCopyRight.x = 96;
-			gestureWorksCopyRight.width = 300;
-			gestureWorksCopyRight.alpha = .6; */
 		}
 		
 	}

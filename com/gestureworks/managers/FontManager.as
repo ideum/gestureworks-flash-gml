@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    DefaultFonts.as
+//  File:    FontManager.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -14,11 +14,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.gestureworks.text
+package com.gestureworks.managers
 {
 	import flash.text.Font;
 	
-	public class DefaultFonts
+	public class FontManager 
 	{				
 		// Open Sans
 		[Embed(source = '../../../../lib/fonts/OpenSansRegular.ttf', 

@@ -16,23 +16,16 @@
 
 package com.gestureworks.core
 {
-	import com.gestureworks.managers.MotionManager;
-	import com.gestureworks.managers.SensorManager;
-	
+	import com.gestureworks.managers.*;
+	import com.gestureworks.tuio.*;
+	import com.gestureworks.utils.*;
+	import flash.display.*;
+	import flash.events.*;
 	import flash.ui.*;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.display.StageScaleMode;
-	import flash.display.StageAlign;
-	import flash.display.StageDisplayState;
-	import com.gestureworks.text.DefaultFonts;
-	import flash.utils.setInterval;
-	import flash.utils.clearInterval;
-	import com.gestureworks.utils.Simulator;
-	import com.gestureworks.tuio.TUIO;
+	import flash.utils.*;
 	
-	/* 
-		
+	
+	/*	
 		IMPORTANT NOTE TO DEVELOPER **********************************************
 		 
 		PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS IF YOU DO NOT UNDERSTAND IT'S CURRENT VALUE OR PLACE... PERIOD...
@@ -41,8 +34,7 @@ package com.gestureworks.core
 		SOMETHINGS AT FIRST MAY NOT BE CLEAR AS TO WHAT THE ACTUAL PURPOSE IS, BUT IT IS VALUABLE AND IS USED IF IT IS CURRENTLY WRITTTEN HERE.
 		DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
 		
-		*/
-		
+	*/
 	public class GestureWorksCore extends Sprite
 	{		
 		protected var initialized:Boolean;
@@ -51,7 +43,7 @@ package com.gestureworks.core
 		public function GestureWorksCore()
 		{
 			super();
-			
+			FontManager
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -235,9 +227,6 @@ package com.gestureworks.core
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			
-			var df:DefaultFonts = new DefaultFonts();
-			
 			graphics.beginFill(0xFFFFFF,0);
 			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
 			graphics.endFill(); 
