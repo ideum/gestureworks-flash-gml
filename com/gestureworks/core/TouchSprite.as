@@ -179,7 +179,7 @@ package com.gestureworks.core
 			// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
 			if (GestureWorks.activeTUIO)		
 				addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-			if (GestureWorks.activeNativeTouch || GestureWorks.activeStarling || GestureWorks.activeMotion)		
+			if (GestureWorks.activeNativeTouch)		
 				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
 			if (GestureWorks.activeSim)				
 				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);

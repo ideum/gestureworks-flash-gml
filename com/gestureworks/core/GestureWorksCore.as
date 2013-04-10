@@ -212,9 +212,7 @@ package com.gestureworks.core
 			_motion = value;
 			
 			if (_motion) 
-				MotionManager.gw_public::initialize();
-				
-			updateTouchObjects();
+				MotionManager.gw_public::initialize();			
 		}
 				
 		private var _sensor:Boolean = false;
@@ -230,8 +228,6 @@ package com.gestureworks.core
 			
 			if (_sensor) 
 				SensorManager.gw_public::initialize();
-			
-			updateTouchObjects();
 		}
 		
 		private var _leap2D:Boolean = false;
