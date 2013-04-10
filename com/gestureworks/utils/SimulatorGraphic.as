@@ -16,7 +16,6 @@
 package com.gestureworks.utils
 {
 	import flash.display.Sprite;
-	import com.gestureworks.core.CML;
 	
 	public class SimulatorGraphic extends Sprite
 	{

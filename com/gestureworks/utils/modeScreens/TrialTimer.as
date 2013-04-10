@@ -16,7 +16,6 @@
 package com.gestureworks.utils.modeScreens 
 {
 	import com.gestureworks.core.*;
-	import com.gestureworks.text.*;
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
