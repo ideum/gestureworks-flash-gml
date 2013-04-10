@@ -73,7 +73,7 @@ package com.gestureworks.managers
 			
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			//GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);			
+			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);			
 			
 			TouchManager.gw_public::registerTouchPoint(event);
 		
@@ -145,12 +145,12 @@ package com.gestureworks.managers
 		{
 			mousePointX = e.stageX;
 			mousePointY = e.stageY;
-			
-			if (!allowMouseStartDrag) return;
-			if (!hold || e.target.toString()!="[object SimulatorGraphic]") return;
-			
-			var event:GWTouchEvent = new GWTouchEvent(e);
-			TouchManager.onTouchMove(event);
+			//
+			//if (!allowMouseStartDrag) return;
+			//if (!hold || e.target.toString()!="[object SimulatorGraphic]") return;
+			//
+			//var event:GWTouchEvent = new GWTouchEvent(e);
+			//TouchManager.onTouchMove(event);
 		}
 		
 		private static function mouseFrameHandler(e:Event):void
