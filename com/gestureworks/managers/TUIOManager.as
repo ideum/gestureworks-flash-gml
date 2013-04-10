@@ -94,13 +94,16 @@ package com.gestureworks.managers
 		
 		private function onUpdate(e:TuioEvent):void
 		{			
-			TouchManager.onTouchMove(GWTouchEvent(e));
+			var event:GWTouchEvent = new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
+			event.stageX = e.tuioContainer.x * stage.stageWidth;
+			event.stageY = e.tuioContainer.y * stage.stageHeight;
+			TouchManager.onTouchMove(event);
 		}
 		
 		
 		private function onRemove(e:TuioEvent):void
 		{
-			TouchManager.onTouchUp(GWTouchEvent(e));				
+			TouchManager.onTouchUp(new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID));				
 		}
 				
 

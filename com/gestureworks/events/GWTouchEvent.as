@@ -64,7 +64,25 @@ package com.gestureworks.events
 		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.ROLL_OUT] = TOUCH_ROLL_OUT;		
 		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.ROLL_OVER] = TOUCH_ROLL_OVER;				
 		
-		
+		/**
+		 * Serves as an encompassing touch event for all input types as well as a utility for converting different input events. The <code>GWTouchEvent</code> can 
+		 * be used as a proxy for the TouchEvent instances to bypass read-only accessor permissions (e.g. stageX and stageY). 
+		 * @param	event  the event to convert 
+		 * @param	type  the input event type to be evaluated and converted to a GWTouchEvent 
+		 * @param	bubbles  
+		 * @param	cancelable
+		 * @param	touchPointID
+		 * @param	isPrimaryTouchPoint
+		 * @param	localX
+		 * @param	localY
+		 * @param	sizeX
+		 * @param	sizeY
+		 * @param	pressure
+		 * @param	relatedObject
+		 * @param	ctrlKey
+		 * @param	altKey
+		 * @param	shiftKey
+		 */
 		public function GWTouchEvent(event:Event, type:String = "touchBegin", bubbles:Boolean=true, cancelable:Boolean=false, touchPointID:int=0, isPrimaryTouchPoint:Boolean=false, localX:Number=NaN, localY:Number=NaN, sizeX:Number=NaN, sizeY:Number=NaN, pressure:Number=NaN, relatedObject:InteractiveObject=null, ctrlKey:Boolean=false, altKey:Boolean=false, shiftKey:Boolean=false)
 		{
 			super(resolveType(type), bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
@@ -124,7 +142,7 @@ package com.gestureworks.events
 				touchPointID = MousePoint.getID();
 			else if (eventType == TuioTouchEvent)
 				touchPointID = TuioTouchEvent(event).tuioContainer.sessionID;
-						
+
 			for each(prop in sourceInfo.accessor) {
 				propName = String(prop.@name);
 				if (this.hasOwnProperty(propName))
