@@ -150,13 +150,13 @@ package com.gestureworks.core
 		 * Overrides native touch input
 		 * @default true
 		 */
-		public function get nativeTouch():Boolean { return _leap3D; }
+		public function get nativeTouch():Boolean { return _nativeTouch; }
 		public function set nativeTouch(value:Boolean):void
 		{
 			if (_nativeTouch == value) return;
 			_nativeTouch = value;
 			
-			GestureWorks.activeNativeTouch = true;
+			GestureWorks.activeNativeTouch = _nativeTouch;
 			
 			if (!_nativeTouch)
 				Multitouch.inputMode = MultitouchInputMode.NONE;
@@ -176,7 +176,7 @@ package com.gestureworks.core
 			_simulator = value;
 			
 			if (simulator)
-				Simulator.gw_public::initialize(simulator);
+				Simulator.gw_public::initialize();
 		}
 		
 		private var _tuio:Boolean = false;
