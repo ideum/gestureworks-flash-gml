@@ -18,6 +18,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.events.GWEvent;
+	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.utils.SimulatorGraphic;
 	import flash.display.DisplayObject;
@@ -77,8 +78,8 @@ package com.gestureworks.managers
 			TouchManager.gw_public::registerTouchPoint(event);
 		
 			currentMousePoint = event.touchPointID;
-			mousePointX = event.localX;
-			mousePointY = event.localY;
+			mousePointX = event.stageX;
+			mousePointY = event.stageY;
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
@@ -90,7 +91,9 @@ package com.gestureworks.managers
 					if (e.target.toString() == "[object SimulatorGraphic]")
 					{
 						GestureWorks.application.removeChild(e.target as DisplayObject);
-						var eventHere:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, e.target.id, false, mousePointX, mousePointY);
+						var eventHere:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, e.target.id, false);
+						eventHere.stageX = mousePointX;
+						eventHere.stageY = mousePointY;
 						TouchManager.onTouchUp(eventHere);
 					}
 				}
@@ -125,7 +128,7 @@ package com.gestureworks.managers
 				return;
 			}
 			
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_END, true, false, currentMousePoint, false, mousePointX, mousePointY);
+			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, currentMousePoint, false);
 			TouchManager.onTouchUp(event);
 		}
 		
@@ -146,13 +149,15 @@ package com.gestureworks.managers
 			if (!allowMouseStartDrag) return;
 			if (!hold || e.target.toString()!="[object SimulatorGraphic]") return;
 			
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, 0, false, mousePointX, mousePointY);
+			var event:GWTouchEvent = new GWTouchEvent(e);
 			TouchManager.onTouchMove(event);
 		}
 		
 		private static function mouseFrameHandler(e:Event):void
 		{
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_MOVE, true, false, currentMousePoint, false, mousePointX, mousePointY);
+			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, currentMousePoint, false);			
+			event.stageX = mousePointX;
+			event.stageY = mousePointY;
 			TouchManager.onTouchMove(event);
 		}
 	}
