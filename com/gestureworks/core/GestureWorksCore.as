@@ -227,9 +227,6 @@ package com.gestureworks.core
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			graphics.beginFill(0xFFFFFF,0);
-			graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			graphics.endFill(); 
 			
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			_supportsTouch = Multitouch.supportsTouchEvents;			
@@ -238,16 +235,8 @@ package com.gestureworks.core
 			GestureWorks.application = stage;
 			initialized = true;
 			
-			if (cml) create();
-			else timeInterval = setInterval(timerComplete, 500);
-		}
-		
-		private function timerComplete():void
-		{
-			clearInterval(timeInterval);
 			create();
-		}
-		
+		}		
 		
 		// protected //
 		
