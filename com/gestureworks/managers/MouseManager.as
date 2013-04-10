@@ -143,8 +143,10 @@ package com.gestureworks.managers
 		
 		private static function onMouseMove(e:MouseEvent):void
 		{
+			if (GestureWorks.isShift) return;
 			mousePointX = e.stageX;
 			mousePointY = e.stageY;
+			
 			//
 			//if (!allowMouseStartDrag) return;
 			//if (!hold || e.target.toString()!="[object SimulatorGraphic]") return;
