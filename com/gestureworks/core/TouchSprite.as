@@ -107,11 +107,7 @@ package com.gestureworks.core
          {
 			//trace("create touchsprite base");
 					addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
-					
-					// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
-					if (GestureWorks.activeTUIO)		addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-					if (GestureWorks.activeNativeTouch)		addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					else								addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+					updateListeners();				
 									
 					// Register touchObject with object manager, return object id
 					_touchObjectID = ObjectManager.registerTouchObject(this);
@@ -168,6 +164,25 @@ package com.gestureworks.core
 					initBase()
 					//if (debugDisplay)
 					//td = new TouchDebugDisplay(touchObjectID);
+		}
+		
+		/**
+		 * Registers/unregisters event handlers depending on the active modes
+		 */
+		public function updateListeners():void {
+			
+			//clear 
+			removeEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false);
+			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
+			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			
+			// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
+			if (GestureWorks.activeTUIO)		
+				addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+			if (GestureWorks.activeNativeTouch || GestureWorks.activeStarling || GestureWorks.activeMotion)		
+				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+			if (GestureWorks.activeSim)				
+				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 		}
 		
 		 private function initBase():void 

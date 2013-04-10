@@ -160,8 +160,10 @@ package com.gestureworks.core
 			
 			if (!_nativeTouch)
 				Multitouch.inputMode = MultitouchInputMode.NONE;
-			else	
-				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			else
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+				
+			updateTouchObjects();
 		}	
 		
 		private var _simulator:Boolean = false;
@@ -177,6 +179,8 @@ package com.gestureworks.core
 			
 			if (simulator)
 				Simulator.gw_public::initialize();
+				
+			updateTouchObjects();
 		}
 		
 		private var _tuio:Boolean = false;
@@ -192,6 +196,8 @@ package com.gestureworks.core
 			
 			if (_tuio) 
 				TUIOManager.gw_public::initialize();
+				
+			updateTouchObjects();
 		}
 		
 		private var _motion:Boolean = false;
@@ -207,6 +213,8 @@ package com.gestureworks.core
 			
 			if (_motion) 
 				MotionManager.gw_public::initialize();
+				
+			updateTouchObjects();
 		}
 				
 		private var _sensor:Boolean = false;
@@ -222,6 +230,8 @@ package com.gestureworks.core
 			
 			if (_sensor) 
 				SensorManager.gw_public::initialize();
+			
+			updateTouchObjects();
 		}
 		
 		private var _leap2D:Boolean = false;
@@ -256,8 +266,18 @@ package com.gestureworks.core
 				MotionManager.leapmode = "3d";
 				motion = true;
 			}
-		}				
+		}
 		
+		/**
+		 * Updates event listeners depending on the active modes
+		 */
+		protected function updateTouchObjects():void
+		{
+			for each(var obj:* in GestureGlobals.gw_public::touchObjects) {
+				if (obj is TouchSprite)
+					TouchSprite(obj).updateListeners();
+			}				
+		}
 		
 		
 		// private methods //
