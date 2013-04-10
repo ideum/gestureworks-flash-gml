@@ -14,16 +14,16 @@ package com.gestureworks.managers
 	 */
 	public class Leap2DManager extends LeapManager
 	{				
-		private var activePoints:Array;
+		private var activePoints:Array;		
 		
-		private var minX:Number = -180;
-		private var maxX:Number = 180;
+		private var _minX:Number = -180;
+		private var _maxX:Number = 180;
 		
-		private var minY:Number = 75;
-		private var maxY:Number = 270;
+		private var _minY:Number = 75;
+		private var _maxY:Number = 270;
 		
-		private var minZ:Number = -110;
-		private var maxZ:Number = 200;
+		private var _minZ:Number = -110;
+		private var _maxZ:Number = 200;
 		
 		/**
 		 * The Leap2DManager constructor allows arguments for screen and leap device calibration settings. The settings will map x and y Leap coordinate ranges to screen 
@@ -67,7 +67,7 @@ package com.gestureworks.managers
 			for each(var aid:Number in activePoints) {
 				if (pids.indexOf(aid) == -1) {
 					temp.splice(temp.indexOf(aid), 1);
-					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false, event.frame.pointable(aid).tipPosition.x, event.frame.pointable(aid).tipPosition.y));
+					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false));
 					if(debug)
 						trace("REMOVED:", aid, event.frame.pointable(aid));					
 				}
@@ -164,7 +164,61 @@ package com.gestureworks.managers
 			}
 			
 			return ancestors;
-		} 
+		}
+		
+		/**
+		 * The lowest x of the Leap x-coordinate range
+		 * @default -180
+		 */
+		public function get minX():Number { return _minX; }
+		public function set minX(x:Number):void {
+			_minX = x;
+		}
+		
+		/**
+		 * The highest x of the Leap x-coordinate range
+		 * @default 180
+		 */
+		public function get maxX():Number { return _maxX; }
+		public function set maxX(x:Number):void {
+			_maxX = x;
+		}
+		
+		/**
+		 * The lowest y of the Leap y-coordinate range
+		 * @default 75
+		 */
+		public function get minY():Number { return _minY; }
+		public function set minY(y:Number):void {
+			_minY = y;
+		}
+		
+		/**
+		 * The highest y of the Leap y-coordinate range
+		 * @default 270
+		 */
+		public function get maxY():Number { return _maxY; }
+		public function set maxY(x:Number):void {
+			_maxY = x;
+		}
+		
+		/**
+		 * The lowest z of the Leap z-coordinate range. Mapped to touch pressure. 
+		 * @default -110
+		 */
+		public function get minZ():Number { return _minZ; }
+		public function set minZ(z:Number):void {
+			_minZ = z;
+		}
+		
+		/**
+		 * The highest z of the Leap z-coordinate range. Mapped to touch pressure. 
+		 * @default 200
+		 */
+		public function get maxZ():Number { return _maxZ; }
+		public function set maxZ(z:Number):void {
+			_maxZ = z;
+		}		
 	}
 
 }
