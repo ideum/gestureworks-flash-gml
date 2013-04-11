@@ -141,7 +141,7 @@ package com.gestureworks.core
 			if (_auto == value) return;
 			_auto = value;
 			
-			if (!_auto && !GestureWorks.supportsTouch) 
+			if (_auto && !GestureWorks.supportsTouch) 
 				simulator = true;			
 		}			
 		
