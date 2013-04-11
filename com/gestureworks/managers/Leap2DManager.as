@@ -1,6 +1,5 @@
 package com.gestureworks.managers 
 {
-	import com.gestureworks.cml.utils.NumberUtils;
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.leapmotion.leap.events.LeapEvent;
@@ -80,9 +79,9 @@ package com.gestureworks.managers
 			for each(var pid:Number in pids) {
 				var tip:Vector3 = event.frame.pointable(pid).tipPosition;
 				var point:Point = new Point();
-				point.x = NumberUtils.map(tip.x, minX, maxX, 0, stage.stageWidth);
-				point.y = NumberUtils.map(tip.y, minY, maxY, stage.stageHeight, 0);
-				var pressure:Number = NumberUtils.map(tip.z, minZ, maxZ, 0, 1);
+				point.x = map(tip.x, minX, maxX, 0, stage.stageWidth);
+				point.y = map(tip.y, minY, maxY, stage.stageHeight, 0);
+				var pressure:Number = map(tip.z, minZ, maxZ, 0, 1);
 				
 				if (debug)
 					trace("tip z:", tip.z, pressure);
@@ -243,7 +242,7 @@ package com.gestureworks.managers
 		public function get pressureThreshold():Number { return _pressureThreshold; }
 		public function set pressureThreshold(p:Number):void {
 			_pressureThreshold = p;
-		}
+		}		
 	}
 
 }
