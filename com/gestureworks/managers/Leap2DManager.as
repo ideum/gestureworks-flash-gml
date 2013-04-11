@@ -25,6 +25,8 @@ package com.gestureworks.managers
 		private var _minZ:Number = -110;
 		private var _maxZ:Number = 200;
 		
+		private var _pressureThreshold:Number = 1;
+		
 		/**
 		 * The Leap2DManager constructor allows arguments for screen and leap device calibration settings. The settings will map x and y Leap coordinate ranges to screen 
 		 * coordinates and the Leap z range to pressure. The calibration is only valid as long as the relative position of the Leap device and the monitor remain constant. 
@@ -85,10 +87,13 @@ package com.gestureworks.managers
 				if (debug)
 					trace("tip z:", tip.z, pressure);
 
-				if (activePoints.indexOf(pid) == -1) {
-					activePoints.push(pid);					
+				if (activePoints.indexOf(pid) == -1) {								
+					
+					//hit test
 					var obj:* = getTopDisplayObjectUnderPoint(point);
-					if (obj is TouchSprite) {
+					
+					if (obj is TouchSprite && pressure <= pressureThreshold) {
+						activePoints.push(pid);	
 						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
 						ev.stageX = point.x;
 						ev.stageY = point.y;
@@ -101,13 +106,23 @@ package com.gestureworks.managers
 						trace("ADDED:", pid, event.frame.pointable(pid));	
 				}
 				else {
-					ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
-					ev.stageX = point.x;
-					ev.stageY = point.y;
-					ev.pressure = pressure;
-					TouchManager.onTouchMove(ev);											
-					if(debug)
-						trace("UPDATE:", pid, event.frame.pointable(pid));	
+					if (activePoints.indexOf(pid) != -1 && pressure > pressureThreshold){
+						activePoints.splice(activePoints.indexOf(pid), 1);
+						TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, pid, false));
+						
+						if (debug)
+							trace("REMOVED:", pid, event.frame.pointable(pid));					
+					}
+					else{
+						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
+						ev.stageX = point.x;
+						ev.stageY = point.y;
+						ev.pressure = pressure;
+						TouchManager.onTouchMove(ev);											
+						
+						if(debug)
+							trace("UPDATE:", pid, event.frame.pointable(pid));							
+					}
 				}
 			}			
 		}
@@ -218,7 +233,17 @@ package com.gestureworks.managers
 		public function get maxZ():Number { return _maxZ; }
 		public function set maxZ(z:Number):void {
 			_maxZ = z;
-		}		
+		}	
+		
+		/**
+		 * Defines a point registration threshold, based on pressure(Z coordinate), providing the control to decrease
+		 * the entry point of the device's interactive field. 
+		 * @default 1
+		 */
+		public function get pressureThreshold():Number { return _pressureThreshold; }
+		public function set pressureThreshold(p:Number):void {
+			_pressureThreshold = p;
+		}
 	}
 
 }
