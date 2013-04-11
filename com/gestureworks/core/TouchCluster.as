@@ -479,9 +479,9 @@ package com.gestureworks.core
 									
 										for (DIM = 0; DIM < dn; DIM++) 
 										{
-											var gdim:DimensionObject = g.dList[DIM];
+											gdim = g.dList[DIM];
 												gdim.activeDim = true; // ACTIVATE DIM
-											var res:String = gdim.property_result
+											res = gdim.property_result
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											gdim.clusterDelta = cO[res];//rtn_dim = 1;

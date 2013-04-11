@@ -1,6 +1,5 @@
 package com.gestureworks.utils
 {
-	import com.gestureworks.cml.events.StateEvent;
 	import flash.display.Loader;
 	import flash.events.*;
 	import flash.net.*;
@@ -134,7 +133,6 @@ package com.gestureworks.utils
 		private function onProgress(e:ProgressEvent):void
 		{
 			_percentLoaded = e.bytesLoaded / e.bytesTotal;
-			dispatchEvent(new StateEvent(StateEvent.CHANGE, null, "percentLoaded", percentLoaded));
 		}	
 
 

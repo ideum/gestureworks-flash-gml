@@ -125,7 +125,7 @@ package com.gestureworks.core
 		public function get key():String{return _key;}
 		public function set key(value:String):void
 		{
-			if (key == value) return;
+			if (_key == value) return;
 			_key = value;
 		}
 		
