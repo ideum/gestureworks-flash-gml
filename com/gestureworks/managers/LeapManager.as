@@ -14,7 +14,6 @@ package com.gestureworks.managers
 	{
 		public var leap:LeapMotion;		
 		protected var debug:Boolean = false;
-		public var outputLeap:Boolean = false;
 		
 		public function LeapManager() {	
 			
@@ -56,13 +55,6 @@ package com.gestureworks.managers
 		protected function onFrame(event:LeapEvent):void
 		{			
 			dispatchEvent(new LeapEvent(event.type, event.frame));
-			if (outputLeap)
-			{
-				for each(var pointable:Pointable in event.frame.pointables)
-				{
-					trace("POINT ID:"+ pointable.id+ " x:"+ pointable.tipPosition.x+ " y:"+ pointable.tipPosition.y+ " z:"+ pointable.tipPosition.z);
-				}
-			}
 		}		
 		
 	}
