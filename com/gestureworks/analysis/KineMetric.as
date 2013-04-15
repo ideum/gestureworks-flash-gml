@@ -154,6 +154,7 @@ package com.gestureworks.analysis
 			cO.dthetaX = 0;
 			cO.dthetaY = 0;
 			cO.dthetaZ = 0;
+			cO.dtheta = 0;
 			cO.dx = 0;
 			cO.dy = 0;
 			cO.dz = 0;//-
