@@ -176,7 +176,6 @@ package com.gestureworks.core
 			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
 			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			
-			// add touch event listener - the order of the conditions are important! (Charles 5/31/12)
 			if (GestureWorks.activeTUIO)		
 				addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
 			if (GestureWorks.activeNativeTouch)		
@@ -338,13 +337,6 @@ package com.gestureworks.core
 		private function onTuioTouchDown(e:TuioTouchEvent):void
 		{			
 			var event:GWTouchEvent = new GWTouchEvent(e);			
-			
-			// currentTarget seems to work here, b/c there is filtering going on within onTouchDown
-			// normally this would be the target, but Tuio library doesn't recognize mouseChildren = false
-			//onTouchDown(event, e.currentTarget);
-			
-			// this is the new technique, basically doing my own mouseChildren check 
-			// -Charles Veasey (9/5/2012)
 			if (!mouseChildren) { 
 				e.stopPropagation();
 				onTouchDown(event, this);
@@ -566,9 +558,9 @@ package com.gestureworks.core
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				if (GestureWorks.activeNativeTouch) 	TouchManager.gw_public::registerTouchPoint(event);
+				TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				else 								MouseManager.gw_public::registerMousePoint(event);
+				if (GestureWorks.activeSim) MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline
 				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	

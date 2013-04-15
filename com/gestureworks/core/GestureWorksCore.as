@@ -158,9 +158,11 @@ package com.gestureworks.core
 			
 			GestureWorks.activeNativeTouch = _nativeTouch;
 			
-			if (!_nativeTouch)
+			if (!_nativeTouch) {
 				Multitouch.inputMode = MultitouchInputMode.NONE;
-			else
+				TouchManager.gw_public::deInitialize();
+			}
+			else 
 				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
 				
 			updateTouchObjects();
@@ -213,7 +215,7 @@ package com.gestureworks.core
 			
 			if (_motion) 
 				MotionManager.gw_public::initialize();			
-		}
+		}	
 				
 		private var _sensor:Boolean = false;
 		/**
@@ -263,6 +265,26 @@ package com.gestureworks.core
 				motion = true;
 			}
 		}
+		
+		private var _starling:Boolean = false;
+		/**
+		 * Prepares input configuration for Starling
+		 * @default false
+		 */
+		public function get starling():Boolean{return _starling;}
+		public function set starling(value:Boolean):void
+		{
+			if (_starling == value) return;
+			_starling = value;
+			
+			GestureWorks.activeStarling = _starling;
+			
+			if (_starling) {
+				nativeTouch = false;
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			}
+		}			
+		
 		
 		/**
 		 * Updates event listeners depending on the active modes
