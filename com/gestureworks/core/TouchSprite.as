@@ -550,9 +550,7 @@ package com.gestureworks.core
 				
 				//UPDATE LOCAL CLUSTER OBJECT
 				cO.pointArray = _pointArray;
-				
-				trace(_pointArray.length);
-				
+								
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
 				
