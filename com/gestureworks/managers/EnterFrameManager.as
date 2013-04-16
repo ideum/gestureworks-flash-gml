@@ -27,6 +27,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
 	
+	
 	public class EnterFrameManager 
 	{		
 		gw_public static function initialize():void
@@ -39,11 +40,14 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(Event.ENTER_FRAME, enterframeHandler);
 		}
 		
+		private static var prevTime:Number = 0;
+		
 		private static function enterframeHandler(event:Event):void
 		{			
-			//trace("system gw enter frame");
+			trace("system gw enter frame");
 			
 			GestureWorks.application.dispatchEvent(new GWEvent(GWEvent.ENTER_FRAME));
+			
 			//GestureGlobals.frameID +=1;
 		}
 		

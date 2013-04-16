@@ -1,6 +1,5 @@
-package 
+package com.gestureworks.core
 {
-	import com.gestureworks.cml.utils.*;
 	import com.gestureworks.core.*;
 	import com.gestureworks.events.*;
 	import com.gestureworks.managers.*;
