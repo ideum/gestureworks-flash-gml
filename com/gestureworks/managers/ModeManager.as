@@ -27,13 +27,13 @@ package com.gestureworks.managers
 	public class ModeManager extends Sprite
 	{
 		private var isOE:Boolean = false; // open exhibits	
-		private var isT:Boolean = false; // gw trial		
+		private var isT:Boolean = true; // gw trial		
 
 		// comment out image embed when not in mode
 		//[Embed(source = "../../../../lib/assets/oe_splash.png")] 
 		private var OESplash:Class;
 
-		//[Embed(source = "../../../../lib/assets/gw_splash.png")]
+		[Embed(source = "../../../../lib/assets/gw_splash.png")]
 		private var GWSplash:Class;		
 		
 		private var splashTime:int = 5; // in seconds

@@ -43,9 +43,7 @@ package com.gestureworks.managers
 		private static var prevTime:Number = 0;
 		
 		private static function enterframeHandler(event:Event):void
-		{			
-			trace("system gw enter frame");
-			
+		{						
 			GestureWorks.application.dispatchEvent(new GWEvent(GWEvent.ENTER_FRAME));
 			
 			//GestureGlobals.frameID +=1;
