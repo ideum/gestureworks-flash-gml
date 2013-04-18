@@ -26,14 +26,15 @@ package com.gestureworks.events
 
 	public class GWTouchEvent extends TouchEvent
 	{		
+		private var sourceEvent:Event;
+		
 		public static const TOUCH_BEGIN : String = "gwTouchBegin";
 		public static const TOUCH_END : String = "gwTouchEnd"
 		public static const TOUCH_MOVE : String = "gwTouchMove"
 		public static const TOUCH_OUT : String = "gwTouchOut"
 		public static const TOUCH_OVER : String = "gwTouchOver"
 		public static const TOUCH_ROLL_OUT : String = "gwTouchRollOut"
-		public static const TOUCH_ROLL_OVER : String = "gwTouchRollOver"			
-		
+		public static const TOUCH_ROLL_OVER : String = "gwTouchRollOver"					
 		
 		private static var TOUCH_TYPE_MAP: Dictionary = new Dictionary(); 
 		
@@ -124,7 +125,7 @@ package com.gestureworks.events
 
 		override public function clone():Event
 		{
-			return new GWTouchEvent(null, type, bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
+			return new GWTouchEvent(sourceEvent, type, bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
 		}
 		
 		/**
@@ -133,6 +134,7 @@ package com.gestureworks.events
 		 */
 		private function importEvent(event:Event):void
 		{ 
+			sourceEvent = event;
 			var sourceInfo:XML = describeType(event);
 			var prop:XML;
 			var propName:String;
@@ -145,6 +147,7 @@ package com.gestureworks.events
 
 			for each(prop in sourceInfo.accessor) {
 				propName = String(prop.@name);
+				
 				if (this.hasOwnProperty(propName))
 				{
 					if (propName == "type") 
