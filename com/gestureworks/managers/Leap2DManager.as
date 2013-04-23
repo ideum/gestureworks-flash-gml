@@ -1,5 +1,9 @@
 package com.gestureworks.managers 
 {
+
+	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.cml.utils.NumberUtils;
+
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.leapmotion.leap.events.LeapEvent;
@@ -40,6 +44,11 @@ package com.gestureworks.managers
 		{
 			super();
 			activePoints = new Array();
+			
+			//only allow leap touch
+			//WILL NEED TO COMMENT OUT
+			//GestureWorks.supportsTouch = false;
+
 			
 			if (minX) this.minX = minX;
 			if (maxX) this.maxX = maxX;
@@ -123,7 +132,7 @@ package com.gestureworks.managers
 							trace("UPDATE:", pid, event.frame.pointable(pid));							
 					}
 				}
-			}			
+			}
 		}
 
 		/**

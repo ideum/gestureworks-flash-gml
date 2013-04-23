@@ -52,11 +52,10 @@ package com.gestureworks.utils
 		// GML
 		/////////////////////////////////////////////////////////////////////
          public function parse(ID:int):void 
+		 //private function parse(ID:int):void 
          {
 			//if (trace_debug_mode) trace("local gml parser", ID, "Y:",Y);
 			
-			// version
-			//var Y:int = Yolotzin.mode;
 			
 			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
 			
@@ -66,6 +65,7 @@ package com.gestureworks.utils
 			gml = new XMLList(GML.Gestures);
 			gList = new Vector.<GestureObject>;
 			
+			//trace(gml)
 				gestureTypeList = { 
 									"translate":true, 
 									"drag":true, 
@@ -152,18 +152,20 @@ package com.gestureworks.utils
 								// 	for all gestures listed for touchspriteID
 								for (key in gestureList)
 								{
-								//trace("key",key);
+								//trace("key", key, gesture_id, gesture_set_id);
+								
 								// check for key match in gml // gesture sets set match
+								
 								if ((gesture_id == key)||(gesture_set_id == key)) 
 								{	
 									var gtype:String = String(gml.Gesture_set[g].Gesture[i].attribute("type"));
 									
-									//trace("gtype",gtype);
+									//trace("gtype-----------------------------",gtype);
 									
 									// for all matches in cml gesturelist and gml 
 									for (type in gestureTypeList)
 										{
-										// check tha type is allowable in accordance with version license number
+										// check tha type is allowable 
 										if (type == gtype)
 										{
 											//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -592,7 +594,7 @@ package com.gestureworks.utils
 						
 							gOList.pOList = gList;
 							
-						//traceGesturePropertyList()
+						traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		

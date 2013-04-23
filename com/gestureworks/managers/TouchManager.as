@@ -53,8 +53,6 @@ package com.gestureworks.managers
 	{
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
-		//public static var globalClock:Timer = new Timer(GestureGlobals.touchFrameInterval, 0);
-		//public static var globalClock:Timer = new Timer(8, 0);
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -69,12 +67,7 @@ package com.gestureworks.managers
 			
 			// DRIVES UPDATES ON TOUCH POINT PATHS
 			if (GestureWorks.activeNativeTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-			
-			// SINGLE GLOBAL CLOCK FOR TOUCH PROCESSING
-			// COMPILES TOUCH FRAMES
-			//globalClock.addEventListener(TimerEvent.TIMER, touchFrameHandler, false,10,false);
-			//globalClock.start();
-			
+
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
 		}
@@ -108,26 +101,8 @@ package com.gestureworks.managers
 		// registers touch point via touchSprite
 		gw_public static function registerTouchPoint(event:TouchEvent):void
 		{
-			// CHECK GLOBAL MAX POINT COUNT HERE
-			// DO NOT REGISTER IF OVER THRESHOLD
-			// 1000 IS DEFAULT MAX
-			
-			//trace(pointCount())
-			
-			//if (pointCount()<2){
-
-			//if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,GestureGlobals.frameID,0,event,points[event.touchPointID]))
-			//else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, GestureGlobals.frameID, 0, event, points[event.touchPointID]));
-			
-			//if (!GestureWorks.activeTUIO) points[event.touchPointID].history.unshift(PointHistories.historyObject(event.stageX, event.stageY,event,GestureGlobals.frameID))
-			//else points[event.touchPointID].history.unshift(PointHistories.historyObject(event.localX, event.localY, event, GestureGlobals.frameID));
-			
-			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))
-			
-			//}
-			//else return
-			
-			
+			//FIX CELAN UP REFERENCE 
+			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
 		}
 		
 		// stage on TOUCH_UP.
@@ -159,6 +134,19 @@ package com.gestureworks.managers
 					
 					// analyze for taps
 					if (tO.tg) tO.tg.onTouchEnd(event);
+					
+					
+					/////////////////////////////////////////////////////////////////////////////
+					//REMOVE POINT FROM PAIR LIST
+					// will need to remove from all nested clusters also
+					for (var i:int = 0; i < tO.cO.pointPairArray.length; i++)
+					{
+						if ((tO.cO.pointPairArray[i].idA == event.touchPointID)||(tO.cO.pointPairArray[i].idB == event.touchPointID)) {
+							tO.cO.pointPairArray.splice(i, 1);
+							//trace("point pair spliced",tO.cO.pointPairArray.length)
+						}
+					}
+					
 					
 					// REMOVE POINT FROM LOCAL LIST
 					tO.pointArray.splice(pointObject.id, 1);
@@ -220,25 +208,26 @@ package com.gestureworks.managers
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:GWEvent):void
 		{
-			//trace("touch frame process ----------------------------------------------");
+			//trace("touch frame process ----------------------------------------------",GestureGlobals.motionframeID);	
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
-			
+
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
 				// update touch,cluster and gesture processing
 				updateTouchObject(tO);
 				
+				//UPDATE CLUSTER HISTORIES
+				// moved to touch object
+				//ClusterHistories.historyQueue(tO.touchObjectID);
+					
 				// move to timeline visualizer
 				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
 				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
 				if ((tO.td)&&(tO.td.debug_display))
 				{
-					//UPDATE CLUSTER HISTORIES
-					//ClusterHistories.historyQueue(tO.touchObjectID);
-					
 					//UPDATE TRANSFORM HISTORIES
 					TransformHistories.historyQueue(tO.touchObjectID);
 					
@@ -251,6 +240,10 @@ package com.gestureworks.managers
 				// was just pushing events and never clearing object 
 				if(tO.tiO) tO.tiO.frame = new FrameObject();
 			}
+			
+			// zero motion frame count
+			GestureGlobals.motionFrameID = 0;
+			//trace(GestureGlobals.motionframeID)
 		}
 		
 		
@@ -262,12 +255,9 @@ package com.gestureworks.managers
 				// THERFOR CLUSTER ANALYSIS IS N SPECICIFC AND SELF MAMANGED SWITCHING
 				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
 				
-				//tO.updateClusterAnalysis(); // cluster count is in cluster analysis
-				//tO.updateGesturePipeline();
-				//tO.updateTransformation();
-				
+
 				tO.updateTObjProcessing();
-				
+				//trace(tO.touchObjectID)
 				
 				// check for erroneous points
 				// kill after processing (just in case)
@@ -303,20 +293,6 @@ package com.gestureworks.managers
 					}
 				}
 		}
-		
-		
-		/*
-		public static function updatePointObject(event:TouchEvent):void
-		{
-			//var pointObject:Object = GestureGlobals.gw_public::points[event.touchPointID];
-			var pointObject:Object = points[event.touchPointID];
-			
-			if (pointObject)
-			{
-				pointObject.y = event.stageY;
-				pointObject.x = event.stageX;
-			}	
-		}*/
 		
 	}
 }

@@ -339,6 +339,8 @@ package com.gestureworks.core
 		{			
 			GMLParser.settingsPath = gml;
 			GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
+			
+			//trace("start gml parse",gml,GMLParser.settingsPath)
 		}
 		
 		// parse loaded cml file
@@ -377,21 +379,18 @@ package com.gestureworks.core
 			if (!gml && CML.Objects.@gml) {
 				_gml = CML.Objects.@gml;				
 				startGmlParse();
+				//trace("init no gml", gml)
 			}
+			
+			//if (gml) startGmlParse();
+			//trace("cml loader complete",gml);
 		}
 		
 		// parse loaded gml file
-		private function gmlParserComplete(event:Event=null):void
+		private function gmlParserComplete(event:Event):void
 		{
 			GML.Gestures = GMLParser.settings;
-			
-			// defined global settings for GML
-			//if (GML.Gestures.gloabl_settings.input.@motion == "true") 
-				//motion = true;
-				
-			//if (GML.Gestures.gloabl_settings.input.@sensor == "true") 
-				//sensor = true;
-			
+			//trace("complete gml parser settings", gml, GMLParser.settings);
 		}
 		
 		protected function gestureworksInit():void{}

@@ -38,6 +38,8 @@ package com.gestureworks.core
 		 * Contains a dictionary of all touch points present to the framework.
 		 */
 		gw_public static var points:Dictionary = new Dictionary();
+		
+		gw_public static var motionPoints:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all point histories present to the framework.
 		 */
@@ -86,20 +88,20 @@ package com.gestureworks.core
 		}
 		
 		// frameID frame stamp relative to start of application ------------
-		private static var _motionframeID:uint = 0;//int.MAX_VALUE
+		private static var _motionFrameID:uint = 0;//int.MAX_VALUE
 		/**
 		 * frameID frame stamp relative to start of application.
 		 */
-		public static function get motionframeID():uint
+		public static function get motionFrameID():uint
 		{
-			return _motionframeID;
+			return _motionFrameID;
 		}
 		/**
 		 * frameID frame stamp relative to start of application.
 		 */
-		public static function set motionframeID(value:uint):void
+		public static function set motionFrameID(value:uint):void
 		{
-			_motionframeID=value;
+			_motionFrameID=value;
 		}
 		
 		private static var _touchFrameInterval:Number = 16;//60fps
@@ -168,6 +170,40 @@ package com.gestureworks.core
 		{
 			_clusterHistoryCaptureLength=value;
 		}
+		
+		
+		
+		
+		//  motionFrameHistoryCaptureLength -------------------------------------
+		private static var _motionHistoryCaptureLength:int =120;//int.MAX_VALUE
+		/**
+		 * Returns the pointHistoryCaptureLength.
+		 */
+		public static function get motionHistoryCaptureLength():int
+		{
+			return _motionHistoryCaptureLength;
+		}
+		/**
+		 * Sets the motionFrameHistoryCaptureLength.
+		 */
+		public static function set motionHistoryCaptureLength(value:int):void
+		{
+			_motionHistoryCaptureLength=value;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		//  transformHistoryCaptureLength -------------------------------------
 		private static var _transformHistoryCaptureLength:int = 0;//int.MAX_VALUE

@@ -48,37 +48,26 @@ package com.gestureworks.core
 		public var ref_frame_angle:Number = 0; 
 	
 		// private //local merged display object properties
-		/*
-		private var _x:Number = 0;
-		private var _y:Number = 0;
-		private var _scaleX:Number = 1;
-		private var _scaleY:Number = 1;
-		private var _rotation:Number = 0;
-		private var _width:Number = 0;
-		private var _height:Number = 0;
-		*/
 		private var t_x:Number = 0;
 		private var t_y:Number =  0;
-		
-		// 3d
-		//private var _rotationX:Number = 0;
-		//private var _rotationY:Number = 0;
-		//private var _rotationZ:Number = 0;
+		private var t_z:Number =  0;
 		
 		// private	// differentials
 		private var dx:Number = 0;
 		private var dy:Number =  0;
+		private var dz:Number =  0;//3d--
 		private var ds:Number = 0;
 		private var dsx:Number =  0;
 		private var dsy:Number =  0;
+		private var dsz:Number =  0;//3d--
 		private var dtheta:Number =  0;
 		
 		// 3d
-		//private var dthetaX:Number =  0;//3d
-		//private var dthetaY:Number =  0;//3d
-		//private var dthetaZ:Number =  0;//3d
+		private var dthetaX:Number =  0;//3d--
+		private var dthetaY:Number =  0;//3d--
+		private var dthetaZ:Number =  0;//3d--
 		
-		//private var transform_3d:Boolean = true;
+		private var transform_3d:Boolean = false;
 		
 		private var centerTransform:Boolean = false;
 		
@@ -103,7 +92,7 @@ package com.gestureworks.core
 			affine_modifier = new Matrix();// init display object transformation operator
 			
 			//affine_modifier3D = new Matrix3D()
-			
+
 			trO.transformPointsOn = true;
 			pre_InitTransformPoints();
 			
@@ -116,16 +105,9 @@ package com.gestureworks.core
 		// update local properties
 		public function updateLocalProperties():void
 		{
-			//_x = super.x;
-			//_y = super.y;
-			//_scaleX = super.scaleX;
-			//_scaleY = super.scaleY;//0.5;
-			//_rotation = super.rotation//45;	
-			//_width = super.width;
-			//_height = super.height;
-			
 			ts._$x = ts.x;
 			ts._$y = ts.y;
+			ts._$z = ts.z;//3d--
 			ts._$scaleX = ts.scaleX;
 			ts._$scaleY = ts.scaleY;//0.5;
 			ts._$rotation = ts.rotation//45;	
@@ -133,9 +115,9 @@ package com.gestureworks.core
 			ts._$height = ts.height;
 			
 			//3d
-			//_rotationX = super.rotationX;//3d
-			//_rotationY = super.rotationY;//3d
-			//_rotationZ = super.rotationZ;//3d
+			ts._$rotationX = ts.rotationX;//3d--
+			ts._$rotationY = ts.rotationY;//3d--
+			ts._$rotationZ = ts.rotationZ;//3d--
 			
 			
 			// update transform object properties
@@ -144,15 +126,16 @@ package com.gestureworks.core
 				trO.obj_x = trO.transAffinePoints[4].x//_x
 				trO.obj_y = trO.transAffinePoints[4].y//_y	
 			}
+			
 			trO.obj_scaleX = ts._$scaleX;
 			trO.obj_scaleY = ts._$scaleY;
 			trO.obj_rotation = ts._$rotation;
 			trO.obj_width = ts._$width;
 			trO.obj_height = ts._$height;
 			
-			//trO.obj_rotationX = _rotationX;//3d
-			//trO.obj_rotationY = _rotationY;//3d
-			//trO.obj_rotationZ = _rotationZ;//3d
+			trO.obj_rotationX = ts._$rotationX;//3d--
+			trO.obj_rotationY = ts._$rotationY;//3d--
+			trO.obj_rotationZ = ts._$rotationZ;//3d-
 		}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -311,11 +294,12 @@ package com.gestureworks.core
 				// leave scalar values untouched
 				dsx =  trO.dsx;
 				dsy =  trO.dsy;// trO.dsy;
+				//dsZ =  trO.dsz;// trO.dsy;
 				dtheta = trO.dtheta * DEG_RAD;
 				
-				//dthetaX = trO.dthetaX //* DEG_RAD;//3d
-				//dthetaY = trO.dthetaY //* DEG_RAD;//3d
-				//dthetaZ = trO.dthetaZ //* DEG_RAD;//3d
+				dthetaX = trO.dthetaX * DEG_RAD;//3d--
+				dthetaY = trO.dthetaY * DEG_RAD;//3d--
+				dthetaZ = trO.dthetaZ * DEG_RAD;//3d--
 				
 				///////////////////////////////////////////////////////////////////////////////////
 				// 3d test
@@ -350,13 +334,19 @@ package com.gestureworks.core
 						//affine_modifier3D.appendTranslation(t_x,t_y, 0)
 					this.transform.matrix3D = affine_modifier3D
 					//trace(this.perspectiveProjection.matrix3D
+					
+					
+					//3d
+					//ts.rotationX += dthetaX;//3d--
+					//ts.rotationY += dthetaY;//3d--
+					//ts.rotationZ += dthetaZ;//3d--
+					
 				}*/
 				
 				 if (affine) 
 				 {
 					//if (trace_debug_mode) 
-					//trace("gesture affine transform");
-					//affine_modifier = this.transform.matrix;
+					//trace("gesture affine transform", t_x,t_y);
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate(-t_x+dx,-t_y+dy);
 						affine_modifier.rotate(dtheta);
@@ -369,12 +359,6 @@ package com.gestureworks.core
 				{
 					///if (trace_debug_mode) 
 					//trace("gesture tween non-affine transform")
-					//affine_modifier = this.transform.matrix;
-						//affine_modifier.translate(-super.x,-super.y);
-						//affine_modifier.rotate(dtheta);
-						//affine_modifier.scale(1 + dsx, 1 + dsy);
-						//affine_modifier.translate(super.x + dx, super.y + dy);
-					//this.transform.matrix = affine_modifier
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate(-ts.x,-ts.y);
 						affine_modifier.rotate(dtheta);
@@ -386,10 +370,7 @@ package com.gestureworks.core
 				
 				updateLocalProperties();
 				
-				//3d
-				//this.rotationX += dthetaX;//3d
-				//this.rotationY += dthetaY;//3d
-				//this.rotationZ += dthetaZ;//3d
+				
 			
 		}
 			 
@@ -463,12 +444,23 @@ package com.gestureworks.core
 				dsy = (ts._$scaleY - ts.scaleY);//dsx
 				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
 				
-			//	dthetaX = (_rotationX - super.rotationX) * DEG_RAD;//3d
-			//	dthetaY = (_rotationY - super.rotationY) * DEG_RAD;//3d
-			//	dthetaZ = (_rotationZ - super.rotationZ) * DEG_RAD;//3d
+				dthetaX = (ts._$rotationX - ts.rotationX) * DEG_RAD;//3d--
+				dthetaY = (ts._$rotationY - ts.rotationY) * DEG_RAD;//3d--
+				dthetaZ = (ts._$rotationZ - ts.rotationZ) * DEG_RAD;//3d--
 				
 			//trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
 				
+				//////////////////////////////////////////////////////
+				// 3d
+				if (transform_3d) 
+				{
+						ts.rotationX += dthetaX;//3d--
+						ts.rotationY += dthetaY;//3d--
+						ts.rotationZ += dthetaZ;//3d--
+				}
+			
+				//////////////////////////////////////////////////////
+				// 2d
 				if (affine) 
 				 {
 					//trace("$transforming");
@@ -497,10 +489,7 @@ package com.gestureworks.core
 				 
 				 updateLocalProperties();
 				 
-				 // 3d
-				 //rotationX += dthetaX;//3d
-				 //rotationY += dthetaY;//3d
-				// rotationZ += dthetaZ;//3d
+				 
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////

@@ -105,7 +105,7 @@ package com.gestureworks.managers
 				// STANDARD CLUSTER CALCS
 				object.orient_dx = clusterObject.orient_dx;
 				object.orient_dy = clusterObject.orient_dy;
-				object.orient_dz = clusterObject.orient_dz; // 
+				//object.orient_dz = clusterObject.orient_dz; // 
 				
 				//object.pointArray = [2, 3]//;
 				
@@ -116,10 +116,15 @@ package com.gestureworks.managers
 				//trace(clusterObject.pointArray[0].x)
 				
 				//MOTION FRAME DATA
-				object.motionArray = clusterObject.motionArray;
+				object.iPointArray = clusterObject.iPointArray;
+				
+				//MOTION FRAME DATA
+				//object.motionArray = clusterObject.motionArray;
 				
 				//SENSOR ACCELEROMETER DATA
-				object.sensorArray = clusterObject.sensorArray;
+				//object.sensorArray = clusterObject.sensorArray;
+				
+				//trace("cluster history push")
 
 			return object;
 		}

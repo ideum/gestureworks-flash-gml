@@ -15,6 +15,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
+	import com.gestureworks.objects.PointPairObject;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
+	import flash.geom.Point;
+	import org.tuio.TuioTouchEvent;
+	
+	import com.gestureworks.cml.utils.CloneUtils;
+	import com.gestureworks.utils.GestureParser;
+	import com.gestureworks.utils.MousePoint;
+	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
@@ -27,6 +38,8 @@ package com.gestureworks.core
 	import com.gestureworks.managers.MouseManager;
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
+	import com.gestureworks.managers.ClusterHistories;
+	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
@@ -161,9 +174,10 @@ package com.gestureworks.core
 						
 					//}
 					// bypass gml requirement for testing
-					initBase()
+					initBase();
+					
 					//if (debugDisplay)
-					//td = new TouchDebugDisplay(touchObjectID);
+						//td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		/**
@@ -190,7 +204,8 @@ package com.gestureworks.core
 										tp = new TouchPipeline(touchObjectID);
 					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
 										tt = new TouchTransform(touchObjectID);
-					if (debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
+					//if (debugDisplay)	
+					td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
@@ -204,15 +219,6 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		//public var _pointArray:Array = new Array(); // read only
-		//public function get pointArray():Array { return _pointArray; }
-		//public function set pointArray(value:Array):void
-		//{
-			//_pointArray=value;
-		//}
-		
-		
-		
 		public var _pointArray:Vector.<PointObject> = new Vector.<PointObject>(); // read only
 		public function get pointArray():Vector.<PointObject> { return _pointArray; }
 		
@@ -221,20 +227,14 @@ package com.gestureworks.core
 		 */
 		public var _N:int = 0; // number of touch points in the cluster // read only
 		public function get N():int { return _N; }
-		public function set N(value:int):void 
-		{ 
-			_N = value;
-		}
+		public function set N(value:int):void { 	_N = value;}
 		
 		/**
 		 * @private
 		 */
 		public var _dN:Number = 0; // read only
 		public function get dN():Number { return _dN; }
-		public function set dN(value:Number):void 
-		{ 
-			_dN = value;
-		}
+		public function set dN(value:Number):void { _dN = value;}
 		
 		// determin if object created by cml of native as3
 		/**
@@ -242,10 +242,7 @@ package com.gestureworks.core
 		 */
 		public var _cml_item:Boolean = false;
 		public function get cml_item():Boolean{return _cml_item;}
-		public function set cml_item(value:Boolean):void
-		{
-			_cml_item=value;
-		}
+		public function set cml_item(value:Boolean):void{	_cml_item=value;}
 		
 		// debug trace statements
 		/**
@@ -253,10 +250,7 @@ package com.gestureworks.core
 		 */
 		public var trace_debug_mode:Boolean = false;
 		public function get traceDebugModeOn():Boolean{return trace_debug_mode;}
-		public function set traceDebugModeOn(value:Boolean):void
-		{
-			trace_debug_mode=value;
-		}
+		public function set traceDebugModeOn(value:Boolean):void{	trace_debug_mode=value;}
 		
 		// point count
 		/**
@@ -264,10 +258,15 @@ package com.gestureworks.core
 		 */
 		private var _pointCount:int;
 		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void
-		{
-			_pointCount=value;
-		}
+		public function set pointCount(value:int):void {	_pointCount = value; }
+		
+		// motion point count
+		/**
+		 * @private
+		 */
+		private var _motionPointCount:int;
+		public function get motionPointCount():int{return _motionPointCount;}
+		public function set motionPointCount(value:int):void{	_motionPointCount=value;}
 		
 		// cluster ID
 		/**
@@ -275,10 +274,7 @@ package com.gestureworks.core
 		 */
 		private var _clusterID:int;
 		public function get clusterID():int{return _clusterID;}
-		public function set clusterID(value:int):void
-		{
-			_clusterID = value;
-		}
+		public function set clusterID(value:int):void{	_clusterID = value;}
 		/**
 		 * @private
 		 */
@@ -308,20 +304,21 @@ package com.gestureworks.core
 			// makes sure that if gesture list changes timeline gesture int is reset
 			/////////////////////////////////////////////////////////////////////////
 			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
-			
 		}
 		/**
 		 * @private
 		 */
 		private function callLocalGestureParser():void
 		{
+			//trace("call local parser touch sprite", );
+			
 			var gp:GestureParser = new GestureParser();
 				gp.gestureList = gestureList;
 				gp.parse(touchObjectID);
 				
 				if (trace_debug_mode) gp.traceGesturePropertyList();
 				
-			initBase();
+			//initBase();
 		}
 		/**
 		 * @private
@@ -551,6 +548,8 @@ package com.gestureworks.core
 				//UPDATE LOCAL CLUSTER OBJECT
 				cO.pointArray = _pointArray;
 								
+				
+				
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
 				
@@ -566,6 +565,20 @@ package com.gestureworks.core
 				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
 
 				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+				
+				//trace("down:", event.touchPointID, cO.pointArray.length, this._pointArray.length )
+				///////////////////////////////////////////////////////////////////////////////////////
+				//CREATE POINT PAIR
+				if(cO.pointArray.length>1){
+				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				cO.pointPairArray.push(ppt);
+				
+				//trace("pair")
+				}
 				
 		}
 		
@@ -583,6 +596,17 @@ package com.gestureworks.core
 				//UPDATE LOCAL CLUSTER OBJECT
 				//touch object point list and cluster point list should be consolodated
 				cO.pointArray = _pointArray;
+				
+				//create point pair
+				if(cO.pointArray.length!=1){
+				var lastpointID = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				cO.pointPairArray.push(ppt);
+				//trace("Clone pair");
+				}
 				
 				//UPDATE POINT LOCAL COUNT
 				pointCount++;
@@ -602,23 +626,16 @@ package com.gestureworks.core
 		* Determins whether clusterEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get clusterEvents():Boolean{return _clusterEvents;}
-		public function set clusterEvents(value:Boolean):void
-		{
-			_clusterEvents=value;
-		}
+		public function set clusterEvents(value:Boolean):void{	_clusterEvents=value;}
 		
 		///////////////////////////////////////////////////////////////////////////
 		// FILTER OVERRIDES
-		
 		private var _deltaFilterOn:Boolean = false//true;
 		/**
 		* Determins whether filtering is applied to the delta values.
 		*/
 		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
-		public function set deltaFilterOn(value:Boolean):void
-		{
-			_deltaFilterOn=value;
-		}
+		public function set deltaFilterOn(value:Boolean):void{	_deltaFilterOn=value;}
 		
 		/**
 		* @private
@@ -663,11 +680,7 @@ package com.gestureworks.core
 		* Indicates whether any gestureEvents have been started on the touchSprite.
 		*/
 		public function get gestureEventStart():Boolean{return _gestureEventStart;}
-		public function set gestureEventStart(value:Boolean):void
-		{
-			_gestureEventStart=value;
-		}
-		
+		public function set gestureEventStart(value:Boolean):void{	_gestureEventStart=value;}
 		
 		/**
 		* @private
@@ -677,10 +690,7 @@ package com.gestureworks.core
 		* Indicates weather all gestureEvents have been completed on the touchSprite.
 		*/
 		public function get gestureEventComplete():Boolean{return _gestureEventComplete;}
-		public function set gestureEventComplete(value:Boolean):void
-		{
-			_gestureEventComplete=value;
-		}
+		public function set gestureEventComplete(value:Boolean):void{	_gestureEventComplete=value;}
 		
 		/**
 		* @private
@@ -690,12 +700,7 @@ package com.gestureworks.core
 		* Indicates whether all touch points have been released on the touchSprite.
 		*/
 		public function get gestureEventRelease():Boolean{return _gestureEventRelease;}
-		public function set gestureEventRelease(value:Boolean):void
-		{
-			_gestureEventRelease = value;
-			
-			
-		}
+		public function set gestureEventRelease(value:Boolean):void{_gestureEventRelease = value;}
 		
 		/**
 		* @private
@@ -708,10 +713,7 @@ package com.gestureworks.core
 		* Determins whether gestureEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get gestureEvents():Boolean{return _gestureEvents;}
-		public function set gestureEvents(value:Boolean):void
-		{
-			_gestureEvents=value;
-		}
+		public function set gestureEvents(value:Boolean):void{	_gestureEvents=value;}
 		
 		/**
 		* @private
@@ -721,10 +723,7 @@ package com.gestureworks.core
 		* Determins whether release inertia is given to gestureEvents on the touchSprite.
 		*/
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set gestureReleaseInertia(value:Boolean):void
-		{
-			_gestureReleaseInertia=value;
-		}
+		public function set gestureReleaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}
 		
 		//gestures tweening
 		public var _gestureTweenOn:Boolean = false;
@@ -751,12 +750,8 @@ package com.gestureworks.core
 		*/
 		// nested transfrom 
 		private var _nestedTransform:Boolean = false;
-		
 		public function get nestedTransform():Boolean { return _nestedTransform} 
-		public function set nestedTransform(value:Boolean):void
-		{
-			_nestedTransform = value
-		}
+		public function set nestedTransform(value:Boolean):void{	_nestedTransform = value}
 		/**
 		* @private
 		*/
@@ -765,52 +760,32 @@ package com.gestureworks.core
 		* Determins whether transformEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get transformEvents():Boolean{return _transformEvents;}
-		public function set transformEvents(value:Boolean):void
-		{
-			_transformEvents=value;
-		}
+		public function set transformEvents(value:Boolean):void{	_transformEvents=value;}
 	
 		/**
 		* @private
 		*/
 		private var _transformComplete:Boolean = false;
-		
 		public function get transformComplete():Boolean { return _transformComplete; }
-		public function set transformComplete(value:Boolean):void
-		{
-			_transformComplete=value;
-		}
+		public function set transformComplete(value:Boolean):void{	_transformComplete=value;}
 		/**
 		* @private
 		*/
 		private var _transformStart:Boolean = false;
-		
 		public function get transformStart():Boolean { return _transformStart; }
-		public function set transformStart(value:Boolean):void
-		{
-			_transformStart=value;
-		}
-		
+		public function set transformStart(value:Boolean):void{	_transformStart=value;}
 		/**
 		* @private
 		*/
 		private var _transformEventStart:Boolean = true;
-		
 		public function get transformEventStart():Boolean{return _transformEventStart;}
-		public function set transformEventStart(value:Boolean):void
-		{
-			_transformEventStart=value;
-		}
+		public function set transformEventStart(value:Boolean):void{	_transformEventStart=value;}
 		/**
 		* @private
 		*/
 		private var _transformEventComplete:Boolean = true;
-		
 		public function get transformEventComplete():Boolean{return _transformEventComplete;}
-		public function set transformEventComplete(value:Boolean):void
-		{
-			_transformEventComplete=value;
-		}
+		public function set transformEventComplete(value:Boolean):void{	_transformEventComplete=value;}
 		/**
 		* @private
 		*/
@@ -820,10 +795,7 @@ package com.gestureworks.core
 		* Determins whether transformations are handled internally (natively) on the touchSprite.
 		*/
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
-		public function set disableNativeTransform(value:Boolean):void
-		{
-			_disableNativeTransform=value;
-		}
+		public function set disableNativeTransform(value:Boolean):void{	_disableNativeTransform=value;}
 		/**
 		* @private
 		*/
@@ -833,10 +805,7 @@ package com.gestureworks.core
 		* Determins whether transformations are handled internally (natively) on the touchSprite.
 		*/
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
-		public function set transformGestureVectors(value:Boolean):void
-		{
-			_transformGestureVectors=value;
-		}
+		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 		/**
 		* @private
 		*/
@@ -846,10 +815,7 @@ package com.gestureworks.core
 		* Determins whether internal (native) transformations are affine (dynamically centered) on the touchSprite.
 		*/
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
-		public function set disableAffineTransform(value:Boolean):void
-		{
-			_disableAffineTransform=value;
-		}
+		public function set disableAffineTransform(value:Boolean):void{	_disableAffineTransform=value;}
 		
 		private var _x_lock:Boolean = false;
 		public function get x_lock():Boolean {return _x_lock;}	
@@ -864,34 +830,37 @@ package com.gestureworks.core
 		/////////////////////////////////////////////////////////////
 		// x property
 		public function get $x():Number {return _$x;}
-		public function set $x(value:Number):void
-		{
-			_$x = value;
-		}
+		public function set $x(value:Number):void{	_$x = value;}
 		// y property
 		public function get $y():Number {return _$y;}
-		public function set $y(value:Number):void
-		{
-			_$y = value;
-		}
+		public function set $y(value:Number):void{	_$y = value;}
+		// z property
+		public function get $z():Number {return _$z;}
+		public function set $z(value:Number):void{	_$z = value;}
 		// rotation property
 		public function get $rotation():Number{return _$rotation;}
-		public function set $rotation(value:Number):void
+		public function set $rotation(value:Number):void{	_$rotation = value;}
+		// rotationX property
+		public function get $rotationX():Number{return _$rotationX;}
+		public function set $rotationX(value:Number):void
 		{
-			_$rotation = value;
+			_$rotationX = value;
 		}
+		// rotationY property
+		public function get $rotationY():Number{return _$rotationY;}
+		public function set $rotationY(value:Number):void{	_$rotationY = value;}
+		// rotationZ property
+		public function get $rotationZ():Number{return _$rotationZ;}
+		public function set $rotationZ(value:Number):void{	_$rotationZ = value;}
 		// scaleX property
 		public function get $scaleX():Number {return _$scaleX;}
-		public function set $scaleX(value:Number):void
-		{
-			_$scaleX = value;
-		}
+		public function set $scaleX(value:Number):void{	_$scaleX = value;}
 		// scaleY property
 		public function get $scaleY():Number {return _$scaleY;}	
-		public function set $scaleY(value:Number):void
-		{
-			_$scaleY = value;
-		}
+		public function set $scaleY(value:Number):void{_$scaleY = value;}
+		// scaleZ property
+		public function get $scaleZ():Number {return _$scaleY;}	
+		public function set $scaleZ(value:Number):void{	_$scaleZ = value;}
 		// affine transform point 
 		public function get $transformPoint():Point { return new Point(trO.x, trO.y);} 
 		public function set $transformPoint(pt:Point):void
@@ -901,34 +870,16 @@ package com.gestureworks.core
 				trO.y = tpt.y;
 		}
 		
-		/*
-		// rotationX property
-		public function get $rotationX():Number{return _rotationX;}
-		public function set $rotationX(value:Number):void
-		{
-			_rotationX = value;
-		}
-		// rotationY property
-		public function get $rotationY():Number{return _rotationY;}
-		public function set $rotationY(value:Number):void
-		{
-			_rotationY = value;
-		}
-		// rotationZ property
-		public function get $rotationZ():Number{return _rotationZ;}
-		public function set $rotationZ(value:Number):void
-		{
-			_rotationZ = value;
-		}
-		
-		*/
-		
-		
 		public var _$x:Number = 0;
 		public var _$y:Number = 0;
+		public var _$z:Number = 0;
 		public var _$scaleX:Number = 1;
 		public var _$scaleY:Number = 1;
+		public var _$scaleZ:Number = 1;
 		public var _$rotation:Number = 0;
+		public var _$rotationX:Number = 0;
+		public var _$rotationY:Number = 0;
+		public var _$rotationZ:Number = 0;
 		public var _$width:Number = 0;
 		public var _$height:Number = 0;
 		//private var t_x:Number = 0;
@@ -946,10 +897,7 @@ package com.gestureworks.core
 		}
 	}
 	
-	
-	//public var debug_display:Boolean = false;
-	
-	
+
 	public function updateDebugDisplay():void
 	{
 		if(td) td.updateDebugDisplay()
@@ -963,29 +911,25 @@ package com.gestureworks.core
 		
 		private var _debugDisplay:Boolean = false;
 		public function get debugDisplay():Boolean {return _debugDisplay;}	
-		public function set debugDisplay(value:Boolean):void
-		{
-			_debugDisplay = value;
-		}
+		public function set debugDisplay(value:Boolean):void{	_debugDisplay = value;}
 		
 		private var _gestureFilters:Boolean = true;
 		public function get gestureFilters():Boolean {return _gestureFilters;}	
-		public function set gestureFilters(value:Boolean):void
-		{
-			_gestureFilters = value;
-		}
+		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
 		
 		// BROAD CASTING TEST
 		private var _broadcastTarget:Boolean = false;
 		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
-		public function set broadcastTarget(value:Boolean):void
-		{
-			_broadcastTarget = value;
-		}
+		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
+		
+		
+		
 		
 		public function updateTObjProcessing():void
-		{			
-			if ( !(GestureWorks.activeMotion) || (GestureWorks.activeMotion && cO.n != 0) ) {
+		{
+			
+			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
+			
 				if (tc) tc.updateClusterAnalysis();
 				if (tp) tp.processPipeline();
 				if (tg) tg.manageGestureEventDispatch();
@@ -993,7 +937,8 @@ package com.gestureworks.core
 					tt.transformManager();
 					tt.updateLocalProperties();
 				}
-			}
+				
+				ClusterHistories.historyQueue(_touchObjectID);
 		}
 		
 		/**

@@ -32,6 +32,8 @@ package com.gestureworks.utils
 		private static var settingsLoader:URLLoader;
 		protected static var dispatch:EventDispatcher;
 		public static var content:Array = new Array();
+		
+		public static const COMPLETE:String = "COMPLETE";
 
 		public static function get settingsPath():String
 		{
@@ -49,6 +51,8 @@ package com.gestureworks.utils
 			settingsLoader.addEventListener(Event.COMPLETE, settingsLoader_completeHandler);
 			_settingsPath=value;
 			settingsLoader.load(new URLRequest(_settingsPath));
+			
+			//trace("what gml loader path",_settingsPath);
 		}
 
 		private static function settingsLoader_completeHandler(event:Event):void
@@ -67,7 +71,12 @@ package com.gestureworks.utils
 			dispatchEvent(new Event(settingsPath));
 			
 			settingsLoader.removeEventListener(Event.COMPLETE, settingsLoader_completeHandler);
-			settingsLoader=null;
+			settingsLoader = null;
+			
+			
+			
+			/// new
+			dispatchEvent(new Event(GMLParser.COMPLETE, true, true));
 		}
 
 		public static function addEventListener(p_type:String, p_listener:Function, p_useCapture:Boolean=false, p_priority:int=0, p_useWeakReference:Boolean=false):void

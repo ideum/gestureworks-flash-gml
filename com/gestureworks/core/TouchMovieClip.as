@@ -316,6 +316,8 @@ package com.gestureworks.core
 		 */
 		private function callLocalGestureParser():void
 		{
+			//trace("callLocalGestureParser movie clip")
+			
 			var gp:GestureParser = new GestureParser();
 				gp.gestureList = gestureList;
 				gp.parse(touchObjectID);

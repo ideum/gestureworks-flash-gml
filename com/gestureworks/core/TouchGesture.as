@@ -706,6 +706,9 @@ package com.gestureworks.core
 								Data["y"] = new Object();
 								Data["y"] = gO.pOList[key].data.y//cO.y;
 								
+								//Data["z"] = new Object();//3d
+								//Data["z"] = gO.pOList[key].data.z//cO.y;//3d
+								
 								Data["localX"] = new Object();
 								Data["localX"] = trans_pt.x;
 								

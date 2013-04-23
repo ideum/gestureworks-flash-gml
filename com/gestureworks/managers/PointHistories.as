@@ -33,14 +33,7 @@ package com.gestureworks.managers
 		{
 			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
 			
-			//if () {
 			if (point) {
-				//var history:Array = GestureGlobals.gw_public::points[event.touchPointID].history;
-				//point.history.unshift(historyObject(point.history[0].x, point.history[0].y, event, point.history[0].frameID));
-				
-				//point.history.unshift(historyObject(point.history[0].x, point.history[0].y, point.history[0].frameID, point.moveCount, event, point));
-				
-				//point.history.unshift(historyObject(point.history[0].x, point.history[0].y, event, point.history[0].frameID));
 				point.history.unshift(historyObject(event));
 				
 				//trace(history[0].moveCount,GestureGlobals.gw_public::points[event.touchPointID].moveCount)

@@ -206,17 +206,30 @@ package com.gestureworks.core
 			////FIND MOTION CLUSTER COUNT
 			
 			//motion point update
-			cO.hn = cO.motionArray.hands.length;
+			//cO.hn = cO.motionArray.frame.hands.length;
 			
-			if(cO.hn!=0){
+			//if(cO.hn!=0){
 			//trace("hands",cO.hn)
 			
-			if (cO.hn == 2){ cO.fn = cO.motionArray.hands[0].fingers.length; + cO.motionArray.hands[1].fingers.length;}
-			else if (cO.hn == 1) cO.fn = cO.motionArray.hands[0].fingers.length;
-			else cO.fn = 0;
+			//if (cO.hn == 2){ cO.fn = cO.motionArray.frame.hands[0].fingers.length; + cO.motionArray.frame.hands[1].fingers.length;}
+			//else if (cO.hn == 1) cO.fn = cO.motionArray.frame.hands[0].fingers.length;
+			//else cO.fn = 0;
 			
 			//trace("total fingers", cO.fn)
+			//}
+			
+			var f:int = 0;
+			var h:int = 0;
+			for (var i:int = 0; i <cO.motionArray.length; i++) 
+			{
+				if (cO.motionArray[i].type =="finger") f++
+				else if (cO.motionArray[i].type =="hand") h++
 			}
+			
+			
+			cO.hn = h;
+			cO.fn = cO.motionArray.length;
+			cO.ipn = cO.iPointArray.length;
 			//////////////////////////////////////////////////////////////////////////////////////////
 			//////////////////////////////////////////////////////////////////////////////////////////
 			
@@ -276,8 +289,8 @@ package com.gestureworks.core
 		{
 		//cluster_kinemetric.findMeanInstTransformation();
 		
+		//if(ts.cO.fn!=0)	cluster_kinemetric.find3DPointPairList();
 		
-			
 			gn = gO.pOList.length;
 			var dn:uint 
 			
@@ -317,15 +330,17 @@ package com.gestureworks.core
 									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
 									if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformation();
 									
-									// BASIC DRAG CONTROL // ALGORITHM // type drag
-									if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
-									if (g.algorithm == "translate")			cluster_kinemetric.findMeanInstTranslation();
+										// BASIC DRAG CONTROL // ALGORITHM // type drag
+										if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
+										//if (g.algorithm == "translate")			cluster_kinemetric.findMeanInstTranslation();
 
-									// BASIC SCALE CONTROL // ALGORITHM // type scale
-									if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
-								
-									// BASIC ROTATE CONTROL // ALGORITHM // type rotate
-									if (g.algorithm == "rotate")		cluster_kinemetric.findMeanInstRotation();
+										// BASIC SCALE CONTROL // ALGORITHM // type scale
+										if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
+									
+										// BASIC ROTATE CONTROL // ALGORITHM // type rotate
+										if (g.algorithm == "rotate")		cluster_kinemetric.findMeanInstRotation();
+									
+									
 									
 									// BASIC ORIENTATION CONTROL // ALGORITHM
 									if (g.algorithm == "orient")		cluster_kinemetric.findInstOrientation();
@@ -445,7 +460,6 @@ package com.gestureworks.core
 										
 										//if ((g.activeEvent) && (g.dispatchEvent))
 										//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
-									
 							}
 							///////////////////////////////////////////////////
 						}
@@ -454,23 +468,52 @@ package com.gestureworks.core
 				// processing algorithms when in motion
 					if(ts.cO.fn!=0){		// check kinemetric and if continuous analysis
 						// check point number requirements
-						//if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
+						//if((ts.fn >= g.nMin)&&(ts.fn<= g.nMax)||(ts.fn == g.n))
 						//{
 							//trace("call motion cluster calc",ts.cO.fn);
 
 							// activate all by default
 							g.activeEvent = true;
 							
-							if (g.algorithm_class == "kinemetric")
+							if (g.algorithm_class == "3d_kinemetric")
 							{
+								
+									//cluster_kinemetric.find3DThumbPoints();
+									//cluster_kinemetric.find3DNearestPoint()
+									//cluster_kinemetric.find3DBestPointPairs();
+									cluster_kinemetric.find3DPointPairList();
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
+						
 									
 									// BASIC 3D DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-									if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation();
+									//if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation();
 									
 									// BASIC 3D DRAG // ALGORITHM // type drag
-									//if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3dMotionTranslation();
-									if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3DMotionTransformation();
+									//if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
+									
+									// BASIC BIMANUAL MANIPULATION USING PINCH POINTS
+									if (g.algorithm == "3d_bimanual_pinch_manipulate") {
+										//cluster_kinemetric.find3DPinchPoints(); // 	GET PINCH POINTS AND PUSH INTO IPARRAY
+										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
+									}
+									
+									// BASIC BIMANUAL MANIPULATION USING PINCH POINTS
+									if (g.algorithm == "3d_bimanual_trigger_manipulate") {
+										//cluster_kinemetric.find3DTriggerPoints(); // 	GET PINCH POINTS AND PUSH INTO IPARRAY
+										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
+									}
+									
+									
+									// BASIC BIMANUAL MANIPULATION USING PALM POINTS
+									if (g.algorithm == "3d_bimanual_palm_manipulate") {
+										//cluster_kinemetric.find3DPalmPoints();// 	GET PINCH POINTS AND PUSH INTO IPARRAY
+										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
+									}
+									// BASIC BIMANUAL MANIPULATION USING TRIGGER POINTS
+									if (g.algorithm == "3d_bimanual_pinch_manipulate") {
+										//cluster_kinemetric.find3DtriggerPoints();// 	GET PINCH POINTS AND PUSH INTO IPARRAY
+										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
+									}
 									
 									///////////////////////////////////////////////////////////////////////////////////
 									// LIMIT DELTA BY CLUSTER VALUES
@@ -484,7 +527,7 @@ package com.gestureworks.core
 											res = gdim.property_result
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
-											gdim.clusterDelta = cO[res];//rtn_dim = 1;
+											gdim.clusterDelta = cO[res];
 
 											//CLOSE DIM IF NO VALUE
 											if (gdim.clusterDelta == 0) gdim.activeDim = false;
@@ -495,19 +538,18 @@ package com.gestureworks.core
 										}
 
 
-										g.data.x = cO.x;
-										g.data.y = cO.y;
-										g.data.z = cO.z;
-										g.data.hn = cO.hn;
-										g.data.fn = cO.fn;
+										g.data.x = cO.x; // gesture position
+										g.data.y = cO.y; // gesture position
+										g.data.z = cO.z; // gesture position
+										g.data.hn = cO.hn; // current hand number
+										g.data.fn = cO.fn; // current finger total
 										
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////
 										
 										//if ((g.activeEvent) && (g.dispatchEvent))
 										//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
-									
-							//}
+						//}	
 							///////////////////////////////////////////////////
 						}
 				}
