@@ -101,6 +101,9 @@ package com.gestureworks.objects
 		public function set pairedPointID(value:int):void{	_pairedPointID = value;}
 		
 		
+		
+		
+		
 		//position/////////////////////////////////////////////x,y,x
 		private var _position:Vector3D = new Vector3D ();
 		public function get position():Vector3D{	return _position;}
@@ -130,6 +133,15 @@ package com.gestureworks.objects
 		private var _length:Number = 0;
 		public function get length():Number{	return _length;}
 		public function set length(value:Number):void {	_length = value; }
+		
+		//normalized_width based on other fingers in local hand
+		private var _normalized_width:Number = 0;
+		public function get normalized_width():Number{	return _normalized_width;}
+		public function set normalized_width(value:Number):void {	_normalized_width = value; }
+		//normalized_length based on other fingers in loacl hand
+		private var _normalized_length:Number = 0;
+		public function get normalized_length():Number{	return _normalized_length;}
+		public function set normalized_length(value:Number):void {	_normalized_length = value; }
 		
 		
 		// hand structure probs

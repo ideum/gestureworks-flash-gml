@@ -15,13 +15,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.utils
 {	
-	//import flash.geom.*;
 	import flash.display.*;
-//	import flash.net.*;
 	import flash.text.*;
-	//import flash.xml.*;
 
-	public class AddSimpleText extends  Sprite {
+	public class AddSimpleText extends  Sprite {// DisplayObjectContainer
 		private var mytext:TextField;
 		private var format:TextFormat;
 		private var wNum:Number;
@@ -51,6 +48,8 @@ package com.gestureworks.utils
 				mytext.setTextFormat(format);
 				
 			this.addChild(mytext);
+			
+			//this.mouseChildren = true;
 		}
 		
 		public function set textCont(txt:String):void{

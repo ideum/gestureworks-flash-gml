@@ -1026,10 +1026,68 @@ package com.gestureworks.analysis
 				//trace("find thumb")
 		}
 		
+		public function normalizeFingerSize():void {
+			
+			var temp_length_array:Array = new Array();
+			var temp_width_array:Array = new Array();
+			var min_length:Number
+			var max_length:Number
+			var min_width:Number
+			var max_width:Number
+			
+			
+			
+			// get values
+			for (i = 0; i < fn; i++)
+				{	
+					if (cO.motionArray[i].type == "finger")
+					{				
+						temp_length_array.push(cO.motionArray[i]);
+						//emp_width_array.push(cO.motionArray[i]);					
+						//trace("width",cO.motionArray[i].width)
+					}
+				}
+			
+			var  tn:int = temp_length_array.length;
+			temp_width_array = temp_length_array;
+				
+			
+			trace("fingers", fn, tn)
+			
+			// get normalized length
+				
+				//sort
+				temp_length_array.sortOn("length", Array.DESCENDING);
+				//temp_width_array.sortOn("width", Array.DESCENDING)
+						
+				// get max and min
+				if (temp_length_array[tn - 1]) 	min_length = temp_length_array[tn - 1].length;	
+				if (temp_length_array[0]) 		max_length = temp_length_array[0].length;
+				
+				//if (temp_width_array[tn - 1]) min_width = temp_length_array[tn - 1].width;	
+				//if (temp_width_array[0]) max_width = temp_length_array[0].width;
+						
+						for (i = 0; i < tn; i++)
+							{
+						if (temp_length_array[i].type == "finger")
+								{	
+									var pt:MotionPointObject = GestureGlobals.gw_public::motionPoints[temp_length_array[i].motionPointID];
+									
+									pt.normalized_length = normalize(temp_length_array[i].length, min_length, max_length);
+									//cO.motionArray[i].normalized_length = normalize(temp_length_array[i].length, max_length, min_length);
+									
+									trace("norm length",cO.motionArray[i].motionPointID, max_length, min_length,cO.motionArray[i].length,cO.motionArray[i].normalized_length)
+								}
+							}
+			
+		}
+		
+		
 		public function find3DBestPointPairs():void
 		{
 			var ma = cO.motionArray;
 			var pair_table:Array = new Array();
+			
 			
 			
 			// CALC PAIR VALUES FOR UNIQUE POINT PAIRS
@@ -1040,6 +1098,11 @@ package com.gestureworks.analysis
 									//trace("-" );
 									if (cO.motionArray[i].type == "finger")
 									{
+
+									// reset thumb probs
+									cO.motionArray[i].thumb_prob = 0;
+									cO.motionArray[i].mean_thumb_prob = 0
+									
 									//var pair_array:Array = new Array();
 									var palm_mpoint:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.motionArray[i].handID];
 									var pair_array:Array = new Array();
@@ -1056,8 +1119,8 @@ package com.gestureworks.analysis
 														var dq:Vector3D  = cO.motionArray[q].position.subtract(palm_mpoint.position);
 														var di:Vector3D  = cO.motionArray[i].position.subtract(palm_mpoint.position);
 														
-														var dAngle:Number = Vector3D.angleBetween(cO.motionArray[i].direction, cO.motionArray[q].direction);
-														var pAngle:Number = Vector3D.angleBetween(di, dq);
+														var dAngle:Number = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, cO.motionArray[q].direction));
+														var pAngle:Number = Math.abs(Vector3D.angleBetween(di, dq));
 														
 														
 														var pair_data:Array = new Array()
@@ -1073,6 +1136,10 @@ package com.gestureworks.analysis
 															pair_data.max_directionAngle = 0;
 															pair_data.min_directionAngle = 0;
 															pair_data.normalized_directionAngle = 0;
+															pair_data.max_positionAngle = 0;
+															pair_data.min_positionAngle = 0;
+															pair_data.normalized_positionAngle = 0;
+															
 															pair_data.pair_prob = 0;
 															
 															
@@ -1103,71 +1170,144 @@ package com.gestureworks.analysis
 						for (i = 0; i < tn; i++)
 									{		
 										// create temp array
+										var min_dist:Number = null;
+										var max_dist:Number = null;
+										var min_dang:Number = null;
+										var max_dang:Number = null;
+										var min_pang:Number = null;
+										var max_pang:Number = null;
 										var temp_column_arrayA:Array = new Array();
 										var temp_column_arrayB:Array = new Array();
+										var temp_column_arrayC:Array = new Array();
+										
 										
 										var tnn:int = pair_table[i].length;
-										// copy data from table
+										/// copy data from table
 											for (q = 0; q < tnn; q++)
 												{	
 													temp_column_arrayA.push(pair_table[i][q]);
-													temp_column_arrayB.push(pair_table[i][q]);
+													//temp_column_arrayB.push(pair_table[i][q]);
+													//temp_column_arrayC.push(pair_table[i][q]);
 												}
-										// sort data	
-											temp_column_arrayA.sortOn("distance", Array.DESCENDING);
-											temp_column_arrayB.sortOn("positionAngle", Array.DESCENDING);
-											
-										// find max and min values
-											var min_dist:Number = null;
-											var max_dist:Number = null;
-											var min_ang:Number = null;
-											var max_ang:Number = null;
 												
-											if (temp_column_arrayA[tn - 1]) min_dist = temp_column_arrayA[tn - 1].distance;
-											//else min_dist = null;
-											if (temp_column_arrayB[tn - 1]) min_ang = temp_column_arrayB[tn - 1].directionAngle;
-											//else min_ang = null;
+											temp_column_arrayB = temp_column_arrayA
+											temp_column_arrayC = temp_column_arrayA
+												
+												
+										/// sort data	
+											temp_column_arrayA.sortOn("distance", Array.DESCENDING);
+											temp_column_arrayB.sortOn("positionAngle", Array.DESCENDING)
+											temp_column_arrayC.sortOn("directionAngle", Array.DESCENDING);
+											
+										/// find max and min values
+		
+											if (temp_column_arrayA[tnn - 1]) min_dist = temp_column_arrayA[tnn - 1].distance;
+											if (temp_column_arrayB[tnn - 1]) min_pang = temp_column_arrayB[tnn - 1].positionAngle;
+											if (temp_column_arrayC[tnn - 1]) min_dang = temp_column_arrayC[tnn - 1].directionAngle;
 
 											if (temp_column_arrayA[0]) max_dist = temp_column_arrayA[0].distance;
-											//else max_dist = null;
-											if (temp_column_arrayB[0]) max_ang = temp_column_arrayB[0].directionAngle;
+											if (temp_column_arrayB[0]) max_pang = temp_column_arrayB[0].positionAngle;
+											if (temp_column_arrayC[0]) max_dang = temp_column_arrayC[0].directionAngle;
 											//else max_ang = null;
 											
+										
+										
+										
 											
-										// find normalized values
-										// write into table
+										/// find normalized values
+										/// write into table
 										for (q = 0; q < tnn; q++)
 										{
-											
 											pair_table[i][q].max_distance = max_dist
 											pair_table[i][q].min_distance = min_dist
-											pair_table[i][q].normalized_distance = normalize(temp_column_arrayA[q].distance, max_dist, min_dist);
+											pair_table[i][q].normalized_distance = normalize(temp_column_arrayA[q].distance, min_dist, max_dist);
 											
-											pair_table[i][q].max_directionAngle = max_ang
-											pair_table[i][q].min_directionAngle = min_ang
-											pair_table[i][q].normalized_directionAngle = normalize(temp_column_arrayB[q].directionAngle, max_ang, min_ang);
+											pair_table[i][q].max_positionAngle = max_pang
+											pair_table[i][q].min_positionAngle = min_pang
+											pair_table[i][q].normalized_positionAngle = normalize(temp_column_arrayB[q].positionAngle, min_pang, max_pang);
+											
+											pair_table[i][q].max_directionAngle = max_dang
+											pair_table[i][q].min_directionAngle = min_dang
+											pair_table[i][q].normalized_directionAngle = normalize(temp_column_arrayC[q].directionAngle, min_dang, max_dang);
 											
 											// best pair prob	// min distnace in set // min angle in set // gives max prob of 1
-											pair_table[i][q].pair_prob = (1 - pair_table[i][q].normalized_distance) * (1 - pair_table[i][q].normalized_directionAngle);
+											//pair_table[i][q].pair_prob = (1 - pair_table[i][q].normalized_distance) * (1 - pair_table[i][q].normalized_positionAngle)*(1-pair_table[i][q].normalized_directionAngle);
 											
-											 
-										}
-												
-										
-									}
-									
-					// get point id of best pair for each motion
-				//	trace("//")
-				/*
-					for (i = 0; i < tn; i++)
-						{	
-							for (q = 0; q < tnn; q++)
-										{
-											//trace("max dist:", pair_table[i][q].max_distance , "min_dist", pair_table[i][q].min_distance, "norm_dist", pair_table[i][q].normalized_distance, "max dAngle", pair_table[i][q].max_directionAngle, "min_dAngle", pair_table[i][q].min_directionAngle, "norm dAngle", pair_table[i][q].normalized_directionAngle);
-										}
-						}
-				*/		
+											
+											pair_table[i][q].pair_prob = (pair_table[i][q].normalized_distance)// * (pair_table[i][q].normalized_positionAngle)*(pair_table[i][q].normalized_directionAngle);
+											
+											/*
+											trace("");
+											trace("ID", pair_table[i][q].pointID,"pairedID",pair_table[i][q].pair_pointID);
+											trace("norm dist", pair_table[i][q].distance, min_dist, max_dist, pair_table[i][q].normalized_distance);
+											trace("norm ang",  pair_table[i][q].directionAngle, min_ang, max_ang,  pair_table[i][q].normalized_directionAngle);
+											trace("pair prob", pair_table[i][q].pair_prob);
+											*/
+											
+											//if(pair_table[i][q].normalized_directionAngle==0){
+												//trace("ID", pair_table[i][q].pointID,"pairedID",pair_table[i][q].pair_pointID);
+												//trace("norm ang",  pair_table[i][q].directionAngle, min_dang, max_dang,  pair_table[i][q].normalized_directionAngle);
+											//}
+											
+											// accumulate based on paired sets
+											if (pair_table[i][q].pair_prob == 1) {
+												//trace("ID", pair_table[i][q].pointID, "pairedID", pair_table[i][q].pair_pointID);
+												GestureGlobals.gw_public::motionPoints[pair_table[i][q].pointID].thumb_prob += 1;
+												GestureGlobals.gw_public::motionPoints[pair_table[i][q].pair_pointID].thumb_prob += 1;
+											}
+										}	
+								}
+								
 
+						
+						/*
+						// find temporal average thumb prob
+						for (var pn:int = 0; pn < cO.motionArray.length; pn++)
+						{
+							trace("---",cO.motionArray[pn].history.length);
+							for (var h:int = 0; h < cO.motionArray[pn].history.length; h++)
+							{
+								cO.motionArray[pn].mean_thumb_prob += cO.motionArray[pn].history[h].thumb_prob
+							}
+							//cO.motionArray[pn].mean_thumb_prob // cO.motionArray[pn].history.length;
+							trace("mtp",cO.motionArray[pn].motionPointID ,cO.motionArray[pn].mean_thumb_prob)
+						}
+						*/
+						
+						
+						
+						///////////////////////////////////////////////////////////////////////////////////
+						// MOD THUMB PROB WITH FINGER LENGTH AND WIDTH
+
+						for (i = 0; i < fn; i++)
+							{
+								if (cO.motionArray[i].type == "finger") 
+								{
+									cO.motionArray[i].thumb_prob *= (1-cO.motionArray[i].normalized_length)*(1)
+								}
+							}
+									
+						///////////////////////////////////////////////////////////////////////////////////
+						
+						
+						// get largest thumb prob
+						var thumb_list:Array = new Array()
+						
+						for (var pn:int = 0; pn < cO.motionArray.length; pn++)
+						{
+							thumb_list[pn] = cO.motionArray[pn].thumb_prob
+							//thumb_list[pn] = cO.motionArray[pn].mean_thumb_prob
+							 
+							 // reset thum alloc
+							 if(cO.motionArray[pn].type != "palm") cO.motionArray[pn].fingertype = "finger";
+						}
+						
+						// SET FINGER TO THUMB
+						var max_tp:Number = Math.max.apply(null, thumb_list);
+						var max_index:int = thumb_list.indexOf(max_tp);
+						
+						if((max_index!=-1)&&( cO.motionArray[max_index])&&(cO.motionArray[max_index].type == "finger")) cO.motionArray[max_index].fingertype = "thumb";	
+						trace("-----------------------------------------------------------------------------------------------");
 		}
 		
 		
@@ -1691,7 +1831,7 @@ package com.gestureworks.analysis
 			{
 				if (adjacent == 0) return opposite < 0 ? 270 : 90 ;
 				if (opposite == 0) return adjacent < 0 ? 180 : 0 ;
-				
+				0
 				if(opposite > 0) return adjacent > 0 ? 360 + Math.atan(opposite / adjacent) * RAD_DEG : 180 - Math.atan(opposite / -adjacent) * RAD_DEG ;
 				else return adjacent > 0 ? 360 - Math.atan( -opposite / adjacent) * RAD_DEG : 180 + Math.atan( opposite / adjacent) * RAD_DEG ;
 				
@@ -1700,7 +1840,7 @@ package com.gestureworks.analysis
 		
 		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
 
-                        return (value - minimum) / (maximum - minimum);
+                        return Math.abs((value - minimum) / (maximum - minimum));
          }
 
         private static function limit(value : Number, min : Number, max : Number) : Number {

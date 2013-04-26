@@ -480,8 +480,12 @@ package com.gestureworks.core
 								
 									//cluster_kinemetric.find3DThumbPoints();
 									//cluster_kinemetric.find3DNearestPoint()
-									//cluster_kinemetric.find3DBestPointPairs();
-									cluster_kinemetric.find3DPointPairList();
+									
+								cluster_kinemetric.normalizeFingerSize();
+								cluster_kinemetric.find3DBestPointPairs();
+								
+								
+								///cluster_kinemetric.find3DPointPairList();
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
 						
 									

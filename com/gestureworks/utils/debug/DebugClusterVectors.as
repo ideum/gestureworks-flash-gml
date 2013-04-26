@@ -142,7 +142,7 @@ package com.gestureworks.utils.debug
 				
 				
 				///////////////////////////////////////////////////////////////////////////////////////
-				
+				//NOTE BREAK OUT INTO GESUTURE DISPLAY
 				// draw stroke
 				if((N)&&(path_data)){
 				

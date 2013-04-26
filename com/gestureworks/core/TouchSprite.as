@@ -842,10 +842,7 @@ package com.gestureworks.core
 		public function set $rotation(value:Number):void{	_$rotation = value;}
 		// rotationX property
 		public function get $rotationX():Number{return _$rotationX;}
-		public function set $rotationX(value:Number):void
-		{
-			_$rotationX = value;
-		}
+		public function set $rotationX(value:Number):void{_$rotationX = value;}
 		// rotationY property
 		public function get $rotationY():Number{return _$rotationY;}
 		public function set $rotationY(value:Number):void{	_$rotationY = value;}

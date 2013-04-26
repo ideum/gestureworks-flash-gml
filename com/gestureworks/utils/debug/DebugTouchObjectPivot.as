@@ -87,12 +87,41 @@ package com.gestureworks.utils.debug
 				graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
 			}
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public function clear():void
 	{
 		graphics.clear();
 	}
+	
+	
+	
+	
 	public function setStyles():void
 	{
 		cml = new XMLList(CML.Objects)
