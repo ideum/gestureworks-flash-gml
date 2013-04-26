@@ -391,6 +391,19 @@ package com.gestureworks.core
 		{
 			GML.Gestures = GMLParser.settings;
 			//trace("complete gml parser settings", gml, GMLParser.settings);
+			reapplyGestures();
+		}
+		
+		/**
+		 * TODO: Temporary patch to unreliable initialization sequence. Currently gestureworksInit can be called prior to parsing of GML file preventing AS3 objects from
+		 * activating intended gestures. Consider requireing an explicit init call in the constructor for users to control the order of operations by setting the gml and/or
+		 * cml paths prior to GestureWorks initialization.
+		 */
+		private function reapplyGestures():void{ 
+			for each(var obj:* in GestureGlobals.gw_public::touchObjects) {
+				if (obj is TouchSprite)
+					TouchSprite(obj).gestureList = TouchSprite(obj).gestureList;
+			}	
 		}
 		
 		protected function gestureworksInit():void{}
