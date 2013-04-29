@@ -1043,7 +1043,7 @@ package com.gestureworks.analysis
 						cO.motionArray[i].mean_thumb_prob = 0
 						
 						cO.motionArray[i].normalized_length = 0;
-						cO.motionArray[i].normalized_dAngle = 0;
+						cO.motionArray[i].normalized_palmAngle = 0;
 					}
 				}
 			
@@ -1056,13 +1056,13 @@ package com.gestureworks.analysis
 			
 			var temp_length_array:Array = new Array();
 			//var temp_width_array:Array = new Array();
-			var temp_dAngle_array:Array = new Array();
+			var temp_palmAngle_array:Array = new Array();
 			var min_length:Number
 			var max_length:Number
 			//var min_width:Number
 			//var max_width:Number
-			var min_dAngle:Number
-			var max_dAngle:Number
+			var min_palmAngle:Number
+			var max_palmAngle:Number
 			
 			
 			
@@ -1072,14 +1072,13 @@ package com.gestureworks.analysis
 					if (cO.motionArray[i].type == "finger")
 					{	
 						var palm_mpoint:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.motionArray[i].handID];
-						var dAngle:Number = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, palm_mpoint.direction));
+						var palmAngle:Number = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, palm_mpoint.direction));
+						cO.motionArray[i].palmAngle = palmAngle;
 						
-						//trace("ID",cO.motionArray[i].motionPointID,"dangle", dAngle);
 						
-						temp_length_array.push(cO.motionArray[i]);
-						//emp_width_array.push(cO.motionArray[i]);	
-						
-						temp_dAngle_array.push(dAngle)
+						temp_length_array.push(cO.motionArray[i].length);
+						//temp_width_array.push(cO.motionArray[i].width);	
+						temp_palmAngle_array.push(cO.motionArray[i].palmAngle)
 						//trace("width",cO.motionArray[i].width)
 					}
 				}
@@ -1093,37 +1092,33 @@ package com.gestureworks.analysis
 			// get normalized length
 				
 				//sort
-				temp_length_array.sortOn("length", Array.DESCENDING);
-				//temp_width_array.sortOn("width", Array.DESCENDING)
-				temp_dAngle_array.sortOn("dAngle", Array.DESCENDING);
-				temp_dAngle_array.sort(Array.DESCENDING);
+				temp_length_array.sort(Array.DESCENDING);
+				//temp_width_array.sort( Array.DESCENDING)
+				temp_palmAngle_array.sort(Array.DESCENDING);
 						
 				// get max and min
-				if (temp_length_array[tn - 1]) 	min_length = temp_length_array[tn - 1].length;	
-				if (temp_length_array[0]) 		max_length = temp_length_array[0].length;
+				if (temp_length_array[tn - 1]) 	min_length = temp_length_array[tn - 1];	
+				if (temp_length_array[0]) 		max_length = temp_length_array[0];
 				
 				//if (temp_width_array[tn - 1]) min_width = temp_length_array[tn - 1].width;	
 				//if (temp_width_array[0]) max_width = temp_length_array[0].width;
 				
 				// get max and min
-				if (temp_dAngle_array[tn - 1]) 	min_dAngle = temp_dAngle_array[tn - 1];	
-				if (temp_dAngle_array[0]) 		max_dAngle = temp_dAngle_array[0];
+				if (temp_palmAngle_array[tn - 1]) 	min_palmAngle = temp_palmAngle_array[tn - 1];	
+				if (temp_palmAngle_array[0]) 		max_palmAngle = temp_palmAngle_array[0];
 						
-						for (i = 0; i < tn; i++)
-							{
-						if (temp_length_array[i].type == "finger")
-								{	
-									var pt:MotionPointObject = GestureGlobals.gw_public::motionPoints[temp_length_array[i].motionPointID];
-									
-									pt.normalized_length = normalize(temp_length_array[i].length, min_length, max_length);
-									pt.normalized_dAngle = normalize(temp_dAngle_array[i], min_dAngle, max_dAngle);
-									//cO.motionArray[i].normalized_length = normalize(temp_length_array[i].length, max_length, min_length);
-									
-									//trace("norm length",cO.motionArray[i].motionPointID, max_length, min_length,cO.motionArray[i].length,cO.motionArray[i].normalized_length)
-								
-									//trace("ID",temp_length_array[i].motionPointID,"dangle",pt.normalized_dAngle);
-								}
-							}
+				
+				//normalized values and update
+				for (i = 0; i < fn; i++)
+					{
+					if (cO.motionArray[i].type == "finger")
+						{	
+						cO.motionArray[i].normalized_length = normalize(cO.motionArray[i].length, min_length, max_length);
+						//cO.motionArray[i].normalized_width = normalize(cO.motionArray[i].width, min_width, max_width);
+						cO.motionArray[i].normalized_palmAngle = normalize(cO.motionArray[i].palmAngle, min_palmAngle, max_palmAngle);
+						//trace("norm length",cO.motionArray[i].motionPointID, max_length, min_length,cO.motionArray[i].length,cO.motionArray[i].normalized_length)
+						}
+					}
 			
 		}
 		
@@ -1141,7 +1136,7 @@ package com.gestureworks.analysis
 			
 			if (fn == 3) 
 			{
-				/*
+				
 				var temp_pair:Array = new Array();
 				
 				for (i = 0; i < 3; i++)
@@ -1163,17 +1158,33 @@ package com.gestureworks.analysis
 					
 				if (temp_pair.length == 2)
 				{
-					
-					
 					//var d0:Vector3D  = temp_pair[0].position.subtract(palm_mpoint.position);
 					//var d1:Vector3D  = temp_pair[1].position.subtract(palm_mpoint.position);
-					
+					//var pt0 = GestureGlobals.gw_public::motionPoints[temp_pair[0].motionPointID];
+					//var pt0 = GestureGlobals.gw_public::motionPoints[temp_pair[0].motionPointID];
 					var palm_mpoint:MotionPointObject = GestureGlobals.gw_public::motionPoints[temp_pair[0].handID];
-					var dAngle0:Number = Math.abs(Vector3D.angleBetween(temp_pair[0].direction, palm_point.direction));
-					var dAngle1:Number = Math.abs(Vector3D.angleBetween(temp_pair[1].direction, palm_point.direction));
 					
+					var palmAngle0:Number = Math.abs(Vector3D.angleBetween(temp_pair[0].direction, palm_mpoint.direction));
+					var palmAngle1:Number = Math.abs(Vector3D.angleBetween(temp_pair[1].direction, palm_mpoint.direction));
 					
-				}	*/
+					// norm palm angle
+					if (palmAngle1 > palmAngle0) {
+						temp_pair[0].normalized_palmAngle = 0;
+						temp_pair[1].normalized_palmAngle = 1;
+					}
+					else {
+						temp_pair[0].normalized_palmAngle = 1;
+						temp_pair[1].normalized_palmAngle = 0;
+					}
+					
+					// set prob
+					temp_pair[0].thumb_prob = temp_pair[0].normalized_length * temp_pair[0].normalized_palmAngle;
+					temp_pair[1].thumb_prob = temp_pair[1].normalized_length * temp_pair[1].normalized_palmAngle;
+					
+					// set thumb
+					if (temp_pair[1].thumb_prob > temp_pair[0].thumb_prob)  temp_pair[1].fingertype = "thumb";	
+					else temp_pair[0].fingertype = "thumb";
+				}	
 			
 			}
 			if (fn > 3)
@@ -1200,8 +1211,7 @@ package com.gestureworks.analysis
 														var dq:Vector3D  = cO.motionArray[q].position.subtract(palm_mpoint.position);
 														var di:Vector3D  = cO.motionArray[i].position.subtract(palm_mpoint.position);
 														
-														//var dAngle:Number = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, cO.motionArray[q].direction));
-														//var dAngle:Number = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, palm_point.direction));
+														var dAngle:Number = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, cO.motionArray[q].direction));
 														var pAngle:Number = Math.abs(Vector3D.angleBetween(di, dq));
 														
 														
@@ -1209,15 +1219,15 @@ package com.gestureworks.analysis
 															pair_data.pointID = cO.motionArray[i].motionPointID; // ROOT POINT ID
 															pair_data.pair_pointID = cO.motionArray[q].motionPointID; // PAIRED POINT ID
 															pair_data.distance = dist;	//DISTANCE BETWEEEN PAIRS
-															//pair_data.directionAngle = dAngle;	//DIRECTION ANGLE BETWEEN PAIRS
+															pair_data.directionAngle = dAngle;	//DIRECTION ANGLE BETWEEN PAIRS
 															pair_data.positionAngle = pAngle; //POSITION ANGLE BETWEEN PAIRS
 															
 															pair_data.max_distance = 0;
 															pair_data.min_distance = 0;
 															pair_data.normalized_distance = 0;
-															//pair_data.max_directionAngle = 0;
-															//pair_data.min_directionAngle = 0;
-															//pair_data.normalized_directionAngle = 0;
+															pair_data.max_directionAngle = 0;
+															pair_data.min_directionAngle = 0;
+															pair_data.normalized_directionAngle = 0;
 															pair_data.max_positionAngle = 0;
 															pair_data.min_positionAngle = 0;
 															pair_data.normalized_positionAngle = 0;
@@ -1252,48 +1262,56 @@ package com.gestureworks.analysis
 						for (i = 0; i < tn; i++)
 									{		
 										// create temp array
-										var min_dist:Number = null;
-										var max_dist:Number = null;
-										//var min_dang:Number = null;
-										//var max_dang:Number = null;
-										var min_pang:Number = null;
-										var max_pang:Number = null;
+										var min_dist:Number = 0;
+										var max_dist:Number = 0;
+										var min_dang:Number = 0;
+										var max_dang:Number = 0;
+										var min_pang:Number = 0;
+										var max_pang:Number = 0;
 										var temp_column_arrayA:Array = new Array();
 										var temp_column_arrayB:Array = new Array();
-										//var temp_column_arrayC:Array = new Array();
+										var temp_column_arrayC:Array = new Array();
 										
 										
 										var tnn:int = pair_table[i].length;
 										/// copy data from table
 											for (q = 0; q < tnn; q++)
 												{	
-													temp_column_arrayA.push(pair_table[i][q]);
-													//temp_column_arrayB.push(pair_table[i][q]);
-													//temp_column_arrayC.push(pair_table[i][q]);
+													temp_column_arrayA.push(pair_table[i][q].distance);
+													temp_column_arrayB.push(pair_table[i][q].positionAngle);
+													temp_column_arrayC.push(pair_table[i][q].directionAngle);
 												}
 												
-											temp_column_arrayB = temp_column_arrayA
+											//temp_column_arrayB = temp_column_arrayA
 											//temp_column_arrayC = temp_column_arrayA
 												
 												
 										/// sort data	
-											temp_column_arrayA.sortOn("distance", Array.DESCENDING);
-											temp_column_arrayB.sortOn("positionAngle", Array.DESCENDING)
+											//temp_column_arrayA.sortOn("distance", Array.DESCENDING);
+											//temp_column_arrayB.sortOn("positionAngle", Array.DESCENDING)
 											//temp_column_arrayC.sortOn("directionAngle", Array.DESCENDING);
+											temp_column_arrayA.sort(Array.DESCENDING);
+											temp_column_arrayB.sort(Array.DESCENDING)
+											temp_column_arrayC.sort(Array.DESCENDING);
 											
 										/// find max and min values
-		
+										/*
 											if (temp_column_arrayA[tnn - 1]) min_dist = temp_column_arrayA[tnn - 1].distance;
 											if (temp_column_arrayB[tnn - 1]) min_pang = temp_column_arrayB[tnn - 1].positionAngle;
-											//if (temp_column_arrayC[tnn - 1]) min_dang = temp_column_arrayC[tnn - 1].directionAngle;
+											if (temp_column_arrayC[tnn - 1]) min_dang = temp_column_arrayC[tnn - 1].directionAngle;
 
 											if (temp_column_arrayA[0]) max_dist = temp_column_arrayA[0].distance;
 											if (temp_column_arrayB[0]) max_pang = temp_column_arrayB[0].positionAngle;
-											//if (temp_column_arrayC[0]) max_dang = temp_column_arrayC[0].directionAngle;
-											//else max_ang = null;
+											if (temp_column_arrayC[0]) max_dang = temp_column_arrayC[0].directionAngle;
+										*/
+											if (temp_column_arrayA[tnn - 1]) min_dist = temp_column_arrayA[tnn - 1]
+											if (temp_column_arrayB[tnn - 1]) min_pang = temp_column_arrayB[tnn - 1]
+											if (temp_column_arrayC[tnn - 1]) min_dang = temp_column_arrayC[tnn - 1]
+
+											if (temp_column_arrayA[0]) max_dist = temp_column_arrayA[0];
+											if (temp_column_arrayB[0]) max_pang = temp_column_arrayB[0];
+											if (temp_column_arrayC[0]) max_dang = temp_column_arrayC[0];
 											
-										
-										
 										
 											
 										/// find normalized values
@@ -1302,25 +1320,22 @@ package com.gestureworks.analysis
 										{
 											pair_table[i][q].max_distance = max_dist
 											pair_table[i][q].min_distance = min_dist
-											pair_table[i][q].normalized_distance = normalize(temp_column_arrayA[q].distance, min_dist, max_dist);
+											pair_table[i][q].normalized_distance = normalize(temp_column_arrayA[q], min_dist, max_dist);
 											
 											pair_table[i][q].max_positionAngle = max_pang
 											pair_table[i][q].min_positionAngle = min_pang
-											pair_table[i][q].normalized_positionAngle = normalize(temp_column_arrayB[q].positionAngle, min_pang, max_pang);
+											pair_table[i][q].normalized_positionAngle = normalize(temp_column_arrayB[q], min_pang, max_pang);
 											
-											//pair_table[i][q].max_directionAngle = max_dang
-											//pair_table[i][q].min_directionAngle = min_dang
-											//pair_table[i][q].normalized_directionAngle = normalize(temp_column_arrayC[q].directionAngle, min_dang, max_dang);
+											pair_table[i][q].max_directionAngle = max_dang
+											pair_table[i][q].min_directionAngle = min_dang
+											pair_table[i][q].normalized_directionAngle = normalize(temp_column_arrayC[q], min_dang, max_dang);
 											
 											// best pair prob	// min distnace in set // min angle in set // gives max prob of 1
-											//pair_table[i][q].pair_prob = (1 - pair_table[i][q].normalized_distance) * (1 - pair_table[i][q].normalized_positionAngle)*(1-pair_table[i][q].normalized_directionAngle);
+											pair_table[i][q].pair_prob = (pair_table[i][q].normalized_distance) * (pair_table[i][q].normalized_positionAngle)//*(pair_table[i][q].normalized_directionAngle);
 											
-											
-											pair_table[i][q].pair_prob = (pair_table[i][q].normalized_distance) * (pair_table[i][q].normalized_positionAngle);
-											//pair_table[i][q].pair_prob = (pair_table[i][q].normalized_distance) + (pair_table[i][q].normalized_positionAngle)+(pair_table[i][q].normalized_directionAngle);
-											//pair_table[i][q].pair_prob = (pair_table[i][q].normalized_distance)
-											//pair_table[i][q].pair_prob = (pair_table[i][q].normalized_positionAngle)
-											// pair_table[i][q].pair_prob = (pair_table[i][q].normalized_directionAngle);
+											// accumulate based on paired sets on primary point in pair
+											GestureGlobals.gw_public::motionPoints[pair_table[i][q].pointID].thumb_prob += pair_table[i][q].pair_prob//1;
+										
 											/*
 											trace("");
 											trace("ID", pair_table[i][q].pointID,"pairedID",pair_table[i][q].pair_pointID);
@@ -1328,38 +1343,22 @@ package com.gestureworks.analysis
 											trace("norm ang",  pair_table[i][q].directionAngle, min_ang, max_ang,  pair_table[i][q].normalized_directionAngle);
 											trace("pair prob", pair_table[i][q].pair_prob);
 											*/
-											
-											//if(pair_table[i][q].normalized_directionAngle==0){
-												//trace("ID", pair_table[i][q].pointID,"pairedID",pair_table[i][q].pair_pointID);
-												//trace("norm ang",  pair_table[i][q].directionAngle, min_dang, max_dang,  pair_table[i][q].normalized_directionAngle);
-											//}
-											
-											// accumulate based on paired sets
-											if (pair_table[i][q].pair_prob == 1) {
-												//trace("ID", pair_table[i][q].pointID, "pairedID", pair_table[i][q].pair_pointID);
-												GestureGlobals.gw_public::motionPoints[pair_table[i][q].pointID].thumb_prob += pair_table[i][q].pair_prob//1;
-												GestureGlobals.gw_public::motionPoints[pair_table[i][q].pair_pointID].thumb_prob += pair_table[i][q].pair_prob//1;
-											}
-										}	
-										
-										
-										
-							
+											}							
 								}
 					}	
 
 						
 						/*
 						// find temporal average thumb prob
-						for (var pn:int = 0; pn < cO.motionArray.length; pn++)
+						for (i = 0; i < fn; i++)
 						{
-							trace("---",cO.motionArray[pn].history.length);
-							for (var h:int = 0; h < cO.motionArray[pn].history.length; h++)
+							trace("---",cO.motionArray[i].history.length);
+							for (var h:int = 0; h < cO.motionArray[i].history.length; h++)
 							{
-								cO.motionArray[pn].mean_thumb_prob += cO.motionArray[pn].history[h].thumb_prob
+								cO.motionArray[i].mean_thumb_prob += cO.motionArray[i].history[h].thumb_prob
 							}
 							//cO.motionArray[pn].mean_thumb_prob // cO.motionArray[pn].history.length;
-							trace("mtp",cO.motionArray[pn].motionPointID ,cO.motionArray[pn].mean_thumb_prob)
+							trace("mtp",cO.motionArray[i].motionPointID ,cO.motionArray[i].mean_thumb_prob)
 						}
 						*/
 						
@@ -1375,35 +1374,22 @@ package com.gestureworks.analysis
 							{
 								if (cO.motionArray[i].type == "finger") 
 								{
-									 cO.motionArray[i].thumb_prob *= 1//(1 - cO.motionArray[i].normalized_length) //* (1-cO.motionArray[i].normalized_dAngle);
-									// cO.motionArray[i].thumb_prob *= (1 - cO.motionArray[i].normalized_dAngle);
-									//cO.motionArray[i].thumb_prob += (1-cO.motionArray[i].normalized_length);
-									
-									
-									trace("iD",cO.motionArray[i].motionPointID,"thumb prob",cO.motionArray[i].thumb_prob)
+									cO.motionArray[i].thumb_prob *= (1 - cO.motionArray[i].normalized_length) * (1-cO.motionArray[i].normalized_palmAngle);
+									//trace("iD",cO.motionArray[i].motionPointID,"length", cO.motionArray[i].normalized_length,"palm angle", cO.motionArray[i].normalized_palmAngle,"thumb prob",cO.motionArray[i].thumb_prob)
 								}
-								
 								thumb_list[i] = cO.motionArray[i].thumb_prob;
+								//thumb_list[i] = cO.motionArray[i].mean_thumb_prob
 							}
 									
 						///////////////////////////////////////////////////////////////////////////////////
 						
-						
-						
-						
-						//for (var pn:int = 0; pn < fn; pn++)
-						//{
-							//thumb_list[i] = cO.motionArray[i].thumb_prob
-		
-							//thumb_list[pn] = cO.motionArray[pn].mean_thumb_prob
-						//}
 						
 						// SET FINGER TO THUMB
 						var max_tp:Number = Math.max.apply(null, thumb_list);
 						var max_index:int = thumb_list.indexOf(max_tp);
 						
 						if((max_index!=-1)&&( cO.motionArray[max_index])&&(cO.motionArray[max_index].type == "finger")) cO.motionArray[max_index].fingertype = "thumb";	
-						trace("-----------------------------------------------------------------------------------------------");
+						//trace("-----------------------------------------------------------------------------------------------");
 		}
 		
 		

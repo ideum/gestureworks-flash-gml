@@ -133,6 +133,10 @@ package com.gestureworks.objects
 		private var _length:Number = 0;
 		public function get length():Number{	return _length;}
 		public function set length(value:Number):void {	_length = value; }
+		//palmAngle
+		private var _palmAngle:Number = 0;
+		public function get palmAngle():Number{	return _palmAngle;}
+		public function set palmAngle(value:Number):void {	_palmAngle = value; }
 		
 		//normalized_width based on other fingers in local hand
 		private var _normalized_width:Number = 0;
@@ -143,9 +147,9 @@ package com.gestureworks.objects
 		public function get normalized_length():Number{	return _normalized_length;}
 		public function set normalized_length(value:Number):void {	_normalized_length = value; }
 		//normalized_dAngle based on other fingers in loacl hand
-		private var _normalized_dAngle:Number = 0;
-		public function get normalized_dAngle():Number{	return _normalized_dAngle;}
-		public function set normalized_dAngle(value:Number):void {	_normalized_dAngle = value; }
+		private var _normalized_palmAngle:Number = 0;
+		public function get normalized_palmAngle():Number{	return _normalized_palmAngle;}
+		public function set normalized_palmAngle(value:Number):void {	_normalized_palmAngle = value; }
 		
 		
 		// hand structure probs

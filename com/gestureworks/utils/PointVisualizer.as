@@ -93,7 +93,7 @@ package com.gestureworks.utils
 				// create text fields
 				for (var i:int = 0; i < 12; i++) 
 				{
-					mptext_array[i] = new AddSimpleText(200, 100, "left", 0x777777, 18);
+					mptext_array[i] = new AddSimpleText(600, 100, "left", 0x777777, 18);
 						//mptext_array[i].mouseChildren = true;
 					tptext_array[i] = new AddSimpleText(200, 100, "left", 0x000000, 18);
 						//tptext_array[i].mouseChildren = true;
@@ -285,10 +285,12 @@ package com.gestureworks.utils
 											graphics.endFill();
 											
 											//drawPoints ID of point
-											mptext_array[i].textCont = "Finger: " + "ID" + String(mp.motionPointID) + "    id" + String(mp.id);
+											mptext_array[i].textCont = "Finger: " + "ID" + String(mp.motionPointID) + "    id: " + String(mp.id) + "  thumb prob: " + Math.round(100*mp.thumb_prob)*0.01 +   "\n" + "length: "+ Math.round(100*mp.normalized_length)*0.01 +"   palm angle: " + Math.round(100*mp.normalized_palmAngle)*0.01;
 											mptext_array[i].x = mp.position.x;
 											mptext_array[i].y = mp.position.y - 50;
 											mptext_array[i].visible = true;
+											
+											
 											
 											
 											

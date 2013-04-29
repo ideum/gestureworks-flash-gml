@@ -480,6 +480,8 @@ package com.gestureworks.core
 								
 									//cluster_kinemetric.find3DThumbPoints();
 									//cluster_kinemetric.find3DNearestPoint()
+								
+								cluster_kinemetric.clearMotionPointData();
 									
 								cluster_kinemetric.normalizeFingerSize();
 								
