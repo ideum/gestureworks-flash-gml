@@ -142,13 +142,16 @@ package com.gestureworks.objects
 		private var _normalized_length:Number = 0;
 		public function get normalized_length():Number{	return _normalized_length;}
 		public function set normalized_length(value:Number):void {	_normalized_length = value; }
+		//normalized_dAngle based on other fingers in loacl hand
+		private var _normalized_dAngle:Number = 0;
+		public function get normalized_dAngle():Number{	return _normalized_dAngle;}
+		public function set normalized_dAngle(value:Number):void {	_normalized_dAngle = value; }
 		
 		
 		// hand structure probs
 		private var _thumb_prob:Number = 0;
 		public function get thumb_prob():Number{	return _thumb_prob;}
 		public function set thumb_prob(value:Number):void {	_thumb_prob = value; }
-		
 		// hand structure probs
 		private var _mean_thumb_prob:Number = 0;
 		public function get mean_thumb_prob():Number{	return _mean_thumb_prob;}

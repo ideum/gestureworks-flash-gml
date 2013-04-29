@@ -482,6 +482,7 @@ package com.gestureworks.core
 									//cluster_kinemetric.find3DNearestPoint()
 									
 								cluster_kinemetric.normalizeFingerSize();
+								
 								cluster_kinemetric.find3DBestPointPairs();
 								
 								
