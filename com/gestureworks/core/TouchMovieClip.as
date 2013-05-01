@@ -165,8 +165,6 @@ package com.gestureworks.core
 					//}
 					// bypass gml requirement for testing
 					initBase()
-					//if (debugDisplay)
-					//td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		/**
@@ -189,11 +187,11 @@ package com.gestureworks.core
 		
 		 private function initBase():void 
 		{
-										tc = new TouchCluster(touchObjectID);
-										tp = new TouchPipeline(touchObjectID);
-					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
-										tt = new TouchTransform(touchObjectID);
-					if (debugDisplay)	td = new TouchVisualizer(touchObjectID);
+							tc = new TouchCluster(touchObjectID);
+							tp = new TouchPipeline(touchObjectID);
+		if (gestureEvents)	tg = new TouchGesture(touchObjectID);
+							tt = new TouchTransform(touchObjectID);
+							td = new TouchVisualizer(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////

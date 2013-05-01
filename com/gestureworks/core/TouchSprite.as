@@ -52,14 +52,8 @@ package com.gestureworks.core
 	import com.gestureworks.utils.GestureParser;
 	
 	
-	
-	
-	
-	
-
-	
 	/**
-	 * The TouchSpriteBase class is the base class for all touch and gestures enabled
+	 * The TouchSprite class is the base class for all touch and gestures enabled
 	 * Sprites that require additional display list management. 
 	 * 
 	 * <pre>
@@ -77,8 +71,6 @@ package com.gestureworks.core
 	
 	public class TouchSprite extends Sprite
 	{
-		//public var point:Point;
-		//public var point:*;
 		/**
 		 * @private
 		 */
@@ -173,11 +165,9 @@ package com.gestureworks.core
 						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
 						
 					//}
+					
 					// bypass gml requirement for testing
 					initBase();
-					
-					//if (debugDisplay)
-						//td = new TouchDebugDisplay(touchObjectID);
 		}
 		
 		/**
@@ -200,12 +190,11 @@ package com.gestureworks.core
 		
 		 private function initBase():void 
 		{
-										tc = new TouchCluster(touchObjectID);
-										tp = new TouchPipeline(touchObjectID);
-					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
-										tt = new TouchTransform(touchObjectID);
-					//if (debugDisplay)	
-					td = new TouchVisualizer(touchObjectID);
+							tc = new TouchCluster(touchObjectID);
+							tp = new TouchPipeline(touchObjectID);
+		if (gestureEvents)	tg = new TouchGesture(touchObjectID);
+							tt = new TouchTransform(touchObjectID);
+							td = new TouchVisualizer(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
@@ -343,11 +332,13 @@ package com.gestureworks.core
 		 * @private
 		 */
 		private var _touchChildren:Boolean = false;
+		/**
+		 * Allows touch events to be passed down to child display object. Has the same function as MouseChildren.
+		 */
 		public function get touchChildren():Boolean{return _touchChildren;}
 		public function set touchChildren(value:Boolean):void
 		{
 			_touchChildren = value;
-			
 			// reset bubling on touch listener
 			if (value) mouseChildren = true;
 			else mouseChildren = false;
