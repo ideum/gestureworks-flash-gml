@@ -209,6 +209,11 @@ package com.gestureworks.managers
 					mpO.sphereRadius = event.value.sphereRadius;
 					mpO.sphereCenter = event.value.sphereCenter;
 					
+					mpO.length = event.value.length;
+					mpO.width = event.value.width;
+		
+					
+					
 					//mpO.handID = event.value.handID;
 					
 					//mpO.x = event.value.x;

@@ -18,15 +18,26 @@ package com.gestureworks.core
 	import flash.events.Event;
 	import flash.display.Sprite;
 	
-	import com.gestureworks.utils.PointVisualizer;
-	import com.gestureworks.utils.ClusterVisualizer;
-	import com.gestureworks.utils.GestureVisualizer;
+	import com.gestureworks.analysis.PointVisualizer;
+	import com.gestureworks.analysis.ClusterVisualizer;
+	import com.gestureworks.analysis.GestureVisualizer;
 	
 	import com.gestureworks.managers.ClusterHistories;
 	import com.gestureworks.managers.TransformHistories;
 
-	public class TouchDebugDisplay
+	public class TouchVisualizer
 	{
+		/**
+		* @private
+		*/
+		private var ts:TouchSprite;
+		/**
+		* @private
+		*/
+		private var id:uint
+		/**
+		* displays touch cluster and gesture visulizations on the touchSprite.
+		*/
 		public var debug_display:Sprite;
 		/**
 		* @private
@@ -44,28 +55,50 @@ package com.gestureworks.core
 		* @private
 		*/
 		private var viewAlwaysOn:Boolean = false;
-
-		
+		/**
+		* @private
+		*/
 		private var _pointDisplay:Boolean = true;
-		public function get pointDisplay():Boolean{return _pointDisplay;}
+		/**
+		* activates point visualization methods.
+		*/
+		public function get pointDisplay():Boolean { return _pointDisplay; }
+		/**
+		* activates point visualization methods.
+		*/
 		public function set pointDisplay(value:Boolean):void{_pointDisplay = value;}
-		
+		/**
+		* @private
+		*/
 		private var _clusterDisplay:Boolean = true;
-		public function get clusterDisplay():Boolean{return _clusterDisplay;}
+		/**
+		* activates cluster visualization methods.
+		*/
+		public function get clusterDisplay():Boolean { return _clusterDisplay; }
+		/**
+		* activates cluster visualization methods.
+		*/
 		public function set clusterDisplay(value:Boolean):void { _clusterDisplay = value; }
-		
+		/**
+		* @private
+		*/
 		private var _gestureDisplay:Boolean = true;
-		public function get gestureDisplay():Boolean{return _gestureDisplay;}
+		/**
+		* activates gesture visualization methods.
+		*/
+		public function get gestureDisplay():Boolean { return _gestureDisplay; }
+		/**
+		* activates gesture visualization methods.
+		*/
 		public function set gestureDisplay(value:Boolean):void{_gestureDisplay = value;}
 		
-		private var ts:TouchSprite;
-		private var id:uint
 		
 		
 		
 		
 		
-		public function TouchDebugDisplay(touchObjectID:int):void
+		
+		public function TouchVisualizer(touchObjectID:int):void
 		{
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
@@ -127,9 +160,9 @@ package com.gestureworks.core
 					/////////////////////////////////////////////////////////////////
 					if (pointDisplay) 
 					{
-							point_visualizer = new PointVisualizer(id);
-								point_visualizer.setStyles();
-							debug_display.addChild(point_visualizer);
+						point_visualizer = new PointVisualizer(id);
+							point_visualizer.setStyles();
+						debug_display.addChild(point_visualizer);
 					}
 					
 					////////////////////////////////////////////////////////////////////
@@ -184,10 +217,13 @@ package com.gestureworks.core
 				if (gestureDisplay) gesture_visualizer.draw();
 			}
 			
-			
-			
 			//sensor points
-			
+			//if (ts.cO.sn) 
+			//{	
+				//if (pointDisplay)	point_visualizer.draw();
+				//if (clusterDisplay)	cluster_visualizer.draw();
+				//if (gestureDisplay) gesture_visualizer.draw();
+			//}
 		}
 	}
 	/**

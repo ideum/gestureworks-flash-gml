@@ -13,33 +13,32 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
-package com.gestureworks.utils
+package com.gestureworks.analysis
 {
-	import com.gestureworks.managers.MotionPointHistories;
+	
 	import flash.display.Shape;
-	import com.gestureworks.core.CML;
-	import flash.geom.Vector3D;
 	import flash.display.Sprite;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.DisplayObject;
+	import flash.display.Graphics;
+	
+	import flash.geom.Vector3D;
 	import flash.text.*;
 	
-	
+	import com.gestureworks.managers.MotionPointHistories;
+	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	
 	import com.gestureworks.objects.MotionPointObject;
-	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.ClusterObject;
+	
 	import com.gestureworks.utils.AddSimpleText;
 	
-	
-	import com.leapmotion.leap.events.LeapEvent;
-	import com.leapmotion.leap.LeapMotion;
-	import com.leapmotion.leap.*;
-	import com.leapmotion.leap.events.*;
-	import com.leapmotion.leap.util.*;
-	
-	
 
-	public class PointVisualizer extends Sprite//Shape
+
+	public class PointVisualizer extends Sprite//Shape//Container
 	{
 		private static var cml:XMLList;
 		public var style:Object; // public allows override of cml values
@@ -93,9 +92,9 @@ package com.gestureworks.utils
 				// create text fields
 				for (var i:int = 0; i < 12; i++) 
 				{
-					mptext_array[i] = new AddSimpleText(600, 100, "left", 0x777777, 18);
+					mptext_array[i] = new AddSimpleText(500, 100, "left", 0x777777, 12);
 						//mptext_array[i].mouseChildren = true;
-					tptext_array[i] = new AddSimpleText(200, 100, "left", 0x000000, 18);
+					tptext_array[i] = new AddSimpleText(200, 100, "left", 0x000000, 12);
 						//tptext_array[i].mouseChildren = true;
 					addChild(tptext_array[i]);
 					addChild(mptext_array[i]);
@@ -285,7 +284,12 @@ package com.gestureworks.utils
 											graphics.endFill();
 											
 											//drawPoints ID of point
-											mptext_array[i].textCont = "Finger: " + "ID" + String(mp.motionPointID) + "    id: " + String(mp.id) + "  thumb prob: " + Math.round(100*mp.thumb_prob)*0.01 +   "\n" + "length: "+ Math.round(100*mp.normalized_length)*0.01 +"   palm angle: " + Math.round(100*mp.normalized_palmAngle)*0.01;
+											mptext_array[i].textCont = " Finger: " + "ID:" + String(mp.motionPointID) + "   id: " + String(mp.id) + "  thumb prob: " + (Math.round(100 * mp.thumb_prob)) * 0.01 +   "\n" 
+																	+ " Nlength: "+ (Math.round(100*mp.normalized_length))*0.01 + "  N palm angle: " + (Math.round(100*mp.normalized_palmAngle))*0.01 +   "\n" 
+																	+ " length: " + (Math.round(100 * mp.length)) * 0.01;
+											
+																	// + "  palm angle: " + (Math.round(100*mp.palmAngle))*0.01;
+																	//" width: "+ Math.round(100*mp.width)*0.01 +
 											mptext_array[i].x = mp.position.x;
 											mptext_array[i].y = mp.position.y - 50;
 											mptext_array[i].visible = true;

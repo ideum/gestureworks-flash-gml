@@ -13,13 +13,14 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
-package com.gestureworks.utils
+package com.gestureworks.analysis
 {
 	import flash.display.Shape;
 	import com.gestureworks.core.CML;
 	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.ClusterObject;
 	

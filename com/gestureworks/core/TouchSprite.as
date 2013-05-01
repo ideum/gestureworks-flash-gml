@@ -15,16 +15,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
-	import com.gestureworks.objects.PointPairObject;
+	
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	import org.tuio.TuioTouchEvent;
-	
-	import com.gestureworks.cml.utils.CloneUtils;
-	import com.gestureworks.utils.GestureParser;
-	import com.gestureworks.utils.MousePoint;
 	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
@@ -33,6 +29,8 @@ package com.gestureworks.core
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchTransform;
+	import com.gestureworks.core.TouchVisualizer;
+	
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.MouseManager;
@@ -46,12 +44,14 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.objects.PointPairObject;
+	
+	import com.gestureworks.cml.utils.CloneUtils;
 	import com.gestureworks.utils.GestureParser;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.events.TouchEvent;
-	import flash.geom.Point;
-	import org.tuio.TuioTouchEvent;
+	import com.gestureworks.utils.MousePoint;
+	import com.gestureworks.utils.GestureParser;
+	
+	
 	
 	
 	
@@ -99,7 +99,7 @@ package com.gestureworks.core
 		public var tp:TouchPipeline;
 		public var tg:TouchGesture;
 		public var tt:TouchTransform;
-		public var td:TouchDebugDisplay;
+		public var td:TouchVisualizer;
 		
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
@@ -205,7 +205,7 @@ package com.gestureworks.core
 					if (gestureEvents)	tg = new TouchGesture(touchObjectID);
 										tt = new TouchTransform(touchObjectID);
 					//if (debugDisplay)	
-					td = new TouchDebugDisplay(touchObjectID);
+					td = new TouchVisualizer(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////

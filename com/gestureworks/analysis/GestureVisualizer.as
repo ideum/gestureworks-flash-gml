@@ -13,22 +13,26 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
-package com.gestureworks.utils
+package com.gestureworks.analysis
 {
-	import flash.display.Sprite;
+	import flash.display.Shape;
 	import flash.geom.Vector3D;
 	
 	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
+	
 	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.MotionPointObject;
+	//import com.gestureworks.objects.SensorPointObject;
+	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.objects.StrokeObject;
-	import com.gestureworks.objects.MotionPointObject;
+	
 	
 
-	public class GestureVisualizer extends Sprite
+	public class GestureVisualizer extends Shape
 	{	
 		private static var cml:XMLList;
 		private var style:Object;
@@ -166,8 +170,6 @@ package com.gestureworks.utils
 		// draw orientation data
 		///////////////////////////////////////////////////////////////////////////////////
 			
-			/////////////////////////////////////////////////////////////////////////////
-			// draw orientation		
 			if (N == 5)
 			{
 				// draw thimb ring
@@ -188,11 +190,9 @@ package com.gestureworks.utils
 			///////////////////////////////////////////////////////////////////////////////////
 			// draw stroke data
 			///////////////////////////////////////////////////////////////////////////////////
-			///////////////////////////////////////////////////////////////////////////////////////
-						
-				// draw stroke
-				if((N)&&(path_data)){
-						
+				
+				if ((N) && (path_data))
+				{	
 				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
 							
 					// SAMPLE PATH

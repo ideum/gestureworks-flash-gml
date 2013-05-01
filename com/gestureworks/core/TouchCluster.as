@@ -478,15 +478,14 @@ package com.gestureworks.core
 							if (g.algorithm_class == "3d_kinemetric")
 							{
 								
-									//cluster_kinemetric.find3DThumbPoints();
-									//cluster_kinemetric.find3DNearestPoint()
-								
-								cluster_kinemetric.clearMotionPointData();
-									
+								cluster_kinemetric.clearMotionPointData();	
 								cluster_kinemetric.normalizeFingerSize();
+								cluster_kinemetric.findThumb();
 								
-								cluster_kinemetric.find3DBestPointPairs();
+								cluster_kinemetric.find3DPinchPoints(); 
+								cluster_kinemetric.find3DTriggerPoints(); 
 								
+								cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
 								
 								///cluster_kinemetric.find3DPointPairList();
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
