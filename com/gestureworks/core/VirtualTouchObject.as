@@ -45,7 +45,7 @@ package com.gestureworks.core
 		public var tp:TouchPipeline;
 		public var tg:TouchGesture;
 		public var tt:TouchTransform;
-		public var td:TouchDebugDisplay;
+		public var visualizer:TouchVisualizer;
 				
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
@@ -149,7 +149,7 @@ package com.gestureworks.core
 								tp = new TouchPipeline(touchObjectID);
 			if (gestureEvents)	tg = new TouchGesture(touchObjectID);
 								tt = new TouchTransform(touchObjectID);
-			if (debugDisplay)	td = new TouchDebugDisplay(touchObjectID);
+								visualizer = new TouchVisualizer(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
@@ -876,7 +876,7 @@ package com.gestureworks.core
 	
 	public function updateDebugDisplay():void
 	{
-		if(td) td.updateDebugDisplay()
+		if (visualizer) visualizer.updateDebugDisplay();
 	}
 	
 	private function onGestureListUpdate(event:GWGestureEvent):void  

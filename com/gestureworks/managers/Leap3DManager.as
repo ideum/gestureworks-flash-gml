@@ -1,7 +1,6 @@
 package com.gestureworks.managers 
 {
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.cml.utils.NumberUtils;
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
@@ -92,13 +91,13 @@ package com.gestureworks.managers
 								{
 									//mp.handID = event.frame.hand[i].id;
 									
-									mp.position.x = NumberUtils.map(event.frame.hands[i].palmPosition.x, -180, 180, 0, stage.stageWidth);
-									mp.position.y = NumberUtils.map(event.frame.hands[i].palmPosition.y, 75, 270, stage.stageHeight, 0);
+									mp.position.x = map(event.frame.hands[i].palmPosition.x, -180, 180, 0, stage.stageWidth);
+									mp.position.y = map(event.frame.hands[i].palmPosition.y, 75, 270, stage.stageHeight, 0);
 									mp.position.z = event.frame.hands[i].palmPosition.z;
 									
 									//mp.direction = new Vector3D(event.frame.hands[i].direction.x, event.frame.hands[i].direction.y, event.frame.hands[i].direction.z);
-									mp.direction.x = NumberUtils.map(event.frame.hands[i].direction.x, -180, 180, 0, stage.stageWidth)
-									mp.direction.y = NumberUtils.map(event.frame.hands[i].direction.y,75, 270, stage.stageHeight, 0);
+									mp.direction.x = map(event.frame.hands[i].direction.x, -180, 180, 0, stage.stageWidth)
+									mp.direction.y = map(event.frame.hands[i].direction.y,75, 270, stage.stageHeight, 0);
 									mp.direction.z = event.frame.hands[i].direction.z;
 								
 									
@@ -108,9 +107,9 @@ package com.gestureworks.managers
 									mp.velocity = new Vector3D(event.frame.hands[i].palmVelocity.x,event.frame.hands[i].palmVelocity.y,event.frame.hands[i].palmVelocity.z);
 									
 									//mp.sphereCenter = new Vector3D(event.frame.hands[i].sphereCenter.x,event.frame.hands[i].sphereCenter.y,event.frame.hands[i].sphereCenter.z);
-									mp.sphereCenter.x = NumberUtils.map(event.frame.hands[i].sphereCenter.x, -180, 180, 0, stage.stageWidth);
-									mp.sphereCenter.y = NumberUtils.map(event.frame.hands[i].sphereCenter.y, 75, 270, stage.stageHeight, 0);
-									mp.sphereCenter.z = event.frame.hands[i].sphereCenter.z//NumberUtils.map(event.frame.hands[i].sphereCenter.z, 75, 270, stage.stageHeight, 0);
+									mp.sphereCenter.x = map(event.frame.hands[i].sphereCenter.x, -180, 180, 0, stage.stageWidth);
+									mp.sphereCenter.y = map(event.frame.hands[i].sphereCenter.y, 75, 270, stage.stageHeight, 0);
+									mp.sphereCenter.z = event.frame.hands[i].sphereCenter.z//map(event.frame.hands[i].sphereCenter.z, 75, 270, stage.stageHeight, 0);
 									mp.sphereRadius = event.frame.hands[i].sphereRadius
 								}
 							}
@@ -125,8 +124,8 @@ package com.gestureworks.managers
 							}
 							
 							// position
-							mp.position.x = NumberUtils.map(event.frame.pointable(aid).tipPosition.x, -180, 180, 0, stage.stageWidth);
-							mp.position.y = NumberUtils.map(event.frame.pointable(aid).tipPosition.y, 75, 270, stage.stageHeight, 0);
+							mp.position.x = map(event.frame.pointable(aid).tipPosition.x, -180, 180, 0, stage.stageWidth);
+							mp.position.y = map(event.frame.pointable(aid).tipPosition.y, 75, 270, stage.stageHeight, 0);
 							mp.position.z = event.frame.pointable(aid).tipPosition.z;
 							
 							mp.direction = new Vector3D(event.frame.pointable(aid).direction.x, event.frame.pointable(aid).direction.y, event.frame.pointable(aid).direction.z);
@@ -167,23 +166,23 @@ package com.gestureworks.managers
 								if (pid == event.frame.hands[k].id) 
 								{
 								//mp.handID = event.frame.hands[k].id;
-								mp.position.x = NumberUtils.map(event.frame.hands[k].palmPosition.x, -180, 180, 0, stage.stageWidth)
-								mp.position.y = NumberUtils.map(event.frame.hands[k].palmPosition.y, 75, 270, stage.stageHeight, 0);
+								mp.position.x = map(event.frame.hands[k].palmPosition.x, -180, 180, 0, stage.stageWidth)
+								mp.position.y = map(event.frame.hands[k].palmPosition.y, 75, 270, stage.stageHeight, 0);
 								mp.position.z = event.frame.hands[k].palmPosition.z
 								
 								//mp.direction = new Vector3D(event.frame.hands[k].direction.x, event.frame.hands[k].direction.y, event.frame.hands[k].direction.z);
 								
-								mp.direction.x = NumberUtils.map(event.frame.hands[k].direction.x, -180, 180, 0, stage.stageWidth)
-								mp.direction.y = NumberUtils.map(event.frame.hands[k].direction.y,75, 270, stage.stageHeight, 0);
+								mp.direction.x = map(event.frame.hands[k].direction.x, -180, 180, 0, stage.stageWidth)
+								mp.direction.y = map(event.frame.hands[k].direction.y,75, 270, stage.stageHeight, 0);
 								mp.direction.z = event.frame.hands[k].direction.z;
 								
 								
 								mp.normal = new Vector3D(event.frame.hands[k].palmNormal.x,event.frame.hands[k].palmNormal.y,event.frame.hands[k].palmNormal.z);
 								mp.velocity = new Vector3D(event.frame.hands[k].palmVelocity.x,event.frame.hands[k].palmVelocity.y,event.frame.hands[k].palmVelocity.z);
 								
-								mp.sphereCenter.x = NumberUtils.map(event.frame.hands[k].sphereCenter.x, -180, 180, 0, stage.stageWidth);
-								mp.sphereCenter.y = NumberUtils.map(event.frame.hands[k].sphereCenter.y, 75, 270, stage.stageHeight, 0);
-								mp.sphereCenter.z = event.frame.hands[k].sphereCenter.z//NumberUtils.map(event.frame.hands[k].sphereCenter.z, 75, 270, stage.stageHeight, 0);
+								mp.sphereCenter.x = map(event.frame.hands[k].sphereCenter.x, -180, 180, 0, stage.stageWidth);
+								mp.sphereCenter.y = map(event.frame.hands[k].sphereCenter.y, 75, 270, stage.stageHeight, 0);
+								mp.sphereCenter.z = event.frame.hands[k].sphereCenter.z//map(event.frame.hands[k].sphereCenter.z, 75, 270, stage.stageHeight, 0);
 								mp.sphereRadius = event.frame.hands[k].sphereRadius;
 								}
 							}
@@ -199,9 +198,9 @@ package com.gestureworks.managers
 						}
 						
 						//mp.handID = event.frame.pointable(pid).hand.id;
-						mp.position.x = NumberUtils.map(event.frame.pointable(pid).tipPosition.x, -180, 180, 0, stage.stageWidth);
-						mp.position.y = NumberUtils.map(event.frame.pointable(pid).tipPosition.y, 75, 270, stage.stageHeight, 0);
-						mp.position.z = event.frame.pointable(pid).tipPosition.z//NumberUtils.map(tip.z, 75, 270, stage.stageHeight, 0);
+						mp.position.x = map(event.frame.pointable(pid).tipPosition.x, -180, 180, 0, stage.stageWidth);
+						mp.position.y = map(event.frame.pointable(pid).tipPosition.y, 75, 270, stage.stageHeight, 0);
+						mp.position.z = event.frame.pointable(pid).tipPosition.z//map(tip.z, 75, 270, stage.stageHeight, 0);
 						
 						mp.direction = new Vector3D(event.frame.pointable(pid).direction.x, event.frame.pointable(pid).direction.y, event.frame.pointable(pid).direction.z);
 						mp.velocity = new Vector3D(event.frame.pointable(pid).tipVelocity.x,event.frame.pointable(pid).tipVelocity.y,event.frame.pointable(pid).tipVelocity.z);

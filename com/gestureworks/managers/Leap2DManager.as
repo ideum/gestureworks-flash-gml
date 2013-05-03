@@ -2,8 +2,6 @@ package com.gestureworks.managers
 {
 
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.cml.utils.NumberUtils;
-
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.leapmotion.leap.events.LeapEvent;

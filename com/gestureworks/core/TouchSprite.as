@@ -46,7 +46,6 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.objects.PointPairObject;
 	
-	import com.gestureworks.cml.utils.CloneUtils;
 	import com.gestureworks.utils.GestureParser;
 	import com.gestureworks.utils.MousePoint;
 	import com.gestureworks.utils.GestureParser;
