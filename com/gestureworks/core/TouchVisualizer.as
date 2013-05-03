@@ -161,7 +161,7 @@ package com.gestureworks.core
 					if (pointDisplay) 
 					{
 						point = new PointVisualizer(id);
-							point.setStyles();
+							//point.init();
 						debug_display.addChild(point);
 					}
 					
@@ -171,7 +171,6 @@ package com.gestureworks.core
 					if (clusterDisplay) 
 					{	
 						cluster = new ClusterVisualizer(id);
-							cluster.setStyles();
 							cluster.init();
 						debug_display.addChild(cluster);
 						
@@ -184,7 +183,6 @@ package com.gestureworks.core
 					if (gestureDisplay)
 					{	
 						gesture = new GestureVisualizer(id);
-							//gesture_display.setStyles();
 							gesture.init();
 						debug_display.addChild(gesture);
 					}

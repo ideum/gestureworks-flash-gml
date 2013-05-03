@@ -306,7 +306,8 @@ package com.gestureworks.core
 				
 				if (trace_debug_mode) gp.traceGesturePropertyList();
 				
-			//initBase();
+			//tp re init vector metric and get new stroke lib for comparison
+			if (tc) tc.initClusterAnalysisConfig();
 		}
 		/**
 		 * @private

@@ -116,11 +116,12 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		private function initClusterAnalysisConfig():void
+		// internal public
+		public function initClusterAnalysisConfig():void
 			{
 				// analyzes and characterizes multi-point motion
 				if (kinemetricsOn)		cluster_kinemetric.init();
-				//if (vectormetricsOn)	cluster_vectormetric.init();
+				if (vectormetricsOn)	cluster_vectormetric.init();
 				//if(geometricsOn)		//cluster_geometric.init();
 							
 		}
@@ -379,8 +380,14 @@ package com.gestureworks.core
 								
 										var hold_number:int = ts.N;//gO.pOList[key].n; // REDUNDANT AS ONLY CALLED IF MEETS N CRITERIA
 										var hold_dist:int = g.point_translation_max;
-										var	hold_time:int = Math.ceil(g.point_event_duration_min/ GestureGlobals.touchFrameInterval);
-									
+										
+										//HOLD TIME MEASURED IN FRAMES
+										//var	hold_time:int = Math.ceil(g.point_event_duration_min/ GestureGlobals.touchFrameInterval);
+										var	hold_time:int = Math.ceil(g.point_event_duration_min * GestureWorks.application.frameRate * 0.001)
+										
+										//var t = 1 / GestureWorks.application.frameRate;
+										
+										//trace("hold ",GestureGlobals.touchFrameInterval,hold_time,g.point_event_duration_min,GestureWorks.application.frameRate,t)
 										cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);	
 										
 										if(!cO.hold_n)	g.activeEvent = false;

@@ -16,12 +16,14 @@
 package com.gestureworks.analysis
 {
 	import flash.display.Shape;
-	import com.gestureworks.core.CML;
+	import flash.geom.Vector3D;
 	
+	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
 	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	
 	public class ClusterVisualizer extends Shape
@@ -107,9 +109,16 @@ package com.gestureworks.analysis
 	{
 		//trace("init")
 		cO = GestureGlobals.gw_public::clusters[id];
-	}		
+	}
 	
 	public function draw():void
+	{
+		drawTouch();
+		drawMotion();
+		//drawSensor();
+	}
+	
+	private function drawTouch():void
 	{	
 		if (cO.pointArray)
 			{
@@ -288,35 +297,96 @@ package com.gestureworks.analysis
 			}
 			}
 	}
-		
+	
+	private function drawMotion():void
+		{
+		var mpn:int = cO.motionArray.length;
 
-	
-	
-	public function setStyles():void
-	{
-		cml = new XMLList(CML.Objects)
-		var numLayers:int = cml.DebugKit.DebugLayer.length()
+				for (var i:int = 0; i < mpn; i++) 
+					{
+							var mp:MotionPointObject = cO.motionArray[i];
+								
+								if (_drawWeb)
+								{	
+									var pmp:MotionPointObject = GestureGlobals.gw_public::motionPoints[mp.handID]											
+									if (pmp)
+									{
+										// draw line to palm point
+										graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
+										graphics.moveTo(mp.position.x , mp.position.y);
+										graphics.lineTo(pmp.position.x , pmp.position.y);
+									}
+								}	
+									
+								// draw thumb
+								if ((_drawThumb)&&(mp.fingertype == "thumb")) 
+									{
+									///////////////////////////////////////////////////////
+									// draw thumb
+									///////////////////////////////////////////////////////
+									var w:int = 50;
+									graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
+									//graphics.drawCircle(mp.position.x , mp.position.y, style.radius + 10);
+									graphics.drawRect(mp.position.x - w, mp.position.y - w, 2 * w, 2 * w);
+								}
 		
-		for (var i:int = 0; i < numLayers; i++) {
-			var type:String = cml.DebugKit.DebugLayer[i].attribute("type")
+								
+								if ((_drawPalm)&&(mp.type == "palm"))
+									{
+										var hz:Number = mp.position.z
+										var hr:Number = mp.sphereRadius * 0.5 + hz;
+										var sq_width:Number = 5;
+											
+										/////////////////// move to cluster
+										// palm radius 
+										graphics.lineStyle(4, 0x716BE3, style.stroke_alpha);
+										graphics.drawCircle(mp.position.x , mp.position.y, hr);
+										
+										//sphere
+										graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
+										graphics.drawCircle(mp.sphereCenter.x , mp.sphereCenter.y, mp.sphereRadius);
+									}
+								
+								
+					}
 			
-			if (type == "cluster_display") {
-				//trace("point display style");
-				//obj.displayOn = cml.DebugKit.DebugLayer[i].attribute("displayOn")//3;
-				
-				//obj.stroke_thickness = cml.DebugKit.DebugLayer[i].attribute("stroke_thickness")//3;
-				//obj.stroke_color = cml.DebugKit.DebugLayer[i].attribute("stroke_color")//0xFFFFFF;
-				//obj.stroke_alpha = cml.DebugKit.DebugLayer[i].attribute("stroke_alpha")//1;
-				//obj.radius = cml.DebugKit.DebugLayer[i].attribute("radius")//20;
-				//obj.height = cml.DebugKit.DebugLayer[i].attribute("height")//20;
-				//obj.width = cml.DebugKit.DebugLayer[i].attribute("width")//20;
-				//obj.width = cml.DebugKit.DebugLayer[i].attribute("shape")//20;
-
-				//trace(obj.filter)
-			}
-		}
+					
+					
+					
+					////////////////////////////////////////////////////////////////
+					// motion point piars 
+					///////////////////////////////////////////////////////////////
+					if(_drawPairs){
+					var lines:int = cO.pairList.length//cO.motionArray.length
+					
+						//trace("pair list length",lines,cO.pairList.length)
+						if (lines <= cO.pairList.length)
+						{
+							//trace("ggg");
+							for (var pn:int = 0; pn < lines; pn++) //5
+							//for (var pn:int = 0; pn < cO.motionArray.length-2; pn++) //4
+							{
+								var pA:MotionPointObject = cO.pairList[pn].pointA;
+								var pB:MotionPointObject = cO.pairList[pn].pointB;
+								
+								//trace(pA,pB);
+								
+								if ((pA!=undefined) && (pB!=undefined))
+								{
+									var mpA:Vector3D = pA.position;
+									var mpB:Vector3D = pB.position;
+							
+										graphics.lineStyle(4, 0x0000FF, 0.5);
+										graphics.moveTo (mpA.x, mpA.y);
+										graphics.lineTo (mpB.x, mpB.y);
+										
+										//trace(mpB.x,mpB.y,mpB.x,mpA.y)
+								}
+							}
+						}
+					}
+					/////////////////////////////////////////////////////////////////////
 	}
-	
 
 	public function clear():void
 	{
@@ -391,6 +461,38 @@ package com.gestureworks.analysis
 	*/
 	public function get drawSeparation():Boolean { return _drawSeparation; }
 	public function set drawSeparation(value:Boolean):void { _drawSeparation = value; }
+	
+	
+	/**
+	* @private
+	*/
+	private var _drawPairs:Boolean = true;
+	/**
+	* draw point Pairs.
+	*/
+	public function get drawPairs():Boolean { return _drawPairs; }
+	public function set drawPairs(value:Boolean):void { _drawPairs = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawThumb:Boolean = true;
+	/**
+	* draw thumb.
+	*/
+	public function get drawThumb():Boolean { return _drawThumb; }
+	public function set drawThumb(value:Boolean):void { _drawThumb = value; }
+	
+	
+	/**
+	* @private
+	*/
+	private var _drawPalm:Boolean = true;
+	/**
+	* draw Palm.
+	*/
+	public function get drawPalm():Boolean { return _drawPalm; }
+	public function set drawPalm(value:Boolean):void { _drawPalm = value; }
 	
 	
 	

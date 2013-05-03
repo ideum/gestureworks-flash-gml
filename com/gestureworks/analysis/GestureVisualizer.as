@@ -47,7 +47,7 @@ package com.gestureworks.analysis
 		
 		public function GestureVisualizer(ID:Number)
 		{
-			trace("gesture visualizer");
+			//trace("gesture visualizer");
 			id = ID;
 			
 			/////////////////////////////////////////////
@@ -79,8 +79,7 @@ package com.gestureworks.analysis
 		N = pointList.length;
 		path_data = sO.path_data 
 		
-		
-		setStyles();
+		// clear
 		graphics.clear();
 		
 		// draw
@@ -241,99 +240,39 @@ package com.gestureworks.analysis
 							
 				}
 				
+				////////////////////////////////////////////////////////////////////////////////////////////
+				//discrete drawing methods
+				//appear then fade out
+				
+				// 1 create on gesture event draw on gesture coordinates
+				// 2 track no move redraw (make reusable stack)
+				// 3 fade out / animate riple
+				
+				
+				// draw flick (5)
+				
+				// draw swipe (5)
+				
+				// draw scroll // vert/horiz
+				
+				
+				// draw tap (10)
+			
+				// draw double tap (10)
+				
+				// draw hold 
+				
+				
+				//sequence 
+				// draw hold tap
+				// draw hold flick
 				
 		}
 	}
 			
 	private function draw_motion_gesture():void 
 	{	
-		//trace("MOTION CLUSTER DRAW");
-					/*
-					// point pairs
-					for (var pn:int = 0; pn < cO.motionArray.length; pn++) 
-						{
-							if (cO.motionArray[pn].type == "finger")
-								{
-								var mp:MotionPointObject = cO.motionArray[pn];
-								var nnd_mp:MotionPointObject = GestureGlobals.gw_public::motionPoints[mp.nndID];
-								var nnda_mp:MotionPointObject = GestureGlobals.gw_public::motionPoints[mp.nndaID];
-								//var nnda_mp:MotionPointObject = GestureGlobals.gw_public::motionPoints[mp.nnpaID];
-								var nnp_mp:MotionPointObject = GestureGlobals.gw_public::motionPoints[mp.nnprobID];
-								
-								var mpv:Vector3D = mp.position;
-								
-								
-								if (nnp_mp){ // white prob
-									
-									var nnp_mpv:Vector3D = nnp_mp.position;
-									
-									// dist based point pair
-									graphics.lineStyle(4, 0xF0F0F0, 0.5);
-									graphics.moveTo (mpv.x, mpv.y);
-									graphics.lineTo (nnp_mpv.x , nnp_mpv.y);							
-								}
-								
-								// light blue
-								//graphics.lineStyle(4, 0x00FFFF, 0.5);
-								
-								if (nnd_mp){ // dark blue
-									var nnd_mpv:Vector3D = nnd_mp.position;
 
-									// dist based point pair
-									graphics.lineStyle(4, 0x0000FF, 0.5);
-									//graphics.moveTo (mpv.x + 100, mpv.y+100);
-									//graphics.lineTo (nnd_mpv.x +100, nnd_mpv.y + 100);
-									
-									graphics.moveTo (mpv.x, mpv.y);
-									graphics.lineTo (nnd_mpv.x, nnd_mpv.y);
-								}
-								
-								if (nnda_mp){ //pink
-									var nnda_mpv:Vector3D = nnda_mp.position;
-									
-									// dist based point pair
-									graphics.lineStyle(4, 0xF000F0, 0.5);
-									graphics.moveTo (mpv.x + 50, mpv.y + 50);
-									graphics.lineTo (nnda_mpv.x+50 , nnda_mpv.y+50);
-								}
-							}
-						}*/
-						
-						
-						//for (var pn:int = 0; pn < cO.pairList.length; pn++) //10
-						
-					//
-					var lines:int = cO.pairList.length//cO.motionArray.length
-					
-					//trace("pair list length",lines,cO.pairList.length)
-					
-					if (lines <= cO.pairList.length)
-					{
-						//trace("ggg");
-						for (var pn:int = 0; pn < lines; pn++) //5
-						//for (var pn:int = 0; pn < cO.motionArray.length-2; pn++) //4
-						{
-							var pA:MotionPointObject = cO.pairList[pn].pointA;
-							var pB:MotionPointObject = cO.pairList[pn].pointB;
-							
-							//trace(pA,pB);
-							
-							if ((pA!=undefined) && (pB!=undefined))
-							{
-								var mpA:Vector3D = pA.position;
-								var mpB:Vector3D = pB.position;
-						
-									graphics.lineStyle(4, 0x0000FF, 0.5);
-									graphics.moveTo (mpA.x, mpA.y);
-									graphics.lineTo (mpB.x, mpB.y);
-									
-									//trace(mpB.x,mpB.y,mpB.x,mpA.y)
-							}
-						}
-					}
-					
-					
-					
 					//////////////////////////////////////////////////////////////
 					// bimanual manipulation data 
 					// interaction point cluster manipulatio data	
@@ -396,32 +335,6 @@ package com.gestureworks.analysis
 	}
 
 	
-	public function setStyles():void
-	{
-		cml = new XMLList(CML.Objects)
-		var numLayers:int = cml.DebugKit.DebugLayer.length()
-		
-		for (var i:int = 0; i < numLayers; i++) {
-			var type:String = cml.DebugKit.DebugLayer[i].attribute("type")
-			
-			if (type == "touchobject_pivot") {
-				//trace("touch object pivot")
-				
-				//obj.stroke_thickness = cml.DebugKit.DebugLayer[i].attribute("stroke_thickness")//3;
-				//obj.stroke_color = cml.DebugKit.DebugLayer[i].attribute("stroke_color")//0xFFFFFF;
-				//obj.stroke_alpha = cml.DebugKit.DebugLayer[i].attribute("stroke_alpha")//1;
-				//obj.fill_color = cml.DebugKit.DebugLayer[i].attribute("fill_color")//0xFFFFFF;
-				//obj.fill_alpha = cml.DebugKit.DebugLayer[i].attribute("fill_alpha")//1;
-				//obj.text_color = cml.DebugKit.DebugLayer[i].attribute("text_color")//0xFFFFFF;
-				//obj.text_size = cml.DebugKit.DebugLayer[i].attribute("text_size")//12;
-				//obj.text_alpha = cml.DebugKit.DebugLayer[i].attribute("text_alpha")//1;
-				//obj.indicators = cml.DebugKit.DebugLayer[i].attribute("indicators")//"true";
-				//obj.radius = cml.DebugKit.DebugLayer[i].attribute("radius");
-			}
-		}
-	}
-	
-	
 	
 	/**
 	* @private
@@ -472,7 +385,6 @@ package com.gestureworks.analysis
 	*/
 	public function get drawPivot():Boolean { return _drawPivot; }
 	public function set drawPivot(value:Boolean):void { _drawPivot = value; }
-	
 	
 	
 	

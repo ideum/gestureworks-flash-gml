@@ -220,7 +220,7 @@ package com.gestureworks.analysis
 		//FIND STROKE MATCH FROM LOCAL TOUCH OBJECT PATH COLLECTION
 		public function findStrokeGesture():void
 		{
-			trace(sO.path_data_norm.length)
+			//trace(sO.path_data_norm.length)
 			var prob_min:Number = 0.6;
 			
 			/////////////////////////////////////
@@ -281,6 +281,8 @@ package com.gestureworks.analysis
 		var t:int;
 		var pn:uint = pathCollection.length;
 		
+		//trace("path comparison", pn);	
+		
 		for (var i:int = 0; i < pn; i++)
 		{
 			//var d:Number = PathDistance(path.collection, pathCollection[i].collection);
@@ -300,9 +302,7 @@ package com.gestureworks.analysis
 		}
 		
 		var score:Number = 1.0 - (b / HalfDiagonal);
-		
 		//trace(score,t);
-		
 		return {path: pathCollection[t], score: score,key:t};
 	}
 	
