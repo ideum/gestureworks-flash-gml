@@ -30,7 +30,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var ts:TouchSprite;
+		private var ts//TouchSprite;
 		/**
 		* @private
 		*/
@@ -42,15 +42,15 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var point_visualizer:PointVisualizer;
+		public var point:PointVisualizer;
 		/**
 		* @private
 		*/
-		private var cluster_visualizer:ClusterVisualizer;
+		public var cluster:ClusterVisualizer;
 		/**
 		* @private
 		*/
-		private var gesture_visualizer:GestureVisualizer;
+		public var gesture:GestureVisualizer;
 		/**
 		* @private
 		*/
@@ -63,9 +63,6 @@ package com.gestureworks.core
 		* activates point visualization methods.
 		*/
 		public function get pointDisplay():Boolean { return _pointDisplay; }
-		/**
-		* activates point visualization methods.
-		*/
 		public function set pointDisplay(value:Boolean):void{_pointDisplay = value;}
 		/**
 		* @private
@@ -75,9 +72,6 @@ package com.gestureworks.core
 		* activates cluster visualization methods.
 		*/
 		public function get clusterDisplay():Boolean { return _clusterDisplay; }
-		/**
-		* activates cluster visualization methods.
-		*/
 		public function set clusterDisplay(value:Boolean):void { _clusterDisplay = value; }
 		/**
 		* @private
@@ -87,9 +81,6 @@ package com.gestureworks.core
 		* activates gesture visualization methods.
 		*/
 		public function get gestureDisplay():Boolean { return _gestureDisplay; }
-		/**
-		* activates gesture visualization methods.
-		*/
 		public function set gestureDisplay(value:Boolean):void{_gestureDisplay = value;}
 		
 		
@@ -131,6 +122,14 @@ package com.gestureworks.core
 		//trace("init debug cml vars");
 		//trace(_pointData,_panelData,_touchObjectData)
 		
+		ts.debugDisplay = true;
+		viewAlwaysOn = true;
+		//pointDisplay = true;
+		//clusterDisplay = true;
+		//gestureDisplay = true;
+		
+		
+		/*
 		if (CML.Objects != null) 
 		{
 			ts.cml = new XMLList(CML.Objects)
@@ -142,11 +141,12 @@ package com.gestureworks.core
 			for (var i:int = 0; i < numLayers; i++) {
 				var type:String = ts.cml.DebugKit.DebugLayer[i].attribute("type")
 			
-				if (type == "point") pointDisplay = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
-				if (type == "cluster") clusterDisplay = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
-				if (type == "gesture") gestureDisplay = ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
+				if (type == "point") pointDisplay = true//ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
+				if (type == "cluster") clusterDisplay = true//ts.cml.DebugKit.DebugLayer[i].attribute("displayOn") == "true" ?true:false;
+				if (type == "gesture") gestureDisplay = true//ts.cml.DebugKit.DebugLayer[i].attribute("displayOn")== "true" ?true:false;
 			}
 		}
+		*/
 		
 	}
 	public function initDebugDisplay():void 
@@ -160,9 +160,9 @@ package com.gestureworks.core
 					/////////////////////////////////////////////////////////////////
 					if (pointDisplay) 
 					{
-						point_visualizer = new PointVisualizer(id);
-							point_visualizer.setStyles();
-						debug_display.addChild(point_visualizer);
+						point = new PointVisualizer(id);
+							point.setStyles();
+						debug_display.addChild(point);
 					}
 					
 					////////////////////////////////////////////////////////////////////
@@ -170,10 +170,10 @@ package com.gestureworks.core
 					////////////////////////////////////////////////////////////////////
 					if (clusterDisplay) 
 					{	
-						cluster_visualizer = new ClusterVisualizer(id);
-							cluster_visualizer.setStyles();
-							cluster_visualizer.init();
-						debug_display.addChild(cluster_visualizer);
+						cluster = new ClusterVisualizer(id);
+							cluster.setStyles();
+							cluster.init();
+						debug_display.addChild(cluster);
 						
 						// NOTE ADD CLUSTER VECTORS
 					}
@@ -183,10 +183,10 @@ package com.gestureworks.core
 					////////////////////////////////////////////////////////////////////////
 					if (gestureDisplay)
 					{	
-						gesture_visualizer = new GestureVisualizer(id);
-							//gesture_visualizer.setStyles();
-							gesture_visualizer.init();
-						debug_display.addChild(gesture_visualizer);
+						gesture = new GestureVisualizer(id);
+							//gesture_display.setStyles();
+							gesture.init();
+						debug_display.addChild(gesture);
 					}
 			}
 	}
@@ -203,26 +203,26 @@ package com.gestureworks.core
 			// touch points
 			if (ts.N)
 			{
-				if (pointDisplay) 	point_visualizer.draw();
-				if (clusterDisplay)	cluster_visualizer.draw();
-				if (gestureDisplay) gesture_visualizer.draw();
+				if ((pointDisplay)&&(point)) 		point.draw();
+				if ((clusterDisplay)&&(cluster))	cluster.draw();
+				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 				
 			}
 			
 			// motion points
 			if (ts.cO.fn) 
 			{	
-				if (pointDisplay)	point_visualizer.draw();
-				if (clusterDisplay)	cluster_visualizer.draw();
-				if (gestureDisplay) gesture_visualizer.draw();
+				if ((pointDisplay)&&(point))		point.draw();
+				if ((clusterDisplay)&&(cluster))	cluster.draw();
+				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 			}
 			
 			//sensor points
 			//if (ts.cO.sn) 
 			//{	
-				//if (pointDisplay)	point_visualizer.draw();
-				//if (clusterDisplay)	cluster_visualizer.draw();
-				//if (gestureDisplay) gesture_visualizer.draw();
+				//if (pointDisplay)	point_display.draw();
+				//if (clusterDisplay)	cluster_display.draw();
+				//if (gestureDisplay) gesture_display.draw();
 			//}
 		}
 	}
@@ -234,9 +234,9 @@ package com.gestureworks.core
 		//if(trace_debug_mode) trace("trying to clear debug display",touchObjectID)
 		if ((ts.debugDisplay)&&(debug_display))
 		{
-			if (pointDisplay) 	point_visualizer.clear();
-			if (clusterDisplay) cluster_visualizer.clear();
-			if (gestureDisplay) gesture_visualizer.clear();
+			if (point) 	point.clear();
+			if (cluster) cluster.clear();
+			if (gesture) gesture.clear();
 		}
 	}
 	/**

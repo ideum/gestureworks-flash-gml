@@ -21,7 +21,12 @@ package com.gestureworks.objects
 		// gesture id
 		private var _gesture_id:String;
 		public function get gesture_id():String{return _gesture_id;}
-		public function set gesture_id(value:String):void{	_gesture_id = value;}
+		public function set gesture_id(value:String):void {	_gesture_id = value; }
+		
+		// gesture xml block
+		private var _gesture_xml:XML;
+		public function get gesture_xml():XML{return _gesture_xml;}
+		public function set gesture_xml(value:XML):void{	_gesture_xml = value;}
 		
 		// SHOULD MOVE TO GESTURE EVENT OBJECT
 		// activeEvent
@@ -261,7 +266,13 @@ package com.gestureworks.objects
 		
 		// SHOULD MOVE TO GESTURE EVENT OBJECT
 		///////////////////////////////////////////////////
-		// GESTURE EVENT PHASE LOGIC
+		// GESTURE EVENT PHASE LOGIC 
+		// 0 null
+		// 1 start 
+		// 2 active 
+		// 3 release
+		// 4 passive
+		// 5 complete
 		///////////////////////////////////////////////////
 		// start
 		private var _start:Boolean = false;

@@ -91,7 +91,7 @@ package com.gestureworks.core
 		public var tp:TouchPipeline;
 		public var tg:TouchGesture;
 		public var tt:TouchTransform;
-		public var td:TouchVisualizer;
+		public var visualizer:TouchVisualizer;
 		
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
@@ -194,7 +194,7 @@ package com.gestureworks.core
 							tp = new TouchPipeline(touchObjectID);
 		if (gestureEvents)	tg = new TouchGesture(touchObjectID);
 							tt = new TouchTransform(touchObjectID);
-							td = new TouchVisualizer(touchObjectID);
+							visualizer = new TouchVisualizer(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
@@ -870,8 +870,6 @@ package com.gestureworks.core
 		public var _$rotationZ:Number = 0;
 		public var _$width:Number = 0;
 		public var _$height:Number = 0;
-		//private var t_x:Number = 0;
-		//private var t_y:Number =  0;
 		
 		
 		/**
@@ -888,7 +886,7 @@ package com.gestureworks.core
 
 	public function updateDebugDisplay():void
 	{
-		if(td) td.updateDebugDisplay()
+		if(visualizer) visualizer.updateDebugDisplay()
 	}
 	
 	private function onGestureListUpdate(event:GWGestureEvent):void  
@@ -905,7 +903,7 @@ package com.gestureworks.core
 		public function get gestureFilters():Boolean {return _gestureFilters;}	
 		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
 		
-		// BROAD CASTING TEST
+		// BROADCASTING TEST
 		private var _broadcastTarget:Boolean = false;
 		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
 		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}

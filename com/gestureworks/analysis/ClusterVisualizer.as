@@ -74,8 +74,6 @@ package com.gestureworks.analysis
 				style.fill_color = 0xFFAE1F;
 				style.fill_alpha = 0.9;
 				style.radius = 20;
-				style.height = 20;
-				style.width = 20;
 				
 				// circle
 				style.c_stroke_thickness = 16;
@@ -85,9 +83,9 @@ package com.gestureworks.analysis
 				style.web_shape = "starweb";
 
 				//orientation
-				style.t_stroke_thickness = 10;
-				style.t_stroke_color = 0xFF0000;
-				style.t_stroke_alpha = 0.5;
+				//style.t_stroke_thickness = 10;
+				//style.t_stroke_color = 0xFF0000;
+				//style.t_stroke_alpha = 0.5;
 				
 				// rotation
 				style.a_stroke_thickness = 2;
@@ -151,30 +149,35 @@ package com.gestureworks.analysis
 			// init
 			graphics.clear();
 			
+			if(_drawRadius){
 			// draw bounding circle
 			graphics.lineStyle(style.c_stroke_thickness,style.stroke_color,style.c_stroke_alpha);
 			graphics.drawCircle(_x, _y, _radius);
-			
+			}
 			
 			// set line style
 			graphics.lineStyle(style.stroke_thickness,style.stroke_color,style.stroke_alpha);
 			
+			if(_drawCenter){
 			// draw cluster center position
 			graphics.drawCircle(_x, _y, style.radius);
+			}
 			
+			if(_drawBisector){
 			// draw bi-sectors
 			graphics.moveTo(_x,_y+_height/2);
 			graphics.lineTo(_x,_y-_height/2);
 			graphics.moveTo(_x-_width/2,_y);
 			graphics.lineTo(_x + _width / 2, _y);
+			}
 			
-			
+			if(_drawBox){
 			// draw bunding box
 			graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
+			}
 			
+			if(_drawWeb){
 			// draw web links tyo center
-
-			
 			if (style.web_shape == "fullweb") {
 					for (var k:int=0; k<n; k++){
 							for (var l:int=0; l<n; l++){
@@ -193,12 +196,12 @@ package com.gestureworks.analysis
 						graphics.lineTo(pointList[p].x, pointList[p].y);
 					}
 			}
+			}
 			
-			
+			if(_drawRotation){
 			//////////////////////////////////////////////////////////////////////////////////
 			// draw rotation
 			//////////////////////////////////////////////////////////////////////////////////
-			
 			if (style.rotation_shape == "segment") {
 
 						//trace("redraw segment",orientation);
@@ -282,7 +285,8 @@ package com.gestureworks.analysis
 						graphics.endFill();
 					}
 				}	
-			}	
+			}
+			}
 	}
 		
 
@@ -320,6 +324,86 @@ package com.gestureworks.analysis
 	}
 	
 
+	
+	/**
+	* @private
+	*/
+	private var _drawBisector:Boolean = true;
+	/**
+	* draw cluster bisectors.
+	*/
+	public function get drawBisector():Boolean { return _drawBisector; }
+	public function set drawBisector(value:Boolean):void { _drawBisector = value; }
+	/**
+	* @private
+	*/
+	private var _drawRadius:Boolean = true;
+	/**
+	* draw cluster radius.
+	*/
+	public function get drawRadius():Boolean { return _drawRadius; }
+	public function set drawRadius(value:Boolean):void { _drawRadius = value; }
+	/**
+	* @private
+	*/
+	private var _drawCenter:Boolean = true;
+	/**
+	* draw draw center.
+	*/
+	public function get drawCenter():Boolean { return _drawCenter; }
+	public function set drawCenter(value:Boolean):void { _drawCenter = value; }
+	/**
+	* @private
+	*/
+	private var _drawBox:Boolean = true;
+	/**
+	* draw draw bounding box.
+	*/
+	public function get drawBox():Boolean { return _drawBox; }
+	public function set drawBox(value:Boolean):void { _drawBox = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawWeb:Boolean = true;
+	/**
+	* draw draw bounding Web.
+	*/
+	public function get drawWeb():Boolean { return _drawWeb; }
+	public function set drawWeb(value:Boolean):void { _drawWeb = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawRotation:Boolean = true;
+	/**
+	* draw draw rotation.
+	*/
+	public function get drawRotation():Boolean { return _drawRotation; }
+	public function set drawRotation(value:Boolean):void { _drawRotation = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawSeparation:Boolean = true;
+	/**
+	* draw draw Separation.
+	*/
+	public function get drawSeparation():Boolean { return _drawSeparation; }
+	public function set drawSeparation(value:Boolean):void { _drawSeparation = value; }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
 }

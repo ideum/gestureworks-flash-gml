@@ -155,7 +155,7 @@ package com.gestureworks.core
 		}
 		
 		//  clusterHistoryCaptureLength -------------------------------------
-		private static var _clusterHistoryCaptureLength:int = 8;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
+		private static var _clusterHistoryCaptureLength:int = 60;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
 		/**
 		 * Returns the current clusterHistoryCaptureLength.
 		 */

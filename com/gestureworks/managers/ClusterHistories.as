@@ -32,9 +32,9 @@ package com.gestureworks.managers
 		
 		public static function historyQueue(ClusterID:Object):void//event:ClusterEvent
 		{
-			var history:Vector.<ClusterObject> = GestureGlobals.gw_public::clusters[ClusterID].history;
 			var clusterObject:ClusterObject = GestureGlobals.gw_public::clusters[ClusterID]
-		
+			var history:Vector.<ClusterObject> = clusterObject.history;
+			
 			history.unshift(historyObject(clusterObject));
 			
 			if (history.length-1>=GestureGlobals.clusterHistoryCaptureLength)

@@ -271,6 +271,8 @@ package com.gestureworks.core
 		
 		public function processVectorMetric():void {
 			
+			//trace("process vector metric");
+			
 			var strokeCalled:Boolean = false;
 			
 			for (key = 0; key < gn; key++) 
@@ -281,7 +283,7 @@ package com.gestureworks.core
 						{
 							if ((ts.cO.remove) && (!gO.pOList[key].complete)&&(!strokeCalled)) 
 								{
-								//trace("find stroke..", cO.path_data, cO.history[0].path_data);
+								trace("find stroke..", cO.path_data, cO.history[0].path_data);
 												
 								var pn:uint = sO.path_n;
 								// MAKES SURE PATH IS LONG ENOUGHT TO RESAMPLE
@@ -290,7 +292,7 @@ package com.gestureworks.core
 									ts.tc.cluster_vectormetric.normalizeSamplePath();
 									ts.tc.cluster_vectormetric.findStrokeGesture();
 									strokeCalled = true;
-									//trace("touch gesture call stroke analysis");
+									trace("touch gesture call stroke analysis");
 								}
 								//else ts.tc.cluster_vectormetric.resetPathProperties();
 							}

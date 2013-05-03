@@ -137,8 +137,9 @@ package com.gestureworks.utils
 							for (var i:int = 0; i < gestureNum; i++) 
 							{
 								var gesture_id:String = String(gml.Gesture_set[g].Gesture[i].attribute("id"));
-								var gesture_set_id:String = String(gml.Gesture_set[g].attribute("gesture_set_name"));
+								var gesture_set_id:String = String(gml.Gesture_set[g].attribute("id"));
 								var propertyNum:int = int(gml.Gesture_set[g].Gesture[i].analysis.algorithm.returns.property.length());
+								
 								
 								//trace("gesture id",gesture_id,"gesture set id",gesture_set_id)
 								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -180,6 +181,7 @@ package com.gestureworks.utils
 											//trace("gesture:", gesture_id);
 												
 												gO.gesture_id = gesture_id;
+												gO.gesture_xml = gml.Gesture_set[g].Gesture[i];
 												gO.gesture_type = String(gml.Gesture_set[g].Gesture[i].attribute("type"));
 
 												// MATHICNG CRITERIA
@@ -594,7 +596,7 @@ package com.gestureworks.utils
 						
 							gOList.pOList = gList;
 							
-						traceGesturePropertyList()
+						//traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
@@ -605,8 +607,10 @@ package com.gestureworks.utils
 			
 			for (var i:uint = 0; i < gn; i++ )
 				{
-					trace("	new gesture object:");
+					trace("	new gesture object:--------------------------------");
+					trace("g xml....."+"\n",gOList.pOList[i].gesture_xml)
 					var dn:uint = gOList.pOList[i].dList.length;
+					
 					
 					for (var j:uint = 0; j < dn; j++ )
 					{

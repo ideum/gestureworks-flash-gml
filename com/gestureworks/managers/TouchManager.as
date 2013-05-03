@@ -130,7 +130,7 @@ package com.gestureworks.managers
 					//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
 					if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
 					//UPDATE DEBUG DISPLAY // clear local debug display
-					if ((tO.td) && (tO.td.debug_display) && (tO.cO)) 	tO.td.clearDebugDisplay(); // clear display
+					if ((tO.visualizer) && (tO.visualizer.debug_display) && (tO.cO)) 	tO.visualizer.clearDebugDisplay(); // clear display
 					
 					// analyze for taps
 					if (tO.tg) tO.tg.onTouchEnd(event);
@@ -226,7 +226,7 @@ package com.gestureworks.managers
 				// move to timeline visualizer
 				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
 				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-				if ((tO.td)&&(tO.td.debug_display))
+				if ((tO.visualizer)&&(tO.visualizer.debug_display))
 				{
 					//UPDATE TRANSFORM HISTORIES
 					TransformHistories.historyQueue(tO.touchObjectID);

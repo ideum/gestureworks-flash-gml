@@ -35,7 +35,7 @@ package com.gestureworks.analysis
 	public class GestureVisualizer extends Shape
 	{	
 		private static var cml:XMLList;
-		private var style:Object;
+		public var style:Object;
 		private var ts:Object;
 		private var cO:ClusterObject;
 		private var sO:StrokeObject;
@@ -60,12 +60,6 @@ package com.gestureworks.analysis
 				style.stroke_alpha = 0.9;
 				style.fill_color = 0x9BD6EA;
 				style.fill_alpha = 0.1;
-				style.text_color = 0xFFFFFF;
-				style.text_size = 12;
-				style.text_alpha = 1;
-				style.indicators = true;
-				style.radius = 10;
-				style.indicators = true;
 				style.radius = 10;
 				style.line_type = "dashed"
 		}
@@ -90,20 +84,24 @@ package com.gestureworks.analysis
 		graphics.clear();
 		
 		// draw
-		draw_touch_cluster();
-		draw_motion_cluster();
-		//draw_sensor_cluster();
+		draw_touch_gesture();
+		draw_motion_gesture();
+		//draw_sensor_gesture();
 		
 	}
 	
-	private function draw_touch_cluster():void
+	private function draw_touch_gesture():void
 	{
+		//trace("draw gesture", ts);
+		
 		/////////////////////////////////////////////////////////////////////////////////
 		// draw pivot gesture vector
 		/////////////////////////////////////////////////////////////////////////////////
 		if (N)
 		{
-			if ((ts.trO.init_center_point) && (ts.trO.transformPointsOn))
+			
+			
+			if ((_drawPivot)&&(ts.trO.init_center_point) && (ts.trO.transformPointsOn))
 			{
 				if ((ts.cO.x != 0) && (ts.cO.y != 0) && (ts.cO.dx != 0) && (ts.cO.dy != 0)) {
 				
@@ -139,7 +137,7 @@ package com.gestureworks.analysis
 			// draw key points of touch object display
 			/////////////////////////////////////////////////////////////////////////////////
 			
-				if((trO.transAffinePoints)&&(trO.transformPointsOn)){
+				if((_drawTransformation)&&(trO.transAffinePoints)&&(trO.transformPointsOn)){
 					// draw affine transformation debug wire frame
 					// center
 					graphics.lineStyle(3, 0xFFFFFF, 0.8);
@@ -164,13 +162,13 @@ package com.gestureworks.analysis
 					graphics.moveTo(trO.transAffinePoints[1].x, trO.transAffinePoints[1].y);
 					graphics.lineTo(trO.transAffinePoints[0].x, trO.transAffinePoints[0].y);
 				}
-		}
+		
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// draw orientation data
 		///////////////////////////////////////////////////////////////////////////////////
 			
-			if (N == 5)
+			if ((_drawOrientation)&&(N == 5))
 			{
 				// draw thimb ring
 				graphics.lineStyle(style.t_stroke_thickness,style.t_stroke_color, style.t_stroke_alpha);
@@ -190,25 +188,29 @@ package com.gestureworks.analysis
 			///////////////////////////////////////////////////////////////////////////////////
 			// draw stroke data
 			///////////////////////////////////////////////////////////////////////////////////
-				
-				if ((N) && (path_data))
+
+				if ((_drawStroke)&&(path_data))
 				{	
 				//trace("drawVectors stroke",path_data[0].x, path_data[0].y)
 							
 					// SAMPLE PATH
 						if (path_data[0])
 							{
+							var t:Number = 2
+							var rad:int = 2
+							graphics.lineStyle(t, style.stroke_color, style.stroke_alpha);
 							graphics.moveTo(path_data[0].x, path_data[0].y)
-							
 							
 							for (var p:int = 0; p < path_data.length ; p++) 
 							{
-								var t:Number = 3//0.1*(path_data[p].w + path_data[p].h) * 0.5 -5
+								//0.1*(path_data[p].w + path_data[p].h) * 0.5 -5
 								//style.stroke_thickness
 								//trace(t)
 								//trace(path_data[p].w , path_data[p].h);
-								graphics.lineStyle(t, style.stroke_color, style.stroke_alpha);
+								
 								graphics.lineTo(path_data[p].x, path_data[p].y);
+								graphics.drawCircle(path_data[p].x, path_data[p].y, 2*rad);
+								graphics.moveTo(path_data[p].x, path_data[p].y);
 							}
 							
 							// REFERNCE PATHS//////////////////////////////////////
@@ -231,14 +233,19 @@ package com.gestureworks.analysis
 										graphics.lineTo(a*ref_path[q].x, a*ref_path[q].y+d*b);
 									}
 								}
+								
+								//trace("gesture snippet",b, "\n\n\n",ts.gO.pOList[b].gesture_xml, "\n");
 							}
 							///////////////////////////////////////////////////////
 							}
+							
 				}
+				
+				
 		}
+	}
 			
-			
-	private function draw_motion_cluster():void 
+	private function draw_motion_gesture():void 
 	{	
 		//trace("MOTION CLUSTER DRAW");
 					/*
@@ -361,6 +368,25 @@ package com.gestureworks.analysis
 						}
 						
 						}
+						
+						
+						///////////////////////////////////////////////////////////////////////////////////////
+						// draw interactionPoint path
+						
+						/*
+						if (cO.history) {
+							
+							if (cO.history[h].ipointArray[0])
+							{
+							graphics.moveTo (cO.history[0].ipointArray[0].x, cO.history[0].ipointArray[0].x);
+
+							for (var h:int = 1; h < cO.history.length; h++) 
+									{
+									graphics.lineTo (cO.history[h].ipointArray[0].x, cO.history[h].ipointArray[0].y);
+									//trace("velocity", cO.dx, cO.dy, cO.dz)
+									}
+							}
+						}*/
 		}	
 	
 
@@ -394,6 +420,60 @@ package com.gestureworks.analysis
 			}
 		}
 	}
+	
+	
+	
+	/**
+	* @private
+	*/
+	private var _drawOrientation:Boolean = true;
+	/**
+	* draw Orientation.
+	*/
+	public function get drawOrientation():Boolean { return _drawOrientation; }
+	public function set drawOrientation(value:Boolean):void { _drawOrientation = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawTransformation:Boolean = true;
+	/**
+	* draw Transformation.
+	*/
+	public function get drawTransformation():Boolean { return _drawTransformation; }
+	public function set drawTransformation(value:Boolean):void { _drawTransformation = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawStroke:Boolean = true;
+	/**
+	* draw Stroke.
+	*/
+	public function get drawStroke():Boolean { return _drawStroke; }
+	public function set drawStroke(value:Boolean):void { _drawStroke = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawRotation:Boolean = true;
+	/**
+	* draw Rotation.
+	*/
+	public function get drawRotation():Boolean { return _drawRotation; }
+	public function set drawRotation(value:Boolean):void { _drawRotation = value; }
+	
+	/**
+	* @private
+	*/
+	private var _drawPivot:Boolean = true;
+	/**
+	* draw Rotation.
+	*/
+	public function get drawPivot():Boolean { return _drawPivot; }
+	public function set drawPivot(value:Boolean):void { _drawPivot = value; }
+	
+	
 	
 	
 }

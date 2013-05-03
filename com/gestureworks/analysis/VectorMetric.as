@@ -220,7 +220,7 @@ package com.gestureworks.analysis
 		//FIND STROKE MATCH FROM LOCAL TOUCH OBJECT PATH COLLECTION
 		public function findStrokeGesture():void
 		{
-			//trace(sO.path_data_norm.length)
+			trace(sO.path_data_norm.length)
 			var prob_min:Number = 0.6;
 			
 			/////////////////////////////////////
@@ -319,25 +319,27 @@ package com.gestureworks.analysis
 		
 		//trace(I,PathLength(points),points.length,n,n-1);
 		
-		for (var i:int = 1; i < points.length; i++)
-		{
-			var d:Number = Distance(points[i - 1], points[i]);
-			if ((D + d) >= I)
+		if(I){ // to prevent I==0 time out crash
+			for (var i:int = 1; i < points.length; i++)
 			{
-				var qx:Number = points[i - 1].x + ((I - D) / d) * (points[i].x - points[i - 1].x);
-				var qy:Number = points[i - 1].y + ((I - D) / d) * (points[i].y - points[i - 1].y);
-				var q:Point = new Point(qx, qy);
-				newpoints[newpoints.length] = q; // append new point 'q'
-				points.splice(i, 0, q); // insert 'q' at position i in points s.t. 'q' will be the next i
-				D = 0.0;
+				var d:Number = Distance(points[i - 1], points[i]);
+				if ((D + d) >= I)
+				{
+					var qx:Number = points[i - 1].x + ((I - D) / d) * (points[i].x - points[i - 1].x);
+					var qy:Number = points[i - 1].y + ((I - D) / d) * (points[i].y - points[i - 1].y);
+					var q:Point = new Point(qx, qy);
+					newpoints[newpoints.length] = q; // append new point 'q'
+					points.splice(i, 0, q); // insert 'q' at position i in points s.t. 'q' will be the next i
+					D = 0.0;
+				}
+				else D += d;
 			}
-			else D += d;
-		}
-		// somtimes we fall a rounding-error short of adding the last point, so add it if so
-		if (newpoints.length == n - 1)
-		{
-			newpoints[newpoints.length] = points[points.length - 1];
-			//trace("true")
+			// somtimes we fall a rounding-error short of adding the last point, so add it if so
+			if (newpoints.length == n - 1)
+			{
+				newpoints[newpoints.length] = points[points.length - 1];
+				//trace("true")
+			}
 		}
 		//trace("resample",points.length, n, newpoints.length);
 		
