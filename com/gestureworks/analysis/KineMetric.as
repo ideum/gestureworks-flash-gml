@@ -1069,7 +1069,7 @@ package com.gestureworks.analysis
 									if (cO.motionArray[i].type == "finger")
 									{	
 									//var pair_array:Array = new Array();
-									var palm_mpoint:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.motionArray[i].handID];
+									palm_mpoint= GestureGlobals.gw_public::motionPoints[cO.motionArray[i].handID];
 									var pair_array:Array = new Array();
 											
 									if(palm_mpoint)

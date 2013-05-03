@@ -121,6 +121,7 @@ package com.gestureworks.managers
 				for (var j:int = 0; j < pointObject.objectList.length; j++)
 				{
 					//trace("updating targets");
+					var i:int;
 					var tO:Object = pointObject.objectList[j];
 					
 					//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
@@ -139,7 +140,7 @@ package com.gestureworks.managers
 					/////////////////////////////////////////////////////////////////////////////
 					//REMOVE POINT FROM PAIR LIST
 					// will need to remove from all nested clusters also
-					for (var i:int = 0; i < tO.cO.pointPairArray.length; i++)
+					for (i = 0; i < tO.cO.pointPairArray.length; i++)
 					{
 						if ((tO.cO.pointPairArray[i].idA == event.touchPointID)||(tO.cO.pointPairArray[i].idB == event.touchPointID)) {
 							tO.cO.pointPairArray.splice(i, 1);
@@ -155,7 +156,7 @@ package com.gestureworks.managers
 					tO.pointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < tO.pointArray.length; i++)
+					for (i = 0; i < tO.pointArray.length; i++)
 					{
 						tO.pointArray[i].id = i;
 					}

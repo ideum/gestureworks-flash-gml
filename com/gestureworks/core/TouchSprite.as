@@ -590,8 +590,8 @@ package com.gestureworks.core
 				
 				//create point pair
 				if(cO.pointArray.length!=1){
-				var lastpointID = cO.pointArray[cO.pointArray.length - 2].touchPointID;
-				var ppt = new PointPairObject();
+				var lastpointID:Number = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
 					ppt.idA = lastpointID;
 					ppt.idB = pointObject.touchPointID;
 					

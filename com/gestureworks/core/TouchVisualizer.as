@@ -30,7 +30,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var ts//TouchSprite;
+		private var ts:*;//TouchSprite;
 		/**
 		* @private
 		*/

@@ -151,7 +151,7 @@ package com.gestureworks.managers
 				
 				var tip:Vector3 = event.frame.pointable(pid).tipPosition;
 				
-				var mp:MotionPointObject = new MotionPointObject();
+				mp = new MotionPointObject();
 					mp.motionPointID = pid;
 					
 					if (event.frame.pointable(pid).isTool) mp.type = "tool";

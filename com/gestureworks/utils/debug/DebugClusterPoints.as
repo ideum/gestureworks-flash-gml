@@ -85,6 +85,7 @@ package com.gestureworks.utils.debug
 	{
 		pointList = cO.pointArray
 		NumPoints = pointList.length
+		var i:int;
 		
 		//trace("draw motion points");
 		
@@ -98,13 +99,13 @@ package com.gestureworks.utils.debug
 			graphics.clear();
 			
 			// clear text
-			for (var i:int = 0; i < 12; i++) text_array[i].visible = false;
+			for (i = 0; i < 12; i++) text_array[i].visible = false;
 
 			graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 				
 				
 				
-				for (var i:int = 0; i < NumPoints; i++) 
+				for (i = 0; i < NumPoints; i++) 
 				{
 					//var x:Number = pointList[i].point.x
 					//var y:Number = pointList[i].point.y
@@ -191,7 +192,7 @@ package com.gestureworks.utils.debug
 							//if (fn)
 							//{
 								// Calculate the hand's average finger tip position
-								for (var i:int = 0; i < mpn; i++) 
+								for (i=0; i < mpn; i++) 
 								{
 								var mp:MotionPointObject = cO.motionArray[i];
 								//trace("----finger--",finger.id,finger.motionPointID, finger.x,finger.y);	
@@ -330,13 +331,14 @@ package com.gestureworks.utils.debug
 						
 					//
 					var lines:int = cO.pairList.length//cO.motionArray.length
+					var pn:int;
 					
 					//trace("pair list length",lines,cO.pairList.length)
 					
 					if (lines <= cO.pairList.length)
 					{
 						//trace("ggg");
-						for (var pn:int = 0; pn < lines; pn++) //5
+						for (pn = 0; pn < lines; pn++) //5
 						//for (var pn:int = 0; pn < cO.motionArray.length-2; pn++) //4
 						{
 							var pA:MotionPointObject = cO.pairList[pn].pointA;
@@ -344,7 +346,7 @@ package com.gestureworks.utils.debug
 							
 							//trace(pA,pB);
 							
-							if ((pA!=undefined) && (pB!=undefined))
+							if ((pA!=null) && (pB!=null))
 							{
 								var mpA:Vector3D = pA.position;
 								var mpB:Vector3D = pB.position;
@@ -370,7 +372,7 @@ package com.gestureworks.utils.debug
 						//trace("ipointArray",cO.iPointArray.length)
 					
 						// draw all pinch points
-						for (var pn:int = 0; pn < cO.iPointArray.length; pn++) 
+						for (pn = 0; pn < cO.iPointArray.length; pn++) 
 						{
 							//trace("ipoint type",cO.iPointArray[pn].type)
 							//PINK 0xE3716B // for pinch

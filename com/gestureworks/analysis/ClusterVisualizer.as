@@ -371,7 +371,7 @@ package com.gestureworks.analysis
 								
 								//trace(pA,pB);
 								
-								if ((pA!=undefined) && (pB!=undefined))
+								if ((pA!=null) && (pB!=null))
 								{
 									var mpA:Vector3D = pA.position;
 									var mpB:Vector3D = pB.position;
