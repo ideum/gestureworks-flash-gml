@@ -370,32 +370,19 @@ package com.gestureworks.core
 										cluster_kinemetric.findMeanTemporalAcceleration(); //ensamble temporal mean acceleration
 									}
 									
-									
-									///////////////////////////////////////////////////////////////////////////////////////////////////
-									// MOVE TO TEMPORAL METRIC
-									// BASIC HOLD CONTROL // ALGORITHM // type hold
-									if (g.algorithm == "hold")
-									{
-										//if (trace_debug_mode) trace("cluster hold algorithm");
-								
-										var hold_number:int = ts.N;//gO.pOList[key].n; // REDUNDANT AS ONLY CALLED IF MEETS N CRITERIA
-										var hold_dist:int = g.point_translation_max;
-										
-										//HOLD TIME MEASURED IN FRAMES
-										//var	hold_time:int = Math.ceil(g.point_event_duration_min/ GestureGlobals.touchFrameInterval);
-										var	hold_time:int = Math.ceil(g.point_event_duration_min * GestureWorks.application.frameRate * 0.001)
-										
-										//var t = 1 / GestureWorks.application.frameRate;
-										
-										//trace("hold ",GestureGlobals.touchFrameInterval,hold_time,g.point_event_duration_min,GestureWorks.application.frameRate,t)
-										cluster_kinemetric.findLockedPoints(hold_dist, hold_time, hold_number);	
-										
-										if(!cO.hold_n)	g.activeEvent = false;
-			
-									}
-									
-									
 
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
 									///////////////////////////////////////////////////////////////////////////////////
 									// LIMIT DELTA BY CLUSTER VALUES
 									/////////////////////////////////////////////////////////////////////////////////////

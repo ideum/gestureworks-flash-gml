@@ -24,6 +24,9 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.GML;
 	import com.gestureworks.objects.FrameObject;
+	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.PointObject;
+	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	
@@ -36,6 +39,7 @@ package com.gestureworks.analysis
 	{
 		private var touchObjectID:int;
 		private var ts:Object;//	private var ts:TouchSprite;
+		private var cO:ClusterObject;
 		
 		// pause time between gesture event counting cycles
 		private var tap_pauseTime:int = 0;
@@ -68,10 +72,116 @@ package com.gestureworks.analysis
 		public function init():void
 		{
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
+			cO = ts.cO;
 			
 			if (ts.trace_debug_mode) trace("init gesture discrete analysis");
-			
 			//trace(GestureGlobals.touchFrameInterval)
+		}
+		
+		
+		////////////////////////////////////////////////////////////////////////////////////////
+		// HOLD GESTURE
+		////////////////////////////////////////////////////////////////////////////////////////
+		public function findLockedPoints(key:int):void
+		{
+			// REDUNDANT AS ONLY CALLED IF MEETS N CRITERIA
+			var hold_number:int = ts.N;//gO.pOList[key].n; 
+			var hold_dist:int = ts.gO.pOList[key].point_translation_max;
+			
+			//HOLD TIME MEASURED IN FRAMES
+			var	hold_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_min * GestureWorks.application.frameRate * 0.001)							
+			//trace("hold ",GestureGlobals.touchFrameInterval,hold_time,g.point_event_duration_min,GestureWorks.application.frameRate,t)
+											
+			
+			var dn:uint = ts.gO.pOList[key].dList.length;
+			var N:uint = cO.n;
+			var LN:uint = cO.hold_n;
+			
+			
+			// NOTE SHOULD PULL HOLD X AND Y AND N FROM CLUSTER AND MAKE LOCAL TO TEMPORALMETRIC
+			// WILL CLEAN OUT KINEMETRIC AND MOVE TEMPORAL DATA STRUCTS TO TEMPORAL METRIC ASSOCIATED WITH CLUSTER
+			///////////////////////////////////////////////////
+			// HOLD_X / HOLD_Y / HOLD_N
+			// TAP_X / TAP_Y / TAP_N
+			// DTAP_X / DTAP_Y / DTAP_N
+			// TTAP_X / TTAP_Y / TTAP_N
+			// HOLD_TAP_X / HOLD_TAP_Y / HOLD_TAP_N
+			
+			
+				///////////////////////////////
+				// check for locked points
+				///////////////////////////////
+				
+							for (var i:int = 0; i < N; i++)
+								{
+								var pt:PointObject = cO.pointArray[i]
+								
+								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
+								if ((Math.abs(pt.dx) < hold_dist) && (Math.abs(pt.dy) < hold_dist))
+									{
+									if (pt.holdCount < hold_time) {
+									
+										pt.holdCount++;
+															
+										if (pt.holdCount >= hold_time) 
+											{
+											pt.holdLock = true; 
+											cO.hold_x += pt.history[0].x;
+											cO.hold_y += pt.history[0].y;
+											//trace("why here")
+											}	
+										}
+										else {
+											pt.holdCount = 0; // reset count
+											pt.holdLock = false; // add this feature here
+											}
+									}
+								}
+								
+					///////////////////////
+					// count locked points
+					//////////////////////
+						LN = 0;
+						for (i = 0; i < N; i++)
+						{
+							if (pt.holdLock) LN++;
+						}
+					//trace("LOCKED",LN)
+					//////////////////////			
+								
+
+						if (LN) {
+							if ((LN == hold_number) || (hold_number == 0)) 
+								{
+								cO.hold_x *= 1/LN//k0;
+								cO.hold_y *= 1 / LN//k0;
+								cO.hold_n = LN;
+								
+								
+									/////////////////////////////////////
+									// push data (bypasses filtering for now)
+									/////////////////////////////////////
+									
+									ts.gO.pOList[key].data.x = cO.hold_x; 
+									ts.gO.pOList[key].data.y = cO.hold_y; 
+									
+									var d:Object = new Object();
+										d["x"] = cO.hold_x;
+										d["y"] = cO.hold_y;
+										d["n"] = cO.hold_n;
+									
+									for (DIM = 0; DIM < dn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = d[ts.gO.pOList[key].dList[DIM].property_result];
+									
+									//////////////////////////////////////
+								}
+							//trace("cluster",cO.hold_x,cO.hold_y,LN,N, cO.hold_n)
+						}
+						else {
+							cO.hold_x = 0;
+							cO.hold_y = 0;
+							cO.hold_n = 0;
+						}
+						
 		}
 		
 		

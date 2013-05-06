@@ -229,6 +229,7 @@ package com.gestureworks.core
 									gO.pOList[key].dispatchEvent = false;
 									//gO.pOList[key].complete = true;
 								}
+
 								///////////////////////////////////////////////////////////////////////////////////////////
 							}
 							
@@ -317,6 +318,8 @@ package com.gestureworks.core
 			var dtapCalled:Boolean = false;
 			var ttapCalled:Boolean = false;
 			
+		//	trace("process temporalmetric");
+			
 			//gn = gO.pOList.length;
 			for (key=0; key < gn; key++) 
 			//for (key in gO.pOList)
@@ -325,8 +328,34 @@ package com.gestureworks.core
 					//if (ts.gestureList[gO.pOList[key].gesture_id])||(ts.gestureList[gO.pOList[key].gesture_set_id]))// so can vaidate set
 					if (ts.gestureList[gO.pOList[key].gesture_id])
 					{
-						if ((gO.pOList[key].algorithm_class == "temporalmetric")&&(gO.pOList[key].algorithm_type == "discrete")){	
+						if ((gO.pOList[key].algorithm_class == "temporalmetric") && (gO.pOList[key].algorithm_type == "discrete"))
+						{	
 						
+								
+						///////////////////////////////////////////////
+						// HOLD GESTURE// type hold
+						///////////////////////////////////////////////
+							
+						if (gO.pOList[key].gesture_type == "hold")
+						{
+							//trace("process hold")
+							//gO.pOList[key].dispatchEvent = false;
+								
+								if (gO.pOList[key].algorithm == "hold")
+								{	
+								gesture_disc.findLockedPoints(key);	
+										
+									if (!cO.hold_n)	gO.pOList[key].activeEvent = false;
+									else {
+										gO.pOList[key].activeEvent = true;
+										//gO.pOList[key].dispatchEvent = true;
+										//trace("dispatch----------------------------------", gO.pOList[key].dispatchEvent);
+										}
+								}
+						}
+						///////////////////////////////////////////////	
+							
+							
 						//trace("TEMPROAL METRIC");
 						// SEARCH FOR EVENT MATCH LIST	
 						
@@ -611,6 +640,8 @@ package com.gestureworks.core
 					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
 					// IF GESTURE EVENT
 					if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
+					
+					
 					// IF KEYBOARD EVENT
 					// BUILD // CONSTRUCT KEYBOARDEVENTS()
 					//dispatchEvent(new KeyboardEvent(KeyboardEvent.KEY_DOWN, true, false, charCodeRef, keyCode, 10));

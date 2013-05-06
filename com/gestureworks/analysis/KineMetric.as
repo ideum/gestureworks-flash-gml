@@ -52,7 +52,7 @@ package com.gestureworks.analysis
 		public var pointPairList:Vector.<PointPairObject>;// should operate directly on cluster
 		
 		// number in group
-		private var N:uint = 0;
+		public var N:uint = 0;
 		public var LN:uint = 0; //locked touch points
 		
 		private var N1:uint = 0;
@@ -104,7 +104,7 @@ package com.gestureworks.analysis
 				///////////////////////////////////////////////
 				// get number of touch points in cluster
 				N = ts.cO.n;
-				LN = ts.cO.hold_n // will need to move to interaction point structure
+				LN = ts.cO.hold_n // will need to move to interaction point structure or temporal metric mgmt
 				
 				// derived point totals
 				if (N) 
@@ -383,61 +383,6 @@ package com.gestureworks.analysis
 						cO.mx *= k0;
 						cO.my *= k0;
 					}
-		}
-		
-		public function findLockedPoints(hold_dist:Number, hold_time:Number, hold_number:Number):void
-		{
-			
-				///////////////////////////////
-				// check for locked points
-				///////////////////////////////
-							for (i = 0; i < N; i++)
-								{
-								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
-								if ((Math.abs(pointList[i].dx) < hold_dist) && (Math.abs(pointList[i].dy) < hold_dist))
-									{
-									if (pointList[i].holdCount < hold_time) {
-									
-										pointList[i].holdCount++;
-															
-										if (pointList[i].holdCount >= hold_time) 
-											{
-											pointList[i].holdLock = true; 
-											cO.hold_x += pointList[i].history[0].x;
-											cO.hold_y += pointList[i].history[0].y;
-											}	
-										}
-										else {
-											pointList[i].holdCount = 0; // reset count
-											pointList[i].holdLock = false; // add this feature here
-											}
-									}
-								}
-								
-					///////////////////////
-					// count locked points
-					//////////////////////
-						LN = 0;
-						for (i = 0; i < N; i++)
-						{
-							if (pointList[i].holdLock) LN++;
-						}
-					//trace("LOCKED",LN)
-					//////////////////////			
-								
-
-						if (LN) {
-						if (((LN == hold_number)) || (hold_number == 0)) 
-							{
-							cO.hold_x *= 1/LN//k0;
-							cO.hold_y *= 1/LN//k0;
-							}
-						}
-						else {
-							cO.hold_x = 0;
-							cO.hold_y = 0;
-						}
-						//trace("cluster",hold_x,hold_y,LN,N)
 		}
 		
 		public function findMeanInstTransformation():void
