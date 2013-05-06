@@ -65,7 +65,7 @@ package com.gestureworks.core
 	*/	
 	public class GestureWorks extends GestureWorksCore
 	{		
-		public static var _version:String = "3.6.0";
+		public static var _version:String = "3.6.1";
 		/**
 		 * Returns the current version of GestureWorks.
 		 */		
