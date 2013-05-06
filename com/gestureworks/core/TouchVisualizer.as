@@ -122,8 +122,8 @@ package com.gestureworks.core
 		//trace("init debug cml vars");
 		//trace(_pointData,_panelData,_touchObjectData)
 		
-		ts.debugDisplay = true;
-		viewAlwaysOn = true;
+		//ts.debugDisplay = true;
+		//viewAlwaysOn = true;
 		//pointDisplay = true;
 		//clusterDisplay = true;
 		//gestureDisplay = true;

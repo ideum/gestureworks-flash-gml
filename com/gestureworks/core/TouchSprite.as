@@ -896,8 +896,13 @@ package com.gestureworks.core
 		}
 		
 		private var _debugDisplay:Boolean = false;
-		public function get debugDisplay():Boolean {return _debugDisplay;}	
-		public function set debugDisplay(value:Boolean):void{	_debugDisplay = value;}
+		public function get debugDisplay():Boolean { return _debugDisplay;}	
+		public function set debugDisplay(value:Boolean):void {
+			if (debugDisplay == value) return;
+						
+			_debugDisplay = value;
+			visualizer.initDebug();
+		}
 		
 		private var _gestureFilters:Boolean = true;
 		public function get gestureFilters():Boolean {return _gestureFilters;}	
