@@ -377,20 +377,44 @@ package com.gestureworks.analysis
 						///////////////////////////////////////////////////////////////////////////////////////
 						// draw interactionPoint path
 						
-						/*
-						if (cO.history) {
-							
-							if (cO.history[h].ipointArray[0])
+						var hist = cO.history.length-1;
+						
+						//trace("hist",hist)
+						//if (cO.iPointArray[pn].type == "pinch") graphics.lineStyle(1, 0xE3716B, style.stroke_alpha);
+						//if (cO.iPointArray[pn].type == "trigger") graphics.lineStyle(1, 0xc44dbe, style.stroke_alpha);
+						
+						if (cO.history[0]) 
+						{
+							if (cO.history[0].iPointArray.length) 
 							{
-							graphics.moveTo (cO.history[0].ipointArray[0].x, cO.history[0].ipointArray[0].x);
-
-							for (var h:int = 1; h < cO.history.length; h++) 
-									{
-									graphics.lineTo (cO.history[h].ipointArray[0].x, cO.history[h].ipointArray[0].y);
-									//trace("velocity", cO.dx, cO.dy, cO.dz)
-									}
+								if (cO.history[0])
+								{
+									
+										
+										/////////////////
+										
+										if ((cO.history[0].iPointArray.length) && (cO.history[0].iPointArray[0])) 
+										{
+											graphics.moveTo (cO.history[0].iPointArray[0].position.x, cO.history[0].iPointArray[0].position.y);
+											graphics.drawCircle(cO.history[0].iPointArray[0].position.x, cO.history[0].iPointArray[0].position.y, 8);
+										
+											for (var h:int = 1; h < cO.history.length; h++) 
+												{
+												if ((cO.history[h].iPointArray.length) && (cO.history[h].iPointArray[0])) 
+												{
+													graphics.lineTo (cO.history[h].iPointArray[0].position.x, cO.history[h].iPointArray[0].position.y);
+													//graphics.drawCircle(cO.history[h].iPointArray[0].position.x, cO.history[h].iPointArray[0].position.y, 8);
+													//graphics.moveTo (cO.history[h].iPointArray[0].position.x, cO.history[h].iPointArray[0].position.y);
+												//trace("velocity", cO.dx, cO.dy, cO.dz)
+												}
+											}
+										}
+										
+										////////////////
+										
+								}
 							}
-						}*/
+						}
 		}	
 	
 

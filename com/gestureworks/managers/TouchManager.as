@@ -243,7 +243,7 @@ package com.gestureworks.managers
 			}
 			
 			// zero motion frame count
-			GestureGlobals.motionFrameID = 0;
+			GestureGlobals.motionFrameID = 1;
 			//trace(GestureGlobals.motionframeID)
 		}
 		

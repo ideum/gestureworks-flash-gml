@@ -1179,7 +1179,7 @@ package com.gestureworks.analysis
 									cO.motionArray[i].mean_thumb_prob = cO.motionArray[i].mean_thumb_prob / cO.motionArray[i].history.length;
 									
 									//cO.motionArray[pn].mean_thumb_prob // cO.motionArray[pn].history.length;
-									trace("mtp", cO.motionArray[i].motionPointID , cO.motionArray[i].mean_thumb_prob)
+									//trace("mtp", cO.motionArray[i].motionPointID , cO.motionArray[i].mean_thumb_prob)
 									thumb_list[i] = cO.motionArray[i].mean_thumb_prob
 								}
 							}
@@ -1189,6 +1189,9 @@ package com.gestureworks.analysis
 						var max_tp:Number = Math.max.apply(null, thumb_list);
 						var max_index:int = thumb_list.indexOf(max_tp);
 						if ((max_index != -1) && ( cO.motionArray[max_index]) && (cO.motionArray[max_index].type == "finger")) cO.motionArray[max_index].fingertype = "thumb";	
+						
+						// note sorting point list at this pahse doesnt seem to have any issues??
+						// probably because there are no transformations yet
 						
 						
 						/*
@@ -1381,9 +1384,9 @@ package com.gestureworks.analysis
 														
 														if (tpht){
 															//add to pinch point list
-															cO.iPointArray.push(tp);
+															if((tp.position.x!=0)&&(tp.position.y!=0))cO.iPointArray.push(tp);
 															
-															trace("finger", i,j3, tp.id, "angle", angle, tp.motionPointID,tpht,cO.motionArray[i].length,cO.motionArray[j3].length)
+															//trace("finger", i,j3, tp.id, "angle", angle, tp.motionPointID,tpht,cO.motionArray[i].length,cO.motionArray[j3].length)
 															// when found trigger pair return out of loop
 															return 
 														}	
@@ -1445,22 +1448,29 @@ package com.gestureworks.analysis
 						}	
 						
 						//Leap hist	based velocity
-							//trace("motion frame count", GestureGlobals.motionFrameID)
-							//trace("test",GestureWorks.application.stage.leap);
-							//trace(cO.motionArray.history[0].frame);
-							
-							/////////////////////////////////////////////////////////
+						//trace("motion frame count", GestureGlobals.motionFrameID)
+						//trace(cO.motionArray.history[0].frame);
+						//if (cO.iPointArray.length>0) if(cO.iPointArray[0] )trace("motion move count", cO.iPointArray[0].moveCount,GestureGlobals.motionFrameID,GestureGlobals.frameID );
+	
 							//frame hist based velocity
-							var h:uint = 1;
+							var h:uint = GestureGlobals.motionFrameID;  //3-8
 							var hk:Number = 1/h;
-							if(cO.history){	
-							if (cO.history[h]){
-									//var hframe:Frame = cO.history[h].motionArray.frame;
-									//cO.dx = (cO.x - cO.history[h].x) * hk; 
-									//cO.dy = (cO.y - cO.history[h].y) * hk;
-									//cO.dz = (cO.z - cO.history[h].z) * hk;
 							
-							trace("velocity", cO.dx,cO.dy,cO.dz)
+							if (cO.history)
+							{	
+								if (cO.history[h-1])
+								{
+									//STOPS JUMPING
+									if ((cO.x != 0) && (cO.history[h].x != 0)) cO.dx = (cO.x - cO.history[h].x) * hk; 
+									else cO.dx = 0;
+									
+									if ((cO.y != 0) && (cO.history[h].y != 0)) cO.dy = (cO.y - cO.history[h].y) * hk;
+									else cO.dy = 0;
+									
+									
+									cO.dz = (cO.z - cO.history[h].z) * hk;
+							
+							//trace("velocity", cO.dx,cO.dy,cO.dz)
 							/////////////////////////////////////////////////////////
 							
 							var sx:Number = 0;

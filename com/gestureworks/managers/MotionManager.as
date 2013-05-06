@@ -106,6 +106,7 @@ package com.gestureworks.managers
 		public static function onFrame(event:LeapEvent):void 
 		{
 			//trace("motion frame------------------------------------", event.frame)
+			GestureGlobals.motionFrameID += 1;
 		}
 		
 		
@@ -221,7 +222,11 @@ package com.gestureworks.managers
 					//mpO.z = event.value.z;
 				
 					mpO.moveCount ++;
+					
+					
+					//trace( mpO.moveCount);
 				}
+				
 				
 				
 				// UPDATE POINT HISTORY 

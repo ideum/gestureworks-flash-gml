@@ -343,8 +343,8 @@ package com.gestureworks.analysis
 										graphics.drawCircle(mp.position.x , mp.position.y, hr);
 										
 										//sphere
-										graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
-										graphics.drawCircle(mp.sphereCenter.x , mp.sphereCenter.y, mp.sphereRadius);
+										//graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
+										//graphics.drawCircle(mp.sphereCenter.x , mp.sphereCenter.y, mp.sphereRadius);
 									}
 								
 								

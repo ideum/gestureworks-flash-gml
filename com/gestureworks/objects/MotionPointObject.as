@@ -45,7 +45,12 @@ package com.gestureworks.objects
 		// frameID
 		private var _frameID:int;
 		public function get frameID():int{	return _frameID;}
-		public function set frameID(value:int):void{	_frameID = value;}
+		public function set frameID(value:int):void {	_frameID = value; }
+		
+		// motionID
+		private var _motionFrameID:int;
+		public function get motionFrameID():int{	return _motionFrameID;}
+		public function set motionFrameID(value:int):void{	_motionFrameID = value;}
 		
 		// move count 
 		// number move updates for point in frame
