@@ -28,6 +28,7 @@ package com.gestureworks.analysis
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.StrokeObject;
 	
 	
@@ -39,11 +40,14 @@ package com.gestureworks.analysis
 		private var ts:Object;
 		private var cO:ClusterObject;
 		private var sO:StrokeObject;
+		private var gO:GestureListObject;
+		
 		private var trO:TransformObject;
 		private var id:Number = 0;
 		private var pointList:Vector.<PointObject>
 		private var N:int = 0;
 		private var path_data:Array = new Array();
+		private var gn:int = 0;
 		
 		public function GestureVisualizer(ID:Number)
 		{
@@ -59,8 +63,9 @@ package com.gestureworks.analysis
 				style.stroke_color = 0x9BD6EA;
 				style.stroke_alpha = 0.9;
 				style.fill_color = 0x9BD6EA;
-				style.fill_alpha = 0.1;
+				style.fill_alpha = 0.4;
 				style.radius = 10;
+				style.width = 50;
 				style.line_type = "dashed"
 		}
 			
@@ -71,6 +76,9 @@ package com.gestureworks.analysis
 			trO = ts.trO;// points to sprite
 			sO = ts.sO
 			cO = ts.cO;
+			gO = ts.gO;
+			
+			
 		}
 			
 	public function draw():void
@@ -78,6 +86,7 @@ package com.gestureworks.analysis
 		pointList = cO.pointArray;
 		N = pointList.length;
 		path_data = sO.path_data 
+		gn = gO.pOList.length;
 		
 		// clear
 		graphics.clear();
@@ -248,24 +257,80 @@ package com.gestureworks.analysis
 				// 2 track no move redraw (make reusable stack)
 				// 3 fade out / animate riple
 				
+				/*
 				
-				// draw flick (5)
+				for (var key:int=0; key < gn; key++) 
+				{	
+					// IF GESTURE EVENT
+					
+					//trace("GE",key,gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent);
+					
+					//if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent)) 
+					if ((gO.pOList[key].dispatchEvent)) 
+					//if ((gO.pOList[key].activeEvent) ) 
+					{
+						var x:Number = gO.pOList[key].data.x;
+						var y:Number = gO.pOList[key].data.y;
+						trace("draw gesture now", x, y);
+						
+						
+						if (gO.pOList[key].gesture_type =="hold")
+						{
+							// hold gesture square
+							graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+							graphics.beginFill(style.fill_color, style.fill_alpha);
+							graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
+							graphics.endFill();
+						}
+						
+						if (gO.pOList[key].gesture_type =="tap")
+						{
+							// tap gesture ring
+							graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+							graphics.drawCircle(x, y, style.radius + 20);
+						}
+						
+						// draw tap (10)
+						// draw double tap (10)
+						// draw hold 
+						
+						
+						
+						if (gO.pOList[key].gesture_type =="manipulate")
+						{
+							
+							trace("manip");
+							if(cO.history[7]){
+							// tap gesture ring
+							graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+							//alpha = 0.08*(hist-j)
+							graphics.moveTo(cO.history[0].x, cO.history[0].y);
+							graphics.lineTo(cO.history[7].x, cO.history[7].y);
+							}
+						}
+						
+						// draw drag
+						// draw scale
+						// draw rotate
+						
+						// draw flick (5)
+						// draw swipe (5)
+						// draw scroll // vert/horiz
+						
+						
+						//sequence 
+						// draw hold tap
+						// draw hold flick
+						
+						
+					}
+					
+				}*/
 				
-				// draw swipe (5)
-				
-				// draw scroll // vert/horiz
 				
 				
-				// draw tap (10)
-			
-				// draw double tap (10)
-				
-				// draw hold 
 				
 				
-				//sequence 
-				// draw hold tap
-				// draw hold flick
 				
 		}
 	}

@@ -1161,6 +1161,7 @@ package com.gestureworks.analysis
 										//trace("iD",cO.motionArray[i].motionPointID,"length", cO.motionArray[i].normalized_length,"palm angle", cO.motionArray[i].normalized_palmAngle,"thumb prob",cO.motionArray[i].thumb_prob)
 									}
 									thumb_list[i] = cO.motionArray[i].thumb_prob;
+									//thumb_list[i] = cO.motionArray[i];
 								}	
 							///////////////////////////////////////////////////////////////////////////////////
 							// optional history buffer
@@ -1184,9 +1185,39 @@ package com.gestureworks.analysis
 							}
 						///////////////////////////////////////////////////////////////////////////////////
 						// SET FINGER TO THUMB BASED ON HIGHEST PROB
+						
 						var max_tp:Number = Math.max.apply(null, thumb_list);
 						var max_index:int = thumb_list.indexOf(max_tp);
-						if((max_index!=-1)&&( cO.motionArray[max_index])&&(cO.motionArray[max_index].type == "finger")) cO.motionArray[max_index].fingertype = "thumb";	
+						if ((max_index != -1) && ( cO.motionArray[max_index]) && (cO.motionArray[max_index].type == "finger")) cO.motionArray[max_index].fingertype = "thumb";	
+						
+						
+						/*
+						thumb_list.sortOn("thumb_prob",Array.DESCENDING);
+						
+						
+						/// find min 
+						if (thumb_list[fn - 1]) {
+							//min_dist = thumb_list[n - 1]
+							//trace("min", thumb_list[fn - 1].thumb_prob, thumb_list[fn - 1].motionPointID);
+							if((thumb_list[fn-1].type == "finger")) thumb_list[fn-1].fingertype = "middle";
+						}
+						
+						// find max
+						if (thumb_list[1]) {
+							//max_dist = thumb_list[0];
+							//trace("pinky", thumb_list[0].thumb_prob, thumb_list[1].motionPointID);
+							if((thumb_list[0].type == "finger")) thumb_list[1].fingertype = "pinky";
+						}
+						
+						// find max
+						if (thumb_list[0]) {
+							//max_dist = thumb_list[0];
+							//trace("max", thumb_list[0].thumb_prob, thumb_list[0].motionPointID);
+							if((thumb_list[0].type == "finger")) thumb_list[0].fingertype = "thumb";
+						}
+						*/				
+						
+						
 							
 		}
 
