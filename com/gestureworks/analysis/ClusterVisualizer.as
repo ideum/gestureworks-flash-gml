@@ -50,6 +50,7 @@ package com.gestureworks.analysis
 		private var _rotation:Number = 0
 		private var _orientation:Number = 0
 		private var _dtheta:Number = 0
+		private var _ds:Number = 0
 		
 		private var step:Number =  0
 		private var percent:Number = 0
@@ -133,6 +134,7 @@ package com.gestureworks.analysis
 			_rotation = cO.rotation; 
 			_orientation = cO.orientation; 
 			_dtheta = cO.dtheta / 4;
+			_ds = cO.ds*10;
 			
 			step =  0.01;
 			percent = style.percent;
@@ -295,7 +297,33 @@ package com.gestureworks.analysis
 					}
 				}	
 			}
+			
+			
+			
+			if (_drawSeparation)
+			{
+			
+					trace(_ds)
+			
+				if (_ds < 0) // contract
+				{
+				graphics.lineStyle(style.c_stroke_thickness +10 ,style.a_stroke_color,0.3);
+				graphics.drawCircle(_x, _y, _radius +20+50*_ds );
+				}
+				else if (_ds > 0) //expand
+				{
+					graphics.lineStyle(style.c_stroke_thickness +10 ,style.b_stroke_color,0.3);
+					graphics.drawCircle(_x, _y, _radius +20+50*_ds );
+				}
+				else if (_ds==0) {
+					//do nothing
+					//graphics.lineStyle(style.c_stroke_thickness +10 ,0xFFFFFF,0.3);
+					//graphics.drawCircle(_x, _y, _radius +20);
+				}
 			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+		}
 	}
 	
 	private function drawMotion():void

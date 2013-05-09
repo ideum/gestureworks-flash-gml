@@ -209,7 +209,7 @@ package com.gestureworks.managers
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:GWEvent):void
 		{
-			//trace("touch frame process ----------------------------------------------",GestureGlobals.motionframeID);	
+			//trace("touch frame process ----------------------------------------------");	
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;

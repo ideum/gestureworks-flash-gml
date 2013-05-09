@@ -116,11 +116,11 @@ package com.gestureworks.core
 				
 				if (!tiO.timelineOn)
 				{
-					//if ((gO.pOList[key].gesture_type == "stroke") || (gO.pOList[key].gesture_type == "swipe") || (gO.pOList[key].gesture_type == "flick") || (gO.pOList[key].gesture_type == "hold") || (gO.pOList[key].gesture_type == "tap") || (gO.pOList[key].gesture_type == "double_tap") || (gO.pOList[key].gesture_type == "triple_tap"))
-					if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap"))
+					if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")||(gO.pOList[key].gesture_type == "hold"))
 					{
 						tiO.timelineOn = true;
 						tiO.pointEvents = true;
+						tiO.gestureEvents = true; // for gesutre feedback
 						tiO.timelineInit = true;
 						GestureGlobals.timelineHistoryCaptureLength = 80;
 						tapOn = true;
@@ -780,11 +780,16 @@ package com.gestureworks.core
 							// USES THE DEFINED EVENT TYPE
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
 							
+							var GGWEVENT:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DRAG, Data);
+							
 							ts.dispatchEvent(GWEVENT);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
 							//trace(GWEVENT)
-							if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(GWEVENT);
+							//if ((tiO.timelineOn) && (tiO.gestureEvents))	
+							ts.tiO.frame.gestureEventArray.push(GGWEVENT);
+							//ts.tiO.frame.gestureEventArray.push(hold_event);
 							
+						//	trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							/////// split
 						
 							/////// anchor

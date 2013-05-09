@@ -100,6 +100,10 @@ package com.gestureworks.analysis
 	
 	private function draw_touch_gesture():void
 	{
+		
+		var	gestureEventArray:Array = new Array();
+		var	pointEventArray:Array = new Array();
+				
 		//trace("draw gesture", ts);
 		
 		/////////////////////////////////////////////////////////////////////////////////
@@ -247,9 +251,60 @@ package com.gestureworks.analysis
 							///////////////////////////////////////////////////////
 							}
 							
-				}
+				}	
 				
-				////////////////////////////////////////////////////////////////////////////////////////////
+				
+				
+				
+				
+				/////////////////////////////////////////////////////////
+				// draw continuous gesture events
+				////////////////////////////////////////////////////////
+				
+				// based on timeline gesture events
+				
+					// gest current gesture event array from frame
+					gestureEventArray = ts.tiO.frame.gestureEventArray;
+
+					if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
+							
+						
+								for (var j:uint = 0; j < gestureEventArray.length; j++) 
+									{
+									var x:Number = gestureEventArray[j].value.x;
+									var y:Number = gestureEventArray[j].value.y;
+									trace("draw gesture event:",gestureEventArray[j].type, x, y);
+									
+									
+									//if (gestureEventArray[j].type =="manipulate")
+										
+									
+									
+									if (gestureEventArray[j].type =="drag")
+										{
+											trace("visualizwe DRAG")
+											graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+											graphics.moveTo(x, y);
+											graphics.moveTo(x + gestureEventArray[j].value.dx*10, y + gestureEventArray[j].value.dy*10);
+										}
+										
+										// draw scale
+								if (gestureEventArray[j].type =="scale")
+										{
+											trace("visualize scale")
+											graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+											graphics.moveTo(x, y);
+											graphics.moveTo(x + gestureEventArray[j].value.dx*10, y + gestureEventArray[j].value.dy*10);
+										}
+										
+										// draw rotate
+										// draw scroll // vert/horiz
+									}
+
+		}
+		
+		
+		////////////////////////////////////////////////////////////////////////////////////////////
 				//discrete drawing methods
 				//appear then fade out
 				
@@ -257,82 +312,116 @@ package com.gestureworks.analysis
 				// 2 track no move redraw (make reusable stack)
 				// 3 fade out / animate riple
 				
-				/*
 				
-				for (var key:int=0; key < gn; key++) 
-				{	
-					// IF GESTURE EVENT
-					
-					//trace("GE",key,gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent);
-					
-					//if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent)) 
-					if ((gO.pOList[key].dispatchEvent)) 
-					//if ((gO.pOList[key].activeEvent) ) 
+				// SCAN TIMELINE
+				// LOOK FOR GESTURE EVENTS
+				// IF CONTINUOUS SHOW ONLY IF KEYFRAME
+				// IF DISCRETE DISPLAY IF ON TIMELINE SEGMENT (500ms or 30 frames)
+				// SEGMENT TIME IS LINGER TIME!!!!
+				
+				//var	gestureEventArray:Array = new Array();
+				//var	pointEventArray:Array = new Array();
+				var scan_time:int = 60; //1000ms
+				var hold_linger:int = 30;
+				var tap_linger:int = 30;
+				
+				ts.tiO.timelineOn = true;
+				ts.tiO.gestureEvents = true;
+				
+				
+				
+				//trace("visulaize event frame",ts.tiO.timelineOn,ts.tiO.history.length,GestureGlobals.frameID);
+				
+				
+				for (i = 0; i < scan_time; i++) 
 					{
-						var x:Number = gO.pOList[key].data.x;
-						var y:Number = gO.pOList[key].data.y;
-						trace("draw gesture now", x, y);
-						
-						
-						if (gO.pOList[key].gesture_type =="hold")
+					if (ts.tiO.history[i])
 						{
-							// hold gesture square
-							graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-							graphics.beginFill(style.fill_color, style.fill_alpha);
-							graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
-							graphics.endFill();
-						}
+						gestureEventArray = ts.tiO.history[i].gestureEventArray;
+						pointEventArray = ts.tiO.history[i].pointEventArray;
+
+						if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
+						//if(pointEventArray.length)trace("point event array--------------------------------------------",pointEventArray.length);
+								
+								/*
+								for (var j:uint = 0; j < pointEventArray.length; j++) 
+									{
+										var px:Number = pointEventArray[j].stageX;
+										var py:Number = pointEventArray[j].stageY;
+										//trace("draw point event:", pointEventArray[j].type, px, py);
+										
+										if ((pointEventArray[j].type =="touchBegin")&&(i<tap_linger))
+										{
+											// tap gesture ring
+											//graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+											//graphics.drawCircle(px, py, style.radius + 20);
+										}
+										
+										if ((pointEventArray[j].type =="touchEnd")&&(i<tap_linger))
+										{
+											// tap gesture ring
+											//graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+											//graphics.drawCircle(px, py, style.radius + 20);
+										}
+									
+									}*/
 						
-						if (gO.pOList[key].gesture_type =="tap")
-						{
-							// tap gesture ring
-							graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-							graphics.drawCircle(x, y, style.radius + 20);
-						}
-						
-						// draw tap (10)
-						// draw double tap (10)
-						// draw hold 
-						
-						
-						
-						if (gO.pOList[key].gesture_type =="manipulate")
-						{
-							
-							trace("manip");
-							if(cO.history[7]){
-							// tap gesture ring
-							graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-							//alpha = 0.08*(hist-j)
-							graphics.moveTo(cO.history[0].x, cO.history[0].y);
-							graphics.lineTo(cO.history[7].x, cO.history[7].y);
+								for (var j:uint = 0; j < gestureEventArray.length; j++) 
+									{
+										
+									var x:Number = gestureEventArray[j].value.x;
+									var y:Number = gestureEventArray[j].value.y;
+									trace("draw gesture event:",gestureEventArray[j].type, x, y);
+									
+									//object phase
+									// start // active // release // passive // complete
+									
+									
+									if ((gestureEventArray[j].type =="tap")&&(i<tap_linger))
+										{
+											// tap gesture ring
+											graphics.lineStyle(style.stroke_thickness+2, style.stroke_color, 0.35);
+											graphics.drawCircle(x, y, style.radius + 15);
+										}
+									
+										if ((gestureEventArray[j].type =="double_tap")&&(i<tap_linger))
+										{
+											// tap gesture ring
+											graphics.lineStyle(style.stroke_thickness+3, style.stroke_color, 0.45);
+											graphics.drawCircle(x, y, style.radius + 30);
+										}
+										
+										if ((gestureEventArray[j].type =="triple_tap")&&(i<tap_linger))
+										{
+											// tap gesture ring
+											graphics.lineStyle(style.stroke_thickness+4, style.stroke_color, 0.55);
+											graphics.drawCircle(x, y, style.radius + 50);
+										}
+									
+									
+									//trace(gestureEventArray[j].type,event.value.gestureID,gestureEventArray[j].value.gestureID);
+									if ((gestureEventArray[j].type =="hold")&&(i<hold_linger))
+										{
+											// hold gesture square
+											graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+											graphics.beginFill(style.fill_color, style.fill_alpha);
+											//graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
+											graphics.drawRect(x - style.width , y- style.width ,  2*style.width,  2*style.width);
+											graphics.endFill();
+										}
+										
+
+										// draw flick (5)
+										// draw swipe (5)
+										
+										//sequence 
+										// draw hold tap
+										// draw hold flick
+									}
 							}
 						}
-						
-						// draw drag
-						// draw scale
-						// draw rotate
-						
-						// draw flick (5)
-						// draw swipe (5)
-						// draw scroll // vert/horiz
-						
-						
-						//sequence 
-						// draw hold tap
-						// draw hold flick
-						
-						
-					}
-					
-				}*/
-				
-				
-				
-				
-				
-				
-		}
+		
+		
 	}
 			
 	private function draw_motion_gesture():void 
@@ -355,6 +444,8 @@ package com.gestureworks.analysis
 							if (cO.iPointArray[pn].type == "pinch") graphics.lineStyle(4, 0xE3716B, style.stroke_alpha);
 							//PURPLE 0xc44dbe // for trigger
 							if (cO.iPointArray[pn].type == "trigger") graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
+							//yellow 0xFFFF00 // for PUSH
+							if (cO.iPointArray[pn].type == "push") graphics.lineStyle(4, 0xFFFF00, style.stroke_alpha);
 							
 							graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
 						}
@@ -468,7 +559,7 @@ package com.gestureworks.analysis
 	/**
 	* @private
 	*/
-	private var _drawPivot:Boolean = true;
+	private var _drawPivot:Boolean = false;
 	/**
 	* draw Rotation.
 	*/

@@ -203,9 +203,10 @@ package com.gestureworks.core
 			{
 				if ((pointDisplay)&&(point)) 		point.draw();
 				if ((clusterDisplay)&&(cluster))	cluster.draw();
-				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
+				//if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 				
 			}
+			if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 			
 			// motion points
 			if (ts.cO.fn) 

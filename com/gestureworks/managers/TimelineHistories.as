@@ -34,8 +34,8 @@ package com.gestureworks.managers
 		{
 			//trace("capturing timline histories");
 			
-			var history:Array = GestureGlobals.gw_public::timelines[ClusterID].history;
-			var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID]
+			var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID];
+			var history:Array = tiO.history;
 			
 			//GestureGlobals.timelineHistoryCaptureLength = 120;
 

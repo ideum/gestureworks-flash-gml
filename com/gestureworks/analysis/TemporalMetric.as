@@ -50,6 +50,7 @@ package com.gestureworks.analysis
 		private var tapID:int = 0;
 		private var dtapID:int = 0;
 		private var ttapID:int = 0;
+		private var holdID:int = 0;
 		
 		// sets gesture id for tap clusters
 		private var ntapID:int = 0;
@@ -97,6 +98,9 @@ package com.gestureworks.analysis
 			var N:uint = cO.n;
 			var LN:uint = cO.hold_n;
 			
+			//clear hold position
+			cO.hold_x = 0;
+			cO.hold_y = 0;
 			
 			// NOTE SHOULD PULL HOLD X AND Y AND N FROM CLUSTER AND MAKE LOCAL TO TEMPORALMETRIC
 			// WILL CLEAN OUT KINEMETRIC AND MOVE TEMPORAL DATA STRUCTS TO TEMPORAL METRIC ASSOCIATED WITH CLUSTER
@@ -119,15 +123,15 @@ package com.gestureworks.analysis
 								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
 								if ((Math.abs(pt.dx) < hold_dist) && (Math.abs(pt.dy) < hold_dist))
 									{
-									if (pt.holdCount < hold_time) {
+									if (pt.holdCount < hold_time) { // non repeat
 									
 										pt.holdCount++;
 															
 										if (pt.holdCount >= hold_time) 
 											{
 											pt.holdLock = true; 
-											cO.hold_x += pt.history[0].x;
-											cO.hold_y += pt.history[0].y;
+											cO.hold_x += pt.x;
+											cO.hold_y += pt.y;
 											//trace("why here")
 											}	
 										}
@@ -153,10 +157,12 @@ package com.gestureworks.analysis
 						if (LN) {
 							if ((LN == hold_number) || (hold_number == 0)) 
 								{
-								cO.hold_x *= 1/LN//k0;
+								cO.hold_x *= 1 / LN//k0;
 								cO.hold_y *= 1 / LN//k0;
 								cO.hold_n = LN;
 								
+								// hold event id
+								holdID++;
 								
 									/////////////////////////////////////
 									// push data (bypasses filtering for now)
@@ -173,6 +179,11 @@ package com.gestureworks.analysis
 									for (DIM = 0; DIM < dn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = d[ts.gO.pOList[key].dList[DIM].property_result];
 									
 									//////////////////////////////////////
+									
+									var hold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.HOLD, { x:cO.hold_x, y:cO.hold_y, gestureID:holdID , id:key} );
+									ts.tiO.frame.gestureEventArray.push(hold_event);
+									
+									
 								}
 							//trace("cluster",cO.hold_x,cO.hold_y,LN,N, cO.hold_n)
 						}
@@ -309,7 +320,7 @@ package com.gestureworks.analysis
 											var lpt:Point = ts.globalToLocal(spt); //local point
 											
 											dtapID++;
-											var dtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:dtapID, id:key});
+											var dtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt.x , y:spt.y, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y, gestureID:dtapID, id:key});
 											//if (ts.tiO.pointEvents) 
 											ts.tiO.frame.gestureEventArray.push(dtap_event);
 											//trace("double tap detected", dtap_event.type)
@@ -380,7 +391,7 @@ package com.gestureworks.analysis
 															var lpt:Point = ts.globalToLocal(spt); //local point
 															
 															ttapID++;
-															var ttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt.x , y:spt.x, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y,gestureID:ntapID, id:key});
+															var ttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt.x , y:spt.y, stageX:spt.x , stageY:spt.y, localX:lpt.x , localY:lpt.y,gestureID:ntapID, id:key});
 															//if (ts.tiO.pointEvents) 
 															ts.tiO.frame.gestureEventArray.push(ttap_event);
 															return; 
