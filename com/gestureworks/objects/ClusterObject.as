@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
-	import com.gestureworks.objects.MotionFrameObject;
+	//import com.gestureworks.objects.MotionFrameObject;
 	import flash.geom.Vector3D;
 	
 	public class ClusterObject extends Object 
@@ -499,20 +499,20 @@ package com.gestureworks.objects
 		// PUSH GESTURE TO TARGET OBJECT
 		
 		
-		
-		// hold_x---------------------
+		// private var _holdPoint:Vector3D = new Vector3D(); 
+		// hold_x---------------------//remove
 		private var _hold_x:Number = 0;
 		public function get hold_x():Number{return _hold_x;}
 		public function set hold_x(value:Number):void{_hold_x = value;}
-		// hold_y---------------------
+		// hold_y---------------------remove
 		private var _hold_y:Number = 0;
 		public function get hold_y():Number{return _hold_y;}
 		public function set hold_y(value:Number):void{_hold_y = value;}
-		// hold_z---------------------
+		// hold_z---------------------remove
 		private var _hold_z:Number = 0;
 		public function get hold_z():Number{return _hold_z;}
 		public function set hold_z(value:Number):void{_hold_z = value;}
-		// c_locked---------------------
+		// c_locked---------------------remove
 		private var _hold_n:int = 0;
 		public function get hold_n():int{return _hold_n;}
 		public function set hold_n(value:int):void{_hold_n = value;}
@@ -526,6 +526,12 @@ package com.gestureworks.objects
 		//
 		//
 		//
+		
+		// motion point data list
+		//private var _hand:Vector.<Vector> = new Vector.<Vector>();
+		//public function get hand():Vector.<Vector>{return _hand;}
+		//public function set hand(value:Vector.<Vector>):void{_hand = value;}
+		
 		
 		// serialized list of point pairs
 		private var _pairList:Array = new Array();

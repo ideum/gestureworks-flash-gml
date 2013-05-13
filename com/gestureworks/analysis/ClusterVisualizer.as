@@ -303,22 +303,17 @@ package com.gestureworks.analysis
 			if (_drawSeparation)
 			{
 			
-					trace(_ds)
+				trace(_ds)
 			
-				if (_ds < 0) // contract
+				if (_ds < -0.1) // contract
 				{
-				graphics.lineStyle(style.c_stroke_thickness +10 ,style.a_stroke_color,0.3);
-				graphics.drawCircle(_x, _y, _radius +20+50*_ds );
+				graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.a_stroke_color,0.3);
+				graphics.drawCircle(_x, _y, _radius +20);
 				}
-				else if (_ds > 0) //expand
+				else if (_ds > 0.1) //expand
 				{
-					graphics.lineStyle(style.c_stroke_thickness +10 ,style.b_stroke_color,0.3);
-					graphics.drawCircle(_x, _y, _radius +20+50*_ds );
-				}
-				else if (_ds==0) {
-					//do nothing
-					//graphics.lineStyle(style.c_stroke_thickness +10 ,0xFFFFFF,0.3);
-					//graphics.drawCircle(_x, _y, _radius +20);
+					graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.b_stroke_color,0.3);
+					graphics.drawCircle(_x, _y, _radius +20);
 				}
 			}
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////

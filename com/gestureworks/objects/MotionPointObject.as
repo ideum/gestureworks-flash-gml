@@ -138,6 +138,20 @@ package com.gestureworks.objects
 		private var _length:Number = 0;
 		public function get length():Number{	return _length;}
 		public function set length(value:Number):void {	_length = value; }
+		//min length of this motion point for sesioon
+		private var _min_length:Number = 100000000;
+		public function get min_length():Number{	return _min_length;}
+		public function set min_length(value:Number):void {	_min_length = value; }
+		//max length of this motion for session
+		private var _max_length:Number = 0;
+		public function get max_length():Number{	return _max_length;}
+		public function set max_length(value:Number):void {	_max_length = value; }
+		//extension percentage based on max and min length for session
+		private var _extension:Number = 0;
+		public function get extension():Number{	return _extension;}
+		public function set extension(value:Number):void {	_extension = value; }
+		
+		
 		//palmAngle
 		private var _palmAngle:Number = 0;
 		public function get palmAngle():Number{	return _palmAngle;}
@@ -147,11 +161,11 @@ package com.gestureworks.objects
 		private var _normalized_width:Number = 0;
 		public function get normalized_width():Number{	return _normalized_width;}
 		public function set normalized_width(value:Number):void {	_normalized_width = value; }
-		//normalized_length based on other fingers in loacl hand
+		//normalized_length based on other fingers in local hand
 		private var _normalized_length:Number = 0;
 		public function get normalized_length():Number{	return _normalized_length;}
 		public function set normalized_length(value:Number):void {	_normalized_length = value; }
-		//normalized_dAngle based on other fingers in loacl hand
+		//normalized_dAngle based on other fingers in local hand
 		private var _normalized_palmAngle:Number = 0;
 		public function get normalized_palmAngle():Number{	return _normalized_palmAngle;}
 		public function set normalized_palmAngle(value:Number):void {	_normalized_palmAngle = value; }

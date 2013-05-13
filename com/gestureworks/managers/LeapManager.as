@@ -23,9 +23,6 @@ package com.gestureworks.managers
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
 			leap.controller.addEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );
-			
-			//GestureWorks.application.stage.addChild(this);
-
 		}
 		
 		public function onInit( event:LeapEvent ):void

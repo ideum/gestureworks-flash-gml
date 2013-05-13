@@ -18,7 +18,7 @@ package com.gestureworks.managers
 	
 
 	import com.gestureworks.core.TouchSprite;
-	import com.gestureworks.objects.MotionFrameObject;
+	//import com.gestureworks.objects.MotionFrameObject;
 	
 	
 	import flash.utils.Dictionary;
@@ -34,10 +34,6 @@ package com.gestureworks.managers
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
-	//import com.gestureworks.managers.MotionPointHistories;
-	
-	
-
 
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;

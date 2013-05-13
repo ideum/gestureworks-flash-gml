@@ -330,6 +330,7 @@ package com.gestureworks.core
 									
 									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
 									if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformation();
+																		//cluster_kinemetric.findSimpleMeanInstTransformation();
 									
 										// BASIC DRAG CONTROL // ALGORITHM // type drag
 										if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
@@ -337,10 +338,11 @@ package com.gestureworks.core
 
 										// BASIC SCALE CONTROL // ALGORITHM // type scale
 										if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
+																		//cluster_kinemetric.findSimpleMeanInstSeparation();
 									
 										// BASIC ROTATE CONTROL // ALGORITHM // type rotate
 										if (g.algorithm == "rotate")		cluster_kinemetric.findMeanInstRotation();
-									
+																			//cluster_kinemetric.findSimpleMeanInstRotation();
 									
 									
 									// BASIC ORIENTATION CONTROL // ALGORITHM
@@ -475,9 +477,10 @@ package com.gestureworks.core
 								cluster_kinemetric.clearMotionPointData();	
 								cluster_kinemetric.normalizeFingerSize();
 								cluster_kinemetric.findThumb();
+								cluster_kinemetric.createHand();
 								
-								//cluster_kinemetric.find3DPinchPoints(); 
-								//cluster_kinemetric.find3DTriggerPoints(); 
+								cluster_kinemetric.find3DPinchPoints(); 
+								cluster_kinemetric.find3DTriggerPoints(); 
 								cluster_kinemetric.find3DPushPoints(); 
 								
 								cluster_kinemetric.findMeanInst3DMotionTransformationIPA();

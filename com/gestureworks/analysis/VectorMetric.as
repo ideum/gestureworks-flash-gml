@@ -248,7 +248,10 @@ package com.gestureworks.analysis
 					///////////////////////////////////////////
 					// SEED DATA INTO CORROLATED GESTURE OBJECT
 					// PUSH STROKE OBJECT DATA INTO GESTURE OBJECT
-					gO.pOList[key].data.path_data = sO.path_data
+					//gO.pOList[key].data.path_data = sO.path_data  // neeed to push raw data into event also for debugging
+					
+					
+					gO.pOList[key].data.path_data = sO.path_data_norm
 					gO.pOList[key].data.prob = sO.path_prob;
 					gO.pOList[key].data.stroke_id = sO.id;
 										
@@ -269,6 +272,10 @@ package com.gestureworks.analysis
 					// TRIGGER GESTURE EVENT CONSTRUCTOR
 					gO.pOList[key].activeEvent = true;
 					gO.pOList[key].dispatchEvent = true;
+					
+					
+					
+					trace(sO.path_data_norm)
 				}
 			}
 		}

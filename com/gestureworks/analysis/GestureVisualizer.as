@@ -35,6 +35,8 @@ package com.gestureworks.analysis
 
 	public class GestureVisualizer extends Shape
 	{	
+		private static const RAD_DEG:Number = 180 / Math.PI;
+		
 		private static var cml:XMLList;
 		public var style:Object;
 		private var ts:Object;
@@ -48,6 +50,17 @@ package com.gestureworks.analysis
 		private var N:int = 0;
 		private var path_data:Array = new Array();
 		private var gn:int = 0;
+		
+		
+		private var orientation:Number = 0
+		private var step:Number =  0
+		private var percent:Number = 0
+		private var r2:Number = 0
+		private var r1:Number = 0
+		private var sA:Number = 0
+		private var eA:Number = 0
+		private var numSteps:Number = 0
+		
 		
 		public function GestureVisualizer(ID:Number)
 		{
@@ -67,6 +80,22 @@ package com.gestureworks.analysis
 				style.radius = 10;
 				style.width = 50;
 				style.line_type = "dashed"
+				
+				style.a_stroke_thickness = 2;
+				style.a_stroke_color = 0x4B7BCC;
+				style.a_stroke_alpha = 0.8;
+				style.a_fill_color = 0x9BD6EA;
+				style.a_fill_alpha = 0.3;
+				style.b_stroke_thickness = 2;
+				style.b_stroke_color = 0xFF0000;
+				style.b_stroke_alpha = 0.2;
+				style.b_fill_color = 0xFF0000;
+				style.b_fill_alpha = 0.3;
+				style.rotation_shape = "segment";
+				style.rotation_radius = 200;	
+				style.percent = 0.7
+				
+				
 		}
 			
 		public function init():void
@@ -77,6 +106,10 @@ package com.gestureworks.analysis
 			sO = ts.sO
 			cO = ts.cO;
 			gO = ts.gO;
+			
+			orientation = cO.orientation;
+			
+			
 			
 			
 		}
@@ -266,39 +299,124 @@ package com.gestureworks.analysis
 					// gest current gesture event array from frame
 					gestureEventArray = ts.tiO.frame.gestureEventArray;
 
-					if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
+					//if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
 							
 						
 								for (var j:uint = 0; j < gestureEventArray.length; j++) 
 									{
 									var x:Number = gestureEventArray[j].value.x;
 									var y:Number = gestureEventArray[j].value.y;
-									trace("draw gesture event:",gestureEventArray[j].type, x, y);
+									//trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
 									
 									
 									//if (gestureEventArray[j].type =="manipulate")
-										
+									//if (gestureEventArray[j].type =="rotate_scale")
 									
 									
 									if (gestureEventArray[j].type =="drag")
 										{
-											trace("visualizwe DRAG")
-											graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+											var df:Number = 5;
+											var dx:Number = gestureEventArray[j].value.drag_dx*df
+											var dy:Number = gestureEventArray[j].value.drag_dy*df
+											//trace("visualize gesture drag", x, y,dx,dy)
+											
+											graphics.lineStyle(10, style.stroke_color, style.stroke_alpha);
 											graphics.moveTo(x, y);
-											graphics.moveTo(x + gestureEventArray[j].value.dx*10, y + gestureEventArray[j].value.dy*10);
+											graphics.lineTo(x + dx, y + dy);
 										}
 										
-										// draw scale
-								if (gestureEventArray[j].type =="scale")
+									// draw scale
+									if (gestureEventArray[j].type =="scale")
 										{
-											trace("visualize scale")
-											graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-											graphics.moveTo(x, y);
-											graphics.moveTo(x + gestureEventArray[j].value.dx*10, y + gestureEventArray[j].value.dy*10);
+											var scf:Number = 50;
+											var ds:Number = gestureEventArray[j].value.scale_dsx * scf;
+											//var dy:Number = gestureEventArray[j].value.scale_dsy * scf;
+											
+											///trace("visualize gesture scale", x,y, ds)
+											
+											if (ds < -0.1) // contract
+											{
+												graphics.lineStyle(30 +2*Math.abs(ds) ,0x9BD6EA,0.3);
+												graphics.drawCircle(x, y, cO.radius +50);
+											}
+											else if (ds > 0.1) //expand
+											{
+												graphics.lineStyle(30 +2*Math.abs(ds) ,0xFF0000,0.3);
+												graphics.drawCircle(x, y, cO.radius +50);
+											}
+											
+											
 										}
 										
-										// draw rotate
-										// draw scroll // vert/horiz
+									// draw rotate
+									if (gestureEventArray[j].type =="rotate")
+									{
+										var rf:Number = 10;
+										var dtheta:Number = gestureEventArray[j].value.rotate_dtheta;
+										var dx:Number = 50 * Math.cos(rf * dtheta); 
+										var dy:Number = 50 * Math.sin(rf * dtheta);
+										
+										//if (style.rotation_shape == "slice") {
+										
+										step =  0.01;
+										percent = style.percent;
+										numSteps = Math.abs(Math.round(dtheta / step));
+										r2 = cO.radius * percent;
+										r1 = cO.radius * (percent + 0.2);
+													
+										if(Math.abs(orientation)>=360){
+											orientation = 0;
+										}
+										sA = orientation/RAD_DEG
+										eA = orientation / RAD_DEG + dtheta;
+					
+												//trace("redraw slice", rotation, dtheta);
+												if (dtheta < 0)
+												{
+													graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
+													graphics.beginFill(style.a_fill_color, style.a_fill_alpha);
+													
+													graphics.moveTo(x, y);
+													graphics.lineTo(x + cO.radius * Math.cos(sA), y + cO.radius * Math.sin(sA));
+													
+													for (var theta3:Number = sA; theta3 > eA; theta3 -= step) {
+														graphics.lineTo(x + cO.radius * Math.cos(theta3), y + cO.radius * Math.sin(theta3));
+													}
+													graphics.lineTo(x, y);
+													graphics.endFill();
+												}
+												
+												if (dtheta > 0)
+												{
+													graphics.lineStyle(style.b_stroke_thickness, style.b_stroke_color, style.b_stroke_alpha);
+													graphics.beginFill(style.b_fill_color,style.b_fill_alpha);
+												
+													graphics.moveTo(x, y);
+													graphics.lineTo(x + cO.radius * Math.cos(sA), y + cO.radius * Math.sin(sA));
+													
+													for (var theta4:Number = sA; theta4 < eA; theta4 += step) {
+														graphics.lineTo(x + cO.radius * Math.cos(theta4), y + cO.radius * Math.sin(theta4));
+													}
+													graphics.lineTo(x, y);
+													graphics.endFill();
+												}
+											//}	
+										}
+	
+									// SYLE AS ARROW
+									// draw scroll // vert/horiz
+									if (gestureEventArray[j].type =="scroll")
+									{
+										var slf:Number = 10;
+										var dx:Number = slf * gestureEventArray[j].value.scroll_dx; 
+										var dy:Number = slf * gestureEventArray[j].value.scroll_dy;
+										
+										//trace("visualize gesture scroll", x,y,dx,dy)
+										graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
+										graphics.moveTo(x, y);
+										graphics.lineTo(x + dx, y +dy);
+									}
+									
 									}
 
 		}
@@ -340,7 +458,7 @@ package com.gestureworks.analysis
 						gestureEventArray = ts.tiO.history[i].gestureEventArray;
 						pointEventArray = ts.tiO.history[i].pointEventArray;
 
-						if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
+						//if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
 						//if(pointEventArray.length)trace("point event array--------------------------------------------",pointEventArray.length);
 								
 								/*
@@ -371,11 +489,12 @@ package com.gestureworks.analysis
 										
 									var x:Number = gestureEventArray[j].value.x;
 									var y:Number = gestureEventArray[j].value.y;
-									trace("draw gesture event:",gestureEventArray[j].type, x, y);
+									//trace("draw gesture event:",gestureEventArray[j].type, x, y, gestureEventArray[j].value.path_data);
 									
 									//object phase
 									// start // active // release // passive // complete
-									
+									//if (gestureEventArray[j].type =="release")
+									//if (gestureEventArray[j].type =="complete")
 									
 									if ((gestureEventArray[j].type =="tap")&&(i<tap_linger))
 										{
@@ -399,24 +518,64 @@ package com.gestureworks.analysis
 										}
 									
 									
-									//trace(gestureEventArray[j].type,event.value.gestureID,gestureEventArray[j].value.gestureID);
-									if ((gestureEventArray[j].type =="hold")&&(i<hold_linger))
+										if ((gestureEventArray[j].type =="hold")&&(i<hold_linger))
 										{
 											// hold gesture square
 											graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 											graphics.beginFill(style.fill_color, style.fill_alpha);
-											//graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
 											graphics.drawRect(x - style.width , y- style.width ,  2*style.width,  2*style.width);
 											graphics.endFill();
 										}
+										// SYLE AS ARROW
+										// draw flick
+										if ((gestureEventArray[j].type =="flick")&&(i<tap_linger))
+										{
+											// flick gesture double headed arrow
+											graphics.lineStyle(style.stroke_thickness+4, style.stroke_color, 0.55);
+											//graphics.drawCircle(x, y, style.radius + 50);
+											trace("visualize flick");
+										}
+										// SYLE AS ARROW
+										// draw swipe
+										if ((gestureEventArray[j].type =="swipe")&&(i<tap_linger))
+										{
+											// swipe gesture arrow
+											graphics.lineStyle(style.stroke_thickness+4, style.stroke_color, 0.55);
+											//graphics.drawCircle(x, y, style.radius + 50);
+											trace("visualize swipe");
+										}
 										
-
-										// draw flick (5)
-										// draw swipe (5)
+										// draw stroke
+										if ((gestureEventArray[j].type =="stroke")||(gestureEventArray[j].type =="stroke_symbol")||(gestureEventArray[j].type =="stroke_greek")||(gestureEventArray[j].type =="stroke_shape")||(gestureEventArray[j].type =="stroke_number")||(gestureEventArray[j].type =="stroke_letter"))
+										{
+											if (i < tap_linger)
+											{
+											var x0:Number = gestureEventArray[j].value.x0;
+											var y0:Number = gestureEventArray[j].value.y0;
+											var ref_path:Array = gestureEventArray[j].value.path;
+												
+											// stroke gesture normalized ref path
+											graphics.lineStyle(style.stroke_thickness + 4, style.stroke_color, 0.55);
+											
+											// SELECTED REFERNCE PATH//////////////////////////////////////
+												if (ref_path[0])
+												{
+													graphics.moveTo(x0, y0)
+													
+													for (var q:int = 0; q < ref_path.length ; q++) 
+													{
+														graphics.lineTo(x0 + ref_path[q].x, x0 + ref_path[q].y);
+													}
+												}
+											}
+										}
 										
-										//sequence 
+										//gesture sequences 
 										// draw hold tap
+										// draw hold dtap
 										// draw hold flick
+										// draw hold scale
+										// draw hold rotate
 									}
 							}
 						}
@@ -441,26 +600,66 @@ package com.gestureworks.analysis
 						{
 							//trace("ipoint type",cO.iPointArray[pn].type)
 							//PINK 0xE3716B // for pinch
-							if (cO.iPointArray[pn].type == "pinch") graphics.lineStyle(4, 0xE3716B, style.stroke_alpha);
-							//PURPLE 0xc44dbe // for trigger
-							if (cO.iPointArray[pn].type == "trigger") graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
-							//yellow 0xFFFF00 // for PUSH
-							if (cO.iPointArray[pn].type == "push") graphics.lineStyle(4, 0xFFFF00, style.stroke_alpha);
+							if (cO.iPointArray[pn].type == "pinch") {
+								
+								graphics.lineStyle(4, 0xE3716B, style.stroke_alpha);
+								graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
+								
+								}
+						
 							
-							graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
+							//PURPLE 0xc44dbe // for trigger
+							if (cO.iPointArray[pn].type == "trigger") {
+								
+								var tgr:Number = 40;
+								
+								
+								// set style
+								graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
+								// draw cross
+								graphics.moveTo (cO.iPointArray[pn].position.x - tgr, cO.iPointArray[pn].position.y);
+								graphics.lineTo (cO.iPointArray[pn].position.x + tgr , cO.iPointArray[pn].position.y);
+								graphics.moveTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y- tgr);
+								graphics.lineTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y + tgr);
+								//draw cricle
+								graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, tgr - 10);
+								
+								// get thum id
+								// check extension
+								
+								if (cO.iPointArray[pn].extension < 40) {
+									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 50);
+								}
+						
+							}
+							
+							//yellow 0xFFFF00 // for PUSH
+							if (cO.iPointArray[pn].type == "push") 
+							{
+								graphics.lineStyle(4, 0xFFFF00, style.stroke_alpha);
+								graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
+							}
+							
+							
 						}
 						
 						// only 2 points and must be from different hands
 						//if ((cO.iPointArray.length == 2) && (cO.iPointArray[0].w != cO.iPointArray[1].w))
-						if (cO.iPointArray.length == 2)
-						{
+						
+						
+						
+						
+							if (cO.iPointArray.length == 2)
+							{
 							// draw mid point//0xFAAFBE,
 							graphics.drawCircle(cO.x, cO.y, 5);
-					
-							//draw pinch line
-							graphics.moveTo (cO.iPointArray[0].position.x, cO.iPointArray[0].position.y);
-							graphics.lineTo (cO.iPointArray[1].position.x , cO.iPointArray[1].position.y);
-						}
+									
+								//draw pinch line
+								graphics.moveTo (cO.iPointArray[0].position.x, cO.iPointArray[0].position.y);
+								graphics.lineTo (cO.iPointArray[1].position.x , cO.iPointArray[1].position.y);
+							}
+						
+						
 						
 						}
 						

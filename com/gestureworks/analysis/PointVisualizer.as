@@ -251,12 +251,8 @@ package com.gestureworks.analysis
 		private function draw_motionPoints():void
 		{
 				
-				
-					if (_drawText)
-					{
-						// clear text
-						for (i = 0; i < 12; i++) mptext_array[i].visible = false;
-					}
+					// clear text
+					if (_drawText)	for (i = 0; i < 12; i++) mptext_array[i].visible = false;
 				
 					//var frame:Frame = cO.motionArray;
 					var mpn:int = cO.motionArray.length;
@@ -293,7 +289,8 @@ package com.gestureworks.analysis
 												mptext_array[i].textCont = String(mp.fingertype) + ": ID:" + String(mp.motionPointID) + "\n"
 																		+ "Thumb prob: " + (Math.round(100 * mp.thumb_prob)) * 0.01 +  "\n" 
 																		+ "N length: " + (Math.round(100 * mp.normalized_length)) * 0.01 + " length: " + (Math.round(100 * mp.length)) * 0.01 + "\n"
-																		+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01; 
+																		+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01 +"\n"
+																		+ "max_length: " + Math.round(mp.max_length) + " min_length: "+ Math.round(mp.min_length) + " length: "+ Math.round(mp.length) + " Extension: " + mp.extension + "%"; 
 																		//" width: "+ Math.round(100*mp.width)*0.01 +
 											}	
 									}

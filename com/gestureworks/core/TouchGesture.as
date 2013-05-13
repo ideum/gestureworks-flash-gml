@@ -627,9 +627,9 @@ package com.gestureworks.core
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
-				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
+				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:cO.x,y:cO.y}));
 				gO.start = false;
-				//trace("start fired");
+				//trace("start fired",cO.x,cO.y);
 			}
 			
 			//////////////////////////////////////////////
@@ -653,18 +653,18 @@ package com.gestureworks.core
 			if ((gO.release)&&(ts.gestureEventRelease))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
-				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
+				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:cO.x,y:cO.y}));
 				gO.release = false;
-				//trace("release fired");
+				//trace("release fired",cO.x,cO.y);
 			}
 			
 			// gesture OBJECT complete event
 			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE,{id:gO.id}));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id}));
+				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:cO.x,y:cO.y}));
 				gO.complete = false;
-				//trace("complete fired");
+				//trace("complete fired",cO.x,cO.y);
 			}
 		
 			gO.start = false;
@@ -749,6 +749,7 @@ package com.gestureworks.core
 								Data["localY"] = trans_pt.y;
 								
 								// default stroke data
+								Data["path"] = gO.pOList[key].data.path_data;
 								Data["prob"] = gO.pOList[key].data.prob;
 								Data["stroke_id"] = gO.pOList[key].data.stroke_id;
 								Data["x0"] = gO.pOList[key].data.x0//cO.x;
@@ -778,16 +779,21 @@ package com.gestureworks.core
 							
 							
 							// USES THE DEFINED EVENT TYPE
-							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
+							//var str:String = gO.pOList[key].event_type
+							//var type:String = "GWGestureEvent." + str.toUpperCase();
 							
-							var GGWEVENT:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DRAG, Data);
+							//trace("touchgesture",gO.pOList[key].event_type)
+							//var GWEVENT:GWGestureEvent = new GWGestureEvent(type, Data);
+							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
+							//var GGWEVENT:GWGestureEvent = new GWGestureEvent(type, Data);
+							
+							//trace("type-----------", gO.pOList[key].event_type, type );
 							
 							ts.dispatchEvent(GWEVENT);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
 							//trace(GWEVENT)
 							//if ((tiO.timelineOn) && (tiO.gestureEvents))	
-							ts.tiO.frame.gestureEventArray.push(GGWEVENT);
-							//ts.tiO.frame.gestureEventArray.push(hold_event);
+							ts.tiO.frame.gestureEventArray.push(GWEVENT);
 							
 						//	trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							/////// split

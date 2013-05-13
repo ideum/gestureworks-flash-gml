@@ -27,6 +27,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.GML;
+	import com.gestureworks.core.TouchSprite
 	
 	import com.gestureworks.utils.ArrangePoints;
 	import com.gestureworks.managers.PointHistories;
@@ -54,6 +55,8 @@ package com.gestureworks.managers
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		
+		private static var gms:TouchSprite;
+		
 		// initializes touchManager
 		gw_public static function initialize():void
 		{	
@@ -61,6 +64,8 @@ package com.gestureworks.managers
 			
 			points = GestureGlobals.gw_public::points;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
+			
+			//global_motion_sprite = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			
 			//DRIVES UPDATES ON POINT LIFETIME
 			if (GestureWorks.activeNativeTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
@@ -213,10 +218,22 @@ package com.gestureworks.managers
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
+			
+			/////////////////////////////////////////////////////////////////////////////
+			//GET MOTION POINT LIST
+			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
+				//////////////////////////////////////////////////////////////
+				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
+				//COULD BE JUST INTERACTION POINT DATA ??
+				// BUT NEEDS TO LOCALLY DETERMIN PICH HIT TEST
+				// PERHAPS A INTERACTION POINT CADIDATE LIST THEN PERFORM HIT LOCAL TO THE TOUCHOBJECT
+				tO.cO.motionArray = gms.cO.motionArray
+				//////////////////////////////////////////////////////////////
+				
 				// update touch,cluster and gesture processing
 				updateTouchObject(tO);
 				

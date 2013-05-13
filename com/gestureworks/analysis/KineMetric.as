@@ -48,7 +48,7 @@ package com.gestureworks.analysis
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
 		
-		public var pointList:Vector.<PointObject>; // should operate directly on cluster
+		//public var pointList:Vector.<PointObject>; // should operate directly on cluster
 		public var pointPairList:Vector.<PointPairObject>;// should operate directly on cluster
 		
 		// number in group
@@ -113,8 +113,8 @@ package com.gestureworks.analysis
 					k0 = 1 / N;
 					k1 = 1 / N1;
 					if (N == 0) k1 = 0;
-					pointList = cO.pointArray; // copy most recent point array data
-					mc = pointList[0].moveCount; // get sample move count value
+					//pointList = cO.pointArray; // copy most recent point array data
+					mc = cO.pointArray[0].moveCount; // get sample move count value
 					
 					//trace("move count:",mc);
 					
@@ -150,7 +150,7 @@ package com.gestureworks.analysis
 				ipn = ts.cO.ipn;
 				
 				if (ipn) {
-					// do somethinng
+					// do something
 				}
 				
 				
@@ -264,19 +264,6 @@ package com.gestureworks.analysis
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// basic cluster property values 
 			// uses the current position of the points in the cluster to find the spread of the cluster and its current dims
-					/*
-					c_px = 0; 
-					c_py = 0;
-					c_r = 0;
-					c_w = 0;
-					c_h = 0;
-					
-					c_sx = 0;
-					c_sy = 0;
-					c_theta = 0;
-					c_emx = 0;
-					c_emy = 0;
-					*/
 					
 					cO.x = 0; 
 					cO.y = 0;
@@ -292,18 +279,12 @@ package com.gestureworks.analysis
 					
 					
 					
-					if ((N == 1)&& (pointList.length && pointList[0].history.length && pointList[0].history[0])) 
+					if (N == 1)
 					{
-						/*
-						c_px = pointList[0].history[0].x;
-						c_py = pointList[0].history[0].y;
-						c_emx = pointList[0].history[0].x;
-						c_emy = pointList[0].history[0].y;
-						*/
-						cO.x = pointList[0].history[0].x;
-						cO.y = pointList[0].history[0].y;
-						cO.mx = pointList[0].history[0].x;
-						cO.my = pointList[0].history[0].y;
+						cO.x = cO.pointArray[0].x;
+						cO.y = cO.pointArray[0].y;
+						cO.mx = cO.pointArray[0].x;
+						cO.my = cO.pointArray[0].y;
 					}
 					
 					else if (N > 1)
@@ -312,61 +293,53 @@ package com.gestureworks.analysis
 						{
 							for (var j1:uint = 0; j1 < N; j1++)
 							{
-								if ((i != j1)&& pointList.length && (pointList[i].history.length) && (pointList[i].history[0]) && (pointList[j1].history.length && pointList[j1].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
+								if ((i != j1) && (cO.pointArray[i]) && (cO.pointArray[j1]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock))//edit
 									{
 										//trace("dim",N);
-										var dx:Number = pointList[i].history[0].x - pointList[j1].history[0].x
-										var dy:Number = pointList[i].history[0].y - pointList[j1].history[0].y
+										var dx:Number = cO.pointArray[i].x - cO.pointArray[j1].x
+										var dy:Number = cO.pointArray[i].y - cO.pointArray[j1].y
 										var ds:Number  = Math.sqrt(dx * dx + dy * dy);
 											
 										// diameter, radius of group
-										if(ds>cO.radius){
-											//c_r = ds
+										if (ds > cO.radius)
+										{
 											cO.radius = ds *0.5;
 										}
 										// width of group
 										var abs_dx:Number = Math.abs(dx);
-										if(abs_dx>cO.width){
-											//c_w = abs_dx;
-											//c_px = pointList[i].history[0].x -dx / 2;
+										if (abs_dx > cO.width)
+										{
 											cO.width = abs_dx;
-											cO.x = pointList[i].history[0].x -(dx*0.5);
+											cO.x = cO.pointArray[i].x -(dx*0.5);
 										}
 										// height of group
 										var abs_dy:Number = Math.abs(dy);
-										if(abs_dy>cO.height){
-											//c_h = abs_dy;
-											//c_py = pointList[i].history[0].y -dy / 2
+										if (abs_dy > cO.height)
+										{
 											cO.height = abs_dy;
-											cO.y = pointList[i].history[0].y -(dy* 0.5);
+											cO.y = cO.pointArray[i].y -(dy* 0.5);
 										} 
 										
 										// mean point position
-										//c_emx += pointList[i].history[0].x;
-										//c_emy += pointList[i].history[0].y;
-										cO.mx += pointList[i].history[0].x;
-										cO.my += pointList[i].history[0].y;
+										cO.mx += cO.pointArray[i].x;
+										cO.my += cO.pointArray[i].y;
 									}
 							}
 							
 							
 							// inst separation and rotation
-							if ( (pointList[i].history.length) && (pointList[0].history.length && pointList[0].history[0]) && (pointList[i].history[0]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
+							if ((cO.pointArray[0]) && (cO.pointArray[i]))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
 							{
-								var dxs:Number = pointList[0].history[0].x - pointList[i].history[0].x;
-								var dys:Number = pointList[0].history[0].y - pointList[i].history[0].y;
+								var dxs:Number = cO.pointArray[0].x - cO.pointArray[i].x;
+								var dys:Number = cO.pointArray[0].y - cO.pointArray[i].y;
 								//var ds:Number  = Math.sqrt(dx * dx + dy * dy);
 
 								// separation of group
-								//c_s += ds;
-								//c_sx += Math.abs(dxs);
-								//c_sy += Math.abs(dys);
 								cO.separationX += Math.abs(dxs);
 								cO.separationY += Math.abs(dys);
 								
 								// rotation of group
-								//c_theta += (calcAngle(dxs, dys)) || 0
-								cO.rotation += (calcAngle(dxs, dys)) || 0
+								cO.rotation += (calcAngle(dxs, dys)) //|| 0
 							}
 						}
 						/*
@@ -383,6 +356,55 @@ package com.gestureworks.analysis
 						cO.mx *= k0;
 						cO.my *= k0;
 					}
+		}
+		
+		
+		public function findSimpleMeanInstTransformation():void
+		{
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// cluster tranformation // OPERATION
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			if (N == 1) 
+			{
+				// DO NOT SET OTHER DELTAS TO ZERO IN OPERATOR
+				cO.dx = cO.pointArray[0].DX;
+				cO.dy = cO.pointArray[0].DY;
+				//trace("cluster- porcessing", c_dx,c_dy);
+			}
+			else if (N > 1)
+				{
+					for (i = 0; i < N; i++) 
+						{	
+							// translate	
+							cO.dx += cO.pointArray[i].DX;
+							cO.dy += cO.pointArray[i].DY;
+						}
+						//var theta0:Number = calcAngle(sx, sy);
+						//var theta1:Number = calcAngle(sx_mc, sy_mc); // could eliminate in point pair
+
+						cO.dx *= k0;
+						cO.dy *= k0;
+								
+						if (cO.history[1])
+								{
+									//////////////////////////////////////////////////////////
+									// CHANGE IN SEPARATION
+									if ((cO.history[1].radius != 0) && (cO.rotation != 0)) 
+									{
+										cO.ds = (cO.radius - cO.history[1].radius) * sck;
+									}
+									//trace(cO.radius, cO.history[mc].radius);
+									
+									//////////////////////////////////////////////////////////
+									// CHANGE IN ROTATION
+									if ((cO.history[1].rotation != 0) && (cO.rotation != 0)) 
+									{
+										if (Math.abs(cO.rotation - cO.history[1].rotation) > 90) cO.dtheta = 0
+										else cO.dtheta = (cO.rotation - cO.history[1].rotation);	
+									}
+									//trace(cO.rotation, cO.history[1].rotation, cO.dtheta);
+								}
+				}
 		}
 		
 		public function findMeanInstTransformation():void
@@ -409,6 +431,7 @@ package com.gestureworks.analysis
 							var sy_mc:Number = 0;
 						//	var ds:Number = 0;
 								
+						
 								for (i = 0; i < N; i++) 
 								{	
 									/////////////////////////////////////////////
@@ -485,7 +508,10 @@ package com.gestureworks.analysis
 								
 								cO.dx *= k0;
 								cO.dy *= k0;
+								
+								
 								cO.ds = (Math.sqrt(sx * sx  +  sy * sy) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc)) * k1 * sck;
+								
 								/*
 								if ((cO.history.length != 0)&&(cO.history[1])) {
 									//trace("hello");
@@ -497,12 +523,12 @@ package com.gestureworks.analysis
 								//c_dsy *= k1;
 								cO.dtheta *= k1;
 								
+								
+								
 				}
 		//trace("transfromation",c_dx,c_dy, c_ds,c_dtheta)
 		}
 		
-		// NEED TO REMOVE HO AND HISTORY COMPONENET
-		// NEED TO MAKE STANDARD AND ALWAYS ON
 		public function findMeanInstTranslation():void
 		{
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -515,24 +541,51 @@ package com.gestureworks.analysis
 					
 					if (N == 1) 
 						{
-							cO.dx = pointList[0].DX;
-							cO.dy = pointList[0].DY;
+							if (cO.pointArray[0])
+								{
+								cO.dx = cO.pointArray[0].DX;
+								cO.dy = cO.pointArray[0].DY;
+								}
 						}
 					else if (N > 1)
 					{
 						for (i = 0; i < N; i++) 
 						{
-								if (pointList[i])//&&(!pointList[i].holdLock))// edit
+								if (cO.pointArray[i])//&&(!pointList[i].holdLock))// edit
 								{
 									// SIMPLIFIED DELTa
-									cO.dx += pointList[i].DX;
-									cO.dy += pointList[i].DY;
+									cO.dx += cO.pointArray[i].DX;
+									cO.dy += cO.pointArray[i].DY;
 								}	
 						}
 						cO.dx *= k0;
 						cO.dy *= k0;
 					}
 					//	trace("drag calc kine",c_dx,c_dy);
+		}
+		
+		
+		public function findSimpleMeanInstSeparation():void
+		{
+			
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// cluster separation //OPERATION
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			// finds the change in the separation of the cluster between the current frame and a previous frame in history
+			cO.ds = 0;
+			cO.dsx = 0;
+			cO.dsy = 0;
+					
+					if (N > 1)
+					{	
+						if (cO.history[1])
+						{
+							if (cO.history[1].radius != 0) cO.ds = (cO.radius - cO.history[1].radius) * sck;
+							if (cO.history[1].width != 0) cO.dsx = (cO.width - cO.history[1].width) * sck;
+							if (cO.history[1].height != 0) cO.dsy = (cO.height - cO.history[1].height) * sck;
+						} 
+					}
 		}
 		
 		public function findMeanInstSeparation():void
@@ -556,12 +609,12 @@ package com.gestureworks.analysis
 						for (i = 0; i < N; i++) 
 						{
 							//if ((N > i + 1) && (pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
-							if ((N>i+1)&&(pointList[0].history.length>mc) && (pointList[i + 1].history.length>mc))
+							if ((N>i+1)&&(cO.pointArray[0].history.length>mc) && (cO.pointArray[i + 1].history.length>mc))
 							{		
-								sx = Math.abs(pointList[0].history[0].x - pointList[i + 1].history[0].x);
-								sy = Math.abs(pointList[0].history[0].y - pointList[i + 1].history[0].y);
-								sx_mc = Math.abs(pointList[0].history[mc].x - pointList[i + 1].history[mc].x);
-								sy_mc = Math.abs(pointList[0].history[mc].y - pointList[i + 1].history[mc].y);
+								sx = Math.abs(cO.pointArray[0].x - cO.pointArray[i + 1].history[0].x);
+								sy = Math.abs(cO.pointArray[0].y - cO.pointArray[i + 1].history[0].y);
+								sx_mc = Math.abs(cO.pointArray[0].history[mc].x - cO.pointArray[i + 1].history[mc].x);
+								sy_mc = Math.abs(cO.pointArray[0].history[mc].y - cO.pointArray[i + 1].history[mc].y);
 								
 								//c_ds += (Math.sqrt((pointList[0].history[0].x - pointList[i + 1].history[0].x) * (pointList[0].history[0].x - pointList[i + 1].history[0].x) + (pointList[0].history[0].y - pointList[i + 1].history[0].y) * (pointList[0].history[0].y - pointList[i + 1].history[0].y)) - Math.sqrt((pointList[0].history[mc].x - pointList[i + 1].history[mc].x) * (pointList[0].history[mc].x - pointList[i + 1].history[mc].x) + (pointList[0].history[mc].y - pointList[i + 1].history[mc].y) * (pointList[0].history[mc].y - pointList[i + 1].history[mc].y)))
 								cO.ds += (Math.sqrt(sx * sx + sy * sy) - Math.sqrt(sx_mc * sx_mc + sy_mc * sy_mc));
@@ -583,6 +636,25 @@ package com.gestureworks.analysis
 					
 		}	
 		
+		
+		public function findSimpleMeanInstRotation():void
+		{
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// cluster roation // OPERATION
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// finds the change in the rotation of the cluster between the current frame and a previous frame in history
+			cO.dtheta = 0;
+						
+			if(N>1)
+				{	
+				if (cO.history[1])
+					{
+						if (cO.history[1].rotation!=0) cO.dtheta =(cO.rotation - cO.history[1].rotation)	 
+					}					
+				}
+			//trace(cO.dtheta);
+		}
+		
 		public function findMeanInstRotation():void
 		{
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -596,13 +668,13 @@ package com.gestureworks.analysis
 						{
 						for (i = 0; i < N; i++) 
 						{
-								if ((N > i + 1)&&(pointList.length>i)&&(pointList[0].history.length>mc) && (pointList[i + 1].history.length>mc))
+								if ((N > i + 1)&&(cO.pointArray[0].history.length>mc) && (cO.pointArray[i + 1].history.length>mc))
 								{		
 									// SIMPLIFIED DELTA 
 									var dtheta:Number = 0;
-									var theta0:Number = calcAngle((pointList[0].history[0].x - pointList[i+1].history[0].x), (pointList[0].history[0].y - pointList[i+1].history[0].y));
+									var theta0:Number = calcAngle((cO.pointArray[0].x - cO.pointArray[i+1].x), (cO.pointArray[0].y - cO.pointArray[i+1].y));
 									//var theta1:Number = calcAngle((pointList[0].history[h].x - pointList[i + 1].history[h].x), (pointList[0].history[h].y - pointList[i + 1].history[h].y));
-									var theta1:Number = calcAngle((pointList[0].history[mc].x - pointList[i+1].history[mc].x), (pointList[0].history[mc].y - pointList[i+1].history[mc].y));
+									var theta1:Number = calcAngle((cO.pointArray[0].history[mc].x - cO.pointArray[i+1].history[mc].x), (cO.pointArray[0].history[mc].y - cO.pointArray[i+1].history[mc].y));
 									
 									if ((theta0 != 0) && (theta1 != 0)) 
 										{
@@ -630,12 +702,12 @@ package com.gestureworks.analysis
 						
 						for (i = 0; i < N; i++) 
 						{
-							if (pointList[i].history[1])//&&(!pointList[i].holdLock))//edit
+							if (cO.pointArray[i].history[1])//&&(!pointList[i].holdLock))//edit
 							{
 								// SIMPLIFIED DELTAS
 								// second diff of x anf y wrt t
-								cO.ddx += pointList[i].history[0].dx - pointList[i].history[1].dx;
-								cO.ddy += pointList[i].history[0].dy - pointList[i].history[1].dy;
+								cO.ddx += cO.pointArray[i].dx - cO.pointArray[i].history[1].dx;
+								cO.ddy += cO.pointArray[i].dy - cO.pointArray[i].history[1].dy;
 							}
 						}
 						cO.ddx *= k0;
@@ -655,12 +727,12 @@ package com.gestureworks.analysis
 					
 			for (i = 0; i < N; i++) 
 				{
-					if(pointList[i].history.length>t)
+					if(cO.pointArray[i].history.length>t)
 					{
 					for (j = 0; j < t; j++) 
 						{
-						cO.etm_dx += pointList[i].history[j].dx;
-						cO.etm_dy += pointList[i].history[j].dy;
+						cO.etm_dx += cO.pointArray[i].history[j].dx;
+						cO.etm_dy += cO.pointArray[i].history[j].dy;
 						}
 					}
 			}
@@ -684,20 +756,20 @@ package com.gestureworks.analysis
 						
 				for (i = 0; i < N; i++) 
 					{
-					if(pointList[i].history.length>t)
+					if(cO.pointArray[i].history.length>t)
 						{
 							// SIMPLIFIED DELTAS
 							// second diff of x anf y wrt t
 							for (j = 0; j < t; j++) 
 							{
-								cO.etm_ddx += pointList[i].history[j+1].dx- pointList[i].history[j].dx;
-								cO.etm_ddy += pointList[i].history[j + 1].dy -pointList[i].history[j].dy ;
+								cO.etm_ddx += cO.pointArray[i].history[j+1].dx- cO.pointArray[i].history[j].dx;
+								cO.etm_ddy += cO.pointArray[i].history[j + 1].dy -cO.pointArray[i].history[j].dy ;
 								//cO.etm_ddx += pointList[i].history[0].dx - pointList[i].history[1].dx;
 								//cO.etm_ddy += pointList[i].history[0].dy - pointList[i].history[1].dy;
 							}
 						}
 					}
-					trace(k0, t0);
+					//trace(k0, t0);
 			//cO.etm_ddx *= k0 * t0;
 			//cO.etm_ddy *= k0 * t0;
 		}
@@ -715,19 +787,19 @@ package com.gestureworks.analysis
 						
 							for (i = 0; i < N; i++) 
 								{
-									if (pointList[i].history[0])
+									if (cO.pointArray[i].history[0])
 									//if(pointList.length>i)
 									{
 										handArray[i] = new Array();
-										handArray[i].id = pointList[i].id; // set point id
+										handArray[i].id = cO.pointArray[i].id; // set point id
 									
 										// find distance between center of cluster and finger tip
-										var dxe:Number = (pointList[i].history[0].x - cO.x);
-										var dye:Number = (pointList[i].history[0].y - cO.y);
+										var dxe:Number = (cO.pointArray[i].history[0].x - cO.x);
+										var dye:Number = (cO.pointArray[i].history[0].y - cO.y);
 										
 										// find diatance between mean center of cluster and finger tip
-										var dxf:Number = (pointList[i].history[0].x - cO.mx);
-										var dyf:Number = (pointList[i].history[0].y - cO.my);
+										var dxf:Number = (cO.pointArray[i].history[0].x - cO.mx);
+										var dyf:Number = (cO.pointArray[i].history[0].y - cO.my);
 										var ds1:Number = Math.sqrt(dxf * dxf + dyf * dyf)
 										
 										handArray[i].dist = ds1; // set distance from mean
@@ -735,10 +807,10 @@ package com.gestureworks.analysis
 
 										for (var q:int = 0; q < N; q++) 
 										{
-											if ((i != q)&&(pointList[q].history[0]))
+											if ((i != q)&&(cO.pointArray[q].history[0]))
 												{
-												var dxq:Number = (pointList[q].history[0].x - cO.x);
-												var dyq:Number = (pointList[q].history[0].y - cO.y);
+												var dxq:Number = (cO.pointArray[q].history[0].x - cO.x);
+												var dyq:Number = (cO.pointArray[q].history[0].y - cO.y);
 												angle = dotProduct(dxe, dye, dxq, dyq)*RAD_DEG;
 												
 												if (angle < handArray[i].angle) handArray[i].angle = angle;
@@ -767,10 +839,10 @@ package com.gestureworks.analysis
 							// calc orientation vector // FIND ORIENTATION USING CLUSTER RADIAL CENTER
 							for (i = 0; i < N; i++) 
 								{
-									if (pointList[i].id != handArray[0].id) 
+									if (cO.pointArray[i].id != handArray[0].id) 
 									{	
-										cO.orient_dx += (pointList[i].history[0].x - cO.x);
-										cO.orient_dy += (pointList[i].history[0].y - cO.y);
+										cO.orient_dx += (cO.pointArray[i].history[0].x - cO.x);
+										cO.orient_dy += (cO.pointArray[i].history[0].y - cO.y);
 									}
 								}
 							cO.orient_dx *= k1;
@@ -796,15 +868,15 @@ package com.gestureworks.analysis
 								}
 					
 								//if ((pointList[0].history[0]) && (pointList[0].history[1])) 
-								if (pointList[0].history.length>1) 
+								if (cO.pointArray[0].history.length>1) 
 								{		
 									// find touch point translation vector
-									var dxh:Number = pointList[0].history[1].x - x_c;
-									var dyh:Number = pointList[0].history[1].y - y_c;
+									var dxh:Number = cO.pointArray[0].history[1].x - x_c;
+									var dyh:Number = cO.pointArray[0].history[1].y - y_c;
 											
 									// find vector that connects the center of the object and the touch point
-									var dxi:Number = pointList[0].history[0].x - x_c;
-									var dyi:Number = pointList[0].history[0].y - y_c;
+									var dxi:Number = cO.pointArray[0].x - x_c;
+									var dyi:Number = cO.pointArray[0].y - y_c;
 									var pdist:Number = Math.sqrt(dxi * dxi + dyi * dyi);
 											
 									var t0:Number = calcAngle(dxh, dyh);
@@ -821,8 +893,8 @@ package com.gestureworks.analysis
 									//{	
 										// weighted effect
 										cO.pivot_dtheta = theta_diff*Math.pow(pdist, 2)*pvk;
-										cO.x = pointList[0].history[0].x;
-										cO.y = pointList[0].history[0].y;
+										cO.x = cO.pointArray[0].x;
+										cO.y = cO.pointArray[0].y;
 									//}
 									//else cO.pivot_dtheta = 0; 
 								}
@@ -910,6 +982,26 @@ package com.gestureworks.analysis
 						//temp_width_array.push(cO.motionArray[i].width);	
 						temp_palmAngle_array.push(cO.motionArray[i].palmAngle)
 						//trace("width",cO.motionArray[i].width)
+						
+						////////////////////////////////////////////////////
+						// get percent extension
+						var l:Number = cO.motionArray[i].length;
+						var max_l:Number = cO.motionArray[i].max_length;
+						var min_l:Number = cO.motionArray[i].min_length;
+						var ext:Number = 0;
+						
+						//update max and min length
+						if (l > max_l) cO.motionArray[i].max_length = l;
+						if ((l < min_l)&&(l!=0)) cO.motionArray[i].min_length = l;
+						
+						// calc relative extension
+						ext = Math.round(100 * ((l - min_l) / (max_l -min_l)));
+						if (ext < 0) ext = 0;
+						if (ext > 100) ext = 100;
+						
+						 cO.motionArray[i].extension = ext;
+						//trace(cO.motionArray[i].extension,l,min_l,max_l)
+						/////////////////////////////////////////////////////
 					}
 				}
 			
@@ -944,6 +1036,20 @@ package com.gestureworks.analysis
 						}
 					}
 		}
+		
+		// get noamlized finger length and palm angle
+		public function createHand():void 
+		{
+			//cO.hand[0] = new Vector();
+			
+			for (i = 0; i < fn; i++)
+					{
+						/// create hand
+						if (cO.motionArray[i].type == "palm") cO.hand = cO.motionArray[i] //palmID
+						//cO.hand[0][0] = cO.motionArray[i].motionPointID; //palmID
+					}
+		}
+		
 		
 		// find thumb .. generate pair data
 		//.. should save data to cluster table for rot and scale paired operations
@@ -1253,7 +1359,8 @@ package com.gestureworks.analysis
 												var pinch_dist:Number = Vector3D.distance(fv0,fv1) ;
 												//trace(pinch_dist)
 												
-												if (pinch_dist <= pinchThreshold){
+												if (pinch_dist <= pinchThreshold)
+												{
 													// find midpoint between fingertips
 													var pmp:MotionPointObject = new MotionPointObject();
 														pmp.position.x = fv0.x - (fv0.x - fv1.x) * 0.5;
@@ -1321,8 +1428,8 @@ package com.gestureworks.analysis
 									if (pp_ht) {
 											//create point
 											var pmp:MotionPointObject = new MotionPointObject();
-													pmp.id = cO.motionArray[i].id;
-													pmp.motionPointID = cO.motionArray[i].motionPointID;
+													//pmp.id = cO.motionArray[i].id;
+													//pmp.motionPointID = cO.motionArray[i].motionPointID;
 													pmp.handID = cO.motionArray[i].handID;
 													pmp.position = cO.motionArray[i].position;
 													pmp.direction = cO.motionArray[i].direction;
@@ -1347,9 +1454,8 @@ package com.gestureworks.analysis
 			var triggerThreshold:Number = 45;
 			var tempList:Array = new Array();
 			//trace("--frame----------------------------------");
-				if (fn)
-				{
-					//only works for 2 fingers
+				
+								//only works for 2 fingers
 								for (i = 0; i < fn; i++)
 									{
 									for (var j3:uint = 0; j3 <fn; j3++)
@@ -1396,11 +1502,6 @@ package com.gestureworks.analysis
 														array.sortOn("length", Array.DESCENDING);
 														tfv = array[0].point
 														
-														
-														
-													//trace("point", )
-													//push to temp list
-													//tempList.push(tfv);
 
 														//create trigger point
 														var tp:MotionPointObject = new MotionPointObject();
@@ -1408,15 +1509,12 @@ package com.gestureworks.analysis
 															tp.position = tfv.position;
 															tp.direction = tfv.direction;
 															tp.length = tfv.length;
-															tp.id = tfv.id;
-															tp.motionPointID = tfv.motionPointID;
+															//tp.id = tfv.id;
+															//tp.motionPointID = tfv.motionPointID;
 															tp.handID = tfv.handID;
 															tp.type = "trigger";
 														
 														var tpht:Boolean = ts.hitTestPoint(tp.position.x , tp.position.y);
-														
-														//var tpht2:Boolean = ts.hitTestPoint(array[0].point.position.x , array[0].point.position.y);
-														
 														
 														if (tpht){
 															//add to pinch point list
@@ -1431,35 +1529,7 @@ package com.gestureworks.analysis
 											}
 									}
 								}
-					
-					
-														// sort array
-					
-					
-														/*
-														//create trigger point
-														var tp:MotionPointObject = new MotionPointObject();
-															tp.position = tfv.position;
-															tp.direction = tfv.direction;
-															tp.length = tfv.length;
-															tp.id = tfv.id;
-															tp.motionPointID = tfv.motionPointID;
-															tp.handID = tfv.handID;
-															tp.type = "trigger";
-														
-														//var tpht:Boolean = ts.hitTestPoint(tp.position.x ,tp.position.y);
-														
-														//add to pinch point list
-														cO.iPointArray.push(tp);
-														
-														trace("finger", i,j3, tp.id, "angle", angle, tp.motionPointID )
-														
-														// when found trigger pair return out of loop
-														//return
-														*/
-					
-					
-			}
+
 		}
 		
 		// 3D MANIPULATE GENERIC 
@@ -1536,8 +1606,52 @@ package com.gestureworks.analysis
 												
 												
 												
-										var ipn:int = cO.iPointArray.length	
-												
+										var ipn:int = cO.iPointArray.length
+										var ch:int = cO.history.length;
+										
+										for (i = 0; i < ch; i++) 
+										{
+											/*	
+											var chipn = cO.history[i].iPointArray.length
+											
+											for (j = 0; j < chipn; j++) 
+											{
+												//trace("cluster hist, interactive point array", cO.history[i].iPointArray[j].position);
+													
+													if ((chipn > j + 1) && (cO.iPointArray[j]) && (cO.iPointArray[j + 1])) {
+														if (cO.history[3]) {
+															if((cO.history[3].iPointArray[j]) && (cO.history[3].iPointArray[j+1])) {
+														// scale 
+														sx += cO.iPointArray[j].position.x - cO.iPointArray[j+1].position.x;
+														sy += cO.iPointArray[j].position.y - cO.iPointArray[j+1].position.y;
+														sx_mc += cO.history[3].iPointArray[j].position.x - cO.history[3].iPointArray[j+1].position.x;
+														sy_mc += cO.history[3].iPointArray[j].position.y - cO.history[3].iPointArray[j+1].position.y;
+
+														// rotate
+														var dtheta:Number = 0;
+														var theta0:Number = calcAngle(sx, sy);
+														var theta1:Number = calcAngle(sx_mc, sy_mc);
+																
+															if ((theta0 != 0) && (theta1 != 0)) 
+																{
+																if (Math.abs(theta0 - theta1) > 180) dtheta = 0
+																else dtheta = (theta0 - theta1);
+																}
+															else dtheta = 0;
+																		
+															cO.dtheta += dtheta;
+															cO.ds = (Math.sqrt(sx * sx  +  sy * sy) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc)) * sck;
+															
+															trace("rotate and scale", sx_mc, sy_mc, sx, sy, cO.dtheta, cO.ds);
+															}
+														}
+													}
+													}*/
+												}
+										
+										
+										
+										/*	
 										for (i = 0; i < ipn; i++) 
 										{
 											if (cO.history[1])
@@ -1579,8 +1693,15 @@ package com.gestureworks.analysis
 												
 										}
 										}
-									}
+									}*/
+									
+									
+								trace(cO.hand.normal, cO.hand.sphereRadius, cO.hand.velocity)	
 								
+								//AVERAGE FINGER SEPERATION 
+								// BETTER THAN SPHERE WHEN 2 FINGERS?
+								
+
 							}
 							// stops erroneous slipping
 							if (Math.abs(cO.dx) > 200) cO.dx = 0;
