@@ -112,7 +112,7 @@ package com.gestureworks.core
 			if (! fullscreen) return;
 			
 			stage.scaleMode=StageScaleMode.NO_SCALE;
-			stage.displayState=StageDisplayState.FULL_SCREEN;
+			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 			stage.align = StageAlign.TOP_LEFT;
 		}
 		
