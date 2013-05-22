@@ -783,39 +783,40 @@ package com.gestureworks.core
 		public function get y_lock():Boolean {return _y_lock;}	
 		public function set y_lock(value:Boolean):void{_y_lock = value;}
 		
+
 		/////////////////////////////////////////////////////////////
 		// $ affine transform methods
 		/////////////////////////////////////////////////////////////
 		// x property
 		public function get $x():Number {return _$x;}
-		public function set $x(value:Number):void
-		{
-			_$x = value;
-		}
+		public function set $x(value:Number):void{	_$x = value;}
 		// y property
 		public function get $y():Number {return _$y;}
-		public function set $y(value:Number):void
-		{
-			_$y = value;
-		}
+		public function set $y(value:Number):void{	_$y = value;}
+		// z property
+		public function get $z():Number {return _$z;}
+		public function set $z(value:Number):void{	_$z = value;}
 		// rotation property
 		public function get $rotation():Number{return _$rotation;}
-		public function set $rotation(value:Number):void
-		{
-			_$rotation = value;
-		}
+		public function set $rotation(value:Number):void{	_$rotation = value;}
+		// rotationX property
+		public function get $rotationX():Number{return _$rotationX;}
+		public function set $rotationX(value:Number):void{_$rotationX = value;}
+		// rotationY property
+		public function get $rotationY():Number{return _$rotationY;}
+		public function set $rotationY(value:Number):void{	_$rotationY = value;}
+		// rotationZ property
+		public function get $rotationZ():Number{return _$rotationZ;}
+		public function set $rotationZ(value:Number):void{	_$rotationZ = value;}
 		// scaleX property
 		public function get $scaleX():Number {return _$scaleX;}
-		public function set $scaleX(value:Number):void
-		{
-			_$scaleX = value;
-		}
+		public function set $scaleX(value:Number):void{	_$scaleX = value;}
 		// scaleY property
 		public function get $scaleY():Number {return _$scaleY;}	
-		public function set $scaleY(value:Number):void
-		{
-			_$scaleY = value;
-		}
+		public function set $scaleY(value:Number):void{_$scaleY = value;}
+		// scaleZ property
+		public function get $scaleZ():Number {return _$scaleY;}	
+		public function set $scaleZ(value:Number):void{	_$scaleZ = value;}
 		// affine transform point 
 		public function get $transformPoint():Point { return new Point(trO.x, trO.y);} 
 		public function set $transformPoint(pt:Point):void
@@ -825,38 +826,18 @@ package com.gestureworks.core
 				trO.y = tpt.y;
 		}
 		
-		/*
-		// rotationX property
-		public function get $rotationX():Number{return _rotationX;}
-		public function set $rotationX(value:Number):void
-		{
-			_rotationX = value;
-		}
-		// rotationY property
-		public function get $rotationY():Number{return _rotationY;}
-		public function set $rotationY(value:Number):void
-		{
-			_rotationY = value;
-		}
-		// rotationZ property
-		public function get $rotationZ():Number{return _rotationZ;}
-		public function set $rotationZ(value:Number):void
-		{
-			_rotationZ = value;
-		}
-		
-		*/
-		
-		
 		public var _$x:Number = 0;
 		public var _$y:Number = 0;
+		public var _$z:Number = 0;
 		public var _$scaleX:Number = 1;
 		public var _$scaleY:Number = 1;
+		public var _$scaleZ:Number = 1;
 		public var _$rotation:Number = 0;
+		public var _$rotationX:Number = 0;
+		public var _$rotationY:Number = 0;
+		public var _$rotationZ:Number = 0;
 		public var _$width:Number = 0;
-		public var _$height:Number = 0;
-		//private var t_x:Number = 0;
-		//private var t_y:Number =  0;
+		public var _$height:Number = 0;		
 		
 		
 		/**
