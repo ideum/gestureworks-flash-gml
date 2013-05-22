@@ -306,6 +306,8 @@ package com.gestureworks.analysis
 									{
 									var x:Number = gestureEventArray[j].value.x;
 									var y:Number = gestureEventArray[j].value.y;
+									var dx:Number;
+									var dy:Number;
 									//trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
 									
 									
@@ -316,8 +318,8 @@ package com.gestureworks.analysis
 									if (gestureEventArray[j].type =="drag")
 										{
 											var df:Number = 5;
-											var dx:Number = gestureEventArray[j].value.drag_dx*df
-											var dy:Number = gestureEventArray[j].value.drag_dy*df
+											dx = gestureEventArray[j].value.drag_dx*df
+											dy = gestureEventArray[j].value.drag_dy*df
 											//trace("visualize gesture drag", x, y,dx,dy)
 											
 											graphics.lineStyle(10, style.stroke_color, style.stroke_alpha);
@@ -353,8 +355,8 @@ package com.gestureworks.analysis
 									{
 										var rf:Number = 10;
 										var dtheta:Number = gestureEventArray[j].value.rotate_dtheta;
-										var dx:Number = 50 * Math.cos(rf * dtheta); 
-										var dy:Number = 50 * Math.sin(rf * dtheta);
+										dx = 50 * Math.cos(rf * dtheta); 
+										dy = 50 * Math.sin(rf * dtheta);
 										
 										//if (style.rotation_shape == "slice") {
 										
@@ -408,8 +410,8 @@ package com.gestureworks.analysis
 									if (gestureEventArray[j].type =="scroll")
 									{
 										var slf:Number = 10;
-										var dx:Number = slf * gestureEventArray[j].value.scroll_dx; 
-										var dy:Number = slf * gestureEventArray[j].value.scroll_dy;
+										dx = slf * gestureEventArray[j].value.scroll_dx; 
+										dy = slf * gestureEventArray[j].value.scroll_dy;
 										
 										//trace("visualize gesture scroll", x,y,dx,dy)
 										graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
@@ -484,11 +486,11 @@ package com.gestureworks.analysis
 									
 									}*/
 						
-								for (var j:uint = 0; j < gestureEventArray.length; j++) 
+								for (j; j < gestureEventArray.length; j++) 
 									{
 										
-									var x:Number = gestureEventArray[j].value.x;
-									var y:Number = gestureEventArray[j].value.y;
+									x = gestureEventArray[j].value.x;
+									x = gestureEventArray[j].value.y;
 									//trace("draw gesture event:",gestureEventArray[j].type, x, y, gestureEventArray[j].value.path_data);
 									
 									//object phase
@@ -552,7 +554,7 @@ package com.gestureworks.analysis
 											{
 											var x0:Number = gestureEventArray[j].value.x0;
 											var y0:Number = gestureEventArray[j].value.y0;
-											var ref_path:Array = gestureEventArray[j].value.path;
+											ref_path = gestureEventArray[j].value.path;
 												
 											// stroke gesture normalized ref path
 											graphics.lineStyle(style.stroke_thickness + 4, style.stroke_color, 0.55);
@@ -562,7 +564,7 @@ package com.gestureworks.analysis
 												{
 													graphics.moveTo(x0, y0)
 													
-													for (var q:int = 0; q < ref_path.length ; q++) 
+													for (q = 0; q < ref_path.length ; q++) 
 													{
 														graphics.lineTo(x0 + ref_path[q].x, x0 + ref_path[q].y);
 													}
@@ -667,7 +669,7 @@ package com.gestureworks.analysis
 						///////////////////////////////////////////////////////////////////////////////////////
 						// draw interactionPoint path
 						
-						var hist = cO.history.length-1;
+						var hist:Number = cO.history.length-1;
 						
 						//trace("hist",hist)
 						//if (cO.iPointArray[pn].type == "pinch") graphics.lineStyle(1, 0xE3716B, style.stroke_alpha);
