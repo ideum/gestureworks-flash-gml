@@ -55,7 +55,7 @@ package com.gestureworks.managers
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		
-		private static var gms:TouchSprite;
+		private static var gms:*;
 		
 		// initializes touchManager
 		gw_public static function initialize():void
