@@ -124,6 +124,11 @@ package com.gestureworks.objects
 		public function get normal():Vector3D{	return _normal;}
 		public function set normal(value:Vector3D):void {	_normal = value; }
 		
+		//palm plane position/////////////////////////////////////////////x,y,x
+		private var _palmplane_position:Vector3D = new Vector3D ();
+		public function get palmplane_position():Vector3D{	return _palmplane_position;}
+		public function set palmplane_position(value:Vector3D):void {	_palmplane_position = value; }
+		
 		/*
 		//size///////////////////////////////////////////w,h,l
 		private var _size:Vector3D = new Vector3D ();
@@ -165,6 +170,10 @@ package com.gestureworks.objects
 		private var _normalized_length:Number = 0;
 		public function get normalized_length():Number{	return _normalized_length;}
 		public function set normalized_length(value:Number):void {	_normalized_length = value; }
+		
+		private var _normalized_max_length:Number = 0;
+		public function get normalized_max_length():Number{	return _normalized_max_length;}
+		public function set normalized_max_length(value:Number):void {	_normalized_max_length = value; }
 		//normalized_dAngle based on other fingers in local hand
 		private var _normalized_palmAngle:Number = 0;
 		public function get normalized_palmAngle():Number{	return _normalized_palmAngle;}

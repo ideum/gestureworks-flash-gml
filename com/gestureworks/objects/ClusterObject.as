@@ -519,9 +519,9 @@ package com.gestureworks.objects
 		
 		
 		// surface point Pair data list----------------// for point pair delta tracking
-		private var _pointPairArray:Vector.<PointPairObject> = new Vector.<PointPairObject>();
-		public function get pointPairArray():Vector.<PointPairObject>{return _pointPairArray;}
-		public function set pointPairArray(value:Vector.<PointPairObject>):void{_pointPairArray = value;}
+		//private var _pointPairArray:Vector.<PointPairObject> = new Vector.<PointPairObject>();
+		//public function get pointPairArray():Vector.<PointPairObject>{return _pointPairArray;}
+		//public function set pointPairArray(value:Vector.<PointPairObject>):void{_pointPairArray = value;}
 		// motion point pair list
 		//
 		//
@@ -534,9 +534,9 @@ package com.gestureworks.objects
 		
 		
 		// serialized list of point pairs
-		private var _pairList:Array = new Array();
-		public function get pairList():Array{return _pairList;}
-		public function set pairList(value:Array):void{_pairList = value;}
+		//private var _pairList:Array = new Array();
+		//public function get pairList():Array{return _pairList;}
+		//public function set pairList(value:Array):void{_pairList = value;}
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// MAX 2 SUB CLUSTERS PER CLUSTER // BUT LEAVING OPEN FOR MORE JUST IN CASE?

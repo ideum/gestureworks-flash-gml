@@ -103,7 +103,7 @@ package com.gestureworks.managers
 									
 									
 									
-									mp.normal = new Vector3D(event.frame.hands[i].palmNormal.x,event.frame.hands[i].palmNormal.y,event.frame.hands[i].palmNormal.z);
+									mp.normal = new Vector3D(event.frame.hands[i].palmNormal.x,-1*event.frame.hands[i].palmNormal.y,event.frame.hands[i].palmNormal.z);
 									mp.velocity = new Vector3D(event.frame.hands[i].palmVelocity.x,event.frame.hands[i].palmVelocity.y,event.frame.hands[i].palmVelocity.z);
 									
 									//mp.sphereCenter = new Vector3D(event.frame.hands[i].sphereCenter.x,event.frame.hands[i].sphereCenter.y,event.frame.hands[i].sphereCenter.z);
@@ -177,7 +177,7 @@ package com.gestureworks.managers
 								mp.direction.z = event.frame.hands[k].direction.z;
 								
 								
-								mp.normal = new Vector3D(event.frame.hands[k].palmNormal.x,event.frame.hands[k].palmNormal.y,event.frame.hands[k].palmNormal.z);
+								mp.normal = new Vector3D(event.frame.hands[k].palmNormal.x,-1*event.frame.hands[k].palmNormal.y,event.frame.hands[k].palmNormal.z);
 								mp.velocity = new Vector3D(event.frame.hands[k].palmVelocity.x,event.frame.hands[k].palmVelocity.y,event.frame.hands[k].palmVelocity.z);
 								
 								mp.sphereCenter.x = map(event.frame.hands[k].sphereCenter.x, -180, 180, 0, stage.stageWidth);

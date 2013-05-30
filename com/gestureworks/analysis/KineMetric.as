@@ -25,6 +25,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.PointPairObject;
 	import com.gestureworks.managers.PointPairHistories;
+	import com.gestureworks.managers.InteractionPointTracker;
 	
 	import com.leapmotion.leap.Frame 
 	import com.leapmotion.leap.Finger 
@@ -75,9 +76,6 @@ package com.gestureworks.analysis
 		private var fn1:Number = 0;
 		private var fk0:Number = 0;
 		private var fk1:Number = 0;
-		
-		private var prob_array:Array = new Array();
-		//private var handList:Vector.<HandObject>;
 		
 		//////////////////////////////
 		// derived interaction point totals
@@ -250,12 +248,7 @@ package com.gestureworks.analysis
 			//clear interactive point list
 			cO.iPointArray = new Vector.<Object>();
 			
-			prob_array = new Array();
 		}
-		
-		////////////////////////////////////////////////////////////
-		// Methods: Private
-		////////////////////////////////////////////////////////////
 		
 		public function findInstDimention():void
 		{
@@ -446,8 +439,8 @@ package com.gestureworks.analysis
 										{
 										////////////////////////////////////////
 										// scale 
-										sx += cO.pointArray[0].history[0].x - cO.pointArray[i + 1].history[0].x;
-										sy += cO.pointArray[0].history[0].y - cO.pointArray[i + 1].history[0].y;
+										sx += cO.pointArray[0].x - cO.pointArray[i + 1].x;
+										sy += cO.pointArray[0].y - cO.pointArray[i + 1].y;
 										sx_mc += cO.pointArray[0].history[mc].x - cO.pointArray[i + 1].history[mc].x;// could eliminate in point pair
 										sy_mc += cO.pointArray[0].history[mc].y - cO.pointArray[i + 1].history[mc].y;// could eliminate in point pair
 										
@@ -611,8 +604,8 @@ package com.gestureworks.analysis
 							//if ((N > i + 1) && (pointList[0].history[mc]) && (pointList[i + 1].history[mc]))
 							if ((N>i+1)&&(cO.pointArray[0].history.length>mc) && (cO.pointArray[i + 1].history.length>mc))
 							{		
-								sx = Math.abs(cO.pointArray[0].x - cO.pointArray[i + 1].history[0].x);
-								sy = Math.abs(cO.pointArray[0].y - cO.pointArray[i + 1].history[0].y);
+								sx = Math.abs(cO.pointArray[0].x - cO.pointArray[i + 1].x);
+								sy = Math.abs(cO.pointArray[0].y - cO.pointArray[i + 1].y);
 								sx_mc = Math.abs(cO.pointArray[0].history[mc].x - cO.pointArray[i + 1].history[mc].x);
 								sy_mc = Math.abs(cO.pointArray[0].history[mc].y - cO.pointArray[i + 1].history[mc].y);
 								
@@ -956,10 +949,14 @@ package com.gestureworks.analysis
 		// get noamlized finger length and palm angle
 		public function normalizeFingerSize():void 
 		{
-			
+			var temp_max_length_array:Array = new Array();
 			var temp_length_array:Array = new Array();
 			//var temp_width_array:Array = new Array();
 			var temp_palmAngle_array:Array = new Array();
+			
+			
+			var min_max_length:Number = 0;
+			var max_max_length:Number = 0;
 			var min_length:Number = 0;
 			var max_length:Number = 0;
 			//var min_width:Number
@@ -974,7 +971,35 @@ package com.gestureworks.analysis
 					if (cO.motionArray[i].type == "finger")
 					{	
 						var palm_mpoint:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.motionArray[i].handID];
-						if(palm_mpoint) palmAngle = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, palm_mpoint.direction));
+						if (palm_mpoint) {
+							
+							var p_pos:Vector3D = palm_mpoint.position;
+							var normal:Vector3D = palm_mpoint.normal;
+							var f_pos:Vector3D = cO.motionArray[i].position;
+							var vp_mp:Vector3D = f_pos.subtract(p_pos);
+							
+							
+							//var c = p_pos.x*normal.x + p_pos.y*normal.y + p_pos.z*normal.z;
+							//var a = f_pos.x*normal.x + f_pos.y*normal.y + f_pos.z*normal.z - c;
+							//var palm_plane_point:Vector3D = new Vector3D((f_pos.x - a*normal.x), (f_pos.y - a*normal.y), (f_pos.z - a*normal.z));
+							
+							
+							var dist:Number = vp_mp.x * normal.x + (vp_mp.y * normal.y) + vp_mp.z * normal.z;
+							
+							var palm_plane_point:Vector3D = new Vector3D((f_pos.x + dist*normal.x), (f_pos.y - dist*normal.y), (f_pos.z + dist*normal.z));
+							
+							
+							cO.motionArray[i].palmplane_position = palm_plane_point
+							
+							
+							//trace(palm_plane_point)
+							
+							var ppp_dir:Vector3D = palm_plane_point.subtract(p_pos);
+							
+							//palmAngle = Math.abs(Vector3D.angleBetween(ppp_dir, palm_mpoint.direction));
+							palmAngle = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, palm_mpoint.direction));
+						}
+						
 						cO.motionArray[i].palmAngle = palmAngle;
 						
 						
@@ -1004,16 +1029,25 @@ package com.gestureworks.analysis
 						/////////////////////////////////////////////////////
 					}
 				}
+				
+				for (i = 0; i < fn; i++)
+				{
+					temp_max_length_array.push(cO.motionArray[i].max_length);
+				}
 			
 			var  tn:int = temp_length_array.length;
 			
 			// get normalized length
 				//sort
+				temp_max_length_array.sort(Array.DESCENDING);
 				temp_length_array.sort(Array.DESCENDING);
 				//temp_width_array.sort( Array.DESCENDING)
 				temp_palmAngle_array.sort(Array.DESCENDING);
 						
 				// get max and min
+				if (temp_max_length_array[tn - 1]) 	min_max_length = temp_max_length_array[tn - 1];	
+				if (temp_max_length_array[0]) 		max_max_length = temp_max_length_array[0];
+				
 				if (temp_length_array[tn - 1]) 	min_length = temp_length_array[tn - 1];	
 				if (temp_length_array[0]) 		max_length = temp_length_array[0];
 				
@@ -1029,12 +1063,16 @@ package com.gestureworks.analysis
 					{
 					if (cO.motionArray[i].type == "finger")
 						{	
+						cO.motionArray[i].normalized_max_length = normalize(cO.motionArray[i].max_length, min_max_length, max_max_length);
 						cO.motionArray[i].normalized_length = normalize(cO.motionArray[i].length, min_length, max_length);
 						//cO.motionArray[i].normalized_width = normalize(cO.motionArray[i].width, min_width, max_width);
 						cO.motionArray[i].normalized_palmAngle = normalize(cO.motionArray[i].palmAngle, min_palmAngle, max_palmAngle);
 						//trace("norm length",cO.motionArray[i].motionPointID, max_length, min_length,cO.motionArray[i].length,cO.motionArray[i].normalized_length)
 						}
+						//trace(cO.motionArray[i].normalized_max_length);
 					}
+					
+				
 		}
 		
 		// get noamlized finger length and palm angle
@@ -1061,6 +1099,10 @@ package com.gestureworks.analysis
 			// CALC PAIR VALUES FOR UNIQUE POINT PAIRS
 			// COPY FROM ONE SIDE OF MATRIX TO THE OTHER TO HALVE CALCS
 			//trace("---------------");
+			
+			// use max length values instaed of current values
+			// will reduce thumb shift upon extension
+			// or simply require min extension before using real time length
 			
 			if (fn == 3) 
 			{
@@ -1221,16 +1263,16 @@ package com.gestureworks.analysis
 										/// write into table
 										for (q = 0; q < tnn; q++)
 										{
-											pair_table[i][q].max_distance = max_dist
-											pair_table[i][q].min_distance = min_dist
+											pair_table[i][q].max_distance = max_dist;
+											pair_table[i][q].min_distance = min_dist;
 											pair_table[i][q].normalized_distance = normalize(temp_column_arrayA[q], min_dist, max_dist);
 											
-											pair_table[i][q].max_positionAngle = max_pang
-											pair_table[i][q].min_positionAngle = min_pang
+											pair_table[i][q].max_positionAngle = max_pang;
+											pair_table[i][q].min_positionAngle = min_pang;
 											pair_table[i][q].normalized_positionAngle = normalize(temp_column_arrayB[q], min_pang, max_pang);
 											
-											pair_table[i][q].max_directionAngle = max_dang
-											pair_table[i][q].min_directionAngle = min_dang
+											pair_table[i][q].max_directionAngle = max_dang;
+											pair_table[i][q].min_directionAngle = min_dang;
 											pair_table[i][q].normalized_directionAngle = normalize(temp_column_arrayC[q], min_dang, max_dang);
 											
 											// best pair prob	// min distnace in set // min angle in set // gives max prob of 1
@@ -1263,9 +1305,11 @@ package com.gestureworks.analysis
 									{
 										// PALM ANGLE IS NOT LEFT RIGHT INVARIANT 
 										// CAN BE UISED TO TELL LEFT FROM RIGHT  (cO.motionArray[i].normalized_palmAngle); and  (1-cO.motionArray[i].normalized_palmAngle);
-										cO.motionArray[i].thumb_prob *= (1 - cO.motionArray[i].normalized_length) //* (cO.motionArray[i].normalized_palmAngle);
+										cO.motionArray[i].thumb_prob *= (1 - cO.motionArray[i].normalized_length) //* (1-cO.motionArray[i].normalized_palmAngle);
+										//cO.motionArray[i].thumb_prob *= (1 - cO.motionArray[i].normalized_max_length) //* Math.abs(cO.motionArray[i].extension)*0.01;
 										//trace("iD",cO.motionArray[i].motionPointID,"length", cO.motionArray[i].normalized_length,"palm angle", cO.motionArray[i].normalized_palmAngle,"thumb prob",cO.motionArray[i].thumb_prob)
-									}
+										//trace(cO.motionArray[i].max_length,cO.motionArray[i].normalized_max_length);
+										}
 									thumb_list[i] = cO.motionArray[i].thumb_prob;
 									//thumb_list[i] = cO.motionArray[i];
 								}	
@@ -1361,6 +1405,11 @@ package com.gestureworks.analysis
 												
 												if (pinch_dist <= pinchThreshold)
 												{
+													
+													// PUSH PINCH POINT INTERRACTION EVENT
+													//InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, mp, true, false));
+													
+													
 													// find midpoint between fingertips
 													var pmp:MotionPointObject = new MotionPointObject();
 														pmp.position.x = fv0.x - (fv0.x - fv1.x) * 0.5;
@@ -1371,19 +1420,21 @@ package com.gestureworks.analysis
 														
 														////////////////////////////
 														// perform hit test
-														var ht:Boolean = ts.hitTestPoint(pmp.position.x,pmp.position.y);
+														var ht:Boolean = true//ts.hitTestPoint(pmp.position.x,pmp.position.y);
 														//trace("httttt", ht)
 														
 														//PUSH POINT TO TOUCH OBJECT INTERACTIVEPOINT LIST
 														//TREAT AS LOCAL CLUSTER PROCESS ACCORDINGLY
 														
-														
+														//MOVE TO INTERACTION MANAGER
 														if (ht)
 														{
 															//CREATE SUBCLUSTER	
 															//add to pinch point list
 															//cO.clusterArray[0].iPointArray.push(pmp);
-															cO.iPointArray.push(pmp);
+															//cO.iPointArray.push(pmp);
+															InteractionPointTracker.framePoints.push(pmp)
+															
 															
 															//COULD CALL CLUSTER TYPE PINCH RATHER THAN LABELING POINTS 
 															//cO.clusterArray[0].type = "pinch";
@@ -1422,7 +1473,7 @@ package com.gestureworks.analysis
 									//trace("z",cO.motionArray[i].position.z)
 
 									// touch sprite hit test
-									var pp_ht:Boolean = ts.hitTestPoint(cO.motionArray[i].position.x , cO.motionArray[i].position.y);
+									var pp_ht:Boolean = true//ts.hitTestPoint(cO.motionArray[i].position.x , cO.motionArray[i].position.y);
 											
 									
 									if (pp_ht) {
@@ -1437,7 +1488,8 @@ package com.gestureworks.analysis
 													pmp.type = "push";
 
 											// push to interactive point list
-											cO.iPointArray.push(pmp);
+											//cO.iPointArray.push(pmp);
+											InteractionPointTracker.framePoints.push(pmp)
 									}
 									
 								}
@@ -1514,11 +1566,15 @@ package com.gestureworks.analysis
 															tp.handID = tfv.handID;
 															tp.type = "trigger";
 														
-														var tpht:Boolean = ts.hitTestPoint(tp.position.x , tp.position.y);
+														var tpht:Boolean = true//ts.hitTestPoint(tp.position.x , tp.position.y);
 														
 														if (tpht){
 															//add to pinch point list
-															if((tp.position.x!=0)&&(tp.position.y!=0))cO.iPointArray.push(tp);
+															if ((tp.position.x != 0) && (tp.position.y != 0)) {
+																
+																//cO.iPointArray.push(tp);
+																InteractionPointTracker.framePoints.push(tp)
+															}
 															
 															//trace("finger", i,j3, tp.id, "angle", angle, tp.motionPointID,tpht,cO.motionArray[i].length,cO.motionArray[j3].length)
 															// when found trigger pair return out of loop

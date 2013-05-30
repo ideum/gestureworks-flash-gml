@@ -35,7 +35,7 @@ package com.gestureworks.managers
 	
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.TouchObject;
-	import com.gestureworks.managers.PointHistories;
+	import com.gestureworks.managers.iManager;
 	import com.gestureworks.utils.Simulator;
 	
 	import com.gestureworks.objects.FrameObject;
@@ -75,6 +75,8 @@ package com.gestureworks.managers
 
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
+			
+			
 		}
 		
 		gw_public static function resetGlobalClock():void
@@ -141,7 +143,7 @@ package com.gestureworks.managers
 					// analyze for taps
 					if (tO.tg) tO.tg.onTouchEnd(event);
 					
-					
+					/*
 					/////////////////////////////////////////////////////////////////////////////
 					//REMOVE POINT FROM PAIR LIST
 					// will need to remove from all nested clusters also
@@ -152,7 +154,7 @@ package com.gestureworks.managers
 							//trace("point pair spliced",tO.cO.pointPairArray.length)
 						}
 					}
-					
+					*/
 					
 					// REMOVE POINT FROM LOCAL LIST
 					tO.pointArray.splice(pointObject.id, 1);
@@ -222,6 +224,9 @@ package com.gestureworks.managers
 			/////////////////////////////////////////////////////////////////////////////
 			//GET MOTION POINT LIST
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
+			
+			//InteractionPointTracker.framePoints = gms.cO.iPointArray;
+			InteractionPointTracker.getActivePoints();
 
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)

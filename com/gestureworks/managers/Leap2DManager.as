@@ -86,8 +86,8 @@ package com.gestureworks.managers
 			for each(var pid:Number in pids) {
 				var tip:Vector3 = event.frame.pointable(pid).tipPosition;
 				var point:Point = new Point();
-				point.x = map(tip.x, minX, maxX, 0, stage.stageWidth);
-				point.y = map(tip.y, minY, maxY, stage.stageHeight, 0);
+					point.x = map(tip.x, minX, maxX, 0, stage.stageWidth);
+					point.y = map(tip.y, minY, maxY, stage.stageHeight, 0);
 				var pressure:Number = map(tip.z, minZ, maxZ, 0, 1);
 				
 				if (debug)
@@ -101,10 +101,10 @@ package com.gestureworks.managers
 					if (obj is TouchSprite && pressure <= pressureThreshold) {
 						activePoints.push(pid);	
 						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
-						ev.stageX = point.x;
-						ev.stageY = point.y;
-						ev.eventPhase = 2;
-						ev.pressure = pressure;
+							ev.stageX = point.x;
+							ev.stageY = point.y;
+							ev.eventPhase = 2;
+							ev.pressure = pressure;
 						obj.onTouchDown(ev, obj);
 					}
 					
@@ -115,15 +115,15 @@ package com.gestureworks.managers
 					if (activePoints.indexOf(pid) != -1 && pressure > pressureThreshold){
 						activePoints.splice(activePoints.indexOf(pid), 1);
 						TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, pid, false));
-						
+						0
 						if (debug)
 							trace("REMOVED:", pid, event.frame.pointable(pid));					
 					}
 					else{
 						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
-						ev.stageX = point.x;
-						ev.stageY = point.y;
-						ev.pressure = pressure;
+							ev.stageX = point.x;
+							ev.stageY = point.y;
+							ev.pressure = pressure;
 						TouchManager.onTouchMove(ev);											
 						
 						if(debug)

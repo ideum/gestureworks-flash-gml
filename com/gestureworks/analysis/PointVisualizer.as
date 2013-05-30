@@ -279,6 +279,10 @@ package com.gestureworks.analysis
 												graphics.beginFill(0x6AE370, style.fill_alpha);
 												graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
 												graphics.endFill();
+												
+												graphics.lineStyle(4, 0xFFFFFF, style.stroke_alpha);
+												graphics.drawCircle(mp.palmplane_position.x ,mp.palmplane_position.y, style.radius + 20 + zm);	
+												
 											}
 											if (_drawText)
 											{
@@ -309,6 +313,19 @@ package com.gestureworks.analysis
 												// palm center
 												graphics.lineStyle(2, 0x716BE3, style.stroke_alpha);
 												graphics.drawRect(mp.position.x - sq_width, mp.position.y - sq_width, 2 * sq_width, 2 * sq_width);
+												
+												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+												
+												trace(mp.direction)
+												var pt1:Vector3D = mp.direction.crossProduct(mp.normal);
+												
+												//palm plane
+												graphics.moveTo(mp.position.x,mp.position.y);
+												graphics.lineTo(mp.position.x + pt1.x, mp.position.y + pt1.y);
+												
+												//normal
+												graphics.moveTo(mp.position.x,mp.position.y);
+												graphics.lineTo(mp.position.x + 50*mp.normal.x, mp.position.y + 50*mp.normal.y);
 											}
 
 											if (_drawText)

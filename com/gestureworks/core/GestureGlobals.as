@@ -40,9 +40,9 @@ package com.gestureworks.core
 		gw_public static var points:Dictionary = new Dictionary();
 		
 		gw_public static var motionPoints:Dictionary = new Dictionary();
-		/**
-		 * Contains a dictionary of all point histories present to the framework.
-		 */
+		gw_public static var interactionPoints:Dictionary = new Dictionary();
+		
+		 
 		//gw_public static var pointHistory:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all clusters present to the framework.

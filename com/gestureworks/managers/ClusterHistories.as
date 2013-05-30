@@ -107,7 +107,6 @@ package com.gestureworks.managers
 				object.orient_dy = clusterObject.orient_dy;
 				//object.orient_dz = clusterObject.orient_dz; // 
 				
-				//object.pointArray = [2, 3]//;
 				
 				// STROKE DATA
 				object.path_data = clusterObject.path_data;
@@ -116,7 +115,7 @@ package com.gestureworks.managers
 				//trace(clusterObject.pointArray[0].x)
 				
 				//MOTION FRAME DATA
-				object.iPointArray = clusterObject.iPointArray;
+				//object.iPointArray = clusterObject.iPointArray;
 				
 				//MOTION FRAME DATA
 				//object.motionArray = clusterObject.motionArray;

@@ -566,7 +566,7 @@ package com.gestureworks.core
 					ppt.idA = lastpointID;
 					ppt.idB = pointObject.touchPointID;
 					
-				cO.pointPairArray.push(ppt);
+				//cO.pointPairArray.push(ppt);
 				
 				//trace("pair")
 				}
@@ -595,7 +595,7 @@ package com.gestureworks.core
 					ppt.idA = lastpointID;
 					ppt.idB = pointObject.touchPointID;
 					
-				cO.pointPairArray.push(ppt);
+				//cO.pointPairArray.push(ppt);
 				//trace("Clone pair");
 				}
 				

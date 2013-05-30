@@ -479,8 +479,8 @@ package com.gestureworks.core
 								cluster_kinemetric.findThumb();
 								cluster_kinemetric.createHand();
 								
-								cluster_kinemetric.find3DPinchPoints(); 
-								cluster_kinemetric.find3DTriggerPoints(); 
+								//cluster_kinemetric.find3DPinchPoints(); 
+								//cluster_kinemetric.find3DTriggerPoints(); 
 								cluster_kinemetric.find3DPushPoints(); 
 								
 								cluster_kinemetric.findMeanInst3DMotionTransformationIPA();

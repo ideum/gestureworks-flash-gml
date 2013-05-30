@@ -213,8 +213,10 @@ package com.gestureworks.core
 			if (motion == value) return;
 			_motion = value;
 			
-			if (_motion) 
-				MotionManager.gw_public::initialize();			
+			if (_motion) {
+				MotionManager.gw_public::initialize();
+				InteractionManager.gw_public::initialize();
+			}
 		}	
 				
 		private var _sensor:Boolean = false;
