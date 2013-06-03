@@ -35,7 +35,7 @@ package com.gestureworks.managers
 	
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.TouchObject;
-	import com.gestureworks.managers.iManager;
+	//import com.gestureworks.managers.iManager;
 	import com.gestureworks.utils.Simulator;
 	
 	import com.gestureworks.objects.FrameObject;
