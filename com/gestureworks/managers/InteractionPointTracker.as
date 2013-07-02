@@ -30,7 +30,7 @@ package com.gestureworks.managers
 		private static var i:uint = 0;
 		private static var j:uint = 0;
 		
-		private static var d2:Number = 10;
+		private static var d2:Number = 50;
 		private static var d1:Number = 0.5;
 		
 		
@@ -68,7 +68,7 @@ package com.gestureworks.managers
 			// clear frame allows for immediate new entries
 			clearFrame();
 			
-			//trace(temp_activePoints.length,temp_framePoints.length,framePoints,activePoints);
+			trace("active points",temp_activePoints.length,temp_framePoints.length,framePoints.length,activePoints.length);
 			
 			
 			//////////////////////////////////////////////////////////////////////////////////
@@ -76,23 +76,31 @@ package com.gestureworks.managers
 			for (i = 0; i < temp_activePoints.length; i++)
 					{
 					var ap = temp_activePoints[i];	
-									
-					for (j = 0; j < temp_framePoints.length; j++)
-						{
-						var fp = temp_framePoints[j];
-			
-						// calc dist
-						var dist:Number = Vector3D.distance(ap, fp);
-						//trace("dist",dist) ;
-				
-							if (dist > d2) // not there
+					
+					
+					if (temp_framePoints.length != 0)
+					{
+						
+					}
+					else{
+					
+						for (j = 0; j < temp_framePoints.length; j++)
 							{
-								//remove from active point list
-								temp_activePoints.splice(temp_activePoints[i], 1);
-								
-								InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END,ap, true,false));//push end event
-								//if(debug) 
-							//	trace("REMOVED:",ap.id, ap.motionPointID);					
+							var fp = temp_framePoints[j];
+				
+							// calc dist
+							var dist:Number = Vector3D.distance(ap.position, fp.position);
+							//trace("dist",dist) ;
+					
+								if (dist > d2) // not there
+								{
+									//remove from active point list
+									temp_activePoints.splice(temp_activePoints[i], 1);
+									
+									InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END,ap, true,false));//push end event
+									//if(debug) 
+									trace("REMOVED:",ap.id, ap.interactionPointID,ap.type);					
+								}
 							}
 						}
 					}
@@ -112,7 +120,7 @@ package com.gestureworks.managers
 							var ap = temp_activePoints[i];	
 						
 							// calc dist
-							var dist:Number = Vector3D.distance(ap, fp);
+							var dist:Number = Vector3D.distance(ap.position, fp.position);
 							//trace("2dist",dist) ;
 							/////must exist already
 							if (dist < d2)  ////update
@@ -123,12 +131,13 @@ package com.gestureworks.managers
 									activePoints[i] = framePoints[j];
 									InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE,ap, true, false)); //push update event
 									//if(debug) 
-									//trace("UPDATE:",ap.id, ap.InteractionPointID);	
+									trace("UPDATE:",ap.id, ap.interactionPointID,ap.type);	
 								}
-								// update reasociate point id
+								// update reasociate point id but not push move event
 								else 
 								{
-									framePoints[j].id = activePoints[i].id;
+									activePoints[i] = framePoints[j];
+									//if ((framePoints[j])&&(activePoints[i])) framePoints[j].id = activePoints[i].id;
 								}
 							}	
 							else ////// add point to A
@@ -142,21 +151,17 @@ package com.gestureworks.managers
 									//obj.onTouchDown(ev, obj);
 									InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
 									//if (debug) 
-									//trace("ADDED:", fp.id, fp.InteractionPointID);
+									trace("ADDED:", fp.id, fp.interactionPointID,fp.type);
 									
 									//incremt ID
 									_ID ++;
 								}
 							}
-							
-							// if no points in active list
-							
-								
 						}
 						
 						//trace("fnum",f_num,a_num);
-						
-						if (f_num == 0) 
+						//PUSH ALL POINTS IN FRAME INTO ACTIVE LIST///////////////////////////////////////////
+						if (a_num == 0) // if no points in active list
 						{
 							for (j = 0; j < f_num; j++)
 							{
@@ -165,7 +170,7 @@ package com.gestureworks.managers
 								fp.id = _ID;
 								temp_activePoints.push(fp);
 								InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
-								//trace("ADDED:", fp.id, fp.InteractionPointID);
+								trace("ADDED:", fp.id, fp.interactionPointID, fp.type);
 							}
 						}
 						

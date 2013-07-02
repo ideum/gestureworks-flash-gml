@@ -35,7 +35,7 @@ package com.gestureworks.managers
 		public static function historyQueue(event:GWInteractionEvent):void//event:ClusterEvent
 		{
 			// define cluster to update
-			var ipo:InteractionPointObject = GestureGlobals.gw_public::InteractionPoints[event.value.InteractionPointID];
+			var ipo:InteractionPointObject = GestureGlobals.gw_public::interactionPoints[event.value.interactionPointID];
 			
 			
 			

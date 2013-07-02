@@ -35,7 +35,7 @@ package com.gestureworks.managers
 	
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.TouchObject;
-	//import com.gestureworks.managers.iManager;
+	import com.gestureworks.managers.InteractionManager;
 	import com.gestureworks.utils.Simulator;
 	
 	import com.gestureworks.objects.FrameObject;
@@ -225,6 +225,7 @@ package com.gestureworks.managers
 			//GET MOTION POINT LIST
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			
+			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
 			//InteractionPointTracker.framePoints = gms.cO.iPointArray;
 			InteractionPointTracker.getActivePoints();
 

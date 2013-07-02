@@ -17,7 +17,7 @@ package com.gestureworks.objects
 {
 	//import flash.display.DisplayObject;
 	//import flash.events.TouchEvent;
-	
+	import flash.geom.Matrix;
 	import flash.geom.Vector3D;
 	
 	public class MotionPointObject extends Object 
@@ -124,6 +124,11 @@ package com.gestureworks.objects
 		public function get normal():Vector3D{	return _normal;}
 		public function set normal(value:Vector3D):void {	_normal = value; }
 		
+		//rotation/////////////////////////////////////////////x,y,x
+		private var _rotation:Matrix = new Matrix ();
+		public function get rotation():Matrix{	return _rotation;}
+		public function set rotation(value:Matrix):void {	_rotation = value; }
+		
 		//palm plane position/////////////////////////////////////////////x,y,x
 		private var _palmplane_position:Vector3D = new Vector3D ();
 		public function get palmplane_position():Vector3D{	return _palmplane_position;}
@@ -156,6 +161,16 @@ package com.gestureworks.objects
 		public function get extension():Number{	return _extension;}
 		public function set extension(value:Number):void {	_extension = value; }
 		
+		
+		//favdist
+		private var _favdist:Number = 0;
+		public function get favdist():Number{	return _favdist;}
+		public function set favdist(value:Number):void {	_favdist = value; }
+		
+		//normalized_favdist
+		private var _normalized_favdist:Number = 0;
+		public function get normalized_favdist():Number{	return _normalized_favdist;}
+		public function set normalized_favdist(value:Number):void {	_normalized_favdist = value; }
 		
 		//palmAngle
 		private var _palmAngle:Number = 0;

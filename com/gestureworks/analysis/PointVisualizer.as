@@ -291,8 +291,8 @@ package com.gestureworks.analysis
 												mptext_array[i].y = mp.position.y - 50;
 												mptext_array[i].visible = true;
 												mptext_array[i].textCont = String(mp.fingertype) + ": ID:" + String(mp.motionPointID) + "\n"
-																		+ "Thumb prob: " + (Math.round(100 * mp.thumb_prob)) * 0.01 +  "\n" 
-																		+ "N length: " + (Math.round(100 * mp.normalized_length)) * 0.01 + " length: " + (Math.round(100 * mp.length)) * 0.01 + "\n"
+																		+ "Thumb prob: " + (Math.round(1 * mp.thumb_prob)) +  "\n" 
+																		+ "N length: " + (Math.round(100 * mp.normalized_length)) * 0.01 + " length: " + (Math.round(mp.length)) + "\n"
 																		+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01 +"\n"
 																		+ "max_length: " + Math.round(mp.max_length) + " min_length: "+ Math.round(mp.min_length) + " length: "+ Math.round(mp.length) + " Extension: " + mp.extension + "%"; 
 																		//" width: "+ Math.round(100*mp.width)*0.01 +
@@ -316,7 +316,7 @@ package com.gestureworks.analysis
 												
 												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
 												
-												trace(mp.direction)
+												//trace(mp.direction)
 												var pt1:Vector3D = mp.direction.crossProduct(mp.normal);
 												
 												//palm plane

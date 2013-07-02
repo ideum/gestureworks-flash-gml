@@ -35,7 +35,10 @@ package com.gestureworks.objects
 		public function get type():String{	return _type;}
 		public function set type(value:String):void {	_type = value; }
 		
-		
+		// handID // parent hand ID (if type finger)
+		private var _handID:int = 0;
+		public function get handID():int{	return _handID;}
+		public function set handID(value:int):void{	_handID = value;}
 		
 		//position/////////////////////////////////////////////x,y,x
 		private var _position:Vector3D = new Vector3D ();
@@ -101,9 +104,9 @@ package com.gestureworks.objects
 		
 		///////////////////////////////////////////////////////////////////
 		// history/////////////////////////////////////////////////////////
-		private var _history:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		public function get history():Vector.<MotionPointObject>{	return _history;}
-		public function set history(value:Vector.<MotionPointObject>):void{	_history = value;}
+		private var _history:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		public function get history():Vector.<InteractionPointObject>{	return _history;}
+		public function set history(value:Vector.<InteractionPointObject>):void{	_history = value;}
 		///////////////////////////////////////////////////////////////////
 	}
 }

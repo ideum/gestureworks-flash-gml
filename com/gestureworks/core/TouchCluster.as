@@ -18,18 +18,16 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWClusterEvent;
 	import com.gestureworks.analysis.KineMetric;
 	import com.gestureworks.analysis.VectorMetric;
-	//import com.gestureworks.analysis.GeoMetric;
-	
+	import com.gestureworks.analysis.GeoMetric;
 	import com.gestureworks.objects.GestureObject;
-	import flash.geom.Point;
-	import flash.display.DisplayObject;
-	//import com.gestureworks.analysis.VectorMetric;
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
-	
 	import com.gestureworks.objects.DimensionObject;
+	
+	import flash.geom.Point;
+	import flash.display.DisplayObject;
 	
 	//use namespace id_internal;
 	
@@ -43,7 +41,7 @@ package com.gestureworks.core
 		*/
 		private var cluster_kinemetric:KineMetric;
 		public var cluster_vectormetric:VectorMetric;
-		//private var cluster_geometric:GeoMetric;
+		private var cluster_geometric:GeoMetric;
 		
 		/**
 		* @private
@@ -111,7 +109,7 @@ package com.gestureworks.core
 					if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
 					
 					// characterizes advanced relative geometry of a cluster
-					//if(geometricsOn)cluster_geometric = new GeoMetric(id);
+					if (geometricsOn)cluster_geometric = new GeoMetric(id);
 		}
 		/**
 		 * @private
@@ -122,7 +120,7 @@ package com.gestureworks.core
 				// analyzes and characterizes multi-point motion
 				if (kinemetricsOn)		cluster_kinemetric.init();
 				if (vectormetricsOn)	cluster_vectormetric.init();
-				//if(geometricsOn)		//cluster_geometric.init();
+				if(geometricsOn)		cluster_geometric.init();
 							
 		}
 		/**
@@ -245,9 +243,9 @@ package com.gestureworks.core
 				updateClusterCount();
 				getCluster()
 				
+				if(geometricsOn)	getGeoMetrics();
 				if(kinemetricsOn) 	getKineMetrics();
 				if(vectormetricsOn)	getVectorMetrics();
-				//if(geometricsOn)	getGeoMetrics();
 				
 				if ((ts.clusterEvents)&&(ts.N)) manageClusterPropertyEventDispatch();
 		}
@@ -286,11 +284,39 @@ package com.gestureworks.core
 			// multistroke next
 		}
 		
-		public function getKineMetrics():void 
+		public function getGeoMetrics():void 
 		{
-		//cluster_kinemetric.findMeanInstTransformation();
+			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, _N);
+			//gn = gO.pOList.length;
+			
+			cluster_geometric.findGeoConstants();
+			cluster_geometric.resetCluster();
+			
+			////////////////////////////////////////////////
+			cluster_geometric.clearMotionPointData();	
+			cluster_geometric.normalizeFingerSize();
+			cluster_geometric.findThumb();
+			//cluster_geometric.findFingers();
 		
-		//if(ts.cO.fn!=0)	cluster_kinemetric.find3DPointPairList();
+			cluster_geometric.createHand();
+									
+			cluster_geometric.find3DPinchPoints(); 
+			//cluster_geometric.find3DTriggerPoints(); 
+			//cluster_geometric.find3DPushPoints(); 
+			//cluster_geometric.find3DHookPoints(); 
+			//cluster_geometric.find3DToolPoints(); 
+			
+			
+			
+		}
+		
+		public function getKineMetrics():void 
+		{						
+		
+			// move to 3d kinemetrics
+			cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+			/////////////////////////////////////////////////////////
+		
 		
 			gn = gO.pOList.length;
 			var dn:uint 
@@ -474,16 +500,16 @@ package com.gestureworks.core
 							if (g.algorithm_class == "3d_kinemetric")
 							{
 								
-								cluster_kinemetric.clearMotionPointData();	
-								cluster_kinemetric.normalizeFingerSize();
-								cluster_kinemetric.findThumb();
-								cluster_kinemetric.createHand();
+								//cluster_kinemetric.clearMotionPointData();	
+								//cluster_kinemetric.normalizeFingerSize();
+								//cluster_kinemetric.findThumb();
+								//cluster_kinemetric.createHand();
 								
 								//cluster_kinemetric.find3DPinchPoints(); 
 								//cluster_kinemetric.find3DTriggerPoints(); 
-								cluster_kinemetric.find3DPushPoints(); 
+								//cluster_kinemetric.find3DPushPoints(); 
 								
-								cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+								//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
 								
 								///cluster_kinemetric.find3DPointPairList();
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);

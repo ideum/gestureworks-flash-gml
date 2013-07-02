@@ -27,7 +27,6 @@ package com.gestureworks.managers
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWInteractionEvent;
 	import com.gestureworks.objects.InteractionPointObject;
-	
 	import com.gestureworks.managers.InteractionPointTracker;
 	
 	public class InteractionManager 
@@ -65,7 +64,7 @@ package com.gestureworks.managers
 		// registers touch point via touchSprite
 		public static function registerInteractionPoint(ipo:InteractionPointObject):void
 		{
-			ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
+			//ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
 		}
 		
 		
@@ -119,8 +118,8 @@ package com.gestureworks.managers
 		public static function onInteractionEnd(event:GWInteractionEvent):void
 		{
 			//trace("Motion point End, motionManager", event.value.motionPointID)
-			var InteractionPointID:int = event.value.InteractionPointID;
-			var ipointObject:InteractionPointObject = ipoints[InteractionPointID];
+			var iPID:int = event.value.interactionPointID;
+			var ipointObject:InteractionPointObject = ipoints[iPID];
 		
 			
 			if (ipointObject)
