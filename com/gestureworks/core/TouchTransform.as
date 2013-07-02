@@ -16,9 +16,11 @@
 package com.gestureworks.core
 {
 	import flash.display.DisplayObject;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Matrix;
 	import flash.geom.Transform;
+	import flash.geom.Vector3D;
 	import flash.sampler.NewObjectSample;
 	
 	//import flash.geom.* ;
@@ -43,7 +45,7 @@ package com.gestureworks.core
 		private static const RAD_DEG:Number = 180 / Math.PI;
 		private static const DEG_RAD:Number = Math.PI / 180 ;
 		public var affine_modifier:Matrix;
-		//private var affine_modifier3D:Matrix3D;
+		private var affine_modifier3D:Matrix3D;
 		public var parent_modifier:Matrix;
 		public var ref_frame_angle:Number = 0; 
 	
@@ -305,34 +307,38 @@ package com.gestureworks.core
 				// 3d test
 				///////////////////////////////////////////////////////////////////////////////////
 				
-				/*
-				trace(t_x,t_y,dx,dy,dtheta,dsx,dsy,super.x,super.y);
 				
-				if (transform_3d) {
-					
+				//trace(t_x,t_y,dx,dy,dtheta,dsx,dsy,super.x,super.y);
+				
+				if (ts.transform.matrix3D) {					
+					//trace(center.transform.matrix3D);
+					//matrix3D.appendTranslation(0, 0, 1);	
+					//matrix3D.appendRotation(1, new Vector3D(0, 0, 1), new Vector3D(center.x,center.y,center.z) );
+					//matrix3D.appendScale(1.1, 1.1, 1.1);
+					//center.transform.matrix3D = matrix3D;			
 					
 					//this.transform.perspectiveProjection = new PerspectiveProjection();
 					//this.transform.perspectiveProjection.projectionCenter = new Point(trO.transAffinePoints[4].x, trO.transAffinePoints[4].y);
 					//this.transform.perspectiveProjection.projectionCenter = new Point(0, 0);
 					
-					this.z = 0;
+					//this.z = 0;
 					
-					var x_axis:Vector3D = new Vector3D(1,1,0);
+					//var x_axis:Vector3D = new Vector3D(1,1,0);
 					//trace(affine_modifier3D);
 					
-						affine_modifier3D = this.transform.matrix3D;
+					//affine_modifier3D = ts.transform.matrix3D;
+					
+					//trace(affine_modifier3D);
+					//trace(this.transform.perspectiveProjection);
+					//affine_modifier3D.appendTranslation(-t_x+dx,-t_y+dy, 0)
 						
-						trace(affine_modifier3D);
-						trace(this.transform.perspectiveProjection);
-						//affine_modifier3D.appendTranslation(-t_x+dx,-t_y+dy, 0)
-						
-						//affine_modifier3D.appendTranslation(-t_x,-t_y, 0)
-						affine_modifier3D.appendRotation(dthetaX, x_axis);
-						//affine_modifier3D.appendRotation(dthetaY, Vector3D.Y_AXIS);
-						//affine_modifier3D.appendRotation(dthetaZ,Vector3D.Z_AXIS);
-						//affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1);
-						//affine_modifier3D.appendTranslation(t_x,t_y, 0)
-					this.transform.matrix3D = affine_modifier3D
+					//affine_modifier3D.appendTranslation(-t_x,-t_y, 0)
+					//affine_modifier3D.appendRotation(dthetaX, x_axis);
+					//affine_modifier3D.appendRotation(dthetaY, Vector3D.Y_AXIS);
+					//affine_modifier3D.appendRotation(dthetaZ,Vector3D.Z_AXIS);
+					//affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1);
+					//affine_modifier3D.appendTranslation(t_x,t_y, 0)
+					//ts.transform.matrix3D = affine_modifier3D
 					//trace(this.perspectiveProjection.matrix3D
 					
 					
@@ -341,37 +347,33 @@ package com.gestureworks.core
 					//ts.rotationY += dthetaY;//3d--
 					//ts.rotationZ += dthetaZ;//3d--
 					
-				}*/
-				
-				 if (affine) 
-				 {
-					//if (trace_debug_mode) 
-					//trace("gesture affine transform", t_x,t_y);
-					affine_modifier = ts.transform.matrix;
-						affine_modifier.translate(-t_x+dx,-t_y+dy);
-						affine_modifier.rotate(dtheta);
-						affine_modifier.scale(1 + dsx, 1 + dsy);
-						affine_modifier.translate(t_x, t_y);
-					ts.transform.matrix = affine_modifier
-					transformAffineDebugPoints();
 				}
-				else
-				{
-					///if (trace_debug_mode) 
-					//trace("gesture tween non-affine transform")
-					affine_modifier = ts.transform.matrix;
-						affine_modifier.translate(-ts.x,-ts.y);
-						affine_modifier.rotate(dtheta);
-						affine_modifier.scale(1 + dsx, 1 + dsy);
-						affine_modifier.translate(ts.x + dx, ts.y + dy);
-					ts.transform.matrix = affine_modifier
-					transformAffineDebugPoints();
+				else { // default to 2D transforms
+					 if (affine) {
+						//if (trace_debug_mode) 
+						//trace("gesture affine transform", t_x,t_y);
+						affine_modifier = ts.transform.matrix;
+							affine_modifier.translate(-t_x+dx,-t_y+dy);
+							affine_modifier.rotate(dtheta);
+							affine_modifier.scale(1 + dsx, 1 + dsy);
+							affine_modifier.translate(t_x, t_y);
+						ts.transform.matrix = affine_modifier
+						transformAffineDebugPoints();
+					}
+					else {
+						///if (trace_debug_mode) 
+						//trace("gesture tween non-affine transform")
+						affine_modifier = ts.transform.matrix;
+							affine_modifier.translate(-ts.x,-ts.y);
+							affine_modifier.rotate(dtheta);
+							affine_modifier.scale(1 + dsx, 1 + dsy);
+							affine_modifier.translate(ts.x + dx, ts.y + dy);
+						ts.transform.matrix = affine_modifier
+						transformAffineDebugPoints();
+					}
 				}
 				
 				updateLocalProperties();
-				
-				
-			
 		}
 			 
 		/////////////////////////////////////////////////////////////////////////
@@ -452,11 +454,11 @@ package com.gestureworks.core
 				
 				//////////////////////////////////////////////////////
 				// 3d
-				if (transform_3d) 
+				if (ts.transform.matrix3D) // check for 3D transform matrix, only enabled if user sets 3D properties 
 				{
-						ts.rotationX += dthetaX;//3d--
-						ts.rotationY += dthetaY;//3d--
-						ts.rotationZ += dthetaZ;//3d--
+					ts.rotationX += dthetaX;//3d--
+					ts.rotationY += dthetaY;//3d--
+					ts.rotationZ += dthetaZ;//3d--
 				}
 			
 				//////////////////////////////////////////////////////
@@ -521,27 +523,33 @@ package com.gestureworks.core
 				// takes the pre-transformed inial properties of the display object and seeds the debug points//317 ,241//250, 190
 				//if(trace_debug_mode)trace("init center point", this.width,this.height);
 				
-				var mem_modifier:Matrix = ts.transform.matrix;
-				var _modifier:Matrix = ts.transform.matrix;
-						_modifier.rotate(-ts.rotation* DEG_RAD);
-						_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
-				ts.transform.matrix = _modifier
-			
-				trO.pre_init_width = ts.width;
-				trO.pre_init_height = ts.height;
+				if (ts.transform.matrix3D) { // check for 3D transform matrix, only enabled if user sets 3D properties
+					
+					// TODO: 3D representations of below
+				}	
+				else {	// default to default 2D
+					var mem_modifier:Matrix = ts.transform.matrix;
+					var _modifier:Matrix = ts.transform.matrix;
+							_modifier.rotate(-ts.rotation* DEG_RAD);
+							_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
+					ts.transform.matrix = _modifier
 				
-				// revert back
-				ts.transform.matrix = mem_modifier
+					trO.pre_init_width = ts.width;
+					trO.pre_init_height = ts.height;
 				
-				// create original point net
-				var affine_points:Array = new Array();
-					affine_points[0] = new Point(0, 0);
-					affine_points[1] = new Point( trO.pre_init_width, trO.pre_init_height);
-					affine_points[2] = new Point(trO.pre_init_width, 0);
-					affine_points[3] = new Point(0,trO.pre_init_height);
-					affine_points[4] = new Point( trO.pre_init_width / 2, trO.pre_init_height / 2); //center point
-				trO.affinePoints = affine_points;
-				trO.init_center_point = true;
+					// revert back
+					ts.transform.matrix = mem_modifier
+				
+					// create original point net
+					var affine_points:Array = new Array();
+						affine_points[0] = new Point(0, 0);
+						affine_points[1] = new Point( trO.pre_init_width, trO.pre_init_height);
+						affine_points[2] = new Point(trO.pre_init_width, 0);
+						affine_points[3] = new Point(0,trO.pre_init_height);
+						affine_points[4] = new Point( trO.pre_init_width / 2, trO.pre_init_height / 2); //center point
+					trO.affinePoints = affine_points;
+					trO.init_center_point = true;
+				}
 			}
 			
 		}
