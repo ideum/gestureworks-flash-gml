@@ -302,7 +302,7 @@ package com.gestureworks.analysis
 		// FAV IP
 		public function createHand():void 
 		{
-			trace("create hand")
+			//trace("create hand")
 			
 			//cO.hand[0] = new Vector();
 			var fav_pt:Vector3D = new Vector3D();

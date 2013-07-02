@@ -61,15 +61,16 @@ package com.gestureworks.managers
 		 */
 		public static function getActivePoints():void 
 		{
+			
+			return; // temp to avoid errors
+			
 			//copy active list
 			var temp_activePoints:Array = activePoints;
 			var temp_framePoints:Array = framePoints;
 			
 			// clear frame allows for immediate new entries
 			clearFrame();
-			
-			trace("active points",temp_activePoints.length,temp_framePoints.length,framePoints.length,activePoints.length);
-			
+						
 			
 			//////////////////////////////////////////////////////////////////////////////////
 			// loop active points 
