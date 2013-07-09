@@ -211,13 +211,6 @@ package com.gestureworks.core
 			else 
 				pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
 			
-			/////////////////////////////////
-			////////////////////////////////
-			// what is center transform ?? It is overriding the affine transform point
-			////////////////////////////////
-			//////////////////////////////////
-			pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
-			
 			
 			// TRANSFORM TRANSFORMATION VECTOR
 			var vector_mod:Matrix = new Matrix();
@@ -242,8 +235,8 @@ package com.gestureworks.core
 						t_y = trO.transAffinePoints[4].y
 					}
 					else {
-					t_x = trO.x;
-					t_y = trO.y;
+						t_x = trO.x;
+						t_y = trO.y;
 					}
 					dx = trO.dx;
 					dy = trO.dy;
@@ -417,7 +410,7 @@ package com.gestureworks.core
 				dthetaY = (ts._$rotationY - ts.rotationY) * DEG_RAD;//3d--
 				dthetaZ = (ts._$rotationZ - ts.rotationZ) * DEG_RAD;//3d--
 				
-			//trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
+				//trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
 				
 				//////////////////////////////////////////////////////
 				// 3d
