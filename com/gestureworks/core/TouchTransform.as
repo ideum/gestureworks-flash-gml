@@ -322,7 +322,7 @@ package com.gestureworks.core
 					ts.transform.matrix = affine_modifier;
 					transformAffineDebugPoints();
 				}
-				else {
+				else { // DELETE - NOT USED
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate(-ts.x,-ts.y);
 						affine_modifier.rotate(dtheta);
@@ -437,7 +437,7 @@ package com.gestureworks.core
 					transformAffineDebugPoints();
 				 }
 				 
-				 else
+				 else // DELETE - NOT USED
 				 {
 					//if (trace_debug_mode) 
 					//trace("tween trans $ non affine")

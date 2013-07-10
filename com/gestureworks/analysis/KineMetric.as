@@ -1685,6 +1685,8 @@ package com.gestureworks.analysis
 		// 3D MANIPULATE GENERIC 
 		public function findMeanInst3DMotionTransformationIPA():void
 		{
+			return;
+			
 			//trace("motion local pinch kinemetric",cO.iPointArray.length);
 	
 				if (ipn!= 0)
