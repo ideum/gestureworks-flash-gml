@@ -48,7 +48,7 @@ package com.gestureworks.managers
 		public static var leapmode:String = "3d"//"2d";
 		
 		public static var mpoints:Dictionary = new Dictionary();
-		
+		public static var touchObjects:Dictionary = new Dictionary();
 		
 		gw_public static function initialize():void
 
@@ -69,6 +69,7 @@ package com.gestureworks.managers
 			// create gloabal motion sprite
 			motionSprite = new TouchSprite();
 				motionSprite.debugDisplay = true;
+				motionSprite.tc.core = true; // fix for global core analysis
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
 
 			
@@ -76,25 +77,30 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list
 			mpoints = GestureGlobals.gw_public::motionPoints;
+			//touchObjects = GestureGlobals.gw_public::touchObjects;
 			
 			
 			//if (GestureWorks.supportsMotion) {
 				
 				//DRIVES UPDATES ON POINT LIFETIME
-				GestureWorks.application.addEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
-				GestureWorks.application.addEventListener(GWMotionEvent.MOTION_BEGIN, onMotionBegin);
+				//GestureWorks.application.addEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
+				//GestureWorks.application.addEventListener(GWMotionEvent.MOTION_BEGIN, onMotionBegin);
 				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
-				GestureWorks.application.addEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+				//GestureWorks.application.addEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
 			//}
-
+			
+			//////////////////////////////////////////
+			// init interaction manager
+			
+			
 		}
 		
 		gw_public static function deInitialize():void
 		{
-			GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
-			GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
-			GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
+			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
 		}
 
 		
@@ -118,8 +124,7 @@ package com.gestureworks.managers
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			
 			// create new point object
-			var mpointObject:MotionPointObject  = new MotionPointObject();	
-			//var mpointObject:MotionPointObject = mpoints[event.value.motionPointID];
+			var mpointObject:MotionPointObject  = new MotionPointObject();
 					
 					mpointObject.id = motionSprite.motionPointCount; // NEEDED FOR THUMBID
 					mpointObject.motionPointID = event.value.motionPointID;
@@ -162,7 +167,6 @@ package com.gestureworks.managers
 			
 			if (pointObject)
 			{
-					//motionSprite.cO.motionArray.splice(event.value.motionPointID, 1);
 					// REMOVE POINT FROM LOCAL LIST
 					motionSprite.cO.motionArray.splice(pointObject.id, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);

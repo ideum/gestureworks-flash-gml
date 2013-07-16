@@ -32,31 +32,35 @@ package com.gestureworks.managers
 	public class InteractionManager 
 	{	
 		public static var ipoints:Dictionary = new Dictionary();
-		
+		//public static var touchObjects:Dictionary = new Dictionary();
+		private static var gms:TouchSprite;
 		
 		gw_public static function initialize():void
 
 		{
-			trace("interaction manager init");
+			//trace("interaction manager init");
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list
 			ipoints = GestureGlobals.gw_public::interactionPoints;
+			//touchObjects = GestureGlobals.gw_public::touchObjects;
 			
 			// init interaction point manager
 			InteractionPointTracker.initialize();
+			
+			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 
 			/////////////////////////////////////////////////////////////////////////////////////////
 			//DRIVES UPDATES ON POINT LIFETIME
-			GestureWorks.application.addEventListener(GWInteractionEvent.INTERACTION_END, onInteractionEnd);
-			GestureWorks.application.addEventListener(GWInteractionEvent.INTERACTION_BEGIN, onInteractionBegin);
-			GestureWorks.application.addEventListener(GWInteractionEvent.INTERACTION_UPDATE, onInteractionUpdate);
+			//GestureWorks.application.addEventListener(GWInteractionEvent.INTERACTION_END, onInteractionEnd);
+			//GestureWorks.application.addEventListener(GWInteractionEvent.INTERACTION_BEGIN, onInteractionBegin);
+			//GestureWorks.application.addEventListener(GWInteractionEvent.INTERACTION_UPDATE, onInteractionUpdate);
 		}
 		
 		gw_public static function deInitialize():void
 		{
-			GestureWorks.application.removeEventListener(GWInteractionEvent.INTERACTION_END, onInteractionEnd);
-			GestureWorks.application.removeEventListener(GWInteractionEvent.INTERACTION_BEGIN, onInteractionBegin);
-			GestureWorks.application.removeEventListener(GWInteractionEvent.INTERACTION_UPDATE, onInteractionUpdate);
+			//GestureWorks.application.removeEventListener(GWInteractionEvent.INTERACTION_END, onInteractionEnd);
+			//GestureWorks.application.removeEventListener(GWInteractionEvent.INTERACTION_BEGIN, onInteractionBegin);
+			//GestureWorks.application.removeEventListener(GWInteractionEvent.INTERACTION_UPDATE, onInteractionUpdate);
 		}
 
 		
@@ -64,22 +68,24 @@ package com.gestureworks.managers
 		// registers touch point via touchSprite
 		public static function registerInteractionPoint(ipo:InteractionPointObject):void
 		{
-			//ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
+			ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
 		}
 		
 		
 		public static function onInteractionBegin(event:GWInteractionEvent):void
 		{			
-			//trace("motion point begin, motionManager",event.value.motionPointID);
+			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
 			
-			// create new interaction point clone for each display object 
-			
-			
-				// create new point object
+			//NEED IP COUNT FOR ID
+			//for each(var tO:Object in touchObjects)
+			//{
+				// DUPE CORE IP LIST FOR NOW
+				// create new interaction point clone for each interactive display object 
 				var ipO:InteractionPointObject  = new InteractionPointObject();	
-
-						//ipO.id = motionSprite.interactionPointCount; // NEEDED FOR THUMBID
-						//ipO.motionPointID = event.value.interactionPointID;
+				
+						ipO.id = gms.interactionPointCount; // NEEDED FOR THUMBID
+						ipO.interactionPointID = event.value.interactionPointID;
+						ipO.handID = event.value.handID;
 						ipO.type = event.value.type;
 						
 						ipO.position = event.value.position;
@@ -92,57 +98,53 @@ package com.gestureworks.managers
 						
 						ipO.length = event.value.length;
 						ipO.width = event.value.width;
+						
+	
+				//ADD TO LOCAL Interaction POINT LIST
+				gms.cO.iPointArray.push(ipO);
+				// update local touch object point count
+				gms.interactionPointCount++;
+
+				///////////////////////////////////////////////////////////////////////////
+				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
+				GestureGlobals.gw_public::interactionPoints[event.value.interactionPointID] = ipO;
 					
-					
-					
-					
-					
-			//ADD TO LOCAL POINT LIST
-			//tO.cO.interactionArray.push(ipointObject);
-			// update local touch object point count
-			//tO.InteractionPointCount++;
-				
+				////////////////////////////////////////////////////////////////////////////
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER
+				registerInteractionPoint(ipO);
+			//}
 			
-			///////////////////////////////////////////////////////////////////////////
-			// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-			GestureGlobals.gw_public::interactionPoints[event.value.interactionPointID] = ipO;
-				
-			////////////////////////////////////////////////////////////////////////////
-			// REGISTER TOUCH POINT WITH TOUCH MANAGER
-			registerInteractionPoint(ipO);
-			
+			//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
 		}
 		
 		
 		// stage motion end
 		public static function onInteractionEnd(event:GWInteractionEvent):void
 		{
-			//trace("Motion point End, motionManager", event.value.motionPointID)
+			
 			var iPID:int = event.value.interactionPointID;
 			var ipointObject:InteractionPointObject = ipoints[iPID];
-		
+			//trace("Motion point End, motionManager", iPID)
 			
 			if (ipointObject)
 			{
-					//motionSprite.cO.motionArray.splice(event.value.motionPointID, 1);
 					// REMOVE POINT FROM LOCAL LIST
-					//motionSprite.cO.interactionArray.splice(pointObject.id, 1);
-					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
+					gms.cO.iPointArray.splice(ipointObject.id, 1);
 					
 					// REDUCE LOACAL POINT COUNT
-					//motionSprite.interactionPointCount--;
+					gms.interactionPointCount--;
 					
 					// UPDATE POINT ID 
-					//for (var i:int = 0; i < motionSprite.cO.interactionArray.length; i++)
-					//{
-						//motionSprite.cO.InteractionArray[i].id = i;
-					//}
+					for (var i:int = 0; i < gms.cO.iPointArray.length; i++)
+					{
+						gms.cO.iPointArray[i].id = i;
+					}
 				
 					// DELETE FROM GLOBAL POINT LIST
 					delete ipoints[event.value.interactionPointID];
 			}
 			
-			//trace("motion point tot",motionSprite.motionPointCount)
+			//trace("interaction point end",gms.interactionPointCount)
 		}
 		
 	
@@ -152,13 +154,12 @@ package com.gestureworks.managers
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			var ipO:InteractionPointObject = ipoints[event.value.interactionPointID];
 			
-			//trace("motion move event, motionManager", event.value.motionPointID);
+			//trace("interaction move event, interactionsManager", event.value.interactionPointID);
 			
 				if (ipO)
 				{	
 					//mpO = event.value;
-					//mpO.id  = event.value.id;
-					//mpO.motionPointID  = event.value.motionPointID;
+					ipO.interactionPointID  = event.value.interactionPointID;
 					ipO.position = event.value.position;
 					ipO.direction = event.value.direction;
 					ipO.normal = event.value.normal;
@@ -172,10 +173,11 @@ package com.gestureworks.managers
 					
 					//mpO.handID = event.value.handID;
 					//ipO.moveCount ++;
+					
+					//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
 				}
 				
-				
-				
+
 				// UPDATE POINT HISTORY 
 				InteractionPointHistories.historyQueue(event);
 		}	

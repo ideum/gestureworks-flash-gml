@@ -309,30 +309,31 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// 2d/3d hand surface profile / data structure
 		///////////////////////////////////////////////////////////////////////////////
-		// WILL NEED TO EXTEND AS GENERIC DATA STRCUTURE
-		
-		// 2d/3d bimanual data structs // 
-		
-		
-		
-		//-- handednes / left /right :uint 0-left 1-right 2-bimanual
-		//-- orientation vector :Vector3D
-		//-- orintationAngle 
-		//-- thumb id/x/yz
-		//-- hand finger list id/x/y/z
-		//-- fingers id :int
-		//-- mean finger velocity :Vector3D
-		//-- mean finger acceleration :Vector3D
-		//-- palm radius :Number
-		//-- palm center :Vector3D
-		//-- palm velocity :Vector3D
 		
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		private var _hand:Object = new Object();
-		public function get hand():Object{return _hand;}
-		public function set hand(value:Object):void{_hand = value;}
-		// thumbID ------------------
+		private var _handList:Vector.<HandObject> = new Vector.<HandObject>;
+		public function get handList():Vector.<HandObject>{return _handList;}
+		public function set handList(value:Vector.<HandObject>):void{_handList = value;}
+			/// INSIDE HAND Object
+				//--width
+				//--length
+				//--thumb
+				//--fingerlist
+				//-- handednes / left /right :uint 0-left 1-right 2-bimanual
+				//-- orientation vector :Vector3D
+				//-- orintationAngle 
+				//-- thumb id/x/yz
+				//-- hand finger list id/x/y/z
+				//-- fingers id :int
+				//-- mean finger velocity :Vector3D
+				//-- mean finger acceleration :Vector3D
+				//-- palm radius :Number
+				//-- palm center :Vector3D
+				//-- palm velocity :Vector3D
+		
+		/// 
+		// thumbID ------------------ FOR 2D STUFF (NEEDS TO MOVE TO 2D HAND OBJECT)
 		private var _thumbID:int = 0;
 		public function get thumbID():int{return _thumbID;}
 		public function set thumbID(value:int):void { _thumbID = value; }

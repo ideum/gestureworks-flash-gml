@@ -143,19 +143,6 @@ package com.gestureworks.managers
 					// analyze for taps
 					if (tO.tg) tO.tg.onTouchEnd(event);
 					
-					/*
-					/////////////////////////////////////////////////////////////////////////////
-					//REMOVE POINT FROM PAIR LIST
-					// will need to remove from all nested clusters also
-					for (i = 0; i < tO.cO.pointPairArray.length; i++)
-					{
-						if ((tO.cO.pointPairArray[i].idA == event.touchPointID)||(tO.cO.pointPairArray[i].idB == event.touchPointID)) {
-							tO.cO.pointPairArray.splice(i, 1);
-							//trace("point pair spliced",tO.cO.pointPairArray.length)
-						}
-					}
-					*/
-					
 					// REMOVE POINT FROM LOCAL LIST
 					tO.pointArray.splice(pointObject.id, 1);
 					
@@ -232,16 +219,27 @@ package com.gestureworks.managers
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
+				//trace("tm touchobject",tO);
 				//////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
 				//COULD BE JUST INTERACTION POINT DATA ??
 				// BUT NEEDS TO LOCALLY DETERMIN PICH HIT TEST
 				// PERHAPS A INTERACTION POINT CADIDATE LIST THEN PERFORM HIT LOCAL TO THE TOUCHOBJECT
 				tO.cO.motionArray = gms.cO.motionArray
+				
 				//////////////////////////////////////////////////////////////
 				
 				// update touch,cluster and gesture processing
 				updateTouchObject(tO);
+				
+				tO.cO.handList = gms.cO.handList;
+				tO.cO.iPointArray = gms.cO.iPointArray
+				
+				//trace(gms.cO.hand.position,tO.cO.hand.position)
+				
+				// update interaction points
+				//tO.cO.iPointArray = gms.cO.iPointArray
+				//trace("gms touch manager", gms.cO.iPointArray.length, gms.cO.motionArray.length);
 				
 				//UPDATE CLUSTER HISTORIES
 				// moved to touch object

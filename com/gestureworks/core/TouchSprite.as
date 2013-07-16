@@ -254,7 +254,15 @@ package com.gestureworks.core
 		 */
 		private var _motionPointCount:int;
 		public function get motionPointCount():int{return _motionPointCount;}
-		public function set motionPointCount(value:int):void{	_motionPointCount=value;}
+		public function set motionPointCount(value:int):void {	_motionPointCount = value; }
+		
+		// interaction point count
+		/**
+		 * @private
+		 */
+		private var _interactionPointCount:int;
+		public function get interactionPointCount():int{return _interactionPointCount;}
+		public function set interactionPointCount(value:int):void{	_interactionPointCount=value;}
 		
 		// cluster ID
 		/**

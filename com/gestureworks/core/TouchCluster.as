@@ -59,6 +59,7 @@ package com.gestureworks.core
 		private var gO:GestureListObject;
 		private var cO:ClusterObject
 		private var tiO:TimelineObject
+		public var core:Boolean;
 		
 		public function TouchCluster(touchObjectID:int):void
 		{
@@ -247,6 +248,8 @@ package com.gestureworks.core
 				if(kinemetricsOn) 	getKineMetrics();
 				if(vectormetricsOn)	getVectorMetrics();
 				
+				//trace("hand pos",cO.hand.position)
+				
 				if ((ts.clusterEvents)&&(ts.N)) manageClusterPropertyEventDispatch();
 		}
 		
@@ -290,21 +293,39 @@ package com.gestureworks.core
 			//gn = gO.pOList.length;
 			
 			cluster_geometric.findGeoConstants();
-			cluster_geometric.resetCluster();
+			cluster_geometric.resetGeoCluster();
+			
+			
+			if (!core)
+			{
+			//trace("get core geometrics")
 			
 			////////////////////////////////////////////////
+			// skeletal model
 			cluster_geometric.clearMotionPointData();	
-			cluster_geometric.normalizeFingerSize();
-			cluster_geometric.findThumb();
-			//cluster_geometric.findFingers();
-		
-			cluster_geometric.createHand();
-									
-			cluster_geometric.find3DPinchPoints(); 
+			cluster_geometric.createHand(); // palm points // finger list palm ip // up down //wrist 
+				cluster_geometric.findFingerAverage();// finger average point ip
+				cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
+				cluster_geometric.findHandRadius(); // favdist 
+				cluster_geometric.findThumb(); // thumb // left// right
+				//cluster_geometric.findFingers(); // identify fingers
+				// cluster_geometric.findJoints(); // finger joints 
+			////////////////////////////////////////////////
+			
+			///////////////////////////////////////////////
+			// virtual interaction points
+			//trace("hand pos",cO.hand.position)
+			//cluster_geometric.find3DPinchPoints(); 
 			//cluster_geometric.find3DTriggerPoints(); 
 			//cluster_geometric.find3DPushPoints(); 
 			//cluster_geometric.find3DHookPoints(); 
-			//cluster_geometric.find3DToolPoints(); 
+			//cluster_geometric.find3DToolPoints();
+			//cluster_geometric.find3DRegionPoints();
+			//cluster_geometric.find3DFingerPoints(); 
+			//cluster_geometric.find3DThumbPoints(); 
+			cluster_geometric.find3DFramePoints(); 
+			//core = true;
+			}
 			
 			
 			
@@ -314,7 +335,9 @@ package com.gestureworks.core
 		{						
 		
 			// move to 3d kinemetrics
-			cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+			//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+			
+			cluster_kinemetric.testTransformationIPA();
 			/////////////////////////////////////////////////////////
 		
 		
@@ -500,21 +523,11 @@ package com.gestureworks.core
 							if (g.algorithm_class == "3d_kinemetric")
 							{
 								
-								//cluster_kinemetric.clearMotionPointData();	
-								//cluster_kinemetric.normalizeFingerSize();
-								//cluster_kinemetric.findThumb();
-								//cluster_kinemetric.createHand();
-								
-								//cluster_kinemetric.find3DPinchPoints(); 
-								//cluster_kinemetric.find3DTriggerPoints(); 
-								//cluster_kinemetric.find3DPushPoints(); 
-								
-								//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
-								
-								///cluster_kinemetric.find3DPointPairList();
-									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
-						
-									
+								//trace("kinemetric algorithm",gO.pOList[key].algorithm);
+								if (g.algorithm == "3d_bimanual_manipulate") 
+								{
+									//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+								}
 									// BASIC 3D DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
 									//if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation();
 									

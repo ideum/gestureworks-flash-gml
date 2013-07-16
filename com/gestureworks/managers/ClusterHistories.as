@@ -68,7 +68,7 @@ package com.gestureworks.managers
 				object.rotation = clusterObject.rotation;
 				object.separation = clusterObject.separation;
 				
-				object.thumbID = clusterObject.thumbID;
+				object.thumbID = clusterObject.thumbID; //for 2D HAND
 				
 				// first order primary deltas
 				object.dx = clusterObject.dx;
@@ -113,6 +113,8 @@ package com.gestureworks.managers
 				
 				//trace(object.path_data)
 				//trace(clusterObject.pointArray[0].x)
+				
+				object.handList = clusterObject.handList; 
 				
 				//MOTION FRAME DATA
 				//object.iPointArray = clusterObject.iPointArray;

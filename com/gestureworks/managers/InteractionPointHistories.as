@@ -59,8 +59,9 @@ package com.gestureworks.managers
 			//var FrameID:int = 0;
 			
 			var object:InteractionPointObject = new InteractionPointObject();
-				object = ipo;
-	
+				//object = ipo;
+				
+				object.position = ipo.position;
 				//trace("interaction point history push")
 
 			return object;

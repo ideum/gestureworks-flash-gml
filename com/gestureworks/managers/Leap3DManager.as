@@ -92,14 +92,11 @@ package com.gestureworks.managers
 							{
 								if (aid == event.frame.hands[i].id) 
 								{
-									//mp.handID = event.frame.hand[i].id;
-									
+									mp.handID = event.frame.hand[i].id;
 									mp.position = new Vector3D( event.frame.hands[i].palmPosition.x, event.frame.hands[i].palmPosition.y, event.frame.hands[i].palmPosition.z*-1);
 									mp.direction = new Vector3D(event.frame.hands[i].direction.x, event.frame.hands[i].direction.y, event.frame.hands[i].direction.z*-1);
-
 									mp.normal = new Vector3D(event.frame.hands[i].palmNormal.x, event.frame.hands[i].palmNormal.y, event.frame.hands[i].palmNormal.z*-1);
 									mp.velocity = new Vector3D(event.frame.hands[i].palmVelocity.x, event.frame.hands[i].palmVelocity.y, event.frame.hands[i].palmVelocity.z*-1);
-									
 									mp.sphereCenter = new Vector3D(event.frame.hands[i].sphereCenter.x, event.frame.hands[i].sphereCenter.y, event.frame.hands[i].sphereCenter.z*-1);
 									mp.sphereRadius = event.frame.hands[i].sphereRadius
 									
@@ -180,7 +177,7 @@ package com.gestureworks.managers
 							{
 								if (pid == event.frame.hands[k].id) 
 								{
-								//mp.handID = event.frame.hands[k].id;
+								mp.handID = event.frame.hands[k].id;
 								mp.position = new Vector3D( event.frame.hands[k].palmPosition.x, event.frame.hands[k].palmPosition.y, event.frame.hands[k].palmPosition.z*-1);
 								mp.direction = new Vector3D(event.frame.hands[k].direction.x, event.frame.hands[k].direction.y, event.frame.hands[k].direction.z*-1);
 							

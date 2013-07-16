@@ -600,48 +600,51 @@ package com.gestureworks.analysis
 						// draw all pinch points
 						for (var pn:int = 0; pn < cO.iPointArray.length; pn++) 
 						{
-							//trace("ipoint type",cO.iPointArray[pn].type)
-							//PINK 0xE3716B // for pinch
-							if (cO.iPointArray[pn].type == "pinch") {
-								
-								graphics.lineStyle(4, 0xE3716B, style.stroke_alpha);
-								graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
-								
-								}
-						
 							
-							//PURPLE 0xc44dbe // for trigger
-							if (cO.iPointArray[pn].type == "trigger") {
-								
-								var tgr:Number = 40;
-								
-								
-								// set style
-								graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
-								// draw cross
-								graphics.moveTo (cO.iPointArray[pn].position.x - tgr, cO.iPointArray[pn].position.y);
-								graphics.lineTo (cO.iPointArray[pn].position.x + tgr , cO.iPointArray[pn].position.y);
-								graphics.moveTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y- tgr);
-								graphics.lineTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y + tgr);
-								//draw cricle
-								graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, tgr - 10);
-								
-								// get thum id
-								// check extension
-								
-								if (cO.iPointArray[pn].extension < 40) {
-									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 50);
-								}
-						
-							}
-							
-							//yellow 0xFFFF00 // for PUSH
-							if (cO.iPointArray[pn].type == "push") 
+							if (cO.iPointArray[pn])
 							{
-								graphics.lineStyle(4, 0xFFFF00, style.stroke_alpha);
-								graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
-							}
+								//trace("ipoint type",cO.iPointArray[pn].type)
+								//PINK 0xE3716B // for pinch
+								if (cO.iPointArray[pn].type == "pinch") {
+									
+									graphics.lineStyle(4, 0xE3716B, style.stroke_alpha);
+									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
+									
+									}
 							
+								
+								//PURPLE 0xc44dbe // for trigger
+								if (cO.iPointArray[pn].type == "trigger") {
+									
+									var tgr:Number = 40;
+									
+									
+									// set style
+									graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
+									// draw cross
+									graphics.moveTo (cO.iPointArray[pn].position.x - tgr, cO.iPointArray[pn].position.y);
+									graphics.lineTo (cO.iPointArray[pn].position.x + tgr , cO.iPointArray[pn].position.y);
+									graphics.moveTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y- tgr);
+									graphics.lineTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y + tgr);
+									//draw cricle
+									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, tgr - 10);
+									
+									// get thum id
+									// check extension
+									
+									if (cO.iPointArray[pn].extension < 40) {
+										graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 50);
+									}
+							
+								}
+								
+								//yellow 0xFFFF00 // for PUSH
+								if (cO.iPointArray[pn].type == "push") 
+								{
+									graphics.lineStyle(4, 0xFFFF00, style.stroke_alpha);
+									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
+								}
+							}
 							
 						}
 						

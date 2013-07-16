@@ -327,7 +327,8 @@ package com.gestureworks.analysis
 												graphics.moveTo(mp.position.x,mp.position.y);
 												graphics.lineTo(mp.position.x + 50*mp.normal.x, mp.position.y + 50*mp.normal.y);
 											}
-
+											
+											/*
 											if (_drawText)
 											{
 												//drawPoints ID of point
@@ -335,7 +336,7 @@ package com.gestureworks.analysis
 												mptext_array[i].x = mp.position.x;
 												mptext_array[i].y = mp.position.y - 50;
 												mptext_array[i].visible = true;
-											}
+											}*/
 									}
 							}
 		}
