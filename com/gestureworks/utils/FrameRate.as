@@ -25,7 +25,6 @@ package com.gestureworks.utils
 	 * ...
 	 * @author  
 	 */
-	
 	public class FrameRate extends Sprite
 	{
 		private var time:int;
@@ -36,7 +35,10 @@ package com.gestureworks.utils
 		private var ticks:uint = 0;
 		private var tf:TextField;
 		
-		public function FrameRate(xPos:int = 0, yPos:int = 0, color:uint = 0xffffff, fillBackground:Boolean = false, backgroundColor:uint = 0x000000)
+		private var now:uint;
+		private var delta:uint;
+		
+		public function FrameRate(xPos:int = 0, yPos:int = 0, color:uint = 0xffffff, fillBackground:Boolean = false, backgroundColor:uint = 0x000000, addListener:Boolean = true )
 		{
 			x = xPos;
 			y = yPos;
@@ -50,22 +52,23 @@ package com.gestureworks.utils
 			addChild(tf);
 			width = tf.textWidth;
 			height = tf.textHeight;
-			addEventListener(Event.ENTER_FRAME, tick);
+			if (addListener) addEventListener(Event.ENTER_FRAME, tick);
 		}
 		
-		public function tick(evt:Event):void
+		public function tick(evt:Event=null):int
 		{
 			ticks++;
-			var now:uint = getTimer();
-			var delta:uint = now - last;
-			if (delta >= 1000)
-			{
-				//trace(ticks / delta * 1000+" ticks:"+ticks+" delta:"+delta);
-				var fps:Number = ticks / delta * 1000;
+			now = getTimer();
+			delta = now - last;
+			if (delta >= 1000) {
+				fps = ticks / delta * 1000;
 				tf.text = fps.toFixed(1) + " fps";
 				ticks = 0;
 				last = now;
 			}
+			
+			return fps;
 		}
+	
 	}
 }
