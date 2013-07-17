@@ -342,7 +342,6 @@ package com.gestureworks.analysis
 					}
 		}
 		
-		
 		public function findSimpleMeanInstTransformation():void
 		{
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -548,7 +547,6 @@ package com.gestureworks.analysis
 					//	trace("drag calc kine",c_dx,c_dy);
 		}
 		
-		
 		public function findSimpleMeanInstSeparation():void
 		{
 			
@@ -619,7 +617,6 @@ package com.gestureworks.analysis
 					
 					
 		}	
-		
 		
 		public function findSimpleMeanInstRotation():void
 		{
@@ -910,6 +907,15 @@ package com.gestureworks.analysis
 			*/
 		}
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
@@ -918,6 +924,7 @@ package com.gestureworks.analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		
+		/////////////////////////////////////////////////////////////////////////////
 		// clear derived point and cluster motion data
 		public function clearMotionPointData():void
 		{
@@ -939,16 +946,22 @@ package com.gestureworks.analysis
 				}
 		}
 		
-		public function testTransformationIPA():void
+		
+		////////////////////////////////////////////////////////////////////////////
+		// 3D MANIPULATE GENERIC 
+		public function findMeanInst3DMotionTransformationIPA():void
 		{
 			var hist:int = 3;
 			var hk:Number = 1 / hist;
-			
+			var hfk0:Number = 1 / (ipn-1);
+
+			ipn = cO.iPointArray.length
+			var ipnk = 1 / ipn;
 			//trace("motion local pinch kinemetric", cO.iPointArray.length);
 			
 			if (ipn!= 0)
 				{		
-						if ((cO.iPointArray.length == 1)&&(cO.iPointArray[0].history.length>(hist+1)))
+						if ((ipn == 1)&&(cO.iPointArray[0].history.length>(hist+1)))
 							{
 								var pt = cO.iPointArray[0]
 								
@@ -960,342 +973,114 @@ package com.gestureworks.analysis
 								cO.dy = pt.position.y - pt.history[hist].position.y;
 								cO.dz = pt.position.z - pt.history[hist].position.z;
 							}
-				cO.dx = hk*cO.dx;
-				cO.dy = hk*cO.dy; 
-				cO.dz = hk*cO.dz;			
+							
+						
+						if (ipn > 1)
+						{
+						for (i = 0; i < ipn; i++) 
+						{	
+							if (cO.iPointArray[i].history.length>(hist)){
+							//if ((ipn >= 2)&&(cO.iPointArray[0].history.length>(hist+1))&&(cO.iPointArray[1].history.length>(hist+1)))
+							//{
+								var pt0 = cO.iPointArray[i];
+								//var pt1 = cO.iPointArray[1];
+								
+								// pos
+								cO.x += pt0.position.x;
+								cO.y += pt0.position.y;
+								cO.z += pt0.position.z;
+								
+								// drag
+								cO.dx += (pt0.position.x - pt0.history[hist].position.x);
+								cO.dy += (pt0.position.y - pt0.history[hist].position.y);
+								cO.dz += (pt0.position.z - pt0.history[hist].position.z);
+								
+								/*
+								//scale
+								var sx:Number = (cO.iPointArray[0].position.x - cO.iPointArray[1].position.x);
+								var sy:Number = (cO.iPointArray[0].position.y - cO.iPointArray[1].position.y);
+								var sz:Number = (cO.iPointArray[0].position.z - cO.iPointArray[1].position.z);
+								var sx_mc:Number = (cO.iPointArray[0].history[hist].position.x - cO.iPointArray[1].history[hist].position.x);
+								var sy_mc:Number = (cO.iPointArray[0].history[hist].position.y - cO.iPointArray[1].history[hist].position.y);
+								var sz_mc:Number = (cO.iPointArray[0].history[hist].position.z - cO.iPointArray[1].history[hist].position.z);
+
+								// rotate
+								var dthetaZ:Number = 0;
+								var theta0Z:Number = calcAngle(sx, sy);
+								var theta1Z:Number = calcAngle(sx_mc, sy_mc);
+																
+										if ((theta0Z != 0) && (theta1Z != 0)) 
+										{
+											if (Math.abs(theta0Z - theta1Z) > 180) dthetaZ = 0
+											else dthetaZ = (theta0Z - theta1Z);
+										}
+										else dthetaZ = 0;
+										
+								var dthetaX:Number = 0;
+								var theta0X:Number = calcAngle(sy, sz);
+								var theta1X:Number = calcAngle(sy_mc, sz_mc);
+																
+										if ((theta0X != 0) && (theta1X != 0)) 
+										{
+											if (Math.abs(theta0X - theta1X) > 180) dthetaX = 0
+											else dthetaX = (theta0X - theta1X);
+										}
+										else dthetaX = 0;
+										
+										
+								var dthetaY:Number = 0;
+								var theta0Y:Number = calcAngle(sz, sx);
+								var theta1Y:Number = calcAngle(sz_mc, sx_mc);
+																
+										if ((theta0Y != 0) && (theta1Y != 0)) 
+										{
+											if (Math.abs(theta0Y - theta1Y) > 180) dthetaY = 0
+											else dthetaY = (theta0Y - theta1Y);
+										}
+										else dthetaY = 0;
+										
+								var rk:Number = 0.4;
+																		
+								cO.dthetaZ = dthetaZ*rk;
+								cO.dthetaX = dthetaX*rk;
+								cO.dthetaY = dthetaY*rk;
+								
+								//cO.ds = (Math.sqrt(sx * sx  +  sy * sy) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc)) * sck;
+								cO.ds = (Math.sqrt(sx * sx  +  sy * sy  + sz * sz) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc + sz_mc * sz_mc)) * sck;
+								
+								
+								//trace("rotate and scale", sx_mc, sy_mc, sx, sy, cO.dtheta, cO.ds);
+								*/	
+							}
+				cO.x *= ipnk;
+				cO.y *= ipnk; 
+				cO.z *= ipnk;				
+							
+				cO.dx *= ipnk;
+				cO.dy *= ipnk; 
+				cO.dz *= ipnk;	
+				
+				//cO.dsx = ipk0*cO.dsx;
+				//cO.dsy = ipk0*cO.dsy; 
+				//cO.ds = ipk0*cO.ds;
+				//cO.dtheta = ipk0*cO.dtheta;
 				}
+				}
+			}
 				
 			//trace("test",cO.x,cO.y,cO.z, cO.dx,cO.dy,cO.dz);
 		}
 		
-		// 3D MANIPULATE GENERIC 
-		public function findMeanInst3DMotionTransformationIPA():void
-		{
-			//trace("motion local pinch kinemetric",cO.iPointArray.length);
-	
-				if (ipn!= 0)
-				{		
-					
-						if ((cO.iPointArray.length == 1)&&(cO.iPointArray[0].history.length>0))
-							{
-								cO.x = cO.iPointArray[0].position.x;
-								cO.y = cO.iPointArray[0].position.y;
-								cO.z = cO.iPointArray[0].position.z;
-								
-								
-							}
-						
-						if (cO.iPointArray.length == 2)
-							{
-								cO.x = cO.iPointArray[0].position.x - (cO.iPointArray[0].position.x - cO.iPointArray[1].position.x) * 0.5;
-								cO.y = cO.iPointArray[0].position.y - (cO.iPointArray[0].position.y - cO.iPointArray[1].position.y) * 0.5;
-								cO.z = cO.iPointArray[0].position.z - (cO.iPointArray[0].position.z - cO.iPointArray[1].position.z) * 0.5;
-							}	
-							
-							
-							if (cO.iPointArray.length >= 2)
-							{
-								for (i = 0; i <cO.iPointArray.length; i++) 
-										{
-										//cO.x += cO.iPointArray[i].position.x;
-										//cO.y += cO.iPointArray[i].position.y;
-										//cO.z += cO.iPointArray[i].position.z;
-										}
-										
-										//cO.x *= fk0;
-										//cO.y *= fk0;
-										//cO.z *= fk0;
-							}	
-
-							
-
-							//frame hist based velocity
-							var h:uint = 0//GestureGlobals.motionFrameID-2;  //3-8
-							var hk:Number = 1 / h;
-							
-							if ((cO.history)&&(cO.history[h]))
-							{	
-									//STOPS JUMPING
-									if ((cO.x != 0) && (cO.history[h].x != 0)) cO.dx = (cO.x - cO.history[h].x);
-									else cO.dx = 0;
-									
-									if ((cO.y != 0) && (cO.history[h].y != 0)) cO.dy = (cO.y - cO.history[h].y);
-									else cO.dy = 0;
-									
-									if ((cO.z != 0) && (cO.history[h].z != 0)) cO.dz = (cO.z - cO.history[h].z);
-									else cO.dz = 0;
-							
-									
-							//trace("velocity", cO.dx,cO.dy,cO.dz)
-							/////////////////////////////////////////////////////////
-							
-									var sx:Number = 0;
-									var sy:Number = 0;
-									var sx_mc:Number = 0;
-									var sy_mc:Number = 0;
-									
-									
-									//if (cO.iPointArray.length == 2)
-									//{
-									//	if ((cO.iPointArray[0]) && (cO.iPointArray[1])) 
-									//	{
-										//	if ((cO.history[h].iPointArray[0]) && (cO.history[h].iPointArray[1])) 
-										//	{
-												
-												
-												
-										var ipn:int = cO.iPointArray.length
-										var ch:int = cO.history.length;
-										
-										for (i = 0; i < ch; i++) 
-										{
-											/*	
-											var chipn = cO.history[i].iPointArray.length
-											
-											for (j = 0; j < chipn; j++) 
-											{
-												//trace("cluster hist, interactive point array", cO.history[i].iPointArray[j].position);
-													
-													if ((chipn > j + 1) && (cO.iPointArray[j]) && (cO.iPointArray[j + 1])) {
-														if (cO.history[3]) {
-															if((cO.history[3].iPointArray[j]) && (cO.history[3].iPointArray[j+1])) {
-														// scale 
-														sx += cO.iPointArray[j].position.x - cO.iPointArray[j+1].position.x;
-														sy += cO.iPointArray[j].position.y - cO.iPointArray[j+1].position.y;
-														sx_mc += cO.history[3].iPointArray[j].position.x - cO.history[3].iPointArray[j+1].position.x;
-														sy_mc += cO.history[3].iPointArray[j].position.y - cO.history[3].iPointArray[j+1].position.y;
-
-														// rotate
-														var dtheta:Number = 0;
-														var theta0:Number = calcAngle(sx, sy);
-														var theta1:Number = calcAngle(sx_mc, sy_mc);
-																
-															if ((theta0 != 0) && (theta1 != 0)) 
-																{
-																if (Math.abs(theta0 - theta1) > 180) dtheta = 0
-																else dtheta = (theta0 - theta1);
-																}
-															else dtheta = 0;
-																		
-															cO.dtheta += dtheta;
-															cO.ds = (Math.sqrt(sx * sx  +  sy * sy) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc)) * sck;
-															
-															trace("rotate and scale", sx_mc, sy_mc, sx, sy, cO.dtheta, cO.ds);
-															}
-														}
-													}
-													}*/
-												}
-										
-										
-										
-										/*	
-										for (i = 0; i < ipn; i++) 
-										{
-											if (cO.history[1])
-											{
-												
-											//trace(cO.history[h].iPointArray[i]);
-											//if (ipn>i+1)trace(cO.iPointArray[i+1])
-											//if (ipn>i+1)trace(cO.iPointArray[i+1].history[h])
-											if ((ipn>i+1)&&(cO.iPointArray[i].history.length>3) && (cO.iPointArray[i+1].history.length>3)) 
-												{		
-												
-												
-												
-												
-											
-											
-											// scale 
-											sx += cO.iPointArray[i].position.x - cO.iPointArray[i+1].position.x;
-											sy += cO.iPointArray[i].position.y - cO.iPointArray[i+1].position.y;
-											sx_mc += cO.iPointArray[i].history[3].position.x - cO.iPointArray[i+1].history[3].position.x;
-											sy_mc += cO.iPointArray[i].history[3].position.y - cO.iPointArray[i+1].history[3].position.y;
-
-											// rotate
-											var dtheta:Number = 0;
-											var theta0:Number = calcAngle(sx, sy);
-											var theta1:Number = calcAngle(sx_mc, sy_mc);
-													
-												if ((theta0 != 0) && (theta1 != 0)) 
-													{
-													if (Math.abs(theta0 - theta1) > 180) dtheta = 0
-													else dtheta = (theta0 - theta1);
-													}
-												else dtheta = 0;
-															
-												cO.dtheta += dtheta;
-												cO.ds = (Math.sqrt(sx * sx  +  sy * sy) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc)) * sck;
-												
-												trace("rotate and scale",sx_mc,sy_mc,sx,sy,cO.dtheta,cO.ds);
-												
-										}
-										}
-									}*/
-									
-									
-								//trace(cO.hand.normal, cO.hand.sphereRadius, cO.hand.velocity)	
-								
-								//AVERAGE FINGER SEPERATION 
-								// BETTER THAN SPHERE WHEN 2 FINGERS?
-								
-
-							}
-							// stops erroneous slipping
-							if (Math.abs(cO.dx) > 200) cO.dx = 0;
-							if (Math.abs(cO.dy) > 200) cO.dy = 0;
-							if (Math.abs(cO.dz) > 200) cO.dz = 0;
-						}
-				//trace("biman manip",cO.dx,cO.dy)
-		}
-			
-		
-
-		
-		/*
-		public function findMeanInst3DMotionTransformation():void
-		{
-			
-		//trace("motion kinemetric");
-		var frame:Frame = cO.motionArray.frame;
-		
-		//trace("total hands", cO.hn);
-		//trace("total fingers", cO.fn);
-		
-				//trace("--frame----------------------------------");
-				
-				//trace("id: ",	frame.id); 
-				//trace("timestamp: ",	frame.timestamp); 
-				//trace("hands: ",	frame.hands.length); 
-				//trace("finger: ",	frame.fingers.length);
-				
-				//trace("tools: ",	frame.tools.length);
-				//trace("gestures: ",	frame.gestures().length);
-				
-				//frame.rotationAxis();
-				//frame.rotationAngle();
-				//frame.rotationMatrix()
-				//frame.scaleFactor();
-				//frame.translation();
-				//frame.isValid();
-			
-				if (hn!= 0)
-				{
-					for each ( var hand:Hand in frame.hands)
-						{
-					//trace("--hand--");
-					// Get the first hand
-					//var hand:Hand = frame.hands[ 0 ];
-					
-					//// update h cluster shpere rad
-					//hand.sphereRadius
-					//hand.palmPosition
-					//hand.direction
-					
-					//// Get the hand's normal vector and direction
-					//LeapMath.toDegrees(hand.direction.pitch)
-					//LeapMath.toDegrees(hand.palmNormal.roll)
-					//LeapMath.toDegrees(hand.direction.yaw)
-
-					// Check if the hand has any fingers
-					var fingers:Vector.<Finger> = hand.fingers;
-
-					
-					// push fingers to points list
-					if ( fingers.length != 0 )
-					{
-						cO.x *= fk0;
-						cO.y *= fk0;
-						cO.z *= fk0;
-						
-						cO.mx *= fk0;
-						cO.my *= fk0;
-						
-						//cO.z *= fk0;
-						//cO.length *=fk0 
-						
-						
-							///////////////////////////////////////////
-							// velocity
-							//////////////////////////////////////////
-							
-							if (cO.history) {
-								
-								//trace("cluster history length:", cO.history.length)	
-								var h:uint = 6;
-								var hk:Number = 1/h;
-								
-								
-								
-								if (cO.history[h]) {
-									var hframe:Frame = cO.history[h].motionArray.frame;
-									cO.dx = (cO.x - cO.history[h].x) * hk; 
-									cO.dy = (cO.y - cO.history[h].y) * hk;
-									cO.dz = (cO.z - cO.history[h].z) * hk;
-									
-									
-									//cO.dtheta =   LeapMath.toDegrees(frame.rotationAngle(frame) - frame.rotationAngle(hframe)); 
-									//cO.dsx =     -(frame.scaleFactor(frame) - frame.scaleFactor(hframe))*0.04; 
-									//cO.dsy =     -(frame.scaleFactor(frame) - frame.scaleFactor(hframe))*0.04; 
-									//cO.rotation = (frame.rotationAngle(hframe) * hk); 
-									//cO.dthetaX = LeapMath.toDegrees((frame.rotationAngle(hframe))*hk); 
-									//cO.dsy = (cO.history[h].scale - cO.history[h].scale)*hk;
-								}
-								
-								//trace("dtheta",cO.dtheta)
-								
-								// stops erroneous slipping
-								if (Math.abs(cO.dx) > 10) cO.dx = 0;
-								if (Math.abs(cO.dy) > 10) cO.dy = 0;
-								if (Math.abs(cO.dz) > 10) cO.dz = 0;
-								//else {
-									
-								//}
-							}	
-							/////////////////////////////////////////
-
-					}
-					else {
-						cO.mx =0;
-						cO.my = 0;
-						cO.x =0;
-						cO.y = 0;
-						cO.z = 0;
-						
-						cO.dtheta = 0
-						//cO.dx = 0;
-						//cO.dy = 0;
-					}
-					
-				}
-				
-				//cO.dx =0;
-				//cO.dy = 0;
-				//cO.dz = 0;	
-				//cO.dtheta = 0
-				//cO.dx = 0;
-				//cO.dy = 0;
-				
-				
-				
-				/////////////////////////////////////
-				// frame motion 
-				/////////////////////////////////////
-				
-				//if (cO.history[6]) {
-					//var since:Frame = cO.history[6].motionArray;
-					//trace("frame motion:",frame.translation(since));
-				//}
-				
-				// Calculate the hand's pitch, roll, and yaw angles
-				//trace( "Hand pitch: " + LeapMath.toDegrees( direction.pitch ) + " degrees, " + "roll: " + LeapMath.toDegrees( normal.roll ) + " degrees, " + "yaw: " + LeapMath.toDegrees( direction.yaw ) + " degrees\n" );
-				
-				//trace("motion data:",GestureGlobals.motionframeID,fn,fk0,fk1,"pos:",cO.x,cO.y,"vel:",cO.dx,cO.dy);
-			}
-		}
 		
 		
-		*/
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		////////////////////////////////////////////////////////////////////////////////////////

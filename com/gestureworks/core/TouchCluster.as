@@ -307,9 +307,9 @@ package com.gestureworks.core
 				cluster_geometric.findFingerAverage();// finger average point ip
 				cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
 				cluster_geometric.findHandRadius(); // favdist 
-				cluster_geometric.findThumb(); // thumb // left// right
-				//cluster_geometric.findFingers(); // identify fingers
-				// cluster_geometric.findJoints(); // finger joints 
+				//cluster_geometric.findThumb(); // thumb // left// right
+				//--cluster_geometric.findFingers(); // identify fingers
+				//--cluster_geometric.findJoints(); // finger joints 
 			////////////////////////////////////////////////
 			
 			///////////////////////////////////////////////
@@ -319,27 +319,25 @@ package com.gestureworks.core
 			//cluster_geometric.find3DTriggerPoints(); 
 			//cluster_geometric.find3DPushPoints(); 
 			//cluster_geometric.find3DHookPoints(); 
-			//cluster_geometric.find3DToolPoints();
-			//cluster_geometric.find3DRegionPoints();
-			//cluster_geometric.find3DFingerPoints(); 
+			//---cluster_geometric.find3DToolPoints();
+			//---cluster_geometric.find3DRegionPoints();
+			cluster_geometric.find3DFingerPoints(); 
 			//cluster_geometric.find3DThumbPoints(); 
-			cluster_geometric.find3DFramePoints(); 
+			//cluster_geometric.find3DFramePoints(); 
 			//core = true;
 			}
 			
-			
-			
+			//cluster_kinemetric.testTransformationIPA();
+		
 		}
 		
 		public function getKineMetrics():void 
 		{						
-		
+			if (!core)
+			{
 			// move to 3d kinemetrics
-			//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
-			
-			cluster_kinemetric.testTransformationIPA();
-			/////////////////////////////////////////////////////////
-		
+			cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+			}
 		
 			gn = gO.pOList.length;
 			var dn:uint 

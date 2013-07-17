@@ -284,6 +284,7 @@ package com.gestureworks.analysis
 												graphics.drawCircle(mp.palmplane_position.x ,mp.palmplane_position.y, style.radius + 20 + zm);	
 												
 											}
+											/*
 											if (_drawText)
 											{
 												//drawPoints ID of point
@@ -296,7 +297,7 @@ package com.gestureworks.analysis
 																		+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01 +"\n"
 																		+ "max_length: " + Math.round(mp.max_length) + " min_length: "+ Math.round(mp.min_length) + " length: "+ Math.round(mp.length) + " Extension: " + mp.extension + "%"; 
 																		//" width: "+ Math.round(100*mp.width)*0.01 +
-											}	
+											}	*/
 									}
 									
 									

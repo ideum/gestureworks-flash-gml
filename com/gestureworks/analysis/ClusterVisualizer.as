@@ -303,7 +303,7 @@ package com.gestureworks.analysis
 			if (_drawSeparation)
 			{
 			
-				trace(_ds)
+				//trace(_ds)
 			
 				if (_ds < -0.1) // contract
 				{

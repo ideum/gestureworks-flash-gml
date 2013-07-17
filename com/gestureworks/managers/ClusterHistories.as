@@ -70,23 +70,28 @@ package com.gestureworks.managers
 				
 				object.thumbID = clusterObject.thumbID; //for 2D HAND
 				
+				
+				
 				// first order primary deltas
 				object.dx = clusterObject.dx;
 				object.dy = clusterObject.dy;
-				object.dy = clusterObject.dz;
+				object.dz = clusterObject.dz; //3d
 				
 				object.ds = clusterObject.ds;
 				//object.d3ds = clusterObject.d3ds; //3d chang in sep
 				object.dsx = clusterObject.dsx;
 				object.dsy = clusterObject.dsy;
-				object.dsz = clusterObject.dsz; //-
+				object.dsz = clusterObject.dsz; //-3d
 				
 				object.dtheta = clusterObject.dtheta;
+				object.dthetaX = clusterObject.dthetaX;
+				object.dthetaY = clusterObject.dthetaY;
+				object.dthetaZ = clusterObject.dthetaZ;
 				
 				// second order primary deltas
 				object.ddx = clusterObject.ddx;
 				object.ddy = clusterObject.ddy;
-				object.ddz = clusterObject.ddz;//-
+				object.ddz = clusterObject.ddz;//-3d
 				
 				// core cluster events
 				//object.add = clusterObject.add;
@@ -107,14 +112,17 @@ package com.gestureworks.managers
 				object.orient_dy = clusterObject.orient_dy;
 				//object.orient_dz = clusterObject.orient_dz; // 
 				
-				
 				// STROKE DATA
 				object.path_data = clusterObject.path_data;
 				
 				//trace(object.path_data)
 				//trace(clusterObject.pointArray[0].x)
 				
-				object.handList = clusterObject.handList; 
+				//object.handList = clusterObject.handList; 
+				
+				
+				
+				
 				
 				//MOTION FRAME DATA
 				//object.iPointArray = clusterObject.iPointArray;
