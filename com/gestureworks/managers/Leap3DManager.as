@@ -97,24 +97,12 @@ package com.gestureworks.managers
 									mp.direction = new Vector3D(event.frame.hands[i].direction.x, event.frame.hands[i].direction.y, event.frame.hands[i].direction.z*-1);
 									mp.normal = new Vector3D(event.frame.hands[i].palmNormal.x, event.frame.hands[i].palmNormal.y, event.frame.hands[i].palmNormal.z*-1);
 									mp.velocity = new Vector3D(event.frame.hands[i].palmVelocity.x, event.frame.hands[i].palmVelocity.y, event.frame.hands[i].palmVelocity.z*-1);
+									
 									mp.sphereCenter = new Vector3D(event.frame.hands[i].sphereCenter.x, event.frame.hands[i].sphereCenter.y, event.frame.hands[i].sphereCenter.z*-1);
 									mp.sphereRadius = event.frame.hands[i].sphereRadius
 									
 									// cutom leap matrix
 									//mp.rotation = event.frame.hands[i].rotation;
-									
-									//mp.position.x = map(event.frame.hands[i].palmPosition.x, -180, 180, 0, stage.stageWidth);
-									//mp.position.y = map(event.frame.hands[i].palmPosition.y, 75, 270, stage.stageHeight, 0);
-									//mp.position.z = event.frame.hands[i].palmPosition.z;
-									
-									//mp.direction.x = map(event.frame.hands[i].direction.x, -180, 180, 0, stage.stageWidth)
-									//mp.direction.y = map(event.frame.hands[i].direction.y,75, 270, stage.stageHeight, 0);
-									//mp.direction.z = event.frame.hands[i].direction.z;
-									
-									//mp.sphereCenter.x = map(event.frame.hands[i].sphereCenter.x, -180, 180, 0, stage.stageWidth);
-									//mp.sphereCenter.y = map(event.frame.hands[i].sphereCenter.y, 75, 270, stage.stageHeight, 0);
-									//mp.sphereCenter.z = event.frame.hands[i].sphereCenter.z//map(event.frame.hands[i].sphereCenter.z, 75, 270, stage.stageHeight, 0);
-									
 								}
 							}
 						}
@@ -126,16 +114,7 @@ package com.gestureworks.managers
 								mp.handID = event.frame.pointable(aid).hand.id
 								//trace("point hand id",mp.handID);
 							}
-							
-							// position
-							//mp.position.x = map(event.frame.pointable(aid).tipPosition.x, -180, 180, 0, stage.stageWidth);
-							//mp.position.y = map(event.frame.pointable(aid).tipPosition.y, 75, 270, stage.stageHeight, 0);
-							//mp.position.z = event.frame.pointable(aid).tipPosition.z;
-							
-							mp.position.x = event.frame.pointable(aid).tipPosition.x;
-							mp.position.y = event.frame.pointable(aid).tipPosition.y;
-							mp.position.z = event.frame.pointable(aid).tipPosition.z*-1;
-							
+							mp.position = new Vector3D(event.frame.pointable(aid).tipPosition.x, mp.position.y = event.frame.pointable(aid).tipPosition.y, mp.position.z = event.frame.pointable(aid).tipPosition.z*-1);
 							mp.direction = new Vector3D(event.frame.pointable(aid).direction.x, event.frame.pointable(aid).direction.y, event.frame.pointable(aid).direction.z*-1);
 							mp.velocity = new Vector3D(event.frame.pointable(aid).tipVelocity.x, event.frame.pointable(aid).tipVelocity.y, event.frame.pointable(aid).tipVelocity.z*-1);
 							
@@ -180,28 +159,14 @@ package com.gestureworks.managers
 								mp.handID = event.frame.hands[k].id;
 								mp.position = new Vector3D( event.frame.hands[k].palmPosition.x, event.frame.hands[k].palmPosition.y, event.frame.hands[k].palmPosition.z*-1);
 								mp.direction = new Vector3D(event.frame.hands[k].direction.x, event.frame.hands[k].direction.y, event.frame.hands[k].direction.z*-1);
-							
 								mp.normal = new Vector3D(event.frame.hands[k].palmNormal.x, event.frame.hands[k].palmNormal.y, event.frame.hands[k].palmNormal.z*-1);
 								mp.velocity = new Vector3D(event.frame.hands[k].palmVelocity.x, event.frame.hands[k].palmVelocity.y, event.frame.hands[k].palmVelocity.z*-1);
 			
 								mp.sphereCenter = new Vector3D(event.frame.hands[k].sphereCenter.x, event.frame.hands[k].sphereCenter.y, event.frame.hands[k].sphereCenter.z*-1);
 								mp.sphereRadius = event.frame.hands[k].sphereRadius;
 								
-								// cutom leap matrix
+								// custom leap matrix
 								//mp.rotation = event.frame.hands[k].rotation;
-								
-								//mp.position.x = map(event.frame.hands[k].palmPosition.x, -180, 180, 0, stage.stageWidth)
-								//mp.position.y = map(event.frame.hands[k].palmPosition.y, 75, 270, stage.stageHeight, 0);
-								//mp.position.z = event.frame.hands[k].palmPosition.z
-								
-								//mp.direction.x = map(event.frame.hands[k].direction.x, -180, 180, 0, stage.stageWidth)
-								//mp.direction.y = map(event.frame.hands[k].direction.y,75, 270, stage.stageHeight, 0);
-								//mp.direction.z = event.frame.hands[k].direction.z;
-								
-								//mp.sphereCenter.x = map(event.frame.hands[k].sphereCenter.x, -180, 180, 0, stage.stageWidth);
-								//mp.sphereCenter.y = map(event.frame.hands[k].sphereCenter.y, 75, 270, stage.stageHeight, 0);
-								//mp.sphereCenter.z = event.frame.hands[k].sphereCenter.z//map(event.frame.hands[k].sphereCenter.z, 75, 270, stage.stageHeight, 0);
-								
 								}
 							}
 					}
@@ -214,18 +179,10 @@ package com.gestureworks.managers
 							mp.handID = event.frame.pointable(pid).hand.id
 							//trace("point hand id",mp.handID);
 						}
-						
-						//mp.handID = event.frame.pointable(pid).hand.id;
-						
-						
 						mp.position = new Vector3D( event.frame.pointable(pid).tipPosition.x, event.frame.pointable(pid).tipPosition.y, event.frame.pointable(pid).tipPosition.z*-1);
 						mp.direction = new Vector3D(event.frame.pointable(pid).direction.x, event.frame.pointable(pid).direction.y, event.frame.pointable(pid).direction.z*-1);
 						mp.velocity = new Vector3D(event.frame.pointable(pid).tipVelocity.x, event.frame.pointable(pid).tipVelocity.y, event.frame.pointable(pid).tipVelocity.z*-1);
-						
-						//mp.position.x = map(event.frame.pointable(pid).tipPosition.x, -180, 180, 0, stage.stageWidth);
-						//mp.position.y = map(event.frame.pointable(pid).tipPosition.y, 75, 270, stage.stageHeight, 0);
-						//mp.position.z = event.frame.pointable(pid).tipPosition.z//map(tip.z, 75, 270, stage.stageHeight, 0);
-						
+
 						//mp.width = event.frame.pointable(pid).width;
 						//mp.length = event.frame.pointable(pid).length;
 						

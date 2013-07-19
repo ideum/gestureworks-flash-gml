@@ -101,7 +101,7 @@ package com.gestureworks.analysis
 		
 		// draw
 		draw_touchPoints();
-		draw_motionPoints();
+		//draw_motionPoints();
 		//draw_sensorPoints();
 	}
 		

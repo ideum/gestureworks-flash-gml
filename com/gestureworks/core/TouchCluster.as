@@ -304,10 +304,10 @@ package com.gestureworks.core
 			// skeletal model
 			cluster_geometric.clearMotionPointData();	
 			cluster_geometric.createHand(); // palm points // finger list palm ip // up down //wrist 
-				cluster_geometric.findFingerAverage();// finger average point ip
+				cluster_geometric.findFingerAverage();// finger average point
 				cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
 				cluster_geometric.findHandRadius(); // favdist 
-				//cluster_geometric.findThumb(); // thumb // left// right
+				cluster_geometric.findThumb(); // thumb // left// right
 				//--cluster_geometric.findFingers(); // identify fingers
 				//--cluster_geometric.findJoints(); // finger joints 
 			////////////////////////////////////////////////
@@ -322,8 +322,11 @@ package com.gestureworks.core
 			//---cluster_geometric.find3DToolPoints();
 			//---cluster_geometric.find3DRegionPoints();
 			cluster_geometric.find3DFingerPoints(); 
-			//cluster_geometric.find3DThumbPoints(); 
+			cluster_geometric.find3DThumbPoints(); 
 			//cluster_geometric.find3DFramePoints(); 
+			
+			cluster_geometric.find3DPalmPoints(); 
+			cluster_geometric.find3DFingerAveragePoints(); 
 			//core = true;
 			}
 			

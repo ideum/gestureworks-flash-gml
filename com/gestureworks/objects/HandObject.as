@@ -107,6 +107,11 @@ package com.gestureworks.objects
 		public function get fingerAveragePosition():Vector3D{	return _fingerAveragePosition;}
 		public function set fingerAveragePosition(value:Vector3D):void {	_fingerAveragePosition = value; }
 		
+		//finger average position//////////////////////////////////////////// //dx,dy,dz
+		private var _projectedFingerAveragePosition:Vector3D = new Vector3D ();
+		public function get projectedFingerAveragePosition():Vector3D{	return _projectedFingerAveragePosition;}
+		public function set projectedFingerAveragePosition(value:Vector3D):void {	_projectedFingerAveragePosition = value; }
+		
 		//pure finger average position//////////////////////////////////////////// //dx,dy,dz
 		private var _pureFingerAveragePosition:Vector3D = new Vector3D ();
 		public function get pureFingerAveragePosition():Vector3D{	return _pureFingerAveragePosition;}

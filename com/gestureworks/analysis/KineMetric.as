@@ -956,7 +956,7 @@ package com.gestureworks.analysis
 			var hfk0:Number = 1 / (ipn-1);
 
 			ipn = cO.iPointArray.length
-			var ipnk = 1 / ipn;
+			var ipnk = 1 /ipn;
 			//trace("motion local pinch kinemetric", cO.iPointArray.length);
 			
 			if (ipn!= 0)
@@ -969,9 +969,22 @@ package com.gestureworks.analysis
 								cO.y = pt.position.y;
 								cO.z = pt.position.z;
 								
-								cO.dx = pt.position.x - pt.history[hist].position.x;
-								cO.dy = pt.position.y - pt.history[hist].position.y;
-								cO.dz = pt.position.z - pt.history[hist].position.z;
+								cO.dx = (pt.position.x - pt.history[hist].position.x)*hk;
+								cO.dy = (pt.position.y - pt.history[hist].position.y)*hk;
+								cO.dz = (pt.position.z - pt.history[hist].position.z)*hk;
+								
+								
+								if (pt.type == "palm")
+								{
+									cO.rotationX = RAD_DEG * Math.asin(pt.normal.x);
+									cO.rotationY = RAD_DEG * Math.asin(pt.normal.y);
+									cO.rotationZ = RAD_DEG * Math.asin(pt.normal.z);
+									
+									cO.dthetaX = RAD_DEG * (Math.asin(pt.normal.x - pt.history[hist].normal.x))*hk;
+									cO.dthetaY = RAD_DEG * (Math.asin(pt.normal.y - pt.history[hist].normal.y))*hk;
+									cO.dthetaZ = RAD_DEG * (Math.asin(pt.normal.z - pt.history[hist].normal.z))*hk;
+								}
+								//trace(cO.dthetaX,pt.normal.x,pt.history[hist].normal.x);
 							}
 							
 						
@@ -979,30 +992,45 @@ package com.gestureworks.analysis
 						{
 						for (i = 0; i < ipn; i++) 
 						{	
-							if (cO.iPointArray[i].history.length>(hist)){
+							
+						if (cO.iPointArray[i])
+						{
+							var pt0 = cO.iPointArray[i];
+							// pos
+							cO.x += pt0.position.x;
+							cO.y += pt0.position.y;
+							cO.z += pt0.position.z;
+							
+						
+						/*
+						if (ipn > i + 1)
+						{
+							if (cO.iPointArray[i + 1])
+							{
+							var pt1 = cO.iPointArray[i+1];
+							
+							if ((pt.history.length>(hist+1))&&(pt1.history.length>(hist+1))){
 							//if ((ipn >= 2)&&(cO.iPointArray[0].history.length>(hist+1))&&(cO.iPointArray[1].history.length>(hist+1)))
 							//{
-								var pt0 = cO.iPointArray[i];
-								//var pt1 = cO.iPointArray[1];
 								
-								// pos
-								cO.x += pt0.position.x;
-								cO.y += pt0.position.y;
-								cO.z += pt0.position.z;
+								
+						
+						
+								
+								
 								
 								// drag
-								cO.dx += (pt0.position.x - pt0.history[hist].position.x);
-								cO.dy += (pt0.position.y - pt0.history[hist].position.y);
-								cO.dz += (pt0.position.z - pt0.history[hist].position.z);
+								//cO.dx += (pt0.position.x - pt0.history[hist].position.x);
+								//cO.dy += (pt0.position.y - pt0.history[hist].position.y);
+								//cO.dz += (pt0.position.z - pt0.history[hist].position.z);
 								
-								/*
 								//scale
-								var sx:Number = (cO.iPointArray[0].position.x - cO.iPointArray[1].position.x);
-								var sy:Number = (cO.iPointArray[0].position.y - cO.iPointArray[1].position.y);
-								var sz:Number = (cO.iPointArray[0].position.z - cO.iPointArray[1].position.z);
-								var sx_mc:Number = (cO.iPointArray[0].history[hist].position.x - cO.iPointArray[1].history[hist].position.x);
-								var sy_mc:Number = (cO.iPointArray[0].history[hist].position.y - cO.iPointArray[1].history[hist].position.y);
-								var sz_mc:Number = (cO.iPointArray[0].history[hist].position.z - cO.iPointArray[1].history[hist].position.z);
+								var sx:Number = (pt0.position.x - pt1.position.x);
+								var sy:Number = (pt0.position.y - pt1.position.y);
+								var sz:Number = (pt0.position.z - pt1.position.z);
+								var sx_mc:Number = (pt0.history[hist].position.x - pt1.history[hist].position.x);
+								var sy_mc:Number = (pt0.history[hist].position.y - pt1.history[hist].position.y);
+								var sz_mc:Number = (pt0.history[hist].position.z - pt1.history[hist].position.z);
 
 								// rotate
 								var dthetaZ:Number = 0;
@@ -1050,11 +1078,9 @@ package com.gestureworks.analysis
 								
 								
 								//trace("rotate and scale", sx_mc, sy_mc, sx, sy, cO.dtheta, cO.ds);
-								*/	
+								
 							}
-				cO.x *= ipnk;
-				cO.y *= ipnk; 
-				cO.z *= ipnk;				
+							
 							
 				cO.dx *= ipnk;
 				cO.dy *= ipnk; 
@@ -1065,9 +1091,16 @@ package com.gestureworks.analysis
 				//cO.ds = ipk0*cO.ds;
 				//cO.dtheta = ipk0*cO.dtheta;
 				}
+				}*/
+				}
+				}
+				
+				cO.x *= ipnk;
+				cO.y *= ipnk; 
+				cO.z *= ipnk;
+				
 				}
 			}
-				
 			//trace("test",cO.x,cO.y,cO.z, cO.dx,cO.dy,cO.dz);
 		}
 		

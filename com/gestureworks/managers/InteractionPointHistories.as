@@ -60,8 +60,14 @@ package com.gestureworks.managers
 			
 			var object:InteractionPointObject = new InteractionPointObject();
 				//object = ipo;
-				
+	
 				object.position = ipo.position;
+				object.direction = ipo.direction;
+				object.normal = ipo.normal;
+				object.rotation = ipo.rotation;
+				object.handID =  ipo.handID;
+				object.type = ipo.type;
+				
 				//trace("interaction point history push")
 
 			return object;

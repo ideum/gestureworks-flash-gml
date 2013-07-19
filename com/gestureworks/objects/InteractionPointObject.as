@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
-	
+	import flash.geom.Matrix;
 	import flash.geom.Vector3D;
 	
 	public class InteractionPointObject extends Object 
@@ -69,6 +69,11 @@ package com.gestureworks.objects
 		private var _length:Number = 0;
 		public function get length():Number{	return _length;}
 		public function set length(value:Number):void {	_length = value; }
+		
+		//rotation/////////////////////////////////////////////x,y,x
+		private var _rotation:Matrix = new Matrix ();
+		public function get rotation():Matrix{	return _rotation;}
+		public function set rotation(value:Matrix):void {	_rotation = value; }
 		
 		//palm radius
 		private var _sphereRadius:Number = 0;

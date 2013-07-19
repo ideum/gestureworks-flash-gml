@@ -23,69 +23,62 @@ package com.gestureworks.managers
 	 */
 	public class InteractionPointTracker
 	{				
-		private static var activePoints;
-		public static var framePoints;
-		//private var motionPointID:int = 0;
-		private static var _ID:uint = 0;
-		//private static var i:uint = 0;
-		//private static var j:uint = 0;
+		private static var activePoints:Vector.<InteractionPointObject>;
+		public static var framePoints:Vector.<InteractionPointObject>;
+		private static var temp_framePoints:Vector.<InteractionPointObject>;
 		
-		private static var d2:Number = 30;
-		private static var d1:Number = 0;
-		private static var gms:TouchSprite;
+		private static var ap:InteractionPointObject;
+		private static var fp:InteractionPointObject;
+		private static var _ID:uint = 0;
+		
+		private static var d2:int = 20;
+		private static var d1:int = 0;
+		private static var debug:Boolean = false;
 		
 		public static function initialize():void
 		{
 			activePoints = new Vector.<InteractionPointObject>;
 			framePoints = new Vector.<InteractionPointObject>;
+			temp_framePoints = new Vector.<InteractionPointObject>;
 			//trace("i manager init");
-			gms =  GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 		}
 		
 		
 		public static function clearFrame():void 
 		{
 			framePoints = new Vector.<InteractionPointObject>();
-			//activePoints = new Array(); // never clear active point list
 		}
-		
 		
 		public static function getFramePoints():void 
 		{
-			//gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
-			//framePoints = ;
+			temp_framePoints = framePoints;
 		}
 		
 		
 		/**
 		 * Process points
-		 * @param	event
+		 * @param event
 		 */
 		public static function getActivePoints():void 
 		{
-			//trace("get active points");
-			//gms.cO.iPointArray.length = 0;
+			// copy active list
+			getFramePoints();
 			
-			//copy active list
-			var temp_framePoints:Vector.<InteractionPointObject> = framePoints;
-			
-			// refresh frame ready to fill
+			//refresh frame ready to fill
 			clearFrame();
 
 			
-			//trace("active points",activePoints.length,temp_framePoints.length, framePoints.length, activePoints.length);
-			//////////////////////////////////////////////////////////////////////////////////
-			// loop active points 
-				
+				//trace("active points",activePoints.length,temp_framePoints.length, framePoints.length, activePoints.length);
+
 				//////////////////////////////////////////////////////////////////////
 				// REMOVE from ap if not in fp
-				//WILL REMOVE ALL IF NO POINTS IN FRAME
-				for each(var ap:InteractionPointObject in activePoints) 
+				// WILL REMOVE ALL IF NO POINTS IN FRAME
+				for each(ap in activePoints) 
 				{
 					var found:Boolean = false;
-						for each(var fp:InteractionPointObject in temp_framePoints)
+					
+						for each(fp in temp_framePoints)
 						{
-							//var fp = temp_framePoints[j];
 							var dist:Number = Vector3D.distance(ap.position, fp.position);
 							if ((ap.type == fp.type)&&(dist < d2)) found = true;
 						}
@@ -94,14 +87,14 @@ package com.gestureworks.managers
 						{
 							activePoints.splice(activePoints.indexOf(ap), 1);
 							InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
-							//trace("an!=0 REMOVED:", ap.id, ap.interactionPointID, ap.type, ap.position);
+							if(debug) trace("an!=0 REMOVED:", ap.id, ap.interactionPointID, ap.type, ap.position);
 						}
 				}
-					//////////////////////////////////////////////////////
-					// UPDATE
-					for each(var ap:InteractionPointObject in activePoints)
+					//////////////////////////////////////////////////////////////////
+					// UPDATE ap if in fp
+					for each(ap in activePoints)
 						{
-						for each(var fp:InteractionPointObject in temp_framePoints)
+						for each(fp in temp_framePoints)
 							{
 							if (ap.type == fp.type)
 							{
@@ -110,58 +103,45 @@ package com.gestureworks.managers
 							
 							if (dist < d2)  ////update
 								{
-									// update position
-									//if (dist > d1)
-									//{
-
-										ap.position = fp.position;
-										ap.direction = fp.direction;
-										ap.type = fp.type;
-										temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
+									ap.position = fp.position;
+									ap.direction = fp.direction;
+									ap.normal = fp.normal;
+									ap.handID = fp.handID;
+									ap.type = fp.type;
+									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
 										
-										InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
-										//if(debug) 
-										//trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, dist);	
-									//}
-									// update reasociate point id but not push move event
-									/*
-									else 
-									{
-										//activePoints[i] = framePoints[j];
-										//activePoints[i].position = framePoints[j].position;
-										//ap = fp;
-										ap.position = fp.position;
-										ap.type = fp.type;
-										ap.id = fp.id;
-										temp_framePoints.splice(fp, 1);
-										trace("RE-ASSOCIATED");
-									}*/
+									InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
+									if(debug) trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, dist);	
 								}
 							}
 						}	
 					}
 					
-					//////////////////////////////////////////////////////////
-					// ADD NEW POINTS TO ACTIVE (WHEN an!=0)
-					//for (var j:int = 0; j < temp_framePoints.length; j++)
-					for each(var fp:InteractionPointObject in temp_framePoints)
+					///////////////////////////////////////////////////////////////////
+					// ADD NEW POINTS TO ACTIVE will add (WHEN an!=0)
+					for each(fp in temp_framePoints)
 					{
 						_ID++;
 						fp.interactionPointID = _ID;
 						activePoints.push(fp);
 						InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
-						//trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
+						if(debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
 					}
 					
 					/*
-					// push all interactions points to global ms // move to local hit test later
+					// check for duplicates (paulis exclusion principle)
 					for (var i:int = 0; i < activePoints.length; i++)
 					{
-						//trace("push into global ms ip",activePoints[j].type);
-						gms.cO.iPointArray.push(activePoints[i]);
+						for (var j:int = 0; j < activePoints.length; j++)
+						{
+							if ((i != j) && (activePoints[i].position == activePoints[j].position) && (activePoints[i].type == activePoints[j].type)) 
+							{
+								trace("duplicate");
+							}
+						}
 					}
 					*/
-					//trace("gms ip",gms.cO.iPointArray.length);
+					
 		}
 
 			
