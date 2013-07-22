@@ -351,7 +351,13 @@ package com.gestureworks.core
 		}
 		
 		public function getKineMetrics():void 
-		{						
+		{		
+			//if (!ts.transform3d) 
+			//{
+				//cluster_kinemetric.mapCluster3Dto2D();
+			//}
+			
+			
 			if (!core)
 			{
 				// move to 3d kinemetrics
@@ -362,6 +368,11 @@ package com.gestureworks.core
 				//cluster_kinemetric.find3DTapPoints();
 				//cluster_kinemetric.find3DHoldPoints();
 				//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+			}
+			
+			if (!ts.transform3d) 
+			{
+				cluster_kinemetric.mapCluster3Dto2D();
 			}
 			
 		
@@ -663,6 +674,13 @@ package com.gestureworks.core
 
 				}
 			}
+			
+			
+			if (!ts.transform3d) 
+			{
+				cluster_kinemetric.mapCluster3Dto2D();
+			}
+			
 		}
 
 		

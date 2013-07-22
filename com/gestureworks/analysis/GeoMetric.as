@@ -1173,34 +1173,6 @@ package com.gestureworks.analysis
 		////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////
 		
-		/////////////////////////////////////////////////////////////////////////////////////////
-		// FINDS THE ANGLE BETWEEN TWO VECTORS 
-		/////////////////////////////////////////////////////////////////////////////////////////
-		
-		private static function dotProduct(x0:Number, y0:Number,x1:Number, y1:Number):Number
-			{	
-				if ((x0!=0)&&(y0!=0)&&(x1!=0)&&(y1!=0)) return Math.acos((x0 * x1 + y0 * y1) / (Math.sqrt(x1 * x1 + y1 * y1) * Math.sqrt(x0 * x0 + y0 * y0)));
-				else return 0;
-				
-				
-		}	
-			
-		/////////////////////////////////////////////////////////////////////////////////////////
-		// tan function with adjustments for angle wrapping
-		/////////////////////////////////////////////////////////////////////////////////////////
-		// NOTE NEED TO CLEAN LOGIC TO PREVENT ROTATIONS ABOVE 360 AND PREVENT ANY NEGATIVE ROTATIONS
-		
-		private static function calcAngle(adjacent:Number, opposite:Number):Number
-			{
-				if (adjacent == 0) return opposite < 0 ? 270 : 90 ;
-				if (opposite == 0) return adjacent < 0 ? 180 : 0 ;
-				0
-				if(opposite > 0) return adjacent > 0 ? 360 + Math.atan(opposite / adjacent) * RAD_DEG : 180 - Math.atan(opposite / -adjacent) * RAD_DEG ;
-				else return adjacent > 0 ? 360 - Math.atan( -opposite / adjacent) * RAD_DEG : 180 + Math.atan( opposite / adjacent) * RAD_DEG ;
-				
-				return 0;
-		}
-		
 		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
 
                         return (value - minimum) / (maximum - minimum);

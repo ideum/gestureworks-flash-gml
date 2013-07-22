@@ -894,6 +894,21 @@ package com.gestureworks.analysis
 		// 3d IP motion analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
+		public function mapCluster3Dto2D():void
+			{
+				trace("map cluster data 3d to 2d")
+				
+				//POSITION
+				cO.x = normalize(cO.x, -180, 180) * 1920;//stage.stageWidth;
+				cO.y = normalize(cO.y, 270, -75) * 1080;// stage.stageHeight;
+				cO.z = cO.z;
+				
+				// TRANSLATION
+				cO.dx = cO.dx
+				cO.dy = 1 * cO.dy;
+				cO.dz = cO.dy
+			}
+		
 		
 		// GET IP CLUSTER CONSTS
 		public function find3DIPConstants():void
@@ -1121,23 +1136,17 @@ package com.gestureworks.analysis
 							cO.z += pt0.position.z;
 							
 						
-						/*
+						
 						if (ipn > i + 1)
 						{
 							if (cO.iPointArray[i + 1])
 							{
 							var pt1 = cO.iPointArray[i+1];
 							
-							if ((pt.history.length>(hist+1))&&(pt1.history.length>(hist+1))){
+							if ((pt0.history.length>(hist+1))&&(pt1.history.length>(hist+1))){
 							//if ((ipn >= 2)&&(cO.iPointArray[0].history.length>(hist+1))&&(cO.iPointArray[1].history.length>(hist+1)))
 							//{
-								
-								
-						
-						
-								
-								
-								
+			
 								// drag
 								//cO.dx += (pt0.position.x - pt0.history[hist].position.x);
 								//cO.dy += (pt0.position.y - pt0.history[hist].position.y);
@@ -1195,7 +1204,7 @@ package com.gestureworks.analysis
 								//cO.ds = (Math.sqrt(sx * sx  +  sy * sy) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc)) * sck;
 								cO.ds = (Math.sqrt(sx * sx  +  sy * sy  + sz * sz) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc + sz_mc * sz_mc)) * sck;
 								
-								
+								cO.dtheta = dthetaZ*rk;
 								//trace("rotate and scale", sx_mc, sy_mc, sx, sy, cO.dtheta, cO.ds);
 								
 							}
@@ -1210,7 +1219,7 @@ package com.gestureworks.analysis
 				//cO.ds = ipk0*cO.ds;
 				//cO.dtheta = ipk0*cO.dtheta;
 				}
-				}*/
+				}
 				}
 				}
 				

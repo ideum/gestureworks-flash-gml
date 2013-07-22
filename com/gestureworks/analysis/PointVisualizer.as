@@ -272,12 +272,15 @@ package com.gestureworks.analysis
 								var mp:MotionPointObject = new MotionPointObject//cO.motionArray[i];
 								//var mp:MotionPointObject = cO.motionArray[i];
 								
+								if(!ts.transform3d){
 									mp.position.x = normalize(cO.motionArray[i].position.x, -180, 180) * stage.stageWidth;
 									mp.position.y = normalize(cO.motionArray[i].position.y, 270, -75) * stage.stageHeight;
 									mp.position.z = cO.motionArray[i].position.z;
 									mp.type = cO.motionArray[i].type;
-									
-								trace(cO.motionArray[i].position.y, mp.position.y)
+								}
+								
+								
+								//trace(cO.motionArray[i].position.y, mp.position.y)
 									
 
 								//trace("----finger--",finger.id,finger.motionPointID, finger.x,finger.y);	

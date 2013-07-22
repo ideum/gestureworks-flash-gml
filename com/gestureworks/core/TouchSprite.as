@@ -921,8 +921,10 @@ package com.gestureworks.core
 		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
 		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
 		
-		
-		
+		// TRANSFORM 3D
+		private var _transform3d:Boolean = false;
+		public function get transform3d():Boolean {return _transform3d;}	
+		public function set transform3d(value:Boolean):void{	_transform3d = value;}
 		
 		public function updateTObjProcessing():void
 		{
