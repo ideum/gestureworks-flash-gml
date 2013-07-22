@@ -48,8 +48,8 @@ package com.gestureworks.objects
 		// gesture type
 		private var _gesture_type:String;
 		public function get gesture_type():String{	return _gesture_type;}
-		public function set gesture_type(value:String):void{	_gesture_type = value;}
-
+		public function set gesture_type(value:String):void {	_gesture_type = value; }
+		
 		// algorithm id
 		private var _algorithm:String;
 		public function get algorithm():String{	return _algorithm;}
@@ -101,6 +101,10 @@ package com.gestureworks.objects
 		private var _cluster_type:String = "";
 		public function get cluster_type():String{return _cluster_type;}
 		public function set cluster_type(value:String):void { _cluster_type = value; }
+		// CLUSTER INPUT TYPE---------------------
+		private var _cluster_input_type:String = "";
+		public function get cluster_input_type():String{return _cluster_input_type;}
+		public function set cluster_input_type(value:String):void { _cluster_input_type = value; }
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//UPDATE TO LIMITS OBJECT PUSH TO CLUSTER OBJECT

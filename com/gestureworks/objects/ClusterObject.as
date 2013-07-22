@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
-	//import com.gestureworks.objects.MotionFrameObject;
+	import com.gestureworks.objects.InteractionPointObject;
 	import flash.geom.Vector3D;
 	
 	public class ClusterObject extends Object 
@@ -44,18 +44,22 @@ package com.gestureworks.objects
 		private var _fn:int = 0;
 		public function get fn():int{return _fn;}
 		public function set fn(value:int):void{_fn = value;}
-		// number of fingers in left hand---------------------
-		private var _lhfn:int = 0;
-		public function get lhfn():int{return _lhfn;}
-		public function set lhfn(value:int):void{_lhfn = value;}
-		// number of fingers on right hand---------------------
-		private var _rhfn:int = 0;
-		public function get rhfn():int{return _rhfn;}
-		public function set rhfn(value:int):void { _rhfn = value; }
 		// number of derived interactive points---------------------
 		private var _ipn:int = 0;
 		public function get ipn():int{return _ipn;}
 		public function set ipn(value:int):void{_ipn = value;}
+		
+		
+		// number of fingers in left hand---------------------
+		//private var _lhfn:int = 0;
+		//public function get lhfn():int{return _lhfn;}
+		//public function set lhfn(value:int):void{_lhfn = value;}
+		// number of fingers on right hand---------------------
+		//private var _rhfn:int = 0;
+		//public function get rhfn():int{return _rhfn;}
+		//public function set rhfn(value:int):void { _rhfn = value; }
+		
+		
 		
 		/////////////////////////////////
 		// frame count
@@ -315,7 +319,7 @@ package com.gestureworks.objects
 		private var _handList:Vector.<HandObject> = new Vector.<HandObject>;
 		public function get handList():Vector.<HandObject>{return _handList;}
 		public function set handList(value:Vector.<HandObject>):void{_handList = value;}
-			/// INSIDE HAND Object
+			/// INSIDE 3D HAND Object
 				//--width
 				//--length
 				//--thumb
@@ -354,51 +358,25 @@ package com.gestureworks.objects
 		public function get orient_dz():Number {	return _orient_dz; }
 		public function set orient_dz(value:Number):void { _orient_dz = value; }
 		
-		/*
-		 * 
-		 * 
-		 * SAME AS CLUSTER STANDARD PROPERTIES
-		 * JUST NEED TO ADD INTERACTION POINT CONTECT IN 
-		///////////////////////////////
-		// RELATIVE CLUSTER INTERACTION POINT ANALYSIS // BIMANUAL DATA STRUCTURE 2d/3d
+		// private var _holdPoint:Vector3D = new Vector3D(); 
+		// hold_x---------------------//remove
+		private var _hold_x:Number = 0;
+		public function get hold_x():Number{return _hold_x;}
+		public function set hold_x(value:Number):void{_hold_x = value;}
+		// hold_y---------------------remove
+		private var _hold_y:Number = 0;
+		public function get hold_y():Number{return _hold_y;}
+		public function set hold_y(value:Number):void{_hold_y = value;}
+		// hold_z---------------------remove
+		private var _hold_z:Number = 0;
+		public function get hold_z():Number{return _hold_z;}
+		public function set hold_z(value:Number):void{_hold_z = value;}
+		// c_locked---------------------remove
+		private var _hold_n:int = 0;
+		public function get hold_n():int{return _hold_n;}
+		public function set hold_n(value:int):void{_hold_n = value;}
 		
-		//pinch points
-		// midpoint xyz 
-		// midpoint direction xyz
-		private var _b_midpoint:Vector.<Vector3D> = new Vector.<Vector3D>(); // SAME AS CLUSTER CENTER
-		public function get b_midpoint():Vector.<Vector3D>{ return _b_midpoint;}
-		public function set b_midpoint(value:Vector.<Vector3D>):void	{_b_midpoint = value;}
-		
-		// normal to midpoint 2D
-		
-		
-		// dist between pinch points // SAME AS CLUSTER SEP
-		// rotation // SAME AS CLUSTER ROT
-		// seperation //SAME AS CLUSTER SEP
-		
-		//bimanual velocity //relative aggregate cluster vel 
-		// mid point vel
-		private var _b_dr:Number = 0; // 3d radial vel
-		private var _b_dx:Number = 0;
-		private var _b_dy:Number = 0;
-		private var _b_dz:Number = 0;
-		
-		// bimanual angles //relative aggregate cluster angle change
-		private var _b_dtheta:Number = 0;
-		private var _b_dthetaX:Number = 0;
-		private var _b_dthetaY:Number = 0;
-		private var _b_dthetaZ:Number = 0;
-		
-		// bimanual scale //relative aggregate cluster angle change
-		private var _b_ds:Number = 0;
-		private var _b_dsx:Number = 0;
-		private var _b_dsy:Number = 0;
-		private var _b_dsz:Number = 0;
-		
-		*/
-		
-		
-		
+	
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -438,117 +416,9 @@ package com.gestureworks.objects
 		public function get remove():Boolean{return _remove;}
 		public function set remove(value:Boolean):void{_remove = value;}
 		
-		
-		/////////////////////////////////////////////////////////////////////////////
-		// cluster Interaction Point list
-		/////////////////////////////////////////////////////////////////////////////
-		// interaction point
-		// DERIVED POINT LIST BASED ON PRIMARY INTERACTION CRITERIA
-		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
-		// CLASIFIED BY TYPE INTO SINGLE LIST
-		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
-		// id 
-		// x/y/z // location
-		// vector // direction
-		
-		//private var _pinchPointList:Vector.<Vector3D> = new Vector.<Vector3D>();
-		//public function get pinchPointList():Vector.<Vector3D>{ return _pinchPointList;}
-		//public function set pinchPointList(value:Vector.<Vector3D>):void	{ _pinchPointList = value; }
-		
-		// list of interaction points
-		// x,y,z
-		// w for point type id of point for type check
-		// 0 touch point
-		// 1 motion point
-		// 3 sensor point
-		// 4 pinch point
-		// 5 tap point
-		// 6 hold point
-		// 7 trigger point
-		// 8 palm point
-		
-		private var _iPointArray:Vector.<Object> = new Vector.<Object>();
-		public function get iPointArray():Vector.<Object>{ return _iPointArray;}
-		public function set iPointArray(value:Vector.<Object>):void	{_iPointArray = value;}
-		
-		//DEFINE A SET OF INTERACTION POINTS
-		// ANALYZE RELATIVE INTERACTION POINT CHANGES AND PROPERTIES 
-		// HIT TEST QUALIFIED TO TARGET
-		
-		// E.G. PINCH POINT BIMANUAL MANIPULATE
-		// FIND PICH POINTS
-		// FIND REALTIVE CLUSTER DIST, MIDPOINT, VELOCITY, ROATION,SCALE
-		// UPDATE SUBCLUSTER OBJECT WITH TRANSFORMATION DATA
-		// UPDATE PARENT CLUSTER WITH DELTAS
-		// PROCESS GESTURE PIPELINE
-		// PUSH GESTURE TO TARGET OBJECT
-		
-		//E.G BIMANUAL HOLD & MANIPULATE
-		//FIND HOLD POINT LIST
-		//FIND MANIP POINT LIST 
-		// FIND AVERAGE HOLD POINT XY FIND HOLD TIME
-		// FIND DRAG,SCALE,ROTATE
-		// UPDATE PARENT CLUSTER WITH DELTAS
-		// UPDATE GESTURE PIPELINE
-		
-		// E.G. PALM POINT BIMANUAL MANIPULATE
-		// FIND PALM POINTS
-		// FIND REALTIVE CLUSTER, DIST, MIDPOINT, VELOCITY,ROTATION,SCALE
-		// UPDATE SUBCLUSTER OBJECT WITH TRANSFORMATION DATA
-		// UPDATE PARENT CLUSTER WITH DELTAS
-		// PROCESS GESTURE PIPELINE
-		// PUSH GESTURE TO TARGET OBJECT
-		
-		
-		// private var _holdPoint:Vector3D = new Vector3D(); 
-		// hold_x---------------------//remove
-		private var _hold_x:Number = 0;
-		public function get hold_x():Number{return _hold_x;}
-		public function set hold_x(value:Number):void{_hold_x = value;}
-		// hold_y---------------------remove
-		private var _hold_y:Number = 0;
-		public function get hold_y():Number{return _hold_y;}
-		public function set hold_y(value:Number):void{_hold_y = value;}
-		// hold_z---------------------remove
-		private var _hold_z:Number = 0;
-		public function get hold_z():Number{return _hold_z;}
-		public function set hold_z(value:Number):void{_hold_z = value;}
-		// c_locked---------------------remove
-		private var _hold_n:int = 0;
-		public function get hold_n():int{return _hold_n;}
-		public function set hold_n(value:int):void{_hold_n = value;}
-		
-		
-		// surface point Pair data list----------------// for point pair delta tracking
-		//private var _pointPairArray:Vector.<PointPairObject> = new Vector.<PointPairObject>();
-		//public function get pointPairArray():Vector.<PointPairObject>{return _pointPairArray;}
-		//public function set pointPairArray(value:Vector.<PointPairObject>):void{_pointPairArray = value;}
-		// motion point pair list
-		//
-		//
-		//
-		
-		// motion point data list
-		//private var _hand:Vector.<Vector> = new Vector.<Vector>();
-		//public function get hand():Vector.<Vector>{return _hand;}
-		//public function set hand(value:Vector.<Vector>):void{_hand = value;}
-		
-		
-		// serialized list of point pairs
-		//private var _pairList:Array = new Array();
-		//public function get pairList():Array{return _pairList;}
-		//public function set pairList(value:Array):void{_pairList = value;}
-		
-		/////////////////////////////////////////////////////////////////////////////////
-		// MAX 2 SUB CLUSTERS PER CLUSTER // BUT LEAVING OPEN FOR MORE JUST IN CASE?
-		// list of sub cluster objects each with thier own derived properties
-		// for example: pinch cluster / palm cluster / trigger cluster / hold cluster / periodic cluster
-		private var _clusterArray:Vector.<ClusterObject> = new Vector.<ClusterObject>();
-		public function get clusterArray():Vector.<ClusterObject>{return _clusterArray;}
-		public function set clusterArray(value:Vector.<ClusterObject>):void{_clusterArray = value;}
-		
+
 		/////////////////////////////////////////////////////////////////////////
-		//default cluster level data structures
+		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
 		private var _pointArray:Vector.<PointObject> = new Vector.<PointObject>();
@@ -561,7 +431,48 @@ package com.gestureworks.objects
 		// sensor point data list----------------
 		private var _sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
 		public function get sensorArray():Vector.<Number>{return _sensorArray;}
-		public function set sensorArray(value:Vector.<Number>):void{_sensorArray = value;}
+		public function set sensorArray(value:Vector.<Number>):void { _sensorArray = value; }
+		
+		
+		/////////////////////////////////////////////////////////////////////////////
+		// cluster Interaction Point list
+		/////////////////////////////////////////////////////////////////////////////
+		// DERIVED POINT LIST BASED ON PRIMARY INTERACTION CRITERIA
+		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
+		// CLASIFIED BY TYPE INTO SINGLE LIST
+		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
+		private var _iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		public function get iPointArray():Vector.<InteractionPointObject>{ return _iPointArray;}
+		public function set iPointArray(value:Vector.<InteractionPointObject>):void	{_iPointArray = value;}
+		
+		////////////////////////////////////////
+		//1 DEFINE A SET OF INTERACTION POINTS
+		//2 MATCH TO INTERACTION POINT HAND CONFIG (GEOMETRIC)
+		//3 HIT TEST QUALIFIED TO TARGET
+		//4 ANALYZE RELATIVE INTERACTION POINT CHANGES AND PROPERTIES 
+		//5 MATCH MOTION (KINEMETRIC)
+		//6 PUSH GESTURE POINT
+		//7 PROCESS GESTURE POINT FILTERS
+		//8 APPLY INTERNAL NATIVE TRANSFORMS
+		//9 ADD TO TIMELINE
+		//10 DISPTACH GESTURE EVENT
+		////////////////////////////////////////
+			
+		//E.G BIMANUAL HOLD & MANIPULATE
+			//FIND HOLD POINT LIST
+			//FIND MANIP POINT LIST 
+			// FIND AVERAGE HOLD POINT XY FIND HOLD TIME
+			// FIND DRAG,SCALE,ROTATE
+			// UPDATE PARENT CLUSTER WITH DELTAS
+			// UPDATE GESTURE PIPELINE
+			
+		///////////////////////////////////////////////////////////////////////////////////
+		// GESTURE POINTS
+		private var _gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
+		public function get gPointArray():Vector.<GesturePointObject>{ return _gPointArray;}
+		public function set gPointArray(value:Vector.<GesturePointObject>):void	{_gPointArray = value;}
+		
+		
 	
 		/////////////////////////////////////////////////////////////////////////
 		// cluster history

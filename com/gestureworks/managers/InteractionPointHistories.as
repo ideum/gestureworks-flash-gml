@@ -24,6 +24,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.events.GWInteractionEvent;
 	import com.gestureworks.objects.InteractionPointObject;
+		import flash.geom.Vector3D;
 	
 	
 	public class InteractionPointHistories 
@@ -60,7 +61,6 @@ package com.gestureworks.managers
 			
 			var object:InteractionPointObject = new InteractionPointObject();
 				//object = ipo;
-	
 				object.position = ipo.position;
 				object.direction = ipo.direction;
 				object.normal = ipo.normal;
@@ -68,6 +68,15 @@ package com.gestureworks.managers
 				object.handID =  ipo.handID;
 				object.type = ipo.type;
 				
+				//trace(ipo.history.length)
+				
+				if (ipo.history.length>1)
+				{
+					//trace(ipo.position.x,ipo.history[1].position.x,ipo.history[2].position.x)
+					object.velocity = new Vector3D(ipo.position.x - ipo.history[1].position.x,ipo.position.y - ipo.history[1].position.y,ipo.position.z - ipo.history[1].position.z);
+					object.acceleration = new Vector3D(ipo.velocity.x - ipo.history[1].velocity.x, ipo.velocity.y - ipo.history[1].velocity.y, ipo.velocity.z - ipo.history[1].velocity.z);
+					object.jolt = new Vector3D(ipo.acceleration.x - ipo.history[1].acceleration.x,ipo.acceleration.y - ipo.history[1].acceleration.y,ipo.acceleration.z - ipo.history[1].acceleration.z);
+				}
 				//trace("interaction point history push")
 
 			return object;

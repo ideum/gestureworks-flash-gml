@@ -106,6 +106,7 @@ package com.gestureworks.managers
 									ap.position = fp.position;
 									ap.direction = fp.direction;
 									ap.normal = fp.normal;
+									
 									ap.handID = fp.handID;
 									ap.type = fp.type;
 									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);

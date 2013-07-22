@@ -52,6 +52,15 @@ package com.gestureworks.analysis
 		private var i:int
 		private var hist:int = 0;
 		
+		private var _minX:Number = -180;
+		private var _maxX:Number = 180;
+		
+		private var _minY:Number = 75;
+		private var _maxY:Number = 270;
+		
+		private var _minZ:Number = -110;
+		private var _maxZ:Number = 200;
+		
 		
 		public function PointVisualizer(ID:Number)
 		{
@@ -101,7 +110,7 @@ package com.gestureworks.analysis
 		
 		// draw
 		draw_touchPoints();
-		//draw_motionPoints();
+		draw_motionPoints();
 		//draw_sensorPoints();
 	}
 		
@@ -260,7 +269,17 @@ package com.gestureworks.analysis
 								// Calculate the hand's average finger tip position
 								for (i = 0; i < mpn; i++) 
 								{
-								var mp:MotionPointObject = cO.motionArray[i];
+								var mp:MotionPointObject = new MotionPointObject//cO.motionArray[i];
+								//var mp:MotionPointObject = cO.motionArray[i];
+								
+									mp.position.x = normalize(cO.motionArray[i].position.x, -180, 180) * stage.stageWidth;
+									mp.position.y = normalize(cO.motionArray[i].position.y, 270, -75) * stage.stageHeight;
+									mp.position.z = cO.motionArray[i].position.z;
+									mp.type = cO.motionArray[i].type;
+									
+								trace(cO.motionArray[i].position.y, mp.position.y)
+									
+
 								//trace("----finger--",finger.id,finger.motionPointID, finger.x,finger.y);	
 								//trace("type visualizer",mp.type)
 										
@@ -368,6 +387,23 @@ public function clear():void
 	}
 	}
 	
+	
+	public static function map(num:Number, min1:Number, max1:Number, min2:Number, max2:Number, round:Boolean = false, constrainMin:Boolean = true, constrainMax:Boolean = true):Number
+		{
+			if (constrainMin && num < min1) return min2;
+			if (constrainMax && num > max1) return max2;
+		 
+			var num1:Number = (num - min1) / (max1 - min1);
+			var num2:Number = (num1 * (max2 - min2)) + min2;
+			if (round) return Math.round(num2);
+			return num2;
+		}	
+		
+		private function normalize(value : Number, minimum : Number, maximum : Number) : Number {
+
+                        return (value - minimum) / (maximum - minimum);
+         }
+		
 	
 	/**
 	* @private

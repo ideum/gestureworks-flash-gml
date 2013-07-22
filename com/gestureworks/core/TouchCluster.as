@@ -198,41 +198,7 @@ package com.gestureworks.core
 				}
 			}
 			///////////////////////////////////////////////////
-			
 			//trace(_dN, _N, cO.point_remove);
-			
-			///////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////
-			////FIND MOTION CLUSTER COUNT
-			
-			//motion point update
-			//cO.hn = cO.motionArray.frame.hands.length;
-			
-			//if(cO.hn!=0){
-			//trace("hands",cO.hn)
-			
-			//if (cO.hn == 2){ cO.fn = cO.motionArray.frame.hands[0].fingers.length; + cO.motionArray.frame.hands[1].fingers.length;}
-			//else if (cO.hn == 1) cO.fn = cO.motionArray.frame.hands[0].fingers.length;
-			//else cO.fn = 0;
-			
-			//trace("total fingers", cO.fn)
-			//}
-			
-			var f:int = 0;
-			var h:int = 0;
-			for (var i:int = 0; i <cO.motionArray.length; i++) 
-			{
-				if (cO.motionArray[i].type =="finger") f++
-				else if (cO.motionArray[i].type =="hand") h++
-			}
-			
-			
-			cO.hn = h;
-			cO.fn = cO.motionArray.length;
-			cO.ipn = cO.iPointArray.length;
-			//////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////
-			
 		}
 		/**
 		 * @private
@@ -244,7 +210,7 @@ package com.gestureworks.core
 				updateClusterCount();
 				getCluster()
 				
-				if(geometricsOn)	getGeoMetrics();
+				if(geometricsOn)	getGeoMetrics(); // must preceed kinemetrics
 				if(kinemetricsOn) 	getKineMetrics();
 				if(vectormetricsOn)	getVectorMetrics();
 				
@@ -290,57 +256,114 @@ package com.gestureworks.core
 		public function getGeoMetrics():void 
 		{
 			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, _N);
-			//gn = gO.pOList.length;
-			
-			cluster_geometric.findGeoConstants();
-			cluster_geometric.resetGeoCluster();
-			
 			
 			if (!core)
 			{
-			//trace("get core geometrics")
+				//trace("get core geometrics")
+				
+				//////////////////////////////////////////////////////
+				// RESET CLUSTER
+				//////////////////////////////////////////////////////
+				cluster_geometric.resetGeoCluster();
+				
+				
+				/////////////////////////////////////////////////////
+				//BUILD SKELETAL MODEL FROM RAW MOTION POINTS
+				/////////////////////////////////////////////////////
+				
+				// BASIC HAND
+					cluster_geometric.clearHandData();	
+					cluster_geometric.createHand(); // palm points // finger list palm ip 
+				// SKELETAL DETAIL
+					cluster_geometric.findFingerAverage();// finger average point// up down 
+					cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
+					cluster_geometric.findHandRadius(); // favdist 
+					cluster_geometric.findThumb(); // thumb // left// right
+				// ADVANCED SKELETON
+					//--cluster_geometric.findFingers(); // identify fingers
+					//--cluster_geometric.findJoints(); // finger joints //knuckle / wrist
+				////////////////////////////////////////////////
+				
+				
 			
-			////////////////////////////////////////////////
-			// skeletal model
-			cluster_geometric.clearMotionPointData();	
-			cluster_geometric.createHand(); // palm points // finger list palm ip // up down //wrist 
-				cluster_geometric.findFingerAverage();// finger average point
-				cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
-				cluster_geometric.findHandRadius(); // favdist 
-				cluster_geometric.findThumb(); // thumb // left// right
-				//--cluster_geometric.findFingers(); // identify fingers
-				//--cluster_geometric.findJoints(); // finger joints 
-			////////////////////////////////////////////////
+		
+				
+				
+			// CHECK IP DEFINITION IN GML
+			// FILTER BY TYPE 
+			// APPLY KINEMETRIC BY IP TYPE
+				
+			gn = gO.pOList.length;
+			var dn:uint 
 			
-			///////////////////////////////////////////////
-			// virtual interaction points
-			//trace("hand pos",cO.hand.position)
-			//cluster_geometric.find3DPinchPoints(); 
-			//cluster_geometric.find3DTriggerPoints(); 
-			//cluster_geometric.find3DPushPoints(); 
-			//cluster_geometric.find3DHookPoints(); 
-			//---cluster_geometric.find3DToolPoints();
-			//---cluster_geometric.find3DRegionPoints();
-			cluster_geometric.find3DFingerPoints(); 
-			cluster_geometric.find3DThumbPoints(); 
-			//cluster_geometric.find3DFramePoints(); 
+			//trace("-touch cluster -----------------------------",gn);
 			
-			cluster_geometric.find3DPalmPoints(); 
-			cluster_geometric.find3DFingerAveragePoints(); 
-			//core = true;
+			for (key = 0; key < gn; key++) 
+			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
+			{
+				
+				// if gesture object is active in gesture list
+				if (ts.gestureList[gO.pOList[key].gesture_id])
+				{
+				
+					// set dim length
+					dn = gO.pOList[key].dList.length;
+					
+					// zero cluster deltas
+					for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+					
+					var g:GestureObject = gO.pOList[key];
+				
+					trace("matching gesture cluster input type",g.cluster_type)
+						/////////////////////////////////////////////////////
+						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
+						////////////////////////////////////////////////////
+					if (g.cluster_input_type == "motion")
+						{
+						// FUNDAMENTAL INTERACTION POINTS
+							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) cluster_geometric.find3DFingerPoints(); 
+							if ((g.cluster_type == "thumb")||(g.cluster_type == "all")) cluster_geometric.find3DThumbPoints(); 
+							if ((g.cluster_type == "palm")||(g.cluster_type == "all")) cluster_geometric.find3DPalmPoints(); 
+							if ((g.cluster_type == "finger_average")||(g.cluster_type == "all")) cluster_geometric.find3DFingerAveragePoints(); 
+							
+						//CONFIGURATION BASED INTERACTION POINTS
+							if ((g.cluster_type == "pinch")||(g.cluster_type == "all")) cluster_geometric.find3DPinchPoints(); 
+							if ((g.cluster_type == "trigger")||(g.cluster_type == "all"))cluster_geometric.find3DTriggerPoints(); 
+							if ((g.cluster_type == "push")||(g.cluster_type == "all")) cluster_geometric.find3DPushPoints(); 
+							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) cluster_geometric.find3DHookPoints(); 
+							if ((g.cluster_type == "frame")||(g.cluster_type == "all")) cluster_geometric.find3DFramePoints(); 
+						
+						// LATER
+							//---cluster_geometric.find3DToolPoints();
+							//---cluster_geometric.find3DRegionPoints();
+							//---cluster_geometric.find3dTipTapPoints();
+						}
+					}
+				}
 			}
 			
-			//cluster_kinemetric.testTransformationIPA();
-		
+				
+			
+			// MUST USE INTERACTION POINT TRACKER TO INJECT INTERACTION POINTS BASED ON:
+					//HIT TESTING
+					//RAY CASTING
+					//OR GLOBAL CLUSTERING ??
 		}
 		
 		public function getKineMetrics():void 
 		{						
 			if (!core)
 			{
-			// move to 3d kinemetrics
-			cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
+				// move to 3d kinemetrics
+				// FIND MOTION CHARACTER
+				cluster_kinemetric.find3DIPConstants();
+				cluster_kinemetric.find3DDimension();
+				
+				//cluster_kinemetric.find3DTapPoints();
+				//cluster_kinemetric.find3DHoldPoints();
+				//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
 			}
+			
 		
 			gn = gO.pOList.length;
 			var dn:uint 
@@ -363,13 +386,18 @@ package com.gestureworks.core
 					
 					var g:GestureObject = gO.pOList[key];
 					
-					// processing algorithms when in touch
-					if(ts.N!=0){		// check kinemetric and if continuous analysis
+					
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					// PROCESSING TOUCH KINEMETRICS
+					// TOUCH POINTS
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+					if (ts.N != 0) // check kinemetric and if continuous analysis
+					{		
 						// check point number requirements
 						if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
 						{
-							//trace("call cluster calc",ts.N);
-							
+							trace("call cluster calc",ts.N);
 							
 							// activate all by default
 							g.activeEvent = true;
@@ -423,22 +451,11 @@ package com.gestureworks.core
 									}
 									
 
-									
-									
-									
-									
-									
-									
-									
-									
-									
-									
-									
-									
 									///////////////////////////////////////////////////////////////////////////////////
 									// LIMIT DELTA BY CLUSTER VALUES
 									/////////////////////////////////////////////////////////////////////////////////////
-									g.activeEvent = false;
+								
+										g.activeEvent = false;
 									
 										for (DIM = 0; DIM < dn; DIM++) 
 										{
@@ -510,54 +527,91 @@ package com.gestureworks.core
 							///////////////////////////////////////////////////
 						}
 				}
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// END TOUCH POINT KINEMETRIC PROCESSING
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				
+				
+				
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// PROCESSING INTERACTION POINT KINEMETRICS
+				// INTERACTION POINTS FROM
+				// MOTION POINTS
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				// processing algorithms when in motion
 					if(ts.cO.fn!=0){		// check kinemetric and if continuous analysis
+					
+					////////////////////////////////////////////////
+					// SKELETON MATCH
+					/////////////////////////////////////////////////
+					
+					// MATCH NUMBER OF HANDS
+							// 0 ANY
+							// 1
+							// 2
+							// MATCH HANDEDNESS 
+								// LEFT
+								// RIGHT
+							// MATCH HAND ORIENTATION
+								// UP
+								// DOWN
+						// MATCH NUMBER OF THUMBS PER HAND
+							//0 ANY
+							//1
+							// 2 NONE??
+						// MATCH NUMBER OF FINGERS PER HAND
+							//5/4/3/2/1 DIGITS
+							//4/3/2/1 PURE FINGER
+							
+					//////////////////////////////////////////////////
+					// SKELETON CONFIG MATCH
+					//////////////////////////////////////////////////
+						
+					// MATCH INTERACTION POINT TYPE
+								// NONE
+								// PINCH
+								// TRIGGER
+								// HOOK
+								// FINGER
+								// THUMB
+								// PALM
+								// FAV
+								// FRAME
+								// PUSH 
+								// REGION 
+								// TOOL
+								
+					///////////////////////////////////////////////
+					// MOTION MATCH
+					///////////////////////////////////////////////
+						
 						// check point number requirements
 						//if((ts.fn >= g.nMin)&&(ts.fn<= g.nMax)||(ts.fn == g.n))
 						//{
-							//trace("call motion cluster calc",ts.cO.fn);
+							trace("call motion cluster calc",ts.cO.fn,g.algorithm);
 
 							// activate all by default
 							g.activeEvent = true;
 							
 							if (g.algorithm_class == "3d_kinemetric")
 							{
-								
-								//trace("kinemetric algorithm",gO.pOList[key].algorithm);
-								if (g.algorithm == "3d_bimanual_manipulate") 
-								{
-									//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
-								}
 									// BASIC 3D DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-									//if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation();
+									if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation(); // PUSH INTERACTION POINT TYPE
 									
 									// BASIC 3D DRAG // ALGORITHM // type drag
 									//if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
 									
-									// BASIC BIMANUAL MANIPULATION USING PINCH POINTS
-									if (g.algorithm == "3d_bimanual_pinch_manipulate") {
-										//cluster_kinemetric.find3DPinchPoints(); // 	GET PINCH POINTS AND PUSH INTO IPARRAY
-										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
-									}
+									// GENERIC 3D ROTATE
+									//if (g.algorithm == "3d_rotate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
 									
-									// BASIC BIMANUAL MANIPULATION USING PINCH POINTS
-									if (g.algorithm == "3d_bimanual_trigger_manipulate") {
-										//cluster_kinemetric.find3DTriggerPoints(); // 	GET PINCH POINTS AND PUSH INTO IPARRAY
-										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
-									}
+									//GENERIC 3D DCALE
+									//if (g.algorithm == "3d_separate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
 									
-									
-									// BASIC BIMANUAL MANIPULATION USING PALM POINTS
-									if (g.algorithm == "3d_bimanual_palm_manipulate") {
-										//cluster_kinemetric.find3DPalmPoints();// 	GET PINCH POINTS AND PUSH INTO IPARRAY
-										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
-									}
-									// BASIC BIMANUAL MANIPULATION USING TRIGGER POINTS
-									if (g.algorithm == "3d_bimanual_pinch_manipulate") {
-										//cluster_kinemetric.find3DtriggerPoints();// 	GET PINCH POINTS AND PUSH INTO IPARRAY
-										//cluster_kinemetric.findMeanInst3DMotionTransformationIPA(); // ANALYZE IPARRAY AND GENERIC PUSH DELTAS
-									}
+									// GENERIC TAP 
+									//if (g.algorithm == "3d_tap") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
 									
 									///////////////////////////////////////////////////////////////////////////////////
 									// LIMIT DELTA BY CLUSTER VALUES
@@ -597,7 +651,9 @@ package com.gestureworks.core
 							///////////////////////////////////////////////////
 						}
 				}
-				
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// END IP KIMETRIC PROCESSING
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				
 				

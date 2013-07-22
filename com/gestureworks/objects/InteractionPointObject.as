@@ -55,10 +55,20 @@ package com.gestureworks.objects
 		public function get normal():Vector3D{	return _normal;}
 		public function set normal(value:Vector3D):void {	_normal = value; }
 		
-		//velocity//////////////////////////////////////////// //dx,dy,dz
+		//velocity//////////////////////////////////////////////dx,dy,dz
 		private var _velocity:Vector3D = new Vector3D ();
 		public function get velocity():Vector3D{	return _velocity;}
 		public function set velocity(value:Vector3D):void {	_velocity = value; }
+		
+		//accleration//////////////////////////////////////////////ddx,ddy,ddz
+		private var _acceleration:Vector3D = new Vector3D ();
+		public function get acceleration():Vector3D{	return _acceleration;}
+		public function set acceleration(value:Vector3D):void {	_acceleration = value; }
+		
+		//jolt//////////////////////////////////////////////ddx,ddy,ddz
+		private var _jolt:Vector3D = new Vector3D ();
+		public function get jolt():Vector3D{	return _jolt;}
+		public function set jolt(value:Vector3D):void {	_jolt = value; }
 
 	
 		//width

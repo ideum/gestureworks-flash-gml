@@ -15,22 +15,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.utils
 {
+	import flash.geom.Point;
+	
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.gw_public;
+	import com.gestureworks.core.GML;
 	import com.gestureworks.managers.TouchManager;
 	
-	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.GestureObject;
 	import com.gestureworks.objects.GestureListObject;
-	import flash.geom.Point;
-	
-	//import com.gestureworks.utils.Yolotzin;
-	import com.gestureworks.core.GML;
 	
 	import com.gestureworks.events.GWGestureEvent;
 	
-	public class GestureParser //extends Sprite
+	public class GestureParser
 	{
 		public var gOList:GestureListObject;
 		public var gestureList:Object;
@@ -51,15 +50,10 @@ package com.gestureworks.utils
 		/////////////////////////////////////////////////////////////////////
 		// GML
 		/////////////////////////////////////////////////////////////////////
-         public function parse(ID:int):void 
-		 //private function parse(ID:int):void 
+        public function parse(ID:int):void 
          {
-			//if (trace_debug_mode) trace("local gml parser", ID, "Y:",Y);
-			
-			
 			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
-			
-		//	trace("parsing gml");
+			//trace("parsing gml");
 			
 			gOList = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);
@@ -99,31 +93,6 @@ package com.gestureworks.utils
 									"3d_hold":true,
 									"3d_double_tap":true 
 									};			
-						
-									/*
-						// re-set gesture processing rate
-						var processing_rate:Number = gml.attribute("processing_rate");
-						var matchDisplayFR:Boolean = gml.attribute("match_display_frame_rate") == "true" ?true:false;
-						var max_point_number:int = gml.attribute("max_point_number");
-						
-						if (max_point_number) GestureGlobals.max_point_count = max_point_number;
-						else GestureGlobals.max_point_count = 1000;
-						
-						//if (processing_rate) 
-						//{
-							//if (matchDisplayFR)
-							//	{
-								//GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
-							//	}
-							//else{
-								//GestureGlobals.touchFrameInterval = processing_rate;
-							//	}
-							//TouchManager.gw_public::resetGlobalClock;
-							
-							//trace("touch frame interval",GestureGlobals.touchFrameInterval);
-						//}
-						//else GestureGlobals.touchFrameInterval = (1/GestureWorks.application.frameRate)*1000;
-						*/
 						
 						var gestureSetNum:int = gml.Gesture_set.length();
 						
@@ -241,12 +210,16 @@ package com.gestureworks.utils
 															//advanced cluster properties
 															///////////////////////
 															// cluster type
-															gO.cluster_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("cluster_type"));
+															gO.cluster_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("type"));
+															gO.cluster_input_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("input_type"));
 															// hand number
-															gO.hn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("hand_number")); 
-															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number")); 
+															gO.hn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("hand_number"));
 															
-															//trace("hand number",gO.hn,"finger number",gO.fn)
+															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number"));
+															//gO.fn_min = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number_min"));
+															//gO.fn_max = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number_max"));
+															
+															//trace("hand number",gO.hn,"finger number",gO.fn, "cluster", gO.cluster_type)
 														}
 													}
 												

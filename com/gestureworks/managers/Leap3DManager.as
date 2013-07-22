@@ -143,7 +143,7 @@ package com.gestureworks.managers
 					
 					if (event.frame.pointable(pid).isTool) {
 						mp.type = "tool";
-						trace("mp type",mp.type);
+						//trace("leap 3d tracker mp type",mp.type);
 					}
 					if (event.frame.pointable(pid).isFinger) mp.type = "finger";
 					else mp.type = "palm";

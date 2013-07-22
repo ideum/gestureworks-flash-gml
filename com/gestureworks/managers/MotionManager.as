@@ -45,7 +45,7 @@ package com.gestureworks.managers
 
 		public static var lmManager:LeapManager
 		public static var motionSprite:TouchSprite;
-		public static var leapmode:String = "3d"//"2d";
+		public static var leapmode:String = "3d"//"2d"; //======================================================================
 		
 		public static var mpoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
@@ -126,7 +126,7 @@ package com.gestureworks.managers
 			// create new point object
 			var mpointObject:MotionPointObject  = new MotionPointObject();
 					
-					mpointObject.id = motionSprite.motionPointCount; // NEEDED FOR THUMBID
+					mpointObject.id = motionSprite.motionPointCount; // NEEDED FOR THUMBID ?????????????? not in motion
 					mpointObject.motionPointID = event.value.motionPointID;
 					mpointObject.type = event.value.type;
 					mpointObject.handID = event.value.handID;
@@ -142,9 +142,9 @@ package com.gestureworks.managers
 					mpointObject.length = event.value.length;
 					mpointObject.width = event.value.width;
 					
+					
 					//ADD TO LOCAL POINT LIST
 					motionSprite.cO.motionArray.push(mpointObject);
-					
 					motionSprite.motionPointCount++;
 				
 				
@@ -212,22 +212,12 @@ package com.gestureworks.managers
 					
 					mpO.length = event.value.length;
 					mpO.width = event.value.width;
-		
-					
-					
 					//mpO.handID = event.value.handID;
-					
-					//mpO.x = event.value.x;
-					//mpO.y = event.value.y;
-					//mpO.z = event.value.z;
+
 				
 					mpO.moveCount ++;
-					
-					
 					//trace( mpO.moveCount);
 				}
-				
-				
 				
 				// UPDATE POINT HISTORY 
 				MotionPointHistories.historyQueue(event);

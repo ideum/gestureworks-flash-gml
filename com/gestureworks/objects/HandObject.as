@@ -30,10 +30,25 @@ package com.gestureworks.objects
 		public function get handID():int{	return _handID;}
 		public function set handID(value:int):void {	_handID = value; }
 		
-		// motion point type // left / right
-		private var _type:String = new String();
+		// hand type // left / right
+		private var _type:String = new String("undefined");
 		public function get type():String{	return _type;}
 		public function set type(value:String):void {	_type = value; }
+		
+		// hand orientation // up/down
+		private var _orientation:String = new String("undefined");
+		public function get orientation():String{	return _orientation;}
+		public function set orientation(value:String):void {	_orientation = value; }
+		
+		//flatness
+		private var _flatness:Number = 0;
+		public function get flatness():Number{	return _flatness;}
+		public function set flatness(value:Number):void {	_flatness = value; }
+		
+		//splay
+		private var _splay:Number = 0;
+		public function get splay():Number{	return _splay;}
+		public function set splay(value:Number):void {	_splay = value; }
 		
 		/////////////////////////////////////////////////////////////////////////////////////////
 		

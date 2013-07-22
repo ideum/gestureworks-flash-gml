@@ -22,6 +22,9 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.MotionPointObject;
+	import com.gestureworks.objects.InteractionPointObject;
+	import com.gestureworks.objects.GesturePointObject;
+	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.PointPairObject;
 	import com.gestureworks.managers.PointPairHistories;
@@ -50,18 +53,17 @@ package com.gestureworks.analysis
 		private var cO:ClusterObject;
 		
 		//public var pointList:Vector.<PointObject>; // should operate directly on cluster
-		public var pointPairList:Vector.<PointPairObject>;// should operate directly on cluster
+		//public var pointPairList:Vector.<PointPairObject>;// should operate directly on cluster
 		
-		// number in group
+		// TOUCH POINT TOTALS
 		public var N:uint = 0;
 		public var LN:uint = 0; //locked touch points
-		
 		private var N1:uint = 0;
 		private var k0:Number  = 0;
 		private var k1:Number  = 0;
 		private var i:uint = 0;
 		private var j:uint = 0;
-		private var mc:uint = 0;
+		private var mc:uint = 0; //MOVE COUNT
 		
 		// separate base scale const
 		private var sck:Number = 0.0044;
@@ -71,15 +73,12 @@ package com.gestureworks.analysis
 		// motion point totals
 		private var hn:uint = 0;
 		private var fn:uint = 0;
-		private var rhfn:uint = 0;
-		private var lhfn:uint = 0;
-		private var fn1:Number = 0;
-		private var fk0:Number = 0;
-		private var fk1:Number = 0;
 		
-		//////////////////////////////
-		// derived interaction point totals
+		// INTERACTION POINT TOTALS
 		private var ipn:uint = 0;
+		private var ipnk:Number = 0;
+		private var ipnk0:Number = 0;
+	
 		
 		public function KineMetric(_id:int) 
 		{
@@ -127,30 +126,6 @@ package com.gestureworks.analysis
 				// get motion points in frame
 				hn = ts.cO.hn
 				fn = ts.cO.fn
-				rhfn = ts.cO.rhfn
-				lhfn = ts.cO.lhfn
-				
-				
-				
-				// gest derived motion point totals
-				if (fn)
-				{
-					fn1 = fn - 1;
-					fk0 = 1 / fn;
-					fk1 = 1 / fn1;
-					if (fn == 0) fk1 = 0;
-					//motionList = cO.motionArray;
-					//mc = pointList[0].moveCount;
-				}
-				
-				/////////////////////////////////////////
-				// get derived interaction points in cluster
-				ipn = ts.cO.ipn;
-				
-				if (ipn) {
-					// do something
-				}
-				
 				
 		}
 		
@@ -239,6 +214,8 @@ package com.gestureworks.analysis
 			//cO.day =0
 			//cO.daz =0
 			//cO.datheta =0
+			
+			cO.gPointArray = new Vector.<GesturePointObject>;
 		}
 		
 		public function findInstDimention():void
@@ -303,6 +280,9 @@ package com.gestureworks.analysis
 											cO.height = abs_dy;
 											cO.y = cO.pointArray[i].y -(dy* 0.5);
 										} 
+										
+										// NOTE NEED TO FIX AS CO.X CAN BE SAME AS CO.MX
+										
 										
 										// mean point position
 										cO.mx += cO.pointArray[i].x;
@@ -884,13 +864,13 @@ package com.gestureworks.analysis
 		} 
 		
 		
-		///////////////////////////////////////////////////////////////////////////////////
+
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		// sensor analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////
+		
 		
 		public function findSensorJolt():void
 		{
@@ -909,61 +889,200 @@ package com.gestureworks.analysis
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////
-		// 3d motion analysis
-		///////////////////////////////////////////////////////////////////////////////////
+		// 3d IP motion analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		
-		/////////////////////////////////////////////////////////////////////////////
-		// clear derived point and cluster motion data
-		public function clearMotionPointData():void
+		// GET IP CLUSTER CONSTS
+		public function find3DIPConstants():void
 		{
-			for (i = 0; i < fn; i++)
-				{	
-					if (cO.motionArray[i].type == "finger")
-					{	
-						// reset thum alloc// move to cluster
-						cO.motionArray[i].fingertype = "finger";	 
-						
-						// reset thumb probs // move to cluster
-						cO.motionArray[i].thumb_prob = 0;
-						cO.motionArray[i].mean_thumb_prob = 0
-						// normalized data
-						cO.motionArray[i].normalized_length = null;
-						cO.motionArray[i].normalized_palmAngle = null;
-						cO.motionArray[i].normalized_favdist = null;
-					}
-				}
+			cO.ipn = cO.iPointArray.length;
+			ipn = cO.ipn;
+			
+			ipnk = 1 / ipn;
+			if (ipn == 1) ipnk = 1;
+			
+			ipnk0 = 1 / (ipn - 1);
+			if (ipn == 1) ipnk0 = 1;
 		}
 		
+		// IP CLUSTER DIMENSIONS
+		public function find3DDimension():void
+		{
+			for (i = 0; i < ipn; i++) 
+						{
+						var ipt = cO.iPointArray[i];
+						
+						for (var q:uint = 0; q < i+1; q++) 
+						{
+						 if (i != q) {
+							 
+							var dx:Number = cO.iPointArray[i].position.x - cO.iPointArray[q].position.x
+							var dy:Number = cO.iPointArray[i].position.y - cO.iPointArray[q].position.y
+							var dz:Number = cO.iPointArray[i].position.z - cO.iPointArray[q].position.z
+							var ds:Number  = Math.sqrt(dx * dx + dy * dy + dz*dz);
+							 
+							 
+							var abs_dx:Number = Math.abs(dx);
+							var abs_dy:Number = Math.abs(dy);
+							var abs_dz:Number = Math.abs(dz);
+						
+						
+							if (abs_dx > cO.width) cO.width = abs_dx;
+							if (abs_dy > cO.height) cO.height = abs_dy;
+							if (abs_dz > cO.length) cO.length = abs_dz;
+							if (ds > cO.radius) cO.radius = ds;
+						 }
+						 }
+						}
+						
+					//trace(cO.width,cO.height,cO.length)
+		}
 		
-		////////////////////////////////////////////////////////////////////////////
+		// TAP POINTS
+		public function find3DTapPoints():void
+		{
+			// LOOK FOR 
+				//VELOCITY SIGN CHANGE
+				//ACCLERATION SIGN CHANGE 
+				//JOLT MAGNITUDE MIN
+
+			var hist:int = 15;
+			var tapThreshold:Number = 15; // SMALLER MAKES EASIER
+			
+			//trace("--");
+	
+			for (i = 0; i < ipn; i++) 
+					{	
+					var pt = cO.iPointArray[i];
+
+					if (pt)
+						{
+							if (pt.history.length > hist)
+							{
+								//trace("jolt:",cO.iPointArray[0].history[1].jolt.x,cO.iPointArray[0].history[1].jolt.y,cO.iPointArray[0].history[1].jolt.z);
+								if (Math.abs(pt.history[1].jolt.y) > tapThreshold) 
+								{
+									// CHECK PAST MAKE SURE HAVE NOT SET STATE FOR 10 FRAMES
+									//STOP AMBULANCE CHASERS //start after hist 1
+									var test:Boolean = true;
+									
+									for (var h = 2; h < hist; h++) 
+										{	
+											if (Math.abs(pt.history[h].jolt.y) > tapThreshold) test = false;
+										}
+									if (test) {
+										
+										var gpt = new GesturePointObject();
+											gpt.position = pt.position;
+											gpt.type = "y tap";
+										cO.gPointArray.push(gpt);
+										
+										trace("y tap-----scan clean", pt.history[0].jolt.y, pt.history[1].jolt.y, pt.interactionPointID);
+										}
+								}
+								
+								if (Math.abs(pt.history[1].jolt.x) > tapThreshold) 
+								{
+									// CHECK PAST MAKE SURE HAVE NOT SET STATE FOR 10 FRAMES
+									//STOP AMBULANCE CHASERS //start after hist 1
+									var test:Boolean = true;
+									
+									for (var h = 2; h < hist; h++) 
+										{	
+											if (Math.abs(pt.history[h].jolt.x) > tapThreshold) test = false;
+										}
+									if (test) {
+										
+										var gpt = new GesturePointObject();
+											gpt.position = pt.position;
+											gpt.type = "x tap";
+										cO.gPointArray.push(gpt);
+										
+										trace("x tap-----scan clean", pt.history[0].jolt.x,pt.interactionPointID)
+									}
+								}
+								
+								if (Math.abs(pt.history[1].jolt.z) > tapThreshold) 
+								{
+									// CHECK PAST MAKE SURE HAVE NOT SET STATE FOR 10 FRAMES
+									//STOP AMBULANCE CHASERS //start after hist 1
+									var test:Boolean = true;
+									
+									for (var h = 2; h < hist; h++) 
+										{	
+											if (Math.abs(pt.history[h].jolt.z) > tapThreshold) test = false;
+										}
+									if (test) {
+										
+											var gpt = new GesturePointObject();
+												gpt.position = pt.position;
+												gpt.type = "z tap";
+											cO.gPointArray.push(gpt);
+											
+										trace("z tap-----scan clean", pt.history[0].jolt.z, pt.interactionPointID);
+									}
+								}
+								
+								
+								//if (Math.abs(pt.history[1].jolt.x) > tapThreshold) trace("x tap-----------", pt.interactionPointID);
+								//if (Math.abs(pt.history[1].jolt.z) > tapThreshold) trace("z tap-----------", pt.interactionPointID);
+								
+								
+								
+							}
+						}
+					}
+		}
+		
+		//HOLD POINTS
+		public function find3DHoldPoints():void
+		{
+			//HOLD 
+				// SCAN HIST 20
+				// LOW VELOCITY
+				// LOWER ACCEL
+			
+			var hist:int = 20;
+			var holdThreshold:Number = 3; 
+			
+			//trace("--");
+
+			for (i = 0; i < ipn; i++) 
+					{	
+					var pt:InteractionPointObject = cO.iPointArray[i];
+
+						if ((pt)&&(pt.history.length > hist))
+							{
+							if ((pt.history[hist].velocity.length < holdThreshold) && (pt.history[hist].acceleration.length < (holdThreshold*0.1-0.1))) 
+								{
+									var gpt = new GesturePointObject();
+												gpt.position = pt.history[hist].position;// PREVENTS HOLD DRIFT
+												gpt.type = "hold";
+											cO.gPointArray.push(gpt);
+									
+									trace("hold...", pt.interactionPointID);
+								}
+								//trace("v: ",v,"a: ",a)
+							}
+					}
+		}
+		
 		// 3D MANIPULATE GENERIC 
-		public function findMeanInst3DMotionTransformationIPA():void
+		public function findMeanInst3DMotionTransformation():void
 		{
 			var hist:int = 3;
 			var hk:Number = 1 / hist;
-			var hfk0:Number = 1 / (ipn-1);
-
-			ipn = cO.iPointArray.length
-			var ipnk = 1 /ipn;
-			//trace("motion local pinch kinemetric", cO.iPointArray.length);
+			
+			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			
 			if (ipn!= 0)
 				{		
 						if ((ipn == 1)&&(cO.iPointArray[0].history.length>(hist+1)))
 							{
-								var pt = cO.iPointArray[0]
+								var pt = cO.iPointArray[0];
 								
 								cO.x = pt.position.x;
 								cO.y = pt.position.y;

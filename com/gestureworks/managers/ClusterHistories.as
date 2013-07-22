@@ -51,8 +51,8 @@ package com.gestureworks.managers
 				// native properties
 				object.n = clusterObject.n;
 				object.fn = clusterObject.fn;//- total motion finger number
-				object.rhfn = clusterObject.rhfn;//- right hand finger number
-				object.lhfn = clusterObject.lhfn;//- left hand finger number
+				//object.rhfn = clusterObject.rhfn;//- right hand finger number
+				//object.lhfn = clusterObject.lhfn;//- left hand finger number
 				
 				object.x = clusterObject.x;
 				object.y = clusterObject.y;
@@ -132,6 +132,10 @@ package com.gestureworks.managers
 				
 				//SENSOR ACCELEROMETER DATA
 				//object.sensorArray = clusterObject.sensorArray;
+				
+				
+				//Gesture Points DATA simple timeline
+				object.gPointArray = clusterObject.gPointArray;
 				
 				//trace("cluster history push")
 
