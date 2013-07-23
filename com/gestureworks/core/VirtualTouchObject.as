@@ -65,9 +65,8 @@ package com.gestureworks.core
 			preinitBase();
 			
 			// set transform to target
-			if ("transform" in target && target.transform is Transform) {
-				transform.matrix = target.transform.matrix; // Sprite
-			}
+			if ("transform" in target)
+				transform.matrix = target.transform.matrix;
         }
 		
 		// initializers

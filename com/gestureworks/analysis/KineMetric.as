@@ -903,6 +903,12 @@ package com.gestureworks.analysis
 				cO.y = normalize(cO.y, 270, -75) * 1080;// stage.stageHeight;
 				cO.z = cO.z;
 				
+				trace(cO.width,cO.height,cO.radius)
+				
+				cO.width = cO.width;
+				cO.height = cO.height;
+				cO.radius = cO.radius;
+				
 				// TRANSLATION
 				cO.dx = cO.dx
 				cO.dy = 1 * cO.dy;

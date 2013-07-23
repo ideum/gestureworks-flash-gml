@@ -314,7 +314,7 @@ package com.gestureworks.core
 					
 					var g:GestureObject = gO.pOList[key];
 				
-					trace("matching gesture cluster input type",g.cluster_type)
+					//trace("matching gesture cluster input type",g.cluster_type)
 						/////////////////////////////////////////////////////
 						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
 						////////////////////////////////////////////////////
@@ -352,11 +352,9 @@ package com.gestureworks.core
 		
 		public function getKineMetrics():void 
 		{		
-			//if (!ts.transform3d) 
-			//{
-				//cluster_kinemetric.mapCluster3Dto2D();
-			//}
-			
+	
+			cluster_kinemetric.find3DIPConstants();
+			cluster_kinemetric.find3DDimension();
 			
 			if (!core)
 			{
@@ -370,7 +368,7 @@ package com.gestureworks.core
 				//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
 			}
 			
-			if (!ts.transform3d) 
+			if ((!ts.transform3d)&&(ts.motion3d))
 			{
 				cluster_kinemetric.mapCluster3Dto2D();
 			}
@@ -408,7 +406,7 @@ package com.gestureworks.core
 						// check point number requirements
 						if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
 						{
-							trace("call cluster calc",ts.N);
+							//trace("call cluster calc",ts.N);
 							
 							// activate all by default
 							g.activeEvent = true;
@@ -602,7 +600,7 @@ package com.gestureworks.core
 						// check point number requirements
 						//if((ts.fn >= g.nMin)&&(ts.fn<= g.nMax)||(ts.fn == g.n))
 						//{
-							trace("call motion cluster calc",ts.cO.fn,g.algorithm);
+							//trace("call motion cluster calc",ts.cO.fn,g.algorithm);
 
 							// activate all by default
 							g.activeEvent = true;
@@ -676,7 +674,7 @@ package com.gestureworks.core
 			}
 			
 			
-			if (!ts.transform3d) 
+			if ((!ts.transform3d)&&(ts.motion3d))
 			{
 				cluster_kinemetric.mapCluster3Dto2D();
 			}

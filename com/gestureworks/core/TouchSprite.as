@@ -924,7 +924,12 @@ package com.gestureworks.core
 		// TRANSFORM 3D
 		private var _transform3d:Boolean = false;
 		public function get transform3d():Boolean {return _transform3d;}	
-		public function set transform3d(value:Boolean):void{	_transform3d = value;}
+		public function set transform3d(value:Boolean):void {	_transform3d = value; }
+		
+		// TRANSFORM 3D
+		private var _motion3d:Boolean = false;
+		public function get motion3d():Boolean {return _motion3d;}	
+		public function set motion3d(value:Boolean):void{	_motion3d = value;}
 		
 		public function updateTObjProcessing():void
 		{
