@@ -94,6 +94,9 @@ package com.gestureworks.core
 		
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
+		//tracks GWTouchEvents
+		private var gwTouchListeners:Array = [];
+		
 		public function TouchSprite():void
 		{
 			super();
@@ -185,6 +188,25 @@ package com.gestureworks.core
 				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
 			if (GestureWorks.activeSim)				
 				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			
+			updateGWTouchListeners();
+		}
+		
+		/**
+		 * Re-registers GWTouchEvent events with updated mode settings
+		 */
+		private function updateGWTouchListeners():void {
+			var size:int = gwTouchListeners.length;	
+			var l:Object;
+			
+			for (var i:int = 0; i < size; i++) {			
+				l = gwTouchListeners.shift();				
+				if (hasEventListener(l.type)) {
+					super.removeEventListener(l.type, l.listener);
+					if(l.type.indexOf("gwTouch") > -1)
+						addEventListener(l.type, l.listener);
+				}				
+			}			
 		}
 		
 		 private function initBase():void 
@@ -960,11 +982,16 @@ package com.gestureworks.core
 		{
 			if (type.indexOf("gwTouch") > -1)
 			{				
-				super.addEventListener(GWTouchEvent.eventType(type), function(e:*):void {
-					dispatchEvent(new GWTouchEvent(e));
-				});
+				for each(var gwt:String in GWTouchEvent.eventTypes(type)) {
+					function gwl(e:*):void {
+						dispatchEvent(new GWTouchEvent(e));
+					}
+					super.addEventListener(gwt, gwl);
+					gwTouchListeners.push( { type:gwt, listener:gwl } );
+				}
+				gwTouchListeners.push( { type:type, listener:listener } );				
 			}
-			
+						
 			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
 		
