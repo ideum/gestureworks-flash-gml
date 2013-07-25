@@ -181,6 +181,8 @@ package com.gestureworks.core
 			
 			if (simulator)
 				Simulator.gw_public::initialize();
+			else
+				Simulator.gw_public::deactivate();
 				
 			updateTouchObjects();
 		}

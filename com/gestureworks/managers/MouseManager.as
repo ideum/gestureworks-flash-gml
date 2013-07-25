@@ -33,6 +33,7 @@ package com.gestureworks.managers
 		private static var mousePointY:Number = 0;
 		private static var hold:Boolean;
 		private static var allowMouseStartDrag:Boolean = false;
+		private static var circleGraphics:Array = [];
 		
 		
 		/**
@@ -61,8 +62,16 @@ package com.gestureworks.managers
 			if (!GestureWorks.activeSim) return;	
 			TouchManager.gw_public::initialize();
 		}
-			
 		
+		gw_public static function deactivate():void
+		{
+			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			GestureWorks.application.removeEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);
+			for each(var g:SimulatorGraphic in circleGraphics)
+				GestureWorks.application.removeChild(g);
+			circleGraphics = [];
+		}
 		
 		/**
 		 * @private
@@ -91,6 +100,7 @@ package com.gestureworks.managers
 					if (e.target.toString() == "[object SimulatorGraphic]")
 					{
 						GestureWorks.application.removeChild(e.target as DisplayObject);
+						circleGraphics.splice(circleGraphics.indexOf(e.target), 1);
 						var eventHere:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, e.target.id, false);
 						eventHere.stageX = mousePointX;
 						eventHere.stageY = mousePointY;
@@ -123,6 +133,7 @@ package com.gestureworks.managers
 					circleGraphic.y = mousePointY;
 					circleGraphic.id = currentMousePoint
 					circleGraphic.addEventListener(MouseEvent.MOUSE_DOWN, simulatorGraphicPoint);
+				circleGraphics.push(circleGraphic);
 				GestureWorks.application.addChild(circleGraphic);
 				
 				return;

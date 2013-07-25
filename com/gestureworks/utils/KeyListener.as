@@ -27,6 +27,12 @@ package com.gestureworks.utils
 			GestureWorks.application.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);
 		}
 		
+		gw_public static function deactivate():void
+		{
+			GestureWorks.application.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownListener);
+			GestureWorks.application.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);
+		}
+		
 		private static function keyDownListener(e:KeyboardEvent):void
 		{
 			testForShift(e.keyCode);

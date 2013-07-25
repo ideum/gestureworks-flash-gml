@@ -28,5 +28,13 @@ package com.gestureworks.utils
 			trace("simulator is on");
 		}
 		
+		gw_public static function deactivate():void 
+		{
+			MouseManager.gw_public::deactivate();
+			KeyListener.gw_public::deactivate();
+			GestureWorks.activeSim = false;
+			trace("simulator is off");
+		}
+		
 	}
 }
