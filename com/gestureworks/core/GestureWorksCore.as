@@ -352,6 +352,9 @@ package com.gestureworks.core
 		{			
 			CML.Objects = CMLLoader.getInstance(cml).data;
 				
+			if (CML.Objects.@nativeTouch == "false")
+				nativeTouch = false;
+			
 			if (CML.Objects.@simulator == "true") 
 				simulator = true;
 			
