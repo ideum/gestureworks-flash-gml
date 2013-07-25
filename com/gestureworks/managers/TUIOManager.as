@@ -26,7 +26,8 @@ package com.gestureworks.managers
 	import flash.utils.*;
 	import org.tuio.*;
 	import org.tuio.adapters.*;
-	import org.tuio.debug.*;
+	import org.tuio.connectors.TCPConnector;
+	import org.tuio.debug.*;	
 	
 	/**
 	 * This class initializes TUIO. Declare tuio="true" in the main class or as an attribute in the CML root tag.
@@ -35,7 +36,9 @@ package com.gestureworks.managers
 	 */	
 	public class TUIOManager extends Sprite
 	{
-		private var udpConnector:*;
+		private var connector:*;
+		
+		private static var air:Boolean = false;			
 		
 		private var _tuioManager:TuioManager;
 		public function get tuioManager():TuioManager { return _tuioManager; }
@@ -44,13 +47,13 @@ package com.gestureworks.managers
 		public function get tuioClient():TuioClient { return _tuioClient;}		
 
 		private var _tuioDebug:TuioDebug;
-		public function get tuioDebug():TuioDebug { return _tuioDebug; }		
-		
+		public function get tuioDebug():TuioDebug { return _tuioDebug; }	
 	
 		gw_public static function initialize():void
 		{
 			// check for AIR runtime.
-			if (Capabilities.playerType != "Desktop") return;			
+			//if (Capabilities.playerType != "Desktop") return;			
+			air = Capabilities.playerType == "Desktop";
 
 			// create gestureworks TUIOManager
 			var tuioManager:TUIOManager = new TUIOManager;
@@ -65,13 +68,18 @@ package com.gestureworks.managers
 		public function TUIOManager() 
 		{			
 			super();
-									
-			try {
-				var UDPConnector:Class = getDefinitionByName("org.tuio.connectors.UDPConnector") as Class;
-				udpConnector = new UDPConnector();
+				
+			if(air){
+				try {
+					var UDPConnector:Class = getDefinitionByName("org.tuio.connectors.UDPConnector") as Class;
+					connector = new UDPConnector();
+				}
+				catch (e:Error) {
+					throw new Error("If you are trying to utilize TUIO in AIR, please make sure that you have included this statement into your Main Document class:  'import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR;'. ");
+				}
 			}
-			catch (e:Error) {
-				throw new Error("TUIO is currently only supported in AIR, if you are trying to utilize TUIO, please make sure that you have included this statement into your Main Document class:  'import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR;'. ");
+			else {
+				connector = new TCPConnector();
 			}
 			
 			if (stage) init();
@@ -82,7 +90,7 @@ package com.gestureworks.managers
 		private function init(event:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			_tuioClient = new TuioClient(udpConnector);
+			_tuioClient = new TuioClient(connector);
 			_tuioDebug = TuioDebug.init(stage);
 			_tuioManager = TuioManager.init(stage);
 			_tuioClient.addListener(_tuioManager);
