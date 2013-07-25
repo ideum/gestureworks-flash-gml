@@ -42,7 +42,7 @@ package com.gestureworks.managers
 		{
 			if(debug)
 				trace( "Leap Disconnected" );
-			//GestureWorks.application.stage.removeChild(this);								
+			GestureWorks.application.stage.removeChild(this);								
 		}
 
 		public function onExit( event:LeapEvent ):void
@@ -80,7 +80,15 @@ package com.gestureworks.managers
 			var num2:Number = (num1 * (max2 - min2)) + min2;
 			if (round) return Math.round(num2);
 			return num2;
-		}		
+		}
+		
+		public function dispose():void {
+			leap.controller.removeEventListener( LeapEvent.LEAPMOTION_INIT, onInit );
+			leap.controller.removeEventListener( LeapEvent.LEAPMOTION_CONNECTED, onConnect );
+			leap.controller.removeEventListener( LeapEvent.LEAPMOTION_DISCONNECTED, onDisconnect );
+			leap.controller.removeEventListener( LeapEvent.LEAPMOTION_EXIT, onExit );
+			leap.controller.removeEventListener( LeapEvent.LEAPMOTION_FRAME, onFrame );	
+		}
 		
 	}
 

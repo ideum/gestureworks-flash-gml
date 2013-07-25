@@ -219,6 +219,8 @@ package com.gestureworks.core
 				MotionManager.gw_public::initialize();
 				InteractionManager.gw_public::initialize();
 			}
+			else
+				MotionManager.gw_public::deInitialize();
 		}	
 				
 		private var _sensor:Boolean = false;
@@ -251,6 +253,8 @@ package com.gestureworks.core
 				MotionManager.leapmode = "2d";
 				motion = true;
 			}
+			else
+				motion = false;
 		}
 		
 		private var _leap3D:Boolean = false;

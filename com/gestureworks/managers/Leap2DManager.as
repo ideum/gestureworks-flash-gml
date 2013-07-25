@@ -42,7 +42,6 @@ package com.gestureworks.managers
 		{
 			super();
 			activePoints = new Array();
-			
 			//only allow leap touch
 			//WILL NEED TO COMMENT OUT
 			//GestureWorks.supportsTouch = false;
@@ -62,6 +61,7 @@ package com.gestureworks.managers
 		 */
 		override protected function onFrame(event:LeapEvent):void 
 		{
+			if (!stage) return;
 			super.onFrame(event);
 			
 			//store frame's point ids
@@ -249,7 +249,16 @@ package com.gestureworks.managers
 		public function get pressureThreshold():Number { return _pressureThreshold; }
 		public function set pressureThreshold(p:Number):void {
 			_pressureThreshold = p;
-		}		
+		}
+		
+		/**
+		 * Destructor
+		 */
+		override public function dispose():void 
+		{
+			super.dispose();
+			activePoints = null;
+		}
 	}
 
 }

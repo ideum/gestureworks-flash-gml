@@ -101,6 +101,12 @@ package com.gestureworks.managers
 			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
 			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
 			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+			
+			if (leapmode == "2d" && lmManager) {
+				lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				Leap2DManager(lmManager).dispose();
+				lmManager = null;
+			}
 		}
 
 		
