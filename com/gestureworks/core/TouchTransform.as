@@ -518,27 +518,30 @@ package com.gestureworks.core
 				// takes the pre-transformed inial properties of the display object and seeds the debug points//317 ,241//250, 190
 				//if(trace_debug_mode)trace("init center point", this.width,this.height);
 				
-				var mem_modifier:Matrix = ts.transform.matrix;
-				var _modifier:Matrix = ts.transform.matrix;
-						_modifier.rotate(-ts.rotation* DEG_RAD);
-						_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
-				ts.transform.matrix = _modifier
-			
-				trO.pre_init_width = ts.width;
-				trO.pre_init_height = ts.height;
+				if (!ts.transform3d) {
 				
-				// revert back
-				ts.transform.matrix = mem_modifier
+					var mem_modifier:Matrix = ts.transform.matrix;
+					var _modifier:Matrix = ts.transform.matrix;
+							_modifier.rotate(-ts.rotation* DEG_RAD);
+							_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
+					ts.transform.matrix = _modifier
 				
-				// create original point net
-				var affine_points:Array = new Array();
-					affine_points[0] = new Point(0, 0);
-					affine_points[1] = new Point( trO.pre_init_width, trO.pre_init_height);
-					affine_points[2] = new Point(trO.pre_init_width, 0);
-					affine_points[3] = new Point(0,trO.pre_init_height);
-					affine_points[4] = new Point( trO.pre_init_width / 2, trO.pre_init_height / 2); //center point
-				trO.affinePoints = affine_points;
-				trO.init_center_point = true;
+					trO.pre_init_width = ts.width;
+					trO.pre_init_height = ts.height;
+					
+					// revert back
+					ts.transform.matrix = mem_modifier
+					
+					// create original point net
+					var affine_points:Array = new Array();
+						affine_points[0] = new Point(0, 0);
+						affine_points[1] = new Point( trO.pre_init_width, trO.pre_init_height);
+						affine_points[2] = new Point(trO.pre_init_width, 0);
+						affine_points[3] = new Point(0,trO.pre_init_height);
+						affine_points[4] = new Point( trO.pre_init_width / 2, trO.pre_init_height / 2); //center point
+					trO.affinePoints = affine_points;
+					trO.init_center_point = true;
+				}
 			}
 			
 		}

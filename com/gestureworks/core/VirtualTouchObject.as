@@ -65,7 +65,7 @@ package com.gestureworks.core
 			preinitBase();
 			
 			// set transform to target
-			if ("transform" in target)
+			if ("transform" in target && target.transform is Transform)
 				transform.matrix = target.transform.matrix;
         }
 		
@@ -262,9 +262,8 @@ package com.gestureworks.core
 		 */
 		private function onMouseDown(e:MouseEvent):void
 		{			
-			var pointID:int = MousePoint.getID();			
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
-			onTouchDown(event, e.target);
+			var event:GWTouchEvent = new GWTouchEvent(e);
+			onTouchDown(event);
 		}
 		
 		/**
@@ -272,14 +271,12 @@ package com.gestureworks.core
 		 */
 		private function onTuioTouchDown(e:TuioTouchEvent):void
 		{			
-			var pointID:int = e.tuioContainer.sessionID;		
-			var event:TouchEvent = new TouchEvent(TouchEvent.TOUCH_BEGIN, true, false, pointID, false, e.stageX, e.stageY);
-			
-			if (!target.mouseChildren) { 
+			var event:GWTouchEvent = new GWTouchEvent(e);			
+			if (!mouseChildren) { 
 				e.stopPropagation();
-				onTouchDown(event, target);
+				onTouchDown(event, this);
 			}	
-		}	
+		}		
 		
 		/**
 		 * @private
@@ -489,32 +486,49 @@ package com.gestureworks.core
 				// add touch down to touch object gesture event timeline
 				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
 
-				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
-				
+				///////////////////////////////////////////////////////////////////////////////////////
+				//CREATE POINT PAIR
+				if(cO.pointArray.length>1){
+				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;	
+				}
 		}
 		
 		private function assignPointClone(event:TouchEvent):void // assigns point copy
 		{
-			// assign existing point object
-			var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
-				// add this touch object to touchobject list on point
-				pointObject.touchPointID = event.touchPointID;//-??
-				pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
-
-			//ADD TO LOCAL POINT LIST
-			_pointArray.push(pointObject);
-			
-			//UPDATE LOCAL CLUSTER OBJECT
-			//touch object point list and cluster point list should be consolodated
-			cO.pointArray = _pointArray;
-			
-			//UPDATE POINT LOCAL COUNT
-			pointCount++;
-			
-			// add touch down to touch object gesture event timeline
-			if ((tiO)&&(tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
-			
-			//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+				// assign existing point object
+				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+					// add this touch object to touchobject list on point
+					pointObject.touchPointID = event.touchPointID;//-??
+					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+	
+				//ADD TO LOCAL POINT LIST
+				_pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
+				//touch object point list and cluster point list should be consolodated
+				cO.pointArray = _pointArray;
+				
+				//create point pair
+				if(cO.pointArray.length!=1){
+				var lastpointID:Number = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				//cO.pointPairArray.push(ppt);
+				//trace("Clone pair");
+				}
+				
+				//UPDATE POINT LOCAL COUNT
+				pointCount++;
+				
+				// add touch down to touch object gesture event timeline
+				if ((tiO)&&(tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
+				
+				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
@@ -888,9 +902,22 @@ package com.gestureworks.core
 			_broadcastTarget = value;
 		}
 		
+		// TRANSFORM 3D
+		private var _transform3d:Boolean = false;
+		public function get transform3d():Boolean {return _transform3d;}	
+		public function set transform3d(value:Boolean):void {	_transform3d = value; }
+		
+		// TRANSFORM 3D
+		private var _motion3d:Boolean = false;
+		public function get motion3d():Boolean {return _motion3d;}	
+		public function set motion3d(value:Boolean):void {	_motion3d = value; }
+		
+		
 		public function updateTObjProcessing():void
-		{			
-			if ( !(GestureWorks.activeMotion) || (GestureWorks.activeMotion && cO.n != 0) ) {
+		{
+			
+			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
+			
 				if (tc) tc.updateClusterAnalysis();
 				if (tp) tp.processPipeline();
 				if (tg) tg.manageGestureEventDispatch();
@@ -898,7 +925,8 @@ package com.gestureworks.core
 					tt.transformManager();
 					tt.updateLocalProperties();
 				}
-			}
+				
+				ClusterHistories.historyQueue(_touchObjectID);
 		}
 		
 		/**
