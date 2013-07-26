@@ -76,8 +76,6 @@ package com.gestureworks.managers
 
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
-			
-			
 		}
 		
 		gw_public static function resetGlobalClock():void
@@ -114,14 +112,14 @@ package com.gestureworks.managers
 		}
 		
 		// stage on TOUCH_UP.
-		public static function onTouchUp(event:TouchEvent, overrideRegistration:Boolean=false):void
+		public static function onTouchUp(event:TouchEvent, overrideRegisterPoints:Boolean=false):void
 		{
 			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegistration) { 
+				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegisterPoints) { 
 					/////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////
 					// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
@@ -171,7 +169,7 @@ package com.gestureworks.managers
 	
 		// the Stage TOUCH_MOVE event.	
 		// DRIVES POINT PATH UPDATES
-		public static function onTouchMove(event:TouchEvent, overrideRegistration:Boolean=false):void
+		public static function onTouchMove(event:TouchEvent, overrideRegisterPoints:Boolean=false):void
 		{	
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			var pointObject:PointObject = points[event.touchPointID];
@@ -179,7 +177,7 @@ package com.gestureworks.managers
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegistration) { 
+				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegisterPoints) { 
 					// UPDATE POINT POSITIONS
 					pointObject.y = event.stageY;
 					pointObject.x = event.stageX;
