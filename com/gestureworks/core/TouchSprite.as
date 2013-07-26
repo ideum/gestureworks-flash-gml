@@ -953,13 +953,13 @@ package com.gestureworks.core
 		public function set motion3d(value:Boolean):void{	_motion3d = value;}
 		
 		
+		private var _registerPoints:Boolean = true;
 		/**
 		* Determines if the touch points are registered to the TouchManager. One can override 
 		* this behaivor by setting the value to false. This is useful when creating custom 
 		* TouchSprite extensions and external framework bindings.
 		* @default true
 		*/
-		private var _registerPoints:Boolean = true;
 		public function get registerPoints():Boolean { return _registerPoints} 
 		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
 		
