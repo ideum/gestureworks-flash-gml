@@ -273,9 +273,7 @@ package com.gestureworks.core
 				dsx =  trO.dsx;
 				dsy =  trO.dsy;
 				dsz =  trO.dsz;
-				
-				// TODO: center transformations to 3D pivot point //
-				
+							
 				// check for manual 3D flag
 				if (ts.transform3d) {					
 					// 3D matrix uses degrees
