@@ -15,35 +15,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
-	import flash.display.DisplayObject;
-	import flash.geom.Point;
-	import flash.geom.Matrix;
-	import flash.geom.Transform;
-	import flash.sampler.NewObjectSample;
-	
-	//import flash.geom.* ;
-	//import flash.geom.Matrix3D;
-	//import flash.geom.Vector3D;
-	//import flash.geom.PerspectiveProjection;
-	//import flash.filters.ColorMatrixFilter;
-	
 	import com.gestureworks.events.GWTransformEvent;
-	import com.gestureworks.events.GWEvent;
-	
-	//import com.gestureworks.objects.ClusterObject;
-	//import com.gestureworks.objects.GestureObject;
-	//import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import flash.geom.*;
 	
-	import flash.display.StageDisplayState;
-	
-	public class TouchTransform //extends DisplayObject //TouchSpriteBase//TouchSpriteGesture
+	public class TouchTransform
 	{
-		// private
-		private static const RAD_DEG:Number = 180 / Math.PI;
-		private static const DEG_RAD:Number = Math.PI / 180 ;
+		// public
+		public static const RAD_DEG:Number = 180 / Math.PI;
+		public static const DEG_RAD:Number = Math.PI / 180 ;
 		public var affine_modifier:Matrix;
-		//private var affine_modifier3D:Matrix3D;
+		public var affine_modifier3D:Matrix3D;
 		public var parent_modifier:Matrix;
 		public var ref_frame_angle:Number = 0; 
 	
@@ -61,48 +43,43 @@ package com.gestureworks.core
 		private var dsy:Number =  0;
 		private var dsz:Number =  0;//3d--
 		private var dtheta:Number =  0;
+		private var ts:Object;
+		private var trO:TransformObject;
+		private var id:int;
+		private var centerTransform:Boolean = false;
 		
 		// 3d
 		private var dthetaX:Number =  0;//3d--
 		private var dthetaY:Number =  0;//3d--
-		private var dthetaZ:Number =  0;//3d--
-		
-		private var transform_3d:Boolean = false;
-		
-		private var centerTransform:Boolean = false;
-		
-		private var ts:Object;
-		private var trO:TransformObject;
-		private var id:int;
+		private var dthetaZ:Number =  0;//3d--		
+		private var focalLength:Number;
+		private var ratio:Number;		
 		
 		public function TouchTransform(touchObjectID:int):void
 		{
-            //super();
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			trO = ts.trO;
-			
+			trO = ts.trO; //tra
 			initTransform();
-          }
+        }
 		  
 		// initializers    
-         public function initTransform():void 
-         {
-			//if(trace_debug_mode) trace("create touchsprite transform");
+        public function initTransform():void 
+        {
+			//if(trace_debug_mode) trace("create touchsprite transform");			
 			affine_modifier = new Matrix();// init display object transformation operator
+			affine_modifier3D = new Matrix3D();
 			
-			//affine_modifier3D = new Matrix3D()
-
 			trO.transformPointsOn = true;
 			pre_InitTransformPoints();
-			
 		}
 		
 		
+
 		/**
 		* @private
-		*/
-		// update local properties
+		* update local properties
+		*/		
 		public function updateLocalProperties():void
 		{
 			ts._$x = ts.x;
@@ -110,6 +87,7 @@ package com.gestureworks.core
 			ts._$z = ts.z;//3d--
 			ts._$scaleX = ts.scaleX;
 			ts._$scaleY = ts.scaleY;//0.5;
+			ts._$scaleZ = ts.scaleZ;//0.5;
 			ts._$rotation = ts.rotation//45;	
 			ts._$width = ts.width;
 			ts._$height = ts.height;
@@ -129,6 +107,7 @@ package com.gestureworks.core
 			
 			trO.obj_scaleX = ts._$scaleX;
 			trO.obj_scaleY = ts._$scaleY;
+			trO.obj_scaleZ = ts._$scaleZ;
 			trO.obj_rotation = ts._$rotation;
 			trO.obj_width = ts._$width;
 			trO.obj_height = ts._$height;
@@ -155,64 +134,66 @@ package com.gestureworks.core
 	{
 		//if (trace_debug_mode) trace("touch object transform");
 				
-				if ((ts.N != 0)||(ts.cO.fn!=0))
-				{
-					if (!trO.init_center_point) initTransformPoints();
-					
-					centerTransform = false;
-					
-					if (ts.disableNativeTransform){
-						if (!ts.disableAffineTransform) $applyTransform(true);
-					}
-					else applyNativeTransform(true);
-					
-					ts.transformComplete = false;
-					ts.transformStart = true;
-					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (ts.trace_debug_mode)trace("update", ts.touchObjectID)
-				}
-				
-				else if (((ts.N == 0)||(ts.cO.fn == 0)) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) 
-				{
-					centerTransform = true;
-					
-					if (ts.disableNativeTransform) {
-						if (!ts.disableAffineTransform) $applyTransform(true);	//false
-					}
-					else applyNativeTransform(true); // false
-					
-					ts.transformComplete = false;
-					ts.transformStart = false;
-					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (ts.trace_debug_mode)trace("inertia", ts.touchObjectID)
-				}
-				
-				else if (((ts.N == 0)||(ts.cO.fn == 0)) && (!ts.gestureTweenOn)&&(!ts.transformComplete)) 
-				{
-					ts.transformComplete = true;
-					ts.transformStart = false;
-					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (ts.trace_debug_mode)trace("none", ts.touchObjectID)
-				}
-				
-				
+		// active point(s) transform
+		if ((ts.N != 0)||(ts.cO.fn!=0))
+		{
+			if (!trO.init_center_point) initTransformPoints();
+			
+			centerTransform = false;
+			
+			if (ts.disableNativeTransform){
+				if (!ts.disableAffineTransform) $applyTransform();
+			}
+			else applyNativeTransform();
+			
+			ts.transformComplete = false;
+			ts.transformStart = true;
+			if (ts.transformEvents) manageTransformEventDispatch();
+			//if (ts.trace_debug_mode)trace("update", ts.touchObjectID)
+		}
+		
+		// release inertia transform
+		else if (((ts.N == 0)||(ts.cO.fn == 0)) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) 
+		{
+			centerTransform = true;
+			
+			if (ts.disableNativeTransform) {
+				if (!ts.disableAffineTransform) $applyTransform();
+			}
+			else applyNativeTransform();
+			
+			ts.transformComplete = false;
+			ts.transformStart = false;
+			if (ts.transformEvents) manageTransformEventDispatch();
+			//if (ts.trace_debug_mode)trace("inertia", ts.touchObjectID)
+		}
+		
+		// end transform
+		else if (((ts.N == 0)||(ts.cO.fn == 0)) && (!ts.gestureTweenOn)&&(!ts.transformComplete)) 
+		{
+			ts.transformComplete = true;
+			ts.transformStart = false;
+			if (ts.transformEvents) manageTransformEventDispatch();
+			//if (ts.trace_debug_mode)trace("none", ts.touchObjectID)
+		}
+		
 	}
 		
 	////////////////////////////////////////////////////////////////////////////////
-	// transforma propeties using native gml values
+	// transforms properties using native gml values
 	////////////////////////////////////////////////////////////////////////////////
 	/**
 	* @private
 	*/
-	private function applyNativeTransform(affine:Boolean):void
+	private function applyNativeTransform():void
 		{
 			
 			if ((ts.parent) && (ts.transformGestureVectors))
 			//if (ts.parent)
 				{
 				//trace("native parent")
-				// gives root cocatenated transfrom of parent space
-				parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
+				// gives root cocatenated transform of parent space
+				parent_modifier = ts.parent.transform.concatenatedMatrix.clone(); // TODO: replace slow clone method
 				parent_modifier.invert();
 
 				var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
@@ -220,8 +201,9 @@ package com.gestureworks.core
 				//var angle:Number = -calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
 				
 				ref_frame_angle = angle;
-				var scalex:Number = parent_modifier.a/Math.cos(angle)
-				var scaley:Number = parent_modifier.a/Math.cos(angle)
+				var scalex:Number = parent_modifier.a / Math.cos(angle);
+				var scaley:Number = parent_modifier.a / Math.cos(angle);
+				var scalez:Number = parent_modifier.a / Math.cos(angle);
 				
 				//TRANSFORM CENTER POINT OF TRANSFORMATION
 				var pt:Point
@@ -280,7 +262,6 @@ package com.gestureworks.core
 				{
 					t_x = trO.localx //+ ts.x;
 					t_y = trO.localy //+ ts.y;
-					//trace("target",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
 				}
 				
 				///////////////////////////////////////////////////////////////////////////////////
@@ -291,59 +272,52 @@ package com.gestureworks.core
 				// leave scalar values untouched
 				dsx =  trO.dsx;
 				dsy =  trO.dsy;
-				dsz =  trO.dsz;//3d---
-				dtheta = trO.dtheta * DEG_RAD;
+				dsz =  trO.dsz;
 				
-				dthetaX = trO.dthetaX * DEG_RAD;//3d--
-				dthetaY = trO.dthetaY * DEG_RAD;//3d--
-				dthetaZ = trO.dthetaZ * DEG_RAD;//3d--
+				// TODO: center transformations to 3D pivot point //
 				
-				///////////////////////////////////////////////////////////////////////////////////
-				// 3d test
-				///////////////////////////////////////////////////////////////////////////////////
+				// check for manual 3D flag
+				if (ts.transform3d) {					
+					// 3D matrix uses degrees
+					dthetaX = trO.dthetaX; 
+					dthetaY = trO.dthetaY;
+					dthetaZ = trO.dthetaZ;	
+															
+					// modify transform
+					affine_modifier3D = ts.transform.matrix3D.clone(); // TODO: replace clone method
+						affine_modifier3D.appendTranslation( -trO.x, -trO.y, -trO.z);
+						affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
+						affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
+						affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));							
+						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1 + dsz); 		
+						affine_modifier3D.appendTranslation(trO.x + dx, trO.y + dy, trO.z + dz);
+					ts.transform.matrix3D = affine_modifier3D;					
+				}
 				
-				/*
-				trace(t_x,t_y,dx,dy,dtheta,dsx,dsy,super.x,super.y);
+				// check for 3D matrix, flash 3D
+				else if (ts.transform.matrix3D) {
+					// 3D matrix uses degrees
+					dtheta = trO.dtheta * DEG_RAD;
+					
+					// get the projection offset created by the z-position	
+					if (ts.transform.perspectiveProjection) // ts can define location projection
+						focalLength = ts.transform.perspectiveProjection.focalLength;
+					else // use global projection from root
+						focalLength = ts.root.transform.perspectiveProjection.focalLength;
+					ratio = focalLength / (focalLength + ts.z);
+					
+					affine_modifier3D = ts.transform.matrix3D.clone(); // TODO: replace clone method
+						affine_modifier3D.appendTranslation(-t_x, -t_y, 0);
+						affine_modifier3D.appendRotation(dtheta, Vector3D.Z_AXIS); 	
+						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1); 		
+						affine_modifier3D.appendTranslation(t_x + dx/ratio, t_y + dy/ratio, 0);
+					ts.transform.matrix3D = affine_modifier3D;						
+				}
 				
-				if (transform_3d) {
-					
-					
-					//this.transform.perspectiveProjection = new PerspectiveProjection();
-					//this.transform.perspectiveProjection.projectionCenter = new Point(trO.transAffinePoints[4].x, trO.transAffinePoints[4].y);
-					//this.transform.perspectiveProjection.projectionCenter = new Point(0, 0);
-					
-					this.z = 0;
-					
-					var x_axis:Vector3D = new Vector3D(1,1,0);
-					//trace(affine_modifier3D);
-					
-						affine_modifier3D = this.transform.matrix3D;
-						
-						trace(affine_modifier3D);
-						trace(this.transform.perspectiveProjection);
-						//affine_modifier3D.appendTranslation(-t_x+dx,-t_y+dy, 0)
-						
-						//affine_modifier3D.appendTranslation(-t_x,-t_y, 0)
-						affine_modifier3D.appendRotation(dthetaX, x_axis);
-						//affine_modifier3D.appendRotation(dthetaY, Vector3D.Y_AXIS);
-						//affine_modifier3D.appendRotation(dthetaZ,Vector3D.Z_AXIS);
-						//affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1);
-						//affine_modifier3D.appendTranslation(t_x,t_y, 0)
-					this.transform.matrix3D = affine_modifier3D
-					//trace(this.perspectiveProjection.matrix3D
-					
-					
-					//3d
-					//ts.rotationX += dthetaX;//3d--
-					//ts.rotationY += dthetaY;//3d--
-					//ts.rotationZ += dthetaZ;//3d--
-					
-				}*/
-				
-				 if (affine) 
-				 {
-					//if (trace_debug_mode) 
-					//trace("gesture affine transform", t_x,t_y);
+				// default to 2D
+				else {
+					// 2D matrix uses radians
+					dtheta = trO.dtheta * DEG_RAD;
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate(-t_x+dx,-t_y+dy);
 						affine_modifier.rotate(dtheta);
@@ -352,23 +326,8 @@ package com.gestureworks.core
 					ts.transform.matrix = affine_modifier
 					transformAffineDebugPoints();
 				}
-				else
-				{
-					///if (trace_debug_mode) 
-					//trace("gesture tween non-affine transform")
-					affine_modifier = ts.transform.matrix;
-						affine_modifier.translate(-ts.x,-ts.y);
-						affine_modifier.rotate(dtheta);
-						affine_modifier.scale(1 + dsx, 1 + dsy);
-						affine_modifier.translate(ts.x + dx, ts.y + dy);
-					ts.transform.matrix = affine_modifier
-					transformAffineDebugPoints();
-				}
 				
 				updateLocalProperties();
-				
-				
-			
 		}
 			 
 		/////////////////////////////////////////////////////////////////////////
@@ -377,7 +336,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public function $applyTransform(affine:Boolean):void
+		public function $applyTransform():void
 			{
 				///////////////////////////////////////////////////////////////////////////////////
 				if ((ts.parent)&&(ts.transformGestureVectors))
@@ -385,7 +344,7 @@ package com.gestureworks.core
 				{
 					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms
-					parent_modifier = ts.parent.transform.concatenatedMatrix.clone();
+					parent_modifier = ts.parent.transform.concatenatedMatrix.clone(); // TODO: replace clone method
 					parent_modifier.invert();
 					
 					//var $angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
@@ -422,71 +381,46 @@ package com.gestureworks.core
 							t_y = trO.transAffinePoints[4].y
 						}
 						else {
-						t_x = trO.x;
-						t_y = trO.y;
+							t_x = trO.x;
+							t_y = trO.y;
 						}
 						dx = (ts._$x - ts.x);
 						dy = (ts._$y - ts.y);
 				}
-				
-				
+								
 				//////////////////////////////////////////////////
 				// property transform lock
 				if (ts.x_lock) { dx = 0 };
 				if (ts.y_lock) { dy = 0 };
+				if (ts.z_lock) { dz = 0 };
 				
-				///////////////////////////////////////////////////////////////////////////////////
+				///////////////////////////////////////////////////
 				// leave scalar values untouched
 				dsx = (ts._$scaleX - ts.scaleX);
-				dsy = (ts._$scaleY - ts.scaleY);//dsx
+				dsy = (ts._$scaleY - ts.scaleY);
+				dsz = (ts._$scaleZ - ts.scaleZ);
 				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
-				
-				dthetaX = (ts._$rotationX - ts.rotationX) * DEG_RAD;//3d--
-				dthetaY = (ts._$rotationY - ts.rotationY) * DEG_RAD;//3d--
-				dthetaZ = (ts._$rotationZ - ts.rotationZ) * DEG_RAD;//3d--
-				
-			//trace(ts.x, ts.y,trO.x, trO.y,ts.__x, ts.__y,t_x,t_y)
 				
 				//////////////////////////////////////////////////////
 				// 3d
-				if (transform_3d) 
-				{
-						ts.rotationX += dthetaX;//3d--
-						ts.rotationY += dthetaY;//3d--
-						ts.rotationZ += dthetaZ;//3d--
+				if (ts.transform3d) {
+					// TODO: 3D affine transformations
+					dthetaX = (ts._$rotationX - ts.rotationX) * DEG_RAD;//3d--
+					dthetaY = (ts._$rotationY - ts.rotationY) * DEG_RAD;//3d--
+					dthetaZ = (ts._$rotationZ - ts.rotationZ) * DEG_RAD;//3d--					
 				}
 			
 				//////////////////////////////////////////////////////
 				// 2d
-				if (affine) 
-				 {
-					//trace("$transforming");
-					// if (trace_debug_mode) 
-					//trace("trans $ affine")
-					affine_modifier = ts.transform.matrix;
-						affine_modifier.translate( - t_x, - t_y);
-						affine_modifier.rotate(dtheta);
-						affine_modifier.scale(1 + dsx, 1 + dsy);	
-						affine_modifier.translate( dx + t_x, dy + t_y);
-					ts.transform.matrix =  affine_modifier
-					transformAffineDebugPoints();
-				 }
-				 
-				 else
-				 {
-					//if (trace_debug_mode) 
-					//trace("tween trans $ non affine")
-					affine_modifier = new Matrix;
-					affine_modifier.rotate(ts.rotation* DEG_RAD + dtheta);
-						affine_modifier.scale(ts.scaleX + ds, ts.scaleY + ds);	
-						affine_modifier.translate( ts.x + dx, ts.y + dy);
-					ts.transform.matrix =  affine_modifier
-					transformAffineDebugPoints();
-				 }
-				 
-				 updateLocalProperties();
-				 
-				 
+				affine_modifier = ts.transform.matrix;
+					affine_modifier.translate( - t_x, - t_y);
+					affine_modifier.rotate(dtheta);
+					affine_modifier.scale(1 + dsx, 1 + dsy);	
+					affine_modifier.translate( dx + t_x, dy + t_y);
+				ts.transform.matrix =  affine_modifier
+				transformAffineDebugPoints();
+
+				updateLocalProperties();				 
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////
@@ -518,19 +452,31 @@ package com.gestureworks.core
 				// takes the pre-transformed inial properties of the display object and seeds the debug points//317 ,241//250, 190
 				//if(trace_debug_mode)trace("init center point", this.width,this.height);
 				
-				if (!ts.transform3d) {
+				// check for 3D transform flag
+				if (ts.transform3d) {
+					
+					// is this neccesary in 3D
+				}
 				
+				// check for 3D matrix, flash 3D
+				else if (ts.transform.matrix3D) {
+					
+					// is this neccesary in 3D
+				}
+				
+				// default to 2D
+				else {
 					var mem_modifier:Matrix = ts.transform.matrix;
 					var _modifier:Matrix = ts.transform.matrix;
-							_modifier.rotate(-ts.rotation* DEG_RAD);
-							_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
+						_modifier.rotate(-ts.rotation* DEG_RAD);
+						_modifier.scale(1 / ts.scaleX, 1 / ts.scaleY);	
 					ts.transform.matrix = _modifier
 				
 					trO.pre_init_width = ts.width;
 					trO.pre_init_height = ts.height;
 					
 					// revert back
-					ts.transform.matrix = mem_modifier
+					ts.transform.matrix = mem_modifier;
 					
 					// create original point net
 					var affine_points:Array = new Array();
@@ -542,22 +488,22 @@ package com.gestureworks.core
 					trO.affinePoints = affine_points;
 					trO.init_center_point = true;
 				}
+				
 			}
-			
 		}
+		
+		
 		/**
 		* @private
 		*/
 		private function transformAffineDebugPoints():void 
-		{
-			//trace("updating affine debug");
-			
+		{			
 			if (trO.transformPointsOn)
 				{	
 					//var modifier:Matrix = new Matrix();
 					//var modifier:Matrix = ts.transform.matrix;
 					///////////////////////////////////////////////////////////////////////////////
-					var modifier:Matrix = ts.transform.concatenatedMatrix.clone()
+					var modifier:Matrix = ts.transform.concatenatedMatrix.clone(); // TODO: replace clone method
 					//////////////////////////////////////////////////////////////////////////////
 					/*
 					if (ts.nestedTransform) 
