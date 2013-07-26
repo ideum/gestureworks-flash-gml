@@ -286,9 +286,9 @@ package com.gestureworks.core
 					// modify transform
 					affine_modifier3D = ts.transform.matrix3D.clone(); // TODO: replace clone method
 						affine_modifier3D.appendTranslation( -trO.x, -trO.y, -trO.z);
-						affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
-						affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
-						affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));							
+						//affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
+						//affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
+						//affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));							
 						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1 + dsz); 		
 						affine_modifier3D.appendTranslation(trO.x + dx, trO.y + dy, trO.z + dz);
 					ts.transform.matrix3D = affine_modifier3D;					
@@ -297,7 +297,7 @@ package com.gestureworks.core
 				// check for 3D matrix, flash 3D
 				else if (ts.transform.matrix3D) {
 					// 3D matrix uses degrees
-					dtheta = trO.dtheta * DEG_RAD;
+					dtheta = trO.dtheta;
 					
 					// get the projection offset created by the z-position	
 					if (ts.transform.perspectiveProjection) // ts can define location projection
