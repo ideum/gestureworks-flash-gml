@@ -24,9 +24,9 @@ package com.gestureworks.core
 		// public
 		public static const RAD_DEG:Number = 180 / Math.PI;
 		public static const DEG_RAD:Number = Math.PI / 180 ;
-		public var affine_modifier:Matrix;
-		public var affine_modifier3D:Matrix3D;
-		public var parent_modifier:Matrix;
+		public var affine_modifier:Matrix = new Matrix;
+		public var affine_modifier3D:Matrix3D = new Matrix3D;
+		public var parent_modifier:Matrix = new Matrix;
 		public var ref_frame_angle:Number = 0; 
 	
 		// private //local merged display object properties
@@ -193,7 +193,7 @@ package com.gestureworks.core
 				{
 				//trace("native parent")
 				// gives root cocatenated transform of parent space
-				parent_modifier = ts.parent.transform.concatenatedMatrix.clone(); // TODO: replace slow clone method
+				parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
 				parent_modifier.invert();
 
 				var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
@@ -282,7 +282,7 @@ package com.gestureworks.core
 					dthetaZ = trO.dthetaZ;	
 															
 					// modify transform
-					affine_modifier3D = ts.transform.matrix3D.clone(); // TODO: replace clone method
+					affine_modifier3D.copyFrom(ts.transform.matrix3D);
 						affine_modifier3D.appendTranslation( -trO.x, -trO.y, -trO.z);
 						//affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
 						//affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
@@ -304,7 +304,7 @@ package com.gestureworks.core
 						focalLength = ts.root.transform.perspectiveProjection.focalLength;
 					ratio = focalLength / (focalLength + ts.z);
 					
-					affine_modifier3D = ts.transform.matrix3D.clone(); // TODO: replace clone method
+					affine_modifier3D.copyFrom(ts.transform.matrix3D);
 						affine_modifier3D.appendTranslation(-t_x, -t_y, 0);
 						affine_modifier3D.appendRotation(dtheta, Vector3D.Z_AXIS); 	
 						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1); 		
@@ -342,7 +342,7 @@ package com.gestureworks.core
 				{
 					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms
-					parent_modifier = ts.parent.transform.concatenatedMatrix.clone(); // TODO: replace clone method
+					parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
 					parent_modifier.invert();
 					
 					//var $angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
@@ -490,7 +490,7 @@ package com.gestureworks.core
 			}
 		}
 		
-		
+		private var modifier:Matrix = new Matrix();
 		/**
 		* @private
 		*/
@@ -501,7 +501,7 @@ package com.gestureworks.core
 					//var modifier:Matrix = new Matrix();
 					//var modifier:Matrix = ts.transform.matrix;
 					///////////////////////////////////////////////////////////////////////////////
-					var modifier:Matrix = ts.transform.concatenatedMatrix.clone(); // TODO: replace clone method
+					modifier.copyFrom(ts.transform.concatenatedMatrix); 
 					//////////////////////////////////////////////////////////////////////////////
 					/*
 					if (ts.nestedTransform) 
