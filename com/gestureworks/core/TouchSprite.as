@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    TouchSpriteBase.as
+//  File:    TouchSprite.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -74,10 +74,6 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public var gml:XMLList;
-		/**
-		 * @private
-		 */
-		public var cml:XMLList;
 		
 		// internal public 
 		public var cO:ClusterObject;
@@ -96,6 +92,7 @@ package com.gestureworks.core
 		
 		//tracks GWTouchEvents
 		private var gwTouchListeners:Array = [];
+
 		
 		public function TouchSprite():void
 		{
@@ -182,11 +179,11 @@ package com.gestureworks.core
 			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
 			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			
-			if (GestureWorks.activeTUIO)		
+			if (GestureWorks.activeTUIO && registerPoints)		
 				addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-			if (GestureWorks.activeNativeTouch)		
+			if (GestureWorks.activeNativeTouch && registerPoints)		
 				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-			if (GestureWorks.activeSim)				
+			if (GestureWorks.activeSim && registerPoints)				
 				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			
 			updateGWTouchListeners();
@@ -458,7 +455,7 @@ package com.gestureworks.core
 		 */
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
-		public function onTouchDown(event:TouchEvent, target:*=null):void
+		public function onTouchDown(event:TouchEvent, downTarget:*=null):void
 		{			
 				//////////////////
 				// new stuff
@@ -467,12 +464,12 @@ package com.gestureworks.core
 				// if target gets passed it takes precendence, otherwise try to find it
 				// currently target gets passed in as argument for our global hit test
 				// if no target is found then bail
-				if (!target)
-					target = event.target; // object that got hit, used for our non-tuio gesture events
-				if (!target)
+				if (!downTarget)
+					downTarget = event.target; // object that got hit, used for our non-tuio gesture events
+				if (!downTarget)
 					return;
 					
-				var parent:* = target.parent;	
+				var parent:* = downTarget.parent;	
 				
 				//trace("target: ", target, "parent: ", target.parent,clusterBubbling)
 				//trace(target, event.stageX, event.localX);
@@ -486,7 +483,7 @@ package com.gestureworks.core
 				// -Charles (5/16/2012)
 				{					
 						if (targetParent) { //LEGACY SUPPORT
-							if ((target is TouchSprite) || (target is TouchMovieClip)) 
+							if ((downTarget is TouchSprite) || (downTarget is TouchMovieClip)) 
 							{								
 								//ASSIGN PRIMARY CLUSTER TO PARENT
 								parent.assignPoint(event);
@@ -553,7 +550,7 @@ package com.gestureworks.core
 		 * registers assigned touch point globaly and to relevant local clusters 
 		 */
 		private function assignPoint(event:TouchEvent):void // asigns point
-		{
+		{			
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = this; // sets primary touch object/cluster
@@ -577,10 +574,12 @@ package com.gestureworks.core
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				TouchManager.gw_public::registerTouchPoint(event);
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
+				if (GestureWorks.activeNativeTouch && registerPoints)
+					TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				if (GestureWorks.activeSim) MouseManager.gw_public::registerMousePoint(event);
+				if (GestureWorks.activeSim && registerPoints) 
+					MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline
 				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
@@ -952,6 +951,18 @@ package com.gestureworks.core
 		private var _motion3d:Boolean = false;
 		public function get motion3d():Boolean {return _motion3d;}	
 		public function set motion3d(value:Boolean):void{	_motion3d = value;}
+		
+		
+		/**
+		* Determines if the touch points are registered to the TouchManager. One can override 
+		* this behaivor by setting the value to false. This is useful when creating custom 
+		* TouchSprite extensions and external framework bindings.
+		* @default true
+		*/
+		private var _registerPoints:Boolean = true;
+		public function get registerPoints():Boolean { return _registerPoints} 
+		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
+		
 		
 		public function updateTObjProcessing():void
 		{

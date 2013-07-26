@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.events.GWTouchEvent;
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
 	import flash.events.Event;
@@ -113,92 +114,86 @@ package com.gestureworks.managers
 		}
 		
 		// stage on TOUCH_UP.
-		public static function onTouchUp(event:TouchEvent):void
+		public static function onTouchUp(event:TouchEvent, overrideRegistration:Boolean=false):void
 		{
-			//trace("TouchEnd manager")
-			//trace("---------------------------------------------------");
 			var pointObject:Object = points[event.touchPointID];
 			
-			if (pointObject)
-			{
-				//trace("pointID:",event.touchPointID,"length",pointObject.objectList.length,"event",event)
-				/////////////////////////////////////////////////////////////////////////////////////
-				/////////////////////////////////////////////////////////////////////////////////////
-				// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
-				for (var j:int = 0; j < pointObject.objectList.length; j++)
-				{
-					//trace("updating targets");
-					var i:int;
-					var tO:Object = pointObject.objectList[j];
-					
-					//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
-					//trace("tsprite:",tO, "pointlist",tO.N,tO.pointArray.length, tO.pointArray);
-					
-					// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
-					//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
-					if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
-					//UPDATE DEBUG DISPLAY // clear local debug display
-					if ((tO.visualizer) && (tO.visualizer.debug_display) && (tO.cO)) 	tO.visualizer.clearDebugDisplay(); // clear display
-					
-					// analyze for taps
-					if (tO.tg) tO.tg.onTouchEnd(event);
-					
-					// REMOVE POINT FROM LOCAL LIST
-					tO.pointArray.splice(pointObject.id, 1);
-					
-					// REDUCE LOACAL POINT COUNT
-					tO.pointCount--;
-					
-					// UPDATE POINT ID 
-					for (i = 0; i < tO.pointArray.length; i++)
+			if (pointObject) {
+				// allows bindings to work without killing global nativeTouch listeners
+				// NOTE: when enabling targeting object will have to be replaced with objectList
+				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegistration) { 
+					/////////////////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////////////////////
+					// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
+					for (var j:int = 0; j < pointObject.objectList.length; j++)
 					{
-						tO.pointArray[i].id = i;
+						//trace("updating targets");
+						var i:int;
+						var tO:Object = pointObject.objectList[j];
+						
+						//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
+						//trace("tsprite:",tO, "pointlist",tO.N,tO.pointArray.length, tO.pointArray);
+						
+						// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
+						//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
+						if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
+						//UPDATE DEBUG DISPLAY // clear local debug display
+						if ((tO.visualizer) && (tO.visualizer.debug_display) && (tO.cO)) 	tO.visualizer.clearDebugDisplay(); // clear display
+						
+						// analyze for taps
+						if (tO.tg) tO.tg.onTouchEnd(event);
+						
+						// REMOVE POINT FROM LOCAL LIST
+						tO.pointArray.splice(pointObject.id, 1);
+						
+						// REDUCE LOACAL POINT COUNT
+						tO.pointCount--;
+						
+						// UPDATE POINT ID 
+						for (i = 0; i < tO.pointArray.length; i++) {
+							tO.pointArray[i].id = i;
+						}
+						
+						// update broadcast state
+						if(tO.N == 0) tO.broadcastTarget = false;
+						
+						////////////////////////////////////////////////////////
+						//FORCES IMMEDIATE UPDATE ON TOUCH UP
+						//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
+						updateTouchObject(tO);
 					}
-					
-					// update broadcast state
-					if(tO.N == 0) tO.broadcastTarget = false;
-					
-					////////////////////////////////////////////////////////
-					//FORCES IMMEDIATE UPDATE ON TOUCH UP
-					//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
-					updateTouchObject(tO);
-					////////////////////////////////////////////////////////
-					
-					//trace("to n", tO.N, "co n", tO.cO.n, "to pointArry length", tO.pointArray.length);
 				}
-				/////////////////////////////////////////////////////////////////////////////////////
-				////////////////////////////////////////////////////////////////////////////////////
-				
-			// DELETE FROM GLOBAL POINT LIST
-			delete points[event.touchPointID];
+				// DELETE FROM GLOBAL POINT LIST
+				delete points[event.touchPointID];
 			}
-			//trace("--//--")
 		}
 		
 	
 		// the Stage TOUCH_MOVE event.	
 		// DRIVES POINT PATH UPDATES
-		public static function onTouchMove(event:TouchEvent):void
-		{			
+		public static function onTouchMove(event:TouchEvent, overrideRegistration:Boolean=false):void
+		{	
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			var pointObject:PointObject = points[event.touchPointID];
 			
-			//trace("touch move event");
-			
-			if (pointObject)
-			{	
-				// UPDATE POINT POSITIONS
-				pointObject.y = event.stageY;
-				pointObject.x = event.stageX;
-				pointObject.moveCount ++;
-				
-				// UPDATE POINT HISTORY 
-				// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
-				PointHistories.historyQueue(event);
-			}	
-			
-			//touchFrameHandler3(event);
+			if (pointObject) {
+				// allows bindings to work without killing global nativeTouch listeners
+				// NOTE: when enabling targeting object will have to be replaced with objectList
+				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegistration) { 
+					// UPDATE POINT POSITIONS
+					pointObject.y = event.stageY;
+					pointObject.x = event.stageX;
+					pointObject.moveCount ++;
+					
+					// UPDATE POINT HISTORY 
+					// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
+					PointHistories.historyQueue(event);
+				}
+			}
 		}
+		
+		
+		
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:GWEvent):void
