@@ -274,26 +274,7 @@ package com.gestureworks.core
 			}
 		}
 		
-		private var _starling:Boolean = false;
-		/**
-		 * Prepares input configuration for Starling
-		 * @default false
-		 */
-		public function get starling():Boolean{return _starling;}
-		public function set starling(value:Boolean):void
-		{
-			if (_starling == value) return;
-			_starling = value;
 			
-			GestureWorks.activeStarling = _starling;
-			
-			if (_starling) {
-				nativeTouch = false;
-				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
-			}
-		}			
-		
-		
 		/**
 		 * Updates event listeners depending on the active modes
 		 */
