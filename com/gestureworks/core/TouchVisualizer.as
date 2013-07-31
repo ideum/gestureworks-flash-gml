@@ -197,32 +197,14 @@ package com.gestureworks.core
 		//trace("trying to draw display",ts.debugDisplay,debug_display);
 		if ((ts.debugDisplay)&&(debug_display))
 			{
-			
 			// touch points
-			if (ts.N)
+			if ((ts.N)||(ts.cO.fn))//ts.cO.sn
 			{
 				if ((pointDisplay)&&(point)) 		point.draw();
 				if ((clusterDisplay)&&(cluster))	cluster.draw();
-				//if ((gestureDisplay)&&(gesture)) 	gesture.draw();
+				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 				
 			}
-			if ((gestureDisplay)&&(gesture)) 	gesture.draw();
-			
-			// motion points
-			if (ts.cO.fn) 
-			{	
-				if ((pointDisplay)&&(point))		point.draw();
-				if ((clusterDisplay)&&(cluster))	cluster.draw();
-				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
-			}
-			
-			//sensor points
-			//if (ts.cO.sn) 
-			//{	
-				//if (pointDisplay)	point_display.draw();
-				//if (clusterDisplay)	cluster_display.draw();
-				//if (gestureDisplay) gesture_display.draw();
-			//}
 		}
 	}
 	/**

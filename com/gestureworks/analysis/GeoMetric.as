@@ -55,7 +55,7 @@ package com.gestureworks.analysis
 		public function init():void
 		{
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID]; // need to find center of object for orientation and pivot
-			cO = ts.cO;
+			cO = ts.cO; // get motion data
 		
 			if (ts.trace_debug_mode) trace("init cluster geometric");
 		}
@@ -175,7 +175,7 @@ package com.gestureworks.analysis
 										//add to pinch point list
 										InteractionPointTracker.framePoints.push(tpt)
 										
-										trace("tool..........................................");
+										//trace("tool..........................................");
 									}
 									
 								}
@@ -967,7 +967,7 @@ package com.gestureworks.analysis
 						/// find extended fingers
 						for (var i:int = 0; i < hfn; i++)
 						{
-							var pt = cO.handList[j].fingerList[i];
+							var pt:MotionPointObject = cO.handList[j].fingerList[i];
 							if ((pt.type == "finger") && (pt.extension < minExtension)) pointlist.push(pt);
 							//trace(pt.extension)
 						}

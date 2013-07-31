@@ -46,7 +46,8 @@ package com.gestureworks.analysis
 		
 		private var cO:ClusterObject;
 		private var ts:Object;
-		private var N:int = 0;
+		private var N:uint = 0;
+		private var mpn:uint = 0;
 		private var mptext_array:Array = new Array();
 		private var tptext_array:Array = new Array();
 		private var i:int
@@ -104,6 +105,7 @@ package com.gestureworks.analysis
 	{
 		//update data
 		N = cO.pointArray.length
+		mpn = cO.motionArray2D.length;
 		
 		// clar graphics
 		graphics.clear();
@@ -139,10 +141,10 @@ package com.gestureworks.analysis
 						///////////////////////////////////////////////////////////////////
 						//
 						///////////////////////////////////////////////////////////////////
-						tptext_array[i].textCont = "Point: " + "ID" + String(pt.touchPointID) + "    id" + String(pt.id);
-						tptext_array[i].x = x;
-						tptext_array[i].y = y - 50;
-						tptext_array[i].visible = true;
+						//tptext_array[i].textCont = "Point: " + "ID" + String(pt.touchPointID) + "    id" + String(pt.id);
+						//tptext_array[i].x = x;
+						//tptext_array[i].y = y - 50;
+						//tptext_array[i].visible = true;
 					}
 					
 					if (_drawShape)
@@ -257,36 +259,18 @@ package com.gestureworks.analysis
 		/////////////////////////////////////////////////////////////////////
 		// motion points
 		///////////////////////////////////////////////////////////////////
+		
 		private function draw_motionPoints():void
 		{
-				
 					// clear text
 					if (_drawText)	for (i = 0; i < 12; i++) mptext_array[i].visible = false;
 				
-					//var frame:Frame = cO.motionArray;
-					var mpn:int = cO.motionArray.length;
 
 								// Calculate the hand's average finger tip position
 								for (i = 0; i < mpn; i++) 
 								{
-								var mp:MotionPointObject = new MotionPointObject//cO.motionArray[i];
-								//var mp:MotionPointObject = cO.motionArray[i];
-								
-								if (!ts.transform3d)
-								{
-									mp.position.x = normalize(cO.motionArray[i].position.x, -180, 180) * stage.stageWidth;
-									mp.position.y = normalize(cO.motionArray[i].position.y, 270, -75) * stage.stageHeight;
-									mp.position.z = cO.motionArray[i].position.z;
-									mp.type = cO.motionArray[i].type;
-								}
-								
-								
-								//trace(cO.motionArray[i].position.y, mp.position.y)
+								var mp:MotionPointObject = cO.motionArray2D[i];
 									
-
-								//trace("----finger--",finger.id,finger.motionPointID, finger.x,finger.y);	
-								//trace("type visualizer",mp.type)
-										
 									if (mp.type == "finger")
 									{
 										var zm:Number = mp.position.z * 0.2;
@@ -296,17 +280,29 @@ package com.gestureworks.analysis
 
 											if (_drawShape)
 											{
-												//  draw point 
-												graphics.lineStyle(4, 0x6AE370, style.stroke_alpha);
-												graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
-												graphics.beginFill(0x6AE370, style.fill_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-												graphics.endFill();
 												
-												graphics.lineStyle(4, 0xFFFFFF, style.stroke_alpha);
-												graphics.drawCircle(mp.palmplane_position.x ,mp.palmplane_position.y, style.radius + 20 + zm);	
+												if (mp.fingertype == "thumb") 
+												{
+													//  draw finger point 
+													graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
+													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
+													
+													graphics.beginFill(0xFF0000, style.fill_alpha);
+													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+													graphics.endFill();
+												}
 												
+												else
+												{
+													//  draw finger point 
+													graphics.lineStyle(4, 0x6AE370, style.stroke_alpha);
+													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
+													graphics.beginFill(0x6AE370, style.fill_alpha);
+													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+													graphics.endFill();
+												}
 											}
+											
 											/*
 											if (_drawText)
 											{
@@ -331,23 +327,16 @@ package com.gestureworks.analysis
 										////////////////////////////////////////////////////
 										if (_drawShape)
 											{
-												var hz:Number = mp.position.z
-												var sq_width:Number = 5;
-
 												// palm center
-												graphics.lineStyle(2, 0x716BE3, style.stroke_alpha);
-												graphics.drawRect(mp.position.x - sq_width, mp.position.y - sq_width, 2 * sq_width, 2 * sq_width);
-												
 												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+												graphics.drawCircle(mp.position.x, mp.position.y, style.radius+10+ mp.position.z * 0.2);
+												graphics.beginFill(0xFFFFFF, style.fill_alpha);
+												graphics.drawCircle(mp.position.x, mp.position.y, style.radius-10);
+												graphics.endFill();
 												
-												//trace(mp.direction)
-												var pt1:Vector3D = mp.direction.crossProduct(mp.normal);
-												
-												//palm plane
-												graphics.moveTo(mp.position.x,mp.position.y);
-												graphics.lineTo(mp.position.x + pt1.x, mp.position.y + pt1.y);
 												
 												//normal
+												graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
 												graphics.moveTo(mp.position.x,mp.position.y);
 												graphics.lineTo(mp.position.x + 50*mp.normal.x, mp.position.y + 50*mp.normal.y);
 											}
@@ -361,22 +350,26 @@ package com.gestureworks.analysis
 												mptext_array[i].y = mp.position.y - 50;
 												mptext_array[i].visible = true;
 											}*/
-									}
+								}
 							}
+							
+							
 		}
 
-////////////////////////////////////////////////////////////////
-// sensor points
-////////////////////////////////////////////////////////////////
-private function draw_sensorPoints():void 
-	{
-	
-	// draw virtual accelerometer point
-	
-		// draw shape
-		// draw vector
-	
-	}
+		
+		
+		////////////////////////////////////////////////////////////////
+		// sensor points
+		////////////////////////////////////////////////////////////////
+		private function draw_sensorPoints():void 
+			{
+			
+			// draw virtual accelerometer point
+			
+				// draw shape
+				// draw vector
+			
+			}
 
 	
 public function clear():void
@@ -385,10 +378,10 @@ public function clear():void
 		graphics.clear();
 		
 		//text clear
-	for (i = 0; i < 12; i++){
-		tptext_array[i].visible = false;
-		mptext_array[i].visible = false;
-	}
+	//for (i = 0; i < 12; i++){
+		//tptext_array[i].visible = false;
+		//mptext_array[i].visible = false;
+	//}
 	}
 	
 	

@@ -292,7 +292,7 @@ package com.gestureworks.core
 									//if (g.activeEvent)
 									
 									// ONLY FILL CACHE WITH GENERATED VALUES
-									if (ts.N!=0) gDim.gestureDeltaCache = gDim.gestureDelta;
+									if ((ts.N!=0)) gDim.gestureDeltaCache = gDim.gestureDelta;//||(ts.fn!=0)
 									
 								}
 								//trace("pipeline end", gO.pOList[i].dList[j].gestureDeltaCache)
@@ -333,18 +333,24 @@ package com.gestureworks.core
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// core transform properties //default map for direct gesture manipulations
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////
-									
+							
+						/////////////////////////////////////////////////////
+						// TOUCH CLUSTER
+						/////////////////////////////////////////////////////
 						trO.x =	cO.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.y =	cO.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.z =	cO.z; // 3d--
 						
 						trO.width = cO.width
 						trO.height = cO.height
+						trO.length = cO.length//3d--
 						trO.radius = cO.radius
+						
 						trO.scale = cO.separation
 						trO.scaleX = cO.separationX
 						trO.scaleY = cO.separationY
-						//trO.scaleZ = cO.separationZ//3d
+						trO.scaleZ = cO.separationZ//3d--
+						
 						trO.rotation = cO.rotation
 						trO.rotationX = cO.rotationX//3d--
 						trO.rotationY = cO.rotationY//3d--
@@ -355,7 +361,8 @@ package com.gestureworks.core
 						trO.localx =100//cO.x-ts.x; 
 						trO.localy =100//cO.y - ts.y; 
 						
-						//trace("pipeline");
+						//trace("pipeline",trO.x,trO.y,trO.z);
+						
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// map dynamic cluster deltas results into gesture object

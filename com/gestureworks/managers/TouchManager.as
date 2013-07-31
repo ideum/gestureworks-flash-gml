@@ -213,26 +213,22 @@ package com.gestureworks.managers
 			for each(var tO:Object in touchObjects)
 			{
 				//trace("tm touchobject",tO);
-				//////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
 				//COULD BE JUST INTERACTION POINT DATA ??
 				// BUT NEEDS TO LOCALLY DETERMIN PICH HIT TEST
 				// PERHAPS A INTERACTION POINT CADIDATE LIST THEN PERFORM HIT LOCAL TO THE TOUCHOBJECT
-				tO.cO.motionArray = gms.cO.motionArray
 				
-				//////////////////////////////////////////////////////////////
+				//GET GLOBAL MOTION POINTS
+				tO.cO.motionArray = gms.cO.motionArray/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				// update touch,cluster and gesture processing
 				updateTouchObject(tO);
 				
-				tO.cO.handList = gms.cO.handList;
-				tO.cO.iPointArray = gms.cO.iPointArray
+				// DISTRO HAND MODEL AND INTERACTION POINTS TO TOUCH OBJECTS
+				tO.cO.handList = gms.cO.handList;///////////////////////////////////////////////////////////////////////////////////////////////////////
+				tO.cO.iPointArray = gms.cO.iPointArray//////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				//trace(gms.cO.hand.position,tO.cO.hand.position)
-				
-				// update interaction points
-				//tO.cO.iPointArray = gms.cO.iPointArray
-				//trace("gms touch manager", gms.cO.iPointArray.length, gms.cO.motionArray.length);
 				
 				//UPDATE CLUSTER HISTORIES
 				// moved to touch object

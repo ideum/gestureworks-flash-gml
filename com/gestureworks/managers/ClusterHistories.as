@@ -23,6 +23,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.ipClusterObject;
 	
 	public class ClusterHistories 
 	{
@@ -51,8 +52,7 @@ package com.gestureworks.managers
 				// native properties
 				object.n = clusterObject.n;
 				object.fn = clusterObject.fn;//- total motion finger number
-				//object.rhfn = clusterObject.rhfn;//- right hand finger number
-				//object.lhfn = clusterObject.lhfn;//- left hand finger number
+				object.ipn = clusterObject.ipn;
 				
 				object.x = clusterObject.x;
 				object.y = clusterObject.y;
@@ -113,25 +113,57 @@ package com.gestureworks.managers
 				//object.orient_dz = clusterObject.orient_dz; // 
 				
 				// STROKE DATA
-				object.path_data = clusterObject.path_data;
+				//object.path_data = clusterObject.path_data;
 				
 				//trace(object.path_data)
 				//trace(clusterObject.pointArray[0].x)
 				
 				//object.handList = clusterObject.handList; 
-				
-				
-				
-				
-				
-				//MOTION FRAME DATA
-				//object.iPointArray = clusterObject.iPointArray;
-				
 				//MOTION FRAME DATA
 				//object.motionArray = clusterObject.motionArray;
 				
+				//interaction DATA///////////////////////////////////////////
+				object.iPointArray = clusterObject.iPointArray;
+				object.iPointArray2D = clusterObject.iPointArray2D;
+				//InteractionPoint subcluster matrix
+				object.pinch_cO = clusterObject.pinch_cO;
+				object.trigger_cO = clusterObject.trigger_cO;
+				
+				
+				//object.finger_cO = clusterObject.finger_cO;
+				object.finger_cO = new ipClusterObject()//clusterObject.finger_cO;
+				
+					object.finger_cO.ipn = clusterObject.finger_cO.ipn;
+					object.finger_cO.x = clusterObject.finger_cO.x;
+					object.finger_cO.y = clusterObject.finger_cO.y;
+					object.finger_cO.z = clusterObject.finger_cO.z;
+					
+					object.finger_cO.radius = clusterObject.finger_cO.radius;
+					object.finger_cO.width = clusterObject.finger_cO.width;
+					object.finger_cO.height = clusterObject.finger_cO.height;
+					object.finger_cO.length = clusterObject.finger_cO.length;
+					
+					object.finger_cO.rotation = clusterObject.finger_cO.rotation;
+					object.finger_cO.rotationX = clusterObject.finger_cO.rotationX;
+					object.finger_cO.rotationY = clusterObject.finger_cO.rotationY;
+					object.finger_cO.rotationZ = clusterObject.finger_cO.rotationZ;
+					
+					object.finger_cO.separation = clusterObject.finger_cO.separation;
+					object.finger_cO.separationX = clusterObject.finger_cO.separationX;
+					object.finger_cO.separationY = clusterObject.finger_cO.separationY;
+					object.finger_cO.separationZ = clusterObject.finger_cO.separationZ;
+					
+					//object.finger_cO.dipn = clusterObject.finger_cO.dipn;
+					object.finger_cO.dx = clusterObject.finger_cO.dx;
+					object.finger_cO.dy = clusterObject.finger_cO.dy;
+					object.finger_cO.dz = clusterObject.finger_cO.dz;
+					
+					object.finger_cO.dtheta = clusterObject.finger_cO.dtheta;
+				
+				
 				//SENSOR ACCELEROMETER DATA
 				//object.sensorArray = clusterObject.sensorArray;
+				
 				
 				
 				//Gesture Points DATA simple timeline

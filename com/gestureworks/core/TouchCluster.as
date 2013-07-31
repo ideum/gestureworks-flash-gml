@@ -104,7 +104,11 @@ package com.gestureworks.core
 			//trace("init cluster analysis", touchSprite_id);
 							
 					// analyzes and characterizes multi-point motion
-					if (kinemetricsOn) cluster_kinemetric = new KineMetric(id);
+					if (kinemetricsOn) 
+					{
+						cluster_kinemetric = new KineMetric(id);
+						//cluster_kinemetric3D = new KineMetric3D(id);
+					}
 
 					// analyzes and characterizes multi-point paths to match against established strokes
 					if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
@@ -134,9 +138,13 @@ package com.gestureworks.core
 			
 			// FIND CLUSTER COUNT
 			cO.n = cO.pointArray.length
-			ts.dN = cO.n - ts.N;
+			ts.dN = cO.n - ts.N; // dN MUST MOVE TO CLUSTER
 			ts.N = cO.n;
 			
+			// A BETTER WAY TO GET DN
+			//if (cO.history.length>1) dN = cO.N - cO.history[1].N;
+			//else dN = 0;
+			//cO.dN = dN;
 			
 			// CLUSTER OBJECT UPDATE
 			
@@ -210,9 +218,23 @@ package com.gestureworks.core
 				updateClusterCount();
 				getCluster()
 				
-				if(geometricsOn)	getGeoMetrics(); // must preceed kinemetrics
-				if(kinemetricsOn) 	getKineMetrics();
-				if(vectormetricsOn)	getVectorMetrics();
+				// must preceed kinemetrics
+				if (geometricsOn)
+				{	
+					//getGeoMetrics2D(); 
+					if (ts.motion3d) getGeoMetrics3D();
+				}
+				if (kinemetricsOn) 
+				{	
+					getKineMetrics();
+					if (ts.motion3d) getKineMetrics3D();
+				}
+				
+				if (vectormetricsOn) 
+				{
+					getVectorMetrics();
+					//getVectorMetrics3D();
+				}
 				
 				//trace("hand pos",cO.hand.position)
 				
@@ -253,7 +275,7 @@ package com.gestureworks.core
 			// multistroke next
 		}
 		
-		public function getGeoMetrics():void 
+		public function getGeoMetrics3D():void 
 		{
 			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, _N);
 			
@@ -265,7 +287,6 @@ package com.gestureworks.core
 				// RESET CLUSTER
 				//////////////////////////////////////////////////////
 				cluster_geometric.resetGeoCluster();
-				
 				
 				/////////////////////////////////////////////////////
 				//BUILD SKELETAL MODEL FROM RAW MOTION POINTS
@@ -283,11 +304,7 @@ package com.gestureworks.core
 					//--cluster_geometric.findFingers(); // identify fingers
 					//--cluster_geometric.findJoints(); // finger joints //knuckle / wrist
 				////////////////////////////////////////////////
-				
-				
-			
-		
-				
+					
 				
 			// CHECK IP DEFINITION IN GML
 			// FILTER BY TYPE 
@@ -353,27 +370,6 @@ package com.gestureworks.core
 		public function getKineMetrics():void 
 		{		
 	
-			cluster_kinemetric.find3DIPConstants();
-			cluster_kinemetric.find3DDimension();
-			
-			if (!core)
-			{
-				// move to 3d kinemetrics
-				// FIND MOTION CHARACTER
-				cluster_kinemetric.find3DIPConstants();
-				cluster_kinemetric.find3DDimension();
-				
-				//cluster_kinemetric.find3DTapPoints();
-				//cluster_kinemetric.find3DHoldPoints();
-				//cluster_kinemetric.findMeanInst3DMotionTransformationIPA();
-			}
-			
-			if ((!ts.transform3d)&&(ts.motion3d))
-			{
-				cluster_kinemetric.mapCluster3Dto2D();
-			}
-			
-		
 			gn = gO.pOList.length;
 			var dn:uint 
 			
@@ -540,17 +536,86 @@ package com.gestureworks.core
 				// END TOUCH POINT KINEMETRIC PROCESSING
 				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
+				//else {
+					//trace("processing algorithm when NOT touching");
+				//}
+
+				}
+			}
+			
+
+			
+		}
+
+		public function getKineMetrics3D():void 
+		{		
+
+			if (!core)
+			{
+				// FOR NATIVE MAPPING AND GESTURE OBJECT DATA STRUCTURE SIMPLIFICATION
+				if (!ts.transform3d)
+				{
+					cluster_kinemetric.mapCluster3Dto2D();
+				}
 				
+				// GET IP SUBCLUSTERS
+				// PUSH TO SUBCLUSTER MATRIX
+				cluster_kinemetric.getSubClusters();
 				
+				// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
 				
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// PROCESSING INTERACTION POINT KINEMETRICS
-				// INTERACTION POINTS FROM
-				// MOTION POINTS
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						// FIND CLUSTER DIMS
+						cluster_kinemetric.find3DIPConstants("finger");
+						cluster_kinemetric.find3DIPDimension("finger");
+					
+						// FIND CLUSTER MOTION CHARACTER
+						cluster_kinemetric.find3DIPTransformation("finger");
+						// translation
+						// scale
+						// rotation
+						// velocity / accel / jolt
+						
+						// FIND POINT MOTION CHARACTER
+						//cluster_kinemetric.find3DIPTapPoints();
+						//cluster_kinemetric.find3DIPHoldPoints();
+						
+				//////////////////////////////////////////////////////
 				
-				// processing algorithms when in motion
+				// WEAVE INTO PRIME CLUSTER OBJECT FOR PIPELINE INJECTION
+				cluster_kinemetric.Weave3DIPClusterData();
+			}
+			
+			
+		
+			gn = gO.pOList.length;
+			var dn:uint 
+			
+			//trace("-touch cluster -----------------------------",gn);
+			
+			for (key = 0; key < gn; key++) 
+			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
+			{
+				
+				// if gesture object is active in gesture list
+				if (ts.gestureList[gO.pOList[key].gesture_id])
+				{
+				
+					// set dim length
+					dn = gO.pOList[key].dList.length;
+					
+					// zero cluster deltas
+					for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+					
+					var g:GestureObject = gO.pOList[key];
+					
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					// PROCESSING INTERACTION POINT KINEMETRICS
+					// INTERACTION POINTS FROM
+					// MOTION POINTS
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+					// processing algorithms when in motion
 					if(ts.cO.fn!=0){		// check kinemetric and if continuous analysis
 					
 					////////////////////////////////////////////////
@@ -608,7 +673,7 @@ package com.gestureworks.core
 							if (g.algorithm_class == "3d_kinemetric")
 							{
 									// BASIC 3D DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-									if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation(); // PUSH INTERACTION POINT TYPE
+									//if (g.algorithm == "3d_manipulate") cluster_kinemetric.findMeanInst3DMotionTransformation(); // PUSH INTERACTION POINT TYPE
 									
 									// BASIC 3D DRAG // ALGORITHM // type drag
 									//if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
@@ -627,11 +692,12 @@ package com.gestureworks.core
 									/////////////////////////////////////////////////////////////////////////////////////
 									g.activeEvent = false;
 									
+									
 										for (DIM = 0; DIM < dn; DIM++) 
 										{
-											gdim = g.dList[DIM];
+										var	gdim = g.dList[DIM];
 												gdim.activeDim = true; // ACTIVATE DIM
-											res = gdim.property_result
+										var	res = gdim.property_result
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											gdim.clusterDelta = cO[res];
@@ -643,7 +709,7 @@ package com.gestureworks.core
 											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
 											if (gdim.activeDim) g.activeEvent = true;
 										}
-
+									
 
 										g.data.x = cO.x; // gesture position
 										g.data.y = cO.y; // gesture position
@@ -663,25 +729,11 @@ package com.gestureworks.core
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// END IP KIMETRIC PROCESSING
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
-				
-				
-				//else {
-					//trace("processing algorithm when NOT touching");
-				//}
-
 				}
-			}
-			
-			
-			if ((!ts.transform3d)&&(ts.motion3d))
-			{
-				cluster_kinemetric.mapCluster3Dto2D();
 			}
 			
 		}
 
-		
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

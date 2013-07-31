@@ -76,7 +76,8 @@ package com.gestureworks.core
 		public var gml:XMLList;
 		
 		// internal public 
-		public var cO:ClusterObject;
+		public var cO:ClusterObject; // touch
+		
 		public var sO:StrokeObject;
 		public var gO:GestureListObject;
 		public var tiO:TimelineObject;
@@ -124,7 +125,7 @@ package com.gestureworks.core
 						// CREATES A NEW CLUSTER OBJECT FOR THE TOUCHSPRITE
 						// HANDLES CORE GEOMETRIC RAW PROPERTIES OF THE CLUSTER
 						/////////////////////////////////////////////////////////////////////////
-						cO = new ClusterObject();
+						cO = new ClusterObject(); // touch cluster 2d
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
 						
@@ -963,6 +964,9 @@ package com.gestureworks.core
 		public function get registerPoints():Boolean { return _registerPoints} 
 		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
 		
+		private var _away3d:Boolean = false;
+		public function get away3d():Boolean {return _away3d;}	
+		public function set away3d(value:Boolean):void { _away3d = value; }
 		
 		public function updateTObjProcessing():void
 		{

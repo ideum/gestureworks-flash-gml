@@ -50,15 +50,15 @@ package com.gestureworks.objects
 		public function set ipn(value:int):void{_ipn = value;}
 		
 		
-		// number of fingers in left hand---------------------
-		//private var _lhfn:int = 0;
-		//public function get lhfn():int{return _lhfn;}
-		//public function set lhfn(value:int):void{_lhfn = value;}
-		// number of fingers on right hand---------------------
-		//private var _rhfn:int = 0;
-		//public function get rhfn():int{return _rhfn;}
-		//public function set rhfn(value:int):void { _rhfn = value; }
+		// CHANGE IN NUMBER OF TOUCH POINTS
+		private var _dn:int = 0;
+		public function get dn():int{return _dn;}
+		public function set dn(value:int):void { _dn = value; }
 		
+		// CHANGE IN NUMBER OF INTERACTION POINTS
+		private var _dipn:int = 0;
+		public function get dipn():int{return _dipn;}
+		public function set dipn(value:int):void{_dipn = value;}
 		
 		
 		/////////////////////////////////
@@ -386,9 +386,9 @@ package com.gestureworks.objects
 		
 		// path_data
 		// need to update to vector 
-		private var _path_data:Array = new Array();
-		public function get path_data():Array{return _path_data;}
-		public function set path_data(value:Array):void{_path_data = value;}	
+		//private var _path_data:Array = new Array();
+		//public function get path_data():Array{return _path_data;}
+		//public function set path_data(value:Array):void{_path_data = value;}	
 		
 		// 3Dpath_data
 		//private var _path_data3d:Vector.<Vector3d> = new Vector.<Vector3d>();
@@ -427,7 +427,13 @@ package com.gestureworks.objects
 		// motion point data list
 		private var _motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		public function get motionArray():Vector.<MotionPointObject>{return _motionArray;}
-		public function set motionArray(value:Vector.<MotionPointObject>):void{_motionArray = value;}
+		public function set motionArray(value:Vector.<MotionPointObject>):void { _motionArray = value; }
+		
+		// motion point data list
+		private var _motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public function get motionArray2D():Vector.<MotionPointObject>{return _motionArray2D;}
+		public function set motionArray2D(value:Vector.<MotionPointObject>):void{_motionArray2D = value;}
+		
 		// sensor point data list----------------
 		private var _sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
 		public function get sensorArray():Vector.<Number>{return _sensorArray;}
@@ -443,7 +449,26 @@ package com.gestureworks.objects
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
 		private var _iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		public function get iPointArray():Vector.<InteractionPointObject>{ return _iPointArray;}
-		public function set iPointArray(value:Vector.<InteractionPointObject>):void	{_iPointArray = value;}
+		public function set iPointArray(value:Vector.<InteractionPointObject>):void	{ _iPointArray = value; }
+		
+		private var _iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		public function get iPointArray2D():Vector.<InteractionPointObject>{ return _iPointArray2D;}
+		public function set iPointArray2D(value:Vector.<InteractionPointObject>):void	{_iPointArray2D = value;}
+		
+		
+		// SUBCLUSTER INTERACTION POINT CLUSTERS TO BE MOVED INTO MATRIX
+		private var _pinch_cO:ipClusterObject = new ipClusterObject ();
+		public function get pinch_cO():ipClusterObject { return _pinch_cO;}
+		public function set pinch_cO(value:ipClusterObject ):void	{ _pinch_cO = value; }
+		
+		private var _trigger_cO:ipClusterObject = new ipClusterObject ();
+		public function get trigger_cO():ipClusterObject { return _trigger_cO;}
+		public function set trigger_cO(value:ipClusterObject ):void	{ _trigger_cO = value; }
+		
+		private var _finger_cO:ipClusterObject = new ipClusterObject ();
+		public function get finger_cO():ipClusterObject { return _finger_cO;}
+		public function set finger_cO(value:ipClusterObject ):void	{ _finger_cO = value; }
+		
 		
 		////////////////////////////////////////
 		//1 DEFINE A SET OF INTERACTION POINTS
@@ -471,7 +496,6 @@ package com.gestureworks.objects
 		private var _gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
 		public function get gPointArray():Vector.<GesturePointObject>{ return _gPointArray;}
 		public function set gPointArray(value:Vector.<GesturePointObject>):void	{_gPointArray = value;}
-		
 		
 	
 		/////////////////////////////////////////////////////////////////////////

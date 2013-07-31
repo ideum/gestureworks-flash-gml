@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.analysis
 {
+	import com.gestureworks.objects.InteractionPointObject;
 	import flash.display.Shape;
 	import flash.geom.Vector3D;
 	
@@ -125,7 +126,7 @@ package com.gestureworks.analysis
 		graphics.clear();
 		
 		// draw
-		draw_touch_gesture();
+	//	draw_touch_gesture();
 		draw_motion_gesture();
 		//draw_sensor_gesture();
 		
@@ -420,8 +421,7 @@ package com.gestureworks.analysis
 									}
 									
 									}
-
-		}
+						}
 		
 		
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -584,132 +584,42 @@ package com.gestureworks.analysis
 		
 		
 	}
+	
+	
 			
 	private function draw_motion_gesture():void 
 	{	
 
-					//////////////////////////////////////////////////////////////
-					// bimanual manipulation data 
-					// interaction point cluster manipulatio data	
+	graphics.clear();
 					
-					if(cO.iPointArray.length){
+	/*
+					if (cO.gPointArray.length)
+					{
 					////////////////////////////////////////////////////////////
 						
 						//trace("ipointArray",cO.iPointArray.length)
 					
 						// draw all pinch points
-						for (var pn:int = 0; pn < cO.iPointArray.length; pn++) 
+						for (var gn:int = 0; gn < cO.gPointArray.length; gn++) 
 						{
+							var gpt:GesturePointObject = cO.gPointArray[gn];
 							
-							if (cO.iPointArray[pn])
+							
+							if (gpt)
 							{
-								//trace("ipoint type",cO.iPointArray[pn].type)
+								//trace("ipoint type",ipt.type)
 								//PINK 0xE3716B // for pinch
-								if (cO.iPointArray[pn].type == "pinch") {
-									
-									graphics.lineStyle(4, 0xE3716B, style.stroke_alpha);
-									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
-									
-									}
-							
-								
-								//PURPLE 0xc44dbe // for trigger
-								if (cO.iPointArray[pn].type == "trigger") {
-									
-									var tgr:Number = 40;
-									
-									
-									// set style
-									graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
-									// draw cross
-									graphics.moveTo (cO.iPointArray[pn].position.x - tgr, cO.iPointArray[pn].position.y);
-									graphics.lineTo (cO.iPointArray[pn].position.x + tgr , cO.iPointArray[pn].position.y);
-									graphics.moveTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y- tgr);
-									graphics.lineTo (cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y + tgr);
-									//draw cricle
-									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, tgr - 10);
-									
-									// get thum id
-									// check extension
-									
-									if (cO.iPointArray[pn].extension < 40) {
-										graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 50);
-									}
-							
+								if (gpt.type == "pinch") 
+								{
+									graphics.lineStyle(3, 0x00FFFF, style.stroke_alpha);
+									graphics.drawCircle(gpt.position.x, gpt.position.y, 8);	
 								}
 								
-								//yellow 0xFFFF00 // for PUSH
-								if (cO.iPointArray[pn].type == "push") 
-								{
-									graphics.lineStyle(4, 0xFFFF00, style.stroke_alpha);
-									graphics.drawCircle(cO.iPointArray[pn].position.x, cO.iPointArray[pn].position.y, 8);
-								}
-							}
-							
-						}
-						
-						// only 2 points and must be from different hands
-						//if ((cO.iPointArray.length == 2) && (cO.iPointArray[0].w != cO.iPointArray[1].w))
-						
-						
-						
-						
-							if (cO.iPointArray.length == 2)
-							{
-							// draw mid point//0xFAAFBE,
-							graphics.drawCircle(cO.x, cO.y, 5);
-									
-								//draw pinch line
-								graphics.moveTo (cO.iPointArray[0].position.x, cO.iPointArray[0].position.y);
-								graphics.lineTo (cO.iPointArray[1].position.x , cO.iPointArray[1].position.y);
 							}
 						
-						
-						
 						}
+					}*/
 						
-						
-						///////////////////////////////////////////////////////////////////////////////////////
-						// draw interactionPoint path
-						
-						var hist:Number = cO.history.length-1;
-						
-						//trace("hist",hist)
-						//if (cO.iPointArray[pn].type == "pinch") graphics.lineStyle(1, 0xE3716B, style.stroke_alpha);
-						//if (cO.iPointArray[pn].type == "trigger") graphics.lineStyle(1, 0xc44dbe, style.stroke_alpha);
-						
-						if (cO.history[0]) 
-						{
-							if (cO.history[0].iPointArray.length) 
-							{
-								if (cO.history[0])
-								{
-									
-										
-										/////////////////
-										
-										if ((cO.history[0].iPointArray.length) && (cO.history[0].iPointArray[0])) 
-										{
-											graphics.moveTo (cO.history[0].iPointArray[0].position.x, cO.history[0].iPointArray[0].position.y);
-											graphics.drawCircle(cO.history[0].iPointArray[0].position.x, cO.history[0].iPointArray[0].position.y, 8);
-										
-											for (var h:int = 1; h < cO.history.length; h++) 
-												{
-												if ((cO.history[h].iPointArray.length) && (cO.history[h].iPointArray[0])) 
-												{
-													graphics.lineTo (cO.history[h].iPointArray[0].position.x, cO.history[h].iPointArray[0].position.y);
-													//graphics.drawCircle(cO.history[h].iPointArray[0].position.x, cO.history[h].iPointArray[0].position.y, 8);
-													//graphics.moveTo (cO.history[h].iPointArray[0].position.x, cO.history[h].iPointArray[0].position.y);
-												//trace("velocity", cO.dx, cO.dy, cO.dz)
-												}
-											}
-										}
-										
-										////////////////
-										
-								}
-							}
-						}
 		}	
 	
 

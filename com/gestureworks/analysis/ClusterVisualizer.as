@@ -24,6 +24,7 @@ package com.gestureworks.analysis
 	
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.MotionPointObject;
+	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	
 	import away3d.cameras.*;
@@ -52,8 +53,6 @@ package com.gestureworks.analysis
 		private static var cml:XMLList;
 		public var style:Object;
 		private var cO:ClusterObject;
-		private var pointList:Vector.<PointObject>;
-		private var n:Number;
 		private var id:Number = 0;
 
 		
@@ -79,6 +78,8 @@ package com.gestureworks.analysis
 		private var eA:Number = 0
 		private var numSteps:Number = 0
 		
+		private var N:uint = 0;
+		private var ipn:uint = 0;
 			
 		public function ClusterVisualizer(touchObjectID:Number)
 		{
@@ -90,11 +91,11 @@ package com.gestureworks.analysis
 			/////////////////////////////////////////////
 
 			style = new Object
-				style.stroke_thickness = 4;
+				style.stroke_thickness = 3;
 				style.stroke_color = 0xFFAE1F;
-				style.stroke_alpha = 0.9;
+				style.stroke_alpha = 0.8;
 				style.fill_color = 0xFFAE1F;
-				style.fill_alpha = 0.9;
+				style.fill_alpha = 0.8;
 				style.radius = 20;
 				
 				// circle
@@ -133,18 +134,25 @@ package com.gestureworks.analysis
 	
 	public function draw():void
 	{
-		drawTouch();
-		//drawMotion();
-		//drawSensor();
+		
+		N = cO.pointArray.length
+		ipn = cO.iPointArray2D.length;
+		
+		// init
+		graphics.clear();
+		
+		drawClusterDims();
+		drawInteractionPoints();
+		drawSubClusterDims();
 	}
 	
-	private function drawTouch():void
+	private function drawClusterDims():void
 	{	
-		if (cO.pointArray)
+		if ((N)||(ipn))
 			{
-			pointList = cO.pointArray;
-			n = pointList.length;
-		
+				
+			style.stroke_color = 0xFFAE1F;
+			
 			_x = cO.x;
 			_y = cO.y;
 			_width = cO.width;
@@ -170,60 +178,60 @@ package com.gestureworks.analysis
 			x0 = 0
 			y0 = 0
 
-			
-
 			///////////////////////////////////////////////////////////////////////////////////
 			// 	DRAW SHAPES
 			///////////////////////////////////////////////////////////////////////////////////
 		
-			// init
-			graphics.clear();
-			
 			if(_drawRadius){
-			// draw bounding circle
-			graphics.lineStyle(style.c_stroke_thickness,style.stroke_color,style.c_stroke_alpha);
-			graphics.drawCircle(_x, _y, _radius);
+				// draw bounding circle
+				graphics.lineStyle(style.c_stroke_thickness,style.stroke_color,style.c_stroke_alpha);
+				graphics.drawCircle(_x, _y, _radius);
 			}
 			
 			// set line style
 			graphics.lineStyle(style.stroke_thickness,style.stroke_color,style.stroke_alpha);
 			
 			if(_drawCenter){
-			// draw cluster center position
-			graphics.drawCircle(_x, _y, style.radius);
+				// draw cluster center position
+				graphics.drawCircle(_x, _y, style.radius-5);
 			}
 			
 			if(_drawBisector){
-			// draw bi-sectors
-			graphics.moveTo(_x,_y+_height/2);
-			graphics.lineTo(_x,_y-_height/2);
-			graphics.moveTo(_x-_width/2,_y);
-			graphics.lineTo(_x + _width / 2, _y);
+				// draw bi-sectors
+				graphics.moveTo(_x,_y+_height/2);
+				graphics.lineTo(_x,_y-_height/2);
+				graphics.moveTo(_x-_width/2,_y);
+				graphics.lineTo(_x + _width / 2, _y);
 			}
 			
 			if(_drawBox){
 			// draw bunding box
-			graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
+			//graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
 			}
 			
 			if(_drawWeb){
 			// draw web links tyo center
 			if (style.web_shape == "fullweb") {
-					for (var k:int=0; k<n; k++){
-							for (var l:int=0; l<n; l++){
-								if(k!=l){
+					for (var k:int = 0; k < N; k++) {
+						
+						var pt = cO.pointArray[k];
+						
+							for (var l:int=0; l<N; l++){
+								if (k != l) {
+									var pt1 = cO.pointArray[l];
 									//trace(i,j)
-									graphics.moveTo(pointList[k].x,pointList[k].y);
-									graphics.lineTo(pointList[l].x, pointList[l].y);
+									graphics.moveTo(pt.x,pt.y);
+									graphics.lineTo(pt1.x,pt1.y);
 								}
 							}
 					}
 			}
 			if (style.web_shape == "starweb") {
 				//trace("starweb");
-				for (var p:int = 0; p < n; p++) {
+				for (var p:int = 0; p < N; p++) {
+						var pt = cO.pointArray[k];
 						graphics.moveTo(_x,_y);
-						graphics.lineTo(pointList[p].x, pointList[p].y);
+						graphics.lineTo(pt.x, pt.y);
 					}
 			}
 			}
@@ -340,95 +348,292 @@ package com.gestureworks.analysis
 		}
 	}
 	
-	private function drawMotion():void
-		{
-		var mpn:int = cO.motionArray.length;
-
-				for (var i:int = 0; i < mpn; i++) 
+	private function drawInteractionPoints():void
+	{
+				for (var i:int = 0; i < ipn; i++) 
 					{
-							var mp:MotionPointObject = cO.motionArray[i];
+						var ipt:InteractionPointObject = cO.iPointArray2D[i];
 								
 								if (_drawWeb)
 								{	
-									var pmp:MotionPointObject = GestureGlobals.gw_public::motionPoints[mp.handID]											
-									if (pmp)
+									for (var j:int = 0; j < i+1; j++) 
 									{
-										// draw line to palm point
-										graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
-										graphics.moveTo(mp.position.x , mp.position.y);
-										graphics.lineTo(pmp.position.x , pmp.position.y);
+										if (i != j)
+										{
+											var ipt2:InteractionPointObject = cO.iPointArray2D[j];
+											// draw line to palm point
+											graphics.lineStyle(3, style.stroke_color, style.stroke_alpha);
+											graphics.moveTo(ipt.position.x ,ipt.position.y);
+											graphics.lineTo(ipt2.position.x , ipt2.position.y);
+										}
 									}
-								}	
 									
-								// draw thumb
-								if ((_drawThumb)&&(mp.fingertype == "thumb")) 
-									{
-									///////////////////////////////////////////////////////
-									// draw thumb
-									///////////////////////////////////////////////////////
-									var w:int = 50;
-									graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
-									//graphics.drawCircle(mp.position.x , mp.position.y, style.radius + 10);
-									graphics.drawRect(mp.position.x - w, mp.position.y - w, 2 * w, 2 * w);
+								}	
+								// draw finger
+								if (ipt.type == "finger")
+								{
+									graphics.lineStyle(3, 0x00FF00, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x , ipt.position.y, style.radius + 10);
 								}
-		
-								
-								if ((_drawPalm)&&(mp.type == "palm"))
-									{
-										var hz:Number = mp.position.z
-										var hr:Number = mp.sphereRadius * 0.5 + hz;
-										var sq_width:Number = 5;
-											
-										/////////////////// move to cluster
-										// palm radius 
-										graphics.lineStyle(4, 0x716BE3, style.stroke_alpha);
-										graphics.drawCircle(mp.position.x , mp.position.y, hr);
-										
-										//sphere
-										//graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
-										//graphics.drawCircle(mp.sphereCenter.x , mp.sphereCenter.y, mp.sphereRadius);
+								// draw thumb
+								if (ipt.type == "thumb")
+								{
+									graphics.lineStyle(3, 0xFF0000, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x , ipt.position.y, style.radius + 10);
+								}
+								// palm point and radius 
+								if (ipt.type == "palm")
+								{
+									var hr:Number = ipt.sphereRadius * 0.5 + ipt.position.z;
+									graphics.lineStyle(3, 0xFFFFFF, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x , ipt.position.y, hr);
+								}
+								// draw pinch
+								if (ipt.type == "pinch") 
+								{
+									graphics.lineStyle(3, 0x00FFFF, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
+							
+								// for trigger
+								if (ipt.type == "trigger") //PURPLE 0xc44dbe
+								{
+									var tgr:Number = 30;
+									var triggerThreshold = 0.5
+									// set style
+									graphics.lineStyle(3, 0xc44dbe, style.stroke_alpha);
+									// draw cross
+									graphics.moveTo (ipt.position.x - tgr, ipt.position.y);
+									graphics.lineTo (ipt.position.x + tgr , ipt.position.y);
+									graphics.moveTo (ipt.position.x, ipt.position.y- tgr);
+									graphics.lineTo (ipt.position.x,ipt.position.y + tgr);
+									//draw cricle
+									graphics.drawCircle(ipt.position.x, ipt.position.y, tgr - 10);
+
+									// check extension
+									if (ipt.extension < triggerThreshold) {
+										graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius+20);
 									}
+								}
+								
+								// draw PUSH
+								if (ipt.type == "push") //yellow 0xFFFF00 //
+								{
+									graphics.lineStyle(3, 0xFFFF00, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
 								
 								
 					}
-			
-					
-					
-					/*
-					////////////////////////////////////////////////////////////////
-					// motion point piars 
-					///////////////////////////////////////////////////////////////
-					if(_drawPairs){
-					var lines:int = cO.pairList.length//cO.motionArray.length
-					
-						//trace("pair list length",lines,cO.pairList.length)
-						if (lines <= cO.pairList.length)
-						{
-							//trace("ggg");
-							for (var pn:int = 0; pn < lines; pn++) //5
-							//for (var pn:int = 0; pn < cO.motionArray.length-2; pn++) //4
-							{
-								var pA:MotionPointObject = cO.pairList[pn].pointA;
-								var pB:MotionPointObject = cO.pairList[pn].pointB;
-								
-								//trace(pA,pB);
-								
-								if ((pA!=null) && (pB!=null))
-								{
-									var mpA:Vector3D = pA.position;
-									var mpB:Vector3D = pB.position;
-							
-										graphics.lineStyle(4, 0x0000FF, 0.5);
-										graphics.moveTo (mpA.x, mpA.y);
-										graphics.lineTo (mpB.x, mpB.y);
-										
-										//trace(mpB.x,mpB.y,mpB.x,mpA.y)
-								}
-							}
-						}
-					}*/
-					/////////////////////////////////////////////////////////////////////
 	}
+	
+	
+	private function drawSubClusterDims():void
+	{	
+		var sub_cO = cO.finger_cO;
+		var sipn:int = sub_cO.length
+		
+		// DO FOR EACH SUBCLUSTER
+		
+		if ((sipn)&&(sub_cO))
+			{
+					style.stroke_color = 0x00FF00;//0x00FFFF;
+					
+					_x = sub_cO.x;
+					_y = sub_cO.y;
+					_width = sub_cO.width;
+					_height = sub_cO.height;
+					_radius = sub_cO.radius-50;
+					_rotation = sub_cO.rotation; 
+		 
+					_dtheta = sub_cO.dtheta / 4;
+					_ds = sub_cO.ds*10;
+					
+					x0 = 0
+					y0 = 0
+					
+					step =  0.01;
+					percent = style.percent;
+					numSteps = Math.abs(Math.round(_dtheta / step));
+					r2 = _radius * percent;
+					r1 = _radius * (percent + 0.2);
+					
+					if(Math.abs(_orientation)>=360){
+						_orientation = 0;
+					}
+					sA = _orientation/RAD_DEG
+					eA = _orientation/RAD_DEG + _dtheta;
+
+					///////////////////////////////////////////////////////////////////////////////////
+					// 	DRAW SHAPES
+					///////////////////////////////////////////////////////////////////////////////////
+				
+					if(_drawRadius){
+						// draw bounding circle
+						graphics.lineStyle(style.c_stroke_thickness,style.stroke_color,style.c_stroke_alpha);
+						graphics.drawCircle(_x, _y, _radius);
+					}
+					
+					// set line style
+					graphics.lineStyle(style.stroke_thickness,style.stroke_color,style.stroke_alpha);
+					
+					if(_drawCenter){
+						// draw cluster center position
+						graphics.drawCircle(_x, _y, style.radius-5);
+					}
+					
+					if(_drawBisector){
+						// draw bi-sectors
+						graphics.moveTo(_x,_y+_height/2);
+						graphics.lineTo(_x,_y-_height/2);
+						graphics.moveTo(_x-_width/2,_y);
+						graphics.lineTo(_x + _width / 2, _y);
+					}
+					
+					if(_drawBox){
+					// draw bunding box
+					//graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
+					}
+					
+					if(_drawWeb){
+					// draw web links tyo center
+					if (style.web_shape == "fullweb") {
+							for (var k:int = 0; k < N; k++) {
+								
+								var pt = cO.pointArray[k];
+								
+									for (var l:int=0; l<N; l++){
+										if (k != l) {
+											var pt1 = cO.pointArray[l];
+											//trace(i,j)
+											graphics.moveTo(pt.x,pt.y);
+											graphics.lineTo(pt1.x,pt1.y);
+										}
+									}
+							}
+					}
+					}
+					
+					
+					
+					
+			if (_drawRotation) {
+				
+				trace(cO.dtheta);
+			//////////////////////////////////////////////////////////////////////////////////
+			// draw rotation
+			//////////////////////////////////////////////////////////////////////////////////
+			if (style.rotation_shape == "segment") {
+
+						//trace("redraw segment",orientation);
+						//counter clockwise
+						if (_dtheta < 0) {
+							
+							//needs work to get counting correct--------------------------------------//
+							graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
+							
+							graphics.moveTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
+							graphics.lineTo(_x + r1 * Math.cos(sA), _y + r1 * Math.sin(sA));
+							graphics.beginFill(style.a_fill_color,style.a_fill_alpha);
+							
+							for (var theta0:Number = sA; theta0 > eA; theta0 -= step) 
+							{
+								graphics.lineTo(_x + r1*Math.cos(theta0), _y + r1*Math.sin(theta0));
+							}
+							graphics.lineTo(_x + r2*Math.cos(eA), _y + r2*Math.sin(eA));
+						
+							for (var theta:Number = eA; theta < sA; theta += step) 
+								{
+								graphics.lineTo(_x + r2*Math.cos(theta), _y + r2*Math.sin(theta));
+							}
+							graphics.endFill();
+						}
+						
+						// clockwise
+						if (_dtheta > 0) {
+							graphics.lineStyle(style.b_stroke_thickness, style.b_stroke_color, style.b_stroke_alpha);
+							
+							graphics.moveTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
+							graphics.lineTo(_x + r1 * Math.cos(sA),_y + r1 * Math.sin(sA));
+							graphics.beginFill(style.b_fill_color,style.b_fill_alpha);
+							
+							for (var i:int = 0; i < numSteps; i++) {
+								var theta1:Number = i*step + sA;
+								graphics.lineTo(_x + r1*Math.cos(theta1), _y + r1*Math.sin(theta1));
+							}
+							graphics.lineTo(_x + r1*Math.cos(eA), _y + r1*Math.sin(eA));
+							graphics.lineTo(_x + r2*Math.cos(eA), _y + r2*Math.sin(eA));
+						
+							for (var j:int = 0; j < numSteps; j++) {
+								var theta2:Number = -j*step + eA;
+								graphics.lineTo(_x + r2*Math.cos(theta2), _y + r2*Math.sin(theta2));
+							}
+							graphics.lineTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
+							graphics.endFill();
+						}
+			}
+			
+			if (style.rotation_shape == "slice") {
+					
+					//trace("redraw slice", rotation, dtheta);
+					if (_dtheta < 0)
+					{
+						graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
+						graphics.beginFill(style.a_fill_color, style.a_fill_alpha);
+						
+						graphics.moveTo(x, y);
+						graphics.lineTo(_x + _radius * Math.cos(sA), _y + _radius * Math.sin(sA));
+						
+						for (var theta3:Number = sA; theta > eA; theta -= step) {
+							graphics.lineTo(_x + _radius * Math.cos(theta3), _y + _radius * Math.sin(theta3));
+						}
+						graphics.lineTo(_x, _y);
+						graphics.endFill();
+					}
+					
+					if (_dtheta > 0)
+					{
+						graphics.lineStyle(style.b_stroke_thickness, style.b_stroke_color, style.b_stroke_alpha);
+						graphics.beginFill(style.b_fill_color,style.b_fill_alpha);
+					
+						graphics.moveTo(_x, _y);
+						graphics.lineTo(_x + _radius * Math.cos(sA), _y + _radius * Math.sin(sA));
+						
+						for (var theta4:Number = sA; theta < eA; theta += step) {
+							graphics.lineTo(_x + _radius * Math.cos(theta4), _y + _radius * Math.sin(theta4));
+						}
+						graphics.lineTo(_x, _y);
+						graphics.endFill();
+					}
+				}	
+			}
+			
+			
+			
+			if (_drawSeparation)
+			{
+			
+				//trace(_ds)
+			
+				if (_ds < -0.1) // contract
+				{
+				graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.a_stroke_color,0.3);
+				graphics.drawCircle(_x, _y, _radius +20);
+				}
+				else if (_ds > 0.1) //expand
+				{
+					graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.b_stroke_color,0.3);
+					graphics.drawCircle(_x, _y, _radius +20);
+				}
+			}		
+					
+					
+					
+		}
+	}
+	
+	
+	
 
 	public function clear():void
 	{

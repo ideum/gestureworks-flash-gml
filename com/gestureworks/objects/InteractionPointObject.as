@@ -40,6 +40,7 @@ package com.gestureworks.objects
 		public function get handID():int{	return _handID;}
 		public function set handID(value:int):void{	_handID = value;}
 		
+		
 		//position/////////////////////////////////////////////x,y,x
 		private var _position:Vector3D = new Vector3D ();
 		public function get position():Vector3D{	return _position;}

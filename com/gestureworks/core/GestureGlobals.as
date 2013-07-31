@@ -48,6 +48,7 @@ package com.gestureworks.core
 		 * Contains a dictionary of all clusters present to the framework.
 		 */
 		gw_public static var clusters:Dictionary = new Dictionary();
+		
 		/**
 		 * Contains a dictionary of all gestures present to the framework.
 		 */
