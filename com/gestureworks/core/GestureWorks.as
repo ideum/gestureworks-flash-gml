@@ -59,13 +59,12 @@ package com.gestureworks.core
 	 * 		{
 	 * 			trace("GestureWorks has intialized");
 	 * 		}
-	 * 		}
 	 * 	}
 	 * 
 	*/	
 	public class GestureWorks extends GestureWorksCore
 	{		
-		public static var _version:String = "3.6.1";
+		public static var _version:String = "4.0.0";
 		/**
 		 * Returns the current version of GestureWorks.
 		 */		
@@ -76,7 +75,6 @@ package com.gestureworks.core
 		 * Returns the current copyright information for GestureWorks.
 		 */		
 		public static function get copyright():String { return _copyright; }
-		
 		/**
 		 * Returns whether TUIO is activated.
 		 */
@@ -88,41 +86,31 @@ package com.gestureworks.core
 		/**
 		 * Returns whether the motion framework is activated
 		 */
-		public static var activeStarling:Boolean;	
-		/**
-		 * Returns whether the Starling touch framework is activated
-		 */
 		public static var activeMotion:Boolean;		
 		/**
 		 * Returns whether the sensor framework is activated
 		 */
 		public static var activeSensor:Boolean;		
-		
 		/**
 		 * Returns whether native touch is activated
 		 */
 		public static var activeNativeTouch:Boolean;
-		
 		/**
 		 * Determines if Shift key is down or Up.  For use with simulator.
 		 */
 		public static var isShift:Boolean;
-
 		/**
 		 * Returns whether your device currently has touch support available.
 		 */
 		public static function get supportsTouch():Boolean { return _supportsTouch; }
-		
 		/**
 		 * String is the dispatcher for GestureWorks framework.
 		 */
 		public static var GESTUREWORKS_COMPLETE:String = "gestureworks complete";
-
 		/**
 		 * Var = stage.
 		 */
 		public static var application:Stage;		
-		
 		/**
 		 * The GestureWorks constructor.
 		 * var gestureworks:GestureWorks = new GestureWorks();
