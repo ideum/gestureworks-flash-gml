@@ -27,7 +27,7 @@ package com.gestureworks.managers
 	import org.tuio.*;
 	import org.tuio.adapters.*;
 	import org.tuio.connectors.TCPConnector;
-	import org.tuio.debug.*;	
+	import org.tuio.debug.*;
 	
 	/**
 	 * This class initializes TUIO. Declare tuio="true" in the main class or as an attribute in the CML root tag.
@@ -36,12 +36,12 @@ package com.gestureworks.managers
 	 */	
 	public class TUIOManager extends Sprite
 	{
-		private var connector:*;
+		private static var gwTUIOMngr:TUIOManager;
 		
-		private static var air:Boolean = false;			
+		private var connector:*;	
 		
-		private var _tuioManager:TuioManager;
-		public function get tuioManager():TuioManager { return _tuioManager; }
+		private var _tuioManager:*;
+		public function get tuioManager():* { return _tuioManager; }
 		
 		private var _tuioClient:TuioClient;
 		public function get tuioClient():TuioClient { return _tuioClient;}		
@@ -50,25 +50,26 @@ package com.gestureworks.managers
 		public function get tuioDebug():TuioDebug { return _tuioDebug; }	
 	
 		gw_public static function initialize():void
-		{
-			// check for AIR runtime.
-			//if (Capabilities.playerType != "Desktop") return;			
-			air = Capabilities.playerType == "Desktop";
-
+		{			
 			// create gestureworks TUIOManager
-			var tuioManager:TUIOManager = new TUIOManager;
-			GestureWorks.application.addChild(tuioManager); 
+			if(!gwTUIOMngr){
+				gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop");
+				GestureWorks.application.addChild(gwTUIOMngr); 
+			}
 			
 			// tuio is now active
 			GestureWorks.activeTUIO = true;
 			trace("TUIO is active - native touch is no longer automically disabled");
 		}			
 
-		
-		public function TUIOManager() 
+		/**
+		 * Constructor
+		 * @param	air - flag indicating AIR runtime or flash
+		 */
+		public function TUIOManager(air:Boolean = true) 
 		{			
 			super();
-				
+
 			if(air){
 				try {
 					var UDPConnector:Class = getDefinitionByName("org.tuio.connectors.UDPConnector") as Class;
@@ -79,7 +80,7 @@ package com.gestureworks.managers
 				}
 			}
 			else {
-				connector = new TCPConnector();
+				connector = new TCPConnector("127.0.0.1", 3000); 
 			}
 			
 			if (stage) init();
@@ -91,8 +92,11 @@ package com.gestureworks.managers
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			_tuioClient = new TuioClient(connector);
-			_tuioDebug = TuioDebug.init(stage);
+			//flosc
+			//TuioLegacyListener.init(stage, _tuioClient);
+			//_tuioManager = TuioLegacyListener.getInstance();
 			_tuioManager = TuioManager.init(stage);
+			_tuioDebug = TuioDebug.init(stage);
 			_tuioClient.addListener(_tuioManager);
 			_tuioClient.addListener(_tuioDebug);
 			_tuioManager.addEventListener(TuioEvent.UPDATE, onUpdate);
@@ -101,7 +105,7 @@ package com.gestureworks.managers
 				
 		
 		private function onUpdate(e:TuioEvent):void
-		{			
+		{						
 			var event:GWTouchEvent = new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
 			event.stageX = e.tuioContainer.x * stage.stageWidth;
 			event.stageY = e.tuioContainer.y * stage.stageHeight;

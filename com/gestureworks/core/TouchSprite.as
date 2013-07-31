@@ -20,6 +20,7 @@ package com.gestureworks.core
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	import org.tuio.TuioTouchEvent;
 	
 	import com.gestureworks.core.GestureGlobals;
@@ -92,9 +93,8 @@ package com.gestureworks.core
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
 		//tracks GWTouchEvents
-		private var gwTouchListeners:Array = [];
+		private var gwTouchListeners:Dictionary = new Dictionary();
 
-		
 		public function TouchSprite():void
 		{
 			super();
@@ -194,17 +194,16 @@ package com.gestureworks.core
 		 * Re-registers GWTouchEvent events with updated mode settings
 		 */
 		private function updateGWTouchListeners():void {
-			var size:int = gwTouchListeners.length;	
-			var l:Object;
-			
-			for (var i:int = 0; i < size; i++) {			
-				l = gwTouchListeners.shift();				
-				if (hasEventListener(l.type)) {
-					super.removeEventListener(l.type, l.listener);
-					if(l.type.indexOf("gwTouch") > -1)
-						addEventListener(l.type, l.listener);
-				}				
-			}			
+			for (var type:String in gwTouchListeners) {
+				for each(var l:* in gwTouchListeners[type]) {
+					if(l.type)
+						super.removeEventListener(l.type, l.listener);
+					else{
+						super.removeEventListener(type, l.listener);
+						addEventListener(type, l.listener);
+					}
+				}
+			}
 		}
 		
 		 private function initBase():void 
@@ -996,18 +995,40 @@ package com.gestureworks.core
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
 		{
 			if (type.indexOf("gwTouch") > -1)
-			{				
+			{	
+				var listeners:Array = [];
 				for each(var gwt:String in GWTouchEvent.eventTypes(type)) {
 					function gwl(e:*):void {
 						dispatchEvent(new GWTouchEvent(e));
 					}
-					super.addEventListener(gwt, gwl);
-					gwTouchListeners.push( { type:gwt, listener:gwl } );
+					super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
+					listeners.push( { type:gwt, listener:gwl } );
 				}
-				gwTouchListeners.push( { type:type, listener:listener } );				
+				
+				listeners.push( { listener:listener } );
+				gwTouchListeners[type] = listeners;				
 			}
 						
 			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+		}
+		
+		/**
+		 * Unregisters event listeners. Also removes GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 */
+		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void 
+		{
+			if (type.indexOf("gwTouch") > -1) {
+				for each(var l:* in gwTouchListeners[type]) {
+					if (l.type)
+						super.removeEventListener(l.type, l.listener);
+				}
+				delete gwTouchListeners[type];
+			}
+			
+			super.removeEventListener(type, listener, useCapture);
 		}
 		
 	}

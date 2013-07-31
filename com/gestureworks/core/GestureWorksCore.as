@@ -200,6 +200,8 @@ package com.gestureworks.core
 			
 			if (_tuio) 
 				TUIOManager.gw_public::initialize();
+			else
+				GestureWorks.activeTUIO = false;
 				
 			updateTouchObjects();
 		}

@@ -35,7 +35,8 @@ package com.gestureworks.events
 		public static const TOUCH_OUT : String = "gwTouchOut"
 		public static const TOUCH_OVER : String = "gwTouchOver"
 		public static const TOUCH_ROLL_OUT : String = "gwTouchRollOut"
-		public static const TOUCH_ROLL_OVER : String = "gwTouchRollOver"					
+		public static const TOUCH_ROLL_OVER : String = "gwTouchRollOver"
+		public static const TOUCH_TAP : String = "gwTouchTap";
 		
 		private static var TOUCH_TYPE_MAP: Dictionary = new Dictionary(); 
 		
@@ -47,6 +48,7 @@ package com.gestureworks.events
 		TOUCH_TYPE_MAP[TouchEvent].append(TouchEvent.TOUCH_OVER,TOUCH_OVER);		
 		TOUCH_TYPE_MAP[TouchEvent].append(TouchEvent.TOUCH_ROLL_OUT,TOUCH_ROLL_OUT);		
 		TOUCH_TYPE_MAP[TouchEvent].append(TouchEvent.TOUCH_ROLL_OVER,TOUCH_ROLL_OVER);			
+		TOUCH_TYPE_MAP[TouchEvent].append(TouchEvent.TOUCH_TAP, TOUCH_TAP);
 		
 		TOUCH_TYPE_MAP[TuioTouchEvent] = new LinkedMap();
 		TOUCH_TYPE_MAP[TuioTouchEvent].append(TuioTouchEvent.TOUCH_DOWN,TOUCH_BEGIN);		
@@ -56,6 +58,7 @@ package com.gestureworks.events
 		TOUCH_TYPE_MAP[TuioTouchEvent].append(TuioTouchEvent.TOUCH_OVER,TOUCH_OVER);		
 		TOUCH_TYPE_MAP[TuioTouchEvent].append(TuioTouchEvent.ROLL_OUT,TOUCH_ROLL_OUT);		
 		TOUCH_TYPE_MAP[TuioTouchEvent].append(TuioTouchEvent.ROLL_OVER,TOUCH_ROLL_OVER);		
+		TOUCH_TYPE_MAP[TuioTouchEvent].append(TuioTouchEvent.TAP,TOUCH_TAP);		
 		
 		TOUCH_TYPE_MAP[MouseEvent] = new LinkedMap();
 		TOUCH_TYPE_MAP[MouseEvent].append(MouseEvent.MOUSE_DOWN,TOUCH_BEGIN);		
@@ -65,6 +68,7 @@ package com.gestureworks.events
 		TOUCH_TYPE_MAP[MouseEvent].append(MouseEvent.MOUSE_OVER,TOUCH_OVER);		
 		TOUCH_TYPE_MAP[MouseEvent].append(MouseEvent.ROLL_OUT,TOUCH_ROLL_OUT);		
 		TOUCH_TYPE_MAP[MouseEvent].append(MouseEvent.ROLL_OVER,TOUCH_ROLL_OVER);				
+		TOUCH_TYPE_MAP[MouseEvent].append(MouseEvent.CLICK,TOUCH_TAP);				
 		
 		/**
 		 * Serves as an encompassing touch event for all input types as well as a utility for converting different input events. The <code>GWTouchEvent</code> can 
