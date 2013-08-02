@@ -175,21 +175,24 @@ package com.gestureworks.analysis
 			// clear text
 			for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
 			
-				for (i = 0; i < N; i++) 
+				var n:int = (N <= maxPoints) ? N : maxPoints;
+			
+				for (i = 0; i < n; i++) 
 				{
 					var pt:PointObject = cO.pointArray[i]
 					///////////////////////////////////////////////////////////////////
 					// Point positons and shapes
 					///////////////////////////////////////////////////////////////////
 					
-					var x:Number = pt.x
-					var y:Number = pt.y
+					var x:Number = pt.x;
+					var y:Number = pt.y;
 					
 					if (_drawText)
 					{
 						///////////////////////////////////////////////////////////////////
 						//
 						///////////////////////////////////////////////////////////////////
+						
 						tptext_array[i].textCont = "Point: " + "ID" + String(pt.touchPointID) + "    id" + String(pt.id);
 						tptext_array[i].x = x;
 						tptext_array[i].y = y - 50;
@@ -265,21 +268,21 @@ package com.gestureworks.analysis
 					
 					if (_drawVector)
 					{
-						//define vector pint style
+						//define vector point style
 						//graphics.lineStyle(style.v_stroke,style.color,style.alpha);
 						hist  = pt.history.length - 1;
 						if (hist < 0) hist = 0;
 						var alpha:Number = 0;
 						var k:int = 0;
 						
-							if (style.trail_shape == "line")
-							{
+							if (style.trail_shape == "line") {
+								
 										alpha = 0.08*(hist-j)
 										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
 										graphics.moveTo(pt.history[0].x, pt.history[0].y);
 										graphics.lineTo(pt.history[hist].x,pt.history[hist].y);
 									
-								}
+							}
 							else if (style.trail_shape == "curve") {
 								
 								for (var j:int = 0; j < hist; j++) 
@@ -493,9 +496,7 @@ public function clear():void
          }
 		
 	
-	/**
-	* @private
-	*/
+
 	private var _drawShape:Boolean = true;
 	/**
 	* activates gesture point shape visualization methods.
@@ -503,9 +504,7 @@ public function clear():void
 	public function get drawShape():Boolean { return _drawShape; }
 	public function set drawShape(value:Boolean):void { _drawShape = value; }
 	
-	/**
-	* @private
-	*/
+
 	private var _drawVector:Boolean = false;
 	/**
 	* activates gesture point shape visualization methods.
@@ -513,15 +512,15 @@ public function clear():void
 	public function get drawVector():Boolean { return _drawVector; }
 	public function set drawVector(value:Boolean):void { _drawVector = value; }
 	
-	/**
-	* @private
-	*/
+
 	private var _drawText:Boolean = true;
 	/**
 	* activates gesture point shape visualization methods.
 	*/
 	public function get drawText():Boolean { return _drawText; }
 	public function set drawText(value:Boolean):void{_drawText = value;}
+
+	private var _drawTextID:Boolean = true;
 
 }
 }
