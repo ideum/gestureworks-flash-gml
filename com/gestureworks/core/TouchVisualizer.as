@@ -83,11 +83,7 @@ package com.gestureworks.core
 		public function get gestureDisplay():Boolean { return _gestureDisplay; }
 		public function set gestureDisplay(value:Boolean):void{_gestureDisplay = value;}
 		
-		
-		
-		
-		
-		
+
 		
 		public function TouchVisualizer(touchObjectID:int):void
 		{
@@ -100,14 +96,14 @@ package com.gestureworks.core
 		// initializers    
         public function initDebug():void 
         {
-				//trace("create touchsprite debug display")
+			//trace("create touchsprite debug display")
 
-				debug_display = new Sprite();
-				initDebugVars();
-				initDebugDisplay();
-				
-				if (ts.stage) addtostage();
-				else ts.addEventListener(Event.ADDED_TO_STAGE, addtostage);
+			debug_display = new Sprite();
+			//initDebugVars();
+			initDebugDisplay();
+			
+			if (ts.stage) addtostage();
+			else ts.addEventListener(Event.ADDED_TO_STAGE, addtostage);
 		}
 		
 		 public function addtostage(e:Event = null):void 
@@ -118,15 +114,15 @@ package com.gestureworks.core
 		
 		public function initDebugVars():void
 		{
-		//if (trace_debug_mode) 
-		//trace("init debug cml vars");
-		//trace(_pointData,_panelData,_touchObjectData)
-		
-		//ts.debugDisplay = true;
-		//viewAlwaysOn = true;
-		//pointDisplay = true;
-		//clusterDisplay = true;
-		//gestureDisplay = true;
+			//if (trace_debug_mode) 
+			//trace("init debug cml vars");
+			//trace(_pointData,_panelData,_touchObjectData)
+			
+			//ts.debugDisplay = true;
+			//viewAlwaysOn = true;
+			//pointDisplay = true;
+			//clusterDisplay = true;
+			//gestureDisplay = true;
 		
 		
 		/*
@@ -161,7 +157,7 @@ package com.gestureworks.core
 					if (pointDisplay) 
 					{
 						point = new PointVisualizer(id);
-							//point.init();
+							point.init();
 						debug_display.addChild(point);
 					}
 					
