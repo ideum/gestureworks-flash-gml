@@ -16,11 +16,13 @@
 package com.gestureworks.analysis
 {
 	
+	import com.gestureworks.core.GestureWorks;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
+	import flash.events.Event;
 	
 	import flash.geom.Vector3D;
 	import flash.text.*;
@@ -61,10 +63,14 @@ package com.gestureworks.analysis
 		
 		private var _minZ:Number = -110;
 		private var _maxZ:Number = 200;
+		private var trails:Array = [];
 		
+		public var maxPoints:int = 10;
+		public var maxTrails:int = 60;
+	
 		
 		public function PointVisualizer(ID:Number)
-		{
+		{			
 			//trace("points visualizer");	
 			id = ID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
@@ -73,48 +79,76 @@ package com.gestureworks.analysis
 			
 			
 			// set default style 
-			style = new Object
+			style = new Object;
 				//points
 				style.stroke_thickness = 6;
-				style.stroke_color = 0xFFAE1F;
+				//style.stroke_color = 0xFFAE1F;
+				style.stroke_color = 0x107591;
 				style.stroke_alpha = 0.9;
-				style.fill_color = 0xFFAE1F;
+				//style.fill_color = 0xFFAE1F;
+				style.fill_color = 0x107591;
 				style.fill_alpha = 0.6;
 				style.radius = 20;
 				style.height = 20;
 				style.width = 20;
 				style.shape = "circle-fill";
 				style.trail_shape = "curve";
+				style.motion_text_color = 0x777777;
+				style.touch_text_color = 0x000000;
 				
-				
-				
-				// create text fields
-				for (var i:int = 0; i < 12; i++) 
-				{
-					mptext_array[i] = new AddSimpleText(500, 100, "left", 0x777777, 12);
-						//mptext_array[i].mouseChildren = true;
-					tptext_array[i] = new AddSimpleText(200, 100, "left", 0x000000, 12);
-						//tptext_array[i].mouseChildren = true;
-					addChild(tptext_array[i]);
-					addChild(mptext_array[i]);
-				}
 		}
+		
+		public function init():void
+		{
+			var i:int = 0;
 			
+			// create text fields
+			for (i = 0; i < 12; i++) 
+			{
+				mptext_array[i] = new AddSimpleText(500, 100, "left", style.motion_text_color, 12, "left");
+					mptext_array[i].visible = false;
+					mptext_array[i].mouseEnabled = false;
+				tptext_array[i] = new AddSimpleText(200, 100, "left", style.touch_text_color, 12, "left");
+					tptext_array[i].visible = false;
+					tptext_array[i].mouseEnabled = false;
+				addChild(tptext_array[i]);
+				addChild(mptext_array[i]);
+			}
+			
+			
+			// FIXME: lazy instantiate trails
+			for (i = 0; i < 10; i++) { 
+				
+				trails.push(new Array());
+				
+				for (var j:int = 0; j < 60; j++) {
+					var s:Sprite = new Sprite;
+					trails[i].push(s);
+					
+					s.graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);							
+					s.graphics.beginFill(style.fill_color, style.fill_alpha);
+					s.graphics.drawCircle(0, 0, style.radius);
+					s.graphics.endFill();		
+				}
+			}
+			GestureWorks.application.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+		
 	
-	public function draw():void
-	{
-		//update data
-		N = cO.pointArray.length
-		mpn = cO.motionArray2D.length;
-		
-		// clar graphics
-		graphics.clear();
-		
-		// draw
-		draw_touchPoints();
-		draw_motionPoints();
-		//draw_sensorPoints();
-	}
+		public function draw():void
+		{
+			//update data
+			N = cO.pointArray.length
+			mpn = cO.motionArray2D.length;
+			
+			// clar graphics
+			graphics.clear();
+			
+			// draw
+			draw_touchPoints();
+			draw_motionPoints();
+			//draw_sensorPoints();
+		}
 		
 		
 		////////////////////////////////////////////////////////////
@@ -141,10 +175,11 @@ package com.gestureworks.analysis
 						///////////////////////////////////////////////////////////////////
 						//
 						///////////////////////////////////////////////////////////////////
-						//tptext_array[i].textCont = "Point: " + "ID" + String(pt.touchPointID) + "    id" + String(pt.id);
-						//tptext_array[i].x = x;
-						//tptext_array[i].y = y - 50;
-						//tptext_array[i].visible = true;
+						tptext_array[i].textCont = "Point: " + "ID" + String(pt.touchPointID) + "    id" + String(pt.id);
+						tptext_array[i].x = x;
+						tptext_array[i].y = y - 50;
+						tptext_array[i].visible = true;
+						tptext_array[i].textColor = style.touch_text_color;
 					}
 					
 					if (_drawShape)
@@ -158,12 +193,12 @@ package com.gestureworks.analysis
 								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 								graphics.drawRect(x-style.width,y-style.width,2*style.width, 2*style.width);
 						}
-						if (style.shape == "ring") {
+						else if (style.shape == "ring") {
 							//trace("ring");
 								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 								graphics.drawCircle(x, y, style.radius);
 						}
-						if (style.shape == "cross") {
+						else if (style.shape == "cross") {
 							//trace("cross");
 								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 								graphics.moveTo (x - style.radius, y);
@@ -171,7 +206,7 @@ package com.gestureworks.analysis
 								graphics.moveTo (x, y - style.radius);
 								graphics.lineTo (x, y + style.radius);
 						}
-						if (style.shape == "triangle") {
+						else if (style.shape == "triangle") {
 							//trace("triangle");
 								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 								graphics.moveTo (x - style.radius, y -style.radius);
@@ -184,13 +219,14 @@ package com.gestureworks.analysis
 						// filled shapes
 						//////////////////////////////////////////////////////////////////
 						
-						if (style.shape == "circle-fill") {
+						else if (style.shape == "circle-fill") {
 							//trace("circle draw");
+								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);							
 								graphics.beginFill(style.fill_color, style.fill_alpha);
 								graphics.drawCircle(x, y, style.radius);
 								graphics.endFill();
 						}
-						if (style.shape == "triangle-fill") {
+						else if (style.shape == "triangle-fill") {
 							//trace("triangle fill");
 								graphics.beginFill(style.fill_color, style.fill_alpha);
 								graphics.moveTo (x - style.width, y -style.width);
@@ -200,7 +236,7 @@ package com.gestureworks.analysis
 								graphics.endFill();
 						
 						}
-						if (style.shape == "square-fill") {
+						else if (style.shape == "square-fill") {
 							//trace("square");
 								graphics.beginFill(style.color, style.fill_alpha);
 								graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
@@ -219,6 +255,7 @@ package com.gestureworks.analysis
 						hist  = pt.history.length - 1;
 						if (hist < 0) hist = 0;
 						var alpha:Number = 0;
+						var k:int = 0;
 						
 							if (style.trail_shape == "line")
 							{
@@ -228,34 +265,71 @@ package com.gestureworks.analysis
 										graphics.lineTo(pt.history[hist].x,pt.history[hist].y);
 									
 								}
-							if (style.trail_shape == "curve") {
+							else if (style.trail_shape == "curve") {
 								
-										for (var j:int = 0; j < hist; j++) 
-										{
-											if (j + 1 <= hist) {
-												alpha = 0.08 * (hist - j)
-												graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-												graphics.moveTo(pt.history[j].x, pt.history[j].y);
-												graphics.lineTo(pt.history[j + 1].x, pt.history[j + 1].y);
-											}
-										}
+								for (var j:int = 0; j < hist; j++) 
+								{
+									if (j + 1 <= hist) {
+										alpha = 0.08 * (hist - j)
+										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
+										graphics.moveTo(pt.history[j].x, pt.history[j].y);
+										graphics.lineTo(pt.history[j + 1].x, pt.history[j + 1].y);
+									}
+								}
 							}
-							if (style.trail_shape == "ring") {
+							else if (style.trail_shape == "ring") {
 									
-										for (var k:int = 0; k < hist; k++) 
-										{
-											alpha = 0.08 * (hist - j)
-											graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-											graphics.drawCircle(pt.history[j].x, pt.history[j].y, style.radius);
-										}
+								for (k=0; k < hist; k++) 
+								{
+									alpha = 0.08 * (hist - j)
+									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
+									graphics.drawCircle(pt.history[j].x, pt.history[j].y, style.radius);									
+								}
 							}
+							else if (style.trail_shape == "curve") {
+									
+								for (k=0; k < hist; k++) 
+								{
+									alpha = 0.08 * (hist - j)
+									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
+									graphics.drawCircle(pt.history[j].x, pt.history[j].y, style.radius);									
+								}
+							}	
+							else if (style.trail_shape == "circle-fill") {
+									
+								for (k=0; k < hist; k++) 
+								{										
+									trails[i][k].x = pt.history[k].x; 
+									trails[i][k].y = pt.history[k].y;
+									trails[i][k].alpha = 1;
+									if (parent) {
+										parent.addChild(trails[i][k]);	
+										parent.addChildAt(this, parent.numChildren - 1);		
+									}
+								}
+							}								
 						}
 						///////////////////////////////////////////////////////////////////////
 						
 					}
 		}		
+			
+		private function onEnterFrame(e:Event):void
+		{
+			for (var i:int = 0; i < trails.length; i++) {
+				for (var j:int = 0; j < trails[i].length; j++) {
+					trails[i][j].alpha -=  0.8;
+
+					if (trails[i][j].alpha <= 0) {
+						if (trails[i][j].parent)
+							trails[i][j].parent.removeChild(trails[i][j]);
+					}
+				}	
+			}
+		}
 				
-				
+		
+		
 		/////////////////////////////////////////////////////////////////////
 		// motion points
 		///////////////////////////////////////////////////////////////////
