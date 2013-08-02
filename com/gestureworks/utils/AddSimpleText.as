@@ -18,13 +18,13 @@ package com.gestureworks.utils
 	import flash.display.*;
 	import flash.text.*;
 
-	public class AddSimpleText extends  Sprite {// DisplayObjectContainer
+	public class AddSimpleText extends  Sprite {
 		private var mytext:TextField;
 		private var format:TextFormat;
 		private var wNum:Number;
 		private var hNum:Number;
 			
-		public function AddSimpleText(W:Number, H:Number,align:String, color:Number, size:Number) {
+		public function AddSimpleText(W:Number, H:Number,align:String, color:Number, size:Number, autoSize:String="none") {
 			wNum = W;
 			hNum = H;
 			
@@ -34,22 +34,16 @@ package com.gestureworks.utils
 				mytext.wordWrap = false;
 				mytext.mouseEnabled = false;
 				mytext.antiAliasType = AntiAliasType.ADVANCED;
-				//mytext.blendMode = BlendMode.LAYER;
-				//mytext.autoSize = align;
-				//mytext.cacheAsBitmap = true;
-				//mytext.alpha = 0.5;
+				mytext.autoSize = autoSize
 
 				format = new TextFormat();
 					format.color = color;
 					format.size = size;
 					format.font = "OpenSansRegular";
-					//format.font = "ArialFont";
 					format.align = align;
 				mytext.setTextFormat(format);
 				
 			this.addChild(mytext);
-			
-			//this.mouseChildren = true;
 		}
 		
 		public function set textCont(txt:String):void{
@@ -66,7 +60,9 @@ package com.gestureworks.utils
 			mytext.height = hNum;
 		}*/
 		
-		public function set textColor(color:Number):void{
+		public function get textColor():Object { return format.color };
+		public function set textColor(color:Object):void {
+			if (format.color == color) return;			
 			format.color = color;
 			mytext.setTextFormat(format);
 		}
