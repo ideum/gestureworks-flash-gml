@@ -17,12 +17,15 @@ package com.gestureworks.analysis
 {
 	
 	import com.gestureworks.core.GestureWorks;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	
 	import flash.geom.Vector3D;
 	import flash.text.*;
@@ -65,8 +68,8 @@ package com.gestureworks.analysis
 		private var _maxZ:Number = 200;
 		private var trails:Array = [];
 		
+		public var maxTrails:int = 20;
 		public var maxPoints:int = 10;
-		public var maxTrails:int = 60;
 	
 		
 		public function PointVisualizer(ID:Number)
@@ -103,7 +106,7 @@ package com.gestureworks.analysis
 			var i:int = 0;
 			
 			// create text fields
-			for (i = 0; i < 12; i++) 
+			for (i = 0; i < maxPoints; i++) 
 			{
 				mptext_array[i] = new AddSimpleText(500, 100, "left", style.motion_text_color, 12, "left");
 					mptext_array[i].visible = false;
@@ -117,24 +120,36 @@ package com.gestureworks.analysis
 			
 			
 			// FIXME: lazy instantiate trails
-			for (i = 0; i < 10; i++) { 
+			for (i = 0; i < maxPoints; i++) { 
 				
 				trails.push(new Array());
 				
-				for (var j:int = 0; j < 60; j++) {
+				for (var j:int = 0; j < maxTrails; j++) {
 					var s:Sprite = new Sprite;
-					trails[i].push(s);
-					
 					s.graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);							
 					s.graphics.beginFill(style.fill_color, style.fill_alpha);
-					s.graphics.drawCircle(0, 0, style.radius);
+					s.graphics.drawCircle(style.radius+3, style.radius+3, style.radius);
 					s.graphics.endFill();		
+					var b:Bitmap = toBitmap(s);
+					trails[i].push(b);					
 				}
 			}
 			GestureWorks.application.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
-	
+		private function toBitmap(obj:DisplayObject, smoothing:Boolean=true):Bitmap 
+		{
+			var m:Matrix = new Matrix();
+			
+			var bmd:BitmapData = new BitmapData(obj.width, obj.height, true, 0x00000000);
+			bmd.draw(DisplayObject(obj), m);
+			
+			var bitmap:Bitmap = new Bitmap(bmd);
+			bitmap.smoothing = smoothing;
+			
+			return bitmap;
+		}
+		
 		public function draw():void
 		{
 			//update data
@@ -158,7 +173,7 @@ package com.gestureworks.analysis
 		{
 			
 			// clear text
-			for (i = 0; i < 12; i++) tptext_array[i].visible = false;
+			for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
 			
 				for (i = 0; i < N; i++) 
 				{
@@ -297,10 +312,12 @@ package com.gestureworks.analysis
 							}	
 							else if (style.trail_shape == "circle-fill") {
 									
-								for (k=0; k < hist; k++) 
+								var num:int = (hist <= maxTrails) ? hist : maxTrails;
+								
+								for (k=0; k < num; k++) 
 								{										
-									trails[i][k].x = pt.history[k].x; 
-									trails[i][k].y = pt.history[k].y;
+									trails[i][k].x = pt.history[k].x - style.radius+3; 
+									trails[i][k].y = pt.history[k].y - style.radius+3;
 									trails[i][k].alpha = 1;
 									if (parent) {
 										parent.addChild(trails[i][k]);	
@@ -337,7 +354,7 @@ package com.gestureworks.analysis
 		private function draw_motionPoints():void
 		{
 					// clear text
-					if (_drawText)	for (i = 0; i < 12; i++) mptext_array[i].visible = false;
+					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
 				
 
 								// Calculate the hand's average finger tip position
