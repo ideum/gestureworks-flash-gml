@@ -24,7 +24,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.GesturePointObject;
-	import org.openzoom.flash.viewport.controllers.ViewportControllerBase;
+	//import org.openzoom.flash.viewport.controllers.ViewportControllerBase;
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
