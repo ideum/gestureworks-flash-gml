@@ -95,18 +95,30 @@ package com.gestureworks.core
 		//tracks event listeners
 		private var _tsEventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
+		
+		private var _activated:Boolean = false;
 
 		public function TouchSprite():void
 		{
 			super();
-			
+
 			// set mouseChildren to default false
 			mouseChildren = false; //false
 			//mouseEnabled = false;
 			
 			debugDisplay = false;
-			preinitBase();
         }
+		
+		/**
+		 * Lazy activation
+		 */
+		private function get activated():Boolean { return _activated; }
+		private function set activated(a:Boolean):void {
+			if (!_activated && a) {
+				_activated = true;
+				preinitBase();
+			}
+		}
 		  
 		// initializers
          private function preinitBase():void 
@@ -169,6 +181,8 @@ package com.gestureworks.core
 					
 					// bypass gml requirement for testing
 					initBase();
+					if (debugDisplay)
+						visualizer.initDebug();
 		}
 		
 		/**
@@ -301,6 +315,7 @@ package com.gestureworks.core
 		}
 		public function set gestureList(value:Object):void
 		{
+			activated = true;
 			_gestureList = value;
 			
 			//for (var i:String in gestureList) 
@@ -1262,7 +1277,8 @@ package com.gestureworks.core
 			if (debugDisplay == value) return;
 						
 			_debugDisplay = value;
-			visualizer.initDebug();
+			if(visualizer)
+				visualizer.initDebug();
 		}
 		
 		private var _gestureFilters:Boolean = true;
@@ -1326,6 +1342,7 @@ package com.gestureworks.core
 		 */
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
 		{
+			activated = true;			
 			if (type.indexOf("gwTouch") > -1)
 			{	
 				var listeners:Array = [];

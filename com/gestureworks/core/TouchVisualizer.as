@@ -82,28 +82,39 @@ package com.gestureworks.core
 		*/
 		public function get gestureDisplay():Boolean { return _gestureDisplay; }
 		public function set gestureDisplay(value:Boolean):void{_gestureDisplay = value;}
-		
 
 		
 		public function TouchVisualizer(touchObjectID:int):void
 		{
 			id = touchObjectID;
-			ts = GestureGlobals.gw_public::touchObjects[id];
-			initDebug();
-          }
+        }
 		  
+		private var _activated:Boolean = false;
+		/**
+		 * Lazy activation
+		 */
+		private function get activated():Boolean { return _activated; }
+		private function set activated(a:Boolean):void {
+			if (!_activated && a) {
+				_activated = true;
+			}
+		}		
 		  
 		// initializers    
         public function initDebug():void 
         {
-			//trace("create touchsprite debug display")
+			if (!activated) {
+				activated = true;
+				ts = GestureGlobals.gw_public::touchObjects[id];			
+				//trace("create touchsprite debug display")
 
-			debug_display = new Sprite();
-			//initDebugVars();
-			initDebugDisplay();
-			
-			if (ts.stage) addtostage();
-			else ts.addEventListener(Event.ADDED_TO_STAGE, addtostage);
+				debug_display = new Sprite();
+				//initDebugVars();
+				initDebugDisplay();
+				
+				if (ts.stage) addtostage();
+				else ts.addEventListener(Event.ADDED_TO_STAGE, addtostage);
+			}
 		}
 		
 		 public function addtostage(e:Event = null):void 
