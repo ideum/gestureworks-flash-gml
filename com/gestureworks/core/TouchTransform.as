@@ -324,9 +324,22 @@ package com.gestureworks.core
 				dsz =  trO.dsz;
 				
 				// 3D matrix uses degrees
+				dtheta = trO.dtheta;
 				dthetaX = trO.dthetaX; 
 				dthetaY = trO.dthetaY;
 				dthetaZ = trO.dthetaZ;	
+				
+				//native transform boundaries
+				if ((ts.x+dx < ts.minX) || (ts.x+dx > ts.maxX)) dx = 0;
+				if ((ts.y+dy < ts.minY) || (ts.y+dy > ts.maxY)) dy = 0;					
+				if ((ts.z+dz < ts.minZ) || (ts.z+dz > ts.maxZ)) dz = 0;					
+				if ((ts.scaleX+dsx < ts.minScaleX) || (ts.scaleX+dsx > ts.maxScaleX)) dsx = 0;
+				if ((ts.scaleY+dsy < ts.minScaleY) || (ts.scaleY+dsy > ts.maxScaleY)) dsy = 0;
+				if ((ts.scaleZ+dsz < ts.minScaleZ) || (ts.scaleZ+dsz > ts.maxScaleZ)) dsz = 0;
+				if ((ts.rotation+dtheta < ts.minRotation) || (ts.rotation+dtheta > ts.maxRotation)) dtheta = 0;
+				if ((ts.rotationX+dthetaX < ts.minRotationX) || (ts.rotationX+dthetaX > ts.maxRotationX)) dthetaX = 0;
+				if ((ts.rotationY+dthetaY < ts.minRotationY) || (ts.rotationY+dthetaY > ts.maxRotationY)) dthetaY = 0;
+				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;
 							
 				// check for manual away 3D flag with 3d input
 				if (ts.away3d)
@@ -350,10 +363,7 @@ package com.gestureworks.core
 				}
 				// flash 2.5D only
 				else if (ts.transform.matrix3D)// check for 3D matrix,
-				{
-							// 3D matrix uses degrees
-							dtheta = trO.dtheta;
-							
+				{							
 							// get the projection offset created by the z-position	
 							if (ts.transform.perspectiveProjection) // ts can define location projection
 								focalLength = ts.transform.perspectiveProjection.focalLength;
@@ -373,7 +383,7 @@ package com.gestureworks.core
 				// default to 2D (uses mapped 3d to 2d input)
 				else {
 					// 2D matrix uses radians
-					dtheta = trO.dtheta * DEG_RAD;
+					dtheta *= DEG_RAD;
 					affine_modifier = ts.transform.matrix;
 						affine_modifier.translate(-t_x+dx,-t_y+dy);
 						affine_modifier.rotate(dtheta);
