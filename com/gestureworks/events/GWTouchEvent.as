@@ -190,7 +190,20 @@ package com.gestureworks.events
 			if (GestureWorks.activeSim)
 				types.push(TOUCH_TYPE_MAP[MouseEvent].getKeyArray()[TOUCH_TYPE_MAP[MouseEvent].getValueArray().indexOf(type)]);
 			return types;
-		}
+		}		
+		
+		/**
+		 * Determines if the provided type is a GWTouchEvent type
+		 * @param	type
+		 * @return
+		 */
+		public static function isType(type:String):Boolean {
+			for each(var prop:XML in describeType(GWTouchEvent).constant) {
+				if (GWTouchEvent[prop.@name] == type)
+					return true;
+			}
+			return false;
+		}		
 		
 	}
 }

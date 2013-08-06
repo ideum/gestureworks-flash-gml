@@ -110,7 +110,7 @@ package com.gestureworks.core
         }
 		
 		/**
-		 * Lazy activation
+		 * Lazy gesture activation
 		 */
 		private function get activated():Boolean { return _activated; }
 		private function set activated(a:Boolean):void {
@@ -1342,8 +1342,9 @@ package com.gestureworks.core
 		 */
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
 		{
-			activated = true;			
-			if (type.indexOf("gwTouch") > -1)
+			if(GWGestureEvent.isType(type))
+				activated = true;			
+			if (GWTouchEvent.isType(type))
 			{	
 				var listeners:Array = [];
 				for each(var gwt:String in GWTouchEvent.eventTypes(type)) {
@@ -1373,7 +1374,7 @@ package com.gestureworks.core
 			if (!super.hasEventListener(type))
 				return;
 				
-			if (type.indexOf("gwTouch") > -1) {
+			if (GWTouchEvent.isType(type)) {
 				for each(var l:* in gwTouchListeners[type]) {
 					if (l.type)
 						super.removeEventListener(l.type, l.listener);

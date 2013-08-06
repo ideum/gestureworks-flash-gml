@@ -17,6 +17,9 @@ package com.gestureworks.events
 {
 	import flash.events.Event;
 	import com.gestureworks.core.GestureGlobals;
+	import flash.utils.describeType
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 
 	public class GWGestureEvent extends Event
 	{
@@ -112,5 +115,17 @@ package com.gestureworks.events
 			return new GWGestureEvent(type, value, bubbles, cancelable); // add data object
 		}
 
+		/**
+		 * Determines if the provided type is a GWGestureEvent type
+		 * @param	type
+		 * @return
+		 */		
+		public static function isType(type:String):Boolean {
+			for each(var prop:XML in describeType(GWGestureEvent).variable) {
+				if (GWGestureEvent[prop.@name] == type)
+					return true;
+			}
+			return false;
+		}
 	}
 }
