@@ -28,7 +28,10 @@ package com.gestureworks.managers
 	
 	public class PointHistories 
 	{
-				
+		
+		private static var point:PointObject = new PointObject();
+		private static var pt:PointObject = new PointObject();
+		
 		public static function historyQueue(event:TouchEvent):void
 		{
 			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
@@ -53,10 +56,10 @@ package com.gestureworks.managers
 		public static function historyObject(event:TouchEvent):PointObject
 		{
 			//var c0:Number = 1 / moveCount;
-			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
-			var pt:PointObject = new PointObject();
+			point = GestureGlobals.gw_public::points[event.touchPointID];
+			pt = new PointObject;
 			
-			var currentFrameID:int = GestureGlobals.frameID
+			var currentFrameID:int = GestureGlobals.frameID;
 			var FrameID:int = 0;
 			
 			//trace(" --point process");

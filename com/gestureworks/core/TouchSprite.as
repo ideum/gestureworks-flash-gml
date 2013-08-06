@@ -123,7 +123,9 @@ package com.gestureworks.core
 		// initializers
          private function preinitBase():void 
          {
-			//trace("create touchsprite base");
+			 
+			 
+			trace("create touchsprite base");
 					addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
 					updateListeners();				
 									
