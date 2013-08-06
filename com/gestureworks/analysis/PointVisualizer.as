@@ -466,20 +466,22 @@ package com.gestureworks.analysis
 			}
 
 	
-public function clear():void
-	{
-		//trace("trying to clear");
-		graphics.clear();
+		public function clear():void
+		{
+			//trace("trying to clear");
+			graphics.clear();
 		
-		//text clear
-	//for (i = 0; i < 12; i++){
-		//tptext_array[i].visible = false;
-		//mptext_array[i].visible = false;
-	//}
-	}
+			//text clear
+			for (i = 0; i < tptext_array.length; i++){
+				tptext_array[i].visible = false;
+			}
+			for (i = 0; i < mptext_array.length; i++){
+				mptext_array[i].visible = false;
+			}			
+		}
 	
 	
-	public static function map(num:Number, min1:Number, max1:Number, min2:Number, max2:Number, round:Boolean = false, constrainMin:Boolean = true, constrainMax:Boolean = true):Number
+		public static function map(num:Number, min1:Number, max1:Number, min2:Number, max2:Number, round:Boolean = false, constrainMin:Boolean = true, constrainMax:Boolean = true):Number
 		{
 			if (constrainMin && num < min1) return min2;
 			if (constrainMax && num > max1) return max2;
@@ -490,10 +492,10 @@ public function clear():void
 			return num2;
 		}	
 		
-		private function normalize(value : Number, minimum : Number, maximum : Number) : Number {
-
-                        return (value - minimum) / (maximum - minimum);
-         }
+		private function normalize(value : Number, minimum : Number, maximum : Number) : Number 
+		{
+            return (value - minimum) / (maximum - minimum);
+        }
 		
 	
 
@@ -520,7 +522,6 @@ public function clear():void
 	public function get drawText():Boolean { return _drawText; }
 	public function set drawText(value:Boolean):void{_drawText = value;}
 
-	private var _drawTextID:Boolean = true;
 
 }
 }
