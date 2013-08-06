@@ -20,12 +20,12 @@ package com.gestureworks.core
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	import org.tuio.TuioTouchEvent;
 	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
-	
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchPipeline;
@@ -37,6 +37,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.MouseManager;
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
+	import com.gestureworks.managers.ClusterHistories;
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -44,7 +45,10 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.objects.PointPairObject;
 	
+	import com.gestureworks.utils.GestureParser;
+	import com.gestureworks.utils.MousePoint;
 	import com.gestureworks.utils.GestureParser;
 	
 	
@@ -67,19 +71,14 @@ package com.gestureworks.core
 	
 	public class TouchMovieClip extends MovieClip
 	{
-		//public var point:Point;
-		//public var point:*;
 		/**
 		 * @private
 		 */
 		public var gml:XMLList;
-		/**
-		 * @private
-		 */
-		public var cml:XMLList;
 		
 		// internal public 
-		public var cO:ClusterObject;
+		public var cO:ClusterObject; // touch
+		
 		public var sO:StrokeObject;
 		public var gO:GestureListObject;
 		public var tiO:TimelineObject;
@@ -93,19 +92,33 @@ package com.gestureworks.core
 		
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
-		private var gwTouchListeners:Array = [];
+		//tracks event listeners
+		private var _tsEventListeners:Array = [];
+		private var gwTouchListeners:Dictionary = new Dictionary();
+		
+		private var _activated:Boolean = false;
 		
 		public function TouchMovieClip():void
 		{
 			super();
-			
+
 			// set mouseChildren to default false
 			mouseChildren = false; //false
 			//mouseEnabled = false;
 			
 			debugDisplay = false;
-			preinitBase();
         }
+		
+		/**
+		 * Lazy gesture activation
+		 */
+		private function get activated():Boolean { return _activated; }
+		private function set activated(a:Boolean):void {
+			if (!_activated && a) {
+				_activated = true;
+				preinitBase();
+			}
+		}
 		  
 		// initializers
          private function preinitBase():void 
@@ -125,7 +138,7 @@ package com.gestureworks.core
 						// CREATES A NEW CLUSTER OBJECT FOR THE TOUCHSPRITE
 						// HANDLES CORE GEOMETRIC RAW PROPERTIES OF THE CLUSTER
 						/////////////////////////////////////////////////////////////////////////
-						cO = new ClusterObject();
+						cO = new ClusterObject(); // touch cluster 2d
 							cO.id = touchObjectID;
 						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
 						
@@ -165,8 +178,11 @@ package com.gestureworks.core
 						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
 						
 					//}
+					
 					// bypass gml requirement for testing
-					initBase()
+					initBase();
+					if (debugDisplay)
+						visualizer.initDebug();
 		}
 		
 		/**
@@ -179,29 +195,31 @@ package com.gestureworks.core
 			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
 			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			
-			if (GestureWorks.activeTUIO)		
+			if (GestureWorks.activeTUIO && registerPoints)		
 				addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-			if (GestureWorks.activeNativeTouch)		
+			if (GestureWorks.activeNativeTouch && registerPoints)		
 				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-			if (GestureWorks.activeSim)				
+			if (GestureWorks.activeSim && registerPoints)				
 				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				
+			
 			updateGWTouchListeners();
 		}
 		
+		/**
+		 * Re-registers GWTouchEvent events with updated mode settings
+		 */
 		private function updateGWTouchListeners():void {
-			var size:int = gwTouchListeners.length;	
-			var l:Object;
-			
-			for (var i:int = 0; i < size; i++) {			
-				l = gwTouchListeners.shift();				
-				if (hasEventListener(l.type)) {
-					super.removeEventListener(l.type, l.listener);
-					if(l.type.indexOf("gwTouch") > -1)
-						addEventListener(l.type, l.listener);
-				}				
-			}			
-		}		
+			for (var type:String in gwTouchListeners) {
+				for each(var l:* in gwTouchListeners[type]) {
+					if(l.type)
+						super.removeEventListener(l.type, l.listener);
+					else{
+						super.removeEventListener(type, l.listener);
+						addEventListener(type, l.listener);
+					}
+				}
+			}
+		}
 		
 		 private function initBase():void 
 		{
@@ -223,15 +241,6 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		//public var _pointArray:Array = new Array(); // read only
-		//public function get pointArray():Array { return _pointArray; }
-		//public function set pointArray(value:Array):void
-		//{
-			//_pointArray=value;
-		//}
-		
-		
-		
 		public var _pointArray:Vector.<PointObject> = new Vector.<PointObject>(); // read only
 		public function get pointArray():Vector.<PointObject> { return _pointArray; }
 		
@@ -240,20 +249,14 @@ package com.gestureworks.core
 		 */
 		public var _N:int = 0; // number of touch points in the cluster // read only
 		public function get N():int { return _N; }
-		public function set N(value:int):void 
-		{ 
-			_N = value;
-		}
+		public function set N(value:int):void { 	_N = value;}
 		
 		/**
 		 * @private
 		 */
 		public var _dN:Number = 0; // read only
 		public function get dN():Number { return _dN; }
-		public function set dN(value:Number):void 
-		{ 
-			_dN = value;
-		}
+		public function set dN(value:Number):void { _dN = value;}
 		
 		// determin if object created by cml of native as3
 		/**
@@ -261,10 +264,7 @@ package com.gestureworks.core
 		 */
 		public var _cml_item:Boolean = false;
 		public function get cml_item():Boolean{return _cml_item;}
-		public function set cml_item(value:Boolean):void
-		{
-			_cml_item=value;
-		}
+		public function set cml_item(value:Boolean):void{	_cml_item=value;}
 		
 		// debug trace statements
 		/**
@@ -272,10 +272,7 @@ package com.gestureworks.core
 		 */
 		public var trace_debug_mode:Boolean = false;
 		public function get traceDebugModeOn():Boolean{return trace_debug_mode;}
-		public function set traceDebugModeOn(value:Boolean):void
-		{
-			trace_debug_mode=value;
-		}
+		public function set traceDebugModeOn(value:Boolean):void{	trace_debug_mode=value;}
 		
 		// point count
 		/**
@@ -283,10 +280,23 @@ package com.gestureworks.core
 		 */
 		private var _pointCount:int;
 		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void
-		{
-			_pointCount=value;
-		}
+		public function set pointCount(value:int):void {	_pointCount = value; }
+		
+		// motion point count
+		/**
+		 * @private
+		 */
+		private var _motionPointCount:int;
+		public function get motionPointCount():int{return _motionPointCount;}
+		public function set motionPointCount(value:int):void {	_motionPointCount = value; }
+		
+		// interaction point count
+		/**
+		 * @private
+		 */
+		private var _interactionPointCount:int;
+		public function get interactionPointCount():int{return _interactionPointCount;}
+		public function set interactionPointCount(value:int):void{	_interactionPointCount=value;}
 		
 		// cluster ID
 		/**
@@ -294,10 +304,7 @@ package com.gestureworks.core
 		 */
 		private var _clusterID:int;
 		public function get clusterID():int{return _clusterID;}
-		public function set clusterID(value:int):void
-		{
-			_clusterID = value;
-		}
+		public function set clusterID(value:int):void{	_clusterID = value;}
 		/**
 		 * @private
 		 */
@@ -308,6 +315,7 @@ package com.gestureworks.core
 		}
 		public function set gestureList(value:Object):void
 		{
+			activated = true;
 			_gestureList = value;
 			
 			//for (var i:String in gestureList) 
@@ -327,7 +335,6 @@ package com.gestureworks.core
 			// makes sure that if gesture list changes timeline gesture int is reset
 			/////////////////////////////////////////////////////////////////////////
 			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
-			
 		}
 		/**
 		 * @private
@@ -342,7 +349,8 @@ package com.gestureworks.core
 				
 				if (trace_debug_mode) gp.traceGesturePropertyList();
 				
-			initBase();
+			//tp re init vector metric and get new stroke lib for comparison
+			if (tc) tc.initClusterAnalysisConfig();
 		}
 		/**
 		 * @private
@@ -367,11 +375,13 @@ package com.gestureworks.core
 		 * @private
 		 */
 		private var _touchChildren:Boolean = false;
+		/**
+		 * Allows touch events to be passed down to child display object. Has the same function as MouseChildren.
+		 */
 		public function get touchChildren():Boolean{return _touchChildren;}
 		public function set touchChildren(value:Boolean):void
 		{
 			_touchChildren = value;
-			
 			// reset bubling on touch listener
 			if (value) mouseChildren = true;
 			else mouseChildren = false;
@@ -461,7 +471,7 @@ package com.gestureworks.core
 		 */
 		 
 		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
-		public function onTouchDown(event:TouchEvent, target:*=null):void
+		public function onTouchDown(event:TouchEvent, downTarget:*=null):void
 		{			
 				//////////////////
 				// new stuff
@@ -470,12 +480,12 @@ package com.gestureworks.core
 				// if target gets passed it takes precendence, otherwise try to find it
 				// currently target gets passed in as argument for our global hit test
 				// if no target is found then bail
-				if (!target)
-					target = event.target; // object that got hit, used for our non-tuio gesture events
-				if (!target)
+				if (!downTarget)
+					downTarget = event.target; // object that got hit, used for our non-tuio gesture events
+				if (!downTarget)
 					return;
 					
-				var parent:* = target.parent;	
+				var parent:* = downTarget.parent;	
 				
 				//trace("target: ", target, "parent: ", target.parent,clusterBubbling)
 				//trace(target, event.stageX, event.localX);
@@ -489,7 +499,7 @@ package com.gestureworks.core
 				// -Charles (5/16/2012)
 				{					
 						if (targetParent) { //LEGACY SUPPORT
-							if ((target is TouchSprite) || (target is TouchMovieClip)) 
+							if ((downTarget is TouchSprite) || (downTarget is TouchMovieClip)) 
 							{								
 								//ASSIGN PRIMARY CLUSTER TO PARENT
 								parent.assignPoint(event);
@@ -556,7 +566,7 @@ package com.gestureworks.core
 		 * registers assigned touch point globaly and to relevant local clusters 
 		 */
 		private function assignPoint(event:TouchEvent):void // asigns point
-		{
+		{			
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = this; // sets primary touch object/cluster
@@ -571,6 +581,8 @@ package com.gestureworks.core
 				
 				//UPDATE LOCAL CLUSTER OBJECT
 				cO.pointArray = _pointArray;
+								
+				
 				
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
@@ -578,15 +590,31 @@ package com.gestureworks.core
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				TouchManager.gw_public::registerTouchPoint(event);
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
+				if (GestureWorks.activeNativeTouch && registerPoints)
+					TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				if (GestureWorks.activeSim) MouseManager.gw_public::registerMousePoint(event);
+				if (GestureWorks.activeSim && registerPoints) 
+					MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline
 				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
 
 				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+				
+				//trace("down:", event.touchPointID, cO.pointArray.length, this._pointArray.length )
+				///////////////////////////////////////////////////////////////////////////////////////
+				//CREATE POINT PAIR
+				if(cO.pointArray.length>1){
+				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				//cO.pointPairArray.push(ppt);
+				
+				//trace("pair")
+				}
 				
 		}
 		
@@ -604,6 +632,17 @@ package com.gestureworks.core
 				//UPDATE LOCAL CLUSTER OBJECT
 				//touch object point list and cluster point list should be consolodated
 				cO.pointArray = _pointArray;
+				
+				//create point pair
+				if(cO.pointArray.length!=1){
+				var lastpointID:Number = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				//cO.pointPairArray.push(ppt);
+				//trace("Clone pair");
+				}
 				
 				//UPDATE POINT LOCAL COUNT
 				pointCount++;
@@ -623,23 +662,16 @@ package com.gestureworks.core
 		* Determins whether clusterEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get clusterEvents():Boolean{return _clusterEvents;}
-		public function set clusterEvents(value:Boolean):void
-		{
-			_clusterEvents=value;
-		}
+		public function set clusterEvents(value:Boolean):void{	_clusterEvents=value;}
 		
 		///////////////////////////////////////////////////////////////////////////
 		// FILTER OVERRIDES
-		
 		private var _deltaFilterOn:Boolean = false//true;
 		/**
 		* Determins whether filtering is applied to the delta values.
 		*/
 		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
-		public function set deltaFilterOn(value:Boolean):void
-		{
-			_deltaFilterOn=value;
-		}
+		public function set deltaFilterOn(value:Boolean):void{	_deltaFilterOn=value;}
 		
 		/**
 		* @private
@@ -684,11 +716,7 @@ package com.gestureworks.core
 		* Indicates whether any gestureEvents have been started on the touchSprite.
 		*/
 		public function get gestureEventStart():Boolean{return _gestureEventStart;}
-		public function set gestureEventStart(value:Boolean):void
-		{
-			_gestureEventStart=value;
-		}
-		
+		public function set gestureEventStart(value:Boolean):void{	_gestureEventStart=value;}
 		
 		/**
 		* @private
@@ -698,10 +726,7 @@ package com.gestureworks.core
 		* Indicates weather all gestureEvents have been completed on the touchSprite.
 		*/
 		public function get gestureEventComplete():Boolean{return _gestureEventComplete;}
-		public function set gestureEventComplete(value:Boolean):void
-		{
-			_gestureEventComplete=value;
-		}
+		public function set gestureEventComplete(value:Boolean):void{	_gestureEventComplete=value;}
 		
 		/**
 		* @private
@@ -711,12 +736,7 @@ package com.gestureworks.core
 		* Indicates whether all touch points have been released on the touchSprite.
 		*/
 		public function get gestureEventRelease():Boolean{return _gestureEventRelease;}
-		public function set gestureEventRelease(value:Boolean):void
-		{
-			_gestureEventRelease = value;
-			
-			
-		}
+		public function set gestureEventRelease(value:Boolean):void{_gestureEventRelease = value;}
 		
 		/**
 		* @private
@@ -729,10 +749,12 @@ package com.gestureworks.core
 		* Determins whether gestureEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get gestureEvents():Boolean{return _gestureEvents;}
-		public function set gestureEvents(value:Boolean):void
-		{
-			_gestureEvents=value;
-		}
+		public function set gestureEvents(value:Boolean):void {	_gestureEvents = value; }
+		
+		/**
+		 * Returns an array registered events
+		 */
+		public function get eventListeners():Array { return _tsEventListeners; }		
 		
 		/**
 		* @private
@@ -742,10 +764,7 @@ package com.gestureworks.core
 		* Determins whether release inertia is given to gestureEvents on the touchSprite.
 		*/
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set gestureReleaseInertia(value:Boolean):void
-		{
-			_gestureReleaseInertia=value;
-		}
+		public function set gestureReleaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}
 		
 		//gestures tweening
 		public var _gestureTweenOn:Boolean = false;
@@ -772,12 +791,8 @@ package com.gestureworks.core
 		*/
 		// nested transfrom 
 		private var _nestedTransform:Boolean = false;
-		
 		public function get nestedTransform():Boolean { return _nestedTransform} 
-		public function set nestedTransform(value:Boolean):void
-		{
-			_nestedTransform = value
-		}
+		public function set nestedTransform(value:Boolean):void{	_nestedTransform = value}
 		/**
 		* @private
 		*/
@@ -786,52 +801,39 @@ package com.gestureworks.core
 		* Determins whether transformEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get transformEvents():Boolean{return _transformEvents;}
-		public function set transformEvents(value:Boolean):void
-		{
-			_transformEvents=value;
-		}
+		public function set transformEvents(value:Boolean):void{	_transformEvents=value;}
 	
 		/**
 		* @private
 		*/
 		private var _transformComplete:Boolean = false;
-		
 		public function get transformComplete():Boolean { return _transformComplete; }
-		public function set transformComplete(value:Boolean):void
-		{
-			_transformComplete=value;
-		}
+		public function set transformComplete(value:Boolean):void{	_transformComplete=value;}
 		/**
 		* @private
 		*/
 		private var _transformStart:Boolean = false;
-		
 		public function get transformStart():Boolean { return _transformStart; }
-		public function set transformStart(value:Boolean):void
-		{
-			_transformStart=value;
-		}
-		
+		public function set transformStart(value:Boolean):void{	_transformStart=value;}
 		/**
 		* @private
 		*/
 		private var _transformEventStart:Boolean = true;
-		
 		public function get transformEventStart():Boolean{return _transformEventStart;}
-		public function set transformEventStart(value:Boolean):void
-		{
-			_transformEventStart=value;
-		}
+		public function set transformEventStart(value:Boolean):void{	_transformEventStart=value;}
 		/**
 		* @private
 		*/
 		private var _transformEventComplete:Boolean = true;
-		
 		public function get transformEventComplete():Boolean{return _transformEventComplete;}
-		public function set transformEventComplete(value:Boolean):void
-		{
-			_transformEventComplete=value;
-		}
+		public function set transformEventComplete(value:Boolean):void {	_transformEventComplete = value; }
+		
+		//private var _enableTouch:Boolean = true;
+		//public function get enableTouch():Boolean { return _enableTouch; }
+		//public function set enableTouch(t:Boolean):void {
+			//
+		//}		
+
 		/**
 		* @private
 		*/
@@ -841,10 +843,7 @@ package com.gestureworks.core
 		* Determins whether transformations are handled internally (natively) on the touchSprite.
 		*/
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
-		public function set disableNativeTransform(value:Boolean):void
-		{
-			_disableNativeTransform=value;
-		}
+		public function set disableNativeTransform(value:Boolean):void{	_disableNativeTransform=value;}
 		/**
 		* @private
 		*/
@@ -854,10 +853,7 @@ package com.gestureworks.core
 		* Determins whether transformations are handled internally (natively) on the touchSprite.
 		*/
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
-		public function set transformGestureVectors(value:Boolean):void
-		{
-			_transformGestureVectors=value;
-		}
+		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 		/**
 		* @private
 		*/
@@ -867,10 +863,7 @@ package com.gestureworks.core
 		* Determins whether internal (native) transformations are affine (dynamically centered) on the touchSprite.
 		*/
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
-		public function set disableAffineTransform(value:Boolean):void
-		{
-			_disableAffineTransform=value;
-		}
+		public function set disableAffineTransform(value:Boolean):void{	_disableAffineTransform=value;}
 		
 		private var _x_lock:Boolean = false;
 		public function get x_lock():Boolean {return _x_lock;}	
@@ -878,42 +871,354 @@ package com.gestureworks.core
 		
 		private var _y_lock:Boolean = false;
 		public function get y_lock():Boolean {return _y_lock;}	
-		public function set y_lock(value:Boolean):void{_y_lock = value;}
+		public function set y_lock(value:Boolean):void { _y_lock = value; }	
+		
+		
+		/////////////////////////////////////////////////////////////
+		// transform boundaries
+		/////////////////////////////////////////////////////////////		
+		//translation
+		private var _minX:Number;
+		public function get minX():Number { return _minX; }
+		public function set minX(value:Number):void {
+			_minX = value;
+		}
+		
+		private var _maxX:Number;
+		public function get maxX():Number { return _maxX; }
+		public function set maxX(value:Number):void {
+			_maxX = value;
+		}
+		
+		private var _minY:Number;
+		public function get minY():Number { return _minY; }
+		public function set minY(value:Number):void {
+			_minY = value;
+		}
+		
+		private var _maxY:Number;
+		public function get maxY():Number { return _maxY; }
+		public function set maxY(value:Number):void {
+			_maxY = value;
+		}		
+		
+		private var _minZ:Number;
+		public function get minZ():Number { return _minZ; }
+		public function set minZ(value:Number):void {
+			_minZ = value;
+		}		
+	
+		private var _maxZ:Number;
+		public function get maxZ():Number { return _maxZ; }
+		public function set maxZ(value:Number):void {
+			_maxZ = value;
+		}
+		
+		//scale
+		private var _minScale:Number;
+		public function get minScale():Number { return _minScale; }
+		public function set minScale(value:Number):void {
+			_minScale = value;
+			minScaleX = value;
+			minScaleY = value;
+		}
+		
+		private var _maxScale:Number;
+		public function get maxScale():Number { return _maxScale; }
+		public function set maxScale(value:Number):void {
+			_maxScale = value;
+			maxScaleX = value; 
+			maxScaleY = value;
+		}		
+		
+		private var _minScaleX:Number;
+		public function get minScaleX():Number { return _minScaleX; }
+		public function set minScaleX(value:Number):void {
+			_minScaleX = value;
+		}
+		
+		private var _maxScaleX:Number;
+		public function get maxScaleX():Number { return _maxScaleX; }
+		public function set maxScaleX(value:Number):void {
+			_maxScaleX = value;
+		}			
+		
+		private var _minScaleY:Number;
+		public function get minScaleY():Number { return _minScaleY; }
+		public function set minScaleY(value:Number):void {
+			_minScaleY = value;
+		}	
+		
+		private var _maxScaleY:Number;
+		public function get maxScaleY():Number { return _maxScaleY; }
+		public function set maxScaleY(value:Number):void {
+			_maxScaleY = value;
+		}			
+		
+		private var _minScaleZ:Number;
+		public function get minScaleZ():Number { return _minScaleZ; }
+		public function set minScaleZ(value:Number):void {
+			_minScaleZ = value;
+		}		
+		
+		private var _maxScaleZ:Number;
+		public function get maxScaleZ():Number { return _maxScaleZ; }
+		public function set maxScaleZ(value:Number):void {
+			_maxScaleZ = value;
+		}		
+		
+		//rotation
+		private var _minRotation:Number;
+		public function get minRotation():Number { return _minRotation; }
+		public function set minRotation(value:Number):void {
+			_minRotation = value;
+			minRotationX = value;
+			minRotationY = value;
+		}		
+		
+		private var _maxRotation:Number;
+		public function get maxRotation():Number { return _maxRotation; }
+		public function set maxRotation(value:Number):void {
+			_maxRotation = value;
+			maxRotationX = value;
+			maxRotationY = value;
+		}	
+		
+		private var _minRotationX:Number;
+		public function get minRotationX():Number { return _minRotationX; }
+		public function set minRotationX(value:Number):void {
+			_minRotationX = value;
+		}		
+		
+		private var _maxRotationX:Number;
+		public function get maxRotationX():Number { return _maxRotationX; }
+		public function set maxRotationX(value:Number):void {
+			_maxRotationX = value;
+		}
+		
+		private var _minRotationY:Number;
+		public function get minRotationY():Number { return _minRotationY; }
+		public function set minRotationY(value:Number):void {
+			_minRotationY = value;
+		}		
+		
+		private var _maxRotationY:Number;
+		public function get maxRotationY():Number { return _maxRotationY; }
+		public function set maxRotationY(value:Number):void {
+			_maxRotationY = value;
+		}
+		
+		private var _minRotationZ:Number;
+		public function get minRotationZ():Number { return _minRotationZ; }
+		public function set minRotationZ(value:Number):void {
+			_minRotationZ = value;
+		}		
+		
+		private var _maxRotationZ:Number;
+		public function get maxRotationZ():Number { return _maxRotationZ; }
+		public function set maxRotationZ(value:Number):void {
+			_maxRotationZ = value;
+		}		
+		
+		/////////////////////////////////////////////////////////////
+		//transform methods
+		/////////////////////////////////////////////////////////////
+		override public function set x(value:Number):void {super.x = value < minX ? minX : value > maxX ? maxX : value;}		
+		override public function set y(value:Number):void {super.y = value < minY ? minY : value > maxY ? maxY : value;}
+		override public function set z(value:Number):void {super.z = value < minZ ? minZ : value > maxZ ? maxZ : value;}
+		override public function set scaleX(value:Number):void {super.scaleX = value < minScaleX ? minScaleX : value > maxScaleX ? maxScaleX : value;}		
+		override public function set scaleY(value:Number):void {super.scaleY = value < minScaleY ? minScaleY : value > maxScaleY ? maxScaleY : value;}			
+		override public function set scaleZ(value:Number):void {super.scaleZ = value < minScaleZ ? minScaleZ : value > maxScaleZ ? maxScaleZ : value;}
+		override public function set rotation(value:Number):void {super.rotation = value < minRotation ? minRotation : value > maxRotation ? maxRotation : value;}
+		override public function set rotationX(value:Number):void {super.rotationX = value < minRotationX ? minRotationX : value > maxRotationX ? maxRotationX : value;}		
+		override public function set rotationY(value:Number):void {super.rotationY = value < minRotationY ? minRotationY : value > maxRotationY ? maxRotationY : value;}				
+		override public function set rotationZ(value:Number):void { super.rotationZ = value < minRotationZ ? minRotationZ : value > maxRotationZ ? maxRotationZ : value;}	
+		
+		private var _scale:Number = 1;
+		/**
+		 * Scales display object
+		 */	
+		public function get scale():Number{return _scale;}
+		public function set scale(value:Number):void
+		{
+			_scale = value < minScale ? minScale : value > maxScale ? maxScale : value;
+			scaleX = scale;
+			scaleY = scale;
+		}					
+		
+		
+		/////////////////////////////////////////////////////////////
+		// $ affine transform boundaries
+		/////////////////////////////////////////////////////////////			
+		//translation
+		private var _$minX:Number;
+		public function get $minX():Number { return _$minX; }
+		public function set $minX(value:Number):void {
+			_$minX = value;
+		}
+		
+		private var _$maxX:Number;
+		public function get $maxX():Number { return _$maxX; }
+		public function set $maxX(value:Number):void {
+			_$maxX = value;
+		}
+		
+		private var _$minY:Number;
+		public function get $minY():Number { return _$minY; }
+		public function set $minY(value:Number):void {
+			_$minY = value;
+		}
+		
+		private var _$maxY:Number;
+		public function get $maxY():Number { return _$maxY; }
+		public function set $maxY(value:Number):void {
+			_$maxY = value;
+		}		
+		
+		private var _$minZ:Number;
+		public function get $minZ():Number { return _$minZ; }
+		public function set $minZ(value:Number):void {
+			_$minZ = value;
+		}		
+	
+		private var _$maxZ:Number;
+		public function get $maxZ():Number { return _$maxZ; }
+		public function set $maxZ(value:Number):void {
+			_$maxZ = value;
+		}
+		
+		//scale
+		private var _$minScale:Number;
+		public function get $minScale():Number { return _$minScale; }
+		public function set $minScale(value:Number):void {
+			_$minScale = value;
+		}
+		
+		private var _$maxScale:Number;
+		public function get $maxScale():Number { return _$maxScale; }
+		public function set $maxScale(value:Number):void {
+			_$maxScale = value;
+		}			
+		
+		private var _$minScaleX:Number;
+		public function get $minScaleX():Number { return _$minScaleX; }
+		public function set $minScaleX(value:Number):void {
+			_$minScaleX = value;
+		}
+		
+		private var _$maxScaleX:Number;
+		public function get $maxScaleX():Number { return _$maxScaleX; }
+		public function set $maxScaleX(value:Number):void {
+			_$maxScaleX = value;
+		}			
+		
+		private var _$minScaleY:Number;
+		public function get $minScaleY():Number { return _$minScaleY; }
+		public function set $minScaleY(value:Number):void {
+			_$minScaleY = value;
+		}	
+		
+		private var _$maxScaleY:Number;
+		public function get $maxScaleY():Number { return _$maxScaleY; }
+		public function set $maxScaleY(value:Number):void {
+			_$maxScaleY = value;
+		}			
+		
+		private var _$minScaleZ:Number;
+		public function get $minScaleZ():Number { return _$minScaleZ; }
+		public function set $minScaleZ(value:Number):void {
+			_$minScaleZ = value;
+		}		
+		
+		private var _$maxScaleZ:Number;
+		public function get $maxScaleZ():Number { return _$maxScaleZ; }
+		public function set $maxScaleZ(value:Number):void {
+			_$maxScaleZ = value;
+		}		
+		
+		//rotation
+		private var _$minRotation:Number;
+		public function get $minRotation():Number { return _$minRotation; }
+		public function set $minRotation(value:Number):void {
+			_$minRotation = value;
+		}		
+		
+		private var _$maxRotation:Number;
+		public function get $maxRotation():Number { return _$maxRotation; }
+		public function set $maxRotation(value:Number):void {
+			_$maxRotation = value;
+		}
+		
+		private var _$minRotationX:Number;
+		public function get $minRotationX():Number { return _$minRotationX; }
+		public function set $minRotationX(value:Number):void {
+			_$minRotationX = value;
+		}		
+		
+		private var _$maxRotationX:Number;
+		public function get $maxRotationX():Number { return _$maxRotationX; }
+		public function set $maxRotationX(value:Number):void {
+			_$maxRotationX = value;
+		}
+		
+		private var _$minRotationY:Number;
+		public function get $minRotationY():Number { return _$minRotationY; }
+		public function set $minRotationY(value:Number):void {
+			_$minRotationY = value;
+		}		
+		
+		private var _$maxRotationY:Number;
+		public function get $maxRotationY():Number { return _$maxRotationY; }
+		public function set $maxRotationY(value:Number):void {
+			_$maxRotationY = value;
+		}
+		
+		private var _$minRotationZ:Number;
+		public function get $minRotationZ():Number { return _$minRotationZ; }
+		public function set $minRotationZ(value:Number):void {
+			_$minRotationZ = value;
+		}		
+		
+		private var _$maxRotationZ:Number;
+		public function get $maxRotationZ():Number { return _$maxRotationZ; }
+		public function set $maxRotationZ(value:Number):void {
+			_$maxRotationZ = value;
+		}		
 		
 		/////////////////////////////////////////////////////////////
 		// $ affine transform methods
 		/////////////////////////////////////////////////////////////
 		// x property
 		public function get $x():Number {return _$x;}
-		public function set $x(value:Number):void{	_$x = value;}
+		public function set $x(value:Number):void {_$x = value < $minX ? $minX : value > $maxX ? $maxX : value;}
 		// y property
 		public function get $y():Number {return _$y;}
-		public function set $y(value:Number):void{	_$y = value;}
+		public function set $y(value:Number):void {_$y = value < $minY ? $minY : value > $maxY ? $maxY : value;}
 		// z property
 		public function get $z():Number {return _$z;}
-		public function set $z(value:Number):void{	_$z = value;}
+		public function set $z(value:Number):void {_$z = value < $minZ ? $minZ : value > $maxZ ? $maxZ : value;}
 		// rotation property
 		public function get $rotation():Number{return _$rotation;}
-		public function set $rotation(value:Number):void{	_$rotation = value;}
+		public function set $rotation(value:Number):void {_$rotation = value < $minRotation ? $minRotation : value > $maxRotation ? $maxRotation : value;}
 		// rotationX property
 		public function get $rotationX():Number{return _$rotationX;}
-		public function set $rotationX(value:Number):void{_$rotationX = value;}
+		public function set $rotationX(value:Number):void {_$rotationX = value < $minRotationX ? $minRotationX : value > $maxRotationX ? $maxRotationX : value;}
 		// rotationY property
 		public function get $rotationY():Number{return _$rotationY;}
-		public function set $rotationY(value:Number):void{	_$rotationY = value;}
+		public function set $rotationY(value:Number):void{	_$rotationY = value < $minRotationY ? $minRotationY : value > $maxRotationY ? $maxRotationY : value;}
 		// rotationZ property
 		public function get $rotationZ():Number{return _$rotationZ;}
-		public function set $rotationZ(value:Number):void{	_$rotationZ = value;}
+		public function set $rotationZ(value:Number):void{	_$rotationZ = value < $minRotationZ ? $minRotationZ : value > $maxRotationZ ? $maxRotationZ : value;}
 		// scaleX property
 		public function get $scaleX():Number {return _$scaleX;}
-		public function set $scaleX(value:Number):void{	_$scaleX = value;}
+		public function set $scaleX(value:Number):void{	_$scaleX = value < $minScaleX ? $minScaleX : value > $maxScaleX ? $maxScaleX : value;}
 		// scaleY property
 		public function get $scaleY():Number {return _$scaleY;}	
-		public function set $scaleY(value:Number):void{_$scaleY = value;}
+		public function set $scaleY(value:Number):void{_$scaleY = value < $minScaleY ? $minScaleY : value > $maxScaleY ? $maxScaleY : value;}
 		// scaleZ property
 		public function get $scaleZ():Number {return _$scaleY;}	
-		public function set $scaleZ(value:Number):void{	_$scaleZ = value;}
-		// affine transform point 
+		public function set $scaleZ(value:Number):void{	_$scaleZ = value < $minScaleZ ? $minScaleZ : value > $maxScaleZ ? $maxScaleZ : value;}
+		// affine transform point  
 		public function get $transformPoint():Point { return new Point(trO.x, trO.y);} 
 		public function set $transformPoint(pt:Point):void
 		{
@@ -921,12 +1226,19 @@ package com.gestureworks.core
 				trO.x = tpt.x;
 				trO.y = tpt.y;
 		}
-		
-		
-		
+		//affine scale
+		public function get $scale():Number{return _$scale;}
+		public function set $scale(value:Number):void
+		{
+			_$scale = value < $minScale ? $minScale : value > $maxScale ? $maxScale : value;
+			$scaleX = _$scale;
+			$scaleY = _$scale;
+		}		
+
 		public var _$x:Number = 0;
 		public var _$y:Number = 0;
 		public var _$z:Number = 0;
+		public var _$scale:Number = 1;		
 		public var _$scaleX:Number = 1;
 		public var _$scaleY:Number = 1;
 		public var _$scaleZ:Number = 1;
@@ -935,10 +1247,9 @@ package com.gestureworks.core
 		public var _$rotationY:Number = 0;
 		public var _$rotationZ:Number = 0;
 		public var _$width:Number = 0;
-		public var _$height:Number = 0;
+		public var _$height:Number = 0;				
 		
-		
-		/**
+	/**
 	* @private
 	*/
 	public function updateTransformation():void 
@@ -948,10 +1259,6 @@ package com.gestureworks.core
 			tt.updateLocalProperties();
 		}
 	}
-	
-	
-	//public var debug_display:Boolean = false;
-	
 	
 	public function updateDebugDisplay():void
 	{
@@ -965,30 +1272,54 @@ package com.gestureworks.core
 		}
 		
 		private var _debugDisplay:Boolean = false;
-		public function get debugDisplay():Boolean {return _debugDisplay;}	
-		public function set debugDisplay(value:Boolean):void
-		{
+		public function get debugDisplay():Boolean { return _debugDisplay;}	
+		public function set debugDisplay(value:Boolean):void {
+			if (debugDisplay == value) return;
+						
 			_debugDisplay = value;
+			if(visualizer)
+				visualizer.initDebug();
 		}
 		
 		private var _gestureFilters:Boolean = true;
 		public function get gestureFilters():Boolean {return _gestureFilters;}	
-		public function set gestureFilters(value:Boolean):void
-		{
-			_gestureFilters = value;
-		}
+		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
 		
-		// BROAD CASTING TEST
+		// BROADCASTING TEST
 		private var _broadcastTarget:Boolean = false;
 		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
-		public function set broadcastTarget(value:Boolean):void
-		{
-			_broadcastTarget = value;
-		}
+		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
+		
+		// TRANSFORM 3D
+		private var _transform3d:Boolean = false;
+		public function get transform3d():Boolean {return _transform3d;}	
+		public function set transform3d(value:Boolean):void {	_transform3d = value; }
+		
+		// TRANSFORM 3D
+		private var _motion3d:Boolean = false;
+		public function get motion3d():Boolean {return _motion3d;}	
+		public function set motion3d(value:Boolean):void{	_motion3d = value;}
+		
+		
+		private var _registerPoints:Boolean = true;
+		/**
+		* Determines if the touch points are registered to the TouchManager. One can override 
+		* this behaivor by setting the value to false. This is useful when creating custom 
+		* TouchSprite extensions and external framework bindings.
+		* @default true
+		*/
+		public function get registerPoints():Boolean { return _registerPoints} 
+		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
+		
+		private var _away3d:Boolean = false;
+		public function get away3d():Boolean {return _away3d;}	
+		public function set away3d(value:Boolean):void { _away3d = value; }
 		
 		public function updateTObjProcessing():void
-		{			
-			if ( !(GestureWorks.activeMotion) || (GestureWorks.activeMotion && cO.n != 0) ) {
+		{
+			
+			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
+			
 				if (tc) tc.updateClusterAnalysis();
 				if (tp) tp.processPipeline();
 				if (tg) tg.manageGestureEventDispatch();
@@ -996,7 +1327,8 @@ package com.gestureworks.core
 					tt.transformManager();
 					tt.updateLocalProperties();
 				}
-			}
+				
+				ClusterHistories.historyQueue(_touchObjectID);
 		}
 		
 		/**
@@ -1010,20 +1342,93 @@ package com.gestureworks.core
 		 */
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
 		{
-			if (type.indexOf("gwTouch") > -1)
-			{				
+			if(GWGestureEvent.isType(type))
+				activated = true;			
+			if (GWTouchEvent.isType(type))
+			{	
+				var listeners:Array = [];
 				for each(var gwt:String in GWTouchEvent.eventTypes(type)) {
 					function gwl(e:*):void {
 						dispatchEvent(new GWTouchEvent(e));
 					}
-					super.addEventListener(gwt, gwl);
-					gwTouchListeners.push( { type:gwt, listener:gwl } );
+					super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
+					listeners.push( { type:gwt, listener:gwl } );
 				}
-				gwTouchListeners.push( { type:type, listener:listener } );	
+				
+				listeners.push( { listener:listener } );
+				gwTouchListeners[type] = listeners;				
 			}
-			
+
+			_tsEventListeners.push( { type:type, listener:listener, capture:useCapture} );
 			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
+		
+		/**
+		 * Unregisters event listeners. Also removes GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 */
+		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void 
+		{
+			if (!super.hasEventListener(type))
+				return;
+				
+			if (GWTouchEvent.isType(type)) {
+				for each(var l:* in gwTouchListeners[type]) {
+					if (l.type)
+						super.removeEventListener(l.type, l.listener);
+				}
+				delete gwTouchListeners[type];
+			}
+			
+			//update event registration array
+			var lCount:int = _tsEventListeners.length;			
+			for (var i:int = 0; i < lCount; i++) {
+				var el:* = _tsEventListeners[i];
+				if (el.type == type && el.listener == listener && el.capture == useCapture) {
+					_tsEventListeners.splice(i, 1);
+					break;
+				}
+			}
+			
+			super.removeEventListener(type, listener, useCapture);
+		}
+		
+		/**
+		 * Unregisters all event listeners
+		 */
+		public function removeAllListeners():void {
+			var eCnt:int = _tsEventListeners.length;
+			var e:*;
+			for(var i:int = eCnt-1; i >= 0; i--) {
+				e = _tsEventListeners[i];
+				removeEventListener(e.type, e.listener, e.capture);
+			}
+			_tsEventListeners = null;
+		}
+		
+		/**
+		 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
+		 * This is the root destructor intended to be called by overriding dispose functions. 
+		 */		
+		//public function dispose():void {
+			//
+			//remove all children
+			//for (var i:int = numChildren - 1; i >= 0; i--)
+			//{
+				//var child:Object = getChildAt(i);
+				//if (child.hasOwnProperty("dispose"))
+					//child["dispose"]();
+				//removeChildAt(i);
+			//}	
+			//
+			//unregister events
+			//removeAllListeners();
+			//
+			//remove from master list
+			//delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+		//}
 		
 	}
 }
