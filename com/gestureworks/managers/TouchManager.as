@@ -166,22 +166,24 @@ package com.gestureworks.managers
 			}
 		}
 		
+		
+		private static var pointObject:PointObject;
 	
 		// the Stage TOUCH_MOVE event.	
 		// DRIVES POINT PATH UPDATES
 		public static function onTouchMove(event:TouchEvent, overrideRegisterPoints:Boolean=false):void
 		{	
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
-			var pointObject:PointObject = points[event.touchPointID];
+			pointObject = points[event.touchPointID];
 			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegisterPoints) { 
+				if (pointObject.object["registerPoints"] || overrideRegisterPoints) { 
 					// UPDATE POINT POSITIONS
 					pointObject.y = event.stageY;
 					pointObject.x = event.stageX;
-					pointObject.moveCount ++;
+					pointObject.moveCount++;
 					
 					// UPDATE POINT HISTORY 
 					// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY

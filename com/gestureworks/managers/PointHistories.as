@@ -28,13 +28,14 @@ package com.gestureworks.managers
 	
 	public class PointHistories 
 	{
-		
 		private static var point:PointObject = new PointObject();
 		private static var pt:PointObject = new PointObject();
+		private static var currentFrameID:int;
+		private static var FrameID:int;
 		
 		public static function historyQueue(event:TouchEvent):void
 		{
-			var point:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+			point = GestureGlobals.gw_public::points[event.touchPointID]
 			
 			if (point) {
 				point.history.unshift(historyObject(event));
@@ -59,8 +60,8 @@ package com.gestureworks.managers
 			point = GestureGlobals.gw_public::points[event.touchPointID];
 			pt = new PointObject;
 			
-			var currentFrameID:int = GestureGlobals.frameID;
-			var FrameID:int = 0;
+			currentFrameID = GestureGlobals.frameID;
+			FrameID = 0;
 			
 			//trace(" --point process");
 			
@@ -78,12 +79,12 @@ package com.gestureworks.managers
 				pt.h = event.sizeY;
 				pt.dx = event.stageX - point.history[0].x;
 				pt.dy = event.stageY - point.history[0].y;
-					// NO SUB-PIXEL RESOLUTION
-					//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
-					
-					//var sx:Number = event.sizeX * Math.exp(90)
-					//var sy:Number = event.sizeY*Math.exp(90)
-					//trace(event.sizeX,event.sizeY, event.pressure, sx,sy);
+				// NO SUB-PIXEL RESOLUTION
+				//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
+				
+				//var sx:Number = event.sizeX * Math.exp(90)
+				//var sy:Number = event.sizeY*Math.exp(90)
+				//trace(event.sizeX,event.sizeY, event.pressure, sx,sy);
 				//trace(pt.dx,pt.dy,event.stageY,point.history[0].y,point.history[1].y,point.history[3].y)
 			}
 			
