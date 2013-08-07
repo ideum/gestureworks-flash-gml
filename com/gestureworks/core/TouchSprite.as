@@ -123,9 +123,7 @@ package com.gestureworks.core
 		// initializers
          private function preinitBase():void 
          {
-			 
-			 
-			trace("create touchsprite base");
+			//trace("create touchsprite base");
 					addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
 					updateListeners();				
 									
@@ -661,7 +659,7 @@ package com.gestureworks.core
 		 */
 		private var _clusterEvents:Boolean = false;
 		/**
-		* Determins whether clusterEvents are processed and dispatched on the touchSprite.
+		* Determines whether clusterEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get clusterEvents():Boolean{return _clusterEvents;}
 		public function set clusterEvents(value:Boolean):void{	_clusterEvents=value;}
@@ -670,7 +668,7 @@ package com.gestureworks.core
 		// FILTER OVERRIDES
 		private var _deltaFilterOn:Boolean = false//true;
 		/**
-		* Determins whether filtering is applied to the delta values.
+		* Determines whether filtering is applied to the delta values.
 		*/
 		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
 		public function set deltaFilterOn(value:Boolean):void{	_deltaFilterOn=value;}
@@ -680,7 +678,7 @@ package com.gestureworks.core
 		*/
 		private var _gestureTouchInertia:Boolean = false;
 		/**
-		* Determins whether touch inertia is processed on the touchSprite.
+		* Determines whether touch inertia is processed on the touchSprite.
 		*/
 		public function get gestureTouchInertia():Boolean{return _gestureTouchInertia;}
 		public function set gestureTouchInertia(value:Boolean):void
@@ -748,7 +746,7 @@ package com.gestureworks.core
 		// TODO, AUTO ON WHEN ATTATCH LISTENERS
 		private var _gestureEvents:Boolean = true;
 		/**
-		* Determins whether gestureEvents are processed and dispatched on the touchSprite.
+		* Determines whether gestureEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get gestureEvents():Boolean{return _gestureEvents;}
 		public function set gestureEvents(value:Boolean):void {	_gestureEvents = value; }
@@ -763,7 +761,7 @@ package com.gestureworks.core
 		*/
 		public var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
 		/**
-		* Determins whether release inertia is given to gestureEvents on the touchSprite.
+		* Determines whether release inertia is given to gestureEvents on the touchSprite.
 		*/
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
 		public function set gestureReleaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}
@@ -800,7 +798,7 @@ package com.gestureworks.core
 		*/
 		private var _transformEvents:Boolean = false;
 		/**
-		* Determins whether transformEvents are processed and dispatched on the touchSprite.
+		* Determines whether transformEvents are processed and dispatched on the touchSprite.
 		*/
 		public function get transformEvents():Boolean{return _transformEvents;}
 		public function set transformEvents(value:Boolean):void{	_transformEvents=value;}
@@ -842,17 +840,23 @@ package com.gestureworks.core
 		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
 		private var _disableNativeTransform:Boolean = true;
 		/**
-		* Determins whether transformations are handled internally (natively) on the touchSprite.
+		* Determines whether transformations are handled internally (natively) on the touchSprite.
 		*/
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
-		public function set disableNativeTransform(value:Boolean):void{	_disableNativeTransform=value;}
+		public function set disableNativeTransform(value:Boolean):void {_disableNativeTransform = value; }
+		/**
+		* Determines whether transformations are handled internally (natively) on the touchSprite.
+		* Same as !disableNativeTransform.
+		*/
+		public function get nativeTransform():Boolean{return !_disableNativeTransform;}
+		public function set nativeTransform(value:Boolean):void {_disableNativeTransform = !value; }						
 		/**
 		* @private
 		*/
 		// default true so that all nested gestures are correct unless specidied
 		private var _transformGestureVectors:Boolean = true;
 		/**
-		* Determins whether transformations are handled internally (natively) on the touchSprite.
+		* Determines whether transformations are handled internally (natively) on the touchSprite.
 		*/
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
@@ -862,10 +866,18 @@ package com.gestureworks.core
 		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
 		private var _disableAffineTransform:Boolean = true;
 		/**
-		* Determins whether internal (native) transformations are affine (dynamically centered) on the touchSprite.
+		* Determines whether gesture event driven transformations are affine on the touchSprite.
+		* You must use the $attributes when this flag is set.
 		*/
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
-		public function set disableAffineTransform(value:Boolean):void{	_disableAffineTransform=value;}
+		public function set disableAffineTransform(value:Boolean):void {_disableAffineTransform = value;}
+		/**
+		* Determines whether gesture event driven transformations are affine on the touchSprite.
+		* You must use the $attributes when this flag is set.
+		* Same as !disableAffineTransform
+		*/
+		public function get affineTransform():Boolean{return !_disableAffineTransform;}
+		public function set affineTransform(value:Boolean):void{_disableAffineTransform = !value;}		
 		
 		private var _x_lock:Boolean = false;
 		public function get x_lock():Boolean {return _x_lock;}	
@@ -1314,6 +1326,10 @@ package com.gestureworks.core
 		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
 		
 		private var _away3d:Boolean = false;
+		/**
+		* Sets whether this is representing an Away3D object.
+		* @default true
+		*/		
 		public function get away3d():Boolean {return _away3d;}	
 		public function set away3d(value:Boolean):void { _away3d = value; }
 		
