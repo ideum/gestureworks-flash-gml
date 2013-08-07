@@ -21,106 +21,87 @@ package com.gestureworks.objects
 	public class PointObject extends Object 
 	{	
 		// ID
-		private var _id:int;
-		public function get id():int{	return _id;}
-		public function set id(value:int):void{	_id = value;}
+		public var id:int;
+
 		// touchPointID
-		private var _touchPointID:Number;
-		public function get touchPointID():Number{	return _touchPointID;}
-		public function set touchPointID(value:Number):void{	_touchPointID = value;}
+		public var touchPointID:Number;
+
 		
 		/////////////////////////////////////////////
 		// x
-		private var _x:Number = 0;
-		public function get x():Number{	return _x;}
-		public function set x(value:Number):void{	_x = value;}
+		public var x:Number;
+
 		// y
-		private var _y:Number = 0;
-		public function get y():Number{	return _y;}
-		public function set y(value:Number):void{	_y = value;}
+		public var y:Number;
+
 		// Z //-3d
-		//private var _z:Number = 0;
-		//public function get z():Number{	return _z;}
-		//public function set z(value:Number):void{	_z = value;}
+		//public var _z:Number = 0;
+
 		
 		// width
-		private var _w:Number = 0;
-		public function get w():Number{	return _w;}
-		public function set w(value:Number):void{	_w = value;}
+		public var w:Number;
+
 		// height
-		private var _h:Number = 0;
-		public function get h():Number{	return _h;}
-		public function set h(value:Number):void{	_h = value;}
+		public var h:Number;
+
 		//////////////////////////////////////////////
 		
 		// dx
-		private var _dx:Number = 0;
-		public function get dx():Number{	return _dx;}
-		public function set dx(value:Number):void{	_dx = value;}
+		public var dx:Number;
+
 		// dy
-		private var _dy:Number = 0;
-		public function get dy():Number{	return _dy;}
-		public function set dy(value:Number):void {	_dy = value; }
+		public var dy:Number;
+
 		
 		// dz
-		//private var _dz:Number = 0;
-		//public function get dz():Number{	return _dz;}
-		//public function set dz(value:Number):void{	_dz = value;}
+		//public var _dz:Number = 0;
+
 		                                                                                                                                                                                                  
 		// DX
-		private var _DX:Number = 0;
-		public function get DX():Number{	return _DX;}
-		public function set DX(value:Number):void{	_DX = value;}
+		public var DX:Number;
+
 		// DY
-		private var _DY:Number = 0;
-		public function get DY():Number{	return _DY;}
-		public function set DY(value:Number):void{	_DY = value;}
+		public var DY:Number;
+
 		
 		// frameID
-		private var _frameID:int;
-		public function get frameID():int{	return _frameID;}
-		public function set frameID(value:int):void{	_frameID = value;}
+		public var frameID:int;
+
 		
 		// move count
 		// number move updates for point in frame
-		private var _moveCount:int =0;
-		public function get moveCount():int{	return _moveCount;}
-		public function set moveCount(value:int):void{	_moveCount = value;}
+		public var moveCount:int;
+
 		
 		
 		//////////////////////////////////////////////////
 		// MAY NEED TO MOVE TO CLUSTER
 		/////////////////////////////////////////////////
 		// hold monitor 
-		private var _holdMonitorOn:Boolean = false;
-		public function get holdMonitorOn():Boolean{	return _holdMonitorOn;}
-		public function set holdMonitorOn(value:Boolean):void{	_holdMonitorOn = value;}
+		public var holdMonitorOn:Boolean;
+
 		// hold count
 		// number frames passed hold test
-		private var _holdCount:int;
-		public function get holdCount():int{	return _holdCount;}
-		public function set holdCount(value:int):void{	_holdCount = value;}
+		public var holdCount:int;
+
 		// hold lock 
-		private var _holdLock:Boolean = false;
-		public function get holdLock():Boolean{	return _holdLock;}
-		public function set holdLock(value:Boolean):void{	_holdLock = value;}
+		public var holdLock:Boolean;
+
 		
 		
 		
 		// MAY NEED REMOVE
 		// event
-		private var _event:TouchEvent;
-		public function get event():TouchEvent{	return _event;}
-		public function set event(value:TouchEvent):void{	_event = value;}
+		public var event:TouchEvent;
+
 		
 		///////////////////////////////////////////////////
 		// DIRECT REFERENCE TO THE TOUCH OBJECT THAT "OWNS" THE TOUCH POINT
 		// primary touch object (should be target)
 		//////////////////////////////////////////////////
 		// object
-		private var _object:DisplayObject;
-		public function get object():DisplayObject{	return _object;}
-		public function set object(value:DisplayObject):void{	_object = value;}
+		public var object:DisplayObject;
+
 		
 		///////////////////////////////////////////////////////
 		// list of objects that are given copy of touch point
@@ -152,9 +133,8 @@ package com.gestureworks.objects
 		
 		
 		// history
-		private var _history:Vector.<PointObject> = new Vector.<PointObject>();
-		public function get history():Vector.<PointObject>{	return _history;}
-		public function set history(value:Vector.<PointObject>):void{	_history = value;}
+		public var history:Vector.<PointObject> = new Vector.<PointObject>();
+
 		
 	}
 }

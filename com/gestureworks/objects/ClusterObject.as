@@ -21,293 +21,220 @@ package com.gestureworks.objects
 	public class ClusterObject extends Object 
 	{
 		// ID
-		private var _id:int;
-		public function get id():int{return _id;}
-		public function set id(value:int):void{_id = value;}
+		public var id:int;
+
 		// cluster type
-		private var _type:String;
-		public function get type():String{return _type;}
-		public function set type(value:String):void { _type = value; }
+		public var type:String;
+
 		
 		///////////////////////////////////////
 		// cluster properties//////////////////
 		///////////////////////////////////////
 		// number of points---------------------
-		private var _n:int = 0;
-		public function get n():int{return _n;}
-		public function set n(value:int):void{_n = value;}
+		public var n:int;
+
 		// number of hands---------------------
-		private var _hn:int = 0;
-		public function get hn():int{return _hn;}
-		public function set hn(value:int):void{_hn = value;}
+		public var hn:int;
+
 		// number of fingers---------------------
-		private var _fn:int = 0;
-		public function get fn():int{return _fn;}
-		public function set fn(value:int):void{_fn = value;}
+		public var fn:int;
+
 		// number of derived interactive points---------------------
-		private var _ipn:int = 0;
-		public function get ipn():int{return _ipn;}
-		public function set ipn(value:int):void{_ipn = value;}
-		
+		public var ipn:int;
 		
 		// CHANGE IN NUMBER OF TOUCH POINTS
-		private var _dn:int = 0;
-		public function get dn():int{return _dn;}
-		public function set dn(value:int):void { _dn = value; }
+		public var dn:int;
 		
 		// CHANGE IN NUMBER OF INTERACTION POINTS
-		private var _dipn:int = 0;
-		public function get dipn():int{return _dipn;}
-		public function set dipn(value:int):void{_dipn = value;}
-		
+		public var dipn:int;
 		
 		/////////////////////////////////
 		// frame count
-		private var _count:int;
-		public function get count():int{return _count;}
-		public function set count(value:int):void{_count = value;}
+		public var count:int;
+
 		// x---------------------
-		private var _x:Number = 0;
-		public function get x():Number{return _x;}
-		public function set x(value:Number):void{_x = value;}
+		public var x:Number;
+
 		// y---------------------
-		private var _y:Number = 0;
-		public function get y():Number{return _y;}
-		public function set y(value:Number):void{_y = value;}
+		public var y:Number;
+
 		// z---------------------
-		private var _z:Number = 0;
-		public function get z():Number{return _z;}
-		public function set z(value:Number):void{_z = value;}
+		public var z:Number;
+
 		// width----------------------
-		private var _width:Number = 0;
-		public function get width():Number{return _width;}
-		public function set width(value:Number):void{_width = value;}
+		public var width:Number;
+
 		// height---------------------
-		private var _height:Number = 0;
-		public function get height():Number{return _height;}
-		public function set height(value:Number):void{_height = value;}
+		public var height:Number;
+
 		// length---------------------
-		private var _length:Number = 0;
-		public function get length():Number{return _length;}
-		public function set length(value:Number):void{_length = value;}
+		public var length:Number;
+
 		// radius---------------------
-		private var _radius:Number = 0;
-		public function get radius():Number{return _radius;}
-		public function set radius(value:Number):void { _radius = value; }
+		public var radius:Number;
 		
 		// separation------------------
-		private var _separation:Number = 0;
-		public function get separation():Number{return _separation;}
-		public function set separation(value:Number):void{_separation = value;}
+		public var separation:Number;
+
 		// separation------------------
-		private var _separationX:Number = 0;
-		public function get separationX():Number{return _separationX;}
-		public function set separationX(value:Number):void{_separationX = value;}
+		public var separationX:Number;
+
 		// separationY------------------
-		private var _separationY:Number = 0;
-		public function get separationY():Number{return _separationY;}
-		public function set separationY(value:Number):void{_separationY = value;}
+		public var separationY:Number;
+
 		// separationZ------------------
-		private var _separationZ:Number = 0;
-		public function get separationZ():Number{return _separationZ;}
-		public function set separationZ(value:Number):void{_separationZ = value;}
+		public var separationZ:Number;
 		
 		// rotation---------------------
-		private var _rotation:Number = 0;
-		public function get rotation():Number{return _rotation;}
-		public function set rotation(value:Number):void{_rotation = value;}
+		public var rotation:Number;
+
 		// rotationX---------------------
-		private var _rotationX:Number = 0;
-		public function get rotationX():Number{return _rotationX;}
-		public function set rotationX(value:Number):void{_rotationX = value;}
+		public var rotationX:Number;
+
 		// rotation---------------------
-		private var _rotationY:Number = 0;
-		public function get rotationY():Number{return _rotationY;}
-		public function set rotationY(value:Number):void{_rotationY = value;}
+		public var rotationY:Number;
+
 		// rotationZ---------------------
-		private var _rotationZ:Number = 0;
-		public function get rotationZ():Number{return _rotationZ;}
-		public function set rotationZ(value:Number):void{_rotationZ = value; }
+		public var rotationZ:Number;
+
 		
 		// mean position
 		// mx---------------------
-		private var _mx:Number = 0;
-		public function get mx():Number{return _mx;}
-		public function set mx(value:Number):void{_mx = value;}
+		public var mx:Number;
+
 		// my---------------------
-		private var _my:Number = 0;
-		public function get my():Number{return _my;}
-		public function set my(value:Number):void{_my = value;}
+		public var my:Number;
+
 		// mz---------------------
-		private var _mz:Number = 0;
-		public function get mz():Number{return _mz;}
-		public function set mz(value:Number):void { _mz = value; }
+		public var mz:Number;
 		
 		/////////////////////////////////////////////////
 		// velocities
 		/////////////////////////////////////////////////
 		// dx---------------------
-		private var _dx:Number = 0;
-		public function get dx():Number{return _dx;}
-		public function set dx(value:Number):void{_dx = value;}
+		public var dx:Number;
+
 		// dy---------------------
-		private var _dy:Number = 0;
-		public function get dy():Number{return _dy;}
-		public function set dy(value:Number):void{_dy = value;}
+		public var dy:Number;
+
 		// dz---------------------
-		private var _dz:Number = 0;
-		public function get dz():Number{return _dz;}
-		public function set dz(value:Number):void{_dz = value;}
+		public var dz:Number;
 		
 		// size veloctiy
 		// dw---------------------
-		private var _dw:Number = 0;
-		public function get dw():Number{return _dw;}
-		public function set dw(value:Number):void{_dw = value;}
+		public var dw:Number;
+
 		// dh---------------------
-		private var _dh:Number = 0;
-		public function get dh():Number{return _dh;}
-		public function set dh(value:Number):void{_dh = value;}
+		public var dh:Number;
+
 		// dr---------------------
-		private var _dr:Number = 0;
-		public function get dr():Number{return _dr;}
-		public function set dr(value:Number):void{_dr = value;}
+		public var dr:Number;
+
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// scale velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// dsx---------------------
-		private var _ds:Number = 0;
-		public function get ds():Number{return _ds;}
-		public function set ds(value:Number):void{	_ds = value;}
+		public var ds:Number;
+
 		// dsx---------------------
-		private var _dsx:Number = 0;
-		public function get dsx():Number{return _dsx;}
-		public function set dsx(value:Number):void{_dsx = value;}
+		public var dsx:Number;
+
 		// dsy---------------------
-		private var _dsy:Number = 0;
-		public function get dsy():Number{	return _dsy;}
-		public function set dsy(value:Number):void{	_dsy = value;}
+		public var dsy:Number;
+
 		// dsz---------------------
-		private var _dsz:Number = 0;
-		public function get dsz():Number{	return _dsz;}
-		public function set dsz(value:Number):void{	_dsz = value;}
+		public var dsz:Number;
+
 		
 		///////////////////////////////////////////////////////////////////////////////
 		//rotational velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// dtheta ------------------
-		private var _dtheta:Number = 0;
-		public function get dtheta():Number{return _dtheta;}
-		public function set dtheta(value:Number):void{	_dtheta = value;}
+		public var dtheta:Number;
+
 		// dthetax ------------------
-		private var _dthetaX:Number = 0;
-		public function get dthetaX():Number{	return _dthetaX;}
-		public function set dthetaX(value:Number):void{	_dthetaX = value;}
+		public var dthetaX:Number;
+
 		// dthetay ------------------
-		private var _dthetaY:Number = 0;
-		public function get dthetaY():Number{	return _dthetaY;}
-		public function set dthetaY(value:Number):void{	_dthetaY = value;}
+		public var dthetaY:Number;
+
 		// dthetaZ ------------------
-		private var _dthetaZ:Number = 0;
-		public function get dthetaZ():Number{	return _dthetaZ;}
-		public function set dthetaZ(value:Number):void{	_dthetaZ = value;}
+		public var dthetaZ:Number;
+
 		// pivot_dtheta ------------------
-		private var _pivot_dtheta:Number = 0;
-		public function get pivot_dtheta():Number{	return _pivot_dtheta;}
-		public function set pivot_dtheta(value:Number):void{	_pivot_dtheta = value;}
+		public var pivot_dtheta:Number;
+
 	
 		///////////////////////////////////////////////////////////////////////////////
 		//mean velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// mdx---------------------
-		private var _mdx:Number = 0;
-		public function get mdx():Number{return _mdx;}
-		public function set mdx(value:Number):void{_mdx = value;}
+		public var mdx:Number;
+
 		// mdy---------------------
-		private var _mdy:Number = 0;
-		public function get mdy():Number{	return _mdy;}
-		public function set mdy(value:Number):void{	_mdy = value;}
+		public var mdy:Number;
+
 		// mdz---------------------
-		private var _mdz:Number = 0;
-		public function get mdz():Number{	return _mdz;}
-		public function set mdz(value:Number):void{	_mdz = value;}
+		public var mdz:Number;
 		
 		//////////////////////////////////////////////
 		// accelerations
 		//////////////////////////////////////////////
 		// ddx ------------------
-		private var _ddx:Number = 0;
-		public function get ddx():Number{	return _ddx;}
-		public function set ddx(value:Number):void{	_ddx = value;}
+		public var ddx:Number;
+
 		// ddy ------------------
-		private var _ddy:Number = 0;
-		public function get ddy():Number{	return _ddy;}
-		public function set ddy(value:Number):void{	_ddy = value;}
+		public var ddy:Number;
+
 		// ddz ------------------
-		private var _ddz:Number = 0;
-		public function get ddz():Number{	return _ddz;}
-		public function set ddz(value:Number):void{	_ddz = value;}
+		public var ddz:Number;
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// rotational acceleration
 		///////////////////////////////////////////////////////////////////////////////
 		// ddtheta ------------------
-		private var _ddtheta:Number = 0;
-		public function get ddtheta():Number{	return _ddtheta;}
-		public function set ddtheta(value:Number):void	{	_ddtheta = value; }
+		public var ddtheta:Number;
 		
 		////////////////////////////////////////////////////////////////////////////////
 		// separation acceleration
 		////////////////////////////////////////////////////////////////////////////////
 		// ddsx ------------------
-		private var _ddsx:Number = 0;
-		public function get ddsx():Number{	return _ddsx;}
-		public function set ddsx(value:Number):void{	_ddsx = value;}
+		public var ddsx:Number;
+
 		// ddsy ------------------
-		private var _ddsy:Number = 0;
-		public function get ddsy():Number{	return _ddsy;}
-		public function set ddsy(value:Number):void{	_ddsy = value;}
+		public var ddsy:Number;
+
 		// ddsz ------------------
-		private var _ddsz:Number = 0;
-		public function get ddsz():Number{	return _ddsz;}
-		public function set ddsz(value:Number):void{	_ddsz = value;}
+		public var ddsz:Number;
+
 		// dds ------------------
-		private var _dds:Number = 0;
-		public function get dds():Number{	return _dds;}
-		public function set dds(value:Number):void{	_dds = value;}
+		public var dds:Number;
+
 		// dds3d ------------------
-		private var _dds3d:Number = 0;
-		public function get dds3d():Number{	return _dds3d; }
-		public function set dds3d(value:Number):void{_dds3d = value;}
+		public var dds3d:Number;
+
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// estimated total mean acceleration
 		///////////////////////////////////////////////////////////////////////////////
 		// etm_ddx ------------------
-		private var _etm_dx:Number = 0;
-		public function get etm_dx():Number{	return _etm_dx;}
-		public function set etm_dx(value:Number):void{	_etm_dx = value;}
+		public var etm_dx:Number;
+
 		// etm ddy ------------------
-		private var _etm_dy:Number = 0;
-		public function get etm_dy():Number{	return _etm_dy;}
-		public function set etm_dy(value:Number):void{	_etm_dy = value;}
+		public var etm_dy:Number;
+
 		// etm ddz ------------------
-		private var _etm_dz:Number = 0;
-		public function get etm_dz():Number{	return _etm_dz;}
-		public function set etm_dz(value:Number):void{	_etm_dz = value;}
+		public var etm_dz:Number;
+
 		// etm_ddx ------------------
-		private var _etm_ddx:Number = 0;
-		public function get etm_ddx():Number{	return _etm_ddx;}
-		public function set etm_ddx(value:Number):void{	_etm_ddx = value;}
+		public var etm_ddx:Number;
+
 		// etm_ddy ------------------
-		private var _etm_ddy:Number = 0;
-		public function get etm_ddy():Number{	return _etm_ddy;}
-		public function set etm_ddy(value:Number):void{_etm_ddy = value;}
+		public var etm_ddy:Number;
+
 		// etm_ddz ------------------
-		private var _etm_ddz:Number = 0;
-		public function get etm_ddz():Number{return _etm_ddz;}
-		public function set etm_ddz(value:Number):void{_etm_ddz = value;}
+		public var etm_ddz:Number;
 		
 		
 		///////////////////////////////////////////////////////////////////////////////
