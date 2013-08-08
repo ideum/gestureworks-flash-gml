@@ -109,10 +109,6 @@ package com.gestureworks.analysis
 			gO = ts.gO;
 			
 			orientation = cO.orientation;
-			
-			
-			
-			
 		}
 			
 	public function draw():void
@@ -125,9 +121,12 @@ package com.gestureworks.analysis
 		// clear
 		graphics.clear();
 		
+		
+		// FIXME: These are exclusive b/c they use the same graphic surface
+		
 		// draw
-	//	draw_touch_gesture();
-		draw_motion_gesture();
+		draw_touch_gesture();
+		//draw_motion_gesture();
 		//draw_sensor_gesture();
 		
 	}
@@ -144,9 +143,7 @@ package com.gestureworks.analysis
 		// draw pivot gesture vector
 		/////////////////////////////////////////////////////////////////////////////////
 		if (N)
-		{
-			
-			
+		{			
 			if ((_drawPivot)&&(ts.trO.init_center_point) && (ts.trO.transformPointsOn))
 			{
 				if ((ts.cO.x != 0) && (ts.cO.y != 0) && (ts.cO.dx != 0) && (ts.cO.dy != 0)) {
@@ -160,19 +157,19 @@ package com.gestureworks.analysis
 					y_c = ts.trO.transAffinePoints[4].y	
 				}
 					
-					graphics.lineStyle(3, 0xFFFFFF, 0.8);
-					//graphics.moveTo(tO.x, tO.y);
-					graphics.moveTo(x_c, y_c);
-					graphics.lineTo(ts.cO.x, ts.cO.y);
-					
-					graphics.lineStyle(3, 0xFF0000, 0.8);
-					graphics.moveTo(ts.cO.x, ts.cO.y);
-					graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
-					
-					graphics.lineStyle(3, 0x00FF00, 0.8);
-					//graphics.moveTo(tO.x, tO.y);
-					graphics.moveTo(x_c, y_c);
-					graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
+				graphics.lineStyle(3, 0xFFFFFF, 0.8);
+				//graphics.moveTo(tO.x, tO.y);
+				graphics.moveTo(x_c, y_c);
+				graphics.lineTo(ts.cO.x, ts.cO.y);
+				
+				graphics.lineStyle(3, 0xFF0000, 0.8);
+				graphics.moveTo(ts.cO.x, ts.cO.y);
+				graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
+				
+				graphics.lineStyle(3, 0x00FF00, 0.8);
+				//graphics.moveTo(tO.x, tO.y);
+				graphics.moveTo(x_c, y_c);
+				graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
 				}
 			}
 			
@@ -300,7 +297,7 @@ package com.gestureworks.analysis
 					// gest current gesture event array from frame
 					gestureEventArray = ts.tiO.frame.gestureEventArray;
 
-					//if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
+					//trace("gesture event array--------------------------------------------",gestureEventArray.length);
 							
 						
 								for (var j:uint = 0; j < gestureEventArray.length; j++) 
