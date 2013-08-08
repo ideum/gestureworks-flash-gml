@@ -31,210 +31,210 @@ package com.gestureworks.objects
 		// cluster properties//////////////////
 		///////////////////////////////////////
 		// number of points---------------------
-		public var n:int;
+		public var n:int=0;
 
 		// number of hands---------------------
-		public var hn:int;
+		public var hn:int=0;
 
 		// number of fingers---------------------
-		public var fn:int;
+		public var fn:int=0;
 
 		// number of derived interactive points---------------------
-		public var ipn:int;
+		public var ipn:int=0;
 		
 		// CHANGE IN NUMBER OF TOUCH POINTS
-		public var dn:int;
+		public var dn:int=0;
 		
 		// CHANGE IN NUMBER OF INTERACTION POINTS
-		public var dipn:int;
+		public var dipn:int=0;
 		
 		/////////////////////////////////
 		// frame count
-		public var count:int;
+		public var count:int=0;
 
 		// x---------------------
-		public var x:Number;
+		public var x:Number=0;
 
 		// y---------------------
-		public var y:Number;
+		public var y:Number=0;
 
 		// z---------------------
-		public var z:Number;
+		public var z:Number=0;
 
 		// width----------------------
-		public var width:Number;
+		public var width:Number=0;
 
 		// height---------------------
-		public var height:Number;
+		public var height:Number=0;
 
 		// length---------------------
-		public var length:Number;
+		public var length:Number=0;
 
 		// radius---------------------
-		public var radius:Number;
+		public var radius:Number=0;
 		
 		// separation------------------
-		public var separation:Number;
+		public var separation:Number=0;
 
 		// separation------------------
-		public var separationX:Number;
+		public var separationX:Number=0;
 
 		// separationY------------------
-		public var separationY:Number;
+		public var separationY:Number=0;
 
 		// separationZ------------------
-		public var separationZ:Number;
+		public var separationZ:Number=0;
 		
 		// rotation---------------------
-		public var rotation:Number;
+		public var rotation:Number=0;
 
 		// rotationX---------------------
-		public var rotationX:Number;
+		public var rotationX:Number=0;
 
 		// rotation---------------------
-		public var rotationY:Number;
+		public var rotationY:Number=0;
 
 		// rotationZ---------------------
-		public var rotationZ:Number;
+		public var rotationZ:Number=0;
 
 		
 		// mean position
 		// mx---------------------
-		public var mx:Number;
+		public var mx:Number=0;
 
 		// my---------------------
-		public var my:Number;
+		public var my:Number=0;
 
 		// mz---------------------
-		public var mz:Number;
+		public var mz:Number=0;
 		
 		/////////////////////////////////////////////////
 		// velocities
 		/////////////////////////////////////////////////
 		// dx---------------------
-		public var dx:Number;
+		public var dx:Number=0;
 
 		// dy---------------------
-		public var dy:Number;
+		public var dy:Number=0;
 
 		// dz---------------------
-		public var dz:Number;
+		public var dz:Number=0;
 		
 		// size veloctiy
 		// dw---------------------
-		public var dw:Number;
+		public var dw:Number=0;
 
 		// dh---------------------
-		public var dh:Number;
+		public var dh:Number=0;
 
 		// dr---------------------
-		public var dr:Number;
+		public var dr:Number=0;
 
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// scale velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// dsx---------------------
-		public var ds:Number;
+		public var ds:Number=0;
 
 		// dsx---------------------
-		public var dsx:Number;
+		public var dsx:Number=0;
 
 		// dsy---------------------
-		public var dsy:Number;
+		public var dsy:Number=0;
 
 		// dsz---------------------
-		public var dsz:Number;
+		public var dsz:Number=0;
 
 		
 		///////////////////////////////////////////////////////////////////////////////
 		//rotational velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// dtheta ------------------
-		public var dtheta:Number;
+		public var dtheta:Number=0;
 
 		// dthetax ------------------
-		public var dthetaX:Number;
+		public var dthetaX:Number=0;
 
 		// dthetay ------------------
-		public var dthetaY:Number;
+		public var dthetaY:Number=0;
 
 		// dthetaZ ------------------
-		public var dthetaZ:Number;
+		public var dthetaZ:Number=0;
 
 		// pivot_dtheta ------------------
-		public var pivot_dtheta:Number;
+		public var pivot_dtheta:Number=0;
 
 	
 		///////////////////////////////////////////////////////////////////////////////
 		//mean velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// mdx---------------------
-		public var mdx:Number;
+		public var mdx:Number=0;
 
 		// mdy---------------------
-		public var mdy:Number;
+		public var mdy:Number=0;
 
 		// mdz---------------------
-		public var mdz:Number;
+		public var mdz:Number=0;
 		
 		//////////////////////////////////////////////
 		// accelerations
 		//////////////////////////////////////////////
 		// ddx ------------------
-		public var ddx:Number;
+		public var ddx:Number=0;
 
 		// ddy ------------------
-		public var ddy:Number;
+		public var ddy:Number=0;
 
 		// ddz ------------------
-		public var ddz:Number;
+		public var ddz:Number=0;
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// rotational acceleration
 		///////////////////////////////////////////////////////////////////////////////
 		// ddtheta ------------------
-		public var ddtheta:Number;
+		public var ddtheta:Number=0;
 		
 		////////////////////////////////////////////////////////////////////////////////
 		// separation acceleration
 		////////////////////////////////////////////////////////////////////////////////
 		// ddsx ------------------
-		public var ddsx:Number;
+		public var ddsx:Number=0;
 
 		// ddsy ------------------
-		public var ddsy:Number;
+		public var ddsy:Number=0;
 
 		// ddsz ------------------
-		public var ddsz:Number;
+		public var ddsz:Number=0;
 
 		// dds ------------------
-		public var dds:Number;
+		public var dds:Number=0;
 
 		// dds3d ------------------
-		public var dds3d:Number;
+		public var dds3d:Number=0;
 
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// estimated total mean acceleration
 		///////////////////////////////////////////////////////////////////////////////
 		// etm_ddx ------------------
-		public var etm_dx:Number;
+		public var etm_dx:Number=0;
 
 		// etm ddy ------------------
-		public var etm_dy:Number;
+		public var etm_dy:Number=0;
 
 		// etm ddz ------------------
-		public var etm_dz:Number;
+		public var etm_dz:Number=0;
 
 		// etm_ddx ------------------
-		public var etm_ddx:Number;
+		public var etm_ddx:Number=0;
 
 		// etm_ddy ------------------
-		public var etm_ddy:Number;
+		public var etm_ddy:Number=0;
 
 		// etm_ddz ------------------
-		public var etm_ddz:Number;
+		public var etm_ddz:Number=0;
 		
 		
 		///////////////////////////////////////////////////////////////////////////////

@@ -29,28 +29,28 @@ package com.gestureworks.objects
 		
 		/////////////////////////////////////////////
 		// x
-		public var x:Number;
+		public var x:Number=0;
 
 		// y
-		public var y:Number;
+		public var y:Number=0;
 
 		// Z //-3d
 		//public var _z:Number = 0;
 
 		
 		// width
-		public var w:Number;
+		public var w:Number=0;
 
 		// height
-		public var h:Number;
+		public var h:Number=0;
 
 		//////////////////////////////////////////////
 		
 		// dx
-		public var dx:Number;
+		public var dx:Number=0;
 
 		// dy
-		public var dy:Number;
+		public var dy:Number=0;
 
 		
 		// dz
@@ -58,10 +58,10 @@ package com.gestureworks.objects
 
 		                                                                                                                                                                                                  
 		// DX
-		public var DX:Number;
+		public var DX:Number=0;
 
 		// DY
-		public var DY:Number;
+		public var DY:Number=0;
 
 		
 		// frameID
@@ -70,7 +70,7 @@ package com.gestureworks.objects
 		
 		// move count
 		// number move updates for point in frame
-		public var moveCount:int;
+		public var moveCount:int=0;
 
 		
 		
@@ -78,14 +78,14 @@ package com.gestureworks.objects
 		// MAY NEED TO MOVE TO CLUSTER
 		/////////////////////////////////////////////////
 		// hold monitor 
-		public var holdMonitorOn:Boolean;
+		public var holdMonitorOn:Boolean=false;
 
 		// hold count
 		// number frames passed hold test
 		public var holdCount:int;
 
 		// hold lock 
-		public var holdLock:Boolean;
+		public var holdLock:Boolean=false;
 
 		
 		
