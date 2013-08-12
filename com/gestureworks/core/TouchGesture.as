@@ -620,7 +620,7 @@ package com.gestureworks.core
 			{
 				//if (trace_debug_mode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
+				//tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 			}
 			
 			// start OBJECT complete event gesturing
