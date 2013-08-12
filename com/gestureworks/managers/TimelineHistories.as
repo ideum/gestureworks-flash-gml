@@ -38,8 +38,8 @@ package com.gestureworks.managers
 			var history:Array = tiO.history;
 			
 			//GestureGlobals.timelineHistoryCaptureLength = 120;
-
-			history.unshift(historyObject(tiO.frame));
+			
+			history.unshift(tiO.frame);
 			
 			if (history.length-1>=GestureGlobals.timelineHistoryCaptureLength)
 			{
