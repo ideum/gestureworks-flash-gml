@@ -311,12 +311,20 @@ package com.gestureworks.core
 		/**
 		 * Updates event listeners depending on the active modes
 		 */
-		protected function updateTouchObjects():void
+		protected function updateTouchObjects(obj:* = null):void
 		{
-			for each(var obj:* in GestureGlobals.gw_public::touchObjects) {
-				if (obj is TouchSprite)
-					TouchSprite(obj).updateListeners();
-			}				
+			var i:int;
+			
+			if (!obj)
+				obj = this;
+				
+			if (obj is TouchSprite)
+				TouchSprite(obj).updateListeners();							
+			else if (!obj.hasOwnProperty("numChildren"))
+				return;
+				
+			for (i = 0; i < obj.numChildren; i++) 
+				updateTouchObjects(obj.getChildAt(i));
 		}
 		
 		
