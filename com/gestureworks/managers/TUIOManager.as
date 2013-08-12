@@ -48,12 +48,13 @@ package com.gestureworks.managers
 
 		private var _tuioDebug:TuioDebug;
 		public function get tuioDebug():TuioDebug { return _tuioDebug; }	
+		
 	
-		gw_public static function initialize():void
+		gw_public static function initialize(host:String="127.0.0.1", port:int = NaN, protocol:String=null):void		
 		{			
 			// create gestureworks TUIOManager
 			if(!gwTUIOMngr){
-				gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop");
+				gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop", host, port, protocol);
 				GestureWorks.application.addChild(gwTUIOMngr); 
 			}
 			
@@ -64,23 +65,34 @@ package com.gestureworks.managers
 
 		/**
 		 * Constructor
-		 * @param	air - flag indicating AIR runtime or flash
+		 * @param	air   Flag indicating AIR runtime or flash
+		 * @param	host  The id of the tracker or bridge
+		 * @param	port  The port on which the tracker or bridge sends the TUIO tracking data.
+		 * @param	protocol The name of the protocol (udp, tcp, or flosc)
 		 */
-		public function TUIOManager(air:Boolean = true) 
+		public function TUIOManager(air:Boolean = true, host:String="127.0.0.1", port:int=NaN, protocol:String=null) 
 		{			
 			super();
+			protocol = protocol ? protocol : air ? "udp" : "tcp";
+			port = port ? port : protocol == "udp" ? 3333 : 3000;	
 
 			if(air){
 				try {
-					var UDPConnector:Class = getDefinitionByName("org.tuio.connectors.UDPConnector") as Class;
-					connector = new UDPConnector();
+					if(protocol == "udp"){
+						var UDPConnector:Class = getDefinitionByName("org.tuio.connectors.UDPConnector") as Class;
+						connector = new UDPConnector(host, port);
+					}
+					else 
+						connector = new TCPConnector(host, port, protocol == "flosc");
 				}
 				catch (e:Error) {
 					throw new Error("If you are trying to utilize TUIO in AIR, please make sure that you have included this statement into your Main Document class:  'import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR;'. ");
 				}
 			}
 			else {
-				connector = new TCPConnector("127.0.0.1", 3000); 
+				if (protocol == "udp")
+					throw new Error("Flash does not support UDP");
+				connector = new TCPConnector(host, port, protocol=="flosc"); 
 			}
 			
 			if (stage) init();
@@ -92,9 +104,6 @@ package com.gestureworks.managers
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			_tuioClient = new TuioClient(connector);
-			//flosc
-			//TuioLegacyListener.init(stage, _tuioClient);
-			//_tuioManager = TuioLegacyListener.getInstance();
 			_tuioManager = TuioManager.init(stage);
 			_tuioDebug = TuioDebug.init(stage);
 			_tuioClient.addListener(_tuioManager);

@@ -27,6 +27,7 @@ package com.gestureworks.core
 		
 	*/
 		
+	import com.adobe.utils.StringUtil;
 	import com.gestureworks.core.*;
 	import com.gestureworks.managers.*;
 	import com.gestureworks.utils.*;
@@ -187,19 +188,49 @@ package com.gestureworks.core
 			updateTouchObjects();
 		}
 		
-		private var _tuio:Boolean = false;
+		private var _tuio:* = false;
 		/**
-		 * Turns TUIO input on. Currently only supported in AIR.
+		 * Enables tuio input. To apply default settings, assign "true" to this flag. TUIO settings can be modified through the tuio variable 
+		 * with the following syntax: tuio = "host:host id, port:port#, protocol:protocol name". The supported protocols are UDP, TCP, and FLOSC. By default,
+		 * AIR applications use UDP on port 3333 and Flash applications use TCP on port 3000.
+		 *
 		 * @default false
 		 */
-		public function get tuio():Boolean{return _tuio;}
-		public function set tuio(value:Boolean):void
+		public function get tuio():*{return _tuio;}
+		public function set tuio(value:*):void
 		{
 			if (tuio == value) return;
 			_tuio = value;
+			var host:String = "127.0.0.1";
+			var port:int;
+			var protocol:String;
 			
+			//parse string for TUIO arguments
+			if (_tuio is String) {
+				for each(var arg:String in String(_tuio).split(",")) {
+					var keyVal:Array = arg.split(":");
+					var prop:String = StringUtil.trim(keyVal[0]).toLowerCase();
+					var val:String = StringUtil.trim(keyVal[1]).toLowerCase();
+
+					switch(prop) {
+						case "host":
+							host = val;
+							break;
+						case "port":
+							port = int(val);
+							break;
+						case "protocol":
+							protocol = val;
+							break;
+						default:
+							break;
+					}
+				}
+					
+				_tuio = true;
+			}				
 			if (_tuio) 
-				TUIOManager.gw_public::initialize();
+				TUIOManager.gw_public::initialize(host, port, protocol);
 			else
 				GestureWorks.activeTUIO = false;
 				
@@ -347,6 +378,8 @@ package com.gestureworks.core
 			
 			if (CML.Objects.@tuio == "true") 
 				tuio = true;
+			else if (CML.Objects.@tuio != undefined && CML.Objects.@tuio != "false")
+				tuio = CML.Objects.@tuio.toString();
 
 			if (CML.Objects.@fullscreen == "true") 
 				fullscreen = true;	
