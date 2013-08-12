@@ -17,6 +17,7 @@ package com.gestureworks.analysis
 {
 	import com.gestureworks.objects.InteractionPointObject;
 	import flash.display.Shape;
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
 	
 	import com.gestureworks.core.CML;
@@ -62,6 +63,7 @@ package com.gestureworks.analysis
 		private var eA:Number = 0
 		private var numSteps:Number = 0
 		
+		public var drawGesture:Boolean = true;
 		
 		public function GestureVisualizer(ID:Number)
 		{
@@ -122,7 +124,7 @@ package com.gestureworks.analysis
 		graphics.clear();
 		
 		
-		// FIXME: These are exclusive b/c they use the same graphic surface
+		// FIXME:
 		
 		// draw
 		draw_touch_gesture();
@@ -287,6 +289,9 @@ package com.gestureworks.analysis
 				
 				
 				
+				if (!drawGesture) return;
+				
+				
 				
 				/////////////////////////////////////////////////////////
 				// draw continuous gesture events
@@ -420,7 +425,6 @@ package com.gestureworks.analysis
 									}
 						}
 		
-		
 		////////////////////////////////////////////////////////////////////////////////////////////
 				//discrete drawing methods
 				//appear then fade out
@@ -442,8 +446,8 @@ package com.gestureworks.analysis
 				var hold_linger:int = 30;
 				var tap_linger:int = 30;
 				
-				ts.tiO.timelineOn = true;
-				ts.tiO.gestureEvents = true;
+				//ts.tiO.timelineOn = true;
+				//ts.tiO.gestureEvents = true;
 				
 				
 				
@@ -460,34 +464,35 @@ package com.gestureworks.analysis
 						//if(gestureEventArray.length)trace("gesture event array--------------------------------------------",gestureEventArray.length);
 						//if(pointEventArray.length)trace("point event array--------------------------------------------",pointEventArray.length);
 								
-								/*
-								for (var j:uint = 0; j < pointEventArray.length; j++) 
-									{
-										var px:Number = pointEventArray[j].stageX;
-										var py:Number = pointEventArray[j].stageY;
+								
+								//for (var j:uint = 0; j < pointEventArray.length; j++) 
+									//{
+										//var px:Number = pointEventArray[j].stageX;
+										//var py:Number = pointEventArray[j].stageY;
 										//trace("draw point event:", pointEventArray[j].type, px, py);
-										
-										if ((pointEventArray[j].type =="touchBegin")&&(i<tap_linger))
-										{
+										//
+										//if ((pointEventArray[j].type =="touchBegin")&&(i<tap_linger))
+										//{
 											// tap gesture ring
 											//graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 											//graphics.drawCircle(px, py, style.radius + 20);
-										}
-										
-										if ((pointEventArray[j].type =="touchEnd")&&(i<tap_linger))
-										{
+										//}
+										//
+										//if ((pointEventArray[j].type =="touchEnd")&&(i<tap_linger))
+										//{
 											// tap gesture ring
 											//graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
 											//graphics.drawCircle(px, py, style.radius + 20);
-										}
-									
-									}*/
+										//}
+									//
+									//}
 						
-								for (j; j < gestureEventArray.length; j++) 
+								for (j=0; j < gestureEventArray.length; j++) 
 									{
 										
 									x = gestureEventArray[j].value.x;
-									x = gestureEventArray[j].value.y;
+									y = gestureEventArray[j].value.y;
+									
 									//trace("draw gesture event:",gestureEventArray[j].type, x, y, gestureEventArray[j].value.path_data);
 									
 									//object phase
@@ -524,15 +529,41 @@ package com.gestureworks.analysis
 											graphics.beginFill(style.fill_color, style.fill_alpha);
 											graphics.drawRect(x - style.width , y- style.width ,  2*style.width,  2*style.width);
 											graphics.endFill();
+											
 										}
 										// SYLE AS ARROW
 										// draw flick
 										if ((gestureEventArray[j].type =="flick")&&(i<tap_linger))
 										{
+																						
+											
+											var disx:Number = polToCar(100, 45).x + x;
+											var disy:Number = polToCar(100, 45).y + y;
+											
 											// flick gesture double headed arrow
+									        var angle:Number = polarAngle(new Point(disx, disy), new Point(x, y));
+		
 											graphics.lineStyle(style.stroke_thickness+4, style.stroke_color, 0.55);
-											//graphics.drawCircle(x, y, style.radius + 50);
-											trace("visualize flick");
+											graphics.moveTo(x, y);
+											graphics.lineTo(disx, disy);
+									 
+											// draw arrow head
+											graphics.moveTo(disx - (20 * Math.cos((angle - 45) * Math.PI / 180)),
+													 disy - (20 * Math.sin((angle - 45) * Math.PI / 180)));
+								 
+											graphics.lineTo(disx + (5 * Math.cos((angle) * Math.PI / 180)),
+													 disy + (5 * Math.sin((angle) * Math.PI / 180)));
+								 
+											graphics.lineTo(disx - (20 * Math.cos((angle + 45) * Math.PI / 180)),
+													 disy - (20 * Math.sin((angle + 45) * Math.PI / 180)));
+											
+											function polarAngle(point:Point, center:Point=null):Number
+											{
+												if (!center)
+													center = new Point(0, 0);
+									 
+												return Math.atan2(point.y - center.y, point.x - center.x) * 180 / Math.PI;
+											}											
 										}
 										// SYLE AS ARROW
 										// draw swipe
@@ -577,6 +608,7 @@ package com.gestureworks.analysis
 										// draw hold rotate
 									}
 							}
+							
 						}
 		
 		
@@ -625,7 +657,22 @@ package com.gestureworks.analysis
 		graphics.clear();
 	}
 
-	
+    public function carToPol(x:Number,  y:Number) : Array {
+
+        var r:Number = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+        var q:Number = Math.atan(y/x) * (180/Math.PI);
+
+        return [r, q];
+    }
+    public function polToCar(r:Number, q:Number) : Point {
+
+        var asRadian:Number = q * Math.PI/180;
+
+        var x:Number = r * Math.cos(asRadian);
+        var y:Number = r * Math.sin(asRadian);
+
+        return new Point(x,y);
+    }	
 	
 	/**
 	* @private

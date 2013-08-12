@@ -68,7 +68,7 @@ package com.gestureworks.analysis
 		private var _maxZ:Number = 200;
 		private var trails:Array = [];
 		
-		public var maxTrails:int = 20;
+		public var maxTrails:int = 50;
 		public var maxPoints:int = 10;
 	
 		
@@ -104,6 +104,9 @@ package com.gestureworks.analysis
 		public function init():void
 		{
 			var i:int = 0;
+			mptext_array[i];		
+			tptext_array = [];
+			trails = [];
 			
 			// create text fields
 			for (i = 0; i < maxPoints; i++) 
@@ -193,9 +196,9 @@ package com.gestureworks.analysis
 						//
 						///////////////////////////////////////////////////////////////////
 						
-						tptext_array[i].textCont = "Point: " + "ID" + String(pt.touchPointID) + "    id" + String(pt.id);
-						tptext_array[i].x = x;
-						tptext_array[i].y = y - 50;
+						tptext_array[i].textCont = "ID: " + String(pt.id); //+ "    id" + String(pt.touchPointID);
+						tptext_array[i].x = x - tptext_array[i].width / 2;
+						tptext_array[i].y = y - 55;
 						tptext_array[i].visible = true;
 						tptext_array[i].textColor = style.touch_text_color;
 					}
