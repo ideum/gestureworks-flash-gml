@@ -86,10 +86,12 @@ package com.gestureworks.analysis
 				//points
 				style.stroke_thickness = 6;
 				//style.stroke_color = 0xFFAE1F;
-				style.stroke_color = 0x107591;
+				//style.stroke_color = 0x107591;
+				style.stroke_color = 0x9BD6EA;
 				style.stroke_alpha = 0.9;
 				//style.fill_color = 0xFFAE1F;
-				style.fill_color = 0x107591;
+				//style.fill_color = 0x107591;
+				style.fill_color = 0x9BD6EA;
 				style.fill_alpha = 0.6;
 				style.radius = 20;
 				style.height = 20;
@@ -133,8 +135,8 @@ package com.gestureworks.analysis
 					s.graphics.beginFill(style.fill_color, style.fill_alpha);
 					s.graphics.drawCircle(style.radius+3, style.radius+3, style.radius);
 					s.graphics.endFill();		
-					var b:Bitmap = toBitmap(s);
-					trails[i].push(b);					
+					//var b:Bitmap = toBitmap(s);
+					trails[i].push(s);					
 				}
 			}
 			GestureWorks.application.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -174,7 +176,6 @@ package com.gestureworks.analysis
 		////////////////////////////////////////////////////////////
 		public function draw_touchPoints():void
 		{
-			
 			// clear text
 			for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
 			
