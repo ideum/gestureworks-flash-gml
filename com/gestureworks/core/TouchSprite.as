@@ -1367,7 +1367,7 @@ package com.gestureworks.core
 				var listeners:Array = [];
 				for each(var gwt:String in GWTouchEvent.eventTypes(type)) {
 					function gwl(e:*):void {
-						dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, e.cancelable));
+						dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, true));
 					}
 					super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
 					listeners.push( { type:gwt, listener:gwl } );
