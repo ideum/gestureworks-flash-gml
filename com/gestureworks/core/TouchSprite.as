@@ -112,8 +112,8 @@ package com.gestureworks.core
 		/**
 		 * Lazy gesture activation
 		 */
-		private function get activated():Boolean { return _activated; }
-		private function set activated(a:Boolean):void {
+		public function get activated():Boolean { return _activated; }
+		public function set activated(a:Boolean):void {
 			if (!_activated && a) {
 				_activated = true;
 				preinitBase();
