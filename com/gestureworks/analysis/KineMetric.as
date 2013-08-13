@@ -960,7 +960,7 @@ package com.gestureworks.analysis
 			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			
 			// GET TYPED CLUSTER from cluster matrix
-			var sub_cO = new ipClusterObject();
+			var sub_cO:ipClusterObject = new ipClusterObject();
 			
 			
 				//if (type == "pinch") sub_cO = cO.pinch_cO; 
@@ -1173,18 +1173,18 @@ package com.gestureworks.analysis
 								{
 									// CHECK PAST MAKE SURE HAVE NOT SET STATE FOR 10 FRAMES
 									//STOP AMBULANCE CHASERS //start after hist 1
-									var test:Boolean = true;
+									var test0:Boolean = true;
 									
-									for (var h:uint = 2; h < hist; h++) 
+									for (var h0:uint = 2; h0 < hist; h0++) 
 										{	
-											if (Math.abs(pt.history[h].jolt.x) > tapThreshold) test = false;
+											if (Math.abs(pt.history[h0].jolt.x) > tapThreshold) test = false;
 										}
-									if (test) {
+									if (test0) {
 										
-										var gpt:GesturePointObject = new GesturePointObject();
-											gpt.position = pt.position;
-											gpt.type = "x tap";
-										cO.gPointArray.push(gpt);
+										var gpt0:GesturePointObject = new GesturePointObject();
+											gpt0.position = pt.position;
+											gpt0.type = "x tap";
+										cO.gPointArray.push(gpt0);
 										
 										trace("x tap-----scan clean", pt.history[0].jolt.x,pt.interactionPointID)
 									}
@@ -1194,18 +1194,18 @@ package com.gestureworks.analysis
 								{
 									// CHECK PAST MAKE SURE HAVE NOT SET STATE FOR 10 FRAMES
 									//STOP AMBULANCE CHASERS //start after hist 1
-									var test:Boolean = true;
+									var test1:Boolean = true;
 									
-									for (var h = 2; h < hist; h++) 
+									for (var h1:uint = 2; h1 < hist; h1++) 
 										{	
-											if (Math.abs(pt.history[h].jolt.z) > tapThreshold) test = false;
+											if (Math.abs(pt.history[h1].jolt.z) > tapThreshold) test = false;
 										}
-									if (test) {
+									if (test0) {
 										
-											var gpt:GesturePointObject = new GesturePointObject();
-												gpt.position = pt.position;
-												gpt.type = "z tap";
-											cO.gPointArray.push(gpt);
+											var gpt1:GesturePointObject = new GesturePointObject();
+												gpt1.position = pt.position;
+												gpt1.type = "z tap";
+											cO.gPointArray.push(gpt1);
 											
 										trace("z tap-----scan clean", pt.history[0].jolt.z, pt.interactionPointID);
 									}
@@ -1243,7 +1243,7 @@ package com.gestureworks.analysis
 							{
 							if ((pt.history[hist].velocity.length < holdThreshold) && (pt.history[hist].acceleration.length < (holdThreshold*0.1-0.1))) 
 								{
-									var gpt = new GesturePointObject();
+									var gpt:GesturePointObject = new GesturePointObject();
 												gpt.position = pt.history[hist].position;// PREVENTS HOLD DRIFT
 												gpt.type = "hold";
 											cO.gPointArray.push(gpt);
@@ -1274,7 +1274,7 @@ package com.gestureworks.analysis
 			
 			//GET TRANSFORMED IP ARRAY
 			ptArray = sub_cO.iPointArray;
-			var sipn = ptArray.length
+			var sipn:uint = ptArray.length
 			
 			
 			// reset deltas
@@ -1441,7 +1441,7 @@ package com.gestureworks.analysis
 			
 			//GET TRANSFORMED IP ARRAY
 			ptArray = sub_cO.iPointArray;
-			var sipn = ptArray.length
+			var sipn:uint = ptArray.length
 			
 			// reset deltas
 			sub_cO.dx = 0;

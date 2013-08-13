@@ -59,6 +59,7 @@ package com.gestureworks.core
 		private var gO:GestureListObject;
 		private var cO:ClusterObject
 		private var tiO:TimelineObject
+		
 		public var core:Boolean;
 		
 		public function TouchCluster(touchObjectID:int):void
@@ -695,9 +696,9 @@ package com.gestureworks.core
 									
 										for (DIM = 0; DIM < dn; DIM++) 
 										{
-										var	gdim = g.dList[DIM];
+										var	gdim:DimensionObject = g.dList[DIM];
 												gdim.activeDim = true; // ACTIVATE DIM
-										var	res = gdim.property_result
+										var	res:String = gdim.property_result
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											gdim.clusterDelta = cO[res];

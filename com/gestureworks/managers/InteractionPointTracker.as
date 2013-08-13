@@ -98,10 +98,10 @@ package com.gestureworks.managers
 							{
 							if (ap.type == fp.type)
 							{
-							var dist:Number = Vector3D.distance(ap.position, fp.position);
+							var dist0:Number = Vector3D.distance(ap.position, fp.position);
 							//trace("dist",dist,ap.type,fp.type)
 							
-							if (dist < d2)  ////update
+							if (dist0 < d2)  ////update
 								{
 									ap.position = fp.position;
 									ap.direction = fp.direction;
@@ -112,7 +112,7 @@ package com.gestureworks.managers
 									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
 										
 									InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
-									if(debug) trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, dist);	
+									if(debug) trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, dist0);	
 								}
 							}
 						}	

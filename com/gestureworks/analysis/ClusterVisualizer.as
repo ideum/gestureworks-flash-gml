@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.analysis
 {
+	import com.gestureworks.objects.ipClusterObject;
 	import flash.display.Shape;
 	import flash.geom.Vector3D;
 	
@@ -214,11 +215,11 @@ package com.gestureworks.analysis
 			if (style.web_shape == "fullweb") {
 					for (var k:int = 0; k < N; k++) {
 						
-						var pt = cO.pointArray[k];
+						var pt:PointObject = cO.pointArray[k];
 						
 							for (var l:int=0; l<N; l++){
 								if (k != l) {
-									var pt1 = cO.pointArray[l];
+									var pt1:PointObject = cO.pointArray[l];
 									//trace(i,j)
 									graphics.moveTo(pt.x,pt.y);
 									graphics.lineTo(pt1.x,pt1.y);
@@ -229,9 +230,9 @@ package com.gestureworks.analysis
 			if (style.web_shape == "starweb") {
 				//trace("starweb");
 				for (var p:int = 0; p < N; p++) {
-						var pt = cO.pointArray[k];
+						var pt2:PointObject = cO.pointArray[k];
 						graphics.moveTo(_x,_y);
-						graphics.lineTo(pt.x, pt.y);
+						graphics.lineTo(pt2.x, pt2.y);
 					}
 			}
 			}
@@ -399,7 +400,7 @@ package com.gestureworks.analysis
 								if (ipt.type == "trigger") //PURPLE 0xc44dbe
 								{
 									var tgr:Number = 30;
-									var triggerThreshold = 0.5
+									var triggerThreshold:Number = 0.5
 									// set style
 									graphics.lineStyle(3, 0xc44dbe, style.stroke_alpha);
 									// draw cross
@@ -430,7 +431,7 @@ package com.gestureworks.analysis
 	
 	private function drawSubClusterDims():void
 	{	
-		var sub_cO = cO.finger_cO;
+		var sub_cO:ipClusterObject = cO.finger_cO;
 		var sipn:int = sub_cO.length
 		
 		// DO FOR EACH SUBCLUSTER
@@ -500,11 +501,11 @@ package com.gestureworks.analysis
 					if (style.web_shape == "fullweb") {
 							for (var k:int = 0; k < N; k++) {
 								
-								var pt = cO.pointArray[k];
+								var pt:PointObject = cO.pointArray[k];
 								
 									for (var l:int=0; l<N; l++){
 										if (k != l) {
-											var pt1 = cO.pointArray[l];
+											var pt1:PointObject = cO.pointArray[l];
 											//trace(i,j)
 											graphics.moveTo(pt.x,pt.y);
 											graphics.lineTo(pt1.x,pt1.y);

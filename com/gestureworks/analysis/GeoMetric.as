@@ -154,7 +154,7 @@ package com.gestureworks.analysis
 						
 						for (i = 0; i < cO.motionArray.length; i++)
 								{	
-									var mp = cO.motionArray[i];
+									var mp:MotionPointObject = cO.motionArray[i];
 									//trace(cO.handList[j].handID ,cO.motionArray[i].handID)
 									if ((mp.type == "finger")&&(cO.handList[j].handID == mp.handID))
 									{
@@ -197,14 +197,14 @@ package com.gestureworks.analysis
 				{
 					var fav_pt:Vector3D = new Vector3D();
 					var pfav_pt:Vector3D = new Vector3D();
-					var hfn = cO.handList[j].fingerList.length;
-					var hfnk = 0;
+					var hfn:int = cO.handList[j].fingerList.length;
+					var hfnk:Number = 0;
 					
 					if (hfn) hfnk = 1 / hfn;
 					
 					for (i = 0; i < hfn; i++)
 							{	
-									var fpt = cO.handList[j].fingerList[i];
+									var fpt:MotionPointObject = cO.handList[j].fingerList[i];
 
 									// finger average point (fingers + thumb)
 									fav_pt.x += fpt.position.x;
@@ -260,10 +260,10 @@ package com.gestureworks.analysis
 				{
 					//trace("number finger",fn,fnk,fav_pt.x,fav_pt.y,fav_pt.z)
 					var favlength:Number = 100//100;
-					var palmratio = 1.4;
+					var palmratio:Number = 1.4;
 							
-					var hfn = cO.handList[j].fingerList.length;
-					var hfnk = 0;
+					var hfn:int = cO.handList[j].fingerList.length;
+					var hfnk:Number = 0;
 					if (hfn) hfnk = 1 / hfn;
 					
 						for (i = 0; i < hfn; i++)
@@ -312,7 +312,7 @@ package com.gestureworks.analysis
 			min_favdist = 0;
 			max_favdist = 0;
 				
-			var hfn = cO.handList[j].fingerList.length;
+			var hfn:uint = cO.handList[j].fingerList.length;
 			var palm_mpoint:MotionPointObject = cO.handList[j].palm; // NEED TO SIMPLIFY		
 			
 			
@@ -332,15 +332,15 @@ package com.gestureworks.analysis
 			// get values
 			for (i = 0; i < hfn; i++)
 				{	
-					var fpt = cO.handList[j].fingerList[i];
+					var fpt:MotionPointObject = cO.handList[j].fingerList[i];
 						
 							
 							var f_pos:Vector3D = fpt.position;
 							
 							var vp_mp:Vector3D = f_pos.subtract(p_pos);
 
-							var dist:Number = (vp_mp.x * normal.x) + (vp_mp.y * normal.y) + (vp_mp.z * normal.z);
-							var palm_plane_point:Vector3D = new Vector3D((f_pos.x - dist * normal.x), (f_pos.y -dist*normal.y), (f_pos.z - dist*normal.z));
+							var dist1:Number = (vp_mp.x * normal.x) + (vp_mp.y * normal.y) + (vp_mp.z * normal.z);
+							var palm_plane_point:Vector3D = new Vector3D((f_pos.x - dist1 * normal.x), (f_pos.y -dist1*normal.y), (f_pos.z - dist1*normal.z));
 							
 							fpt.palmplane_position = palm_plane_point
 							//trace("projected point in palm plane",palm_plane_point)
@@ -355,8 +355,8 @@ package com.gestureworks.analysis
 							fpt.length = Vector3D.distance(p_pos, f_pos);
 							
 							// FIND EXTENSION MEASURE
-							var palm_finger_vector = fpt.position.subtract(palm_mpoint.position);
-							var angle_diff = Vector3D.angleBetween(fpt.direction, palm_finger_vector);
+							var palm_finger_vector:Vector3D = fpt.position.subtract(palm_mpoint.position);
+							var angle_diff:Number = Vector3D.angleBetween(fpt.direction, palm_finger_vector);
 							// normalize
 							fpt.extension = normalize(angle_diff, 0, Math.PI*0.5);
 				}
@@ -364,25 +364,25 @@ package com.gestureworks.analysis
 				
 				for (i = 0; i < hfn; i++)
 				{
-					var fpt = cO.handList[j].fingerList[i];
+					var fpt0:MotionPointObject = cO.handList[j].fingerList[i];
 					
 						//max length max and min
-						var value_max_length = fpt.max_length;
+						var value_max_length:Number = fpt0.max_length;
 						if (value_max_length > max_max_length) max_max_length = value_max_length;
 						if ((value_max_length < min_max_length)&&(value_max_length!=0)) min_max_length = value_max_length;
 						
 						// length max and min
-						var value_length = fpt.length;
+						var value_length:Number = fpt0.length;
 						if (value_length > max_length) max_length = value_length;
 						if ((value_length < min_length)&&(value_length!=0)) min_length = value_length;
 						
 						// palm angle max and min
-						var value_palm = fpt.palmAngle;
+						var value_palm:Number = fpt0.palmAngle;
 						if (value_palm > max_palmAngle) max_palmAngle = value_palm;
 						if ((value_palm < min_palmAngle)&&(value_palm!=0)) min_palmAngle = value_palm;
 
 						//finge raverage distance max and min
-						var value = fpt.favdist;
+						var value:Number = fpt0.favdist;
 						if (value > max_favdist) max_favdist = value;
 						if ((value < min_favdist)&&(value!=0)) min_favdist = value;
 				}
@@ -393,17 +393,17 @@ package com.gestureworks.analysis
 				//normalized values and update
 				for (i = 0; i < hfn; i++)
 					{
-						var fpt = cO.handList[j].fingerList[i];
+						var fpt1:MotionPointObject = cO.handList[j].fingerList[i];
 						
-						fpt.normalized_max_length = normalize(fpt.max_length, min_max_length, max_max_length);
-						fpt.normalized_length = normalize(fpt.length, min_length, max_length);
+						fpt1.normalized_max_length = normalize(fpt1.max_length, min_max_length, max_max_length);
+						fpt1.normalized_length = normalize(fpt1.length, min_length, max_length);
 						//cO.motionArray[i].normalized_width = normalize(cO.motionArray[i].width, min_width, max_width);
-						fpt.normalized_palmAngle = normalize(fpt.palmAngle, min_palmAngle, max_palmAngle);
-						fpt.normalized_favdist = normalize(fpt.favdist, min_favdist, max_favdist);
+						fpt1.normalized_palmAngle = normalize(fpt1.palmAngle, min_palmAngle, max_palmAngle);
+						fpt1.normalized_favdist = normalize(fpt1.favdist, min_favdist, max_favdist);
 						
 						
 						//AVERGE PALM ANGLE
-						avg_palm_angle += fpt.normalized_palmAngle;
+						avg_palm_angle += fpt1.normalized_palmAngle;
 					}
 					
 					
@@ -427,8 +427,8 @@ package com.gestureworks.analysis
 					{
 						if (i!=q)
 						{
-							var dist:Number = Vector3D.distance(cO.handList[j].fingerList[i].position,cO.handList[j].fingerList[q].position);
-							splay_d +=dist
+							var dist0:Number = Vector3D.distance(cO.handList[j].fingerList[i].position,cO.handList[j].fingerList[q].position);
+							splay_d += dist0;
 						}
 						
 					}
@@ -453,8 +453,8 @@ package com.gestureworks.analysis
 			
 			var hfn:int = cO.handList[j].fingerList.length;
 			
-			var fpt //= cO.handList[j].fingerList[i];
-			var palm_mpoint
+			var fpt:MotionPointObject //= cO.handList[j].fingerList[i];
+			var palm_mpoint:MotionPointObject
 
 						///////////////////////////////////////////////////////////////////////////////////
 						// MOD THUMB PROB WITH FINGER LENGTH AND WIDTH
@@ -484,16 +484,16 @@ package com.gestureworks.analysis
 							
 							// 
 							//var v = cO.handList[j].projectedFingerAveragePosition.subtract(cO.handList[j].palm.position)
-							var v = cO.handList[j].palm.direction;
-							var v1 = cO.handList[j].fingerList[max_index].palmplane_position.subtract(cO.handList[j].palm.position)
+							var v:Vector3D = cO.handList[j].palm.direction;
+							var v1:Vector3D = cO.handList[j].fingerList[max_index].palmplane_position.subtract(cO.handList[j].palm.position)
 							
-							var angle = Vector3D.angleBetween(v, v1)
-							var length = cO.handList[j].fingerList[max_index].length;
-							var favdist = cO.handList[j].fingerList[max_index].favdist;
+							var angle:Number = Vector3D.angleBetween(v, v1)
+							var length:int = cO.handList[j].fingerList[max_index].length;
+							var favdist:Number = cO.handList[j].fingerList[max_index].favdist;
 							
 							
 								// QUICK EFFECTIVE METRIC/////////////////////////////////////////////
-								var ratio = (1.1*length) / (favdist + 50 * angle)
+								var ratio:Number = (1.1*length) / (favdist + 50 * angle)
 								//////////////////////////////////////////////////////////
 							
 							
@@ -571,11 +571,11 @@ package com.gestureworks.analysis
 						{
 							// RATIO BREAKS APPART AS LENGTH AND FAV DIST NO LONGER RELEVANT
 							// ANGLE IS ONLY REMAINING METRIC
-							var v = cO.handList[j].palm.direction
-							var v1 = cO.handList[j].fingerList[0].palmplane_position.subtract(cO.handList[j].palm.position)
-							var angle = Vector3D.angleBetween(v, v1)
+							var v0:Vector3D = cO.handList[j].palm.direction
+							var v10:Vector3D = cO.handList[j].fingerList[0].palmplane_position.subtract(cO.handList[j].palm.position)
+							var angle0:Number = Vector3D.angleBetween(v0, v10)
 							//trace("one", angle)
-							if (angle > 0.2)
+							if (angle0 > 0.2)
 							{
 								//trace("one")
 								cO.handList[j].fingerList[0].fingertype = "thumb";
@@ -624,10 +624,10 @@ package com.gestureworks.analysis
 						{
 							var palmcross:Vector3D = cO.handList[j].palm.normal.crossProduct(cO.handList[j].palm.direction);
 							var thumbVector:Vector3D = cO.handList[j].thumb.position.subtract(cO.handList[j].palm.position);
-							var angle:Number = palmcross.dotProduct(thumbVector)
+							var angle1:Number = palmcross.dotProduct(thumbVector)
 							
-							if (angle < 0) cO.handList[j].type = "left";
-							if (angle > 0) cO.handList[j].type = "right";
+							if (angle1 < 0) cO.handList[j].type = "left";
+							if (angle1 > 0) cO.handList[j].type = "right";
 							else cO.handList[j].type = "udefined";
 							
 							//trace(angle, cO.handList[j].type)
@@ -724,15 +724,15 @@ package com.gestureworks.analysis
 						}
 						else if (min_pprob < pinchThreshold)
 						{
-						var pmp:InteractionPointObject = new InteractionPointObject();
-							pmp.position.x = best_pt1.position.x - (best_pt1.position.x - best_pt2.position.x) * 0.5;
-							pmp.position.y = best_pt1.position.y - (best_pt1.position.y - best_pt2.position.y) * 0.5;
-							pmp.position.z = best_pt1.position.z - (best_pt1.position.z - best_pt2.position.z) * 0.5;
+						var pmp0:InteractionPointObject = new InteractionPointObject();
+							pmp0.position.x = best_pt1.position.x - (best_pt1.position.x - best_pt2.position.x) * 0.5;
+							pmp0.position.y = best_pt1.position.y - (best_pt1.position.y - best_pt2.position.y) * 0.5;
+							pmp0.position.z = best_pt1.position.z - (best_pt1.position.z - best_pt2.position.z) * 0.5;
 							//pmp.handID = cO.hand.handID;
-							pmp.type = "pinch";
+							pmp0.type = "pinch";
 															
 						//add to pinch point list
-						InteractionPointTracker.framePoints.push(pmp)
+						InteractionPointTracker.framePoints.push(pmp0)
 						//trace("n pinch push", pinchThreshold)
 						}
 					}
@@ -780,16 +780,16 @@ package com.gestureworks.analysis
 					{
 						if(hp.extension > hookThreshold + 0.2)
 							{	
-							var pmp:InteractionPointObject = new InteractionPointObject();
-								pmp.handID = hp.handID;
-								pmp.position = hp.position;
-								pmp.direction = hp.direction;
+							var pmp0:InteractionPointObject = new InteractionPointObject();
+								pmp0.handID = hp.handID;
+								pmp0.position = hp.position;
+								pmp0.direction = hp.direction;
 								//pmp.length = cO.motionArray[i].length;
 								//pmp.extension = hp.extension;
-								pmp.type = "hook";
+								pmp0.type = "hook";
 								
 							// push to interactive point list
-							InteractionPointTracker.framePoints.push(pmp)
+							InteractionPointTracker.framePoints.push(pmp0)
 							}
 					}	
 				}
@@ -858,7 +858,7 @@ package com.gestureworks.analysis
 					{
 						if (thumb.extension > triggerThreshold) //1 rad 90 deg ish
 							{
-							var	t_pt = new InteractionPointObject();
+							var	t_pt:InteractionPointObject = new InteractionPointObject();
 							
 							for (i = 0; i < hfn; i++)
 							{
@@ -920,7 +920,7 @@ package com.gestureworks.analysis
 			
 					for (i = 0; i < hfn; i++)
 						{
-						var pt = cO.handList[j].fingerList[i];	
+						var pt:MotionPointObject = cO.handList[j].fingerList[i];	
 						
 						if ((x_min < pt.position.x < x_max) && (y_min < pt.position.y < y_max) && (z_min < pt.position.z < z_max))
 							{
@@ -1011,14 +1011,14 @@ package com.gestureworks.analysis
 								for (var q:int = 0; q < pointlist.length; q++)
 								{
 									// create interactions points
-									var ff_pt:InteractionPointObject = new InteractionPointObject();
-										ff_pt.position = pointlist[q].position;
+									var ff_pt0:InteractionPointObject = new InteractionPointObject();
+										ff_pt0.position = pointlist[q].position;
 										//ff_pt.direction =pointlist[j].direction;
 										//t_pt.normal = cO.hand.normal;
 										//ff_pt.handID = cO.handList[j].handID;
-										ff_pt.type = "frame";
+										ff_pt0.type = "frame";
 										
-									InteractionPointTracker.framePoints.push(ff_pt)
+									InteractionPointTracker.framePoints.push(ff_pt0)
 									//trace("push frame point");
 								}
 
@@ -1072,7 +1072,7 @@ package com.gestureworks.analysis
 			for (var j:int = 0; j < cO.hn; j++)
 				{	
 					var hfn:int = cO.handList[j].fingerList.length;
-					var v0 = new Vector3D(0,0,0)
+					var v0:Vector3D = new Vector3D(0,0,0)
 					//get thumb points
 					if ((hfn>0)&&(cO.handList[j].thumb!=null)&&(cO.handList[j].thumb.fingertype=="thumb")) 
 					{
@@ -1097,7 +1097,7 @@ package com.gestureworks.analysis
 			
 				for (j = 0; j < cO.hn; j++)
 				{
-					var favpt = cO.handList[j].fingerAveragePosition;
+					var favpt:Vector3D = cO.handList[j].fingerAveragePosition;
 					
 					if ((favpt.x != 0) && (favpt.y != 0) && (favpt.z != 0))
 					{

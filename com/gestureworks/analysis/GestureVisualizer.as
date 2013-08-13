@@ -534,9 +534,7 @@ package com.gestureworks.analysis
 										// SYLE AS ARROW
 										// draw flick
 										if ((gestureEventArray[j].type =="flick")&&(i<tap_linger))
-										{
-																						
-											
+										{											
 											var disx:Number = polToCar(100, 45).x + x;
 											var disy:Number = polToCar(100, 45).y + y;
 											
