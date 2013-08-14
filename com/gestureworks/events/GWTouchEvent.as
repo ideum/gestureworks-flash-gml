@@ -15,7 +15,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.events
 {
-	import com.gestureworks.cml.utils.LinkedMap;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.utils.MousePoint;
 	import flash.display.InteractiveObject;
