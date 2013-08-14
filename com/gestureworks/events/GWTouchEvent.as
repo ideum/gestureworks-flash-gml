@@ -166,7 +166,6 @@ package com.gestureworks.events
 		 */
 		private function resolveType(type:String):String
 		{
-			//var key:Class = TOUCH_TYPE_MAP[TuioTouchEvent].hasKey(type) ? TuioTouchEvent : TOUCH_TYPE_MAP[TouchEvent].hasKey(type) ? TouchEvent : TOUCH_TYPE_MAP[MouseEvent].hasKey(type) ? MouseEvent : null;
 			var key:Class = hasKey(TOUCH_TYPE_MAP[TuioTouchEvent],type) ? TuioTouchEvent : hasKey(TOUCH_TYPE_MAP[TouchEvent],type) ? TouchEvent : hasKey(TOUCH_TYPE_MAP[MouseEvent],type) ? MouseEvent : null;
 			var resolvedType:String = key && hasKey(TOUCH_TYPE_MAP[key],type) ? TOUCH_TYPE_MAP[key][type]: type;
 			return resolvedType;
@@ -182,13 +181,10 @@ package com.gestureworks.events
 			var types:Array = [];
 			if (GestureWorks.activeTUIO)
 				types.push(correspondingType(TuioTouchEvent, type));
-				//types.push(TOUCH_TYPE_MAP[TuioTouchEvent].getKeyArray()[TOUCH_TYPE_MAP[TuioTouchEvent].getValueArray().indexOf(type)]);
 			if (GestureWorks.activeNativeTouch)
 				types.push(correspondingType(TouchEvent, type));
-				//types.push(TOUCH_TYPE_MAP[TouchEvent].getKeyArray()[TOUCH_TYPE_MAP[TouchEvent].getValueArray().indexOf(type)]);
 			if (GestureWorks.activeSim)
 				types.push(correspondingType(MouseEvent, type));
-				//types.push(TOUCH_TYPE_MAP[MouseEvent].getKeyArray()[TOUCH_TYPE_MAP[MouseEvent].getValueArray().indexOf(type)]);
 			return types;
 		}		
 		
