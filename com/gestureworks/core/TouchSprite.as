@@ -1236,12 +1236,13 @@ package com.gestureworks.core
 		public function get $scaleZ():Number {return _$scaleY;}	
 		public function set $scaleZ(value:Number):void{	_$scaleZ = value < $minScaleZ ? $minScaleZ : value > $maxScaleZ ? $maxScaleZ : value;}
 		// affine transform point  
-		public function get $transformPoint():Point { return new Point(trO.x, trO.y);} 
+		public function get $transformPoint():Point { return new Point(trO?trO.x:0, trO?trO.y:0);} 
 		public function set $transformPoint(pt:Point):void
 		{
+			if (!tt) return;
 			var tpt:Point = tt.affine_modifier.transformPoint(pt);
-				trO.x = tpt.x;
-				trO.y = tpt.y;
+			trO.x = tpt.x;
+			trO.y = tpt.y;
 		}
 		//affine scale
 		public function get $scale():Number{return _$scale;}
