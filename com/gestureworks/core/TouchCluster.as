@@ -563,24 +563,30 @@ package com.gestureworks.core
 				// PUSH TO SUBCLUSTER MATRIX
 				cluster_kinemetric.getSubClusters();
 				
-				// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
 				
+				
+				// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
+				for (var j:uint = 0; j < cO.subClusterArray.length; j++) 
+					{
+						var type:String = cO.subClusterArray[j].type;
+							
 						// FIND CLUSTER DIMS
-						cluster_kinemetric.find3DIPConstants("finger");
-						cluster_kinemetric.find3DIPDimension("finger");
-					
-						// FIND CLUSTER MOTION CHARACTER
-						cluster_kinemetric.find3DIPTransformation("finger");
-						// translation
-						// scale
-						// rotation
-						// velocity / accel / jolt
+						cluster_kinemetric.find3DIPConstants(type);//"finger"
+						cluster_kinemetric.find3DIPDimension(type); //"finger"
 						
+						// FIND CLUSTER MOTION CHARACTER
+						cluster_kinemetric.find3DIPTransformation(type);//"finger"
+							// translation
+							// scale
+							// rotation
+							// velocity / accel / jolt
+							
 						// FIND POINT MOTION CHARACTER
 						//cluster_kinemetric.find3DIPTapPoints();
 						//cluster_kinemetric.find3DIPHoldPoints();
-						
+					}
 				//////////////////////////////////////////////////////
+					
 				
 				// WEAVE INTO PRIME CLUSTER OBJECT FOR PIPELINE INJECTION
 				cluster_kinemetric.Weave3DIPClusterData();

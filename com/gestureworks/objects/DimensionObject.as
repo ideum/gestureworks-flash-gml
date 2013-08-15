@@ -53,15 +53,6 @@ package com.gestureworks.objects
 		public function get property_id():String{	return _property_id;}
 		public function set property_id(value:String):void {	_property_id = value; }
 		
-		///////////////////////////////////////////////////////////////////////////////////////
-		//NOT USED
-		//private var _clusterValue:Number = 0;
-		//public function get clusterValue():Number{	return _clusterValue;}
-		//public function set clusterValue(value:Number):void{	_clusterValue = value;}
-		//NOT USED
-		//private var _processValue:Number = 0;
-		//public function get processValue():Number{	return _processValue;}
-		//public function set processValue(value:Number):void {	_processValue = value; }
 		
 		//USED IN BOUNDARY EVAL
 		private var _gestureValue:Number = 0;

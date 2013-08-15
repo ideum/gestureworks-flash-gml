@@ -909,22 +909,23 @@ package com.gestureworks.analysis
 			if ((!ts.transform3d)&&(ts.motion3d)) temp_ipointArray = cO.iPointArray2D;
 			else temp_ipointArray = cO.iPointArray;
 			
-			cO.pinch_cO.iPointArray.length = 0;
-			cO.trigger_cO.iPointArray.length = 0;
-			cO.finger_cO.iPointArray.length = 0;
+			cO.subClusterArray[0] = new ipClusterObject();
+			cO.subClusterArray[0].type = "finger"		// finger
+			cO.subClusterArray[1] = new ipClusterObject(); // trigger
+			cO.subClusterArray[1].type = "trigger"		
+			cO.subClusterArray[2] = new ipClusterObject(); // pinch
+			cO.subClusterArray[2].type = "pinch"		
 
 				//create subclusters
 				for (i = 0; i < temp_ipointArray.length; i++) 
-						{
+					{
 						var ipt:InteractionPointObject = temp_ipointArray[i];
 						
-						//if (ipt.type=="pinch") pinch_cO.iPointArray.push(ipt);
-						//if (ipt.type=="trigger") trigger_cO.iPointArray.push(ipt);
-						if (ipt.type=="finger") cO.finger_cO.iPointArray.push(ipt);
-						//if (ipt.type=="") iPointArray.push(ipt);
-						//if (ipt.type=="") iPointArray.push(ipt);
-						//if (ipt.type=="") iPointArray.push(ipt);	
+						for (j = 0; j < cO.subClusterArray.length; j++) 
+						{
+							if (ipt.type==cO.subClusterArray[j].type) cO.subClusterArray[j].iPointArray.push(ipt);
 						}
+					}
 	}
 		
 		
@@ -953,20 +954,28 @@ package com.gestureworks.analysis
 	}
 	
 		
-	// IP CLUSTER DIMENSIONS
-	public function find3DIPDimension(type:String):void
+		// IP CLUSTER DIMENSIONS
+		public function find3DIPDimension(type:String):void
 		{
 			var ptArray:Vector.<InteractionPointObject>;
 			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			
-			// GET TYPED CLUSTER from cluster matrix
+			// GET TYPED SUB CLUSTER from cluster matrix
 			var sub_cO:ipClusterObject = new ipClusterObject();
 			
-			
-				//if (type == "pinch") sub_cO = cO.pinch_cO; 
-				//if (type == "trigger") sub_cO = cO.trigger_cO; 
-				if (type == "finger") sub_cO = cO.finger_cO; 
-				//if (type == "all") sub_cO = cO; 
+			for (i = 0; i < cO.subClusterArray.length; i++) 
+						{
+							var ctype:String = cO.subClusterArray[i].type
+							
+							//trace("DIMENSION Ctype",ctype)
+							
+							//if (type == "pinch") sub_cO = cO.pinch_cO; 
+							//if (type == "trigger") sub_cO = cO.trigger_cO; 
+							//if (ctype == "finger") sub_cO = cO.subClusterArray[i];
+							if (ctype == type) sub_cO = cO.subClusterArray[i];
+							//if (type == "all") sub_cO = cO; 
+						}
+				
 			
 			
 			// GET TRANSFORMED INTERACTION POINT LIST
@@ -1265,12 +1274,23 @@ package com.gestureworks.analysis
 			var ptArray:Vector.<InteractionPointObject>;
 			var sub_cO:ipClusterObject;
 			
-			//SELECT CLUSTER
-			/////if(type=="none") sub_cO = cO;
-				//if (type == "pinch") sub_cO = cO.pinch_cO; 
-				//if (type == "trigger") sub_cO = cO.trigger_cO; 
-				if (type == "finger") sub_cO = cO.finger_cO; 
-				//if (type == "all") sub_cO = cO.iPointArray2D; 
+			
+			for (i = 0; i < cO.subClusterArray.length; i++) 
+						{
+							var ctype:String = cO.subClusterArray[i].type
+							
+							//trace("TRANSFORM type",ctype)
+			
+							//SELECT CLUSTER
+							/////if(type=="none") sub_cO = cO;
+							//if (type == "pinch") sub_cO = cO.pinch_cO; 
+							//if (type == "trigger") sub_cO = cO.trigger_cO; 
+							//if (type == "finger") sub_cO = cO.finger_cO; 
+							//if (ctype == "finger") sub_cO = cO.subClusterArray[i];
+							if (ctype == type) sub_cO = cO.subClusterArray[i];
+							//if (type == "all") sub_cO = cO.iPointArray2D; 
+				
+				}
 			
 			//GET TRANSFORMED IP ARRAY
 			ptArray = sub_cO.iPointArray;
@@ -1432,12 +1452,23 @@ package com.gestureworks.analysis
 			var ptArray:Vector.<InteractionPointObject>;
 			var sub_cO:ipClusterObject;
 			
-			//SELECT CLUSTER
-			/////if(type=="none") sub_cO = cO;
-				//if (type == "pinch") sub_cO = cO.pinch_cO; 
-				//if (type == "trigger") sub_cO = cO.trigger_cO; 
-				if (type == "finger") sub_cO = cO.finger_cO; 
-				//if (type == "all") sub_cO = cO.iPointArray2D; 
+			
+			for (i = 0; i < cO.subClusterArray.length; i++) 
+						{
+							var ctype:String = cO.subClusterArray[i].type
+							
+							trace("TRANSLATE type",ctype)
+			
+							//SELECT CLUSTER
+							/////if(type=="none") sub_cO = cO;
+							//if (type == "pinch") sub_cO = cO.pinch_cO; 
+							//if (type == "trigger") sub_cO = cO.trigger_cO; 
+							//if (type == "finger") sub_cO = cO.finger_cO; 
+							//if (ctype == "finger") sub_cO = cO.subClusterArray[i];
+							if (ctype == type) sub_cO = cO.subClusterArray[i];
+							//if (type == "all") sub_cO = cO.iPointArray2D; 
+				
+						}
 			
 			//GET TRANSFORMED IP ARRAY
 			ptArray = sub_cO.iPointArray;
@@ -1497,53 +1528,65 @@ package com.gestureworks.analysis
 			/////////////////////////////////////////////////////////////////////////////////////////
 			// loop for all sub clusters/////////////////////////////////////////////////////////////
 			
-			
-			// GET CLUSTER ANALYSIS FROM EACH SUBCLUSTER
-			var sub_cO:ipClusterObject = cO.finger_cO;
-			
-			if (sub_cO.ipn>0)
-			{
-				//trace("weave ipcos",sub_cO.ipn);
-						
-				// recalculate cluster center
-				// average over all ip subcluster subclusters 
-				cO.x += sub_cO.x
-				cO.y += sub_cO.y
-				cO.z += sub_cO.z
-			
-				// recalculate based on ip subcluster totals
-				cO.width = sub_cO.width; // get max
-				cO.height = sub_cO.height;// get max
-				cO.length = sub_cO.length;// get max
-				cO.radius = sub_cO.radius;// get max
+			for (i = 0; i < cO.subClusterArray.length; i++) 
+				{
+					var ctype:String = cO.subClusterArray[i].type
 							
-				cO.separation = sub_cO.separation;// get max
-				cO.separationX = sub_cO.separationX;// get max
-				cO.separationY = sub_cO.separationY;// get max
-				cO.separationZ = sub_cO.separationZ;// get max
-						
-				cO.rotation = sub_cO.rotation;// get max
-				cO.rotationX = sub_cO.rotationX;// get max
-				cO.rotationY = sub_cO.rotationY;// get max
-				cO.rotationZ = sub_cO.rotationZ;// get max
-				
-				// map non zero deltas // accumulate 
-				cO.dx += sub_cO.dx;
-				cO.dy += sub_cO.dy;
-				cO.dz += sub_cO.dz;	
+					//trace("weave ctype",ctype)
+							
+					var sub_cO:ipClusterObject;
 					
-				cO.dtheta += sub_cO.dtheta;
-				cO.dthetaX += sub_cO.dthetaX;
-				cO.dthetaY += sub_cO.dthetaY;
-				cO.dthetaZ += sub_cO.dthetaZ;
+					// GET CLUSTER ANALYSIS FROM EACH SUBCLUSTER
+					//if (ctype == "finger") 
+					sub_cO = cO.subClusterArray[i];
+			
+						//trace(sub_cO.ipn)
+			
+						if (sub_cO.iPointArray.length>0)//ipn
+						{
+							//trace("weave ipcos",sub_cO.ipn);
+									
+							// recalculate cluster center
+							// average over all ip subcluster subclusters 
+							cO.x += sub_cO.x
+							cO.y += sub_cO.y
+							cO.z += sub_cO.z
+						
+							// recalculate based on ip subcluster totals
+							cO.width = sub_cO.width; // get max
+							cO.height = sub_cO.height;// get max
+							cO.length = sub_cO.length;// get max
+							cO.radius = sub_cO.radius;// get max
 										
-				cO.ds += sub_cO.ds; // must not be affected by cluster chnage in radius
-				cO.dsx += sub_cO.dsx;
-				cO.dsy += sub_cO.dsy;
-				cO.dsz += sub_cO.dsz;
-				///////////////////////////////////////////////////////////////////////////////////////
-				///////////////////////////////////////////////////////////////////////////////////////
-			}
+							
+							cO.separation = sub_cO.separation;// get max
+							cO.separationX = sub_cO.separationX;// get max
+							cO.separationY = sub_cO.separationY;// get max
+							cO.separationZ = sub_cO.separationZ;// get max
+									
+							cO.rotation = sub_cO.rotation;// get max
+							cO.rotationX = sub_cO.rotationX;// get max
+							cO.rotationY = sub_cO.rotationY;// get max
+							cO.rotationZ = sub_cO.rotationZ;// get max
+							
+							// map non zero deltas // accumulate 
+							cO.dx += sub_cO.dx;
+							cO.dy += sub_cO.dy;
+							cO.dz += sub_cO.dz;	
+								
+							cO.dtheta += sub_cO.dtheta;
+							cO.dthetaX += sub_cO.dthetaX;
+							cO.dthetaY += sub_cO.dthetaY;
+							cO.dthetaZ += sub_cO.dthetaZ;
+													
+							cO.ds += sub_cO.ds; // must not be affected by cluster chnage in radius
+							cO.dsx += sub_cO.dsx;
+							cO.dsy += sub_cO.dsy;
+							cO.dsz += sub_cO.dsz;
+							///////////////////////////////////////////////////////////////////////////////////////
+							///////////////////////////////////////////////////////////////////////////////////////
+						}
+				}
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////

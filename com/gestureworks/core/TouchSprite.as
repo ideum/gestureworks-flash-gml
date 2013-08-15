@@ -45,7 +45,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
-	import com.gestureworks.objects.PointPairObject;
+	//import com.gestureworks.objects.PointPairObject;
 	
 	import com.gestureworks.utils.GestureParser;
 	import com.gestureworks.utils.MousePoint;
@@ -605,6 +605,8 @@ package com.gestureworks.core
 				//trace("down:", event.touchPointID, cO.pointArray.length, this._pointArray.length )
 				///////////////////////////////////////////////////////////////////////////////////////
 				//CREATE POINT PAIR
+				
+				/*
 				if(cO.pointArray.length>1){
 				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
 				var ppt:PointPairObject = new PointPairObject();
@@ -614,7 +616,7 @@ package com.gestureworks.core
 				//cO.pointPairArray.push(ppt);
 				
 				//trace("pair")
-				}
+				} */
 				
 		}
 		
@@ -634,6 +636,7 @@ package com.gestureworks.core
 				cO.pointArray = _pointArray;
 				
 				//create point pair
+				/*
 				if(cO.pointArray.length!=1){
 				var lastpointID:Number = cO.pointArray[cO.pointArray.length - 2].touchPointID;
 				var ppt:PointPairObject = new PointPairObject();
@@ -642,7 +645,7 @@ package com.gestureworks.core
 					
 				//cO.pointPairArray.push(ppt);
 				//trace("Clone pair");
-				}
+				}*/
 				
 				//UPDATE POINT LOCAL COUNT
 				pointCount++;

@@ -397,6 +397,11 @@ package com.gestureworks.objects
 		public function set finger_cO(value:ipClusterObject ):void	{ _finger_cO = value; }
 		
 		
+		private var _subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public function get subClusterArray():Vector.<ipClusterObject>{ return _subClusterArray;}
+		public function set subClusterArray(value:Vector.<ipClusterObject>):void	{ _subClusterArray = value; }
+		
+		
 		////////////////////////////////////////
 		//1 DEFINE A SET OF INTERACTION POINTS
 		//2 MATCH TO INTERACTION POINT HAND CONFIG (GEOMETRIC)
