@@ -320,8 +320,8 @@ package com.gestureworks.core
 				
 				// leave scalar values untouched
 				dsx =  trO.dsx;
-				dsy =  trO.dsy;
-				dsz =  trO.dsz;
+				dsy =  dsx//trO.dsy;
+				dsz =  dsx//trO.dsz;
 				
 				// 3D matrix uses degrees
 				dtheta = trO.dtheta;

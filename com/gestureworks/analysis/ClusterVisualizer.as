@@ -424,7 +424,30 @@ package com.gestureworks.analysis
 									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
 								}
 								
-								
+								// draw FRAME
+								if (ipt.type == "frame") //0xE3716B; //
+								{
+									graphics.lineStyle(3, 0xE3716B, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
+								// draw HOOK
+								if (ipt.type == "hook") //0x0000FF //blue
+								{
+									graphics.lineStyle(3, 0x0000FF, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
+								//draw TOOL
+								if (ipt.type == "tool") //0xE3716B; //
+								{
+									graphics.lineStyle(3, 0xFFFF00, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
+								// draw finger average
+								if (ipt.type == "finger_average") //0x000000; //black
+								{
+									graphics.lineStyle(3, 0x000000, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
 					}
 	}
 	
@@ -434,27 +457,35 @@ package com.gestureworks.analysis
 		
 		for (i = 0; i < cO.subClusterArray.length; i++) 
 			{
-				var ctype:String = cO.subClusterArray[i].type
+				//var ctype:String = cO.subClusterArray[i].type
 				
 				if (true) //ctype == "finger"// only shows finger now
 					{
 				
-				var sub_cO:ipClusterObject = cO.subClusterArray[i]; //= cO.finger_cO;
-				var sipn:int = sub_cO.length
+					var sub_cO:ipClusterObject = cO.subClusterArray[i]; //= cO.finger_cO;
+					var sipn:int = sub_cO.ipn;
 		
-					// DO FOR EACH SUBCLUSTER
-					
-					if ((sipn)&&(sub_cO))
+					// DO FOR EACH EXISTING NONZERO SUBCLUSTER
+					if ((sipn!=0)&&(sub_cO))
 						{
+						//trace("hello");	
 								if (sub_cO.type == "finger") style.stroke_color = 0x00FF00;//0x00FFFF;
+								if (sub_cO.type == "thumb") style.stroke_color = 0xFF0000;//0x00FFFF;
+								if (sub_cO.type == "palm") style.stroke_color = 0xFFFFFF;
+								if (sub_cO.type == "finger_average") style.stroke_color = 0x000000;
+						
 								if (sub_cO.type == "trigger") style.stroke_color = 0xc44dbe;//0x00FFFF;
-								if (sub_cO.type== "pinch") style.stroke_color = 0x00FFFF;//0x00FFFF;
+								if (sub_cO.type == "pinch") style.stroke_color = 0x00FFFF;//0x00FFFF;
+								if (sub_cO.type == "frame") style.stroke_color = 0x00FFFF;//0x00FFFF;
+								if (sub_cO.type == "push") style.stroke_color = 0xFFFF00;//0x00FFFF;
+								if (sub_cO.type == "hook") style.stroke_color = 0x0000FF;
+								
 								
 								_x = sub_cO.x;
 								_y = sub_cO.y;
 								_width = sub_cO.width;
 								_height = sub_cO.height;
-								_radius = sub_cO.radius-50 -i*30;
+								_radius = sub_cO.radius-50 -i*10;
 								_rotation = sub_cO.rotation; 
 					 
 								_dtheta = sub_cO.dtheta / 4;
@@ -530,7 +561,7 @@ package com.gestureworks.analysis
 								
 						if (_drawRotation) {
 							
-						//trace(cO.dtheta);
+					//	trace("vis rotation", cO.dtheta);
 						//////////////////////////////////////////////////////////////////////////////////
 						// draw rotation
 						//////////////////////////////////////////////////////////////////////////////////
@@ -586,7 +617,6 @@ package com.gestureworks.analysis
 						
 						if (style.rotation_shape == "slice") {
 								
-								//trace("redraw slice", rotation, dtheta);
 								if (_dtheta < 0)
 								{
 									graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
@@ -624,7 +654,7 @@ package com.gestureworks.analysis
 						if (_drawSeparation)
 						{
 						
-							//trace(_ds)
+						//	trace("vis scale",_ds)
 						
 							if (_ds < -0.1) // contract
 							{

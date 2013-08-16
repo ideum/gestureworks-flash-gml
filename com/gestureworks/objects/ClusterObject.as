@@ -40,13 +40,20 @@ package com.gestureworks.objects
 		public var fn:int=0;
 
 		// number of derived interactive points---------------------
-		public var ipn:int=0;
+		public var ipn:int = 0;
+		public var ipnk:Number = 0;
+		public var ipnk0:Number = 0;
 		
 		// CHANGE IN NUMBER OF TOUCH POINTS
 		public var dn:int=0;
 		
 		// CHANGE IN NUMBER OF INTERACTION POINTS
-		public var dipn:int=0;
+		public var dipn:int = 0;
+		
+		
+		
+		
+		
 		
 		/////////////////////////////////
 		// frame count
