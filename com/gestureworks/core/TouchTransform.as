@@ -430,7 +430,7 @@ package com.gestureworks.core
 					var $r_mod:Matrix = new Matrix ();
 						$r_mod.rotate($angle);
 						$r_mod.scale($scalex ,$scaley);
-					var $tpt:Point = $r_mod.transformPoint(new Point(trO.dx, trO.dy));
+					var $tpt:Point = $r_mod.transformPoint(new Point((ts._$x - ts.x), (ts._$y - ts.y)));
 				
 						// translate center of transformation
 						t_x =  $pt.x;
@@ -450,8 +450,8 @@ package com.gestureworks.core
 							t_x = trO.x;
 							t_y = trO.y;
 						}
-						dx = trO.dx;
-						dy = trO.dy;
+						dx = (ts._$x - ts.x);
+						dy = (ts._$y - ts.y);
 				}
 								
 				//////////////////////////////////////////////////
@@ -461,12 +461,10 @@ package com.gestureworks.core
 				
 				///////////////////////////////////////////////////
 				// leave scalar values untouched
-				dsx = trO.dsx;
-				dsy = trO.dsy;
-				dsz = trO.dsz;
-				dtheta = trO.dtheta;
-				
-				trace(ts._$rotation, ts.rotation, dtheta);
+				dsx = (ts._$scaleX - ts.scaleX);
+				dsy = (ts._$scaleY - ts.scaleY);
+				dsz = (ts._$scaleZ - ts.scaleZ);
+				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
 				
 				//////////////////////////////////////////////////////
 				// 3d
@@ -479,7 +477,6 @@ package com.gestureworks.core
 			
 				//////////////////////////////////////////////////////
 				// 2d
-				dtheta *= DEG_RAD;
 				affine_modifier = ts.transform.matrix;
 					affine_modifier.translate( - t_x, - t_y);
 					affine_modifier.rotate(dtheta);
