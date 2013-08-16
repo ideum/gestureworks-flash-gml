@@ -16,13 +16,6 @@
 package com.gestureworks.core
 {
 	
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.events.TouchEvent;
-	import flash.geom.Point;
-	import flash.utils.Dictionary;
-	import org.tuio.TuioTouchEvent;
-	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
@@ -31,25 +24,30 @@ package com.gestureworks.core
 	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchTransform;
 	import com.gestureworks.core.TouchVisualizer;
-	
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.managers.ClusterHistories;
 	import com.gestureworks.managers.MouseManager;
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
-	import com.gestureworks.managers.ClusterHistories;
-	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.utils.GestureParser;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
+	import flash.geom.Point;
+	import flash.utils.Dictionary;
+	import org.tuio.TuioTouchEvent;
+	
+	
+	
 	//import com.gestureworks.objects.PointPairObject;
 	
-	import com.gestureworks.utils.GestureParser;
-	import com.gestureworks.utils.MousePoint;
-	import com.gestureworks.utils.GestureParser;
 	
 	
 	/**
@@ -833,11 +831,31 @@ package com.gestureworks.core
 		public function get transformEventComplete():Boolean{return _transformEventComplete;}
 		public function set transformEventComplete(value:Boolean):void {	_transformEventComplete = value; }
 		
-		//private var _enableTouch:Boolean = true;
-		//public function get enableTouch():Boolean { return _enableTouch; }
-		//public function set enableTouch(t:Boolean):void {
-			//
-		//}		
+		/**
+		 * Enables/Disables all GWTouchEvent and GWGestureEvent listeners
+		 */
+		private var _enableTouch:Boolean = true;
+		public function get enableTouch():Boolean { return _enableTouch; }
+		public function set enableTouch(t:Boolean):void {
+			if (_enableTouch == t) return;			
+			_enableTouch = t;
+			
+			var eCnt:int = _tsEventListeners.length;
+			var e:*;
+			for(var i:int = eCnt-1; i >= 0; i--) {
+				e = _tsEventListeners[i];
+				if (GWTouchEvent.isType(e.type) || GWGestureEvent.isType(e.type)) {
+					if (_enableTouch) {
+						addGWTouch(e.type, e.listener, e.capture);
+						super.addEventListener(e.type, e.listener, e.capture);
+					}
+					else {
+						removeGWTouch(e.type);
+						super.removeEventListener(e.type, e.listener, e.capture);
+					}
+				}
+			}
+		}		
 
 		/**
 		* @private
@@ -1356,8 +1374,7 @@ package com.gestureworks.core
 		}
 		
 		/**
-		 * Registers event listeners. Also processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
-		 * and dispatches appropriate events.
+		 * Registers event listeners. 
 		 * @param	type
 		 * @param	listener
 		 * @param	useCapture
@@ -1366,6 +1383,26 @@ package com.gestureworks.core
 		 */
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
 		{			
+			addGWTouch(type, listener, useCapture, priority, useWeakReference);
+			
+			//prevent duplicate events
+			if(searchEvent(type, listener, useCapture) < 0)
+				_tsEventListeners.push( { type:type, listener:listener, capture:useCapture } );
+			
+			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+		}
+		
+		/**
+		 * Processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
+		 * and dispatches appropriate events.
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 * @param	priority = 0
+		 * @param	useWeakReference
+		 */
+		private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority = 0, useWeakReference:Boolean = false):void
+		{
 			if (GWTouchEvent.isType(type))
 			{	
 				var listeners:Array = [];
@@ -1379,14 +1416,11 @@ package com.gestureworks.core
 				
 				listeners.push( { listener:listener } );
 				gwTouchListeners[type] = listeners;				
-			}
-
-			_tsEventListeners.push( { type:type, listener:listener, capture:useCapture} );
-			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+			}			
 		}
 		
 		/**
-		 * Unregisters event listeners. Also removes GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
+		 * Unregisters event listeners. 
 		 * @param	type
 		 * @param	listener
 		 * @param	useCapture
@@ -1396,25 +1430,28 @@ package com.gestureworks.core
 			if (!super.hasEventListener(type))
 				return;
 				
+			removeGWTouch(type);
+			
+			//update event registration array	
+			var i:int = searchEvent(type, listener, useCapture);
+			if(i >= 0)
+				_tsEventListeners.splice(i, 1);
+			
+			super.removeEventListener(type, listener, useCapture);
+		}
+		
+		/**
+		 * Manages removal of GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
+		 * @param	type GWTouchEvent type
+		 */
+		private function removeGWTouch(type:String):void {
 			if (GWTouchEvent.isType(type)) {
 				for each(var l:* in gwTouchListeners[type]) {
 					if (l.type)
 						super.removeEventListener(l.type, l.listener);
 				}
 				delete gwTouchListeners[type];
-			}
-			
-			//update event registration array
-			var lCount:int = _tsEventListeners.length;			
-			for (var i:int = 0; i < lCount; i++) {
-				var el:* = _tsEventListeners[i];
-				if (el.type == type && el.listener == listener && el.capture == useCapture) {
-					_tsEventListeners.splice(i, 1);
-					break;
-				}
-			}
-			
-			super.removeEventListener(type, listener, useCapture);
+			}			
 		}
 		
 		/**
@@ -1428,6 +1465,23 @@ package com.gestureworks.core
 				removeEventListener(e.type, e.listener, e.capture);
 			}
 			_tsEventListeners = null;
+		}
+		
+		/**
+		 * Search registerd events for provided event
+		 * @param	type Event type
+		 * @param	listener Listener function
+		 * @param	useCapture Capture flag
+		 * @return The index of the event in the registration list, or -1 if not registered
+		 */
+		private function searchEvent(type:String, listener:Function, useCapture:Boolean = false):int {
+			for (var i:int = 0; i < _tsEventListeners.length; i++) {
+				var el:* = _tsEventListeners[i];
+				if (el.type == type && el.listener == listener && el.capture == useCapture) {
+					return i;
+				}
+			}			
+			return -1;
 		}
 		
 		/**
