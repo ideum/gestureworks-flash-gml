@@ -191,16 +191,18 @@ package com.gestureworks.core
 		public function updateListeners():void {
 			
 			//clear 
-			removeEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false);
-			removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
-			removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			
-			if (GestureWorks.activeTUIO && registerPoints)		
-				addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-			if (GestureWorks.activeNativeTouch && registerPoints)		
-				addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-			if (GestureWorks.activeSim && registerPoints)				
-				addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			if(activated){
+				removeEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false);
+				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
+				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				
+				if (GestureWorks.activeTUIO && registerPoints)		
+					addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+				if (GestureWorks.activeNativeTouch && registerPoints)		
+					addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+				if (GestureWorks.activeSim && registerPoints)				
+					addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			}
 			
 			updateGWTouchListeners();
 		}
@@ -1363,9 +1365,7 @@ package com.gestureworks.core
 		 * @param	useWeakReference
 		 */
 		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
-		{
-			if(GWGestureEvent.isType(type))
-				activated = true;			
+		{			
 			if (GWTouchEvent.isType(type))
 			{	
 				var listeners:Array = [];
