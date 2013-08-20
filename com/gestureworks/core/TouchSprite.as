@@ -834,18 +834,18 @@ package com.gestureworks.core
 		/**
 		 * Enables/Disables all GWTouchEvent and GWGestureEvent listeners
 		 */
-		private var _enableTouch:Boolean = true;
-		public function get enableTouch():Boolean { return _enableTouch; }
-		public function set enableTouch(t:Boolean):void {
-			if (_enableTouch == t) return;			
-			_enableTouch = t;
+		private var _touchEnabled:Boolean = true;
+		public function get touchEnabled():Boolean { return _touchEnabled; }
+		public function set touchEnabled(t:Boolean):void {
+			if (_touchEnabled == t) return;			
+			_touchEnabled = t;
 			
 			var eCnt:int = _tsEventListeners.length;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
 				e = _tsEventListeners[i];
 				if (GWTouchEvent.isType(e.type) || GWGestureEvent.isType(e.type)) {
-					if (_enableTouch) {
+					if (_touchEnabled) {
 						addGWTouch(e.type, e.listener, e.capture);
 						super.addEventListener(e.type, e.listener, e.capture);
 					}
