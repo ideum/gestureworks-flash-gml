@@ -16,6 +16,7 @@
 package com.gestureworks.events
 {
 	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.utils.MousePoint;
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
@@ -173,18 +174,27 @@ package com.gestureworks.events
 		
 		/**
 		 * Translate GWTouchEvent to appropriate touch type.
-		 * @param	type
-		 * @return
+		 * @param	type  The type to translate to input types
+		 * @param   target The target to check for local overrides
+		 * @return An array of activated input types
 		 */
-		public static function eventTypes(type:String):Array
+		public static function eventTypes(type:String, target:TouchSprite = null):Array
 		{
 			var types:Array = [];
-			if (GestureWorks.activeTUIO)
+			var active:Boolean;
+			
+			active = target && target.localInput ? target.tuio : GestureWorks.activeTUIO;
+			if (active)
 				types.push(correspondingType(TuioTouchEvent, type));
-			if (GestureWorks.activeNativeTouch)
+				
+			active = target && target.localInput ? target.nativeTouch: GestureWorks.activeNativeTouch;				
+			if (active)
 				types.push(correspondingType(TouchEvent, type));
-			if (GestureWorks.activeSim)
+				
+			active = target && target.localInput ? target.simulator : GestureWorks.activeSim;				
+			if (active)
 				types.push(correspondingType(MouseEvent, type));
+				
 			return types;
 		}		
 		

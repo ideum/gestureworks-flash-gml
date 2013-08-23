@@ -117,6 +117,46 @@ package com.gestureworks.core
 				preinitBase();
 			}
 		}
+		
+		private var _localInput:Boolean;
+		/**
+		 * Flag indicating the overriding of global input mode settings with local
+		 */
+		public function get localInput():Boolean { return _localInput; }
+		public function set localInput(l:Boolean):void {
+			if (_localInput == l) return;
+			_localInput = l;
+			updateListeners();
+		}
+		
+		private var _nativeTouch:Boolean;
+		/**
+		 * Local native touch input setting. Overrides global when localInput is true.
+		 */		
+		public function get nativeTouch():Boolean { return _nativeTouch; }
+		public function set nativeTouch(n:Boolean):void {
+			if (_nativeTouch == n) return;
+			_nativeTouch = n;
+			updateListeners();
+		}
+		
+		private var _simulator:Boolean;
+		/**
+		 * Local mouse input setting. Overrides global when localInput is true.
+		 */		
+		public function get simulator():Boolean { return _simulator; }
+		public function set simulator(s:Boolean):void {
+			_simulator = s;
+		}
+		
+		private var _tuio:Boolean;
+		/**
+		 * Local tuio input setting. Overrides global when localInput is true.
+		 */		
+		public function get tuio():Boolean { return _tuio; }
+		public function set tuio(t:Boolean):void {
+			_tuio = t;
+		}				
 		  
 		// initializers
          private function preinitBase():void 
@@ -187,6 +227,7 @@ package com.gestureworks.core
 		 * Registers/unregisters event handlers depending on the active modes
 		 */
 		public function updateListeners():void {
+			var register:Boolean;
 			
 			//clear 
 			if(activated){
@@ -194,11 +235,16 @@ package com.gestureworks.core
 				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
 				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				
-				if (GestureWorks.activeTUIO && registerPoints)		
+				register = localInput ? tuio : GestureWorks.activeTUIO;				
+				if (register && registerPoints)		
 					addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-				if (GestureWorks.activeNativeTouch && registerPoints)		
+					
+				register = localInput ? nativeTouch : GestureWorks.activeNativeTouch;				
+				if (register && registerPoints)		
 					addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-				if (GestureWorks.activeSim && registerPoints)				
+					
+				register = localInput ? simulator : GestureWorks.activeSim;					
+				if (register && registerPoints)				
 					addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			}
 			
@@ -1406,7 +1452,7 @@ package com.gestureworks.core
 			if (GWTouchEvent.isType(type))
 			{	
 				var listeners:Array = [];
-				for each(var gwt:String in GWTouchEvent.eventTypes(type)) {
+				for each(var gwt:String in GWTouchEvent.eventTypes(type,this)) {
 					function gwl(e:*):void {
 						dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, true));
 					}
