@@ -94,7 +94,7 @@ package com.gestureworks.core
 		/**
 		 * Returns whether native touch is activated
 		 */
-		public static var activeNativeTouch:Boolean;
+		public static var activeNativeTouch:Boolean = true;
 		/**
 		 * Determines if Shift key is down or Up.  For use with simulator.
 		 */
