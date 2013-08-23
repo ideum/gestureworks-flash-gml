@@ -69,10 +69,10 @@ package com.gestureworks.managers
 			//global_motion_sprite = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			
 			//DRIVES UPDATES ON POINT LIFETIME
-			if (GestureWorks.activeNativeTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
+			GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
 			
 			// DRIVES UPDATES ON TOUCH POINT PATHS
-			if (GestureWorks.activeNativeTouch) GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);

@@ -58,8 +58,7 @@ package com.gestureworks.managers
 		
 		// initialization method, call through to TouchManager
 		gw_public static function initialize():void
-		{
-			if (!GestureWorks.activeSim) return;	
+		{	
 			TouchManager.gw_public::initialize();
 		}
 		

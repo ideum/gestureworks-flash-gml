@@ -157,16 +157,14 @@ package com.gestureworks.core
 			if (_nativeTouch == value) return;
 			_nativeTouch = value;
 			
-			GestureWorks.activeNativeTouch = _nativeTouch;
-			
-			if (!_nativeTouch) {
-				Multitouch.inputMode = MultitouchInputMode.NONE;
-				TouchManager.gw_public::deInitialize();
-			}
-			else 
-				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
-				
+			enableTouchInput = _nativeTouch;				
+			GestureWorks.activeNativeTouch = _nativeTouch;			
 			updateTouchObjects();
+			
+			if (_nativeTouch)
+				trace("native touch is on");
+			else
+				trace("native touch is off");
 		}	
 		
 		private var _simulator:Boolean = false;
@@ -180,12 +178,14 @@ package com.gestureworks.core
 			if (simulator == value) return;
 			_simulator = value;
 			
-			if (simulator)
-				Simulator.gw_public::initialize();
-			else
-				Simulator.gw_public::deactivate();
-				
+			enableMouseInput = _simulator;	
+			GestureWorks.activeSim = _simulator;
 			updateTouchObjects();
+			
+			if (_simulator)
+				trace("simulator is on");
+			else
+				trace("simulator is off");
 		}
 		
 		private var _tuio:* = false;
@@ -201,40 +201,17 @@ package com.gestureworks.core
 		{
 			if (tuio == value) return;
 			_tuio = value;
-			var host:String = "127.0.0.1";
-			var port:int;
-			var protocol:String;
 			
-			//parse string for TUIO arguments
-			if (_tuio is String) {
-				for each(var arg:String in String(_tuio).split(",")) {
-					var keyVal:Array = arg.split(":");
-					var prop:String = StringUtil.trim(keyVal[0]).toLowerCase();
-					var val:String = StringUtil.trim(keyVal[1]).toLowerCase();
-
-					switch(prop) {
-						case "host":
-							host = val;
-							break;
-						case "port":
-							port = int(val);
-							break;
-						case "protocol":
-							protocol = val;
-							break;
-						default:
-							break;
-					}
-				}
-					
-				_tuio = true;
-			}				
-			if (_tuio) 
-				TUIOManager.gw_public::initialize(host, port, protocol);
-			else
-				GestureWorks.activeTUIO = false;
-				
+			enableTuioInput = _tuio;			
+			if (_tuio is String) _tuio = true;				
+			GestureWorks.activeTUIO = _tuio;			
 			updateTouchObjects();
+			
+			if (_tuio)
+				trace("TUIO is on");			
+			else
+				trace("TUIO is off");
+				
 		}
 		
 		private var _motion:Boolean = false;
@@ -307,6 +284,70 @@ package com.gestureworks.core
 			}
 		}
 		
+		private var _touchInputEnabled:Boolean;
+		/**
+		 * @private
+		 */
+		public function set enableTouchInput(value:Boolean):void {						
+			if(value) {
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+				TouchManager.gw_public::initialize();
+			}
+			else {
+				Multitouch.inputMode = MultitouchInputMode.NONE;
+				TouchManager.gw_public::deInitialize();				
+			}			
+		}
+		
+		private var _mouseInputEnabled:Boolean;
+		/**
+		 * @private
+		 */
+		public function set enableMouseInput(value:Boolean):void {
+			if (value)
+				Simulator.gw_public::initialize();
+			else
+				Simulator.gw_public::deactivate();
+		}
+		
+		private var _tuioInputEnabled:Boolean;
+		/**
+		 * @private
+		 */
+		public function set enableTuioInput(value:*):void {
+			
+			var host:String = "127.0.0.1";
+			var port:int;
+			var protocol:String;			
+			
+			//parse string for TUIO arguments
+			if (value is String) {
+				for each(var arg:String in String(_tuio).split(",")) {
+					var keyVal:Array = arg.split(":");
+					var prop:String = StringUtil.trim(keyVal[0]).toLowerCase();
+					var val:String = StringUtil.trim(keyVal[1]).toLowerCase();
+
+					switch(prop) {
+						case "host":
+							host = val;
+							break;
+						case "port":
+							port = int(val);
+							break;
+						case "protocol":
+							protocol = val;
+							break;
+						default:
+							break;
+					}
+				}
+					
+				value = true;
+			}
+			
+			if (value) 
+				TUIOManager.gw_public::initialize(host, port, protocol);			
+		}
 			
 		/**
 		 * Updates event listeners depending on the active modes

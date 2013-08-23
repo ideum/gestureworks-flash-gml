@@ -57,10 +57,6 @@ package com.gestureworks.managers
 				gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop", host, port, protocol);
 				GestureWorks.application.addChild(gwTUIOMngr); 
 			}
-			
-			// tuio is now active
-			GestureWorks.activeTUIO = true;
-			trace("TUIO is active - native touch is no longer automically disabled");
 		}			
 
 		/**

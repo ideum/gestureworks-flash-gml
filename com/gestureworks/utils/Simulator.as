@@ -23,17 +23,13 @@ package com.gestureworks.utils
 		gw_public static function initialize():void
 		{	
 			MouseManager.gw_public::initialize();		
-			KeyListener.gw_public::initialize();
-			GestureWorks.activeSim = true;			
-			trace("simulator is on");
+			KeyListener.gw_public::initialize();		
 		}
 		
 		gw_public static function deactivate():void 
 		{
 			MouseManager.gw_public::deactivate();
 			KeyListener.gw_public::deactivate();
-			GestureWorks.activeSim = false;
-			trace("simulator is off");
 		}
 		
 	}
