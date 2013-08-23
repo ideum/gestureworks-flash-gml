@@ -67,8 +67,8 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			GestureWorks.application.removeEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);
-			for each(var g:SimulatorGraphic in circleGraphics)
-				GestureWorks.application.removeChild(g);
+			for (var i:int = circleGraphics.length - 1; i >= 0; i--)
+				removeSimulatorPoint(circleGraphics[i]);
 			circleGraphics = [];
 		}
 		
@@ -97,14 +97,7 @@ package com.gestureworks.managers
 				if (GestureWorks.isShift) 
 				{
 					if (e.target.toString() == "[object SimulatorGraphic]")
-					{
-						GestureWorks.application.removeChild(e.target as DisplayObject);
-						circleGraphics.splice(circleGraphics.indexOf(e.target), 1);
-						var eventHere:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, e.target.id, false);
-						eventHere.stageX = mousePointX;
-						eventHere.stageY = mousePointY;
-						TouchManager.onTouchUp(eventHere);
-					}
+						removeSimulatorPoint(e.target as SimulatorGraphic);
 				}
 				else
 				{
@@ -140,6 +133,15 @@ package com.gestureworks.managers
 			
 			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, currentMousePoint, false);
 			TouchManager.onTouchUp(event);
+		}
+		
+		private static function removeSimulatorPoint(simPoint:SimulatorGraphic) {
+			GestureWorks.application.removeChild(simPoint as DisplayObject);
+			circleGraphics.splice(circleGraphics.indexOf(simPoint), 1);
+			var eventHere:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, simPoint.id, false);
+			eventHere.stageX = mousePointX;
+			eventHere.stageY = mousePointY;
+			TouchManager.onTouchUp(eventHere);			
 		}
 		
 		private static function simulatorGraphicPoint(event:MouseEvent):void
