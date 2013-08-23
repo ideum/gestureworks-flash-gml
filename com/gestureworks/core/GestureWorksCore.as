@@ -157,8 +157,8 @@ package com.gestureworks.core
 			if (_nativeTouch == value) return;
 			_nativeTouch = value;
 			
-			enableTouchInput = _nativeTouch;				
 			GestureWorks.activeNativeTouch = _nativeTouch;			
+			enableTouchInput = _nativeTouch;							
 			updateTouchObjects();
 			
 			if (_nativeTouch)
@@ -178,8 +178,8 @@ package com.gestureworks.core
 			if (simulator == value) return;
 			_simulator = value;
 			
-			enableMouseInput = _simulator;	
 			GestureWorks.activeSim = _simulator;
+			enableMouseInput = _simulator;	
 			updateTouchObjects();
 			
 			if (_simulator)
@@ -202,9 +202,9 @@ package com.gestureworks.core
 			if (tuio == value) return;
 			_tuio = value;
 			
+			GestureWorks.activeTUIO = _tuio;				
 			enableTuioInput = _tuio;			
-			if (_tuio is String) _tuio = true;				
-			GestureWorks.activeTUIO = _tuio;			
+			if (_tuio is String) _tuio = true;						
 			updateTouchObjects();
 			
 			if (_tuio)
@@ -284,12 +284,28 @@ package com.gestureworks.core
 			}
 		}
 		
-		private var _touchInputEnabled:Boolean;
+		
+		/////////////////////////////////
+		//// Input controls allow touch objects to activate/deactivate modes independent from global settings.
+		////////////////////////////////
+		
+		private var touchInputEnabled:Boolean = true;
 		/**
+		 * Provides touch input control at a global and local level
 		 * @private
 		 */
-		public function set enableTouchInput(value:Boolean):void {						
-			if(value) {
+		public function set enableTouchInput(value:Boolean):void {		
+			
+			if (touchInputEnabled == value) return;
+			
+			if (value)  //enable 
+				touchInputEnabled = value;
+			if (!value && canDisable("nativeTouch"))  //if not active, disable 
+				touchInputEnabled = false;
+			else
+				return;				//active so don't disable
+			
+			if(touchInputEnabled) {
 				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
 				TouchManager.gw_public::initialize();
 			}
@@ -299,8 +315,9 @@ package com.gestureworks.core
 			}			
 		}
 		
-		private var _mouseInputEnabled:Boolean;
+		private var mouseInputEnabled:Boolean;
 		/**
+		 * Provides mouse input control at a global and local 
 		 * @private
 		 */
 		public function set enableMouseInput(value:Boolean):void {
@@ -310,8 +327,9 @@ package com.gestureworks.core
 				Simulator.gw_public::deactivate();
 		}
 		
-		private var _tuioInputEnabled:Boolean;
+		private var tuioInputEnabled:Boolean;
 		/**
+		 * Provides tuio input control at a global and local level
 		 * @private
 		 */
 		public function set enableTuioInput(value:*):void {
@@ -348,6 +366,41 @@ package com.gestureworks.core
 			if (value) 
 				TUIOManager.gw_public::initialize(host, port, protocol);			
 		}
+		
+		/**
+		 * Check global and local mode settings to verify the specified input can be disabled. If the mode is not active
+		 * at a global or local level, the input manager can be disabled.
+		 * @param	input
+		 * @return
+		 */
+		private function canDisable(input:String, obj:* = null):Boolean {
+							
+			//global check
+			if (input == "nativeTouch" && GestureWorks.activeNativeTouch)
+				return false;
+			else if (input == "simulator" && GestureWorks.activeSim)
+				return false;
+			else if (input == "tuio" && GestureWorks.activeTUIO)
+				return false;
+				
+			//local check
+			var i:int;
+			var disable:Boolean = true;			
+			if (!obj) 
+				obj = this;
+			else if (obj is TouchSprite && obj.localInput && obj[input])
+				return false;
+				
+			if (obj.hasOwnProperty("numChildren")) {
+				for (i = 0; i < obj.numChildren; i++)
+					return canDisable(input, obj.getChildAt(i)) && disable;
+			}
+			
+			return disable;							
+		}
+		
+		
+		
 			
 		/**
 		 * Updates event listeners depending on the active modes
