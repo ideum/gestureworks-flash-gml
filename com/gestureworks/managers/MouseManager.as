@@ -77,7 +77,7 @@ package com.gestureworks.managers
 		 */
 		gw_public static function registerMousePoint(event:TouchEvent):void
 		{
-			if (!GestureWorks.activeSim) return;
+			//if (!GestureWorks.activeSim) return;
 			
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);

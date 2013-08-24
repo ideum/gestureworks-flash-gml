@@ -137,7 +137,10 @@ package com.gestureworks.core
 		public function set nativeTouch(n:Boolean):void {
 			if (_nativeTouch == n) return;
 			_nativeTouch = n;
+			if (root is GestureWorks)
+				GestureWorks(root).enableTouchInput = _nativeTouch;
 			updateListeners();
+			trace("native touch is on for", this, ":", name);
 		}
 		
 		private var _simulator:Boolean;
@@ -146,7 +149,12 @@ package com.gestureworks.core
 		 */		
 		public function get simulator():Boolean { return _simulator; }
 		public function set simulator(s:Boolean):void {
+			if (_simulator == s) return;
 			_simulator = s;
+			if (root is GestureWorks)
+				GestureWorks(root).enableMouseInput = _simulator;
+			updateListeners();	
+			trace("simulator is on for", this, ":", name);
 		}
 		
 		private var _tuio:Boolean;
@@ -636,11 +644,14 @@ package com.gestureworks.core
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
+				var register:Boolean;
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
-				if (GestureWorks.activeNativeTouch && registerPoints)
+				register = localInput ? nativeTouch : GestureWorks.activeNativeTouch;		
+				if (register && registerPoints)
 					TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				if (GestureWorks.activeSim && registerPoints) 
+				register = localInput ? simulator : GestureWorks.activeSim;		
+				if (register && registerPoints) 
 					MouseManager.gw_public::registerMousePoint(event);
 				
 				// add touch down to touch object gesture event timeline

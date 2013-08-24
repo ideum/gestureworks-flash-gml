@@ -300,7 +300,7 @@ package com.gestureworks.core
 			
 			if (value)  //enable 
 				touchInputEnabled = value;
-			if (!value && canDisable("nativeTouch"))  //if not active, disable 
+			else if (!value && canDisable("nativeTouch"))  //if not active, disable 
 				touchInputEnabled = false;
 			else
 				return;				//active so don't disable
@@ -321,6 +321,16 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public function set enableMouseInput(value:Boolean):void {
+			
+			if (mouseInputEnabled == value) return;
+			
+			if (value)  //enable 
+				mouseInputEnabled = value;
+			else if (!value && canDisable("simulator"))  //if not active, disable 
+				mouseInputEnabled = false;
+			else
+				return;				//active so don't disable
+				
 			if (value)
 				Simulator.gw_public::initialize();
 			else
@@ -333,6 +343,15 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public function set enableTuioInput(value:*):void {
+			
+			if (tuioInputEnabled == value) return;
+			
+			if (value)  //enable 
+				tuioInputEnabled = value;
+			else if (!value && canDisable("tuio"))  //if not active, disable 
+				tuioInputEnabled = false;
+			else
+				return;				//active so don't disable			
 			
 			var host:String = "127.0.0.1";
 			var port:int;
@@ -384,19 +403,20 @@ package com.gestureworks.core
 				return false;
 				
 			//local check
-			var i:int;
-			var disable:Boolean = true;			
+			var i:int;		
 			if (!obj) 
 				obj = this;
 			else if (obj is TouchSprite && obj.localInput && obj[input])
 				return false;
 				
 			if (obj.hasOwnProperty("numChildren")) {
-				for (i = 0; i < obj.numChildren; i++)
-					return canDisable(input, obj.getChildAt(i)) && disable;
+				for (i = 0; i < obj.numChildren; i++){
+					if (!canDisable(input, obj.getChildAt(i)))
+						return false;
+				}
 			}
 			
-			return disable;							
+			return true;							
 		}
 		
 		
