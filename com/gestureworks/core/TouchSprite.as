@@ -1401,7 +1401,7 @@ package com.gestureworks.core
 		 * @param	priority = 0
 		 * @param	useWeakReference
 		 */
-		private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority = 0, useWeakReference:Boolean = false):void
+		private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
 		{
 			if (GWTouchEvent.isType(type))
 			{	

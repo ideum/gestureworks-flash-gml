@@ -28,25 +28,6 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	
-	import away3d.cameras.*;
-	import away3d.containers.*;
-	import away3d.controllers.*;
-	import away3d.entities.*;
-	import away3d.lights.*;
-	import away3d.materials.*;
-	import away3d.materials.lightpickers.*;
-	import away3d.materials.methods.*;
-	import away3d.primitives.*;
-	import away3d.utils.*;
-	
-	import away3d.core.math.Matrix3DUtils;
-	import away3d.primitives.LineSegment;
-	import away3d.entities.SegmentSet;
-	import away3d.debug.WireframeAxesGrid;
-	import away3d.debug.AwayStats;
-	import away3d.debug.AwayStats;
-	import away3d.debug.Trident;
-	
 	public class ClusterVisualizer extends Shape
 	{
 		private static const RAD_DEG:Number = 180 / Math.PI;
