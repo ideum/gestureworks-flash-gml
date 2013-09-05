@@ -70,8 +70,7 @@ package com.gestureworks.managers
 				
 				object.thumbID = clusterObject.thumbID; //for 2D HAND
 				
-				
-				
+		
 				// first order primary deltas
 				object.dx = clusterObject.dx;
 				object.dy = clusterObject.dy;
@@ -126,11 +125,10 @@ package com.gestureworks.managers
 				object.iPointArray = clusterObject.iPointArray;
 				object.iPointArray2D = clusterObject.iPointArray2D;
 				
-				//InteractionPoint subcluster matrix
-				//object.subClusterArray = clusterObject.subClusterArray
-				
-				//object.pinch_cO = clusterObject.pinch_cO;
-				//object.trigger_cO = clusterObject.trigger_cO;
+				// aggregate values
+				//objec.velocity = clusterObject.velocity;
+				//objec.acceleration = clusterObject.acceleration;
+				//object.jolt = clusterObject.jolt;
 				
 				
 				var sipn:int = clusterObject.subClusterArray.length
@@ -142,8 +140,8 @@ package com.gestureworks.managers
 					object.subClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
 				
 					object.subClusterArray[i].ipn = clusterObject.subClusterArray[i].ipn;
-					//object.subClusterArray[i].ipnk = clusterObject.subClusterArray[i].ipnk;
-					//object.subClusterArray[i].ipnk0 = clusterObject.subClusterArray[i].ipnk0;
+					object.subClusterArray[i].ipnk = clusterObject.subClusterArray[i].ipnk;
+					object.subClusterArray[i].ipnk0 = clusterObject.subClusterArray[i].ipnk0;
 					object.subClusterArray[i].dipn = clusterObject.subClusterArray[i].dipn;
 					
 					object.subClusterArray[i].x = clusterObject.subClusterArray[i].x;
@@ -179,38 +177,15 @@ package com.gestureworks.managers
 					object.subClusterArray[i].dthetaX = clusterObject.subClusterArray[i].dthetaX;
 					object.subClusterArray[i].dthetaY = clusterObject.subClusterArray[i].dthetaY;
 					object.subClusterArray[i].dthetaZ = clusterObject.subClusterArray[i].dthetaZ;
+					
+					// aggregate values
+					object.subClusterArray[i].velocity = clusterObject.subClusterArray[i].velocity;
+					object.subClusterArray[i].acceleration = clusterObject.subClusterArray[i].acceleration;
+					object.subClusterArray[i].jolt = clusterObject.subClusterArray[i].jolt;
+					
+					object.subClusterArray[i].rotationList = clusterObject.subClusterArray[i].rotationList;
+					
 				}
-				
-					/*
-				object.finger_cO = new ipClusterObject()//clusterObject.finger_cO;
-				
-					object.finger_cO.ipn = clusterObject.finger_cO.ipn;
-					object.finger_cO.x = clusterObject.finger_cO.x;
-					object.finger_cO.y = clusterObject.finger_cO.y;
-					object.finger_cO.z = clusterObject.finger_cO.z;
-					
-					object.finger_cO.radius = clusterObject.finger_cO.radius;
-					object.finger_cO.width = clusterObject.finger_cO.width;
-					object.finger_cO.height = clusterObject.finger_cO.height;
-					object.finger_cO.length = clusterObject.finger_cO.length;
-					
-					object.finger_cO.rotation = clusterObject.finger_cO.rotation;
-					object.finger_cO.rotationX = clusterObject.finger_cO.rotationX;
-					object.finger_cO.rotationY = clusterObject.finger_cO.rotationY;
-					object.finger_cO.rotationZ = clusterObject.finger_cO.rotationZ;
-					
-					object.finger_cO.separation = clusterObject.finger_cO.separation;
-					object.finger_cO.separationX = clusterObject.finger_cO.separationX;
-					object.finger_cO.separationY = clusterObject.finger_cO.separationY;
-					object.finger_cO.separationZ = clusterObject.finger_cO.separationZ;
-					
-					//object.finger_cO.dipn = clusterObject.finger_cO.dipn;
-					object.finger_cO.dx = clusterObject.finger_cO.dx;
-					object.finger_cO.dy = clusterObject.finger_cO.dy;
-					object.finger_cO.dz = clusterObject.finger_cO.dz;
-					
-					object.finger_cO.dtheta = clusterObject.finger_cO.dtheta;
-				*/
 				
 				//SENSOR ACCELEROMETER DATA
 				//object.sensorArray = clusterObject.sensorArray;

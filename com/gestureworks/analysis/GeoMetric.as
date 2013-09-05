@@ -1072,7 +1072,7 @@ package com.gestureworks.analysis
 			for (var j:int = 0; j < cO.hn; j++)
 				{	
 					var hfn:int = cO.handList[j].fingerList.length;
-					var v0:Vector3D = new Vector3D(0,0,0)
+					//var v0:Vector3D = new Vector3D(0,0,0)
 					//get thumb points
 					if ((hfn>0)&&(cO.handList[j].thumb!=null)&&(cO.handList[j].thumb.fingertype=="thumb")) 
 					{
@@ -1087,6 +1087,32 @@ package com.gestureworks.analysis
 						InteractionPointTracker.framePoints.push(t_pt)
 						//trace("push thumb point");
 					}
+				}
+		}
+		
+		/////////////////////////////////////////////////////////////////////////
+		// Collect Interactive Thumb Points
+		public function find3DFingerAndThumbPoints():void
+		{
+			for (var j:int = 0; j < cO.hn; j++)
+				{	
+					var hfn:int = cO.handList[j].fingerList.length;
+					
+					for (var i:int = 0; i < hfn; i++)
+						{
+						var dpt:MotionPointObject = cO.handList[j].fingerList[i];
+					
+							if((dpt)&&(dpt.fingertype=="thumb")||(dpt.fingertype == "finger")) 
+							{
+							var d_pt:InteractionPointObject = new InteractionPointObject();
+								d_pt.position = dpt.position;
+								d_pt.direction = dpt.direction;
+								//t_pt.handID = cO.hand.handID;
+								d_pt.type = "digit";
+										
+							InteractionPointTracker.framePoints.push(d_pt)
+							}
+						}
 				}
 		}
 		

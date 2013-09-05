@@ -204,8 +204,8 @@ package com.gestureworks.core
 		//trace("trying to draw display",ts.debugDisplay,debug_display);
 		if ((ts.debugDisplay)&&(debug_display))
 			{
-			// touch points
-			if ((ts.N)||(ts.cO.fn))//ts.cO.sn
+			// touch points or interaction points
+			if ((ts.N)||(ts.cO.ipn))//ts.cO.sn //ts.cO.fn
 			{
 				if ((pointDisplay)&&(point)) 		point.draw();
 				if ((clusterDisplay)&&(cluster))	cluster.draw();

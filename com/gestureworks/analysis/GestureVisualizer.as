@@ -27,6 +27,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	//import com.gestureworks.objects.SensorPointObject;
+	import com.gestureworks.objects.GesturePointObject;
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.TransformObject;
@@ -128,7 +129,7 @@ package com.gestureworks.analysis
 		
 		// draw
 		draw_touch_gesture();
-		//draw_motion_gesture();
+		draw_motion_gesture();
 		//draw_sensor_gesture();
 		
 	}
@@ -617,9 +618,11 @@ package com.gestureworks.analysis
 	private function draw_motion_gesture():void 
 	{	
 
-	graphics.clear();
-					
-	/*
+	//graphics.clear();
+				
+	//graphics.lineStyle(4, 0x00FFFF, 1);
+	//graphics.drawRect(100, 100,50,50);	
+	
 					if (cO.gPointArray.length)
 					{
 					////////////////////////////////////////////////////////////
@@ -631,21 +634,30 @@ package com.gestureworks.analysis
 						{
 							var gpt:GesturePointObject = cO.gPointArray[gn];
 							
-							
 							if (gpt)
 							{
-								//trace("ipoint type",ipt.type)
+								//trace("ipoint type",gpt.type)
+								
+								if (gpt.type == "hold") 
+								{
+									trace("hold gesture point",gpt.position.x, gpt.position.y);
+									graphics.lineStyle(3, 0x00FFFF, 1);
+									graphics.drawRect(gpt.position.x, gpt.position.y, 50, 50);	
+									//graphics.drawRect(100, 100,50,50);	
+								}
+								
 								//PINK 0xE3716B // for pinch
 								if (gpt.type == "pinch") 
 								{
 									graphics.lineStyle(3, 0x00FFFF, style.stroke_alpha);
 									graphics.drawCircle(gpt.position.x, gpt.position.y, 8);	
+									
 								}
 								
 							}
 						
 						}
-					}*/
+					}
 						
 		}	
 	

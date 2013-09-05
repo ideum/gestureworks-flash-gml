@@ -126,7 +126,7 @@ package com.gestureworks.core
 				// analyzes and characterizes multi-point motion
 				if (kinemetricsOn)		cluster_kinemetric.init();
 				if (vectormetricsOn)	cluster_vectormetric.init();
-				if(geometricsOn)		cluster_geometric.init();
+				if (geometricsOn)		cluster_geometric.init();
 							
 		}
 		/**
@@ -223,18 +223,20 @@ package com.gestureworks.core
 				if (geometricsOn)
 				{	
 					//getGeoMetrics2D(); 
-					if (ts.motion3d) getGeoMetrics3D();
+					//if (ts.motion3d) 
+					getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
 				{	
 					getKineMetrics();
-					if (ts.motion3d) getKineMetrics3D();
+					//if (ts.motion3d) 
+					getKineMetrics3D();
 				}
 				
 				if (vectormetricsOn) 
 				{
 					getVectorMetrics();
-					//getVectorMetrics3D();
+					//if (ts.motion3d)getVectorMetrics3D();
 				}
 				
 				//trace("hand pos",cO.hand.position)
@@ -342,14 +344,17 @@ package com.gestureworks.core
 							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) cluster_geometric.find3DFingerPoints(); 
 							if ((g.cluster_type == "thumb")||(g.cluster_type == "all")) cluster_geometric.find3DThumbPoints(); 
 							if ((g.cluster_type == "palm")||(g.cluster_type == "all")) cluster_geometric.find3DPalmPoints(); 
-							if ((g.cluster_type == "finger_average")||(g.cluster_type == "all")) cluster_geometric.find3DFingerAveragePoints(); 
+							if ((g.cluster_type == "finger_average") || (g.cluster_type == "all")) cluster_geometric.find3DFingerAveragePoints(); 
+							if (g.cluster_type == "digit") cluster_geometric.find3DFingerAndThumbPoints(); 
 							
 						//CONFIGURATION BASED INTERACTION POINTS
 							if ((g.cluster_type == "pinch")||(g.cluster_type == "all")) cluster_geometric.find3DPinchPoints(); 
 							if ((g.cluster_type == "trigger")||(g.cluster_type == "all"))cluster_geometric.find3DTriggerPoints(); 
 							if ((g.cluster_type == "push")||(g.cluster_type == "all")) cluster_geometric.find3DPushPoints(); 
 							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) cluster_geometric.find3DHookPoints(); 
-							if ((g.cluster_type == "frame")||(g.cluster_type == "all")) cluster_geometric.find3DFramePoints(); 
+							if ((g.cluster_type == "frame") || (g.cluster_type == "all")) cluster_geometric.find3DFramePoints(); 
+							
+							
 						
 						// LATER
 							//---cluster_geometric.find3DToolPoints();
@@ -388,17 +393,16 @@ package com.gestureworks.core
 					dn = gO.pOList[key].dList.length;
 					
 					// zero cluster deltas
-					for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+					//for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
 					
 					var g:GestureObject = gO.pOList[key];
-					
 					
 					////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// PROCESSING TOUCH KINEMETRICS
 					// TOUCH POINTS
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-					if (ts.N != 0) // check kinemetric and if continuous analysis
+					if (ts.N != 0) // check kinemetric and if continuous analyze
 					{		
 						// check point number requirements
 						if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
@@ -506,10 +510,10 @@ package com.gestureworks.core
 												// when no limits
 												else gdim.clusterDelta = cO[res];//dim_var = num;
 											}
+											
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											else gdim.clusterDelta = cO[res];//rtn_dim = 1;
 											/////////////////////////////////////////////////////////////
-											
 											
 											//CLOSE DIM IF NO VALUE
 											if (gdim.clusterDelta == 0) gdim.activeDim = false;
@@ -574,6 +578,10 @@ package com.gestureworks.core
 						
 						// FIND CLUSTER MOTION CHARACTER
 						cluster_kinemetric.find3DIPTransformation(j);
+						//cluster_kinemetric.find3DIPTranslation(j);
+						//cluster_kinemetric.find3DIPRotation(j);
+						//cluster_kinemetric.find3DIPSeparation(j);
+						
 						//cluster_kinemetric.find3dIPAcceleration(j);
 						
 						// FIND POINT MOTION CHARACTER
@@ -609,7 +617,14 @@ package com.gestureworks.core
 					dn = gO.pOList[key].dList.length;
 					
 					// zero cluster deltas
-					for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+					//////////////////////////////////////////////////////
+					//PROBLEM
+					/////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////
+					//for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
+					//////////////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////////////
+					
 					
 					var g:GestureObject = gO.pOList[key];
 					
@@ -621,7 +636,7 @@ package com.gestureworks.core
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 					// processing algorithms when in motion
-					if(ts.cO.fn!=0){		// check kinemetric and if continuous analysis
+					if(ts.cO.ipn!=0){		// check kinemetric and if continuous analyze
 					
 					////////////////////////////////////////////////
 					// SKELETON MATCH
@@ -721,6 +736,7 @@ package com.gestureworks.core
 										g.data.z = cO.z; // gesture position
 										g.data.hn = cO.hn; // current hand number
 										g.data.fn = cO.fn; // current finger total
+										//g.data.ipn = cO.ipn; // current ip total
 										
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////

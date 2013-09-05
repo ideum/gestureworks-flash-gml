@@ -31,10 +31,8 @@ package com.gestureworks.objects
 		///////////////////////////////////////
 		// number of points---------------------
 		private var n:int = 0;
-	
 		// number of hands---------------------
 		private var hn:int = 0;
-		
 		// number of fingers---------------------
 		private var fn:int = 0;
 		
@@ -43,7 +41,7 @@ package com.gestureworks.objects
 		public var ipn:int = 0;
 		public var ipnk:Number = 0;
 		public var ipnk0:Number = 0;
-		
+	
 		// CHANGE IN NUMBER OF INTERACTION POINTS
 		public var dipn:int = 0;
 		
@@ -138,16 +136,12 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// dtheta ------------------
 		public var dtheta:Number = 0;
-		
 		// dthetax ------------------
 		public var dthetaX:Number = 0;
-		
 		// dthetay ------------------
 		public var dthetaY:Number = 0;
-		
 		// dthetaZ ------------------
 		public var dthetaZ:Number = 0;
-		
 		// pivot_dtheta ------------------
 		public var pivot_dtheta:Number = 0;
 	
@@ -156,95 +150,62 @@ package com.gestureworks.objects
 		//mean velocity
 		///////////////////////////////////////////////////////////////////////////////
 		// mdx---------------------
-		private var _mdx:Number = 0;
-		public function get mdx():Number{return _mdx;}
-		public function set mdx(value:Number):void{_mdx = value;}
+		public var mdx:Number = 0;
 		// mdy---------------------
-		private var _mdy:Number = 0;
-		public function get mdy():Number{	return _mdy;}
-		public function set mdy(value:Number):void{	_mdy = value;}
+		public var mdy:Number = 0;
 		// mdz---------------------
-		private var _mdz:Number = 0;
-		public function get mdz():Number{	return _mdz;}
-		public function set mdz(value:Number):void{	_mdz = value;}
+		public var mdz:Number = 0;
+		
 		
 		//////////////////////////////////////////////
 		// accelerations
 		//////////////////////////////////////////////
 		// ddx ------------------
-		private var _ddx:Number = 0;
-		public function get ddx():Number{	return _ddx;}
-		public function set ddx(value:Number):void{	_ddx = value;}
+		public var ddx:Number = 0;
 		// ddy ------------------
-		private var _ddy:Number = 0;
-		public function get ddy():Number{	return _ddy;}
-		public function set ddy(value:Number):void{	_ddy = value;}
+		public var ddy:Number = 0;
 		// ddz ------------------
-		private var _ddz:Number = 0;
-		public function get ddz():Number{	return _ddz;}
-		public function set ddz(value:Number):void{	_ddz = value;}
+		public var ddz:Number = 0;
+		
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// rotational acceleration
 		///////////////////////////////////////////////////////////////////////////////
 		// ddtheta ------------------
-		private var _ddtheta:Number = 0;
-		public function get ddtheta():Number{	return _ddtheta;}
-		public function set ddtheta(value:Number):void	{	_ddtheta = value; }
+		public var ddtheta:Number = 0;
+		
 		
 		////////////////////////////////////////////////////////////////////////////////
 		// separation acceleration
 		////////////////////////////////////////////////////////////////////////////////
 		// ddsx ------------------
-		private var _ddsx:Number = 0;
-		public function get ddsx():Number{	return _ddsx;}
-		public function set ddsx(value:Number):void{	_ddsx = value;}
+		public var ddsx:Number = 0;
 		// ddsy ------------------
-		private var _ddsy:Number = 0;
-		public function get ddsy():Number{	return _ddsy;}
-		public function set ddsy(value:Number):void{	_ddsy = value;}
+		public var ddsy:Number = 0;
 		// ddsz ------------------
-		private var _ddsz:Number = 0;
-		public function get ddsz():Number{	return _ddsz;}
-		public function set ddsz(value:Number):void{	_ddsz = value;}
+		public var ddsz:Number = 0;
 		// dds ------------------
-		private var _dds:Number = 0;
-		public function get dds():Number{	return _dds;}
-		public function set dds(value:Number):void{	_dds = value;}
+		public var dds:Number = 0;
 		// dds3d ------------------
-		private var _dds3d:Number = 0;
-		public function get dds3d():Number{	return _dds3d; }
-		public function set dds3d(value:Number):void{_dds3d = value;}
+		public var dds3d:Number = 0;
 		
 		///////////////////////////////////////////////////////////////////////////////
 		// estimated total mean acceleration
 		///////////////////////////////////////////////////////////////////////////////
 		// etm_ddx ------------------
-		private var _etm_dx:Number = 0;
-		public function get etm_dx():Number{	return _etm_dx;}
-		public function set etm_dx(value:Number):void{	_etm_dx = value;}
+		public var etm_dx:Number = 0;
 		// etm ddy ------------------
-		private var _etm_dy:Number = 0;
-		public function get etm_dy():Number{	return _etm_dy;}
-		public function set etm_dy(value:Number):void{	_etm_dy = value;}
+		public var etm_dy:Number = 0;
 		// etm ddz ------------------
-		private var _etm_dz:Number = 0;
-		public function get etm_dz():Number{	return _etm_dz;}
-		public function set etm_dz(value:Number):void{	_etm_dz = value;}
+		public var etm_dz:Number = 0;
+		
 		// etm_ddx ------------------
-		private var _etm_ddx:Number = 0;
-		public function get etm_ddx():Number{	return _etm_ddx;}
-		public function set etm_ddx(value:Number):void{	_etm_ddx = value;}
+		public var etm_ddx:Number = 0;
 		// etm_ddy ------------------
-		private var _etm_ddy:Number = 0;
-		public function get etm_ddy():Number{	return _etm_ddy;}
-		public function set etm_ddy(value:Number):void{_etm_ddy = value;}
+		public var etm_ddy:Number = 0;
 		// etm_ddz ------------------
-		private var _etm_ddz:Number = 0;
-		public function get etm_ddz():Number{return _etm_ddz;}
-		public function set etm_ddz(value:Number):void{_etm_ddz = value;}
-		
-		
+		public var etm_ddz:Number = 0;
+	
 		///////////////////////////////////////////////////////////////////////////////
 		// 2d/3d hand surface profile / data structure
 		///////////////////////////////////////////////////////////////////////////////
@@ -273,45 +234,57 @@ package com.gestureworks.objects
 		
 		/// 
 		// thumbID ------------------ FOR 2D STUFF (NEEDS TO MOVE TO 2D HAND OBJECT)
-		private var _thumbID:int = 0;
-		public function get thumbID():int{return _thumbID;}
-		public function set thumbID(value:int):void { _thumbID = value; }
+		public var thumbID:int = 0;
 		// orientationAngle---------------------
-		private var _orientation:Number = 0;
-		public function get orientation():Number{return _orientation;}
-		public function set orientation(value:Number):void{_orientation = value;}
+		public var orientation:Number = 0;
 		// orient_dx---------------------
-		private var _orient_dx:Number = 0;
-		public function get orient_dx():Number{return _orient_dx;}
-		public function set orient_dx(value:Number):void{_orient_dx = value;}
+		public var orient_dx:Number = 0;
 		// orient_dy---------------------
-		private var _orient_dy:Number = 0;
-		public function get orient_dy():Number {	return _orient_dy; }
-		public function set orient_dy(value:Number):void { _orient_dy = value; }
+		public var orient_dy:Number = 0;
 		// orient_dz---------------------
-		private var _orient_dz:Number = 0;
-		public function get orient_dz():Number {	return _orient_dz; }
-		public function set orient_dz(value:Number):void { _orient_dz = value; }
-		
+		public var orient_dz:Number = 0;
+	
 		// private var _holdPoint:Vector3D = new Vector3D(); 
 		// hold_x---------------------//remove
-		private var _hold_x:Number = 0;
-		public function get hold_x():Number{return _hold_x;}
-		public function set hold_x(value:Number):void{_hold_x = value;}
+		public var hold_x:Number = 0;
 		// hold_y---------------------remove
-		private var _hold_y:Number = 0;
-		public function get hold_y():Number{return _hold_y;}
-		public function set hold_y(value:Number):void{_hold_y = value;}
+		public var hold_y:Number = 0;
 		// hold_z---------------------remove
-		private var _hold_z:Number = 0;
-		public function get hold_z():Number{return _hold_z;}
-		public function set hold_z(value:Number):void{_hold_z = value;}
+		public var hold_z:Number = 0;
 		// c_locked---------------------remove
-		private var _hold_n:int = 0;
-		public function get hold_n():int{return _hold_n;}
-		public function set hold_n(value:int):void{_hold_n = value;}
+		public var hold_n:int = 0;
 		
 	
+		
+		//inst velocity//////////////////////////////////////////////dx,dy,dz
+		public var velocity:Vector3D = new Vector3D ();
+
+		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
+		public var acceleration:Vector3D = new Vector3D ();
+
+		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
+		public var jolt:Vector3D = new Vector3D ();
+		
+		
+		public var rotationList:Vector.<Vector3D> = new Vector.<Vector3D>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////

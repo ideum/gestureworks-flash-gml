@@ -36,10 +36,10 @@ package com.gestureworks.analysis
 		public var style:Object;
 		private var cO:ClusterObject;
 		private var id:Number = 0;
-
+		private var ts:Object;
 		
 		private var _x:Number = 0;
-		private var _y: Number = 0;
+		private var _y:Number = 0;
 		private var _width:Number = 0;
 		private var _height: Number = 0;
 		private var x0:Number = 0;
@@ -63,10 +63,11 @@ package com.gestureworks.analysis
 		private var N:uint = 0;
 		private var ipn:uint = 0;
 			
-		public function ClusterVisualizer(touchObjectID:Number)
+		public function ClusterVisualizer(ID:Number)
 		{
 			//trace("init cluster visualizer");
-			id = touchObjectID;
+			id = ID;
+			ts = GestureGlobals.gw_public::touchObjects[id];
 			
 			/////////////////////////////////////////////
 			// set default style 
@@ -118,11 +119,11 @@ package com.gestureworks.analysis
 	{
 		
 		N = cO.pointArray.length
-		ipn = cO.iPointArray2D.length;
+		ipn = cO.iPointArray2D.length; // ALWAYS ZERO WHEN ts.transform3d==FALSE // AS NOT POPULATED
 		
 		// init
 		graphics.clear();
-		
+
 		drawClusterDims();
 		drawInteractionPoints();
 		drawSubClusterDims();
@@ -137,6 +138,9 @@ package com.gestureworks.analysis
 			
 			_x = cO.x;
 			_y = cO.y;
+			
+			//trace("cluster vis",cO.x,cO.y, _x, _y);
+			
 			_width = cO.width;
 			_height = cO.height;
 			_radius = cO.radius;
@@ -332,9 +336,12 @@ package com.gestureworks.analysis
 	
 	private function drawInteractionPoints():void
 	{
+		if (ipn)
+			{
 				for (var i:int = 0; i < ipn; i++) 
 					{
 						var ipt:InteractionPointObject = cO.iPointArray2D[i];
+			
 								
 								if (_drawWeb)
 								{	
@@ -430,228 +437,205 @@ package com.gestureworks.analysis
 									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
 								}
 					}
+			}
 	}
 	
 	
 	private function drawSubClusterDims():void
 	{	
+		//FIND NUMBER OF SUBCLUSTERS
+		var scn:uint = cO.subClusterArray.length;
 		
-		for (i = 0; i < cO.subClusterArray.length; i++) 
+		//trace("draw",ipn,scn)
+		
+		if ((ipn)&&(scn))
 			{
-				//var ctype:String = cO.subClusterArray[i].type
-				
-				if (true) //ctype == "finger"// only shows finger now
-					{
-				
-					var sub_cO:ipClusterObject = cO.subClusterArray[i]; //= cO.finger_cO;
-					var sipn:int = sub_cO.ipn;
-		
-					// DO FOR EACH EXISTING NONZERO SUBCLUSTER
-					if ((sipn!=0)&&(sub_cO))
+			for (var c:uint = 0; c < scn; c++) 
+				{
+					//var ctype:String = cO.subClusterArray[i].type
+					
+					if (true) //ctype == "finger"// only shows finger now
 						{
-						//trace("hello");	
-								if (sub_cO.type == "finger") style.stroke_color = 0x00FF00;//0x00FFFF;
-								if (sub_cO.type == "thumb") style.stroke_color = 0xFF0000;//0x00FFFF;
-								if (sub_cO.type == "palm") style.stroke_color = 0xFFFFFF;
-								if (sub_cO.type == "finger_average") style.stroke_color = 0x000000;
-						
-								if (sub_cO.type == "trigger") style.stroke_color = 0xc44dbe;//0x00FFFF;
-								if (sub_cO.type == "pinch") style.stroke_color = 0x00FFFF;//0x00FFFF;
-								if (sub_cO.type == "frame") style.stroke_color = 0x00FFFF;//0x00FFFF;
-								if (sub_cO.type == "push") style.stroke_color = 0xFFFF00;//0x00FFFF;
-								if (sub_cO.type == "hook") style.stroke_color = 0x0000FF;
-								
-								
-								_x = sub_cO.x;
-								_y = sub_cO.y;
-								_width = sub_cO.width;
-								_height = sub_cO.height;
-								_radius = sub_cO.radius-50 -i*10;
-								_rotation = sub_cO.rotation; 
-					 
-								_dtheta = sub_cO.dtheta / 4;
-								_ds = sub_cO.ds*10;
-								
-								x0 = 0
-								y0 = 0
-								
-								step =  0.01;
-								percent = style.percent;
-								numSteps = Math.abs(Math.round(_dtheta / step));
-								r2 = _radius * percent;
-								r1 = _radius * (percent + 0.2);
-								
-								if(Math.abs(_orientation)>=360){
-									_orientation = 0;
-								}
-								sA = _orientation/RAD_DEG
-								eA = _orientation/RAD_DEG + _dtheta;
-
-								///////////////////////////////////////////////////////////////////////////////////
-								// 	DRAW SHAPES
-								///////////////////////////////////////////////////////////////////////////////////
+						var sub_cO:ipClusterObject = cO.subClusterArray[c]; //= cO.finger_cO;
+						var sipn:int = sub_cO.ipn;
+			
+						// DO FOR EACH EXISTING NONZERO SUBCLUSTER
+						if ((sipn!=0)&&(sub_cO))
+							{
+							//trace("hello",sub_cO.type);	
 							
-								if(_drawRadius){
-									// draw bounding circle
-									graphics.lineStyle(style.c_stroke_thickness,style.stroke_color,style.c_stroke_alpha);
-									graphics.drawCircle(_x, _y, _radius);
-								}
+						
+									if (sub_cO.type == "finger") style.stroke_color = 0x00FF00;//0x00FFFF;
+									if (sub_cO.type == "thumb") style.stroke_color = 0xFF0000;//0x00FFFF;
+									if (sub_cO.type == "digit") style.stroke_color = 0x4B7BCC;
+									if (sub_cO.type == "palm") style.stroke_color = 0xFFFFFF;
+									//if (sub_cO.type == "finger_average") style.stroke_color = 0x000000;
+							
+									if (sub_cO.type == "trigger") style.stroke_color = 0xc44dbe;//0x00FFFF;
+									if (sub_cO.type == "pinch") style.stroke_color = 0x00FFFF;//0x00FFFF;
+									if (sub_cO.type == "frame") style.stroke_color = 0x00FFFF;//0x00FFFF;
+									if (sub_cO.type == "push") style.stroke_color = 0xFFFF00;//0x00FFFF;
+									if (sub_cO.type == "hook") style.stroke_color = 0x0000FF;
+									//if (sub_cO.type == "tool") style.stroke_color = 0x0000FF;
+									
+									
+									_x = sub_cO.x;
+									_y = sub_cO.y;
+									_width = sub_cO.width;
+									_height = sub_cO.height;
+									_radius = sub_cO.radius-50 -i*10;
+									_rotation = sub_cO.rotation; 
+						 
+									_dtheta = sub_cO.dtheta / 4;
+									_ds = sub_cO.ds*10;
+									
+									x0 = 0
+									y0 = 0
+									
+									step =  0.01;
+									percent = style.percent;
+									numSteps = Math.abs(Math.round(_dtheta / step));
+									r2 = _radius * percent;
+									r1 = _radius * (percent + 0.2);
+									
+									if(Math.abs(_orientation)>=360){
+										_orientation = 0;
+									}
+									sA = _orientation/RAD_DEG
+									eA = _orientation/RAD_DEG + _dtheta;
+
+									///////////////////////////////////////////////////////////////////////////////////
+									// 	DRAW SHAPES
+									///////////////////////////////////////////////////////////////////////////////////
 								
-								// set line style
-								graphics.lineStyle(style.stroke_thickness,style.stroke_color,style.stroke_alpha);
-								
-								if(_drawCenter){
-									// draw cluster center position
-									graphics.drawCircle(_x, _y, style.radius-5);
-								}
-								
-								if(_drawBisector){
-									// draw bi-sectors
-									graphics.moveTo(_x,_y+_height/2);
-									graphics.lineTo(_x,_y-_height/2);
-									graphics.moveTo(_x-_width/2,_y);
-									graphics.lineTo(_x + _width / 2, _y);
-								}
-								
-								if(_drawBox){
-								// draw bunding box
-								//graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
-								}
-								
-								if(_drawWeb){
-								// draw web links tyo center
-								if (style.web_shape == "fullweb") {
-										for (var k:int = 0; k < N; k++) {
-											
-											var pt:PointObject = cO.pointArray[k];
-											
-												for (var l:int=0; l<N; l++){
-													if (k != l) {
-														var pt1:PointObject = cO.pointArray[l];
-														//trace(i,j)
-														graphics.moveTo(pt.x,pt.y);
-														graphics.lineTo(pt1.x,pt1.y);
+									if(_drawRadius){
+										// draw bounding circle
+										graphics.lineStyle(style.c_stroke_thickness,style.stroke_color,style.c_stroke_alpha);
+										graphics.drawCircle(_x, _y, _radius);
+									}
+									
+									// set line style
+									graphics.lineStyle(style.stroke_thickness,style.stroke_color,style.stroke_alpha);
+									
+									if(_drawCenter){
+										// draw cluster center position
+										graphics.drawCircle(_x, _y, style.radius-5);
+									}
+									
+									if(_drawBisector){
+										// draw bi-sectors
+										graphics.moveTo(_x,_y+_height/2);
+										graphics.lineTo(_x,_y-_height/2);
+										graphics.moveTo(_x-_width/2,_y);
+										graphics.lineTo(_x + _width / 2, _y);
+									}
+									
+									if(_drawBox){
+									// draw bunding box
+									//graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
+									}
+									
+									if(_drawWeb){
+									// draw web links tyo center
+									if (style.web_shape == "fullweb") {
+											for (var k:int = 0; k < N; k++) {
+												
+												var pt:PointObject = sub_cO.pointArray[k];
+												
+													for (var l:int=0; l<N; l++){
+														if (k != l) {
+															var pt1:PointObject = sub_cO.pointArray[l];
+															//trace(i,j)
+															graphics.moveTo(pt.x,pt.y);
+															graphics.lineTo(pt1.x,pt1.y);
+														}
 													}
-												}
-										}
-								}
-								}
+											}
+									}
+									}
+									
+									
+										
+									
+							if (_drawRotation) {
 								
-								
-								
-								
-						if (_drawRotation) {
-							
-					//	trace("vis rotation", cO.dtheta);
-						//////////////////////////////////////////////////////////////////////////////////
-						// draw rotation
-						//////////////////////////////////////////////////////////////////////////////////
-						if (style.rotation_shape == "segment") {
+								//	trace("vis rotation", cO.dtheta);
+								//////////////////////////////////////////////////////////////////////////////////
+								// draw rotation
+								//////////////////////////////////////////////////////////////////////////////////
+								if (style.rotation_shape == "segment") {
 
-									//trace("redraw segment",orientation);
-									//counter clockwise
-									if (_dtheta < 0) {
-										
-										//needs work to get counting correct--------------------------------------//
-										graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
-										
-										graphics.moveTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
-										graphics.lineTo(_x + r1 * Math.cos(sA), _y + r1 * Math.sin(sA));
-										graphics.beginFill(style.a_fill_color,style.a_fill_alpha);
-										
-										for (var theta0:Number = sA; theta0 > eA; theta0 -= step) 
-										{
-											graphics.lineTo(_x + r1*Math.cos(theta0), _y + r1*Math.sin(theta0));
-										}
-										graphics.lineTo(_x + r2*Math.cos(eA), _y + r2*Math.sin(eA));
-									
-										for (var theta:Number = eA; theta < sA; theta += step) 
-											{
-											graphics.lineTo(_x + r2*Math.cos(theta), _y + r2*Math.sin(theta));
-										}
-										graphics.endFill();
-									}
-									
-									// clockwise
-									if (_dtheta > 0) {
-										graphics.lineStyle(style.b_stroke_thickness, style.b_stroke_color, style.b_stroke_alpha);
-										
-										graphics.moveTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
-										graphics.lineTo(_x + r1 * Math.cos(sA),_y + r1 * Math.sin(sA));
-										graphics.beginFill(style.b_fill_color,style.b_fill_alpha);
-										
-										for (var i:int = 0; i < numSteps; i++) {
-											var theta1:Number = i*step + sA;
-											graphics.lineTo(_x + r1*Math.cos(theta1), _y + r1*Math.sin(theta1));
-										}
-										graphics.lineTo(_x + r1*Math.cos(eA), _y + r1*Math.sin(eA));
-										graphics.lineTo(_x + r2*Math.cos(eA), _y + r2*Math.sin(eA));
-									
-										for (var j:int = 0; j < numSteps; j++) {
-											var theta2:Number = -j*step + eA;
-											graphics.lineTo(_x + r2*Math.cos(theta2), _y + r2*Math.sin(theta2));
-										}
-										graphics.lineTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
-										graphics.endFill();
-									}
-						}
-						
-						if (style.rotation_shape == "slice") {
-								
-								if (_dtheta < 0)
-								{
-									graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
-									graphics.beginFill(style.a_fill_color, style.a_fill_alpha);
-									
-									graphics.moveTo(x, y);
-									graphics.lineTo(_x + _radius * Math.cos(sA), _y + _radius * Math.sin(sA));
-									
-									for (var theta3:Number = sA; theta > eA; theta -= step) {
-										graphics.lineTo(_x + _radius * Math.cos(theta3), _y + _radius * Math.sin(theta3));
-									}
-									graphics.lineTo(_x, _y);
-									graphics.endFill();
+											//trace("redraw segment",orientation);
+											//counter clockwise
+											if (_dtheta < 0) {
+												
+												//needs work to get counting correct--------------------------------------//
+												graphics.lineStyle(style.a_stroke_thickness, style.a_stroke_color, style.a_stroke_alpha);
+												
+												graphics.moveTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
+												graphics.lineTo(_x + r1 * Math.cos(sA), _y + r1 * Math.sin(sA));
+												graphics.beginFill(style.a_fill_color,style.a_fill_alpha);
+												
+												for (var theta0:Number = sA; theta0 > eA; theta0 -= step) 
+												{
+													graphics.lineTo(_x + r1*Math.cos(theta0), _y + r1*Math.sin(theta0));
+												}
+												graphics.lineTo(_x + r2*Math.cos(eA), _y + r2*Math.sin(eA));
+											
+												for (var theta:Number = eA; theta < sA; theta += step) 
+													{
+													graphics.lineTo(_x + r2*Math.cos(theta), _y + r2*Math.sin(theta));
+												}
+												graphics.endFill();
+											}
+											
+											// clockwise
+											if (_dtheta > 0) {
+												graphics.lineStyle(style.b_stroke_thickness, style.b_stroke_color, style.b_stroke_alpha);
+												
+												graphics.moveTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
+												graphics.lineTo(_x + r1 * Math.cos(sA),_y + r1 * Math.sin(sA));
+												graphics.beginFill(style.b_fill_color,style.b_fill_alpha);
+												
+												for (var i:int = 0; i < numSteps; i++) {
+													var theta1:Number = i*step + sA;
+													graphics.lineTo(_x + r1*Math.cos(theta1), _y + r1*Math.sin(theta1));
+												}
+												graphics.lineTo(_x + r1*Math.cos(eA), _y + r1*Math.sin(eA));
+												graphics.lineTo(_x + r2*Math.cos(eA), _y + r2*Math.sin(eA));
+											
+												for (var j:int = 0; j < numSteps; j++) {
+													var theta2:Number = -j*step + eA;
+													graphics.lineTo(_x + r2*Math.cos(theta2), _y + r2*Math.sin(theta2));
+												}
+												graphics.lineTo(_x + r2 * Math.cos(sA), _y + r2 * Math.sin(sA));
+												graphics.endFill();
+											}
 								}
-								
-								if (_dtheta > 0)
+							}
+							
+							
+							
+							if (_drawSeparation)
+							{
+							//	trace("vis scale",_ds)
+							
+								if (_ds < -0.1) // contract
 								{
-									graphics.lineStyle(style.b_stroke_thickness, style.b_stroke_color, style.b_stroke_alpha);
-									graphics.beginFill(style.b_fill_color,style.b_fill_alpha);
-								
-									graphics.moveTo(_x, _y);
-									graphics.lineTo(_x + _radius * Math.cos(sA), _y + _radius * Math.sin(sA));
-									
-									for (var theta4:Number = sA; theta < eA; theta += step) {
-										graphics.lineTo(_x + _radius * Math.cos(theta4), _y + _radius * Math.sin(theta4));
-									}
-									graphics.lineTo(_x, _y);
-									graphics.endFill();
+									graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.a_stroke_color,0.3);
+									graphics.drawCircle(_x, _y, _radius +20);
 								}
-							}	
-						}
+								else if (_ds > 0.1) //expand
+								{
+									graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.b_stroke_color,0.3);
+									graphics.drawCircle(_x, _y, _radius +20);
+								}
+							}		
 						
-						
-						
-						if (_drawSeparation)
-						{
-						
-						//	trace("vis scale",_ds)
-						
-							if (_ds < -0.1) // contract
-							{
-							graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.a_stroke_color,0.3);
-							graphics.drawCircle(_x, _y, _radius +20);
-							}
-							else if (_ds > 0.1) //expand
-							{
-								graphics.lineStyle(style.c_stroke_thickness-20 +20*Math.abs(5*_ds) ,style.b_stroke_color,0.3);
-								graphics.drawCircle(_x, _y, _radius +20);
-							}
-						}		
-					
+					}
 				}
+						
 			}
-					
 		}
 	}
 	

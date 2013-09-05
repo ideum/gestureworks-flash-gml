@@ -24,7 +24,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.events.GWInteractionEvent;
 	import com.gestureworks.objects.InteractionPointObject;
-		import flash.geom.Vector3D;
+	import flash.geom.Vector3D;
 	
 	
 	public class InteractionPointHistories 
@@ -68,7 +68,7 @@ package com.gestureworks.managers
 				object.handID =  ipo.handID;
 				object.type = ipo.type;
 				
-				//trace(ipo.history.length)
+			//	trace(ipo.history.length)
 				
 				if (ipo.history.length>1)
 				{

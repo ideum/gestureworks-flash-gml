@@ -32,10 +32,8 @@ package com.gestureworks.objects
 		///////////////////////////////////////
 		// number of points---------------------
 		public var n:int=0;
-
 		// number of hands---------------------
 		public var hn:int=0;
-
 		// number of fingers---------------------
 		public var fn:int=0;
 
@@ -57,50 +55,39 @@ package com.gestureworks.objects
 		
 		/////////////////////////////////
 		// frame count
-		public var count:int=0;
-
+		public var count:int = 0;
+		
 		// x---------------------
 		public var x:Number=0;
-
 		// y---------------------
 		public var y:Number=0;
-
 		// z---------------------
 		public var z:Number=0;
 
 		// width----------------------
 		public var width:Number=0;
-
 		// height---------------------
 		public var height:Number=0;
-
 		// length---------------------
 		public var length:Number=0;
-
 		// radius---------------------
 		public var radius:Number=0;
 		
 		// separation------------------
 		public var separation:Number=0;
-
 		// separation------------------
 		public var separationX:Number=0;
-
 		// separationY------------------
 		public var separationY:Number=0;
-
 		// separationZ------------------
 		public var separationZ:Number=0;
 		
 		// rotation---------------------
 		public var rotation:Number=0;
-
 		// rotationX---------------------
 		public var rotationX:Number=0;
-
 		// rotation---------------------
 		public var rotationY:Number=0;
-
 		// rotationZ---------------------
 		public var rotationZ:Number=0;
 
@@ -108,10 +95,8 @@ package com.gestureworks.objects
 		// mean position
 		// mx---------------------
 		public var mx:Number=0;
-
 		// my---------------------
 		public var my:Number=0;
-
 		// mz---------------------
 		public var mz:Number=0;
 		
@@ -120,20 +105,16 @@ package com.gestureworks.objects
 		/////////////////////////////////////////////////
 		// dx---------------------
 		public var dx:Number=0;
-
 		// dy---------------------
 		public var dy:Number=0;
-
 		// dz---------------------
 		public var dz:Number=0;
 		
 		// size veloctiy
 		// dw---------------------
 		public var dw:Number=0;
-
 		// dh---------------------
 		public var dh:Number=0;
-
 		// dr---------------------
 		public var dr:Number=0;
 
@@ -143,13 +124,10 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// dsx---------------------
 		public var ds:Number=0;
-
 		// dsx---------------------
 		public var dsx:Number=0;
-
 		// dsy---------------------
 		public var dsy:Number=0;
-
 		// dsz---------------------
 		public var dsz:Number=0;
 
@@ -159,16 +137,12 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// dtheta ------------------
 		public var dtheta:Number=0;
-
 		// dthetax ------------------
 		public var dthetaX:Number=0;
-
 		// dthetay ------------------
 		public var dthetaY:Number=0;
-
 		// dthetaZ ------------------
 		public var dthetaZ:Number=0;
-
 		// pivot_dtheta ------------------
 		public var pivot_dtheta:Number=0;
 
@@ -178,10 +152,8 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// mdx---------------------
 		public var mdx:Number=0;
-
 		// mdy---------------------
 		public var mdy:Number=0;
-
 		// mdz---------------------
 		public var mdz:Number=0;
 		
@@ -190,10 +162,8 @@ package com.gestureworks.objects
 		//////////////////////////////////////////////
 		// ddx ------------------
 		public var ddx:Number=0;
-
 		// ddy ------------------
 		public var ddy:Number=0;
-
 		// ddz ------------------
 		public var ddz:Number=0;
 		
@@ -208,16 +178,12 @@ package com.gestureworks.objects
 		////////////////////////////////////////////////////////////////////////////////
 		// ddsx ------------------
 		public var ddsx:Number=0;
-
 		// ddsy ------------------
 		public var ddsy:Number=0;
-
 		// ddsz ------------------
 		public var ddsz:Number=0;
-
 		// dds ------------------
 		public var dds:Number=0;
-
 		// dds3d ------------------
 		public var dds3d:Number=0;
 
@@ -227,19 +193,14 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// etm_ddx ------------------
 		public var etm_dx:Number=0;
-
 		// etm ddy ------------------
 		public var etm_dy:Number=0;
-
 		// etm ddz ------------------
 		public var etm_dz:Number=0;
-
 		// etm_ddx ------------------
 		public var etm_ddx:Number=0;
-
 		// etm_ddy ------------------
 		public var etm_ddy:Number=0;
-
 		// etm_ddz ------------------
 		public var etm_ddz:Number=0;
 		
@@ -272,45 +233,67 @@ package com.gestureworks.objects
 		
 		/// 
 		// thumbID ------------------ FOR 2D STUFF (NEEDS TO MOVE TO 2D HAND OBJECT)
-		private var _thumbID:int = 0;
-		public function get thumbID():int{return _thumbID;}
-		public function set thumbID(value:int):void { _thumbID = value; }
+		public var thumbID:int = 0;
 		// orientationAngle---------------------
-		private var _orientation:Number = 0;
-		public function get orientation():Number{return _orientation;}
-		public function set orientation(value:Number):void{_orientation = value;}
+		public var orientation:Number = 0;
 		// orient_dx---------------------
-		private var _orient_dx:Number = 0;
-		public function get orient_dx():Number{return _orient_dx;}
-		public function set orient_dx(value:Number):void{_orient_dx = value;}
+		public var orient_dx:Number = 0;
 		// orient_dy---------------------
-		private var _orient_dy:Number = 0;
-		public function get orient_dy():Number {	return _orient_dy; }
-		public function set orient_dy(value:Number):void { _orient_dy = value; }
+		public var orient_dy:Number = 0;
 		// orient_dz---------------------
-		private var _orient_dz:Number = 0;
-		public function get orient_dz():Number {	return _orient_dz; }
-		public function set orient_dz(value:Number):void { _orient_dz = value; }
+		public var orient_dz:Number = 0;
+
 		
 		// private var _holdPoint:Vector3D = new Vector3D(); 
 		// hold_x---------------------//remove
-		private var _hold_x:Number = 0;
-		public function get hold_x():Number{return _hold_x;}
-		public function set hold_x(value:Number):void{_hold_x = value;}
+		public var hold_x:Number = 0;
 		// hold_y---------------------remove
-		private var _hold_y:Number = 0;
-		public function get hold_y():Number{return _hold_y;}
-		public function set hold_y(value:Number):void{_hold_y = value;}
+		public var hold_y:Number = 0;
 		// hold_z---------------------remove
-		private var _hold_z:Number = 0;
-		public function get hold_z():Number{return _hold_z;}
-		public function set hold_z(value:Number):void{_hold_z = value;}
+		public var hold_z:Number = 0;
 		// c_locked---------------------remove
-		private var _hold_n:int = 0;
-		public function get hold_n():int{return _hold_n;}
-		public function set hold_n(value:int):void{_hold_n = value;}
+		public var hold_n:int = 0;
+
 		
 	
+		
+		
+		
+		
+		
+		
+		
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// simplified data structure ----------------------------------------------------------------------------------------------
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		////////////////////////////////////////////////////////////////////
+		//ABSOLUTE PROPS
+		//inst position//////////////////////////////////////////////x,y,z
+		public var position:Vector3D = new Vector3D ();
+		//inst direction/orientation //////////////////////////////////////////////x,y,z
+		public var direction:Vector3D = new Vector3D ();
+		//inst scale //////////////////////////////////////////////scaleX,scaleY,scaleZ
+		public var scale :Vector3D = new Vector3D ();
+		//inst scale change //////////////////////////////////////////////rotationX,rotationY,rotationZ
+		//public var rotation:Vector3D = new Vector3D ();
+		
+		
+		/////////////////////////////////////////////////////////////////////////////
+		// DELTA PROPS
+		//inst scale change//////////////////////////////////////////////dsx,dsy,dsz
+		public var scaleDelta :Vector3D = new Vector3D ();
+		//inst scale change //////////////////////////////////////////////dthetax,dthetay,dthetaz
+		public var rotationDelta:Vector3D = new Vector3D ();
+		//inst velocity//////////////////////////////////////////////dx,dy,dz
+		public var velocity:Vector3D = new Vector3D ();
+		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
+		public var acceleration:Vector3D = new Vector3D ();
+		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
+		public var jolt:Vector3D = new Vector3D ();
+		
+		
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -389,7 +372,7 @@ package com.gestureworks.objects
 		public function get iPointArray2D():Vector.<InteractionPointObject>{ return _iPointArray2D;}
 		public function set iPointArray2D(value:Vector.<InteractionPointObject>):void	{_iPointArray2D = value;}
 		
-		
+		/*
 		// SUBCLUSTER INTERACTION POINT CLUSTERS TO BE MOVED INTO MATRIX
 		private var _pinch_cO:ipClusterObject = new ipClusterObject ();
 		public function get pinch_cO():ipClusterObject { return _pinch_cO;}
@@ -402,7 +385,7 @@ package com.gestureworks.objects
 		private var _finger_cO:ipClusterObject = new ipClusterObject ();
 		public function get finger_cO():ipClusterObject { return _finger_cO;}
 		public function set finger_cO(value:ipClusterObject ):void	{ _finger_cO = value; }
-		
+		*/
 		
 		private var _subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		public function get subClusterArray():Vector.<ipClusterObject>{ return _subClusterArray;}

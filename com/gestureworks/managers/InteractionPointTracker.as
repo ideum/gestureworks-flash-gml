@@ -31,8 +31,8 @@ package com.gestureworks.managers
 		private static var fp:InteractionPointObject;
 		private static var _ID:uint = 0;
 		
-		private static var d2:int = 20;
-		private static var d1:int = 0;
+		private static var d2:Number = 40;
+		private static var d1:Number = 0;
 		private static var debug:Boolean = false;
 		
 		public static function initialize():void
@@ -79,7 +79,7 @@ package com.gestureworks.managers
 					
 						for each(fp in temp_framePoints)
 						{
-							var dist:Number = Vector3D.distance(ap.position, fp.position);
+							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 							if ((ap.type == fp.type)&&(dist < d2)) found = true;
 						}
 						
@@ -98,7 +98,7 @@ package com.gestureworks.managers
 							{
 							if (ap.type == fp.type)
 							{
-							var dist0:Number = Vector3D.distance(ap.position, fp.position);
+							var dist0:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 							//trace("dist",dist,ap.type,fp.type)
 							
 							if (dist0 < d2)  ////update
