@@ -104,10 +104,6 @@ package com.gestureworks.core
 			mouseChildren = false; //false
 			//mouseEnabled = false;			
 			debugDisplay = false;
-			
-			nativeTouch = GestureWorks.activeNativeTouch;
-			simulator = GestureWorks.activeSim;
-			tuio = GestureWorks.activeTUIO;
         }
 		
 		/**
