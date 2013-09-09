@@ -157,14 +157,18 @@ package com.gestureworks.core
 			if (_nativeTouch == value) return;
 			_nativeTouch = value;
 			
-			GestureWorks.activeNativeTouch = _nativeTouch;			
-			enableTouchInput = _nativeTouch;							
-			updateTouchObjects();
+			GestureWorks.activeNativeTouch = _nativeTouch;	
 			
-			if (_nativeTouch)
+			if(_nativeTouch) {
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+				TouchManager.gw_public::initialize();
 				trace("native touch is on");
-			else
+			}
+			else {
+				Multitouch.inputMode = MultitouchInputMode.NONE;
+				TouchManager.gw_public::deInitialize();				
 				trace("native touch is off");
+			}
 		}	
 		
 		private var _simulator:Boolean = false;
@@ -179,13 +183,16 @@ package com.gestureworks.core
 			_simulator = value;
 			
 			GestureWorks.activeSim = _simulator;
-			enableMouseInput = _simulator;	
-			updateTouchObjects();
-			
-			if (_simulator)
+			if (_simulator){
+				Simulator.gw_public::initialize();
 				trace("simulator is on");
-			else
+			}
+			else{
+				Simulator.gw_public::deactivate();
 				trace("simulator is off");
+			}
+				
+			updateTouchObjects();
 		}
 		
 		private var _tuio:* = false;
@@ -201,17 +208,45 @@ package com.gestureworks.core
 		{
 			if (tuio == value) return;
 			_tuio = value;
+									
+			var host:String = "127.0.0.1";
+			var port:int;
+			var protocol:String;			
 			
-			GestureWorks.activeTUIO = _tuio;				
-			enableTuioInput = _tuio;			
-			if (_tuio is String) _tuio = true;						
-			updateTouchObjects();
+			//parse string for TUIO arguments
+			if (value is String) {
+				for each(var arg:String in String(_tuio).split(",")) {
+					var keyVal:Array = arg.split(":");
+					var prop:String = StringUtil.trim(keyVal[0]).toLowerCase();
+					var val:String = StringUtil.trim(keyVal[1]).toLowerCase();
+
+					switch(prop) {
+						case "host":
+							host = val;
+							break;
+						case "port":
+							port = int(val);
+							break;
+						case "protocol":
+							protocol = val;
+							break;
+						default:
+							break;
+					}
+				}
+					
+				_tuio = true;
+			}
 			
-			if (_tuio)
+			GestureWorks.activeTUIO = _tuio;
+			if (_tuio) {
+				TUIOManager.gw_public::initialize(host, port, protocol);						
 				trace("TUIO is on");			
+			}
 			else
 				trace("TUIO is off");
 				
+			updateTouchObjects();				
 		}
 		
 		private var _motion:Boolean = false;
@@ -283,144 +318,6 @@ package com.gestureworks.core
 				motion = true;
 			}
 		}
-		
-		
-		/////////////////////////////////
-		//// Input controls allow touch objects to activate/deactivate modes independent from global settings.
-		////////////////////////////////
-		
-		private var touchInputEnabled:Boolean = true;
-		/**
-		 * Provides touch input control at a global and local level
-		 * @private
-		 */
-		public function set enableTouchInput(value:Boolean):void {		
-			
-			if (touchInputEnabled == value) return;
-			
-			if (value)  //enable 
-				touchInputEnabled = value;
-			else if (!value && canDisable("nativeTouch"))  //if not active, disable 
-				touchInputEnabled = false;
-			else
-				return;				//active so don't disable
-			
-			if(touchInputEnabled) {
-				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
-				TouchManager.gw_public::initialize();
-			}
-			else {
-				Multitouch.inputMode = MultitouchInputMode.NONE;
-				TouchManager.gw_public::deInitialize();				
-			}			
-		}
-		
-		private var mouseInputEnabled:Boolean;
-		/**
-		 * Provides mouse input control at a global and local 
-		 * @private
-		 */
-		public function set enableMouseInput(value:Boolean):void {
-			
-			if (mouseInputEnabled == value) return;
-			
-			if (value)  //enable 
-				mouseInputEnabled = value;
-			else if (!value && canDisable("simulator"))  //if not active, disable 
-				mouseInputEnabled = false;
-			else
-				return;				//active so don't disable
-				
-			if (value)
-				Simulator.gw_public::initialize();
-			else
-				Simulator.gw_public::deactivate();
-		}
-		
-		private var tuioInputEnabled:Boolean;
-		/**
-		 * Provides tuio input control at a global and local level
-		 * @private
-		 */
-		public function set enableTuioInput(value:*):void {
-			
-			if (tuioInputEnabled == value) return;
-			
-			if (value)  //enable 
-				tuioInputEnabled = value;
-			else if (!value && canDisable("tuio"))  //if not active, disable 
-				tuioInputEnabled = false;
-			else
-				return;				//active so don't disable			
-			
-			var host:String = "127.0.0.1";
-			var port:int;
-			var protocol:String;			
-			
-			//parse string for TUIO arguments
-			if (value is String) {
-				for each(var arg:String in String(_tuio).split(",")) {
-					var keyVal:Array = arg.split(":");
-					var prop:String = StringUtil.trim(keyVal[0]).toLowerCase();
-					var val:String = StringUtil.trim(keyVal[1]).toLowerCase();
-
-					switch(prop) {
-						case "host":
-							host = val;
-							break;
-						case "port":
-							port = int(val);
-							break;
-						case "protocol":
-							protocol = val;
-							break;
-						default:
-							break;
-					}
-				}
-					
-				value = true;
-			}
-			
-			if (value) 
-				TUIOManager.gw_public::initialize(host, port, protocol);			
-		}
-		
-		/**
-		 * Check global and local mode settings to verify the specified input can be disabled. If the mode is not active
-		 * at a global or local level, the input manager can be disabled.
-		 * @param	input
-		 * @return
-		 */
-		private function canDisable(input:String, obj:* = null):Boolean {
-							
-			//global check
-			if (input == "nativeTouch" && GestureWorks.activeNativeTouch)
-				return false;
-			else if (input == "simulator" && GestureWorks.activeSim)
-				return false;
-			else if (input == "tuio" && GestureWorks.activeTUIO)
-				return false;
-				
-			//local check
-			var i:int;		
-			if (!obj) 
-				obj = this;
-			else if (obj is TouchSprite && obj.localInput && obj[input])
-				return false;
-				
-			if (obj.hasOwnProperty("numChildren")) {
-				for (i = 0; i < obj.numChildren; i++){
-					if (!canDisable(input, obj.getChildAt(i)))
-						return false;
-				}
-			}
-			
-			return true;							
-		}
-		
-		
-		
 			
 		/**
 		 * Updates event listeners depending on the active modes

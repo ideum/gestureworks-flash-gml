@@ -183,15 +183,15 @@ package com.gestureworks.events
 			var types:Array = [];
 			var active:Boolean;
 			
-			active = target && target.localInput ? target.tuio : GestureWorks.activeTUIO;
+			active = target && target.localModes ? target.tuio : GestureWorks.activeTUIO;
 			if (active)
 				types.push(correspondingType(TuioTouchEvent, type));
 				
-			active = target && target.localInput ? target.nativeTouch: GestureWorks.activeNativeTouch;				
+			active = target && target.localModes ? target.nativeTouch: GestureWorks.activeNativeTouch;				
 			if (active)
 				types.push(correspondingType(TouchEvent, type));
 				
-			active = target && target.localInput ? target.simulator : GestureWorks.activeSim;				
+			active = target && target.localModes ? target.simulator : GestureWorks.activeSim;				
 			if (active)
 				types.push(correspondingType(MouseEvent, type));
 				

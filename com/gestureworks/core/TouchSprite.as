@@ -102,9 +102,12 @@ package com.gestureworks.core
 
 			// set mouseChildren to default false
 			mouseChildren = false; //false
-			//mouseEnabled = false;
-			
+			//mouseEnabled = false;			
 			debugDisplay = false;
+			
+			nativeTouch = GestureWorks.activeNativeTouch;
+			simulator = GestureWorks.activeSim;
+			tuio = GestureWorks.activeTUIO;
         }
 		
 		/**
@@ -118,52 +121,54 @@ package com.gestureworks.core
 			}
 		}
 		
-		private var _localInput:Boolean;
+		private var _localModes:Boolean;
 		/**
-		 * Flag indicating the overriding of global input mode settings with local
+		 * Flag indicating the application of local modes over the global settings. By default, all objects are enabled for input
+		 * processing based on the application level mode settings (i.e. nativeTouch, simulator, tuio, etc.). This flag allows the 
+		 * inclusion/exclusion of specific input interaction according to local overrides. Note that the corresponding global setting
+		 * must be enabled in order to locally enable the input. 
 		 */
-		public function get localInput():Boolean { return _localInput; }
-		public function set localInput(l:Boolean):void {
-			if (_localInput == l) return;
-			_localInput = l;
+		public function get localModes():Boolean { return _localModes; }
+		public function set localModes(l:Boolean):void {
+			if (_localModes == l) return;
+			_localModes = l;
 			updateListeners();
 		}
 		
 		private var _nativeTouch:Boolean;
 		/**
-		 * Local native touch input setting. Overrides global when localInput is true.
+		 * Local override to enable/disable native touch input.
+		 * @see localModes
 		 */		
-		public function get nativeTouch():Boolean { return _nativeTouch; }
+		public function get nativeTouch():Boolean { return _nativeTouch && GestureWorks.activeNativeTouch; }
 		public function set nativeTouch(n:Boolean):void {
 			if (_nativeTouch == n) return;
 			_nativeTouch = n;
-			if (root is GestureWorks)
-				GestureWorks(root).enableTouchInput = _nativeTouch;
 			updateListeners();
-			trace("native touch is on for", this, ":", name);
 		}
 		
 		private var _simulator:Boolean;
 		/**
-		 * Local mouse input setting. Overrides global when localInput is true.
+		 * Local override to enable/disable mouse input.
+		 * @see localModes
 		 */		
-		public function get simulator():Boolean { return _simulator; }
+		public function get simulator():Boolean { return _simulator && GestureWorks.activeSim; }
 		public function set simulator(s:Boolean):void {
 			if (_simulator == s) return;
 			_simulator = s;
-			if (root is GestureWorks)
-				GestureWorks(root).enableMouseInput = _simulator;
 			updateListeners();	
-			trace("simulator is on for", this, ":", name);
 		}
 		
 		private var _tuio:Boolean;
 		/**
-		 * Local tuio input setting. Overrides global when localInput is true.
+		 * Local override to enable/disable tuio input.
+		 * @see localModes
 		 */		
-		public function get tuio():Boolean { return _tuio; }
+		public function get tuio():Boolean { return _tuio && GestureWorks.activeTUIO; }
 		public function set tuio(t:Boolean):void {
+			if (_tuio == t) return;
 			_tuio = t;
+			updateListeners();
 		}				
 		  
 		// initializers
@@ -243,15 +248,15 @@ package com.gestureworks.core
 				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
 				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 				
-				register = localInput ? tuio : GestureWorks.activeTUIO;				
+				register = localModes ? tuio : GestureWorks.activeTUIO;				
 				if (register && registerPoints)		
 					addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
 					
-				register = localInput ? nativeTouch : GestureWorks.activeNativeTouch;				
+				register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;				
 				if (register && registerPoints)		
 					addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
 					
-				register = localInput ? simulator : GestureWorks.activeSim;					
+				register = localModes ? simulator : GestureWorks.activeSim;					
 				if (register && registerPoints)				
 					addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			}
@@ -646,11 +651,11 @@ package com.gestureworks.core
 				
 				var register:Boolean;
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
-				register = localInput ? nativeTouch : GestureWorks.activeNativeTouch;		
+				register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;		
 				if (register && registerPoints)
 					TouchManager.gw_public::registerTouchPoint(event);
 				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				register = localInput ? simulator : GestureWorks.activeSim;		
+				register = localModes ? simulator : GestureWorks.activeSim;		
 				if (register && registerPoints) 
 					MouseManager.gw_public::registerMousePoint(event);
 				
