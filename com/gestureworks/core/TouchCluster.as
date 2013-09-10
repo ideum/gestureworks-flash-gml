@@ -22,6 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.GestureObject;
 	
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.DimensionObject;
@@ -58,6 +59,9 @@ package com.gestureworks.core
 		
 		private var gO:GestureListObject;
 		private var cO:ClusterObject
+		private var tcO:ipClusterObject
+		private var mcO:ipClusterObject
+		
 		private var tiO:TimelineObject
 		
 		public var core:Boolean;
@@ -70,6 +74,10 @@ package com.gestureworks.core
 			
 			gO = ts.gO;
 			cO = ts.cO;
+				tcO = cO.tcO;
+				mcO = cO.mcO;
+				//scO = cO.scO;
+			
 			tiO = ts.tiO;
 			
 			initCluster();
@@ -104,18 +112,14 @@ package com.gestureworks.core
 		{
 			//trace("init cluster analysis", touchSprite_id);
 							
-					// analyzes and characterizes multi-point motion
-					if (kinemetricsOn) 
-					{
-						cluster_kinemetric = new KineMetric(id);
-						//cluster_kinemetric3D = new KineMetric3D(id);
-					}
+				// analyzes and characterizes multi-point motion
+				if (kinemetricsOn) cluster_kinemetric = new KineMetric(id);
 
-					// analyzes and characterizes multi-point paths to match against established strokes
-					if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
+				// analyzes and characterizes multi-point paths to match against established strokes
+				if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
 					
-					// characterizes advanced relative geometry of a cluster
-					if (geometricsOn)cluster_geometric = new GeoMetric(id);
+				// characterizes advanced relative geometry of a cluster
+				if (geometricsOn)cluster_geometric = new GeoMetric(id);
 		}
 		/**
 		 * @private
@@ -137,18 +141,23 @@ package com.gestureworks.core
 		{
 			//trace("update cluster count");
 			
-			// FIND CLUSTER COUNT
-			cO.n = cO.pointArray.length
-			ts.dN = cO.n - ts.N; // dN MUST MOVE TO CLUSTER
+			// get point count
+			cluster_kinemetric.findTouchClusterConstants(); // get tpn
+			cluster_kinemetric.find3DGlobalIPConstants();  	// get ipn
+			cluster_kinemetric.findRootClusterConstants(); 	// get n
+			
+			//trace("update ts count", ts.N, ts.tpn, ts.ipn)
+			//trace("update co count", ts.cO.n, ts.cO.tpn, ts.cO.ipn);
+			//trace("update tco count",ts.cO.tcO.tpn, ts.cO.tcO.ipn);
+			//trace("update mco count",ts.cO.mcO.tpn, ts.cO.mcO.ipn);
+			//trace("");
+			
+			// dN MUST MOVE TO CLUSTER
+			ts.dN = cO.n - ts.N; 
 			ts.N = cO.n;
-			
-			// A BETTER WAY TO GET DN
-			//if (cO.history.length>1) dN = cO.N - cO.history[1].N;
-			//else dN = 0;
-			//cO.dN = dN;
-			
+			//trace(ts.dN)
+
 			// CLUSTER OBJECT UPDATE
-			
 			// reset cluster states
 			cO.point_remove = false;
 			cO.point_add = false;
@@ -207,8 +216,8 @@ package com.gestureworks.core
 				}
 			}
 			///////////////////////////////////////////////////
-			//trace(_dN, _N, cO.point_remove);
 		}
+		
 		/**
 		 * @private
 		 */
@@ -216,28 +225,41 @@ package com.gestureworks.core
 		public function updateClusterAnalysis():void
 			{
 				//trace("update cluster analysis")
+				
+				// NEED TO MOVE INTO METRIC
 				updateClusterCount();
-				getCluster()
+				gn = gO.pOList.length;
+				
+				cluster_kinemetric.resetRootCluster();
+				cluster_kinemetric.resetMotionCluster();
+				cluster_kinemetric.resetTouchCluster();
+				
+				//cluster_kinemetric.findRootInstDimention();
 				
 				// must preceed kinemetrics
 				if (geometricsOn)
 				{	
+					//if (ts.touch_input) 
 					//getGeoMetrics2D(); 
-					//if (ts.motion3d) 
+					//if (ts.motion_input) 
 					getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
 				{	
+					//if (ts.touch_input) 
 					getKineMetrics();
-					//if (ts.motion3d) 
+					//if (ts.motion_input) 
 					getKineMetrics3D();
 				}
 				
 				if (vectormetricsOn) 
 				{
+					//if (ts.touch_input) 
 					getVectorMetrics();
-					//if (ts.motion3d)getVectorMetrics3D();
+					//if (ts.motion_input)getVectorMetrics3D();
 				}
+				
+				//cluster_kinemetric.findRootInstDimention();
 				
 				//trace("hand pos",cO.hand.position)
 				
@@ -245,31 +267,10 @@ package com.gestureworks.core
 		}
 		
 		
-		public function updateMotionClusterAnalysis():void
-			{
-				//cluster_kinemetric.findMeanInst3DMotionTransformation();
-		}
-		
-		public function updateSensorClusterAnalysis():void
-			{
-				//cluster_kinemetric.findSensorJolt();
-		}
-		
-		
-		public function getCluster():void 
-		{
-			//trace("TouchSprite findcluster update-----------------------------",GestureGlobals.frameID, _N);
-			gn = gO.pOList.length;
-			
-			cluster_kinemetric.findClusterConstants();
-			cluster_kinemetric.resetCluster();
-			cluster_kinemetric.findInstDimention();
-		}
-		
 		public function getVectorMetrics():void 
 		{
 			// for unistroke only
-			if (ts.N == 1)
+			if (cO.tpn == 1) // CHNAGE TO tpn
 			{
 				cluster_vectormetric.resetPathProperties(); // reset stroke data object
 				cluster_vectormetric.getSamplePath(); // collect sample path
@@ -379,6 +380,9 @@ package com.gestureworks.core
 			gn = gO.pOList.length;
 			var dn:uint 
 			
+			cluster_kinemetric.resetTouchCluster();
+			cluster_kinemetric.findTouchInstDimention();
+			
 			//trace("-touch cluster -----------------------------",gn);
 			
 			for (key = 0; key < gn; key++) 
@@ -402,10 +406,10 @@ package com.gestureworks.core
 					// TOUCH POINTS
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-					if (ts.N != 0) // check kinemetric and if continuous analyze
+					if (ts.tpn != 0) // check kinemetric and if continuous analyze
 					{		
 						// check point number requirements
-						if((ts.N >= g.nMin)&&(ts.N <= g.nMax)||(ts.N == g.n))
+						if((ts.tpn >= g.nMin)&&(ts.tpn <= g.nMax)||(ts.tpn == g.n))
 						{
 							//trace("call cluster calc",ts.N);
 							
@@ -483,7 +487,7 @@ package com.gestureworks.core
 											// STILL NEED TO MAP RETURN TO RESULT
 											if (gdim.property_vars[0])
 											{
-												var num:Number = Math.abs(cO[gdim.property_vars[0]["var"]]);
+												var num:Number = Math.abs(tcO[gdim.property_vars[0]["var"]]);
 												var dim_var:Number = 0;
 													
 												// when max and min
@@ -496,7 +500,7 @@ package com.gestureworks.core
 												else if(gdim.property_vars[0]["min"] != null) 
 												{	
 													if (num >= gdim.property_vars[0]["min"])	{
-														gdim.clusterDelta = cO[res];//dim_var = num;
+														gdim.clusterDelta = tcO[res];//dim_var = num;
 														//trace("MIN",num)
 													}
 													else gdim.clusterDelta = 0//dim_var = 0;
@@ -508,11 +512,11 @@ package com.gestureworks.core
 													else gdim.clusterDelta = 0;//dim_var = 0;
 												}
 												// when no limits
-												else gdim.clusterDelta = cO[res];//dim_var = num;
+												else gdim.clusterDelta = tcO[res];//dim_var = num;
 											}
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
-											else gdim.clusterDelta = cO[res];//rtn_dim = 1;
+											else gdim.clusterDelta = tcO[res];//rtn_dim = 1;
 											/////////////////////////////////////////////////////////////
 											
 											//CLOSE DIM IF NO VALUE
@@ -524,9 +528,9 @@ package com.gestureworks.core
 										}
 
 
-										g.data.x = cO.x;
-										g.data.y = cO.y;
-										g.data.n = cO.n;
+										g.data.x = tcO.x;
+										g.data.y = tcO.y;
+										//g.data.n = tpn;
 										
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////
@@ -548,8 +552,8 @@ package com.gestureworks.core
 				}
 			}
 			
-
-			
+			//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
+			cluster_kinemetric.WeaveTouchClusterData();
 		}
 
 		public function getKineMetrics3D():void 
@@ -558,16 +562,10 @@ package com.gestureworks.core
 			if (!core)
 			{
 				// FOR NATIVE MAPPING AND GESTURE OBJECT DATA STRUCTURE SIMPLIFICATION
-				if (!ts.transform3d)
-				{
-					cluster_kinemetric.mapCluster3Dto2D();
-				}
+				if (!ts.transform3d) cluster_kinemetric.mapCluster3Dto2D();
 				
-				// GET IP SUBCLUSTERS
-				// PUSH TO SUBCLUSTER MATRIX
+				// GET IP SUBCLUSTERS // PUSH TO SUBCLUSTER MATRIX
 				cluster_kinemetric.getSubClusters();
-				
-				cluster_kinemetric.find3DGlobalIPConstants()
 				
 				// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
 				for (var j:uint = 0; j < cO.subClusterArray.length; j++) 
@@ -596,6 +594,8 @@ package com.gestureworks.core
 				
 				// WEAVE INTO PRIME CLUSTER OBJECT FOR PIPELINE INJECTION
 				cluster_kinemetric.Weave3DIPClusterData();
+				
+				cluster_kinemetric.WeaveMotionClusterData();
 			}
 			
 			
@@ -712,6 +712,7 @@ package com.gestureworks.core
 									/////////////////////////////////////////////////////////////////////////////////////
 									g.activeEvent = false;
 									
+									//NEED TO PULL FROM RELVANT SUBCLUSTER
 									
 										for (DIM = 0; DIM < dn; DIM++) 
 										{
@@ -729,14 +730,18 @@ package com.gestureworks.core
 											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
 											if (gdim.activeDim) g.activeEvent = true;
 										}
-									
-
-										g.data.x = cO.x; // gesture position
-										g.data.y = cO.y; // gesture position
-										g.data.z = cO.z; // gesture position
-										g.data.hn = cO.hn; // current hand number
+										
+										
+										
+										//NEED TO PULL FROM RELVANT SUBCLUSTER
+										/*
+										g.data.x = mcO.x; // gesture position
+										g.data.y = mcO.y; // gesture position
+										g.data.z = mcO.z; // gesture position
+										g.data.hn = mcO.hn; // current hand number
 										g.data.fn = cO.fn; // current finger total
 										//g.data.ipn = cO.ipn; // current ip total
+										*/
 										
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////
@@ -753,6 +758,7 @@ package com.gestureworks.core
 				}
 			}
 			
+			//cluster_kinemetric.WeaveMotionClusterData();
 		}
 
 		

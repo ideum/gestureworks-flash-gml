@@ -22,37 +22,34 @@ package com.gestureworks.objects
 	{
 		// ID
 		public var id:int;
-
 		// cluster type
 		public var type:String;
 
-		
-		///////////////////////////////////////
 		// cluster properties//////////////////
-		///////////////////////////////////////
-		// number of points---------------------
-		public var n:int=0;
-		// number of hands---------------------
+		// number of points
+		public var n:int = 0;
+		// number of touch points
+		public var tpn:int = 0;
+		//number of sensor points
+		public var spn:int=0;
+		
+		
+		// number of hands
 		public var hn:int=0;
-		// number of fingers---------------------
+		// number of fingers
 		public var fn:int=0;
 
-		// number of derived interactive points---------------------
+		// number of derived interactive points
 		public var ipn:int = 0;
 		public var ipnk:Number = 0;
 		public var ipnk0:Number = 0;
-		
 		// CHANGE IN NUMBER OF TOUCH POINTS
 		public var dn:int=0;
-		
 		// CHANGE IN NUMBER OF INTERACTION POINTS
 		public var dipn:int = 0;
 		
 		
-		
-		
-		
-		
+
 		/////////////////////////////////
 		// frame count
 		public var count:int = 0;
@@ -255,15 +252,7 @@ package com.gestureworks.objects
 		public var hold_n:int = 0;
 
 		
-	
-		
-		
-		
-		
-		
-		
-		
-		
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// simplified data structure ----------------------------------------------------------------------------------------------
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,7 +267,6 @@ package com.gestureworks.objects
 		public var scale :Vector3D = new Vector3D ();
 		//inst scale change //////////////////////////////////////////////rotationX,rotationY,rotationZ
 		//public var rotation:Vector3D = new Vector3D ();
-		
 		
 		/////////////////////////////////////////////////////////////////////////////
 		// DELTA PROPS
@@ -333,7 +321,12 @@ package com.gestureworks.objects
 		public function get remove():Boolean{return _remove;}
 		public function set remove(value:Boolean):void{_remove = value;}
 		
-
+		
+		
+		private var _mmPointArray:Array = new Array();
+		public function get mmPointArray():Array{return _mmPointArray;}
+		public function set mmPointArray(value:Array):void { _mmPointArray = value; }
+		
 		/////////////////////////////////////////////////////////////////////////
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
@@ -372,47 +365,29 @@ package com.gestureworks.objects
 		public function get iPointArray2D():Vector.<InteractionPointObject>{ return _iPointArray2D;}
 		public function set iPointArray2D(value:Vector.<InteractionPointObject>):void	{_iPointArray2D = value;}
 		
-		/*
-		// SUBCLUSTER INTERACTION POINT CLUSTERS TO BE MOVED INTO MATRIX
-		private var _pinch_cO:ipClusterObject = new ipClusterObject ();
-		public function get pinch_cO():ipClusterObject { return _pinch_cO;}
-		public function set pinch_cO(value:ipClusterObject ):void	{ _pinch_cO = value; }
 		
-		private var _trigger_cO:ipClusterObject = new ipClusterObject ();
-		public function get trigger_cO():ipClusterObject { return _trigger_cO;}
-		public function set trigger_cO(value:ipClusterObject ):void	{ _trigger_cO = value; }
 		
-		private var _finger_cO:ipClusterObject = new ipClusterObject ();
-		public function get finger_cO():ipClusterObject { return _finger_cO;}
-		public function set finger_cO(value:ipClusterObject ):void	{ _finger_cO = value; }
-		*/
+		// TOUCH PARENT CLUSTER
+		private var _tcO:ipClusterObject = new ipClusterObject ();
+		public function get tcO():ipClusterObject { return _tcO;}
+		public function set tcO(value:ipClusterObject ):void	{ _tcO = value; }
 		
+		// MOTION PARENT CLUSTER
+		private var _mcO:ipClusterObject = new ipClusterObject ();
+		public function get mcO():ipClusterObject { return _mcO;}
+		public function set mcO(value:ipClusterObject ):void	{ _mcO = value; }
+		
+		//MOTION SUBCLUSTER ARRAY
 		private var _subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		public function get subClusterArray():Vector.<ipClusterObject>{ return _subClusterArray;}
 		public function set subClusterArray(value:Vector.<ipClusterObject>):void	{ _subClusterArray = value; }
 		
+		/*
+		// SENSOR PARENT CLUSTER
+		private var _scO:ipClusterObject = new ipClusterObject ();
+		public function get scO():ipClusterObject { return _scO;}
+		public function set scO(value:ipClusterObject ):void	{ _scO = value; }*/
 		
-		////////////////////////////////////////
-		//1 DEFINE A SET OF INTERACTION POINTS
-		//2 MATCH TO INTERACTION POINT HAND CONFIG (GEOMETRIC)
-		//3 HIT TEST QUALIFIED TO TARGET
-		//4 ANALYZE RELATIVE INTERACTION POINT CHANGES AND PROPERTIES 
-		//5 MATCH MOTION (KINEMETRIC)
-		//6 PUSH GESTURE POINT
-		//7 PROCESS GESTURE POINT FILTERS
-		//8 APPLY INTERNAL NATIVE TRANSFORMS
-		//9 ADD TO TIMELINE
-		//10 DISPTACH GESTURE EVENT
-		////////////////////////////////////////
-			
-		//E.G BIMANUAL HOLD & MANIPULATE
-			//FIND HOLD POINT LIST
-			//FIND MANIP POINT LIST 
-			// FIND AVERAGE HOLD POINT XY FIND HOLD TIME
-			// FIND DRAG,SCALE,ROTATE
-			// UPDATE PARENT CLUSTER WITH DELTAS
-			// UPDATE GESTURE PIPELINE
-			
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
 		private var _gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();

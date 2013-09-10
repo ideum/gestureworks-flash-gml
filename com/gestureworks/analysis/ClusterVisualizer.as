@@ -60,7 +60,7 @@ package com.gestureworks.analysis
 		private var eA:Number = 0
 		private var numSteps:Number = 0
 		
-		private var N:uint = 0;
+		private var tpn:uint = 0;
 		private var ipn:uint = 0;
 			
 		public function ClusterVisualizer(ID:Number)
@@ -118,7 +118,7 @@ package com.gestureworks.analysis
 	public function draw():void
 	{
 		
-		N = cO.pointArray.length
+		tpn = ts.tpn;// cO.pointArray.length
 		ipn = cO.iPointArray2D.length; // ALWAYS ZERO WHEN ts.transform3d==FALSE // AS NOT POPULATED
 		
 		// init
@@ -127,11 +127,13 @@ package com.gestureworks.analysis
 		drawClusterDims();
 		drawInteractionPoints();
 		drawSubClusterDims();
+		
+		//trace("draw", tpn,ipn, ts.ipn, cO.ipn,cO.iPointArray2D.length);
 	}
 	
 	private function drawClusterDims():void
 	{	
-		if ((N)||(ipn))
+		if ((tpn)||(ipn))
 			{
 				
 			style.stroke_color = 0xFFAE1F;
@@ -198,11 +200,11 @@ package com.gestureworks.analysis
 			if(_drawWeb){
 			// draw web links tyo center
 			if (style.web_shape == "fullweb") {
-					for (var k:int = 0; k < N; k++) {
+					for (var k:int = 0; k < tpn; k++) {
 						
 						var pt:PointObject = cO.pointArray[k];
 						
-							for (var l:int=0; l<N; l++){
+							for (var l:int=0; l<tpn; l++){
 								if (k != l) {
 									var pt1:PointObject = cO.pointArray[l];
 									//trace(i,j)
@@ -214,7 +216,7 @@ package com.gestureworks.analysis
 			}
 			if (style.web_shape == "starweb") {
 				//trace("starweb");
-				for (var p:int = 0; p < N; p++) {
+				for (var p:int = 0; p < tpn; p++) {
 						var pt2:PointObject = cO.pointArray[k];
 						graphics.moveTo(_x,_y);
 						graphics.lineTo(pt2.x, pt2.y);
@@ -342,7 +344,6 @@ package com.gestureworks.analysis
 					{
 						var ipt:InteractionPointObject = cO.iPointArray2D[i];
 			
-								
 								if (_drawWeb)
 								{	
 									for (var j:int = 0; j < i+1; j++) 
@@ -469,11 +470,11 @@ package com.gestureworks.analysis
 									if (sub_cO.type == "thumb") style.stroke_color = 0xFF0000;//0x00FFFF;
 									if (sub_cO.type == "digit") style.stroke_color = 0x4B7BCC;
 									if (sub_cO.type == "palm") style.stroke_color = 0xFFFFFF;
-									//if (sub_cO.type == "finger_average") style.stroke_color = 0x000000;
+									if (sub_cO.type == "finger_average") style.stroke_color = 0x000000;
 							
 									if (sub_cO.type == "trigger") style.stroke_color = 0xc44dbe;//0x00FFFF;
 									if (sub_cO.type == "pinch") style.stroke_color = 0x00FFFF;//0x00FFFF;
-									if (sub_cO.type == "frame") style.stroke_color = 0x00FFFF;//0x00FFFF;
+									if (sub_cO.type == "frame") style.stroke_color = 0xE3716B;//0x00FFFF;
 									if (sub_cO.type == "push") style.stroke_color = 0xFFFF00;//0x00FFFF;
 									if (sub_cO.type == "hook") style.stroke_color = 0x0000FF;
 									//if (sub_cO.type == "tool") style.stroke_color = 0x0000FF;
@@ -538,11 +539,11 @@ package com.gestureworks.analysis
 									if(_drawWeb){
 									// draw web links tyo center
 									if (style.web_shape == "fullweb") {
-											for (var k:int = 0; k < N; k++) {
+											for (var k:int = 0; k < tpn; k++) {
 												
 												var pt:PointObject = sub_cO.pointArray[k];
 												
-													for (var l:int=0; l<N; l++){
+													for (var l:int=0; l<tpn; l++){
 														if (k != l) {
 															var pt1:PointObject = sub_cO.pointArray[l];
 															//trace(i,j)

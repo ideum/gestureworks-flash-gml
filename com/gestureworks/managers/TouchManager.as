@@ -274,8 +274,8 @@ package com.gestureworks.managers
 				
 				// check for erroneous points
 				// kill after processing (just in case)
-				if (tO.N!=0) {
-					for (var i:int = 0; i < tO.N; i++) {
+				if (tO.tpn!=0) {
+					for (var i:int = 0; i < tO.tpn; i++) {
 						if (points[tO.pointArray[i].touchPointID] == undefined) {
 						
 							//trace("kill zombe",tO,tO.cO,tO.cO.pointArray.length,tO.cO.pointArray.length,tO.pointArray[i].touchPointID,i);

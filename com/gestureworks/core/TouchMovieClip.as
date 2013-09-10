@@ -694,15 +694,15 @@ package com.gestureworks.core
 			if(tc) tc.updateClusterAnalysis();
 		}
 		
-		public function updateMotionClusterAnalysis():void
-		{
-			if(tc) tc.updateMotionClusterAnalysis();
-		}
+		//public function updateMotionClusterAnalysis():void
+		//{
+			//if(tc) tc.updateMotionClusterAnalysis();
+		//}
 		
-		public function updateSensorClusterAnalysis():void
-		{
-			if(tc) tc.updateSensorClusterAnalysis();
-		}
+		//public function updateSensorClusterAnalysis():void
+		//{
+			//if(tc) tc.updateSensorClusterAnalysis();
+		//}
 		
 		////////////////////////////////////////////////////////////////////////////
 		

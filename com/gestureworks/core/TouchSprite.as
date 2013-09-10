@@ -302,9 +302,18 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		public var _N:int = 0; // number of touch points in the cluster // read only
+		public var _N:int = 0; // number of points in the super cluster // read only
 		public function get N():int { return _N; }
-		public function set N(value:int):void { 	_N = value;}
+		public function set N(value:int):void { 	_N = value; }
+		
+		public var _tpn:int = 0; // number of touch points in the parent cluster // read only
+		public function get tpn():int { return _tpn; }
+		public function set tpn(value:int):void { 	_tpn = value;}
+		
+		public var _ipn:int = 0; // number of motion points in the parent cluster // read only
+		public function get ipn():int { return _ipn; }
+		public function set ipn(value:int):void { 	_ipn = value;}
+		
 		
 		/**
 		 * @private
@@ -638,7 +647,6 @@ package com.gestureworks.core
 				cO.pointArray = _pointArray;
 								
 				
-				
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				pointCount++;
 				
@@ -661,20 +669,7 @@ package com.gestureworks.core
 				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 				
 				//trace("down:", event.touchPointID, cO.pointArray.length, this._pointArray.length )
-				///////////////////////////////////////////////////////////////////////////////////////
-				//CREATE POINT PAIR
 				
-				/*
-				if(cO.pointArray.length>1){
-				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
-				var ppt:PointPairObject = new PointPairObject();
-					ppt.idA = lastpointID;
-					ppt.idB = pointObject.touchPointID;
-					
-				//cO.pointPairArray.push(ppt);
-				
-				//trace("pair")
-				} */
 				
 		}
 		
@@ -692,18 +687,6 @@ package com.gestureworks.core
 				//UPDATE LOCAL CLUSTER OBJECT
 				//touch object point list and cluster point list should be consolodated
 				cO.pointArray = _pointArray;
-				
-				//create point pair
-				/*
-				if(cO.pointArray.length!=1){
-				var lastpointID:Number = cO.pointArray[cO.pointArray.length - 2].touchPointID;
-				var ppt:PointPairObject = new PointPairObject();
-					ppt.idA = lastpointID;
-					ppt.idB = pointObject.touchPointID;
-					
-				//cO.pointPairArray.push(ppt);
-				//trace("Clone pair");
-				}*/
 				
 				//UPDATE POINT LOCAL COUNT
 				pointCount++;
@@ -753,15 +736,15 @@ package com.gestureworks.core
 			if(tc) tc.updateClusterAnalysis();
 		}
 		
-		public function updateMotionClusterAnalysis():void
-		{
-			if(tc) tc.updateMotionClusterAnalysis();
-		}
+		//public function updateMotionClusterAnalysis():void
+		//{
+			//if(tc) tc.updateMotionClusterAnalysis();
+		//}
 		
-		public function updateSensorClusterAnalysis():void
-		{
-			if(tc) tc.updateSensorClusterAnalysis();
-		}
+		//public function updateSensorClusterAnalysis():void
+		//{
+			//if(tc) tc.updateSensorClusterAnalysis();
+		//}
 		
 		////////////////////////////////////////////////////////////////////////////
 		

@@ -36,6 +36,8 @@ package com.gestureworks.objects
 		// number of fingers---------------------
 		private var fn:int = 0;
 		
+		// number of touch points
+		public var tpn:int = 0;
 		
 		// number of derived interactive points---------------------
 		public var ipn:int = 0;
