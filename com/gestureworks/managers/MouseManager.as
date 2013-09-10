@@ -66,7 +66,7 @@ package com.gestureworks.managers
 			TouchManager.gw_public::initialize();
 		}
 		
-		gw_public static function deactivate():void
+		gw_public static function deInitialize():void
 		{
 			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);

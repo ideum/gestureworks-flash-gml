@@ -188,7 +188,7 @@ package com.gestureworks.core
 				trace("simulator is on");
 			}
 			else{
-				Simulator.gw_public::deactivate();
+				Simulator.gw_public::deInitialize();
 				trace("simulator is off");
 			}
 				
