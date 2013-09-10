@@ -183,7 +183,7 @@ package com.gestureworks.managers
 				return;
 			
 			if (target.hasOwnProperty("clusterBubbling") && target.clusterBubbling) {
-				target.assignPointClone(event);
+				assignPointClone(target, event);
 				propagatePoint(target.parent, event);
 			}
 		}
@@ -244,6 +244,42 @@ package com.gestureworks.managers
 				//trace("pair")
 				} */
 				
+		}	
+		
+		private static function assignPointClone(target:*, event:TouchEvent):void // assigns point copy
+		{
+				// assign existing point object
+				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+					// add this touch object to touchobject list on point
+					pointObject.touchPointID = event.touchPointID;//-??
+					pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+	
+				//ADD TO LOCAL POINT LIST
+				target._pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
+				//touch object point list and cluster point list should be consolodated
+				target.cO.pointArray = target._pointArray;
+				
+				//create point pair
+				/*
+				if(target.cO.pointArray.length!=1){
+				var lastpointID:Number = target.cO.pointArray[target.cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				//cO.pointPairArray.push(ppt);
+				//trace("Clone pair");
+				}*/
+				
+				//UPDATE POINT LOCAL COUNT
+				target.pointCount++;
+				
+				// add touch down to touch object gesture event timeline
+				if ((target.tiO)&&(target.tiO.timelineOn) && (target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
+				
+				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}		
 		
 		// stage on TOUCH_UP.
