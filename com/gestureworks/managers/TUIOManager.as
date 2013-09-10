@@ -21,6 +21,7 @@ package com.gestureworks.managers
 	import com.gestureworks.managers.*;
 	import flash.display.*;
 	import flash.events.*;
+	import flash.geom.Point;
 	import flash.system.*;
 	import flash.ui.*;
 	import flash.utils.*;
@@ -110,7 +111,12 @@ package com.gestureworks.managers
 		}
 				
 		private function onAdd(e:TuioEvent):void {
-			
+			var event:GWTouchEvent = new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
+			event.stageX = e.tuioContainer.x * stage.stageWidth;
+			event.stageY = e.tuioContainer.y * stage.stageHeight;
+			event.target = getTopDisplayObjectUnderPoint(new Point(event.stageX, event.stageY));
+			event.eventPhase = 3;
+			TouchManager.onTouchDown(event);
 		}
 		
 		private function onUpdate(e:TuioEvent):void
@@ -126,7 +132,60 @@ package com.gestureworks.managers
 		{
 			TouchManager.onTouchUp(new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID));				
 		}
+		
+		/**
+		 * Hit test
+		 * @param	point
+		 * @return
+		*/ 
+		private function getTopDisplayObjectUnderPoint(point:Point):DisplayObject {
+			var targets:Array =  stage.getObjectsUnderPoint(point);
+			var item:DisplayObject = (targets.length > 0) ? targets[targets.length - 1] : stage;
+			item = resolveTarget(item);
+									
+			return item;
+		}	
+		
+		/**
+		 * Determines the hit target based on mouseChildren settings of the ancestors
+		 * @param	target
+		 * @return
+		 */
+		private function resolveTarget(target:DisplayObject):DisplayObject {
+			var ancestors:Array = targetAncestors(target, new Array(target));			
+			var trueTarget:DisplayObject = target;
+			
+			for each(var t:DisplayObject in ancestors) {
+				if (t is DisplayObjectContainer && !DisplayObjectContainer(t).mouseChildren)
+				{
+					trueTarget = t;
+					break;
+				}
+			}
+			
+			return trueTarget;
+		}
 				
+		/**
+		 * Returns a list of the supplied target's ancestors sorted from highest to lowest
+		 * @param	target
+		 * @param	ancestors
+		 * @return
+		 */
+		private function targetAncestors(target:DisplayObject, ancestors:Array = null):Array {
+			
+			if (!ancestors)
+				ancestors = new Array();
+				
+			if (!target.parent || target.parent == target.root)
+				return ancestors;
+			else {
+				ancestors.unshift(target.parent);
+				ancestors = targetAncestors(target.parent, ancestors);
+			}
+			
+			return ancestors;
+		}		
 
 	}
 }
