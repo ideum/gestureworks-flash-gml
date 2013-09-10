@@ -103,9 +103,8 @@ package com.gestureworks.managers
 						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
 							ev.stageX = point.x;
 							ev.stageY = point.y;
-							ev.eventPhase = 2;
 							ev.pressure = pressure;
-						obj.onTouchDown(ev, obj);
+						TouchManager.onTouchDown(ev, obj);
 					}
 					
 					if(debug)
