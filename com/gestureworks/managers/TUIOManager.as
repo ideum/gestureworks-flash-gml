@@ -104,10 +104,14 @@ package com.gestureworks.managers
 			_tuioDebug = TuioDebug.init(stage);
 			_tuioClient.addListener(_tuioManager);
 			_tuioClient.addListener(_tuioDebug);
+			_tuioManager.addEventListener(TuioEvent.ADD, onAdd);
 			_tuioManager.addEventListener(TuioEvent.UPDATE, onUpdate);
 			_tuioManager.addEventListener(TuioEvent.REMOVE, onRemove);
 		}
 				
+		private function onAdd(e:TuioEvent):void {
+			
+		}
 		
 		private function onUpdate(e:TuioEvent):void
 		{						
