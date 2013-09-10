@@ -239,23 +239,23 @@ package com.gestureworks.core
 			var register:Boolean;
 			
 			//clear 
-			if(activated){
-				removeEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false);
-				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
-				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				
-				register = localModes ? tuio : GestureWorks.activeTUIO;				
-				if (register && registerPoints)		
-					addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-					
-				register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;				
-				if (register && registerPoints)		
-					addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					
-				register = localModes ? simulator : GestureWorks.activeSim;					
-				if (register && registerPoints)				
-					addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			}
+			//if(activated){
+				//removeEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false);
+				//removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
+				//removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+				//
+				//register = localModes ? tuio : GestureWorks.activeTUIO;				
+				//if (register && registerPoints)		
+					//addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
+					//
+				//register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;				
+				//if (register && registerPoints)		
+					//addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
+					//
+				//register = localModes ? simulator : GestureWorks.activeSim;					
+				//if (register && registerPoints)				
+					//addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			//}
 			
 			updateGWTouchListeners();
 		}
@@ -620,8 +620,8 @@ package com.gestureworks.core
 		 /**
 		 * registers assigned touch point globaly and to relevant local clusters 
 		 */
-		private function assignPoint(event:TouchEvent):void // asigns point
-		{			
+		public function assignPoint(event:TouchEvent):void // asigns point
+		{		
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = this; // sets primary touch object/cluster
@@ -678,7 +678,7 @@ package com.gestureworks.core
 				
 		}
 		
-		private function assignPointClone(event:TouchEvent):void // assigns point copy
+		public function assignPointClone(event:TouchEvent):void // assigns point copy
 		{
 				// assign existing point object
 				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
