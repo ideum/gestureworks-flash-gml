@@ -89,7 +89,7 @@ package com.gestureworks.managers
 		}
 		
 		private static function onMouseDown(e:MouseEvent):void {
-			
+			TouchManager.onTouchDown(new GWTouchEvent(e));
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
