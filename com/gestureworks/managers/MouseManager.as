@@ -68,6 +68,7 @@ package com.gestureworks.managers
 		
 		gw_public static function deactivate():void
 		{
+			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			GestureWorks.application.removeEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);
@@ -80,7 +81,9 @@ package com.gestureworks.managers
 		 * @private
 		 */
 		gw_public static function registerMousePoint(event:TouchEvent):void
-		{					
+		{						
+			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);							
 			TouchManager.gw_public::registerTouchPoint(event);
 		
 			currentMousePoint = event.touchPointID;
