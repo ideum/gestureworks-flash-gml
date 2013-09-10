@@ -133,7 +133,7 @@ package com.gestureworks.managers
 		{
 			if (event.eventPhase == 3) { //not stage
 				
-				if (event.target is TouchSprite || event.target is TouchMovieClip) {
+				if ((event.target is TouchSprite || event.target is TouchMovieClip) && event.target.activated) {
 					
 					// if target gets passed it takes precendence, otherwise try to find it
 					// currently target gets passed in as argument for our global hit test
