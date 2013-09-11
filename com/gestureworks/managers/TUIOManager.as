@@ -116,8 +116,11 @@ package com.gestureworks.managers
 			event.stageY = e.tuioContainer.y * stage.stageHeight;
 			event.target = getTopDisplayObjectUnderPoint(new Point(event.stageX, event.stageY));
 			event.eventPhase = 2;
-			if (!(event.target is Stage))
-				TouchManager.onTouchDown(event);
+			if (event.target is Stage)
+				return;
+			else if (event.target.localModes && !event.target.tuio)
+				return;
+			TouchManager.onTouchDown(event);
 		}
 		
 		private function onUpdate(e:TuioEvent):void

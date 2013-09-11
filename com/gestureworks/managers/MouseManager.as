@@ -92,6 +92,8 @@ package com.gestureworks.managers
 		}
 		
 		private static function onMouseDown(e:MouseEvent):void {
+			if (e.target.localModes && !e.target.simulator)
+				return;
 			TouchManager.onTouchDown(new GWTouchEvent(e));
 		}
 		
