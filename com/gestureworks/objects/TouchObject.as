@@ -14,11 +14,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
-{
-	//import flash.display.DisplayObject;
-	//import flash.events.TouchEvent;
-	//import flash.geom.Point;
-	
+{	
+	/**
+	 * The TouchObject class is the base class for all touch enabled DisplayObjects. It
+	 * provides basic implementations for priortized gesture and touch processing as well as 
+	 * properties to dictate tactual object ownership and targeting. This object inherits
+	 * the Player default Sprite functionality.
+	 * 
+	 * <p>All TouchObjects are provided with a static reference to the global blob manager
+	 * at runtime. A DataProvider to the blob manager is established upon Application 
+	 * instantiation by the developer.</p>
+	 * 
+	 */
 	public class TouchObject extends Object 
 	{
 		// ID

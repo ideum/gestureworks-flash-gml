@@ -29,23 +29,10 @@ package com.gestureworks.core
 	
 	import flash.geom.Point;
 	
-	/**
- * The TouchObject class is the base class for all touch enabled DisplayObjects. It
- * provides basic implementations for priortized gesture and touch processing as well as 
- * properties to dictate tactual object ownership and targeting. This object inherits
- * the Player default Sprite functionality.
- * 
- * <p>All TouchObjects are provided with a static reference to the global blob manager
- * at runtime. A DataProvider to the blob manager is established upon Application 
- * instantiation by the developer.</p>
- * 
- */
-	
+
 	public class TouchPipeline
 	{
-		/**
-	 * A collection of gestures attached to this object.
-	 */
+		// A collection of gestures attached to this object.
 		private var touchObjectID:int;
 		private var ts:Object;
 		private var gO:GestureListObject;
@@ -56,21 +43,12 @@ package com.gestureworks.core
 		private var j:uint;
 		private var gn:uint
 
-		 /**
-		 *  Constructor.
-		 *  
-		 * @langversion 3.0
-		 * @playerversion AIR 1.5
-		 * @playerversion Flash 10
-		 * @playerversion Flash Lite 4
-		 * @productversion GestureWorks 1.5
-		 */ 
-		public function TouchPipeline(_id:int) {
-			
+		public function TouchPipeline(_id:int) 
+		{	
 			touchObjectID = _id;
 			init();
 		}
-		
+
 		public function init():void
 		{	
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
