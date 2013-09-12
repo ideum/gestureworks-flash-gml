@@ -65,196 +65,61 @@ package com.gestureworks.core
 		
 		
 		
-		private static var _motionSpriteID:int = 0;//
-		public static function get motionSpriteID():int{return _motionSpriteID;}
-		public static function set motionSpriteID(value:int):void{_motionSpriteID=value;}
+		public static var motionSpriteID:int = 0;//
 		
-		// frameID frame stamp relative to start of application ------------
-		private static var _frameID:int = 0;//int.MAX_VALUE
 		/**
 		 * frameID frame stamp relative to start of application.
 		 */
-		public static function get frameID():int
-		{
-			return _frameID;
-		}
+		public static var frameID:int = 0;//int.MAX_VALUE
+		
 		/**
 		 * frameID frame stamp relative to start of application.
 		 */
-		public static function set frameID(value:int):void
-		{
-			_frameID=value;
-		}
-		
-		// frameID frame stamp relative to start of application ------------
-		private static var _motionFrameID:uint = 0;//int.MAX_VALUE
+		public static var motionFrameID:uint = 0;//int.MAX_VALUE
+
 		/**
-		 * frameID frame stamp relative to start of application.
-		 */
-		public static function get motionFrameID():uint
-		{
-			return _motionFrameID;
-		}
+		 * touch frame interval, time between touch processing cycles.
+		 */		
+		public static var touchFrameInterval:Number = 16;//60fps
+		
 		/**
-		 * frameID frame stamp relative to start of application.
-		 */
-		public static function set motionFrameID(value:uint):void
-		{
-			_motionFrameID=value;
-		}
+		 * max number of tracked touch points.
+		 */		
+		public static var max_point_count:int = 1000;
 		
-		private static var _touchFrameInterval:Number = 16;//60fps
+		
 		/**
-		 * returns touch frame interval, time between touch processing cycles.
-		 */
-		public static function get touchFrameInterval():Number
-		{
-			return _touchFrameInterval;
-		}
+		 * point history capture length
+		 */		
+		public static var pointHistoryCaptureLength:int = 8;//int.MAX_VALUE
+		
 		/**
-		 * sets touch frame interval, time between touch processing cycles
-		 */
-		public static function set touchFrameInterval(value:Number):void
-		{
-			_touchFrameInterval=value;
-		}
+		 * cluster history capture length
+		 */		
+		public static var clusterHistoryCaptureLength:int = 60;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
 		
-		private static var _max_point_count:int = 1000;
+		
 		/**
-		 * returns max number of tracked touch points.
+		 * motion history capture length
 		 */
-		public static function get max_point_count():int
-		{
-			return _max_point_count;
-		}
+		public static var motionHistoryCaptureLength:int =120;//int.MAX_VALUE
+
+		
 		/**
-		 * sets max number of tracked touch points.
+		 * transform history capture length
 		 */
-		public static function set max_point_count(value:int):void
-		{
-			_max_point_count=value;
-		}
+		public static var transformHistoryCaptureLength:int = 0;//int.MAX_VALUE
 		
-		
-		//  pointHistoryCaptureLength -------------------------------------
-		private static var _pointHistoryCaptureLength:int = 8;//int.MAX_VALUE
 		/**
-		 * Returns the pointHistoryCaptureLength.
+		 * timeline history capture length
 		 */
-		public static function get pointHistoryCaptureLength():int
-		{
-			return _pointHistoryCaptureLength;
-		}
+		public static var timelineHistoryCaptureLength:int = 20;//int.MAX_VALUE
+		
+		
 		/**
-		 * Sets the pointHistoryCaptureLength.
+		 * current GestureWorks object count
 		 */
-		public static function set pointHistoryCaptureLength(value:int):void
-		{
-			_pointHistoryCaptureLength=value;
-		}
-		
-		//  clusterHistoryCaptureLength -------------------------------------
-		private static var _clusterHistoryCaptureLength:int = 60;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
-		/**
-		 * Returns the current clusterHistoryCaptureLength.
-		 */
-		public static function get clusterHistoryCaptureLength():int
-		{
-			return _clusterHistoryCaptureLength;
-		}
-		/**
-		 * Sets the current clusterHistoryCaptureLength.
-		 */
-		public static function set clusterHistoryCaptureLength(value:int):void
-		{
-			_clusterHistoryCaptureLength=value;
-		}
-		
-		
-		
-		
-		//  motionFrameHistoryCaptureLength -------------------------------------
-		private static var _motionHistoryCaptureLength:int =120;//int.MAX_VALUE
-		/**
-		 * Returns the pointHistoryCaptureLength.
-		 */
-		public static function get motionHistoryCaptureLength():int
-		{
-			return _motionHistoryCaptureLength;
-		}
-		/**
-		 * Sets the motionFrameHistoryCaptureLength.
-		 */
-		public static function set motionHistoryCaptureLength(value:int):void
-		{
-			_motionHistoryCaptureLength=value;
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//  transformHistoryCaptureLength -------------------------------------
-		private static var _transformHistoryCaptureLength:int = 0;//int.MAX_VALUE
-		/**
-		 * Returns the current transformHistoryCaptureLength.
-		 */
-		public static function get transformHistoryCaptureLength():int
-		{
-			return _transformHistoryCaptureLength;
-		}
-		/**
-		 * Sets the current transformHistoryCaptureLength.
-		 */
-		public static function set transformHistoryCaptureLength(value:int):void
-		{
-			_transformHistoryCaptureLength=value;
-		}
-		
-		//  timleineHistoryCaptureLength -------------------------------------
-		private static var _timelineHistoryCaptureLength:int = 20;//int.MAX_VALUE
-		/**
-		 * Returns the current timelineHistoryCaptureLength.
-		 */
-		public static function get timelineHistoryCaptureLength():int
-		{
-			return _timelineHistoryCaptureLength;
-		}
-		/**
-		 *Sets the current timelineHistoryCaptureLength.
-		 */
-		public static function set timelineHistoryCaptureLength(value:int):void
-		{
-			_timelineHistoryCaptureLength=value;
-		}
-		
-		
-		//  objectCount -------------------------------------
-		private static var _objectCount:int;
-		/**
-		 * Returns the current objectCount of GestureWorks.
-		 */
-		public static function get objectCount():int
-		{
-			return _objectCount;
-		}
-		/**
-		 * Sets the current objectCount of GestureWorks.
-		 */
-		gw_public static function set objectCount(value:int):void
-		{
-			_objectCount=value;
-		}
+		public static var objectCount:int;
 
 
 		//  gwPointID -----------------------------------------------
