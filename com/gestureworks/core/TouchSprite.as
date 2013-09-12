@@ -38,6 +38,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
@@ -233,30 +234,9 @@ package com.gestureworks.core
 		}
 		
 		/**
-		 * Registers/unregisters event handlers depending on the active modes
+		 * Re-registers event listeners with updated mode settings
 		 */
-		public function updateListeners():void {
-			var register:Boolean;
-			
-			//clear 
-			if(activated){
-				removeEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false);
-				removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false); 
-				removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-				
-				register = localModes ? tuio : GestureWorks.activeTUIO;				
-				if (register && registerPoints)		
-					addEventListener(TuioTouchEvent.TOUCH_DOWN, onTuioTouchDown, false, 0, true);
-					
-				register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;				
-				if (register && registerPoints)		
-					addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown, false, 0, true); // bubbles up when nested
-					
-				register = localModes ? simulator : GestureWorks.activeSim;					
-				if (register && registerPoints)				
-					addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			}
-			
+		public function updateListeners():void {			
 			updateGWTouchListeners();
 		}
 		
@@ -416,25 +396,7 @@ package com.gestureworks.core
 			//tp re init vector metric and get new stroke lib for comparison
 			if (tc) tc.initClusterAnalysisConfig();
 		}
-		/**
-		 * @private
-		 */
-		private function onMouseDown(e:MouseEvent):void
-		{			
-			var event:GWTouchEvent = new GWTouchEvent(e);
-			onTouchDown(event);
-		}
-		/**
-		 * @private
-		 */
-		private function onTuioTouchDown(e:TuioTouchEvent):void
-		{			
-			var event:GWTouchEvent = new GWTouchEvent(e);			
-			if (!mouseChildren) { 
-				e.stopPropagation();
-				onTouchDown(event, this);
-			}	
-		}		
+		
 		/**
 		 * @private
 		 */
@@ -1415,6 +1377,18 @@ package com.gestureworks.core
 		}
 		
 		/**
+		 * Overrides dispatch event to deconlfict duplicate device input 
+		 * @param	event
+		 * @return
+		 */
+		override public function dispatchEvent(event:Event):Boolean 
+		{
+			if (event is GWTouchEvent && duplicateDeviceInput(GWTouchEvent(event)))
+				return false;
+			return super.dispatchEvent(event);
+		}
+		
+		/**
 		 * Registers event listeners. 
 		 * @param	type
 		 * @param	listener
@@ -1524,6 +1498,21 @@ package com.gestureworks.core
 			}			
 			return -1;
 		}
+		
+		private static var input1:GWTouchEvent;
+		/**
+		 * Prioritizes native touch input over mouse input from the touch screen. Processing
+		 * both inputs from the same device produces undesired results. Assumes touch events
+		 * will precede mouse events.
+		 * @param	event
+		 * @return
+		 */
+		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
+			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
+				return true;
+			input1 = event;
+			return false;
+		}		
 		
 		/**
 		 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 

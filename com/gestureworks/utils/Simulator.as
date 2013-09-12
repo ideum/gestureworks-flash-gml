@@ -26,10 +26,10 @@ package com.gestureworks.utils
 			KeyListener.gw_public::initialize();		
 		}
 		
-		gw_public static function deactivate():void 
+		gw_public static function deInitialize():void 
 		{
-			MouseManager.gw_public::deactivate();
-			KeyListener.gw_public::deactivate();
+			MouseManager.gw_public::deInitialize();
+			KeyListener.gw_public::deInitialize();
 		}
 		
 	}

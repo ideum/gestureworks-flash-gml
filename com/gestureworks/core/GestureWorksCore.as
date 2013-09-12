@@ -188,7 +188,7 @@ package com.gestureworks.core
 				trace("simulator is on");
 			}
 			else{
-				Simulator.gw_public::deactivate();
+				Simulator.gw_public::deInitialize();
 				trace("simulator is off");
 			}
 				
@@ -243,8 +243,10 @@ package com.gestureworks.core
 				TUIOManager.gw_public::initialize(host, port, protocol);						
 				trace("TUIO is on");			
 			}
-			else
+			else {
+				TUIOManager.gw_public::deInitialize();						
 				trace("TUIO is off");
+			}
 				
 			updateTouchObjects();				
 		}

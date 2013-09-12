@@ -15,7 +15,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.core.TouchMovieClip;
+	import com.gestureworks.core.VirtualTouchObject;
 	import com.gestureworks.events.GWTouchEvent;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
 	import flash.events.Event;
@@ -68,11 +74,17 @@ package com.gestureworks.managers
 			
 			//global_motion_sprite = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			
-			//DRIVES UPDATES ON POINT LIFETIME
-			GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
-			
-			// DRIVES UPDATES ON TOUCH POINT PATHS
-			GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			if (GestureWorks.activeNativeTouch) {			
+				
+				//DRIVES HIT TESTING
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
+				
+				//DRIVES UPDATES ON POINT LIFETIME
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
+				
+				// DRIVES UPDATES ON TOUCH POINT PATHS
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			}
 
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
@@ -86,10 +98,10 @@ package com.gestureworks.managers
 		
 		gw_public static function deInitialize():void
 		{
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchUp);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
-		}
-		
+		}		
 		
 		public static function pointCount():int {
 			
@@ -105,11 +117,188 @@ package com.gestureworks.managers
 		} 
 		
 		// registers touch point via touchSprite
-		gw_public static function registerTouchPoint(event:TouchEvent):void
+		private static function registerTouchPoint(event:TouchEvent):void
 		{
 			//FIX CELAN UP REFERENCE 
 			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
 		}
+		
+		/**
+		 * Convert TouchEvent to GWTouchEvent
+		 * @param	event
+		 */
+		private static function onTouchBegin(event:TouchEvent):void{
+			onTouchDown(new GWTouchEvent(event));
+		}
+		
+		/**
+		 * Decides how to assign the captured touch point to a cluster can pass to parent, an explicit target, an explicit list or 
+		 * targets or a passed to any touch object in the local display stack.
+		 * @param	event
+		 * @param	downTarget
+		 */
+		public static function onTouchDown(event:GWTouchEvent, downTarget:*=null):void
+		{
+			if (event.eventPhase == 3) { //not stage
+				
+				if ((event.target is TouchSprite || event.target is TouchMovieClip) && event.target.activated) {
+					
+					if (duplicateDeviceInput(event)) return;
+					
+					// if target gets passed it takes precendence, otherwise try to find it
+					// currently target gets passed in as argument for our global hit test
+					// if no target is found then bail
+					if (!downTarget)
+						downTarget = event.target; // object that got hit, used for our non-tuio gesture events
+					if (!downTarget)
+						return;
+						
+					var parent:* = downTarget.parent;	
+								
+					if (downTarget.targetParent && ((downTarget is TouchSprite) || (downTarget is TouchMovieClip))) { //ASSIGN PRIMARY CLUSTER TO PARENT
+							parent.assignPoint(event);
+					}
+					else if ((downTarget.targetObject is TouchSprite)||(downTarget.targetObject is TouchMovieClip))	// ASSIGN PRIMARY CLUSTER TO TARGET
+					{							
+						downTarget.targetObject.assignPoint(event);
+						downTarget.targetList[j].broadcastTarget = true;
+					}
+					else if ((downTarget.targetList[0] is TouchSprite)||(downTarget.targetList[0] is TouchMovieClip))
+					{							
+						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
+						downTarget.assignPoint(event);
+						
+						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
+						for (var j:uint = 0; j < downTarget.targetList.length; j++) 
+						{
+							downTarget.targetList[j].assignPointClone(event);
+							downTarget.targetList[j].broadcastTarget = true;
+						}
+					}
+					else {
+						 assignPoint(downTarget, event);
+						 propagatePoint(parent, event);
+					}	
+				}					
+			}
+		}
+		
+		private static var input1:GWTouchEvent;
+		/**
+		 * Prioritizes native touch input over mouse input from the touch screen. Processing
+		 * both inputs from the same device produces undesired results. Assumes touch events
+		 * will precede mouse events.
+		 * @param	event
+		 * @return
+		 */
+		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
+			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
+				return true;
+			input1 = event;
+			return false;
+		}
+		
+		/**
+		 * Assign point clones to parent's with cluster bubbling enabled.
+		 * @param	target
+		 * @param	event
+		 */
+		private static function propagatePoint(target:*, event:TouchEvent):void {
+			if (!target)
+				return;
+			
+			if (target.hasOwnProperty("clusterBubbling") && target.clusterBubbling) {
+				assignPointClone(target, event);
+				propagatePoint(target.parent, event);
+			}
+		}
+		
+		/**
+		 * Registers assigned touch point globaly and to relevant local clusters 
+		 * @param	target
+		 * @param	event
+		 */
+		private static function assignPoint(target:*, event:TouchEvent):void // asigns point
+		{		
+			// create new point object
+			var pointObject:PointObject  = new PointObject();	
+				pointObject.object = target; // sets primary touch object/cluster
+				pointObject.id = target.pointCount; // NEEDED FOR THUMBID
+				pointObject.touchPointID = event.touchPointID;
+				pointObject.x = event.stageX;
+				pointObject.y = event.stageY; 
+				pointObject.objectList.push(target); // seeds cluster/touch object list
+				
+				//ADD TO LOCAL POINT LIST
+				target._pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
+				target.cO.pointArray = target._pointArray;												
+				
+				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
+				target.pointCount++;
+				
+				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
+				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
+				
+				if(target.registerPoints)
+					registerTouchPoint(event);
+
+				// add touch down to touch object gesture event timeline
+				if((target.tiO)&&(target.tiO.timelineOn)&&(target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
+
+				///////////////////////////////////////////////////////////////////////////////////////
+				//CREATE POINT PAIR
+				
+				/*
+				if(target.cO.pointArray.length>1){
+				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				//cO.pointPairArray.push(ppt);
+				
+				//trace("pair")
+				} */
+				
+		}	
+		
+		private static function assignPointClone(target:*, event:TouchEvent):void // assigns point copy
+		{
+				// assign existing point object
+				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+					// add this touch object to touchobject list on point
+					pointObject.touchPointID = event.touchPointID;//-??
+					pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+	
+				//ADD TO LOCAL POINT LIST
+				target._pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
+				//touch object point list and cluster point list should be consolodated
+				target.cO.pointArray = target._pointArray;
+				
+				//create point pair
+				/*
+				if(target.cO.pointArray.length!=1){
+				var lastpointID:Number = target.cO.pointArray[target.cO.pointArray.length - 2].touchPointID;
+				var ppt:PointPairObject = new PointPairObject();
+					ppt.idA = lastpointID;
+					ppt.idB = pointObject.touchPointID;
+					
+				//cO.pointPairArray.push(ppt);
+				//trace("Clone pair");
+				}*/
+				
+				//UPDATE POINT LOCAL COUNT
+				target.pointCount++;
+				
+				// add touch down to touch object gesture event timeline
+				if ((target.tiO)&&(target.tiO.timelineOn) && (target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
+				
+				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+		}		
 		
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:TouchEvent, overrideRegisterPoints:Boolean=false):void
@@ -305,7 +494,6 @@ package com.gestureworks.managers
 						}
 					}
 				}
-		}
-		
+		}				
 	}
 }

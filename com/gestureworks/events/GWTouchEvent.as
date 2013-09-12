@@ -48,6 +48,7 @@ package com.gestureworks.events
  		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_OVER] = TOUCH_OVER;		
  		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_ROLL_OUT] = TOUCH_ROLL_OUT;		
  		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_ROLL_OVER] = TOUCH_ROLL_OVER;		
+ 		TOUCH_TYPE_MAP[TouchEvent][TouchEvent.TOUCH_TAP] = TOUCH_TAP;		
  		
  		TOUCH_TYPE_MAP[TuioTouchEvent] = new Dictionary();
  		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_DOWN] = TOUCH_BEGIN;		
@@ -57,6 +58,7 @@ package com.gestureworks.events
  		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TOUCH_OVER] = TOUCH_OVER;		
  		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.ROLL_OUT] = TOUCH_ROLL_OUT;		
  		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.ROLL_OVER] = TOUCH_ROLL_OVER;		
+ 		TOUCH_TYPE_MAP[TuioTouchEvent][TuioTouchEvent.TAP] = TOUCH_TAP;		
  		
  		TOUCH_TYPE_MAP[MouseEvent] = new Dictionary();
  		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_DOWN] = TOUCH_BEGIN;		
@@ -66,6 +68,7 @@ package com.gestureworks.events
  		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.MOUSE_OVER] = TOUCH_OVER;		
  		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.ROLL_OUT] = TOUCH_ROLL_OUT;		
  		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.ROLL_OVER] = TOUCH_ROLL_OVER;								
+ 		TOUCH_TYPE_MAP[MouseEvent][MouseEvent.CLICK] = TOUCH_TAP;								
 		
 		/**
 		 * Serves as an encompassing touch event for all input types as well as a utility for converting different input events. The <code>GWTouchEvent</code> can 
@@ -91,6 +94,7 @@ package com.gestureworks.events
 			super(resolveType(type), bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
 			if(event)
 				importEvent(event);
+			_time = getTimer();
 		}
 		
 		private var _bubbles:Boolean;
@@ -123,7 +127,19 @@ package com.gestureworks.events
 		
 		private var _stageY:Number;
 		public function set stageY(v:Number):void { _stageY = v;}
-		override public function get stageY():Number { return _stageY; }		
+		override public function get stageY():Number { return _stageY; }
+		
+		private var _source:String;
+		/**
+		 * The derrived event type
+		 */
+		public function get source():String { return _source; }
+		
+		private var _time:Number;
+		/**
+		 * Time of instantiation
+		 */
+		public function get time():Number { return _time;}
 
 		override public function clone():Event
 		{
@@ -152,8 +168,10 @@ package com.gestureworks.events
 				
 				if (this.hasOwnProperty(propName))
 				{
-					if (propName == "type") 
-						this[propName] = TOUCH_TYPE_MAP[eventType][event[propName]];
+					if (propName == "type") { 
+						_source = event[propName];
+						this[propName] = TOUCH_TYPE_MAP[eventType][source];						
+					}
 					else
 						this[propName] = event[propName];
 				}
@@ -167,8 +185,10 @@ package com.gestureworks.events
 		 */
 		private function resolveType(type:String):String
 		{
+			_source = type;
 			var key:Class = hasKey(TOUCH_TYPE_MAP[TuioTouchEvent],type) ? TuioTouchEvent : hasKey(TOUCH_TYPE_MAP[TouchEvent],type) ? TouchEvent : hasKey(TOUCH_TYPE_MAP[MouseEvent],type) ? MouseEvent : null;
-			var resolvedType:String = key && hasKey(TOUCH_TYPE_MAP[key],type) ? TOUCH_TYPE_MAP[key][type]: type;
+			var resolvedType:String = key && hasKey(TOUCH_TYPE_MAP[key], type) ? TOUCH_TYPE_MAP[key][type]: type;
+			this.type = resolvedType;
 			return resolvedType;
 		}
 		
