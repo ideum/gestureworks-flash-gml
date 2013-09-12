@@ -208,9 +208,8 @@ package com.gestureworks.objects
 		
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		private var _handList:Vector.<HandObject> = new Vector.<HandObject>;
-		public function get handList():Vector.<HandObject>{return _handList;}
-		public function set handList(value:Vector.<HandObject>):void{_handList = value;}
+		public var handList:Vector.<HandObject> = new Vector.<HandObject>;
+
 			/// INSIDE 3D HAND Object
 				//--width
 				//--length
@@ -241,7 +240,7 @@ package com.gestureworks.objects
 		public var orient_dz:Number = 0;
 
 		
-		// private var _holdPoint:Vector3D = new Vector3D(); 
+		// public var holdPoint:Vector3D = new Vector3D(); 
 		// hold_x---------------------//remove
 		public var hold_x:Number = 0;
 		// hold_y---------------------remove
@@ -291,12 +290,12 @@ package com.gestureworks.objects
 		
 		// path_data
 		// need to update to vector 
-		//private var _path_data:Array = new Array();
+		//public var path_data:Array = new Array();
 		//public function get path_data():Array{return _path_data;}
 		//public function set path_data(value:Array):void{_path_data = value;}	
 		
 		// 3Dpath_data
-		//private var _path_data3d:Vector.<Vector3d> = new Vector.<Vector3d>();
+		//public var path_data3d:Vector.<Vector3d> = new Vector.<Vector3d>();
 		//public function get path_data3d():Vector.<Vector3d>{return _path_data3d;}
 		//public function set path_data3d(value:Vector.<Vector3d>):void{_path_data3d = value;}
 		
@@ -305,49 +304,35 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////
 		
 		// add point
-		private var _point_add:Boolean = false;
-		public function get point_add():Boolean{return _point_add;}
-		public function set point_add(value:Boolean):void{_point_add = value;}
+		public var point_add:Boolean = false;
+		
 		// remove point
-		private var _point_remove:Boolean = false;
-		public function get point_remove():Boolean{return _point_remove;}
-		public function set point_remove(value:Boolean):void{_point_remove = value;}
+		public var point_remove:Boolean = false;
+
 		// add cluster
-		private var _add:Boolean = false;
-		public function get add():Boolean{return _add;}
-		public function set add(value:Boolean):void{_add = value;}
+		public var add:Boolean = false;
+
 		// remove cluster
-		private var _remove:Boolean = false;
-		public function get remove():Boolean{return _remove;}
-		public function set remove(value:Boolean):void{_remove = value;}
+		public var remove:Boolean = false;
 		
-		
-		
-		private var _mmPointArray:Array = new Array();
-		public function get mmPointArray():Array{return _mmPointArray;}
-		public function set mmPointArray(value:Array):void { _mmPointArray = value; }
+				
+		public var mmPointArray:Array = new Array();
+
 		
 		/////////////////////////////////////////////////////////////////////////
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
-		private var _pointArray:Vector.<PointObject> = new Vector.<PointObject>();
-		public function get pointArray():Vector.<PointObject>{return _pointArray;}
-		public function set pointArray(value:Vector.<PointObject>):void { _pointArray = value; }
+		public var pointArray:Vector.<PointObject> = new Vector.<PointObject>();
+
 		// motion point data list
-		private var _motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		public function get motionArray():Vector.<MotionPointObject>{return _motionArray;}
-		public function set motionArray(value:Vector.<MotionPointObject>):void { _motionArray = value; }
+		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		
 		// motion point data list
-		private var _motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		public function get motionArray2D():Vector.<MotionPointObject>{return _motionArray2D;}
-		public function set motionArray2D(value:Vector.<MotionPointObject>):void{_motionArray2D = value;}
+		public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		
 		// sensor point data list----------------
-		private var _sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
-		public function get sensorArray():Vector.<Number>{return _sensorArray;}
-		public function set sensorArray(value:Vector.<Number>):void { _sensorArray = value; }
+		public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
 		
 		
 		/////////////////////////////////////////////////////////////////////////////
@@ -357,49 +342,35 @@ package com.gestureworks.objects
 		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
-		private var _iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		public function get iPointArray():Vector.<InteractionPointObject>{ return _iPointArray;}
-		public function set iPointArray(value:Vector.<InteractionPointObject>):void	{ _iPointArray = value; }
-		
-		private var _iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		public function get iPointArray2D():Vector.<InteractionPointObject>{ return _iPointArray2D;}
-		public function set iPointArray2D(value:Vector.<InteractionPointObject>):void	{_iPointArray2D = value;}
+		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
 		
+		public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
+			
 		// TOUCH PARENT CLUSTER
-		private var _tcO:ipClusterObject = new ipClusterObject ();
-		public function get tcO():ipClusterObject { return _tcO;}
-		public function set tcO(value:ipClusterObject ):void	{ _tcO = value; }
+		public var tcO:ipClusterObject = new ipClusterObject ();
 		
 		// MOTION PARENT CLUSTER
-		private var _mcO:ipClusterObject = new ipClusterObject ();
-		public function get mcO():ipClusterObject { return _mcO;}
-		public function set mcO(value:ipClusterObject ):void	{ _mcO = value; }
+		public var mcO:ipClusterObject = new ipClusterObject ();
 		
 		//MOTION SUBCLUSTER ARRAY
-		private var _subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
-		public function get subClusterArray():Vector.<ipClusterObject>{ return _subClusterArray;}
-		public function set subClusterArray(value:Vector.<ipClusterObject>):void	{ _subClusterArray = value; }
+		public var subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		/*
 		// SENSOR PARENT CLUSTER
-		private var _scO:ipClusterObject = new ipClusterObject ();
+		public var scO:ipClusterObject = new ipClusterObject ();
 		public function get scO():ipClusterObject { return _scO;}
 		public function set scO(value:ipClusterObject ):void	{ _scO = value; }*/
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
-		private var _gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
-		public function get gPointArray():Vector.<GesturePointObject>{ return _gPointArray;}
-		public function set gPointArray(value:Vector.<GesturePointObject>):void	{_gPointArray = value;}
+		public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
 		
 	
 		/////////////////////////////////////////////////////////////////////////
 		// cluster history
 		/////////////////////////////////////////////////////////////////////////
-		private var _history:Vector.<ClusterObject> = new Vector.<ClusterObject>();
-		public function get history():Vector.<ClusterObject>{return _history;}
-		public function set history(value:Vector.<ClusterObject>):void{_history = value;}
+		public var history:Vector.<ClusterObject> = new Vector.<ClusterObject>();
 	}
 }
