@@ -55,14 +55,11 @@ package com.gestureworks.managers
 		public static var graphicRadius:Number = 15;
 				
 		
-		
 		// initialization method, call through to TouchManager
 		gw_public static function initialize():void
 		{	
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);				
 			TouchManager.gw_public::initialize();
 		}
 		
@@ -77,24 +74,17 @@ package com.gestureworks.managers
 			circleGraphics = [];
 		}
 		
-		/**
-		 * @private
-		 */
-		gw_public static function registerMousePoint(event:TouchEvent):void
-		{						
+		private static function onMouseDown(e:MouseEvent):void {
+			
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);							
-			TouchManager.gw_public::registerTouchPoint(event);
-		
+			
+			var event:GWTouchEvent = new GWTouchEvent(e);			
+			TouchManager.onTouchDown(event);
+			
 			currentMousePoint = event.touchPointID;
 			mousePointX = event.stageX;
-			mousePointY = event.stageY;
-		}
-		
-		private static function onMouseDown(e:MouseEvent):void {
-			if (e.target.localModes && !e.target.simulator)
-				return;
-			TouchManager.onTouchDown(new GWTouchEvent(e));
+			mousePointY = event.stageY;		
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
@@ -116,8 +106,7 @@ package com.gestureworks.managers
 							GestureWorks.application.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 						}
 					}
-				}
-				
+				}				
 				hold = false;
 				return;
 			}
@@ -165,13 +154,6 @@ package com.gestureworks.managers
 			if (GestureWorks.isShift) return;
 			mousePointX = e.stageX;
 			mousePointY = e.stageY;
-			
-			//
-			//if (!allowMouseStartDrag) return;
-			//if (!hold || e.target.toString()!="[object SimulatorGraphic]") return;
-			//
-			//var event:GWTouchEvent = new GWTouchEvent(e);
-			//TouchManager.onTouchMove(event);
 		}
 		
 		private static function mouseFrameHandler(e:Event):void
