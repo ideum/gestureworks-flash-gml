@@ -7,9 +7,8 @@ package com.gestureworks.utils
 	import flash.text.TextFormatAlign;
 	
 	public class ExampleTemplate extends Sprite 
-	{
-		
-		public function Main():void 
+	{		
+		public function ExampleTemplate():void 
 		{
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
