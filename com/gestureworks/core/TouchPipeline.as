@@ -14,9 +14,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core 
-{
-	//import com.gestureworks.core.TouchSprite;
-	
+{	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.ClusterObject;
@@ -24,11 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.GestureObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.objects.DimensionObject;
-	
-	//import com.gestureworks.utils.NoiseFilter;
-	
 	import flash.geom.Point;
-	
 
 	public class TouchPipeline
 	{

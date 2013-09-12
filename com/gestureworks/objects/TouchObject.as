@@ -13,6 +13,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 package com.gestureworks.objects 
 {	
 	public class TouchObject extends Object 
