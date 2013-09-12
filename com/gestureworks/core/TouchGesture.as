@@ -362,12 +362,12 @@ package com.gestureworks.core
 						// AVOIDS THE NEED TO HAVE MORE EVENTS AND LISTENERS IN THE DISPLAY LIST
 						// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
 						
-						//search for touch end events on timeline
-						if ((gO.pOList[key].match_TouchEvent == "gwTouchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
+						//search for touch end events on timeline						
+						if ((gO.pOList[key].match_TouchEvent == "gwTouchEnd")|| (gO.pOList[key].match_TouchEvent == "touchEnd") || (gO.pOList[key].match_GestureEvent == "tap") )
 						{
 							if ((tiO.timelineOn) && (tiO.pointEvents) && (tiO.frame.pointEventArray))
 							{
-							
+								
 							// in current frame
 							for (var j:int = 0; j < ts.tiO.frame.pointEventArray.length; j++) 
 									{
