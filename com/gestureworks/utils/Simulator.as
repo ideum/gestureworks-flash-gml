@@ -31,6 +31,5 @@ package com.gestureworks.utils
 			MouseManager.gw_public::deInitialize();
 			KeyListener.gw_public::deInitialize();
 		}
-		
 	}
 }
