@@ -29,9 +29,7 @@ package com.gestureworks.core
 	
 	import flash.geom.Point;
 	import flash.display.DisplayObject;
-	
-	//use namespace id_internal;
-	
+		
 	/**
 	* @private
 	*/

@@ -22,7 +22,7 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	//import com.gestureworks.analysis.GesturePipeline;
-	import com.gestureworks.analysis.TemporalMetric;;
+	import com.gestureworks.analysis.TemporalMetric;
 	
 	import com.gestureworks.managers.TimelineHistories;
 	import com.gestureworks.objects.FrameObject; 
