@@ -243,8 +243,10 @@ package com.gestureworks.core
 				TUIOManager.gw_public::initialize(host, port, protocol);						
 				trace("TUIO is on");			
 			}
-			else
+			else {
+				TUIOManager.gw_public::deInitialize();						
 				trace("TUIO is off");
+			}
 				
 			updateTouchObjects();				
 		}

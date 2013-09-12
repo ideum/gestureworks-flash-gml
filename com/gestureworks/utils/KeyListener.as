@@ -27,7 +27,7 @@ package com.gestureworks.utils
 			GestureWorks.application.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);
 		}
 		
-		gw_public static function deactivate():void
+		gw_public static function deInitialize():void
 		{
 			GestureWorks.application.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownListener);
 			GestureWorks.application.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);

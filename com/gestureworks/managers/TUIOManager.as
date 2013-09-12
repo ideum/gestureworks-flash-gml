@@ -58,7 +58,19 @@ package com.gestureworks.managers
 				gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop", host, port, protocol);
 				GestureWorks.application.addChild(gwTUIOMngr); 
 			}
+			else {
+				gwTUIOMngr.activate();
+				GestureWorks.application.addChild(gwTUIOMngr);
+			}
 		}			
+		
+		gw_public static function deInitialize():void
+		{
+			if (gwTUIOMngr) {
+				gwTUIOMngr.deactivate();
+				GestureWorks.application.removeChild(gwTUIOMngr);
+			}
+		}
 
 		/**
 		 * Constructor
@@ -105,9 +117,23 @@ package com.gestureworks.managers
 			_tuioDebug = TuioDebug.init(stage);
 			_tuioClient.addListener(_tuioManager);
 			_tuioClient.addListener(_tuioDebug);
-			_tuioManager.addEventListener(TuioEvent.ADD, onAdd);
-			_tuioManager.addEventListener(TuioEvent.UPDATE, onUpdate);
-			_tuioManager.addEventListener(TuioEvent.REMOVE, onRemove);
+			activate();
+		}
+		
+		private function activate():void {
+			if (_tuioManager) {
+				_tuioManager.addEventListener(TuioEvent.ADD, onAdd);
+				_tuioManager.addEventListener(TuioEvent.UPDATE, onUpdate);
+				_tuioManager.addEventListener(TuioEvent.REMOVE, onRemove);
+			}
+		}
+		
+		private function deactivate():void {
+			if (_tuioManager) {
+				_tuioManager.removeEventListener(TuioEvent.ADD, onAdd);
+				_tuioManager.removeEventListener(TuioEvent.UPDATE, onUpdate);
+				_tuioManager.removeEventListener(TuioEvent.REMOVE, onRemove);				
+			}
 		}
 				
 		private function onAdd(e:TuioEvent):void {
