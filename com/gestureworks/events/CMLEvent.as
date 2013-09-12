@@ -27,7 +27,6 @@ package com.gestureworks.events
 		public function CMLEvent(type:String, _id:String=null, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
-			
 			id = _id;
 		}
 
