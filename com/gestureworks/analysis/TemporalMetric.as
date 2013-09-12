@@ -219,7 +219,7 @@ package com.gestureworks.analysis
 					////////////////////////////////////////
 					
 					// match type and id
-					if ((pointEventArray[p].type =="touchBegin")&&(pointEventArray[p].touchPointID == event.touchPointID))
+					if ((pointEventArray[p].type =="gwTouchBegin")&&(pointEventArray[p].touchPointID == event.touchPointID))
 						{
 							var dx:Number = Math.abs(pointEventArray[p].stageX - event.stageX)
 							var dy:Number = Math.abs(pointEventArray[p].stageY - event.stageY)
@@ -228,7 +228,7 @@ package com.gestureworks.analysis
 							if ((dx < tap_dist) && (dy < tap_dist))
 							{
 								// add tap event to gesture timeline 
-								// uses touchEnd id and position
+								// uses gwTouchEnd id and position
 								//trace("Current Frame TAP", pointEventArray[p].touchPointID);
 								tapID ++;
 								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
@@ -261,7 +261,7 @@ package com.gestureworks.analysis
 											if ((dx0 < tap_dist) && (dy0 < tap_dist))
 											{
 												// add tap event to gesture timeline 
-												// uses touchEnd id and position
+												// uses gwTouchEnd id and position
 												//trace("History TAP", pointEventArray[j].touchPointID);
 												tapID ++;
 												var tap_event0:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );

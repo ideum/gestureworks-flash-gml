@@ -80,10 +80,10 @@ package com.gestureworks.managers
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				
 				//DRIVES UPDATES ON POINT LIFETIME
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);
 			}
 
 			// leave this on for all input types
@@ -99,8 +99,8 @@ package com.gestureworks.managers
 		gw_public static function deInitialize():void
 		{
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchUp);
-			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);
 		}		
 		
 		public static function pointCount():int {
@@ -298,10 +298,18 @@ package com.gestureworks.managers
 				if ((target.tiO)&&(target.tiO.timelineOn) && (target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
 				
 				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+		}	
+		
+		/**
+		 * Convert TouchEvent to GWTouchEvent
+		 * @param	event
+		 */
+		private static function onTouchEnd(event:TouchEvent):void{
+			onTouchUp(new GWTouchEvent(event));
 		}		
 		
 		// stage on TOUCH_UP.
-		public static function onTouchUp(event:TouchEvent, overrideRegisterPoints:Boolean=false):void
+		public static function onTouchUp(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
 		{
 			var pointObject:Object = points[event.touchPointID];
 			
@@ -357,10 +365,18 @@ package com.gestureworks.managers
 		
 		
 		private static var pointObject:PointObject;
+		
+		/**
+		 * Convert TouchEvent to GWTouchEvent
+		 * @param	event
+		 */
+		private static function onMove(event:TouchEvent):void{
+			onTouchMove(new GWTouchEvent(event));
+		}			
 	
 		// the Stage TOUCH_MOVE event.	
 		// DRIVES POINT PATH UPDATES
-		public static function onTouchMove(event:TouchEvent, overrideRegisterPoints:Boolean=false):void
+		public static function onTouchMove(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
 		{	
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			pointObject = points[event.touchPointID];

@@ -363,7 +363,7 @@ package com.gestureworks.core
 						// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
 						
 						//search for touch end events on timeline
-						if ((gO.pOList[key].match_TouchEvent == "touchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
+						if ((gO.pOList[key].match_TouchEvent == "gwTouchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
 						{
 							if ((tiO.timelineOn) && (tiO.pointEvents) && (tiO.frame.pointEventArray))
 							{
@@ -371,7 +371,7 @@ package com.gestureworks.core
 							// in current frame
 							for (var j:int = 0; j < ts.tiO.frame.pointEventArray.length; j++) 
 									{
-									if (tiO.frame.pointEventArray[j].type == "touchEnd" ) 
+									if (tiO.frame.pointEventArray[j].type == "gwTouchEnd" ) 
 									{
 										//trace("touch end")
 									
