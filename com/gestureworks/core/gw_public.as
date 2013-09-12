@@ -16,7 +16,5 @@
 
 package com.gestureworks.core
 {
-	
-	public namespace gw_public = "http://www.ideum.com/2011/AS3/gwpublic";
-	
+	public namespace gw_public = "http://www.ideum.com/2011/AS3/gwpublic";	
 }
