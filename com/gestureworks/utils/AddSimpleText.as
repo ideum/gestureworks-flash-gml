@@ -52,13 +52,6 @@ package com.gestureworks.utils
 			mytext.width = wNum;
 			mytext.height = hNum;
 		}
-		/*
-		public function set textContSymbol(txt:uint):void{
-			mytext.htmlText = txt;
-			mytext.setTextFormat(format);
-			mytext.width = wNum;
-			mytext.height = hNum;
-		}*/
 		
 		public function get textColor():Object { return format.color };
 		public function set textColor(color:Object):void {
