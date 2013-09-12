@@ -20,45 +20,33 @@ package com.gestureworks.objects
 	public class TimelineObject extends Object 
 	{
 		// ID
-		private var _id:int;
-		public function get id():int{	return _id;}
-		public function set id(value:int):void{	_id = value;}
+		public var id:int;
+		
 		//
-		private var _timelineOn:Boolean = false;
-		public function get timelineOn():Boolean{	return _timelineOn;}
-		public function set timelineOn(value:Boolean):void{	_timelineOn = value;}
+		public var timelineOn:Boolean = false;
+
 		//
-		private var _timelineInit:Boolean = false;
-		public function get timelineInit():Boolean{return _timelineInit;}
-		public function set timelineInit(value:Boolean):void{	_timelineInit = value;}
+		public var timelineInit:Boolean = false;
 		
 		//INIT EVENT TYPES //////////////////////////////////////////////////////////////
 		// add touch point events
-		private var _pointEvents:Boolean = false;
-		public function get pointEvents():Boolean{	return _pointEvents;}
-		public function set pointEvents(value:Boolean):void{	_pointEvents = value;}
+		public var pointEvents:Boolean = false;
+
 		// add touch cluster events
-		private var _clusterEvents:Boolean = false;
-		public function get clusterEvents():Boolean{	return _clusterEvents;}
-		public function set clusterEvents(value:Boolean):void{	_clusterEvents = value;}
+		public var clusterEvents:Boolean = false;
+
 		// add touch point events
-		private var _gestureEvents:Boolean = false;
-		public function get gestureEvents():Boolean{	return _gestureEvents;}
-		public function set gestureEvents(value:Boolean):void{	_gestureEvents = value;}
+		public var gestureEvents:Boolean = false;
+
 		// add touch transform events
-		private var _transformEvents:Boolean = false;
-		public function get transformEvents():Boolean{	return _transformEvents;}
-		public function set transformEvents(value:Boolean):void{	_transformEvents = value;}
+		public var transformEvents:Boolean = false;
 		
 		//frame object
-		private var _frame:FrameObject = new FrameObject();
-		public function get frame():FrameObject{	return _frame;}
-		public function set frame(value:FrameObject):void{	_frame = value;}
-		
+		public var frame:FrameObject = new FrameObject();
+
 		// NEEEDS TO BE VECTOR
 		// timeline history
-		private var _history:Array = new Array();
-		public function get history():Array{	return _history;}
-		public function set history(value:Array):void{	_history = value;}
+		public var history:Array = new Array();
+
 	}
 }
