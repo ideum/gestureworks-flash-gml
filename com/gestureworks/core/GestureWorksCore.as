@@ -430,8 +430,6 @@ package com.gestureworks.core
 				//trace("init no gml", gml)
 			}
 			
-			//if (gml) startGmlParse();
-			//trace("cml loader complete",gml);
 		}
 		
 		// parse loaded gml file
