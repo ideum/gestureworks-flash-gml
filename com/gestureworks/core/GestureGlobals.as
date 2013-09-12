@@ -21,13 +21,9 @@ package com.gestureworks.core
 	import com.gestureworks.core.gw_public;
 	
 	/**
-		 * The GestureGlobals class is the global variables class that can be accessed from all classes within.
-		 *
-		 * You can acess a number of hooks for development.
-		 * We have very near future plans to build this out a be more available for the developer.
-		 * 
-		 */
-
+	 * The GestureGlobals class is the global variables class that can be accessed from all classes within.
+	 * You can acess a number of hooks for development.
+	 */
 	public class GestureGlobals
 	{		
 		/**
@@ -38,12 +34,14 @@ package com.gestureworks.core
 		 * Contains a dictionary of all touch points present to the framework.
 		 */
 		gw_public static var points:Dictionary = new Dictionary();
-		
+		/**
+		 * Contains a dictionary of all motion points present to the framework.
+		 */		
 		gw_public static var motionPoints:Dictionary = new Dictionary();
+		/**
+		 * Contains a dictionary of all interaction points present to the framework.
+		 */			
 		gw_public static var interactionPoints:Dictionary = new Dictionary();
-		
-		 
-		//gw_public static var pointHistory:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all clusters present to the framework.
 		 */
@@ -63,7 +61,7 @@ package com.gestureworks.core
 		gw_public static var timelines:Dictionary = new Dictionary();
 		
 		
-		
+		//gw_public static var pointHistory:Dictionary = new Dictionary();		
 		
 		
 		
