@@ -96,7 +96,6 @@ package com.gestureworks.managers
 					
 			// initialize input managers
 			TouchManager.gw_public::initialize();
-			ObjectManager.gw_public::initialize();
 			EnterFrameManager.gw_public::initialize();
 			
 			initialized = true;

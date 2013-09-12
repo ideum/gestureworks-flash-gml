@@ -24,30 +24,21 @@ package com.gestureworks.managers
 	public class ObjectManager 
 	{
 		private static var count:int;
-		
-		gw_public static function initialize():void{}
-		
-		public static function registerTouchObject(touchObject:Object):int //TouchSpriteBase
+				
+		public static function registerTouchObject(touchObject:Object):int
 		{	
 			touchObject.clusterID = count;
-			
 			GestureGlobals.gw_public::touchObjects[count] = touchObject;
-			
 			GestureGlobals.gw_public::objectCount++;
-			
 			count++;
-			
 			return touchObject.clusterID;
 		}
 		
-		public static function unRegisterTouchObject(touchObject:Object):void//TouchSpriteBase
+		public static function unRegisterTouchObject(touchObject:Object):void
 		{
 			delete GestureGlobals.gw_public::touchObjects[count];
-			
 			count--;
-			
 			GestureGlobals.gw_public::objectCount--;
 		}
-		
 	}
 }
