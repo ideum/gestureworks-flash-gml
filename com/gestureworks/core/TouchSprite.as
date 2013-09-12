@@ -282,9 +282,18 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		public var _N:int = 0; // number of touch points in the cluster // read only
+		public var _N:int = 0; // number of points in the super cluster // read only
 		public function get N():int { return _N; }
-		public function set N(value:int):void { 	_N = value;}
+		public function set N(value:int):void { 	_N = value; }
+		
+		public var _tpn:int = 0; // number of touch points in the parent cluster // read only
+		public function get tpn():int { return _tpn; }
+		public function set tpn(value:int):void { 	_tpn = value;}
+		
+		public var _ipn:int = 0; // number of motion points in the parent cluster // read only
+		public function get ipn():int { return _ipn; }
+		public function set ipn(value:int):void { 	_ipn = value;}
+		
 		
 		/**
 		 * @private
@@ -480,6 +489,180 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
+		
+		/**
+		 * decides how to assign the captured touch point to a cluster
+		 * can pass to parent, an explicit target, an explicit list or 
+		 * targets or a passed to any touch object in the local display stack.
+		 */
+		 
+		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
+		public function onTouchDown(event:TouchEvent, downTarget:*=null):void
+		{			
+				//////////////////
+				// new stuff
+				//////////////////
+				
+				// if target gets passed it takes precendence, otherwise try to find it
+				// currently target gets passed in as argument for our global hit test
+				// if no target is found then bail
+				if (!downTarget)
+					downTarget = event.target; // object that got hit, used for our non-tuio gesture events
+				if (!downTarget)
+					return;
+					
+				var parent:* = downTarget.parent;	
+				
+				//trace("target: ", target, "parent: ", target.parent,clusterBubbling)
+				//trace(target, event.stageX, event.localX);
+				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
+				
+				///////////////
+				// native touch
+				///////////////
+				if (1)
+				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
+				// -Charles (5/16/2012)
+				{					
+						if (targetParent) { //LEGACY SUPPORT
+							if ((downTarget is TouchSprite) || (downTarget is TouchMovieClip)) 
+							{								
+								//ASSIGN PRIMARY CLUSTER TO PARENT
+								parent.assignPoint(event);
+								//event.stopPropagation(); // allows touch down and tap
+							}
+						}
+						else if ((_targetObject is TouchSprite)||(_targetObject is TouchMovieClip))
+						{							
+							// ASSIGN PRIMARY CLUSTER TO TARGET
+							_targetObject.assignPoint(event);
+							_targetList[j].broadcastTarget = true;
+						}
+						
+						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
+						{							
+							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
+							assignPoint(event);
+							
+							//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
+							for (var j:uint = 0; j < _targetList.length; j++) 
+							{
+								_targetList[j].assignPointClone(event);
+								_targetList[j].broadcastTarget = true;
+							}
+						}
+						
+						else if (_clusterBubbling)
+						{	
+							//trace(event.eventPhase)
+							if (3 == event.eventPhase) { // bubbling phase
+								
+								if (!((event.target is TouchSprite)||(event.target is TouchMovieClip)))//
+									assignPoint(event);
+								else	
+									assignPointClone(event);
+							}
+							else if (2 == event.eventPhase) { //targeting phase
+								assignPoint(event);
+							 }
+						}
+						else {
+							// added the !mouseChildren in order to simluator to work properly -charles (5/17/2012)
+							if (2 == event.eventPhase && !mouseChildren) { //targeting phase
+								assignPoint(event);
+								//event.stopPropagation(); // allows touch down and tap
+							 }
+						}	
+				}
+				///////////////////////////////////////
+				// mouse events - no longer used
+				/////////////////////////////////////////
+				else {
+					assignPoint(event);
+					return										
+				}
+		}
+		
+
+		/**
+		 * @private
+		 */
+		
+		 /**
+		 * registers assigned touch point globaly and to relevant local clusters 
+		 */
+		private function assignPoint(event:TouchEvent):void // asigns point
+		{			
+			// create new point object
+			var pointObject:PointObject  = new PointObject();	
+				pointObject.object = this; // sets primary touch object/cluster
+				pointObject.id = pointCount; // NEEDED FOR THUMBID
+				pointObject.touchPointID = event.touchPointID;
+				pointObject.x = event.stageX;
+				pointObject.y = event.stageY; 
+				pointObject.objectList.push(this); // seeds cluster/touch object list
+				
+				//ADD TO LOCAL POINT LIST
+				_pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
+				cO.pointArray = _pointArray;
+								
+				
+				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
+				pointCount++;
+				
+				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
+				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
+				
+				var register:Boolean;
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
+				register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;		
+				if (register && registerPoints)
+					TouchManager.gw_public::registerTouchPoint(event);
+				// REGISTER MOUSE POINT WITH MOUSE MANAGER
+				register = localModes ? simulator : GestureWorks.activeSim;		
+				if (register && registerPoints) 
+					MouseManager.gw_public::registerMousePoint(event);
+				
+				// add touch down to touch object gesture event timeline
+				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
+
+				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+				
+				//trace("down:", event.touchPointID, cO.pointArray.length, this._pointArray.length )
+				
+				
+		}
+		
+		private function assignPointClone(event:TouchEvent):void // assigns point copy
+		{
+				// assign existing point object
+				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+					// add this touch object to touchobject list on point
+					pointObject.touchPointID = event.touchPointID;//-??
+					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+	
+				//ADD TO LOCAL POINT LIST
+				_pointArray.push(pointObject);
+				
+				//UPDATE LOCAL CLUSTER OBJECT
+				//touch object point list and cluster point list should be consolodated
+				cO.pointArray = _pointArray;
+				
+				//UPDATE POINT LOCAL COUNT
+				pointCount++;
+				
+				// add touch down to touch object gesture event timeline
+				if ((tiO)&&(tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
+				
+				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+		}
+		////////////////////////////////////////////////////////////////////////////
+		
+		/**
+		 * @private
+		 */
 		private var _clusterEvents:Boolean = false;
 		/**
 		* Determines whether clusterEvents are processed and dispatched on the touchSprite.
@@ -515,15 +698,15 @@ package com.gestureworks.core
 			if(tc) tc.updateClusterAnalysis();
 		}
 		
-		public function updateMotionClusterAnalysis():void
-		{
-			if(tc) tc.updateMotionClusterAnalysis();
-		}
+		//public function updateMotionClusterAnalysis():void
+		//{
+			//if(tc) tc.updateMotionClusterAnalysis();
+		//}
 		
-		public function updateSensorClusterAnalysis():void
-		{
-			if(tc) tc.updateSensorClusterAnalysis();
-		}
+		//public function updateSensorClusterAnalysis():void
+		//{
+			//if(tc) tc.updateSensorClusterAnalysis();
+		//}
 		
 		////////////////////////////////////////////////////////////////////////////
 		
