@@ -21,63 +21,39 @@ package com.gestureworks.objects
 	public class GesturePointObject extends Object 
 	{	
 		// ID
-		private var _id:int;
-		public function get id():int{	return _id;}
-		public function set id(value:int):void{	_id = value;}
+		public var id:int;
 		
 		// gesturePointID
-		private var _gesturePointID:int;
-		public function get gesturePointID():int{	return _gesturePointID;}
-		public function set gesturePointID(value:int):void {	_gesturePointID = value; }
+		public var gesturePointID:int;
 		
 		// gesture point type /tap
-		private var _type:String = new String();
-		public function get type():String{	return _type;}
-		public function set type(value:String):void {	_type = value; }
+		public var type:String = new String();
 		
 		//position/////////////////////////////////////////////x,y,x
-		private var _position:Vector3D = new Vector3D ();
-		public function get position():Vector3D{	return _position;}
-		public function set position(value:Vector3D):void {	_position = value; }
+		public var position:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
-		private var _direction:Vector3D = new Vector3D ();
-		public function get direction():Vector3D{	return _direction;}
-		public function set direction(value:Vector3D):void {	_direction = value; }
+		public var direction:Vector3D = new Vector3D ();
 		
 		//normal/////////////////////////
-		private var _normal:Vector3D = new Vector3D ();
-		public function get normal():Vector3D{	return _normal;}
-		public function set normal(value:Vector3D):void {	_normal = value; }
+		public var normal:Vector3D = new Vector3D ();
 		
 		//velocity//////////////////////////////////////////////dx,dy,dz
-		private var _velocity:Vector3D = new Vector3D ();
-		public function get velocity():Vector3D{	return _velocity;}
-		public function set velocity(value:Vector3D):void {	_velocity = value; }
+		public var velocity:Vector3D = new Vector3D ();
 		
 		//accleration//////////////////////////////////////////////ddx,ddy,ddz
-		private var _acceleration:Vector3D = new Vector3D ();
-		public function get acceleration():Vector3D{	return _acceleration;}
-		public function set acceleration(value:Vector3D):void {	_acceleration = value; }
+		public var acceleration:Vector3D = new Vector3D ();
 		
 		//jolt//////////////////////////////////////////////ddx,ddy,ddz
-		private var _jolt:Vector3D = new Vector3D ();
-		public function get jolt():Vector3D{	return _jolt;}
-		public function set jolt(value:Vector3D):void {	_jolt = value; }
+		public var jolt:Vector3D = new Vector3D ();
 
 		//width
-		private var _width:Number = 0;
-		public function get width():Number{	return _width;}
-		public function set width(value:Number):void {	_width = value; }
+		public var width:Number = 0;
+
 		//length
-		private var _length:Number = 0;
-		public function get length():Number{	return _length;}
-		public function set length(value:Number):void {	_length = value; }
+		public var length:Number = 0;
 		
 		//rotation/////////////////////////////////////////////x,y,x
-		private var _rotation:Matrix = new Matrix ();
-		public function get rotation():Matrix{	return _rotation;}
-		public function set rotation(value:Matrix):void {	_rotation = value; }
-
+		public var rotation:Matrix = new Matrix ();
 	}
 }
