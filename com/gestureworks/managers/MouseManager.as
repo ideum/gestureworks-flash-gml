@@ -35,7 +35,6 @@ package com.gestureworks.managers
 		private static var allowMouseStartDrag:Boolean = false;
 		private static var circleGraphics:Array = [];
 		
-		
 		/**
 		 * Sets the simulator graphic color.
 		 * @default 0xFFAE1F
@@ -74,8 +73,8 @@ package com.gestureworks.managers
 			circleGraphics = [];
 		}
 		
-		private static function onMouseDown(e:MouseEvent):void {
-			
+		private static function onMouseDown(e:MouseEvent):void 
+		{	
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);							
 			
