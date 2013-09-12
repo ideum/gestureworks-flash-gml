@@ -45,13 +45,17 @@ package com.gestureworks.managers
 		private var version:TextField;
 		private var initialized:Boolean = false;
 		private var openedURL:Boolean = false;
-
+		private var txt:TextField;				
+		private var timerTxt:TextField;	
+		private var textString:String = "Gestureworks Trial Mode: ";
+		private var tFormat:TextFormat;
+		private var ttText:Sprite;
+		private var trialTimer:Timer;
+		
 		public function ModeManager()
 		{
 			super();
-			
 			if (isOE) isT = false;
-			
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -95,10 +99,6 @@ package com.gestureworks.managers
 			ObjectManager.gw_public::initialize();
 			EnterFrameManager.gw_public::initialize();
 			
-			// add auxilary devices in the GestureworksCore setters, so everything isn't turned on
-			//MotionManager.gw_public::initialize();
-			//SensorManager.gw_public::initialize();	
-			
 			initialized = true;
 		}		
 		
@@ -138,7 +138,6 @@ package com.gestureworks.managers
 			if (parent && parent.contains(this))
 				parent.removeChild(this);			
 		}
-
 		
 		private function onInvalidRemove(event:Event):void
 		{
@@ -159,13 +158,10 @@ package com.gestureworks.managers
 		{
 			TouchManager.gw_public::deInitialize();
 			openWebsite();
-			//throw new Error("Gestureworks Flash Trial has expired");
+			throw new Error("Gestureworks Flash Trial has expired");
 		}
 		
-		
-		
-		// gw splash 
-		public function createSplashTxt(txt:String, size:Number=15, color:uint=0x000000, spacing:int=0, font:String="Arial"):TextField
+		private function createSplashTxt(txt:String, size:Number=15, color:uint=0x000000, spacing:int=0, font:String="Arial"):TextField
 		{			
 			var textFormat:TextFormat = new TextFormat;
 			textFormat.size = size;
@@ -193,16 +189,7 @@ package com.gestureworks.managers
 			navigateToURL(request, "_blank");
 			openedURL = true;
 		}
-		
-		
-		// trial timer
-		private var txt:TextField;				
-		private var timerTxt:TextField;	
-		private var textString:String = "Gestureworks Trial Mode: ";
-		private var tFormat:TextFormat;
-		private var ttText:Sprite;
-		private var trialTimer:Timer;
-		
+				
 		private function createTrialTimer():void
 		{			
 			timerTxt = new TextField;
@@ -262,12 +249,9 @@ package com.gestureworks.managers
 		private function doubleDigitFormat(num:uint):String
 		{
 			if (num < 10) 
-			{
 				return ("0" + num);
-			}
 			return String(num);
 		}	
-		
 		
 	}
 }
