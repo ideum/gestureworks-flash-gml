@@ -32,7 +32,7 @@ package com.gestureworks.objects
 		/////////////////////////////////////////////////////////////////////////////////////
 		// VECTOR
 		// property var array
-		public var property_vars():Array;
+		public var property_vars:Array = new Array();
 	
 		// property type
 		public var property_type:String;
@@ -93,13 +93,13 @@ package com.gestureworks.objects
 		// value filter
 		//////////////////////////////////////////////////////////
 		// boundaryOn---------------------
-		private var boundary_filter:Boolean = false;
+		public var boundary_filter:Boolean = false;
 
 		// boundary_max ---------------------
-		private var boundary_max:Number = 100;
+		public var boundary_max:Number = 100;
 
 		// boundary_min ---------------------
-		private var boundary_min:Number = 0;
+		public var boundary_min:Number = 0;
 		
 		
 		////////////////////////////////////////////////////////

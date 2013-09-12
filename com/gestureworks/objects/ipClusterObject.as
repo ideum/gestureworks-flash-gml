@@ -215,8 +215,6 @@ package com.gestureworks.objects
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
 		public var handList:Vector.<HandObject> = new Vector.<HandObject>;
-		public function get handList():Vector.<HandObject>{return _handList;}
-		public function set handList(value:Vector.<HandObject>):void{_handList = value;}
 			/// INSIDE 3D HAND Object
 				//--width
 				//--length
