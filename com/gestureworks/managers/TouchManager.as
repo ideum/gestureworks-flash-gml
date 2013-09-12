@@ -77,7 +77,7 @@ package com.gestureworks.managers
 			if (GestureWorks.activeNativeTouch) {			
 				
 				//DRIVES HIT TESTING
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown);
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				
 				//DRIVES UPDATES ON POINT LIFETIME
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchUp);
@@ -98,7 +98,7 @@ package com.gestureworks.managers
 		
 		gw_public static function deInitialize():void
 		{
-			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchDown);
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchUp);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onTouchMove);
 		}		
@@ -117,10 +117,18 @@ package com.gestureworks.managers
 		} 
 		
 		// registers touch point via touchSprite
-		gw_public static function registerTouchPoint(event:TouchEvent):void
+		private static function registerTouchPoint(event:TouchEvent):void
 		{
 			//FIX CELAN UP REFERENCE 
 			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
+		}
+		
+		/**
+		 * Convert TouchEvent to GWTouchEvent
+		 * @param	event
+		 */
+		private static function onTouchBegin(event:TouchEvent):void{
+			onTouchDown(new GWTouchEvent(event));
 		}
 		
 		/**
@@ -129,11 +137,13 @@ package com.gestureworks.managers
 		 * @param	event
 		 * @param	downTarget
 		 */
-		public static function onTouchDown(event:TouchEvent, downTarget:*=null):void
+		public static function onTouchDown(event:GWTouchEvent, downTarget:*=null):void
 		{
 			if (event.eventPhase == 3) { //not stage
 				
 				if ((event.target is TouchSprite || event.target is TouchMovieClip) && event.target.activated) {
+					
+					if (duplicateDeviceInput(event)) return;
 					
 					// if target gets passed it takes precendence, otherwise try to find it
 					// currently target gets passed in as argument for our global hit test
@@ -171,6 +181,21 @@ package com.gestureworks.managers
 					}	
 				}					
 			}
+		}
+		
+		private static var input1:GWTouchEvent;
+		/**
+		 * Prioritizes native touch input over mouse input from the touch screen. Processing
+		 * both inputs from the same device produces undesired results. Assumes touch events
+		 * will precede mouse events.
+		 * @param	event
+		 * @return
+		 */
+		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
+			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
+				return true;
+			input1 = event;
+			return false;
 		}
 		
 		/**
@@ -216,16 +241,9 @@ package com.gestureworks.managers
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
-				var register:Boolean;
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
-				register = target.localModes ? target.nativeTouch : GestureWorks.activeNativeTouch;		
-				if (register && target.registerPoints)
-					TouchManager.gw_public::registerTouchPoint(event);
-				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				register = target.localModes ? target.simulator : GestureWorks.activeSim;		
-				if (register && target.registerPoints) 
-					MouseManager.gw_public::registerMousePoint(event);
-				
+				if(target.registerPoints)
+					registerTouchPoint(event);
+
 				// add touch down to touch object gesture event timeline
 				if((target.tiO)&&(target.tiO.timelineOn)&&(target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
 

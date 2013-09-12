@@ -38,6 +38,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
@@ -1193,6 +1194,18 @@ package com.gestureworks.core
 		}
 		
 		/**
+		 * Overrides dispatch event to deconlfict duplicate device input 
+		 * @param	event
+		 * @return
+		 */
+		override public function dispatchEvent(event:Event):Boolean 
+		{
+			if (event is GWTouchEvent && duplicateDeviceInput(GWTouchEvent(event)))
+				return false;
+			return super.dispatchEvent(event);
+		}
+		
+		/**
 		 * Registers event listeners. 
 		 * @param	type
 		 * @param	listener
@@ -1302,6 +1315,21 @@ package com.gestureworks.core
 			}			
 			return -1;
 		}
+		
+		private static var input1:GWTouchEvent;
+		/**
+		 * Prioritizes native touch input over mouse input from the touch screen. Processing
+		 * both inputs from the same device produces undesired results. Assumes touch events
+		 * will precede mouse events.
+		 * @param	event
+		 * @return
+		 */
+		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
+			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
+				return true;
+			input1 = event;
+			return false;
+		}		
 		
 		/**
 		 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
