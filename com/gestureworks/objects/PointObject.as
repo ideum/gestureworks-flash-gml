@@ -110,26 +110,10 @@ package com.gestureworks.objects
 		
 		//  objectList
 		// UPDATE TO VECTOR
-		private var _objectList:Array = [];
-		/**
-		 * Returns a pointClusterList.
-		 */
-		public function get objectList():Array{	return _objectList;}
-		/**
-		 * Sets a objectList.
-		 */
-		public function set objectList(value:Array):void{	_objectList=value;}
+		public var objectList:Array = [];
 		
 		// UPDATE TO VECTOR
-		private var _clusterList:Array = [];
-		/**
-		 * Returns a pointClusterList.
-		 */
-		public function get clusterList():Array{	return _clusterList;}
-		/**
-		 * Sets a pointClusterList.
-		 */
-		public function set clusterList(value:Array):void{	_clusterList=value;}
+		public var clusterList:Array = [];
 		
 		
 		// history
