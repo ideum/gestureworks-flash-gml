@@ -130,7 +130,7 @@ package com.gestureworks.managers
 		} 
 		
 		// registers touch point via touchSprite
-		private static function registerTouchPoint(event:TouchEvent):void
+		private static function registerTouchPoint(event:GWTouchEvent):void
 		{
 			//FIX CELAN UP REFERENCE 
 			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
@@ -312,7 +312,7 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function propagatePoint(target:ITouchObject, event:TouchEvent):void {
+		private static function propagatePoint(target:ITouchObject, event:GWTouchEvent):void {
 			if (!target)
 				return;
 			
@@ -329,7 +329,7 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function assignPoint(target:ITouchObject, event:TouchEvent):void // asigns point
+		private static function assignPoint(target:ITouchObject, event:GWTouchEvent):void // asigns point
 		{		
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
@@ -376,7 +376,7 @@ package com.gestureworks.managers
 				
 		}	
 		
-		private static function assignPointClone(target:*, event:TouchEvent):void // assigns point copy
+		private static function assignPointClone(target:*, event:GWTouchEvent):void // assigns point copy
 		{
 				// assign existing point object
 				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
