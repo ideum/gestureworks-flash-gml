@@ -24,7 +24,6 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.GesturePointObject;
-	//import org.openzoom.flash.viewport.controllers.ViewportControllerBase;
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
@@ -185,7 +184,7 @@ package com.gestureworks.analysis
 			////////////////////////////////////
 			cO.orient_dx = 0;
 			cO.orient_dy = 0;
-			//cO.orient_dz = 0;//-3D
+			cO.orient_dz = 0;//-3D
 			cO.pivot_dtheta = 0;
 		
 			/////////////////////////
