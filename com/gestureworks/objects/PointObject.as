@@ -35,7 +35,7 @@ package com.gestureworks.objects
 		public var y:Number=0;
 
 		// Z //-3d
-		//public var _z:Number = 0;
+		public var z:Number = 0;
 
 		
 		// width
@@ -54,7 +54,7 @@ package com.gestureworks.objects
 
 		
 		// dz
-		//public var _dz:Number = 0;
+		public var dz:Number = 0;
 
 		                                                                                                                                                                                                  
 		// DX
@@ -63,6 +63,8 @@ package com.gestureworks.objects
 		// DY
 		public var DY:Number=0;
 
+		// DZ
+		public var DZ:Number=0;		
 		
 		// frameID
 		public var frameID:int;

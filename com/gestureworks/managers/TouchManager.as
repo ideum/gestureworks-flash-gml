@@ -60,8 +60,8 @@ package com.gestureworks.managers
 	public class TouchManager
 	{
 		public static var points:Dictionary = new Dictionary();
-		public static var touchObjects:Dictionary = new Dictionary();
-		
+		public static var touchObjects:Dictionary = new Dictionary();	
+		private static var pointObject:PointObject;		
 		private static var gms:*;
 		
 		// initializes touchManager
@@ -117,7 +117,7 @@ package com.gestureworks.managers
 		} 
 		
 		// registers touch point via touchSprite
-		private static function registerTouchPoint(event:TouchEvent):void
+		private static function registerTouchPoint(event:GWTouchEvent):void
 		{
 			//FIX CELAN UP REFERENCE 
 			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
@@ -203,7 +203,7 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function propagatePoint(target:*, event:TouchEvent):void {
+		private static function propagatePoint(target:*, event:GWTouchEvent):void {
 			if (!target)
 				return;
 			
@@ -218,7 +218,7 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function assignPoint(target:*, event:TouchEvent):void // asigns point
+		private static function assignPoint(target:*, event:GWTouchEvent):void // asigns point
 		{		
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
@@ -227,6 +227,7 @@ package com.gestureworks.managers
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
 				pointObject.y = event.stageY; 
+				pointObject.z = event.stageZ; 
 				pointObject.objectList.push(target); // seeds cluster/touch object list
 				
 				//ADD TO LOCAL POINT LIST
@@ -264,7 +265,7 @@ package com.gestureworks.managers
 				
 		}	
 		
-		private static function assignPointClone(target:*, event:TouchEvent):void // assigns point copy
+		private static function assignPointClone(target:*, event:GWTouchEvent):void // assigns point copy
 		{
 				// assign existing point object
 				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
@@ -363,9 +364,7 @@ package com.gestureworks.managers
 			}
 		}
 		
-		
-		private static var pointObject:PointObject;
-		
+				
 		/**
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
@@ -388,6 +387,7 @@ package com.gestureworks.managers
 					// UPDATE POINT POSITIONS
 					pointObject.y = event.stageY;
 					pointObject.x = event.stageX;
+					pointObject.z = event.stageZ;
 					pointObject.moveCount++;
 					
 					// UPDATE POINT HISTORY 

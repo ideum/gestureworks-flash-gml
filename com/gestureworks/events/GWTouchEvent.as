@@ -129,6 +129,10 @@ package com.gestureworks.events
 		public function set stageY(v:Number):void { _stageY = v;}
 		override public function get stageY():Number { return _stageY; }
 		
+		private var _stageZ:Number;
+		public function set stageZ(v:Number):void { _stageZ = v;}
+		public function get stageZ():Number { return _stageZ; }		
+		
 		private var _source:String;
 		/**
 		 * The derrived event type
