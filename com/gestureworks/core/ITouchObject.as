@@ -1,6 +1,5 @@
 package com.gestureworks.core 
 {
-	import away3d.library.utils.IDUtil;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
@@ -8,8 +7,6 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	import flash.display.DisplayObjectContainer;
-	import flash.display.IBitmapDrawable;
-	import flash.display.Sprite;
 	import flash.events.IEventDispatcher;
 	/**
 	 * Implements touch object base classes (TouchSprite and TouchMovieClip)
