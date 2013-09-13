@@ -528,6 +528,7 @@ package com.gestureworks.core
 
 										g.data.x = tcO.x;
 										g.data.y = tcO.y;
+										g.data.z = tcO.z;
 										//g.data.n = tpn;
 										
 										//////////////////////////////////////////////////////////////////

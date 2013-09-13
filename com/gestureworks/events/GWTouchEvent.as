@@ -121,15 +121,15 @@ package com.gestureworks.events
 		public function set type(v:String):void { _type = v; }
 		override public function get type():String { return _type; }
 			
-		private var _stageX:Number;
+		private var _stageX:Number=0;
 		public function set stageX(v:Number):void { _stageX = v;}
 		override public function get stageX():Number { return _stageX; }
 		
-		private var _stageY:Number;
+		private var _stageY:Number=0;
 		public function set stageY(v:Number):void { _stageY = v;}
 		override public function get stageY():Number { return _stageY; }
 		
-		private var _stageZ:Number;
+		private var _stageZ:Number=0;
 		public function set stageZ(v:Number):void { _stageZ = v;}
 		public function get stageZ():Number { return _stageZ; }		
 		

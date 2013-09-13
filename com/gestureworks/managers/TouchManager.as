@@ -140,8 +140,8 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onTouchBegin(event:TouchEvent):void{
-			onTouchDown(new GWTouchEvent(event));
+		private static function onTouchBegin(event:TouchEvent):void {
+				onTouchDown(new GWTouchEvent(event));
 		}
 		
 		/**
@@ -150,47 +150,50 @@ package com.gestureworks.managers
 		 * @param	event
 		 * @param	downTarget
 		 */
-		public static function onTouchDown(event:GWTouchEvent, downTarget:*=null):void
+		public static function onTouchDown(event:GWTouchEvent, downTarget:*=null, overrideRegisterPoints:Boolean=false):void
 		{
 			if (event.eventPhase == 3) { //not stage
 
 				if (event.target is ITouchObject && event.target.activated) {
 					
-					if (duplicateDeviceInput(event)) return;
+					if ((ITouchObject(event.target).registerPoints) || overrideRegisterPoints) {
 					
-					// if target gets passed it takes precendence, otherwise try to find it
-					// currently target gets passed in as argument for our global hit test
-					// if no target is found then bail
-					if (!downTarget)
-						downTarget = event.target; // object that got hit, used for our non-tuio gesture events
-					if (!downTarget)
-						return;
-								
-					if (downTarget.targetParent && downTarget.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
-							assignPoint(downTarget.parent, event);
-					}
-					else if (downTarget.targetObject && downTarget.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
-					{							
-						assignPoint(downTarget.targetObject, event);
-						downTarget.targetList[j].broadcastTarget = true;
-					}
-					else if (downTarget.targetList[0] is ITouchObject)
-					{							
-						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						assignPoint(downTarget, event);
+						if (duplicateDeviceInput(event)) return;
 						
-						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-						for (var j:uint = 0; j < downTarget.targetList.length; j++) 
-						{
-							assignPointClone(downTarget.targetList[j], event);
+						// if target gets passed it takes precendence, otherwise try to find it
+						// currently target gets passed in as argument for our global hit test
+						// if no target is found then bail
+						if (!downTarget)
+							downTarget = event.target; // object that got hit, used for our non-tuio gesture events
+						if (!downTarget)
+							return;
+									
+						if (downTarget.targetParent && downTarget.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
+								assignPoint(downTarget.parent, event);
+						}
+						else if (downTarget.targetObject && downTarget.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
+						{							
+							assignPoint(downTarget.targetObject, event);
 							downTarget.targetList[j].broadcastTarget = true;
 						}
+						else if (downTarget.targetList[0] is ITouchObject)
+						{							
+							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
+							assignPoint(downTarget, event);
+							
+							//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
+							for (var j:uint = 0; j < downTarget.targetList.length; j++) 
+							{
+								assignPointClone(downTarget.targetList[j], event);
+								downTarget.targetList[j].broadcastTarget = true;
+							}
+						}
+						else {
+							 assignPoint(downTarget, event);
+							 if(downTarget.parent is ITouchObject)
+								propagatePoint(ITouchObject(downTarget.parent), event);
+						}
 					}
-					else {
-						 assignPoint(downTarget, event);
-						 if(downTarget.parent is ITouchObject)
-							propagatePoint(ITouchObject(downTarget.parent), event);
-					}	
 				}					
 			}
 		}
