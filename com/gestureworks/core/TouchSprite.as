@@ -16,9 +16,7 @@
 package com.gestureworks.core
 {
 	
-	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchPipeline;
@@ -27,8 +25,6 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.ClusterHistories;
-	import com.gestureworks.managers.MouseManager;
-	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -39,11 +35,8 @@ package com.gestureworks.core
 	import com.gestureworks.utils.GestureParser;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
-	import org.tuio.TuioTouchEvent;
 	
 	
 	
@@ -114,7 +107,7 @@ package com.gestureworks.core
 		public function set activated(a:Boolean):void {
 			if (!_activated && a) {
 				_activated = true;
-				preinitBase();
+				TouchManager.preinitBase(this);
 			}
 		}
 		
@@ -167,71 +160,6 @@ package com.gestureworks.core
 			_tuio = t;
 			updateListeners();
 		}				
-		  
-		// initializers
-         private function preinitBase():void 
-         {
-			//trace("create touchsprite base");
-					addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
-					updateListeners();				
-									
-					// Register touchObject with object manager, return object id
-					_touchObjectID = ObjectManager.registerTouchObject(this);
-					GestureGlobals.gw_public::touchObjects[_touchObjectID] = this;
-					
-					// create generic analysis engine
-					//if (GestureGlobals.analyzeCluster)
-						//{
-						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW CLUSTER OBJECT FOR THE TOUCHSPRITE
-						// HANDLES CORE GEOMETRIC RAW PROPERTIES OF THE CLUSTER
-						/////////////////////////////////////////////////////////////////////////
-						cO = new ClusterObject(); // touch cluster 2d
-							cO.id = touchObjectID;
-						GestureGlobals.gw_public::clusters[_touchObjectID] = cO;
-						
-						// create new stroke object
-						sO = new StrokeObject();
-							sO.id = touchObjectID;
-						
-						/////////////////////////////////////////////////////////////////////////
-						// CREATERS A NEW GESTURE OBJECT
-						// A VEHICLE TO CONTAIN CORE GESTURE VALUES
-						/////////////////////////////////////////////////////////////////////////
-						gO = new GestureListObject();
-							gO.id = touchObjectID;
-						GestureGlobals.gw_public::gestures[_touchObjectID] = gO;
-						
-						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW TRANSFORM OBJECT
-						// ACTS AS A VIRTUAL DISPLAY OBJECT CONTAINS ALL THE MODIFIED AND MAPPED
-						// DISPLAY PROPERTIES TO BE TRANSFERED TO THE TOUCHSPRITE
-						/////////////////////////////////////////////////////////////////////////
-						trO = new TransformObject();
-							trO.id = touchObjectID;
-						GestureGlobals.gw_public::transforms[_touchObjectID] = trO;
-						
-						/////////////////////////////////////////////////////////////////////////
-						// CREATES A NEW TIMELINE OBJECT 
-						// CONTAINS A HISTORY OF ALL TOUCH EVENTS, CLUSTER EVENTS, GESTURE EVENTS 
-						// AND TRANSFORM EVENTS THAT OCCUR ON THE TOUCHSPRITE
-						/////////////////////////////////////////////////////////////////////////
-						tiO = new TimelineObject();
-							tiO.id = touchObjectID;
-							tiO.timelineOn = false; // activates timline manager
-							tiO.pointEvents = false; // pushes point events into timline
-							tiO.clusterEvents = false; // pushes cluster events into timeline
-							tiO.gestureEvents = false; // pushes gesture events into timleine
-							tiO.transformEvents = false; // pushes transform events into timeline
-						GestureGlobals.gw_public::timelines[_touchObjectID] = tiO;
-						
-					//}
-					
-					// bypass gml requirement for testing
-					initBase();
-					if (debugDisplay)
-						visualizer.initDebug();
-		}
 		
 		/**
 		 * Re-registers event listeners with updated mode settings
@@ -254,15 +182,6 @@ package com.gestureworks.core
 					}
 				}
 			}
-		}
-		
-		 private function initBase():void 
-		{
-							tc = new TouchCluster(touchObjectID);
-							tp = new TouchPipeline(touchObjectID);
-		if (gestureEvents)	tg = new TouchGesture(touchObjectID);
-							tt = new TouchTransform(touchObjectID);
-							visualizer = new TouchVisualizer(touchObjectID);
 		}
 		
 		////////////////////////////////////////////////////////////////
@@ -470,8 +389,7 @@ package com.gestureworks.core
 		{
 			_targetList = value;
 		}
-		
-		
+				
 		/**
 		 * @private
 		 */
@@ -485,180 +403,6 @@ package com.gestureworks.core
 		{
 			_targeting = value;
 		}
-		
-		/**
-		 * @private
-		 */
-		
-		/**
-		 * decides how to assign the captured touch point to a cluster
-		 * can pass to parent, an explicit target, an explicit list or 
-		 * targets or a passed to any touch object in the local display stack.
-		 */
-		 
-		// PLEASE LEAVE THIS AS A PUBLIC FUNCTION...  It is required for TUIO support !!!
-		public function onTouchDown(event:TouchEvent, downTarget:*=null):void
-		{			
-				//////////////////
-				// new stuff
-				//////////////////
-				
-				// if target gets passed it takes precendence, otherwise try to find it
-				// currently target gets passed in as argument for our global hit test
-				// if no target is found then bail
-				if (!downTarget)
-					downTarget = event.target; // object that got hit, used for our non-tuio gesture events
-				if (!downTarget)
-					return;
-					
-				var parent:* = downTarget.parent;	
-				
-				//trace("target: ", target, "parent: ", target.parent,clusterBubbling)
-				//trace(target, event.stageX, event.localX);
-				//trace("event targets",event.target,event.currentTarget, event.eventPhase)
-				
-				///////////////
-				// native touch
-				///////////////
-				if (1)
-				// UPDATE: replaced the first condition (above) so everything that gets put through these conditions.
-				// -Charles (5/16/2012)
-				{					
-						if (targetParent) { //LEGACY SUPPORT
-							if ((downTarget is TouchSprite) || (downTarget is TouchMovieClip)) 
-							{								
-								//ASSIGN PRIMARY CLUSTER TO PARENT
-								parent.assignPoint(event);
-								//event.stopPropagation(); // allows touch down and tap
-							}
-						}
-						else if ((_targetObject is TouchSprite)||(_targetObject is TouchMovieClip))
-						{							
-							// ASSIGN PRIMARY CLUSTER TO TARGET
-							_targetObject.assignPoint(event);
-							_targetList[j].broadcastTarget = true;
-						}
-						
-						else if ((_targetList[0] is TouchSprite)||(_targetList[0] is TouchMovieClip))
-						{							
-							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-							assignPoint(event);
-							
-							//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-							for (var j:uint = 0; j < _targetList.length; j++) 
-							{
-								_targetList[j].assignPointClone(event);
-								_targetList[j].broadcastTarget = true;
-							}
-						}
-						
-						else if (_clusterBubbling)
-						{	
-							//trace(event.eventPhase)
-							if (3 == event.eventPhase) { // bubbling phase
-								
-								if (!((event.target is TouchSprite)||(event.target is TouchMovieClip)))//
-									assignPoint(event);
-								else	
-									assignPointClone(event);
-							}
-							else if (2 == event.eventPhase) { //targeting phase
-								assignPoint(event);
-							 }
-						}
-						else {
-							// added the !mouseChildren in order to simluator to work properly -charles (5/17/2012)
-							if (2 == event.eventPhase && !mouseChildren) { //targeting phase
-								assignPoint(event);
-								//event.stopPropagation(); // allows touch down and tap
-							 }
-						}	
-				}
-				///////////////////////////////////////
-				// mouse events - no longer used
-				/////////////////////////////////////////
-				else {
-					assignPoint(event);
-					return										
-				}
-		}
-		
-
-		/**
-		 * @private
-		 */
-		
-		 /**
-		 * registers assigned touch point globaly and to relevant local clusters 
-		 */
-		private function assignPoint(event:TouchEvent):void // asigns point
-		{			
-			// create new point object
-			var pointObject:PointObject  = new PointObject();	
-				pointObject.object = this; // sets primary touch object/cluster
-				pointObject.id = pointCount; // NEEDED FOR THUMBID
-				pointObject.touchPointID = event.touchPointID;
-				pointObject.x = event.stageX;
-				pointObject.y = event.stageY; 
-				pointObject.objectList.push(this); // seeds cluster/touch object list
-				
-				//ADD TO LOCAL POINT LIST
-				_pointArray.push(pointObject);
-				
-				//UPDATE LOCAL CLUSTER OBJECT
-				cO.pointArray = _pointArray;
-								
-				
-				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
-				pointCount++;
-				
-				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
-				
-				var register:Boolean;
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER				
-				register = localModes ? nativeTouch : GestureWorks.activeNativeTouch;		
-				if (register && registerPoints)
-					TouchManager.gw_public::registerTouchPoint(event);
-				// REGISTER MOUSE POINT WITH MOUSE MANAGER
-				register = localModes ? simulator : GestureWorks.activeSim;		
-				if (register && registerPoints) 
-					MouseManager.gw_public::registerMousePoint(event);
-				
-				// add touch down to touch object gesture event timeline
-				if((tiO)&&(tiO.timelineOn)&&(tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
-
-				//trace("ts root target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
-				
-				//trace("down:", event.touchPointID, cO.pointArray.length, this._pointArray.length )
-				
-				
-		}
-		
-		private function assignPointClone(event:TouchEvent):void // assigns point copy
-		{
-				// assign existing point object
-				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
-					// add this touch object to touchobject list on point
-					pointObject.touchPointID = event.touchPointID;//-??
-					pointObject.objectList.push(this);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
-	
-				//ADD TO LOCAL POINT LIST
-				_pointArray.push(pointObject);
-				
-				//UPDATE LOCAL CLUSTER OBJECT
-				//touch object point list and cluster point list should be consolodated
-				cO.pointArray = _pointArray;
-				
-				//UPDATE POINT LOCAL COUNT
-				pointCount++;
-				
-				// add touch down to touch object gesture event timeline
-				if ((tiO)&&(tiO.timelineOn) && (tiO.pointEvents)) tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
-				
-				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
-		}
-		////////////////////////////////////////////////////////////////////////////
 		
 		/**
 		 * @private
@@ -1306,7 +1050,7 @@ package com.gestureworks.core
 		if(visualizer) visualizer.updateDebugDisplay()
 	}
 	
-	private function onGestureListUpdate(event:GWGestureEvent):void  
+	public function onGestureListUpdate(event:GWGestureEvent):void  
 		{
 			//trace("gesturelist update");
 			if (tg) tg.initTimeline();
