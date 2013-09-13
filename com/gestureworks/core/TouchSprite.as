@@ -24,7 +24,6 @@ package com.gestureworks.core
 	import com.gestureworks.core.TouchVisualizer;
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
-	import com.gestureworks.managers.ClusterHistories;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -32,7 +31,6 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
-	import com.gestureworks.utils.GestureParser;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -272,10 +270,7 @@ package com.gestureworks.core
 		 * @private
 		 */
 		private var _gestureList:Object = new Object();
-		public function get gestureList():Object
-		{
-			return _gestureList;
-		}
+		public function get gestureList():Object{ return _gestureList;}
 		public function set gestureList(value:Object):void
 		{
 			activated = true;
@@ -291,7 +286,7 @@ package com.gestureworks.core
 			// Convert GML Into Property Objects That describe how to match,analyze, 
 			// process and map point/clusterobject properties
 			/////////////////////////////////////////////////////////////////////
-			callLocalGestureParser();
+			TouchManager.callLocalGestureParser(this);
 			
 			
 			//////////////////////////////////////////////////////////////////////////
@@ -299,26 +294,7 @@ package com.gestureworks.core
 			/////////////////////////////////////////////////////////////////////////
 			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 		}
-		/**
-		 * @private
-		 */
-		private function callLocalGestureParser():void
-		{
-			//trace("call local parser touch sprite", );
-			
-			var gp:GestureParser = new GestureParser();
-				gp.gestureList = gestureList;
-				gp.parse(touchObjectID);
-				
-				if (trace_debug_mode) gp.traceGesturePropertyList();
-				
-			//tp re init vector metric and get new stroke lib for comparison
-			if (tc) tc.initClusterAnalysisConfig();
-		}
 		
-		/**
-		 * @private
-		 */
 		private var _touchChildren:Boolean = false;
 		/**
 		 * Allows touch events to be passed down to child display object. Has the same function as MouseChildren.
@@ -327,14 +303,9 @@ package com.gestureworks.core
 		public function set touchChildren(value:Boolean):void
 		{
 			_touchChildren = value;
-			// reset bubling on touch listener
-			if (value) mouseChildren = true;
-			else mouseChildren = false;
+			mouseChildren = value;
 		}
 		
-		/**
-		 * @private
-		 */
 		private var _clusterBubbling:Boolean = false;
 		/** 
 		 * Allows touch points from a childclusters to copy into container touch objects
@@ -518,14 +489,8 @@ package com.gestureworks.core
 		
 		//gestures tweening
 		public var _gestureTweenOn:Boolean = false;
-		public function get gestureTweenOn():Boolean
-		{
-			return _gestureTweenOn;
-		}
-		public function set gestureTweenOn(value:Boolean):void
-		{
-			_gestureTweenOn = value;
-		}
+		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }
+		public function set gestureTweenOn(value:Boolean):void { _gestureTweenOn = value; }
 		
 		public function updateGesturePipeline():void
 		{
@@ -1106,18 +1071,7 @@ package com.gestureworks.core
 		
 		public function updateTObjProcessing():void
 		{
-			
-			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
-			
-				if (tc) tc.updateClusterAnalysis();
-				if (tp) tp.processPipeline();
-				if (tg) tg.manageGestureEventDispatch();
-				if (tt){
-					tt.transformManager();
-					tt.updateLocalProperties();
-				}
-				
-				ClusterHistories.historyQueue(_touchObjectID);
+			TouchManager.updateTObjProcessing(this);
 		}
 		
 		/**

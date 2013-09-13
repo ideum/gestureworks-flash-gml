@@ -29,6 +29,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.utils.GestureParser;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -478,6 +479,37 @@ package com.gestureworks.managers
 		if (obj.gestureEvents)	obj.tg = new TouchGesture(obj.touchObjectID);
 							obj.tt = new TouchTransform(obj.touchObjectID);
 							obj.visualizer = new TouchVisualizer(obj.touchObjectID);
+		}	
+		
+		public static function callLocalGestureParser(obj:TouchSprite):void
+		{
+			//trace("call local parser touch sprite", );
+			
+			var gp:GestureParser = new GestureParser(); 
+				gp.gestureList = obj.gestureList;
+				gp.parse(obj.touchObjectID);
+				
+				if (obj.traceDebugModeOn) gp.traceGesturePropertyList();
+				
+			//tp re init vector metric and get new stroke lib for comparison
+			if (obj.tc) obj.tc.initClusterAnalysisConfig();
+		}	
+		
+		
+		public static function updateTObjProcessing(obj:TouchSprite):void
+		{
+			
+			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
+			
+				if (obj.tc) obj.tc.updateClusterAnalysis();
+				if (obj.tp) obj.tp.processPipeline();
+				if (obj.tg) obj.tg.manageGestureEventDispatch();
+				if (obj.tt){
+					obj.tt.transformManager();
+					obj.tt.updateLocalProperties();
+				}
+				
+				ClusterHistories.historyQueue(obj._touchObjectID);
 		}		
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
