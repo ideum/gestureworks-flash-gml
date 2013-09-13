@@ -15,9 +15,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.core.TouchCluster;
+	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchMovieClip;
+	import com.gestureworks.core.TouchPipeline;
+	import com.gestureworks.core.TouchTransform;
+	import com.gestureworks.core.TouchVisualizer;
 	import com.gestureworks.core.VirtualTouchObject;
+	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.GestureListObject;
+	import com.gestureworks.objects.StrokeObject;
+	import com.gestureworks.objects.TimelineObject;
+	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.utils.GestureParser;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -183,6 +195,102 @@ package com.gestureworks.managers
 			}
 		}
 		
+	/**
+		 * Convert TouchEvent to GWTouchEvent
+		 * @param	event
+		 */
+		private static function onTouchEnd(event:TouchEvent):void{
+			onTouchUp(new GWTouchEvent(event));
+		}		
+		
+		// stage on TOUCH_UP.
+		public static function onTouchUp(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
+		{
+			var pointObject:Object = points[event.touchPointID];
+			
+			if (pointObject) {
+				// allows bindings to work without killing global nativeTouch listeners
+				// NOTE: when enabling targeting object will have to be replaced with objectList
+				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegisterPoints) { 
+					/////////////////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////////////////////
+					// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
+					for (var j:int = 0; j < pointObject.objectList.length; j++)
+					{
+						//trace("updating targets");
+						var i:int;
+						var tO:Object = pointObject.objectList[j];
+						
+						//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
+						//trace("tsprite:",tO, "pointlist",tO.N,tO.pointArray.length, tO.pointArray);
+						
+						// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
+						//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
+						if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
+						//UPDATE DEBUG DISPLAY // clear local debug display
+						if ((tO.visualizer) && (tO.visualizer.debug_display) && (tO.cO)) 	tO.visualizer.clearDebugDisplay(); // clear display
+						
+						// analyze for taps
+						if (tO.tg) tO.tg.onTouchEnd(event);
+						
+						// REMOVE POINT FROM LOCAL LIST
+						tO.pointArray.splice(pointObject.id, 1);
+						
+						// REDUCE LOACAL POINT COUNT
+						tO.pointCount--;
+						
+						// UPDATE POINT ID 
+						for (i = 0; i < tO.pointArray.length; i++) {
+							tO.pointArray[i].id = i;
+						}
+						
+						// update broadcast state
+						if(tO.N == 0) tO.broadcastTarget = false;
+						
+						////////////////////////////////////////////////////////
+						//FORCES IMMEDIATE UPDATE ON TOUCH UP
+						//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
+						updateTouchObject(tO);
+					}
+				}
+				// DELETE FROM GLOBAL POINT LIST
+				delete points[event.touchPointID];
+			}
+		}
+		
+		
+		/**
+		 * Convert TouchEvent to GWTouchEvent
+		 * @param	event
+		 */
+		private static function onMove(event:TouchEvent):void{
+			onTouchMove(new GWTouchEvent(event));
+		}			
+	
+		private static var pointObject:PointObject;		
+		// the Stage TOUCH_MOVE event.	
+		// DRIVES POINT PATH UPDATES
+		public static function onTouchMove(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
+		{	
+			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
+			pointObject = points[event.touchPointID];
+			
+			if (pointObject) {
+				// allows bindings to work without killing global nativeTouch listeners
+				// NOTE: when enabling targeting object will have to be replaced with objectList
+				if (pointObject.object["registerPoints"] || overrideRegisterPoints) { 
+					// UPDATE POINT POSITIONS
+					pointObject.y = event.stageY;
+					pointObject.x = event.stageX;
+					pointObject.moveCount++;
+					
+					// UPDATE POINT HISTORY 
+					// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
+					PointHistories.historyQueue(event);
+				}
+			}
+		}		
+		
 		private static var input1:GWTouchEvent;
 		/**
 		 * Prioritizes native touch input over mouse input from the touch screen. Processing
@@ -301,69 +409,80 @@ package com.gestureworks.managers
 				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}	
 		
-		/**
-		 * Convert TouchEvent to GWTouchEvent
-		 * @param	event
-		 */
-		private static function onTouchEnd(event:TouchEvent):void{
-			onTouchUp(new GWTouchEvent(event));
-		}		
-		
-		// stage on TOUCH_UP.
-		public static function onTouchUp(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
-		{
-			var pointObject:Object = points[event.touchPointID];
+		public static function preinitBase(obj:TouchSprite):void 
+        {
+			//trace("create touchsprite base"); 
+			obj.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, obj.onGestureListUpdate); 
+			obj.updateListeners();				
+							
+			// Register touchObject with object manager, return object id
+			obj._touchObjectID = ObjectManager.registerTouchObject(obj);
+			GestureGlobals.gw_public::touchObjects[obj._touchObjectID] = obj;
 			
-			if (pointObject) {
-				// allows bindings to work without killing global nativeTouch listeners
-				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegisterPoints) { 
-					/////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////////////////////
-					// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
-					for (var j:int = 0; j < pointObject.objectList.length; j++)
-					{
-						//trace("updating targets");
-						var i:int;
-						var tO:Object = pointObject.objectList[j];
-						
-						//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
-						//trace("tsprite:",tO, "pointlist",tO.N,tO.pointArray.length, tO.pointArray);
-						
-						// UPDATE EVENT TIMELINES // push touch up event to touch object timeline
-						//if ((tO.tiO.timelineOn) && (tO.tiO.pointEvents)) 
-						if(tO.tiO) tO.tiO.frame.pointEventArray.push(event);// pushed touch up events into the timeline object
-						//UPDATE DEBUG DISPLAY // clear local debug display
-						if ((tO.visualizer) && (tO.visualizer.debug_display) && (tO.cO)) 	tO.visualizer.clearDebugDisplay(); // clear display
-						
-						// analyze for taps
-						if (tO.tg) tO.tg.onTouchEnd(event);
-						
-						// REMOVE POINT FROM LOCAL LIST
-						tO.pointArray.splice(pointObject.id, 1);
-						
-						// REDUCE LOACAL POINT COUNT
-						tO.pointCount--;
-						
-						// UPDATE POINT ID 
-						for (i = 0; i < tO.pointArray.length; i++) {
-							tO.pointArray[i].id = i;
-						}
-						
-						// update broadcast state
-						if(tO.N == 0) tO.broadcastTarget = false;
-						
-						////////////////////////////////////////////////////////
-						//FORCES IMMEDIATE UPDATE ON TOUCH UP
-						//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
-						updateTouchObject(tO);
-					}
-				}
-				// DELETE FROM GLOBAL POINT LIST
-				delete points[event.touchPointID];
-			}
-		}
+			// create generic analysis engine
+			//if (GestureGlobals.analyzeCluster)
+				//{
+				/////////////////////////////////////////////////////////////////////////
+				// CREATES A NEW CLUSTER OBJECT FOR THE TOUCHSPRITE
+				// HANDLES CORE GEOMETRIC RAW PROPERTIES OF THE CLUSTER
+				/////////////////////////////////////////////////////////////////////////
+				obj.cO = new ClusterObject(); // touch cluster 2d 
+					obj.cO.id = obj.touchObjectID; 
+				GestureGlobals.gw_public::clusters[obj._touchObjectID] = obj.cO;
+				
+				// create new stroke object
+				obj.sO = new StrokeObject(); 
+					obj.sO.id = obj.touchObjectID;
+				
+				/////////////////////////////////////////////////////////////////////////
+				// CREATERS A NEW GESTURE OBJECT
+				// A VEHICLE TO CONTAIN CORE GESTURE VALUES
+				/////////////////////////////////////////////////////////////////////////
+				obj.gO = new GestureListObject(); 
+					obj.gO.id = obj.touchObjectID;
+				GestureGlobals.gw_public::gestures[obj._touchObjectID] = obj.gO;
+				
+				/////////////////////////////////////////////////////////////////////////
+				// CREATES A NEW TRANSFORM OBJECT
+				// ACTS AS A VIRTUAL DISPLAY OBJECT CONTAINS ALL THE MODIFIED AND MAPPED
+				// DISPLAY PROPERTIES TO BE TRANSFERED TO THE TOUCHSPRITE
+				/////////////////////////////////////////////////////////////////////////
+				obj.trO = new TransformObject(); 
+					obj.trO.id = obj.touchObjectID;
+				GestureGlobals.gw_public::transforms[obj._touchObjectID] = obj.trO;
+				
+				/////////////////////////////////////////////////////////////////////////
+				// CREATES A NEW TIMELINE OBJECT 
+				// CONTAINS A HISTORY OF ALL TOUCH EVENTS, CLUSTER EVENTS, GESTURE EVENTS 
+				// AND TRANSFORM EVENTS THAT OCCUR ON THE TOUCHSPRITE
+				/////////////////////////////////////////////////////////////////////////
+				obj.tiO = new TimelineObject();  
+					obj.tiO.id = obj.touchObjectID;
+					obj.tiO.timelineOn = false; // activates timline manager
+					obj.tiO.pointEvents = false; // pushes point events into timline
+					obj.tiO.clusterEvents = false; // pushes cluster events into timeline
+					obj.tiO.gestureEvents = false; // pushes gesture events into timleine
+					obj.tiO.transformEvents = false; // pushes transform events into timeline
+				GestureGlobals.gw_public::timelines[obj._touchObjectID] = obj.tiO;
+				
+			//}
+			
+			// bypass gml requirement for testing
+			initBase(obj);
+			if (obj.debugDisplay)
+				obj.visualizer.initDebug();
+		}	
 		
+		private static function initBase(obj:TouchSprite):void 
+		{
+							obj.tc = new TouchCluster(obj.touchObjectID); 
+							obj.tp = new TouchPipeline(obj.touchObjectID);
+		if (obj.gestureEvents)	obj.tg = new TouchGesture(obj.touchObjectID);
+							obj.tt = new TouchTransform(obj.touchObjectID);
+							obj.visualizer = new TouchVisualizer(obj.touchObjectID);
+		}	
+		
+<<<<<<< HEAD
 				
 		/**
 		 * Convert TouchEvent to GWTouchEvent
@@ -393,12 +512,38 @@ package com.gestureworks.managers
 					// UPDATE POINT HISTORY 
 					// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
 					PointHistories.historyQueue(event);
+=======
+		public static function callLocalGestureParser(obj:TouchSprite):void
+		{
+			//trace("call local parser touch sprite", );
+			
+			var gp:GestureParser = new GestureParser(); 
+				gp.gestureList = obj.gestureList;
+				gp.parse(obj.touchObjectID);
+				
+				if (obj.traceDebugModeOn) gp.traceGesturePropertyList();
+				
+			//tp re init vector metric and get new stroke lib for comparison
+			if (obj.tc) obj.tc.initClusterAnalysisConfig();
+		}	
+		
+		
+		public static function updateTObjProcessing(obj:TouchSprite):void
+		{
+			
+			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
+			
+				if (obj.tc) obj.tc.updateClusterAnalysis();
+				if (obj.tp) obj.tp.processPipeline();
+				if (obj.tg) obj.tg.manageGestureEventDispatch();
+				if (obj.tt){
+					obj.tt.transformManager();
+					obj.tt.updateLocalProperties();
+>>>>>>> origin/development
 				}
-			}
-		}
-		
-		
-		
+				
+				ClusterHistories.historyQueue(obj._touchObjectID);
+		}		
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:GWEvent):void

@@ -104,6 +104,8 @@ package com.gestureworks.analysis
 			if (ts.trace_debug_mode) trace("init cluster kinemetric");
 			
 			
+			// TODO: only initialize if ts has motion 
+			
 			// init subclusters
 			cO.subClusterArray[0] = new ipClusterObject();// finger
 			cO.subClusterArray[0].type = "finger";		
@@ -481,7 +483,7 @@ package com.gestureworks.analysis
 			////////////////////////////////////
 			tcO.orient_dx = 0;
 			tcO.orient_dy = 0;
-			//cO.orient_dz = 0;//-3D
+			cO.orient_dz = 0;//-3D
 			tcO.pivot_dtheta = 0;
 		
 			/////////////////////////

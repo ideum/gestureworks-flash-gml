@@ -73,7 +73,7 @@ package com.gestureworks.core
 							////////////////////////////////////////////////////////
 							// PULL DATA FROM CLUSTER
 							gDim.gestureDelta = gDim.clusterDelta;
-							
+														
 							//gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta; // PRE FILTERED DELTA CACHE
 							//trace("push cache front pipe")
 							
@@ -330,6 +330,7 @@ package com.gestureworks.core
 						trO.orientation = cO.orientation
 						
 						
+						// TODO: Check into this, what does this mean?
 						trO.localx =100//cO.x-ts.x; 
 						trO.localy =100//cO.y - ts.y; 
 						
@@ -341,7 +342,6 @@ package com.gestureworks.core
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (!ts.disableNativeTransform)
 			{	
-			
 				for (i=0; i < gn; i++) 
 					{
 						var dn1:uint = gO.pOList[i].dList.length;
