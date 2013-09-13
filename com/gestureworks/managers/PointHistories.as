@@ -19,6 +19,7 @@ package com.gestureworks.managers
 	 * ...
 	 * @author Paul Lacey
 	 */
+	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
@@ -33,7 +34,7 @@ package com.gestureworks.managers
 		private static var currentFrameID:int;
 		private static var FrameID:int;
 		
-		public static function historyQueue(event:TouchEvent):void
+		public static function historyQueue(event:GWTouchEvent):void
 		{
 			point = GestureGlobals.gw_public::points[event.touchPointID]
 			
@@ -54,7 +55,7 @@ package com.gestureworks.managers
 	//	public static function historyObject(X:Number, Y:Number, FrameID:int, moveCount:int, event:TouchEvent, point:PointObject):Object
 		
 		///public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
-		public static function historyObject(event:TouchEvent):PointObject
+		public static function historyObject(event:GWTouchEvent):PointObject
 		{
 			//var c0:Number = 1 / moveCount;
 			point = GestureGlobals.gw_public::points[event.touchPointID];
@@ -75,10 +76,13 @@ package com.gestureworks.managers
 				
 				pt.x = event.stageX;
 				pt.y = event.stageY;
+				pt.z = event.stageZ;
 				pt.w = event.sizeX;
 				pt.h = event.sizeY;
+				//pt.l = event.sizeZ;
 				pt.dx = event.stageX - point.history[0].x;
 				pt.dy = event.stageY - point.history[0].y;
+				pt.dz = event.stageZ - point.history[0].z;
 				// NO SUB-PIXEL RESOLUTION
 				//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
 				
@@ -95,11 +99,14 @@ package com.gestureworks.managers
 				pt.frameID = currentFrameID;
 				pt.dx = 0;
 				pt.dy = 0;
+				pt.dz = 0;
 				
 				pt.x = event.stageX;
 				pt.y = event.stageY;
+				pt.z = event.stageZ;
 				pt.w = event.sizeX;
 				pt.h = event.sizeY;
+				//pt.l = event.sizeZ;
 			}
 			
 			
@@ -110,11 +117,13 @@ package com.gestureworks.managers
 			{
 				point.DX += pt.dx;
 				point.DY += pt.dy;
+				point.DZ += pt.dz;
 				//point.moveCount ++;
 			}
 			else {
 				point.DX = pt.dx;
 				point.DY = pt.dy;
+				point.DZ = pt.dz;
 				point.moveCount = 1;
 			}
 			

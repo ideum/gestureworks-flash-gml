@@ -55,6 +55,8 @@ package com.gestureworks.core
 		{
 			
 			gn = gO.pOList.length;
+			
+			//trace();
 			//trace("processing pipeline--------------------------------",gn);
 			
 			
@@ -73,6 +75,9 @@ package com.gestureworks.core
 							////////////////////////////////////////////////////////
 							// PULL DATA FROM CLUSTER
 							gDim.gestureDelta = gDim.clusterDelta;
+							
+							//trace(j, gDim.gestureDelta, gDim.clusterDelta);
+							
 														
 							//gO.pOList[i].dList[j].gestureDeltaCache = gO.pOList[i].dList[j].gestureDelta; // PRE FILTERED DELTA CACHE
 							//trace("push cache front pipe")
