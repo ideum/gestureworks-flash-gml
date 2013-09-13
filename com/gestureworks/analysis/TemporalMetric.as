@@ -75,7 +75,7 @@ package com.gestureworks.analysis
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
 			cO = ts.cO;
 			
-			if (ts.trace_debug_mode) trace("init gesture discrete analysis");
+			if (ts.traceDebugMode) trace("init gesture discrete analysis");
 			//trace(GestureGlobals.touchFrameInterval)
 		}
 		
@@ -198,7 +198,7 @@ package com.gestureworks.analysis
 		
 		public function findGestureTap(event:TouchEvent, key:int ):void // each time there is a touchEnd
 		{
-			//if (ts.trace_debug_mode) 
+			//if (ts.traceDebugMode) 
 			//trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			// CHECK GML COMPATABILITY
@@ -286,7 +286,7 @@ package com.gestureworks.analysis
 		
 		public function findGestureDoubleTap(event:GWGestureEvent,key:int):void
 		{
-			//if (ts.trace_debug_mode)
+			//if (ts.traceDebugMode)
 			//trace("find d taps---------------------------------------------------------");
 		
 				var dtap_time:int = 30//Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20frames
@@ -335,7 +335,7 @@ package com.gestureworks.analysis
 		
 		public function findGestureTripleTap(event:GWGestureEvent,key:int):void
 		{
-			if (ts.trace_debug_mode) trace("find t taps---------------------------------------------------------");
+			if (ts.traceDebugMode) trace("find t taps---------------------------------------------------------");
 		
 				var ttap_time:int = 20
 				//var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
@@ -414,7 +414,7 @@ package com.gestureworks.analysis
 		// VISUAL EVENT TIMLINE WOULD HELP
 		public function countTapEvents(key:uint):void // count taps each frame
 		{
-			//if (ts.trace_debug_mode) 
+			//if (ts.traceDebugMode) 
 			//trace("find n-taps---------------------------------------------------------",ts.gO.pOList[key].n);
 			tapEventCount = 0;
 			//var tap_countTime:int = Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001);//10
@@ -512,7 +512,7 @@ package com.gestureworks.analysis
 		
 		public function countDoubleTapEvents(key:int):void // count taps each frame
 		{
-			//if (ts.trace_debug_mode)trace("find n-dtaps---------------------------------------------------------",ts.gO.pOList[key].n);
+			//if (ts.traceDebugMode)trace("find n-dtaps---------------------------------------------------------",ts.gO.pOList[key].n);
 			
 			dtapEventCount = 0;
 			
@@ -603,7 +603,7 @@ package com.gestureworks.analysis
 		
 		public function countTripleTapEvents(key:int):void // count taps each frame
 		{
-			//if (ts.trace_debug_mode) 	trace("find n-ttaps---------------------------------------------------------",ts.gO.pOList[key].n);
+			//if (ts.traceDebugMode) 	trace("find n-ttaps---------------------------------------------------------",ts.gO.pOList[key].n);
 			
 			ttapEventCount = 0;
 			var ttap_countTime:int = ts.gO.pOList[key].dispatch_interval;		//Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001);

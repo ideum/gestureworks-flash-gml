@@ -70,7 +70,7 @@ package com.gestureworks.core
 		// initializers    
         public function initTransform():void 
         {
-			//if(trace_debug_mode) trace("create touchsprite transform");			
+			//if(traceDebugMode) trace("create touchsprite transform");			
 			affine_modifier = new Matrix();// init display object transformation operator
 			affine_modifier3D = new Matrix3D();
 			
@@ -141,7 +141,7 @@ package com.gestureworks.core
 	*/
 	public function transformManager():void 
 	{
-		//if (trace_debug_mode) trace("touch object transform");
+		//if (traceDebugMode) trace("touch object transform");
 				
 				if ((ts.N != 0)||(ts.cO.fn!=0))//
 				{
@@ -157,7 +157,7 @@ package com.gestureworks.core
 					ts.transformComplete = false;
 					ts.transformStart = true;
 					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (ts.trace_debug_mode)trace("update", ts.touchObjectID)
+					//if (ts.traceDebugMode)trace("update", ts.touchObjectID)
 				}
 				
 				else if ((ts.N == 0)&&(ts.cO.fn == 0) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) //||
@@ -172,7 +172,7 @@ package com.gestureworks.core
 					ts.transformComplete = false;
 					ts.transformStart = false;
 					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (ts.trace_debug_mode)trace("inertia", ts.touchObjectID)
+					//if (ts.traceDebugMode)trace("inertia", ts.touchObjectID)
 				}
 				
 				else if ((ts.N == 0)&&(ts.cO.fn == 0) && (!ts.gestureTweenOn)&&(!ts.transformComplete)) //||
@@ -180,7 +180,7 @@ package com.gestureworks.core
 					ts.transformComplete = true;
 					ts.transformStart = false;
 					if (ts.transformEvents) manageTransformEventDispatch();
-					//if (ts.trace_debug_mode)trace("none", ts.touchObjectID)
+					//if (ts.traceDebugMode)trace("none", ts.touchObjectID)
 				}
 				
 				
@@ -199,7 +199,7 @@ package com.gestureworks.core
 			ts.transformComplete = false;
 			ts.transformStart = true;
 			if (ts.transformEvents) manageTransformEventDispatch();
-			//if (ts.trace_debug_mode)trace("update", ts.touchObjectID)
+			//if (ts.traceDebugMode)trace("update", ts.touchObjectID)
 		}
 		
 		// release inertia transform
@@ -215,7 +215,7 @@ package com.gestureworks.core
 			ts.transformComplete = false;
 			ts.transformStart = false;
 			if (ts.transformEvents) manageTransformEventDispatch();
-			//if (ts.trace_debug_mode)trace("inertia", ts.touchObjectID)
+			//if (ts.traceDebugMode)trace("inertia", ts.touchObjectID)
 		}
 		
 		// end transform
@@ -224,7 +224,7 @@ package com.gestureworks.core
 			ts.transformComplete = true;
 			ts.transformStart = false;
 			if (ts.transformEvents) manageTransformEventDispatch();
-			//if (ts.trace_debug_mode)trace("none", ts.touchObjectID)
+			//if (ts.traceDebugMode)trace("none", ts.touchObjectID)
 		}
 	}
 		
@@ -515,7 +515,7 @@ package com.gestureworks.core
 			if (trO.transformPointsOn)
 				{	
 				// takes the pre-transformed inial properties of the display object and seeds the debug points//317 ,241//250, 190
-				//if(trace_debug_mode)trace("init center point", this.width,this.height);
+				//if(traceDebugMode)trace("init center point", this.width,this.height);
 				
 				// check for 3D transform flag
 				if (ts.transform3d) {
@@ -584,7 +584,7 @@ package com.gestureworks.core
 		*/
 		private function manageTransformEventDispatch():void 
 		{
-			//if(trace_debug_mode) trace("transform event dispatch");
+			//if(traceDebugMode) trace("transform event dispatch");
 		
 				if ((ts.transformStart) && (ts.transformEventStart)) {
 					ts.dispatchEvent(new GWTransformEvent(GWTransformEvent.T_START,id));

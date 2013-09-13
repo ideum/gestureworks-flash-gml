@@ -127,7 +127,7 @@ package com.gestureworks.core
 														//{
 														gDim.release_inertiaOn = true;
 														gDim.release_inertia_count = 0;
-															//if (ts.trace_debug_mode) trace("restart tween");
+															//if (ts.traceDebugMode) trace("restart tween");
 														//}
 														
 														// set phase 
@@ -363,7 +363,7 @@ package com.gestureworks.core
 								
 									// ENSURE DELTAS MAPPED TO THE SAME PROPERTY ARE ADDITIVE IN A "FRAME"
 									trO[gO.pOList[i].dList[j].target_id] += gO.pOList[i].dList[j].gestureDelta;
-									if (ts.trace_debug_mode) trace("gesture data", i, j, gO.pOList[i].dList[j].gestureDelta, trO[ts.gO.pOList[i].dList[j].target_id]);
+									if (ts.traceDebugMode) trace("gesture data", i, j, gO.pOList[i].dList[j].gestureDelta, trO[ts.gO.pOList[i].dList[j].target_id]);
 													
 									//trace("target_values", ts.trO[ts.gO.pOList[i].dList[j].target_id]);
 									}

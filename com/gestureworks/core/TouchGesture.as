@@ -80,7 +80,7 @@ package com.gestureworks.core
 		// initializers   
          public function initGesture():void 
          {
-			//if(trace_debug_mode) trace("create touchsprite gesture");
+			//if(traceDebugMode) trace("create touchsprite gesture");
 			initGestureAnalysis();
 		}
 		
@@ -89,7 +89,7 @@ package com.gestureworks.core
 		*/
 		public function initGestureAnalysis():void //clusterObject:Object
 		{
-			//if (trace_debug_mode) trace("init gesture analysis", touchObjectID);
+			//if (traceDebugMode) trace("init gesture analysis", touchObjectID);
 			
 			// configure gesturelist from listener attachment
 			//if (hasEventListener(GWGestureEvent.DRAG)) trace("has drag listener");
@@ -610,7 +610,7 @@ package com.gestureworks.core
 		*/
 		public function dispatchGestures():void 
 		{	
-			//if (trace_debug_mode) trace("continuous gesture event dispatch");
+			//if (traceDebugMode) trace("continuous gesture event dispatch");
 			//trace("touch gesture dispatch--------------------------",gO.release);
 		
 			
@@ -618,7 +618,7 @@ package com.gestureworks.core
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
 			{
-				//if (trace_debug_mode) trace("timeline frame update");
+				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
 				//tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 			}

@@ -57,7 +57,7 @@ package com.gestureworks.analysis
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID]; // need to find center of object for orientation and pivot
 			cO = ts.cO; // get motion data
 		
-			if (ts.trace_debug_mode) trace("init cluster geometric");
+			if (ts.traceDebugMode) trace("init cluster geometric");
 		}
 		
 		

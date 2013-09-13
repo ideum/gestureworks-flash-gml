@@ -102,7 +102,7 @@ package com.gestureworks.analysis
 			//scO = ts.scO; // parent sensor cluster
 			
 			
-			if (ts.trace_debug_mode) trace("init cluster kinemetric");
+			if (ts.traceDebugMode) trace("init cluster kinemetric");
 			
 			
 			// init subclusters
@@ -135,7 +135,7 @@ package com.gestureworks.analysis
 		
 		public function findRootClusterConstants():void
 		{
-				//if (ts.trace_debug_mode) trace("find cluster..............................",N);
+				//if (ts.traceDebugMode) trace("find cluster..............................",N);
 				
 				///////////////////////////////////////////////
 				// get number of touch points in cluster
@@ -304,7 +304,7 @@ package com.gestureworks.analysis
 					
 					if (N == 1)
 					{
-						var pt0 = cO.mmPointArray[0];
+						var pt0:* = cO.mmPointArray[0];
 						
 						if (pt0 is InteractionPointObject)
 						{
@@ -328,7 +328,7 @@ package com.gestureworks.analysis
 						{	
 						for (i = 0; i < N; i++)
 						{
-						var pt = cO.mmPointArray[i];
+						var pt:* = cO.mmPointArray[i];
 						
 						if (pt is PointObject)
 						{
@@ -345,7 +345,7 @@ package com.gestureworks.analysis
 						
 							for (var j1:uint = 0; j1 < N; j1++)
 							{
-							var pt2 = cO.mmPointArray[j1];
+							var pt2:* = cO.mmPointArray[j1];
 								
 								if ((i != j1) && (pt) && (pt2))
 									{
@@ -420,7 +420,7 @@ package com.gestureworks.analysis
 		
 		public function findTouchClusterConstants():void
 		{
-				//if (ts.trace_debug_mode) trace("find cluster..............................",N);
+				//if (ts.traceDebugMode) trace("find cluster..............................",N);
 				
 				///////////////////////////////////////////////
 				// get number of touch points in cluster
@@ -1432,7 +1432,7 @@ package com.gestureworks.analysis
 							for (i = 0; i < sipn; i++) 
 								{
 									//trace("add points")
-									var ipt:InteractionPointObject = ptArray[i];
+									ipt = ptArray[i];
 							
 									if (ipt)
 									{
@@ -1444,15 +1444,15 @@ package com.gestureworks.analysis
 										var ty:Number = -(dzc / dxc);// reversed
 										var tx:Number = -(dyc / dzc); // reversed
 										
-										var rx = Math.atan(tx) * RAD_DEG;
-										var ry = Math.atan(ty) * RAD_DEG;
-										var rz = Math.atan(tz) * RAD_DEG;
+										var rx:Number = Math.atan(tx) * RAD_DEG;
+										var ry:Number = Math.atan(ty) * RAD_DEG;
+										var rz:Number = Math.atan(tz) * RAD_DEG;
 										
 										
 										var rot:Vector3D = new Vector3D();
-											rot.x = (rx ==NaN) ? 0 : rx;
-											rot.y = (ry ==NaN) ? 0 : ry;
-											rot.z = (rz ==NaN) ? 0 : rz;
+											rot.x = (isNaN(rx)) ? 0 : rx;
+											rot.y = (isNaN(ry)) ? 0 : ry;
+											rot.z = (isNaN(rz)) ? 0 : rz;
 										sub_cO.rotationList.push(rot);
 										
 										
@@ -2194,7 +2194,7 @@ package com.gestureworks.analysis
 			
 			var sipn:uint = sub_cO.ipn;
 			var sdipn:uint = sub_cO.dipn;
-			var sipnk = sub_cO.ipnk;
+			var sipnk:* = sub_cO.ipnk;
 			
 			// reset deltas
 			sub_cO.dx = 0;

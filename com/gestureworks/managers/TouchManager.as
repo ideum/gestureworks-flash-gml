@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.core.ITouchObject;
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchMovieClip;
@@ -152,8 +153,8 @@ package com.gestureworks.managers
 		public static function onTouchDown(event:GWTouchEvent, downTarget:*=null):void
 		{
 			if (event.eventPhase == 3) { //not stage
-				
-				if ((event.target is TouchSprite || event.target is TouchMovieClip) && event.target.activated) {
+
+				if (event.target is ITouchObject && event.target.activated) {
 					
 					if (duplicateDeviceInput(event)) return;
 					
@@ -164,32 +165,31 @@ package com.gestureworks.managers
 						downTarget = event.target; // object that got hit, used for our non-tuio gesture events
 					if (!downTarget)
 						return;
-						
-					var parent:* = downTarget.parent;	
 								
-					if (downTarget.targetParent && ((downTarget is TouchSprite) || (downTarget is TouchMovieClip))) { //ASSIGN PRIMARY CLUSTER TO PARENT
-							parent.assignPoint(event);
+					if (downTarget.targetParent && downTarget.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
+							assignPoint(downTarget.parent, event);
 					}
-					else if ((downTarget.targetObject is TouchSprite)||(downTarget.targetObject is TouchMovieClip))	// ASSIGN PRIMARY CLUSTER TO TARGET
+					else if (downTarget.targetObject && downTarget.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
 					{							
-						downTarget.targetObject.assignPoint(event);
+						assignPoint(downTarget.targetObject, event);
 						downTarget.targetList[j].broadcastTarget = true;
 					}
-					else if ((downTarget.targetList[0] is TouchSprite)||(downTarget.targetList[0] is TouchMovieClip))
+					else if (downTarget.targetList[0] is ITouchObject)
 					{							
 						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						downTarget.assignPoint(event);
+						assignPoint(downTarget, event);
 						
 						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
 						for (var j:uint = 0; j < downTarget.targetList.length; j++) 
 						{
-							downTarget.targetList[j].assignPointClone(event);
+							assignPointClone(downTarget.targetList[j], event);
 							downTarget.targetList[j].broadcastTarget = true;
 						}
 					}
 					else {
 						 assignPoint(downTarget, event);
-						 propagatePoint(parent, event);
+						 if(downTarget.parent is ITouchObject)
+							propagatePoint(ITouchObject(downTarget.parent), event);
 					}	
 				}					
 			}
@@ -211,7 +211,7 @@ package com.gestureworks.managers
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if ((TouchSprite(pointObject.object).registerPoints) || overrideRegisterPoints) { 
+				if ((ITouchObject(pointObject.object).registerPoints) || overrideRegisterPoints) { 
 					/////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////
 					// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
@@ -219,7 +219,7 @@ package com.gestureworks.managers
 					{
 						//trace("updating targets");
 						var i:int;
-						var tO:Object = pointObject.objectList[j];
+						var tO:ITouchObject = pointObject.objectList[j];
 						
 						//trace("tsprite:", tO, "frame:", tO.tiO.frame.pointEventArray);
 						//trace("tsprite:",tO, "pointlist",tO.N,tO.pointArray.length, tO.pointArray);
@@ -311,13 +311,15 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function propagatePoint(target:*, event:TouchEvent):void {
+		private static function propagatePoint(target:ITouchObject, event:TouchEvent):void {
 			if (!target)
 				return;
 			
-			if (target.hasOwnProperty("clusterBubbling") && target.clusterBubbling) {
+			if (target.clusterBubbling) {
 				assignPointClone(target, event);
-				propagatePoint(target.parent, event);
+				
+				if(target.parent is ITouchObject)
+					propagatePoint(ITouchObject(target.parent), event);
 			}
 		}
 		
@@ -326,11 +328,11 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function assignPoint(target:*, event:TouchEvent):void // asigns point
+		private static function assignPoint(target:ITouchObject, event:TouchEvent):void // asigns point
 		{		
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
-				pointObject.object = target; // sets primary touch object/cluster
+				pointObject.object = DisplayObject(target); // sets primary touch object/cluster
 				pointObject.id = target.pointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
@@ -338,10 +340,10 @@ package com.gestureworks.managers
 				pointObject.objectList.push(target); // seeds cluster/touch object list
 				
 				//ADD TO LOCAL POINT LIST
-				target._pointArray.push(pointObject);
+				target.pointArray.push(pointObject);
 				
 				//UPDATE LOCAL CLUSTER OBJECT
-				target.cO.pointArray = target._pointArray;												
+				target.cO.pointArray = target.pointArray;												
 				
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				target.pointCount++;
@@ -381,11 +383,11 @@ package com.gestureworks.managers
 					pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 	
 				//ADD TO LOCAL POINT LIST
-				target._pointArray.push(pointObject);
+				target.pointArray.push(pointObject);
 				
 				//UPDATE LOCAL CLUSTER OBJECT
 				//touch object point list and cluster point list should be consolodated
-				target.cO.pointArray = target._pointArray;
+				target.cO.pointArray = target.pointArray;
 				
 				//create point pair
 				/*
@@ -405,18 +407,18 @@ package com.gestureworks.managers
 				// add touch down to touch object gesture event timeline
 				if ((target.tiO)&&(target.tiO.timelineOn) && (target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
 				
-				//trace("ts clone bubble target, point array length",_pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+				//trace("ts clone bubble target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}	
 		
-		public static function preinitBase(obj:TouchSprite):void 
+		public static function preinitBase(obj:ITouchObject):void 
         {
 			//trace("create touchsprite base"); 
-			obj.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, obj.onGestureListUpdate); 
+			obj.addEventListener(GWGestureEvent.GESTURELIST_UPDATE, onGestureListUpdate); 
 			obj.updateListeners();				
 							
 			// Register touchObject with object manager, return object id
-			obj._touchObjectID = ObjectManager.registerTouchObject(obj);
-			GestureGlobals.gw_public::touchObjects[obj._touchObjectID] = obj;
+			obj.touchObjectID = ObjectManager.registerTouchObject(obj);
+			GestureGlobals.gw_public::touchObjects[obj.touchObjectID] = obj;
 			
 			// create generic analysis engine
 			//if (GestureGlobals.analyzeCluster)
@@ -427,7 +429,7 @@ package com.gestureworks.managers
 				/////////////////////////////////////////////////////////////////////////
 				obj.cO = new ClusterObject(); // touch cluster 2d 
 					obj.cO.id = obj.touchObjectID; 
-				GestureGlobals.gw_public::clusters[obj._touchObjectID] = obj.cO;
+				GestureGlobals.gw_public::clusters[obj.touchObjectID] = obj.cO;
 				
 				// create new stroke object
 				obj.sO = new StrokeObject(); 
@@ -439,7 +441,7 @@ package com.gestureworks.managers
 				/////////////////////////////////////////////////////////////////////////
 				obj.gO = new GestureListObject(); 
 					obj.gO.id = obj.touchObjectID;
-				GestureGlobals.gw_public::gestures[obj._touchObjectID] = obj.gO;
+				GestureGlobals.gw_public::gestures[obj.touchObjectID] = obj.gO;
 				
 				/////////////////////////////////////////////////////////////////////////
 				// CREATES A NEW TRANSFORM OBJECT
@@ -448,7 +450,7 @@ package com.gestureworks.managers
 				/////////////////////////////////////////////////////////////////////////
 				obj.trO = new TransformObject(); 
 					obj.trO.id = obj.touchObjectID;
-				GestureGlobals.gw_public::transforms[obj._touchObjectID] = obj.trO;
+				GestureGlobals.gw_public::transforms[obj.touchObjectID] = obj.trO;
 				
 				/////////////////////////////////////////////////////////////////////////
 				// CREATES A NEW TIMELINE OBJECT 
@@ -462,7 +464,7 @@ package com.gestureworks.managers
 					obj.tiO.clusterEvents = false; // pushes cluster events into timeline
 					obj.tiO.gestureEvents = false; // pushes gesture events into timleine
 					obj.tiO.transformEvents = false; // pushes transform events into timeline
-				GestureGlobals.gw_public::timelines[obj._touchObjectID] = obj.tiO;
+				GestureGlobals.gw_public::timelines[obj.touchObjectID] = obj.tiO;
 				
 			//}
 			
@@ -472,7 +474,7 @@ package com.gestureworks.managers
 				obj.visualizer.initDebug();
 		}	
 		
-		private static function initBase(obj:TouchSprite):void 
+		private static function initBase(obj:ITouchObject):void 
 		{
 							obj.tc = new TouchCluster(obj.touchObjectID); 
 							obj.tp = new TouchPipeline(obj.touchObjectID);
@@ -481,7 +483,7 @@ package com.gestureworks.managers
 							obj.visualizer = new TouchVisualizer(obj.touchObjectID);
 		}	
 		
-		public static function callLocalGestureParser(obj:TouchSprite):void
+		public static function callLocalGestureParser(obj:ITouchObject):void
 		{
 			//trace("call local parser touch sprite", );
 			
@@ -489,14 +491,14 @@ package com.gestureworks.managers
 				gp.gestureList = obj.gestureList;
 				gp.parse(obj.touchObjectID);
 				
-				if (obj.traceDebugModeOn) gp.traceGesturePropertyList();
+				if (obj.traceDebugMode) gp.traceGesturePropertyList();
 				
 			//tp re init vector metric and get new stroke lib for comparison
 			if (obj.tc) obj.tc.initClusterAnalysisConfig();
 		}	
 		
 		
-		public static function updateTObjProcessing(obj:TouchSprite):void
+		private static function updateTObjProcessing(obj:ITouchObject):void
 		{
 			
 			// MAIN GESTURE PROCESSING LOOP/////////////////////////////////
@@ -509,7 +511,14 @@ package com.gestureworks.managers
 					obj.tt.updateLocalProperties();
 				}
 				
-				ClusterHistories.historyQueue(obj._touchObjectID);
+				ClusterHistories.historyQueue(obj.touchObjectID);
+		}	
+		
+		private static function onGestureListUpdate(event:GWGestureEvent):void  
+		{
+			//trace("gesturelist update");
+			var obj:ITouchObject = event.target as ITouchObject;
+			if (obj.tg) obj.tg.initTimeline();
 		}		
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
@@ -542,7 +551,7 @@ package com.gestureworks.managers
 				tO.cO.motionArray = gms.cO.motionArray/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				// update touch,cluster and gesture processing
-				updateTouchObject(tO);
+				updateTouchObject(ITouchObject(tO));
 				
 				// DISTRO HAND MODEL AND INTERACTION POINTS TO TOUCH OBJECTS
 				tO.cO.handList = gms.cO.handList;///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -579,14 +588,14 @@ package com.gestureworks.managers
 		
 		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////
 		
-		public static function updateTouchObject(tO:Object):void
+		public static function updateTouchObject(tO:ITouchObject):void
 		{
 				//trace("hello", ts, ts.N);
 				// THERFOR CLUSTER ANALYSIS IS N SPECICIFC AND SELF MAMANGED SWITCHING
 				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
 				
 
-				tO.updateTObjProcessing();
+				updateTObjProcessing(tO);
 				//trace(tO.touchObjectID)
 				
 				// check for erroneous points

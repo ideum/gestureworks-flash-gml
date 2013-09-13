@@ -125,7 +125,7 @@ package com.gestureworks.core
 		
 		public function initDebugVars():void
 		{
-			//if (trace_debug_mode) 
+			//if (traceDebugMode) 
 			//trace("init debug cml vars");
 			//trace(_pointData,_panelData,_touchObjectData)
 			
@@ -158,7 +158,7 @@ package com.gestureworks.core
 	}
 	public function initDebugDisplay():void 
 	{
-		//if (trace_debug_mode) trace("init debug display",touchObjectID);
+		//if (traceDebugMode) trace("init debug display",touchObjectID);
 					
 			if (ts.debugDisplay)
 			{		
@@ -219,7 +219,7 @@ package com.gestureworks.core
 	*/
 	public function clearDebugDisplay():void
 	{
-		//if(trace_debug_mode) trace("trying to clear debug display",touchObjectID)
+		//if(traceDebugMode) trace("trying to clear debug display",touchObjectID)
 		if ((ts.debugDisplay)&&(debug_display))
 		{
 			if (point) 	point.clear();

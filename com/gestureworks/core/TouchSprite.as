@@ -31,6 +31,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -59,47 +60,28 @@ package com.gestureworks.core
 	 * </pre>
 	 */
 	
-	public class TouchSprite extends Sprite
+	public class TouchSprite extends Sprite implements ITouchObject
 	{
 		/**
 		 * @private
 		 */
-		public var gml:XMLList;
-		
-		// internal public 
-		public var cO:ClusterObject; // touch
-		
-		public var sO:StrokeObject;
-		public var gO:GestureListObject;
-		public var tiO:TimelineObject;
-		public var trO:TransformObject;
-		
-		public var tc:TouchCluster;
-		public var tp:TouchPipeline;
-		public var tg:TouchGesture;
-		public var tt:TouchTransform;
-		public var visualizer:TouchVisualizer;
-		
+		public var gml:XMLList;		
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
 		//tracks event listeners
 		private var _tsEventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
-		
-		private var _activated:Boolean = false;
 
 		public function TouchSprite():void
 		{
 			super();
-
-			// set mouseChildren to default false
-			mouseChildren = false; //false
-			//mouseEnabled = false;			
+			mouseChildren = false; 
 			debugDisplay = false;
         }
 		
+		private var _activated:Boolean = false;
 		/**
-		 * Lazy gesture activation
+		 * @inheritDoc
 		 */
 		public function get activated():Boolean { return _activated; }
 		public function set activated(a:Boolean):void {
@@ -111,10 +93,7 @@ package com.gestureworks.core
 		
 		private var _localModes:Boolean;
 		/**
-		 * Flag indicating the application of local modes over the global settings. By default, all objects are enabled for input
-		 * processing based on the application level mode settings (i.e. nativeTouch, simulator, tuio, etc.). This flag allows the 
-		 * inclusion/exclusion of specific input interaction according to local overrides. Note that the corresponding global setting
-		 * must be enabled in order to locally enable the input. 
+		 * @inheritDoc
 		 */
 		public function get localModes():Boolean { return _localModes; }
 		public function set localModes(l:Boolean):void {
@@ -125,8 +104,7 @@ package com.gestureworks.core
 		
 		private var _nativeTouch:Boolean;
 		/**
-		 * Local override to enable/disable native touch input.
-		 * @see localModes
+		 * @inheritDoc
 		 */		
 		public function get nativeTouch():Boolean { return _nativeTouch && GestureWorks.activeNativeTouch; }
 		public function set nativeTouch(n:Boolean):void {
@@ -137,8 +115,7 @@ package com.gestureworks.core
 		
 		private var _simulator:Boolean;
 		/**
-		 * Local override to enable/disable mouse input.
-		 * @see localModes
+		 * @inheritDoc
 		 */		
 		public function get simulator():Boolean { return _simulator && GestureWorks.activeSim; }
 		public function set simulator(s:Boolean):void {
@@ -149,8 +126,7 @@ package com.gestureworks.core
 		
 		private var _tuio:Boolean;
 		/**
-		 * Local override to enable/disable tuio input.
-		 * @see localModes
+		 * @inheritDoc
 		 */		
 		public function get tuio():Boolean { return _tuio && GestureWorks.activeTUIO; }
 		public function set tuio(t:Boolean):void {
@@ -160,16 +136,9 @@ package com.gestureworks.core
 		}				
 		
 		/**
-		 * Re-registers event listeners with updated mode settings
+		 * @inheritDoc
 		 */
 		public function updateListeners():void {			
-			updateGWTouchListeners();
-		}
-		
-		/**
-		 * Re-registers GWTouchEvent events with updated mode settings
-		 */
-		private function updateGWTouchListeners():void {
 			for (var type:String in gwTouchListeners) {
 				for each(var l:* in gwTouchListeners[type]) {
 					if(l.type)
@@ -181,95 +150,159 @@ package com.gestureworks.core
 				}
 			}
 		}
-		
-		////////////////////////////////////////////////////////////////
-		// public read only
-		////////////////////////////////////////////////////////////////
+	
+
+		private var _touchObjectID:int = 0; // read only
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		public var _touchObjectID:int = 0; // read only
 		public function get touchObjectID():int { return _touchObjectID; }
+		public function set touchObjectID(id:int):void { _touchObjectID = id; }
+		
+		private var _pointArray:Vector.<PointObject> = new Vector.<PointObject>(); // read only
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		public var _pointArray:Vector.<PointObject> = new Vector.<PointObject>(); // read only
 		public function get pointArray():Vector.<PointObject> { return _pointArray; }
+		public function set pointArray(pa:Vector.<PointObject>):void { _pointArray = pa; }
 		
+		private var _N:int = 0; 
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		public var _N:int = 0; // number of points in the super cluster // read only
 		public function get N():int { return _N; }
-		public function set N(value:int):void { 	_N = value; }
+		public function set N(n:int):void { _N = n; }
 		
-		public var _tpn:int = 0; // number of touch points in the parent cluster // read only
+		private var _tpn:int = 0; 
+		/**
+		 * @inheritDoc
+		 */
 		public function get tpn():int { return _tpn; }
-		public function set tpn(value:int):void { 	_tpn = value;}
+		public function set tpn(n:int):void { _tpn = n; }
 		
-		public var _ipn:int = 0; // number of motion points in the parent cluster // read only
+		private var _ipn:int = 0; 
+		/**
+		 * @inheritDoc
+		 */
 		public function get ipn():int { return _ipn; }
-		public function set ipn(value:int):void { 	_ipn = value;}
-		
-		
+		public function set ipn(n:int):void { _ipn = n; }
+				
+		private var _dN:Number = 0; 
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		public var _dN:Number = 0; // read only
 		public function get dN():Number { return _dN; }
-		public function set dN(value:Number):void { _dN = value;}
+		public function set dN(n:Number):void { _dN = n; }
 		
-		// determin if object created by cml of native as3
+		private var _cO:ClusterObject; 
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		public var _cml_item:Boolean = false;
-		public function get cml_item():Boolean{return _cml_item;}
-		public function set cml_item(value:Boolean):void{	_cml_item=value;}
+		public function get cO():ClusterObject { return _cO; }
+		public function set cO(obj:ClusterObject):void { _cO = obj; }
+				
+		private var _sO:StrokeObject;
+		/**
+		 * @inheritDoc
+		 */
+		public function get sO():StrokeObject { return _sO; }
+		public function set sO(obj:StrokeObject):void { _sO = obj; }
 		
-		// debug trace statements
+		private var _gO:GestureListObject;
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		public var trace_debug_mode:Boolean = false;
-		public function get traceDebugModeOn():Boolean{return trace_debug_mode;}
-		public function set traceDebugModeOn(value:Boolean):void{	trace_debug_mode=value;}
+		public function get gO():GestureListObject { return _gO; }
+		public function set gO(obj:GestureListObject):void { _gO = obj; }
 		
-		// point count
+		private var _tiO:TimelineObject;
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
+		public function get tiO():TimelineObject { return _tiO; }
+		public function set tiO(obj:TimelineObject):void { _tiO = obj; }	
+		
+		private var _trO:TransformObject;
+		/**
+		 * @inheritDoc
+		 */
+		public function get trO():TransformObject { return _trO; }
+		public function set trO(obj:TransformObject):void { _trO = obj; }		
+		
+		private var _tc:TouchCluster;
+		/**
+		 * @inheritDoc
+		 */
+		public function get tc():TouchCluster { return _tc; }
+		public function set tc(obj:TouchCluster):void { _tc = obj; }
+		
+		private var _tp:TouchPipeline;
+		/**
+		 * @inheritDoc
+		 */
+		public function get tp():TouchPipeline { return _tp; }
+		public function set tp(obj:TouchPipeline):void { _tp = obj; }
+		
+		private var _tg:TouchGesture;
+		/**
+		 * @inheritDoc
+		 */
+		public function get tg():TouchGesture { return _tg; }
+		public function set tg(obj:TouchGesture):void { _tg = obj; }
+		
+		private var _tt:TouchTransform;
+		/**
+		 * @inheritDoc
+		 */
+		public function get tt():TouchTransform { return _tt; }
+		public function set tt(obj:TouchTransform):void { _tt = obj; }	
+				
+		private var _visualizer:TouchVisualizer;		
+		/**
+		 * @inheritDoc
+		 */
+		public function get visualizer():TouchVisualizer { return _visualizer; }
+		public function set visualizer(obj:TouchVisualizer):void { _visualizer = obj; }		
+		
+		private var _traceDebugMode:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get traceDebugMode():Boolean{return _traceDebugMode;}
+		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
+		
 		private var _pointCount:int;
+		/**
+		 * @inheritDoc
+		 */
 		public function get pointCount():int{return _pointCount;}
 		public function set pointCount(value:int):void {	_pointCount = value; }
 		
-		// motion point count
-		/**
-		 * @private
-		 */
 		private var _motionPointCount:int;
+		/**
+		 * @inheritDoc
+		 */
 		public function get motionPointCount():int{return _motionPointCount;}
 		public function set motionPointCount(value:int):void {	_motionPointCount = value; }
 		
-		// interaction point count
-		/**
-		 * @private
-		 */
 		private var _interactionPointCount:int;
+		/**
+		 * @inheritDoc
+		 */
 		public function get interactionPointCount():int{return _interactionPointCount;}
 		public function set interactionPointCount(value:int):void{	_interactionPointCount=value;}
 		
-		// cluster ID
-		/**
-		 * @private
-		 */
 		private var _clusterID:int;
-		public function get clusterID():int{return _clusterID;}
-		public function set clusterID(value:int):void{	_clusterID = value;}
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
+		public function get clusterID():int{return _clusterID;}
+		public function set clusterID(value:int):void {	_clusterID = value; }
+		
 		private var _gestureList:Object = new Object();
+		/**
+		 * @inheritDoc
+		 */
 		public function get gestureList():Object{ return _gestureList;}
 		public function set gestureList(value:Object):void
 		{
@@ -279,11 +312,11 @@ package com.gestureworks.core
 			//for (var i:String in gestureList) 
 			//{
 				//gestureList[i] = gestureList[i].toString() == "true" ?true:false;
-				//if (trace_debug_mode) trace("setting gestureList:", gestureList[i]);
+				//if (traceDebugMode) trace("setting gestureList:", gestureList[i]);
 			//}
 			
 			/////////////////////////////////////////////////////////////////////
-			// Convert GML Into Property Objects That describe how to match,analyze, 
+			// Convert GML into Property Objects That describe how to match,analyze, 
 			// process and map point/clusterobject properties
 			/////////////////////////////////////////////////////////////////////
 			TouchManager.callLocalGestureParser(this);
@@ -297,7 +330,7 @@ package com.gestureworks.core
 		
 		private var _touchChildren:Boolean = false;
 		/**
-		 * Allows touch events to be passed down to child display object. Has the same function as MouseChildren.
+		 * @inheritDoc
 		 */
 		public function get touchChildren():Boolean{return _touchChildren;}
 		public function set touchChildren(value:Boolean):void
@@ -307,100 +340,74 @@ package com.gestureworks.core
 		}
 		
 		private var _clusterBubbling:Boolean = false;
-		/** 
-		 * Allows touch points from a childclusters to copy into container touch objects
-		 * in the local parent child display list stack. This allows the for the concept of parallel
-		 * clustering of touch point. Where a single touch point can simultaniuosly be a 
-		 * member of multiple touch point clusters. This allows multiple gestures to be 
-		 * dispatched from multiple touch objects from a set of touch points.
-		*/
+		/**
+		 * @inheritDoc
+		 */
 		public function get clusterBubbling():Boolean{return _clusterBubbling;}
 		public function set clusterBubbling(value:Boolean):void
 		{
 			_clusterBubbling = value;
 		}
 		
-		/**
-		 * @private
-		 */
 		private var _targetParent:Boolean = false;
 		/**
-		* Allows touch and gesture events to explicitly target the parent touch object
-		**/
+		 * @inheritDoc
+		 */
 		public function get targetParent():Boolean{return _targetParent;}
 		public function set targetParent(value:Boolean):void
 		{
 			_targetParent = value;
 		}
 		
-		/**
-		 * @private
-		 */
 		private var _targetObject:Object;
-		/** 
-		 * Allows touch and gesture events to explicitly target a touch object 
-		 * this can be outside the local parent child display list stack
-		*/
+		/**
+		 * @inheritDoc
+		 */
 		public function get targetObject():Object{return _targetObject;}
 		public function set targetObject(value:Object):void
 		{
 			_targetObject = value;
 		}
 		
-		/**
-		 * @private
-		 */
 		private var _targetList:Array = [];
-		/** 
-		* Allows touch and gesture events to explicitly target a group of defined 
-		* touch objects which can be outside of the local parent child display list stack
-		*/
+		/**
+		 * @inheritDoc
+		 */
 		public function get targetList():Array{return _targetList;}
 		public function set targetList(value:Array):void
 		{
 			_targetList = value;
 		}
 				
-		/**
-		 * @private
-		 */
 		private var _targeting:Boolean = true;
-		/** 
-		* Turns off manual ALL targeting control, defaults to a simple hit test
-		* targeting model with exclusive target clustering
-		*/
+		/**
+		 * @inheritDoc
+		 */
 		public function get targeting():Boolean{return _targeting;}
 		public function set targeting(value:Boolean):void
 		{
 			_targeting = value;
 		}
 		
-		/**
-		 * @private
-		 */
 		private var _clusterEvents:Boolean = false;
 		/**
-		* Determines whether clusterEvents are processed and dispatched on the touchSprite.
-		*/
+		 * @inheritDoc
+		 */
 		public function get clusterEvents():Boolean{return _clusterEvents;}
-		public function set clusterEvents(value:Boolean):void{	_clusterEvents=value;}
+		public function set clusterEvents(value:Boolean):void {	_clusterEvents = value; }
 		
-		///////////////////////////////////////////////////////////////////////////
-		// FILTER OVERRIDES
-		private var _deltaFilterOn:Boolean = false//true;
+		
+		private var _deltaFilterOn:Boolean = false
 		/**
-		* Determines whether filtering is applied to the delta values.
-		*/
+		 * @inheritDoc
+		 */
 		public function get deltaFilterOn():Boolean{return _deltaFilterOn;}
 		public function set deltaFilterOn(value:Boolean):void{	_deltaFilterOn=value;}
 		
-		/**
-		* @private
-		*/
 		private var _gestureTouchInertia:Boolean = false;
 		/**
-		* Determines whether touch inertia is processed on the touchSprite.
-		*/
+		 * @inheritDoc
+		 */
 		public function get gestureTouchInertia():Boolean{return _gestureTouchInertia;}
 		public function set gestureTouchInertia(value:Boolean):void
 		{
@@ -408,87 +415,72 @@ package com.gestureworks.core
 			_deltaFilterOn=value;
 		}
 		
+		/**
+		 * 
+		 */
 		public function updateClusterAnalysis():void
 		{
 			if(tc) tc.updateClusterAnalysis();
 		}
 		
+		/**
+		 * 
+		 */
 		//public function updateMotionClusterAnalysis():void
 		//{
 			//if(tc) tc.updateMotionClusterAnalysis();
 		//}
 		
+		/**
+		 * 
+		 */
 		//public function updateSensorClusterAnalysis():void
 		//{
 			//if(tc) tc.updateSensorClusterAnalysis();
 		//}
 		
-		////////////////////////////////////////////////////////////////////////////
-		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//gesture settings
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		/**
-		* @private
-		*/
-		//public read write
 		private var _gestureEventStart:Boolean = true;
 		/**
-		* Indicates whether any gestureEvents have been started on the touchSprite.
-		*/
+		 * @inheritDoc 
+		 */
 		public function get gestureEventStart():Boolean{return _gestureEventStart;}
 		public function set gestureEventStart(value:Boolean):void{	_gestureEventStart=value;}
 		
-		/**
-		* @private
-		*/
 		private var _gestureEventComplete:Boolean = true;
 		/**
-		* Indicates weather all gestureEvents have been completed on the touchSprite.
-		*/
+		 * @inheritDoc 
+		 */
 		public function get gestureEventComplete():Boolean{return _gestureEventComplete;}
 		public function set gestureEventComplete(value:Boolean):void{	_gestureEventComplete=value;}
 		
-		/**
-		* @private
-		*/
 		private var _gestureEventRelease:Boolean = true;
 		/**
-		* Indicates whether all touch points have been released on the touchSprite.
-		*/
+		 * @inheritDoc
+		 */
 		public function get gestureEventRelease():Boolean{return _gestureEventRelease;}
 		public function set gestureEventRelease(value:Boolean):void{_gestureEventRelease = value;}
 		
-		/**
-		* @private
-		*/
 		// NOW SET TO TRUE BY DEFAULT
 		// TURN OFF TO OPTOMIZE WHEN USING NATIVE
 		// TODO, AUTO ON WHEN ATTATCH LISTENERS
 		private var _gestureEvents:Boolean = true;
 		/**
-		* Determines whether gestureEvents are processed and dispatched on the touchSprite.
-		*/
-		public function get gestureEvents():Boolean{return _gestureEvents;}
-		public function set gestureEvents(value:Boolean):void {	_gestureEvents = value; }
-		
-		/**
-		 * Returns an array registered events
+		 * @inheritDoc
 		 */
-		public function get eventListeners():Array { return _tsEventListeners; }		
+		public function get gestureEvents():Boolean{return _gestureEvents;}
+		public function set gestureEvents(value:Boolean):void {	_gestureEvents = value; }	
 		
+		private var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
 		/**
-		* @private
-		*/
-		public var _gestureReleaseInertia:Boolean = false;	// gesture release inertia switch
-		/**
-		* Determines whether release inertia is given to gestureEvents on the touchSprite.
-		*/
+		 * @inheritDoc 
+		 */
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
 		public function set gestureReleaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}
 		
-		//gestures tweening
-		public var _gestureTweenOn:Boolean = false;
+		private var _gestureTweenOn:Boolean = false;
 		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }
 		public function set gestureTweenOn(value:Boolean):void { _gestureTweenOn = value; }
 		
@@ -501,52 +493,38 @@ package com.gestureworks.core
 		///////////////////////////////////////////////////////////////////////////////////
 		// TRANSFORMS
 		///////////////////////////////////////////////////////////////////////////////////
-		/**
-		* @private
-		*/
-		// nested transfrom 
+		
 		private var _nestedTransform:Boolean = false;
 		public function get nestedTransform():Boolean { return _nestedTransform} 
 		public function set nestedTransform(value:Boolean):void{	_nestedTransform = value}
-		/**
-		* @private
-		*/
+
 		private var _transformEvents:Boolean = false;
 		/**
-		* Determines whether transformEvents are processed and dispatched on the touchSprite.
-		*/
+		 * @inheritDoc 
+		 */
 		public function get transformEvents():Boolean{return _transformEvents;}
 		public function set transformEvents(value:Boolean):void{	_transformEvents=value;}
 	
-		/**
-		* @private
-		*/
 		private var _transformComplete:Boolean = false;
 		public function get transformComplete():Boolean { return _transformComplete; }
 		public function set transformComplete(value:Boolean):void{	_transformComplete=value;}
-		/**
-		* @private
-		*/
+
 		private var _transformStart:Boolean = false;
 		public function get transformStart():Boolean { return _transformStart; }
 		public function set transformStart(value:Boolean):void{	_transformStart=value;}
-		/**
-		* @private
-		*/
+
 		private var _transformEventStart:Boolean = true;
 		public function get transformEventStart():Boolean{return _transformEventStart;}
 		public function set transformEventStart(value:Boolean):void{	_transformEventStart=value;}
-		/**
-		* @private
-		*/
+
 		private var _transformEventComplete:Boolean = true;
 		public function get transformEventComplete():Boolean{return _transformEventComplete;}
 		public function set transformEventComplete(value:Boolean):void {	_transformEventComplete = value; }
 		
-		/**
-		 * Enables/Disables all GWTouchEvent and GWGestureEvent listeners
-		 */
 		private var _touchEnabled:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */
 		public function get touchEnabled():Boolean { return _touchEnabled; }
 		public function set touchEnabled(t:Boolean):void {
 			if (_touchEnabled == t) return;			
@@ -569,95 +547,109 @@ package com.gestureworks.core
 			}
 		}		
 
-		/**
-		* @private
-		*/
-		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
 		private var _disableNativeTransform:Boolean = true;
 		/**
-		* Determines whether transformations are handled internally (natively) on the touchSprite.
-		*/
+		 * @inheritDoc 
+		 */
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
-		public function set disableNativeTransform(value:Boolean):void {_disableNativeTransform = value; }
+		public function set disableNativeTransform(value:Boolean):void { _disableNativeTransform = value; }
+		
 		/**
-		* Determines whether transformations are handled internally (natively) on the touchSprite.
-		* Same as !disableNativeTransform.
-		*/
+		 * @inheritDoc
+		 */
 		public function get nativeTransform():Boolean{return !_disableNativeTransform;}
 		public function set nativeTransform(value:Boolean):void {_disableNativeTransform = !value; }						
-		/**
-		* @private
-		*/
+
 		// default true so that all nested gestures are correct unless specidied
 		private var _transformGestureVectors:Boolean = true;
 		/**
-		* Determines whether transformations are handled internally (natively) on the touchSprite.
-		*/
+		 * @inheritDoc 
+		 */
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
-		/**
-		* @private
-		*/
-		// NOW SET TO TRUE BY DEFAULT FOR AS3 DEV 
+
 		private var _disableAffineTransform:Boolean = true;
 		/**
-		* Determines whether gesture event driven transformations are affine on the touchSprite.
-		* You must use the $attributes when this flag is set.
-		*/
+		 * @inheritDoc
+		 */
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
-		public function set disableAffineTransform(value:Boolean):void {_disableAffineTransform = value;}
+		public function set disableAffineTransform(value:Boolean):void { _disableAffineTransform = value; }
+		
 		/**
-		* Determines whether gesture event driven transformations are affine on the touchSprite.
-		* You must use the $attributes when this flag is set.
-		* Same as !disableAffineTransform
-		*/
+		 * @inheritDoc
+		 */
 		public function get affineTransform():Boolean{return !_disableAffineTransform;}
 		public function set affineTransform(value:Boolean):void{_disableAffineTransform = !value;}		
 		
 		private var _x_lock:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
 		public function get x_lock():Boolean {return _x_lock;}	
 		public function set x_lock(value:Boolean):void { _x_lock = value; }
 		
 		private var _y_lock:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
 		public function get y_lock():Boolean {return _y_lock;}	
 		public function set y_lock(value:Boolean):void { _y_lock = value; }	
 		
 		
 		/////////////////////////////////////////////////////////////
 		// transform boundaries
-		/////////////////////////////////////////////////////////////		
+		/////////////////////////////////////////////////////////////	
+		
 		//translation
 		private var _minX:Number;
+		/**
+		 * @inheritDoc
+		 */
 		public function get minX():Number { return _minX; }
 		public function set minX(value:Number):void {
 			_minX = value;
 		}
 		
 		private var _maxX:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxX():Number { return _maxX; }
 		public function set maxX(value:Number):void {
 			_maxX = value;
 		}
 		
 		private var _minY:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minY():Number { return _minY; }
 		public function set minY(value:Number):void {
 			_minY = value;
 		}
 		
 		private var _maxY:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxY():Number { return _maxY; }
 		public function set maxY(value:Number):void {
 			_maxY = value;
 		}		
 		
 		private var _minZ:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minZ():Number { return _minZ; }
 		public function set minZ(value:Number):void {
 			_minZ = value;
 		}		
 	
 		private var _maxZ:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxZ():Number { return _maxZ; }
 		public function set maxZ(value:Number):void {
 			_maxZ = value;
@@ -665,6 +657,9 @@ package com.gestureworks.core
 		
 		//scale
 		private var _minScale:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minScale():Number { return _minScale; }
 		public function set minScale(value:Number):void {
 			_minScale = value;
@@ -673,6 +668,9 @@ package com.gestureworks.core
 		}
 		
 		private var _maxScale:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxScale():Number { return _maxScale; }
 		public function set maxScale(value:Number):void {
 			_maxScale = value;
@@ -681,36 +679,54 @@ package com.gestureworks.core
 		}		
 		
 		private var _minScaleX:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minScaleX():Number { return _minScaleX; }
 		public function set minScaleX(value:Number):void {
 			_minScaleX = value;
 		}
 		
 		private var _maxScaleX:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxScaleX():Number { return _maxScaleX; }
 		public function set maxScaleX(value:Number):void {
 			_maxScaleX = value;
 		}			
 		
 		private var _minScaleY:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minScaleY():Number { return _minScaleY; }
 		public function set minScaleY(value:Number):void {
 			_minScaleY = value;
 		}	
 		
 		private var _maxScaleY:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxScaleY():Number { return _maxScaleY; }
 		public function set maxScaleY(value:Number):void {
 			_maxScaleY = value;
 		}			
 		
 		private var _minScaleZ:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minScaleZ():Number { return _minScaleZ; }
 		public function set minScaleZ(value:Number):void {
 			_minScaleZ = value;
 		}		
 		
 		private var _maxScaleZ:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxScaleZ():Number { return _maxScaleZ; }
 		public function set maxScaleZ(value:Number):void {
 			_maxScaleZ = value;
@@ -718,6 +734,9 @@ package com.gestureworks.core
 		
 		//rotation
 		private var _minRotation:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minRotation():Number { return _minRotation; }
 		public function set minRotation(value:Number):void {
 			_minRotation = value;
@@ -726,6 +745,9 @@ package com.gestureworks.core
 		}		
 		
 		private var _maxRotation:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxRotation():Number { return _maxRotation; }
 		public function set maxRotation(value:Number):void {
 			_maxRotation = value;
@@ -734,36 +756,54 @@ package com.gestureworks.core
 		}	
 		
 		private var _minRotationX:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minRotationX():Number { return _minRotationX; }
 		public function set minRotationX(value:Number):void {
 			_minRotationX = value;
 		}		
 		
 		private var _maxRotationX:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxRotationX():Number { return _maxRotationX; }
 		public function set maxRotationX(value:Number):void {
 			_maxRotationX = value;
 		}
 		
 		private var _minRotationY:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minRotationY():Number { return _minRotationY; }
 		public function set minRotationY(value:Number):void {
 			_minRotationY = value;
 		}		
 		
 		private var _maxRotationY:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxRotationY():Number { return _maxRotationY; }
 		public function set maxRotationY(value:Number):void {
 			_maxRotationY = value;
 		}
 		
 		private var _minRotationZ:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get minRotationZ():Number { return _minRotationZ; }
 		public function set minRotationZ(value:Number):void {
 			_minRotationZ = value;
 		}		
 		
 		private var _maxRotationZ:Number;
+		/**
+		 * @inheritDoc
+		 */		
 		public function get maxRotationZ():Number { return _maxRotationZ; }
 		public function set maxRotationZ(value:Number):void {
 			_maxRotationZ = value;
@@ -785,7 +825,7 @@ package com.gestureworks.core
 		
 		private var _scale:Number = 1;
 		/**
-		 * Scales display object
+		 * @inheritDoc
 		 */	
 		public function get scale():Number{return _scale;}
 		public function set scale(value:Number):void
@@ -1000,8 +1040,8 @@ package com.gestureworks.core
 		public var _$height:Number = 0;				
 		
 	/**
-	* @private
-	*/
+	 * @inheritDoc
+	 */
 	public function updateTransformation():void 
 	{
 		if(tt){
@@ -1010,229 +1050,237 @@ package com.gestureworks.core
 		}
 	}
 	
+	/**
+	 * @inheritDoc
+	 */
 	public function updateDebugDisplay():void
 	{
 		if(visualizer) visualizer.updateDebugDisplay()
 	}
+		
+	private var _debugDisplay:Boolean = false;
+	/**
+	 * @inheritDoc
+	 */
+	public function get debugDisplay():Boolean { return _debugDisplay;}	
+	public function set debugDisplay(value:Boolean):void {
+		if (debugDisplay == value) return;
+					
+		_debugDisplay = value;
+		if(visualizer)
+			visualizer.initDebug();
+	}
 	
-	public function onGestureListUpdate(event:GWGestureEvent):void  
-		{
-			//trace("gesturelist update");
-			if (tg) tg.initTimeline();
-		}
+	private var _gestureFilters:Boolean = true;
+	/**
+	 * @inheritDoc
+	 */
+	public function get gestureFilters():Boolean {return _gestureFilters;}	
+	public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
+	
+	// BROADCASTING TEST
+	private var _broadcastTarget:Boolean = false;
+	/**
+	 * @inheritDoc
+	 */
+	public function get broadcastTarget():Boolean {return _broadcastTarget;}	
+	public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
+	
+	// TRANSFORM 3D
+	private var _transform3d:Boolean = false;
+	/**
+	 * @inheritDoc
+	 */
+	public function get transform3d():Boolean {return _transform3d;}	
+	public function set transform3d(value:Boolean):void {	_transform3d = value; }
+	
+	// TRANSFORM 3D
+	private var _motion3d:Boolean = false;
+	/**
+	 * @inheritDoc
+	 */
+	public function get motion3d():Boolean {return _motion3d;}	
+	public function set motion3d(value:Boolean):void{	_motion3d = value;}
+	
+	
+	private var _registerPoints:Boolean = true;
+	/**
+	 * @inheritDoc
+	 */
+	public function get registerPoints():Boolean { return _registerPoints} 
+	public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
+	
+	private var _away3d:Boolean = false;
+	/**
+	 * @inheritDoc
+	 */	
+	public function get away3d():Boolean {return _away3d;}	
+	public function set away3d(value:Boolean):void { _away3d = value; }
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function get eventListeners():Array { return _tsEventListeners; }		
+	
+	/**
+	 * Registers event listeners. 
+	 * @param	type
+	 * @param	listener
+	 * @param	useCapture
+	 * @param	priority
+	 * @param	useWeakReference
+	 */
+	override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
+	{			
+		addGWTouch(type, listener, useCapture, priority, useWeakReference);
 		
-		private var _debugDisplay:Boolean = false;
-		public function get debugDisplay():Boolean { return _debugDisplay;}	
-		public function set debugDisplay(value:Boolean):void {
-			if (debugDisplay == value) return;
-						
-			_debugDisplay = value;
-			if(visualizer)
-				visualizer.initDebug();
-		}
+		//prevent duplicate events
+		if(searchEvent(type, listener, useCapture) < 0)
+			_tsEventListeners.push( { type:type, listener:listener, capture:useCapture } );
 		
-		private var _gestureFilters:Boolean = true;
-		public function get gestureFilters():Boolean {return _gestureFilters;}	
-		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
-		
-		// BROADCASTING TEST
-		private var _broadcastTarget:Boolean = false;
-		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
-		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
-		
-		// TRANSFORM 3D
-		private var _transform3d:Boolean = false;
-		public function get transform3d():Boolean {return _transform3d;}	
-		public function set transform3d(value:Boolean):void {	_transform3d = value; }
-		
-		// TRANSFORM 3D
-		private var _motion3d:Boolean = false;
-		public function get motion3d():Boolean {return _motion3d;}	
-		public function set motion3d(value:Boolean):void{	_motion3d = value;}
-		
-		
-		private var _registerPoints:Boolean = true;
-		/**
-		* Determines if the touch points are registered to the TouchManager. One can override 
-		* this behaivor by setting the value to false. This is useful when creating custom 
-		* TouchSprite extensions and external framework bindings.
-		* @default true
-		*/
-		public function get registerPoints():Boolean { return _registerPoints} 
-		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
-		
-		private var _away3d:Boolean = false;
-		/**
-		* Sets whether this is representing an Away3D object.
-		* @default true
-		*/		
-		public function get away3d():Boolean {return _away3d;}	
-		public function set away3d(value:Boolean):void { _away3d = value; }
-		
-		public function updateTObjProcessing():void
-		{
-			TouchManager.updateTObjProcessing(this);
-		}
-		
-		/**
-		 * Overrides dispatch event to deconlfict duplicate device input 
-		 * @param	event
-		 * @return
-		 */
-		override public function dispatchEvent(event:Event):Boolean 
-		{
-			if (event is GWTouchEvent && duplicateDeviceInput(GWTouchEvent(event)))
-				return false;
-			return super.dispatchEvent(event);
-		}
-		
-		/**
-		 * Registers event listeners. 
-		 * @param	type
-		 * @param	listener
-		 * @param	useCapture
-		 * @param	priority
-		 * @param	useWeakReference
-		 */
-		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
-		{			
-			addGWTouch(type, listener, useCapture, priority, useWeakReference);
-			
-			//prevent duplicate events
-			if(searchEvent(type, listener, useCapture) < 0)
-				_tsEventListeners.push( { type:type, listener:listener, capture:useCapture } );
-			
-			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
-		}
-		
-		/**
-		 * Processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
-		 * and dispatches appropriate events.
-		 * @param	type
-		 * @param	listener
-		 * @param	useCapture
-		 * @param	priority = 0
-		 * @param	useWeakReference
-		 */
-		private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
-		{
-			if (GWTouchEvent.isType(type))
-			{	
-				var listeners:Array = [];
-				for each(var gwt:String in GWTouchEvent.eventTypes(type,this)) {
-					function gwl(e:*):void {
-						dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, true));
-					}
-					super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
-					listeners.push( { type:gwt, listener:gwl } );
+		super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+	}
+	
+	/**
+	 * Processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
+	 * and dispatches appropriate events.
+	 * @param	type
+	 * @param	listener
+	 * @param	useCapture
+	 * @param	priority = 0
+	 * @param	useWeakReference
+	 */
+	private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
+	{
+		if (GWTouchEvent.isType(type))
+		{	
+			var listeners:Array = [];
+			for each(var gwt:String in GWTouchEvent.eventTypes(type,this)) {
+				function gwl(e:*):void {
+					dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, true));
 				}
-				
-				listeners.push( { listener:listener } );
-				gwTouchListeners[type] = listeners;				
-			}			
-		}
-		
-		/**
-		 * Unregisters event listeners. 
-		 * @param	type
-		 * @param	listener
-		 * @param	useCapture
-		 */
-		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void 
-		{
-			if (!super.hasEventListener(type))
-				return;
-				
-			removeGWTouch(type);
-			
-			//update event registration array	
-			var i:int = searchEvent(type, listener, useCapture);
-			if(i >= 0)
-				_tsEventListeners.splice(i, 1);
-			
-			super.removeEventListener(type, listener, useCapture);
-		}
-		
-		/**
-		 * Manages removal of GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
-		 * @param	type GWTouchEvent type
-		 */
-		private function removeGWTouch(type:String):void {
-			if (GWTouchEvent.isType(type)) {
-				for each(var l:* in gwTouchListeners[type]) {
-					if (l.type)
-						super.removeEventListener(l.type, l.listener);
-				}
-				delete gwTouchListeners[type];
-			}			
-		}
-		
-		/**
-		 * Unregisters all event listeners
-		 */
-		public function removeAllListeners():void {
-			var eCnt:int = _tsEventListeners.length;
-			var e:*;
-			for(var i:int = eCnt-1; i >= 0; i--) {
-				e = _tsEventListeners[i];
-				removeEventListener(e.type, e.listener, e.capture);
+				super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
+				listeners.push( { type:gwt, listener:gwl } );
 			}
-			_tsEventListeners = null;
-		}
+			
+			listeners.push( { listener:listener } );
+			gwTouchListeners[type] = listeners;				
+		}			
+	}
+	
+	/**
+	 * Unregisters event listeners. 
+	 * @param	type
+	 * @param	listener
+	 * @param	useCapture
+	 */
+	override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void 
+	{
+		if (!super.hasEventListener(type))
+			return;
+			
+		removeGWTouch(type);
 		
-		/**
-		 * Search registerd events for provided event
-		 * @param	type Event type
-		 * @param	listener Listener function
-		 * @param	useCapture Capture flag
-		 * @return The index of the event in the registration list, or -1 if not registered
-		 */
-		private function searchEvent(type:String, listener:Function, useCapture:Boolean = false):int {
-			for (var i:int = 0; i < _tsEventListeners.length; i++) {
-				var el:* = _tsEventListeners[i];
-				if (el.type == type && el.listener == listener && el.capture == useCapture) {
-					return i;
-				}
-			}			
-			return -1;
-		}
+		//update event registration array	
+		var i:int = searchEvent(type, listener, useCapture);
+		if(i >= 0)
+			_tsEventListeners.splice(i, 1);
 		
-		private static var input1:GWTouchEvent;
-		/**
-		 * Prioritizes native touch input over mouse input from the touch screen. Processing
-		 * both inputs from the same device produces undesired results. Assumes touch events
-		 * will precede mouse events.
-		 * @param	event
-		 * @return
-		 */
-		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
-			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
-				return true;
-			input1 = event;
+		super.removeEventListener(type, listener, useCapture);
+	}
+	
+	/**
+	 * Manages removal of GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
+	 * @param	type GWTouchEvent type
+	 */
+	private function removeGWTouch(type:String):void {
+		if (GWTouchEvent.isType(type)) {
+			for each(var l:* in gwTouchListeners[type]) {
+				if (l.type)
+					super.removeEventListener(l.type, l.listener);
+			}
+			delete gwTouchListeners[type];
+		}			
+	}
+	
+	/**
+	 * @inheritDoc
+	 */
+	public function removeAllListeners():void {
+		var eCnt:int = _tsEventListeners.length;
+		var e:*;
+		for(var i:int = eCnt-1; i >= 0; i--) {
+			e = _tsEventListeners[i];
+			removeEventListener(e.type, e.listener, e.capture);
+		}
+		_tsEventListeners = null;
+	}
+	
+	/**
+	 * Search registerd events for provided event
+	 * @param	type Event type
+	 * @param	listener Listener function
+	 * @param	useCapture Capture flag
+	 * @return The index of the event in the registration list, or -1 if not registered
+	 */
+	private function searchEvent(type:String, listener:Function, useCapture:Boolean = false):int {
+		for (var i:int = 0; i < _tsEventListeners.length; i++) {
+			var el:* = _tsEventListeners[i];
+			if (el.type == type && el.listener == listener && el.capture == useCapture) {
+				return i;
+			}
+		}			
+		return -1;
+	}
+	
+	/**
+	 * Overrides dispatch event to deconlfict duplicate device input 
+	 * @param	event
+	 * @return
+	 */
+	override public function dispatchEvent(event:Event):Boolean 
+	{
+		if (event is GWTouchEvent && duplicateDeviceInput(GWTouchEvent(event)))
 			return false;
-		}		
-		
-		/**
-		 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
-		 * This is the root destructor intended to be called by overriding dispose functions. 
-		 */		
-		//public function dispose():void {
-			//
-			//remove all children
-			//for (var i:int = numChildren - 1; i >= 0; i--)
-			//{
-				//var child:Object = getChildAt(i);
-				//if (child.hasOwnProperty("dispose"))
-					//child["dispose"]();
-				//removeChildAt(i);
-			//}	
-			//
-			//unregister events
-			//removeAllListeners();
-			//
-			//remove from master list
-			//delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
-		//}
+		return super.dispatchEvent(event);
+	}		
+	
+	private static var input1:GWTouchEvent;
+	/**
+	 * Prioritizes native touch input over mouse input from the touch screen. Processing
+	 * both inputs from the same device produces undesired results. Assumes touch events
+	 * will precede mouse events.
+	 * @param	event
+	 * @return
+	 */
+	private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
+		if (input1 && input1.source != event.source && (event.time - input1.time < 200))
+			return true;
+		input1 = event;
+		return false;
+	}		
+	
+	/**
+	 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
+	 * This is the root destructor intended to be called by overriding dispose functions. 
+	 */		
+	//public function dispose():void {
+		//
+		//remove all children
+		//for (var i:int = numChildren - 1; i >= 0; i--)
+		//{
+			//var child:Object = getChildAt(i);
+			//if (child.hasOwnProperty("dispose"))
+				//child["dispose"]();
+			//removeChildAt(i);
+		//}	
+		//
+		//unregister events
+		//removeAllListeners();
+		//
+		//remove from master list
+		//delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+	//}
 		
 	}
 }

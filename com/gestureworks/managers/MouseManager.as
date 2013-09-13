@@ -130,7 +130,7 @@ package com.gestureworks.managers
 			TouchManager.onTouchUp(event);
 		}
 		
-		private static function removeSimulatorPoint(simPoint:SimulatorGraphic) {
+		private static function removeSimulatorPoint(simPoint:SimulatorGraphic):void {
 			GestureWorks.application.removeChild(simPoint as DisplayObject);
 			circleGraphics.splice(circleGraphics.indexOf(simPoint), 1);
 			var eventHere:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, simPoint.id, false);
