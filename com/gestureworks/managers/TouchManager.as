@@ -280,8 +280,9 @@ package com.gestureworks.managers
 				// NOTE: when enabling targeting object will have to be replaced with objectList
 				if (pointObject.object["registerPoints"] || overrideRegisterPoints) { 
 					// UPDATE POINT POSITIONS
+					pointObject.x = event.stageX;					
 					pointObject.y = event.stageY;
-					pointObject.x = event.stageX;
+					pointObject.z = event.stageZ;
 					pointObject.moveCount++;
 					
 					// UPDATE POINT HISTORY 
@@ -337,6 +338,7 @@ package com.gestureworks.managers
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
 				pointObject.y = event.stageY; 
+				pointObject.z = event.stageZ; 
 				pointObject.objectList.push(target); // seeds cluster/touch object list
 				
 				//ADD TO LOCAL POINT LIST
