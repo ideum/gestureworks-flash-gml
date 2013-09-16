@@ -17,6 +17,7 @@ package com.gestureworks.managers
 {
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
+	import com.gestureworks.core.ITouchObject;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.TouchManager;
@@ -78,12 +79,13 @@ package com.gestureworks.managers
 			GestureWorks.application.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);							
 			
-			var event:GWTouchEvent = new GWTouchEvent(e);			
-			TouchManager.onTouchDown(event);
-			
-			currentMousePoint = event.touchPointID;
-			mousePointX = event.stageX;
-			mousePointY = event.stageY;		
+			var event:GWTouchEvent = new GWTouchEvent(e);						
+			if (TouchManager.validTarget(event)) {				
+				TouchManager.onTouchDown(event);			
+				currentMousePoint = event.touchPointID;
+				mousePointX = event.stageX;
+				mousePointY = event.stageY;		
+			}
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void

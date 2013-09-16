@@ -15,50 +15,37 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.ITouchObject;
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
-	import com.gestureworks.core.TouchMovieClip;
 	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchTransform;
 	import com.gestureworks.core.TouchVisualizer;
-	import com.gestureworks.core.VirtualTouchObject;
+	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.objects.GestureListObject;
+	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import flash.display.Sprite;
-	import flash.geom.Point;
-	import flash.utils.Dictionary;
+	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
-	import flash.events.Event;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	import flash.system.System;
+	import flash.utils.Dictionary;
+	import org.tuio.TuioEvent;
+	import org.tuio.TuioTouchEvent;
 	
-	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.GestureWorksCore;
-	import com.gestureworks.core.GestureGlobals;
-	import com.gestureworks.core.gw_public;
-	import com.gestureworks.core.GML;
-	import com.gestureworks.core.TouchSprite
 	
-	import com.gestureworks.utils.ArrangePoints;
-	import com.gestureworks.managers.PointHistories;
-	import com.gestureworks.events.GWEvent;
 	
-	import com.gestureworks.objects.PointObject;
-	import com.gestureworks.objects.TouchObject;
-	import com.gestureworks.managers.InteractionManager;
-	import com.gestureworks.utils.Simulator;
 	
-	import com.gestureworks.objects.FrameObject;
 	
 	
 	/* 
@@ -89,7 +76,7 @@ package com.gestureworks.managers
 			
 			if (GestureWorks.activeNativeTouch) {			
 				
-				//DRIVES HIT TESTING
+				//DRIVES POINT REGISTRATION
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 				
 				//DRIVES UPDATES ON POINT LIFETIME
@@ -137,11 +124,40 @@ package com.gestureworks.managers
 		}
 		
 		/**
-		 * Update event target to the first activated ancestor
+		 * Determines the event's target is valid based on activated state and local mode settings.
+		 * @param	event
+		 * @return
+		 */
+		public static function validTarget(event:GWTouchEvent):Boolean {
+			activatedTarget(event);
+			
+			if (event.target is ITouchObject && event.target.activated) {
+				
+				//local mode filters
+				if (event.target.localModes) {
+					switch(event.source) {
+						case TouchEvent.TOUCH_BEGIN:
+							return event.target.nativeTouch;
+						case MouseEvent.MOUSE_DOWN:
+							return event.target.simulator;
+						case TuioEvent.ADD:
+							return event.target.tuio;
+						default:
+							return true;
+					}
+				}			
+				return true;
+				
+			}
+			return false;
+		}
+		
+		/**
+		 * If target is not activated, updates the target to the first activated ancestor
 		 * @param	event
 		 */
 		private static function activatedTarget(event:GWTouchEvent):void {
-			if (event.target is ITouchObject && event.target.activated) 
+			if (!event.target || (event.target is ITouchObject && event.target.activated)) 
 				return;
 			event.target = event.target.parent;
 			activatedTarget(event);
@@ -151,55 +167,53 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onTouchBegin(event:TouchEvent):void {
-				onTouchDown(new GWTouchEvent(event));
+		private static function onTouchBegin(e:TouchEvent):void {			
+			var event:GWTouchEvent = new GWTouchEvent(e);					
+			if(validTarget(event))
+				onTouchDown(event);
 		}
 		
 		/**
-		 * Decides how to assign the captured touch point to a cluster can pass to parent, an explicit target, an explicit list or 
-		 * targets or a passed to any touch object in the local display stack.
+		 * Decides how to assign the captured touch point to a cluster and pass to parent, an explicit target, an explicit list of 
+		 * targets or passed to any touch object in the local display stack.
 		 * @param	event
 		 * @param	overrideRegisterPoints
 		 */
 		public static function onTouchDown(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
 		{
-			if (event.eventPhase == 3) { //not stage
+			if (event.target is ITouchObject) { 
+											
+				if ((ITouchObject(event.target).registerPoints) || overrideRegisterPoints) {
 				
-				activatedTarget(event);				
-				if (event.target is ITouchObject && event.target.activated) {
-					
-					if ((ITouchObject(event.target).registerPoints) || overrideRegisterPoints) {
-					
-						if (duplicateDeviceInput(event)) return;
-									
-						if (event.target.targetParent && event.target.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
-								assignPoint(event.target.parent, event);
-						}
-						else if (event.target.targetObject && event.target.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
-						{							
-							assignPoint(event.target.targetObject, event);
+					if (duplicateDeviceInput(event)) return;
+								
+					if (event.target.targetParent && event.target.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
+							assignPoint(event.target.parent, event);
+					}
+					else if (event.target.targetObject && event.target.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
+					{							
+						assignPoint(event.target.targetObject, event);
+						event.target.targetList[j].broadcastTarget = true;
+					}
+					else if (event.target.targetList[0] is ITouchObject)
+					{							
+						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
+						assignPoint(ITouchObject(event.target), event);
+						
+						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
+						for (var j:uint = 0; j < event.target.targetList.length; j++) 
+						{
+							assignPointClone(event.target.targetList[j], event);
 							event.target.targetList[j].broadcastTarget = true;
 						}
-						else if (event.target.targetList[0] is ITouchObject)
-						{							
-							//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-							assignPoint(ITouchObject(event.target), event);
-							
-							//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-							for (var j:uint = 0; j < event.target.targetList.length; j++) 
-							{
-								assignPointClone(event.target.targetList[j], event);
-								event.target.targetList[j].broadcastTarget = true;
-							}
-						}
-						else {
-							 assignPoint(ITouchObject(event.target), event);
-							 if(event.target.parent is ITouchObject)
-								propagatePoint(ITouchObject(event.target.parent), event);
-						}
 					}
-				}					
-			}
+					else {
+						 assignPoint(ITouchObject(event.target), event);
+						 if(event.target.parent is ITouchObject)
+							propagatePoint(ITouchObject(event.target.parent), event);
+					}
+				}
+			}								
 		}
 		
 	/**
