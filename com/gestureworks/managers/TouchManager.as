@@ -189,29 +189,33 @@ package com.gestureworks.managers
 					if (duplicateDeviceInput(event)) return;
 								
 					if (event.target.targetParent && event.target.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
-							assignPoint(event.target.parent, event);
+						event.target = event.target.parent;	
+						assignPoint(event);
 					}
 					else if (event.target.targetObject && event.target.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
 					{							
-						assignPoint(event.target.targetObject, event);
+						event.target = event.target.targetObject;
+						assignPoint(event);
 						event.target.targetList[j].broadcastTarget = true;
 					}
 					else if (event.target.targetList[0] is ITouchObject)
 					{							
 						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						assignPoint(ITouchObject(event.target), event);
+						assignPoint(event);
 						
 						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
 						for (var j:uint = 0; j < event.target.targetList.length; j++) 
 						{
-							assignPointClone(event.target.targetList[j], event);
+							assignPointClone(event, event.target.targetList[j]);
 							event.target.targetList[j].broadcastTarget = true;
 						}
 					}
 					else {
-						 assignPoint(ITouchObject(event.target), event);
-						 if(event.target.parent is ITouchObject)
-							propagatePoint(ITouchObject(event.target.parent), event);
+						 assignPoint(event);
+						 if (event.target.parent is ITouchObject) {
+							event.target = event.target.parent;
+							propagatePoint( event);
+						 }
 					}
 				}
 			}								
@@ -334,15 +338,19 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function propagatePoint(target:ITouchObject, event:GWTouchEvent):void {
-			if (!target)
+		private static function propagatePoint(event:GWTouchEvent):void {
+			if (!event.target)
 				return;
 			
-			if (target.clusterBubbling) {
-				assignPointClone(target, event);
+			activatedTarget(event);
+			
+			if (event.target.clusterBubbling) {
+				assignPointClone(event);
 				
-				if(target.parent is ITouchObject)
-					propagatePoint(ITouchObject(target.parent), event);
+				if (event.target.parent is ITouchObject) {
+					event.target = event.target.parent;
+					propagatePoint(event);
+				}
 			}
 		}
 		
@@ -351,8 +359,11 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
-		private static function assignPoint(target:ITouchObject, event:GWTouchEvent):void // asigns point
+		private static function assignPoint(event:GWTouchEvent, target:ITouchObject = null):void // asigns point
 		{		
+			if (!target)
+				target = event.target as ITouchObject;
+				
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = DisplayObject(target); // sets primary touch object/cluster
@@ -398,40 +409,43 @@ package com.gestureworks.managers
 				
 		}	
 		
-		private static function assignPointClone(target:*, event:GWTouchEvent):void // assigns point copy
+		private static function assignPointClone(event:GWTouchEvent, target:ITouchObject=null):void // assigns point copy
 		{
-				// assign existing point object
-				var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
-					// add this touch object to touchobject list on point
-					pointObject.touchPointID = event.touchPointID;//-??
-					pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
-	
-				//ADD TO LOCAL POINT LIST
-				target.pointArray.push(pointObject);
+			if (!target)
+				target = event.target as ITouchObject;
 				
-				//UPDATE LOCAL CLUSTER OBJECT
-				//touch object point list and cluster point list should be consolodated
-				target.cO.pointArray = target.pointArray;
+			// assign existing point object
+			var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+				// add this touch object to touchobject list on point
+				pointObject.touchPointID = event.touchPointID;//-??
+				pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+
+			//ADD TO LOCAL POINT LIST
+			target.pointArray.push(pointObject);
+			
+			//UPDATE LOCAL CLUSTER OBJECT
+			//touch object point list and cluster point list should be consolodated
+			target.cO.pointArray = target.pointArray;
+			
+			//create point pair
+			/*
+			if(target.cO.pointArray.length!=1){
+			var lastpointID:Number = target.cO.pointArray[target.cO.pointArray.length - 2].touchPointID;
+			var ppt:PointPairObject = new PointPairObject();
+				ppt.idA = lastpointID;
+				ppt.idB = pointObject.touchPointID;
 				
-				//create point pair
-				/*
-				if(target.cO.pointArray.length!=1){
-				var lastpointID:Number = target.cO.pointArray[target.cO.pointArray.length - 2].touchPointID;
-				var ppt:PointPairObject = new PointPairObject();
-					ppt.idA = lastpointID;
-					ppt.idB = pointObject.touchPointID;
-					
-				//cO.pointPairArray.push(ppt);
-				//trace("Clone pair");
-				}*/
-				
-				//UPDATE POINT LOCAL COUNT
-				target.pointCount++;
-				
-				// add touch down to touch object gesture event timeline
-				if ((target.tiO)&&(target.tiO.timelineOn) && (target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
-				
-				//trace("ts clone bubble target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
+			//cO.pointPairArray.push(ppt);
+			//trace("Clone pair");
+			}*/
+			
+			//UPDATE POINT LOCAL COUNT
+			target.pointCount++;
+			
+			// add touch down to touch object gesture event timeline
+			if ((target.tiO)&&(target.tiO.timelineOn) && (target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array
+			
+			//trace("ts clone bubble target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}	
 		
 		public static function preinitBase(obj:ITouchObject):void 
