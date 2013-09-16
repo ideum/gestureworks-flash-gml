@@ -141,7 +141,7 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function activatedTarget(event:GWTouchEvent):void {
-			if (event.target.activated) 
+			if (event.target is ITouchObject && event.target.activated) 
 				return;
 			event.target = event.target.parent;
 			activatedTarget(event);
