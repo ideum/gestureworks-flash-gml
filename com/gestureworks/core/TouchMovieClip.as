@@ -31,8 +31,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
+	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
@@ -45,7 +44,7 @@ package com.gestureworks.core
 	
 	/**
 	 * The TouchMovieClip class is the base class for all touch and gestures enabled
-	 * MovieClips that require additional display list management. 
+	 * MovieClip objects that require additional display list management. 
 	 * 
 	 * <pre>
 	 * 		<b>Properties</b>
@@ -91,18 +90,19 @@ package com.gestureworks.core
 			}
 		}
 		
-		private var _localModes:Boolean;
+		private var _localModes:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
 		public function get localModes():Boolean { return _localModes; }
 		public function set localModes(l:Boolean):void {
 			if (_localModes == l) return;
+			trace(this);
 			_localModes = l;
 			updateListeners();
 		}
 		
-		private var _nativeTouch:Boolean;
+		private var _nativeTouch:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */		
@@ -113,7 +113,7 @@ package com.gestureworks.core
 			updateListeners();
 		}
 		
-		private var _simulator:Boolean;
+		private var _simulator:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */		
@@ -124,7 +124,7 @@ package com.gestureworks.core
 			updateListeners();	
 		}
 		
-		private var _tuio:Boolean;
+		private var _tuio:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */		
@@ -134,6 +134,17 @@ package com.gestureworks.core
 			_tuio = t;
 			updateListeners();
 		}				
+		
+		private var _leap2D:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */		
+		public function get leap2D():Boolean { return _leap2D && GestureWorks.activeMotion; }
+		public function set leap2D(l:Boolean):void {
+			if (_leap2D == l) return;
+			_leap2D = l;
+			updateListeners();
+		}			
 		
 		/**
 		 * @inheritDoc

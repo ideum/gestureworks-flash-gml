@@ -333,8 +333,8 @@ package com.gestureworks.core
 			if (!obj)
 				obj = this;
 				
-			if (obj is TouchSprite)
-				TouchSprite(obj).updateListeners();							
+			if (obj is ITouchObject)
+				ITouchObject(obj).updateListeners();							
 			else if (!obj.hasOwnProperty("numChildren"))
 				return;
 				
@@ -449,8 +449,8 @@ package com.gestureworks.core
 		 */
 		private function reapplyGestures():void{ 
 			for each(var obj:* in GestureGlobals.gw_public::touchObjects) {
-				if (obj is TouchSprite)
-					TouchSprite(obj).gestureList = TouchSprite(obj).gestureList;
+				if (obj is ITouchObject)
+					ITouchObject(obj).gestureList = ITouchObject(obj).gestureList;
 			}	
 		}
 		

@@ -115,7 +115,7 @@ package com.gestureworks.utils
 								// properties of the gesture 
 								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 								
-								// check to see if in the gesture list for this touchsprite
+								// check to see if in the gesture list for this touch object
 								var key:String;
 								var type:String;
 								
