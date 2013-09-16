@@ -1,8 +1,7 @@
 package com.gestureworks.managers 
 {
 
-	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.TouchSprite;
+	import com.gestureworks.core.ITouchObject;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.Pointable;
@@ -98,13 +97,17 @@ package com.gestureworks.managers
 					//hit test
 					var obj:* = getTopDisplayObjectUnderPoint(point);
 					
-					if (obj is TouchSprite && pressure <= pressureThreshold) {
+					if (obj is ITouchObject && pressure <= pressureThreshold) {
 						activePoints.push(pid);	
 						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
 							ev.stageX = point.x;
 							ev.stageY = point.y;
 							ev.pressure = pressure;
-						TouchManager.onTouchDown(ev, obj);
+							ev.target = obj;
+							ev.source = this.toString();
+							
+						if(TouchManager.validTarget(ev))
+							TouchManager.onTouchDown(ev);
 					}
 					
 					if(debug)

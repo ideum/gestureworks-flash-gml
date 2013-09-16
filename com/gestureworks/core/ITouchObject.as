@@ -53,12 +53,20 @@ package com.gestureworks.core
 		function set simulator(s:Boolean):void;
 		
 		/**
-		 * Local override to enable/disable mouse input.
+		 * Local override to enable/disable tuio input.
 		 * @see localModes
 		 * @default false
 		 */
 		function get tuio():Boolean;
 		function set tuio(t:Boolean):void;
+		
+		/**
+		 * Local override to enable/disable leap2D input.
+		 * @see localModes
+		 * @default false
+		 */
+		function get leap2D():Boolean;
+		function set leap2D(l:Boolean):void;		
 		
 		/**
 		 * Unique id of the touch object

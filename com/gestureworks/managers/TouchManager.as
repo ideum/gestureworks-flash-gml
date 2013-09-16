@@ -41,7 +41,6 @@ package com.gestureworks.managers
 	import flash.events.TouchEvent;
 	import flash.utils.Dictionary;
 	import org.tuio.TuioEvent;
-	import org.tuio.TuioTouchEvent;
 	
 	
 	
@@ -142,6 +141,8 @@ package com.gestureworks.managers
 							return event.target.simulator;
 						case TuioEvent.ADD:
 							return event.target.tuio;
+						case "[object Leap2DManager]":
+							return event.target.leap2D;
 						default:
 							return true;
 					}

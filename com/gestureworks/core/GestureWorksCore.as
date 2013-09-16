@@ -262,6 +262,7 @@ package com.gestureworks.core
 			if (motion == value) return;
 			_motion = value;
 			
+			GestureWorks.activeMotion = _motion;
 			if (_motion) {
 				MotionManager.gw_public::initialize();
 				InteractionManager.gw_public::initialize();
@@ -281,6 +282,7 @@ package com.gestureworks.core
 			if (sensor == value) return;
 			_sensor = value;
 			
+			GestureWorks.activeSensor = _sensor;
 			if (_sensor) 
 				SensorManager.gw_public::initialize();
 		}

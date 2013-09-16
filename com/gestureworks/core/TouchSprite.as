@@ -136,6 +136,17 @@ package com.gestureworks.core
 			updateListeners();
 		}				
 		
+		private var _leap2D:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */		
+		public function get leap2D():Boolean { return _leap2D && GestureWorks.activeMotion; }
+		public function set leap2D(l:Boolean):void {
+			if (_leap2D == l) return;
+			_leap2D = l;
+			updateListeners();
+		}			
+		
 		/**
 		 * @inheritDoc
 		 */

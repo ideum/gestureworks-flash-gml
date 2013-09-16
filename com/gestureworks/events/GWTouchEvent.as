@@ -137,7 +137,8 @@ package com.gestureworks.events
 		/**
 		 * The derrived event type
 		 */
-		public function get source():String { return _source; }
+		public function set source(v:String):void { _source = v; }
+		public function get source():String { return _source; }		
 		
 		private var _time:Number;
 		/**
