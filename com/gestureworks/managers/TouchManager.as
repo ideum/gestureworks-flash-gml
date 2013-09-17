@@ -586,8 +586,11 @@ package com.gestureworks.managers
 				// PERHAPS A INTERACTION POINT CADIDATE LIST THEN PERFORM HIT LOCAL TO THE TOUCHOBJECT
 				
 				//GET GLOBAL MOTION POINTS
-				tO.cO.motionArray = gms.cO.motionArray/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
+				if (tO.cO) 
+					tO.cO.motionArray = gms.cO.motionArray/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				else 
+					continue;
+					
 				// update touch,cluster and gesture processing
 				updateTouchObject(ITouchObject(tO));
 				
