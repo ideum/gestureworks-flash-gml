@@ -375,6 +375,7 @@ package com.gestureworks.core
 
 		/**
 		 * Determines whether gesture event driven transformations are affine on the touchSprite.
+		 * You must use the $attributes when this flag is set.
 		 * @default true
 		 */
 		function get disableAffineTransform():Boolean;
@@ -382,6 +383,7 @@ package com.gestureworks.core
 		
 		/**
 		 * Determines whether gesture event driven transformations are affine on the touchSprite.
+		 * You must use the $attributes when this flag is set.
 		 * Same as !disableAffineTransform
 		 */
 		function get affineTransform():Boolean;
