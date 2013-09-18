@@ -755,18 +755,51 @@ package com.gestureworks.analysis
 										////////////////////////////////////////////
 										// rotate
 										var dtheta:Number = 0;
-										var theta0:Number = calcAngle(sx, sy); // TODO: ADD 3D
+										var dthetax:Number = 0;
+										var dthetay:Number = 0;
+										var dthetaz:Number = 0;
+										
+										var theta0:Number = calcAngle(sx, sy);
 										var theta1:Number = calcAngle(sx_mc, sy_mc); // could eliminate in point pair
-
+										var theta0x:Number = calcAngle(sy, sz);
+										var theta1x:Number = calcAngle(sy_mc, sz_mc);
+										var theta0y:Number = calcAngle(sx, sz);
+										var theta1y:Number = calcAngle(sx_mc, sz_mc); 
+										var theta0z:Number = calcAngle(sx, sy);
+										var theta1z:Number = calcAngle(sx_mc, sy_mc); 
+										
 										if ((theta0 != 0) && (theta1 != 0)) 
 											{
 											if (Math.abs(theta0 - theta1) > 180) dtheta = 0
 											else dtheta = (theta0 - theta1);
 											}
 										else dtheta = 0;
+												
+										if ((theta0x != 0) && (theta1x != 0)) 
+											{
+											if (Math.abs(theta0x - theta1x) > 180) dthetax = 0
+											else dthetax = (theta0x - theta1x);
+											}
+										else dthetax = 0;
+												
+										if ((theta0y != 0) && (theta1y != 0)) 
+											{
+											if (Math.abs(theta0y - theta1y) > 180) dthetax = 0
+											else dthetay = (theta0y - theta1y);
+											}
+										else dthetay = 0;
+		
+										if ((theta0z != 0) && (theta1z != 0)) 
+											{
+											if (Math.abs(theta0z - theta1z) > 180) dthetaz = 0
+											else dthetaz = (theta0z - theta1z);
+											}
+										else dthetaz = 0;
 		
 										tcO.dtheta += dtheta;
-										////////////////////////////////////////////
+										tcO.dthetaX += dthetax;
+										tcO.dthetaY += dthetay;
+										tcO.dthetaZ += dthetaz;
 									
 										}	
 								}
@@ -779,6 +812,9 @@ package com.gestureworks.analysis
 								tcO.dz *= tpnk0;
 								
 								tcO.dtheta *= tpnk1;
+								tcO.dthetaX *= tpnk1;
+								tcO.dthetaY *= tpnk1;
+								tcO.dthetaZ *= tpnk1;
 								tcO.ds = (Math.sqrt(sx * sx  +  sy * sy + sz * sz) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc + sz_mc * sz_mc)) * tpnk1 * sck;
 								
 								
