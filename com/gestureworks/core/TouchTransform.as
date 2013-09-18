@@ -86,16 +86,24 @@ package com.gestureworks.core
 		*/		
 		public function updateLocalProperties():void
 		{
-			ts.dx = 0;
-			ts.dy = 0;
-			ts.dz = 0;
-			ts.dsx = 0;
-			ts.dsy = 0;
-			ts.dsz = 0;
-			ts.dtheta = 0;
-			ts.dthetaX = 0;
-			ts.dthetaY = 0;
-			ts.dthetaZ = 0;						
+			ts._$x = ts.x;
+			ts._$y = ts.y;
+			ts._$z = ts.z;//3d--
+			
+			ts._$scaleX = ts.scaleX;
+			ts._$scaleY = ts.scaleY;//0.5;
+			ts._$scaleZ = ts.scaleZ;//0.5;
+			
+			ts._$width = ts.width;
+			ts._$height = ts.height;
+			//ts._$length = ts.length;
+			
+			//3d
+			ts._$rotation = ts.rotation//45;	
+			ts._$rotationX = ts.rotationX;//3d--
+			ts._$rotationY = ts.rotationY;//3d--
+			ts._$rotationZ = ts.rotationZ;//3d--
+			
 			
 			// update transform 2d debug object properties
 			if (trO.transAffinePoints)
@@ -104,18 +112,18 @@ package com.gestureworks.core
 				trO.obj_y = trO.transAffinePoints[4].y//_y	
 			}
 			
-			trO.obj_scaleX = ts.scaleX;
-			trO.obj_scaleY = ts.scaleY;
-			trO.obj_scaleZ = ts.scaleZ;
+			trO.obj_scaleX = ts._$scaleX;
+			trO.obj_scaleY = ts._$scaleY;
+			trO.obj_scaleZ = ts._$scaleZ;
 			
-			trO.obj_width = ts.width;
-			trO.obj_height = ts.height;
-			//trO.obj_length = ts.length;
+			trO.obj_width = ts._$width;
+			trO.obj_height = ts._$height;
+			//trO.obj_length = ts._$length;
 			
-			trO.obj_rotation = ts.rotation;
-			trO.obj_rotationX = ts.rotationX;//3d--
-			trO.obj_rotationY = ts.rotationY;//3d--
-			trO.obj_rotationZ = ts.rotationZ;//3d-
+			trO.obj_rotation = ts._$rotation;
+			trO.obj_rotationX = ts._$rotationX;//3d--
+			trO.obj_rotationY = ts._$rotationY;//3d--
+			trO.obj_rotationZ = ts._$rotationZ;//3d-
 		}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +150,7 @@ package com.gestureworks.core
 					centerTransform = false;
 					
 					if (ts.disableNativeTransform){
-						if (!ts.disableAffineTransform) applyAffineTransform();//true
+						if (!ts.disableAffineTransform) $applyTransform();//true
 					}
 					else applyNativeTransform();//true
 					
@@ -157,7 +165,7 @@ package com.gestureworks.core
 					centerTransform = true;
 					
 					if (ts.disableNativeTransform) {
-						if (!ts.disableAffineTransform) applyAffineTransform();	//true//false
+						if (!ts.disableAffineTransform) $applyTransform();	//true//false
 					}
 					else applyNativeTransform(); // false
 					
@@ -184,7 +192,7 @@ package com.gestureworks.core
 			centerTransform = false;
 			
 			if (ts.disableNativeTransform){
-				if (!ts.disableAffineTransform) applyAffineTransform();
+				if (!ts.disableAffineTransform) $applyTransform();
 			}
 			else applyNativeTransform();
 			
@@ -200,7 +208,7 @@ package com.gestureworks.core
 			centerTransform = true;
 			
 			if (ts.disableNativeTransform) {
-				if (!ts.disableAffineTransform) applyAffineTransform();
+				if (!ts.disableAffineTransform) $applyTransform();
 			}
 			else applyNativeTransform();
 			
@@ -389,50 +397,50 @@ package com.gestureworks.core
 		}
 			 
 		/////////////////////////////////////////////////////////////////////////
-		// affine transform properties 
+		// transform properties using $ values
 		///////////////////////////////////////////////////////////////////////// 
 		/**
 		* @private
 		*/
-		public function applyAffineTransform():void
+		public function $applyTransform():void
 			{
 				///////////////////////////////////////////////////////////////////////////////////
 				if ((ts.parent)&&(ts.transformGestureVectors))
 				//if (ts.parent)
 				{
-					//trace("transform parent")
+					//trace("$transform parent")
 					// pre transfrom to compensate for parent transforms
 					parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
 					parent_modifier.invert();
 					
-					//var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
-					var angle:Number = calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
+					//var $angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
+					var $angle:Number = calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
 					
 					
-					ref_frame_angle = angle;
-					var scalex:Number = parent_modifier.a/Math.cos(angle)
-					var scaley:Number = parent_modifier.a/Math.cos(angle)
+					ref_frame_angle = $angle;
+					var $scalex:Number = parent_modifier.a/Math.cos($angle)
+					var $scaley:Number = parent_modifier.a/Math.cos($angle)
 					
 					// TRANSFORM AFFINE POINT
-					var pt:Point;
-					if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
-					else pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
+					var $pt:Point;
+					if (!centerTransform) $pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+					else $pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
 					
 					// TRANSFORM VECTOR
-					var r_mod:Matrix = new Matrix ();
-						r_mod.rotate(angle);
-						r_mod.scale(scalex ,scaley);
-					var tpt:Point = r_mod.transformPoint(new Point(ts.dx, ts.dy));
+					var $r_mod:Matrix = new Matrix ();
+						$r_mod.rotate($angle);
+						$r_mod.scale($scalex ,$scaley);
+					var $tpt:Point = $r_mod.transformPoint(new Point((ts._$x - ts.x), (ts._$y - ts.y)));
 				
 						// translate center of transformation
-						t_x =  pt.x;
-						t_y =  pt.y;
+						t_x =  $pt.x;
+						t_y =  $pt.y;
 						// rotate translation vector
-						dx =   tpt.x;
-						dy =   tpt.y;
+						dx =   $tpt.x;
+						dy =   $tpt.y;
 				}
 				else {	
-					//trace("transform")
+					//trace("$transform")
 						// do not pre transform // super override method
 						if (centerTransform) {
 							t_x = trO.transAffinePoints[4].x
@@ -442,8 +450,8 @@ package com.gestureworks.core
 							t_x = trO.x;
 							t_y = trO.y;
 						}
-						dx = ts.dx;
-						dy = ts.dy;
+						dx = (ts._$x - ts.x);
+						dy = (ts._$y - ts.y);
 				}
 								
 				//////////////////////////////////////////////////
@@ -453,18 +461,18 @@ package com.gestureworks.core
 				
 				///////////////////////////////////////////////////
 				// leave scalar values untouched
-				dsx = ts.dsx;
-				dsy = ts.dsy;
-				dsz = ts.dsz;
-				dtheta = ts.dtheta * DEG_RAD;
+				dsx = (ts._$scaleX - ts.scaleX);
+				dsy = (ts._$scaleY - ts.scaleY);
+				dsz = (ts._$scaleZ - ts.scaleZ);
+				dtheta = (ts._$rotation - ts.rotation) * DEG_RAD;
 				
 				//////////////////////////////////////////////////////
 				// 3d
 				if (ts.transform3d) {
 					// TODO: 3D affine transformations
-					dthetaX = ts.dthetaX * DEG_RAD;//3d--
-					dthetaY = ts.dthetaY * DEG_RAD;//3d--
-					dthetaZ = ts.dthetaZ * DEG_RAD;//3d--					
+					dthetaX = (ts._$rotationX - ts.rotationX) * DEG_RAD;//3d--
+					dthetaY = (ts._$rotationY - ts.rotationY) * DEG_RAD;//3d--
+					dthetaZ = (ts._$rotationZ - ts.rotationZ) * DEG_RAD;//3d--					
 				}
 			
 				//////////////////////////////////////////////////////
