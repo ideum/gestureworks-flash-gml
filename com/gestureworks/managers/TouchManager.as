@@ -342,9 +342,7 @@ package com.gestureworks.managers
 			if (!event.target)
 				return;
 			
-			activatedTarget(event);
-			
-			if (event.target.clusterBubbling) {
+			if (validTarget(event) && event.target.clusterBubbling) {
 				assignPointClone(event);
 				
 				if (event.target.parent is ITouchObject) {
