@@ -318,6 +318,10 @@ package com.gestureworks.core
 		public function get gestureList():Object{ return _gestureList;}
 		public function set gestureList(value:Object):void
 		{
+			var empty:Boolean = true;
+			for (var n:* in value) { empty = false; break; }			
+			if (empty) return;
+			
 			activated = true;
 			_gestureList = value;
 			
