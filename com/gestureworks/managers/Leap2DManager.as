@@ -9,6 +9,8 @@ package com.gestureworks.managers
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.geom.Point;
+	import flash.utils.*;
+	
 	/**
 	 * @author
 	 */
@@ -104,7 +106,7 @@ package com.gestureworks.managers
 							ev.stageY = point.y;
 							ev.pressure = pressure;
 							ev.target = obj;
-							ev.source = this.toString();
+							ev.source = getDefinitionByName(getQualifiedClassName(this)) as Class;
 							
 						if(TouchManager.validTarget(ev))
 							TouchManager.onTouchDown(ev);

@@ -133,12 +133,12 @@ package com.gestureworks.events
 		public function set stageZ(v:Number):void { _stageZ = v;}
 		public function get stageZ():Number { return _stageZ; }		
 		
-		private var _source:String;
+		private var _source:Class;
 		/**
 		 * The derrived event type
 		 */
-		public function set source(v:String):void { _source = v; }
-		public function get source():String { return _source; }		
+		public function set source(v:Class):void { _source = v; }
+		public function get source():Class { return _source; }		
 		
 		private var _time:Number;
 		/**
@@ -158,6 +158,7 @@ package com.gestureworks.events
 		private function importEvent(event:Event):void
 		{ 
 			sourceEvent = event;
+			source = getDefinitionByName(getQualifiedClassName(event)) as Class;
 			var sourceInfo:XML = describeType(event);
 			var prop:XML;
 			var propName:String;
@@ -174,8 +175,7 @@ package com.gestureworks.events
 				if (this.hasOwnProperty(propName))
 				{
 					if (propName == "type") { 
-						_source = event[propName];
-						this[propName] = TOUCH_TYPE_MAP[eventType][source];						
+						this[propName] = TOUCH_TYPE_MAP[eventType][event[propName]];						
 					}
 					else
 						this[propName] = event[propName];
@@ -190,10 +190,10 @@ package com.gestureworks.events
 		 */
 		private function resolveType(type:String):String
 		{
-			_source = type;
-			var key:Class = hasKey(TOUCH_TYPE_MAP[TuioTouchEvent],type) ? TuioTouchEvent : hasKey(TOUCH_TYPE_MAP[TouchEvent],type) ? TouchEvent : hasKey(TOUCH_TYPE_MAP[MouseEvent],type) ? MouseEvent : null;
+			var key:Class = hasKey(TOUCH_TYPE_MAP[TuioTouchEvent], type) ? TuioTouchEvent : hasKey(TOUCH_TYPE_MAP[TouchEvent], type) ? TouchEvent : hasKey(TOUCH_TYPE_MAP[MouseEvent], type) ? MouseEvent : null;
 			var resolvedType:String = key && hasKey(TOUCH_TYPE_MAP[key], type) ? TOUCH_TYPE_MAP[key][type]: type;
 			this.type = resolvedType;
+			_source = key;
 			return resolvedType;
 		}
 		

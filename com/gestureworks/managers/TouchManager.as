@@ -135,13 +135,13 @@ package com.gestureworks.managers
 				//local mode filters
 				if (event.target.localModes) {
 					switch(event.source) {
-						case TouchEvent.TOUCH_BEGIN:
+						case TouchEvent:
 							return event.target.nativeTouch;
-						case MouseEvent.MOUSE_DOWN:
+						case MouseEvent:
 							return event.target.simulator;
-						case TuioEvent.ADD:
+						case TuioEvent:
 							return event.target.tuio;
-						case "[object Leap2DManager]":
+						case Leap2DManager:
 							return event.target.leap2D;
 						default:
 							return true;
