@@ -16,6 +16,7 @@
 package com.gestureworks.events
 {
 	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.ITouchObject;
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.utils.MousePoint;
 	import flash.display.InteractiveObject;
@@ -203,7 +204,7 @@ package com.gestureworks.events
 		 * @param   target The target to check for local overrides
 		 * @return An array of activated input types
 		 */
-		public static function eventTypes(type:String, target:TouchSprite = null):Array
+		public static function eventTypes(type:String, target:ITouchObject = null):Array
 		{
 			var types:Array = [];
 			var active:Boolean;
