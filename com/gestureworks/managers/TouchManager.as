@@ -188,11 +188,11 @@ package com.gestureworks.managers
 				
 					if (duplicateDeviceInput(event)) return;
 								
-					if (event.target.targetParent && event.target.parent is ITouchObject) { //ASSIGN PRIMARY CLUSTER TO PARENT
+					if (event.target.targetParent && event.target.parent is ITouchObject && event.target.parent.activated) { //ASSIGN PRIMARY CLUSTER TO PARENT
 						event.target = event.target.parent;	
 						assignPoint(event);
 					}
-					else if (event.target.targetObject && event.target.targetObject is ITouchObject)	// ASSIGN PRIMARY CLUSTER TO TARGET
+					else if (event.target.targetObject && event.target.targetObject is ITouchObject && event.target.targetObject.activated)	// ASSIGN PRIMARY CLUSTER TO TARGET
 					{							
 						event.target = event.target.targetObject;
 						assignPoint(event);
