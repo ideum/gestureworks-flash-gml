@@ -746,7 +746,7 @@ package com.gestureworks.analysis
 		public function findMeanInstTransformation():void
 		{
 			
-			trace("KineMetric::findMeanInstTransformation");
+			//trace("KineMetric::findMeanInstTransformation");
 
 			// these values required reset for manipulate
 			tcO.dthetaX = 0;
@@ -876,7 +876,7 @@ package com.gestureworks.analysis
 		
 		public function findMeanInstTranslation():void
 		{
-			trace("KineMetric::findMeanInstTranslation");
+			//trace("KineMetric::findMeanInstTranslation");
 
 			
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -918,7 +918,7 @@ package com.gestureworks.analysis
 		
 		public function findSimpleMeanInstSeparation():void
 		{
-			trace("KineMetric::findSimpleMeanInstSeparation");
+			//trace("KineMetric::findSimpleMeanInstSeparation");
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// cluster separation //OPERATION
@@ -944,7 +944,7 @@ package com.gestureworks.analysis
 		
 		public function findMeanInstSeparation():void
 		{
-			trace("KineMetric::findMeanInstSeparation");
+			//trace("KineMetric::findMeanInstSeparation");
 
 			
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1001,7 +1001,7 @@ package com.gestureworks.analysis
 		
 		public function findSimpleMeanInstRotation():void
 		{
-			trace("KineMetric::findSimpleMeanInstRotation");			
+			//trace("KineMetric::findSimpleMeanInstRotation");			
 			
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// cluster roation // OPERATION
@@ -1021,7 +1021,7 @@ package com.gestureworks.analysis
 		
 		public function findMeanInstRotation():void
 		{
-			trace("KineMetric::findMeanInstRotation");						
+			//trace("KineMetric::findMeanInstRotation");						
 			
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// cluster roation // OPERATION
@@ -1085,10 +1085,7 @@ package com.gestureworks.analysis
 									//tcO.dtheta += dtheta;
 									tcO.dthetaX += dthetaX;
 									tcO.dthetaY += dthetaY;
-									tcO.dthetaZ += dthetaZ;
-									
-									
-									trace(tcO.dthetaX, tcO.dthetaY, tcO.dthetaZ);
+									tcO.dthetaZ += dthetaZ;									
 								}
 						}
 						//tcO.dtheta *= tpnk1;
@@ -1097,16 +1094,13 @@ package com.gestureworks.analysis
 						tcO.dthetaY *= tpnk1;
 						tcO.dthetaZ *= tpnk1;						
 						tcO.dtheta = tcO.dthetaX + tcO.dthetaY + tcO.dthetaZ;
-						
-						trace(tcO.dtheta, tcO.dthetaX, tcO.dthetaY, tcO.dthetaZ);
-						trace();
 						}
 						//trace(cO.dtheta);
 		}
 		
 		public function findMeanInstAcceleration():void
 		{
-			trace("KineMetric::findMeanInstAcceleration");									
+			//trace("KineMetric::findMeanInstAcceleration");									
 			
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// cluster acceleration x y // OPERATION
@@ -1136,7 +1130,7 @@ package com.gestureworks.analysis
 		
 		public function findMeanTemporalVelocity():void
 		{
-			trace("KineMetric::findMeanTemporalVelocity");	
+			//trace("KineMetric::findMeanTemporalVelocity");	
 			
 		/////////////////////// mean velocity of cluster // OPERATION ////////////////////////////////////////
 			tcO.etm_dx = 0;
@@ -1165,7 +1159,7 @@ package com.gestureworks.analysis
 		
 		public function findMeanTemporalAcceleration():void
 		{
-			trace("KineMetric::findMeanTemporalAcceleration");	
+			//trace("KineMetric::findMeanTemporalAcceleration");	
 			
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// cluster acceleration x y // OPERATION
@@ -1202,7 +1196,7 @@ package com.gestureworks.analysis
 		
 		public function findInstOrientation():void 
 		{
-				trace("KineMetric::findInstOrientation");			
+				//trace("KineMetric::findInstOrientation");			
 			
 				var handArray:Array = new Array();
 				var maxDist:Number = 0;
@@ -1281,7 +1275,7 @@ package com.gestureworks.analysis
 		
 		public function findInstPivot():void
 		{
-			trace("KineMetric::findInstPivot");			
+			//trace("KineMetric::findInstPivot");			
 			
 					if(tpn==1)
 					{
