@@ -33,6 +33,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TransformObject;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	
@@ -44,7 +45,7 @@ package com.gestureworks.core
 	
 	/**
 	 * The TouchMovieClip class is the base class for all touch and gestures enabled
-	 * MovieClip objects that require additional display list management. 
+	 * MovieClips that require additional display list management. 
 	 * 
 	 * <pre>
 	 * 		<b>Properties</b>
@@ -317,6 +318,10 @@ package com.gestureworks.core
 		public function get gestureList():Object{ return _gestureList;}
 		public function set gestureList(value:Object):void
 		{
+			var empty:Boolean = true;
+			for (var n:* in value) { empty = false; break; }			
+			if (empty) return;
+			
 			activated = true;
 			_gestureList = value;
 			
@@ -821,18 +826,149 @@ package com.gestureworks.core
 		}		
 		
 		/////////////////////////////////////////////////////////////
+		//affine transformation deltas 
+		/////////////////////////////////////////////////////////////		
+		/**
+		 * @private
+		 */
+		public var dx:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dy:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dz:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dtheta:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dthetaX:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dthetaY:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dthetaZ:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dsx:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dsy:Number = 0;
+		/**
+		 * @private
+		 */
+		public var dsz:Number = 0;
+		/**
+		 * For non-native affine tranformations, used to cache previous transform in order to revert modifications made through direct transformation settings
+		 * (i.e. x,y,rotation,etc.) allowing the TouchTransform to apply all gesture tranformations
+		 * @private
+		 */
+		public var mtx:Matrix;
+		
+		
+		/////////////////////////////////////////////////////////////
 		//transform methods
 		/////////////////////////////////////////////////////////////
-		override public function set x(value:Number):void {super.x = value < minX ? minX : value > maxX ? maxX : value;}		
-		override public function set y(value:Number):void {super.y = value < minY ? minY : value > maxY ? maxY : value;}
-		override public function set z(value:Number):void {super.z = value < minZ ? minZ : value > maxZ ? maxZ : value;}
-		override public function set scaleX(value:Number):void {super.scaleX = value < minScaleX ? minScaleX : value > maxScaleX ? maxScaleX : value;}		
-		override public function set scaleY(value:Number):void {super.scaleY = value < minScaleY ? minScaleY : value > maxScaleY ? maxScaleY : value;}			
-		override public function set scaleZ(value:Number):void {super.scaleZ = value < minScaleZ ? minScaleZ : value > maxScaleZ ? maxScaleZ : value;}
-		override public function set rotation(value:Number):void {super.rotation = value < minRotation ? minRotation : value > maxRotation ? maxRotation : value;}
-		override public function set rotationX(value:Number):void {super.rotationX = value < minRotationX ? minRotationX : value > maxRotationX ? maxRotationX : value;}		
-		override public function set rotationY(value:Number):void {super.rotationY = value < minRotationY ? minRotationY : value > maxRotationY ? maxRotationY : value;}				
-		override public function set rotationZ(value:Number):void { super.rotationZ = value < minRotationZ ? minRotationZ : value > maxRotationZ ? maxRotationZ : value;}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set x(value:Number):void {	
+			value < minX ? minX : value > maxX ? maxX : value;
+			dx = value - super.x;
+			super.x = value;
+		}		
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set y(value:Number):void {
+			value = value < minY ? minY : value > maxY ? maxY : value;
+			dy = value - super.y;
+			super.y = value;
+		}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set z(value:Number):void {
+			value = value < minZ ? minZ : value > maxZ ? maxZ : value;
+			dz = value - super.z;
+			super.z = value;
+		}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set rotation(value:Number):void {
+			value = value < minRotation ? minRotation : value > maxRotation ? maxRotation : value;
+			dtheta = value - super.rotation;
+			super.rotation = value;
+		}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set rotationX(value:Number):void {
+			value = value < minRotationX ? minRotationX : value > maxRotationX ? maxRotationX : value;
+			dthetaX = value - super.rotationX;
+			super.rotationX = value;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set rotationY(value:Number):void {
+			value = value < minRotationY ? minRotationY : value > maxRotationY ? maxRotationY : value;
+			dthetaY = value - super.rotationY;
+			super.rotationY = value;
+		}
+			
+		/**
+		 * @inheritDoc
+		 */
+		override public function set rotationZ(value:Number):void {
+			value = value < minRotationZ ? minRotationZ : value > maxRotationZ ? maxRotationZ : value;
+			dthetaZ = value - super.rotationZ;
+			super.rotationZ = value;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		override public function set scaleX(value:Number):void {
+			value = value < minScaleX ? minScaleX : value > maxScaleX ? maxScaleX : value;
+			dsx = value - super.scaleX;
+			super.scaleX = value;
+		}			
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set scaleY(value:Number):void {
+			value = value < minScaleY ? minScaleY : value > maxScaleY ? maxScaleY : value;
+			dsy = value - super.scaleY;
+			super.scaleY = value;
+		}	
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function set scaleZ(value:Number):void {
+			value = value < minScaleZ ? minScaleZ : value > maxScaleZ ? maxScaleZ : value;
+			dsz = value - super.scaleZ;
+			super.scaleZ = value;
+		}
 		
 		private var _scale:Number = 1;
 		/**
@@ -846,452 +982,258 @@ package com.gestureworks.core
 			scaleY = scale;
 		}					
 		
-		
-		/////////////////////////////////////////////////////////////
-		// $ affine transform boundaries
-		/////////////////////////////////////////////////////////////			
-		//translation
-		private var _$minX:Number;
-		public function get $minX():Number { return _$minX; }
-		public function set $minX(value:Number):void {
-			_$minX = value;
-		}
-		
-		private var _$maxX:Number;
-		public function get $maxX():Number { return _$maxX; }
-		public function set $maxX(value:Number):void {
-			_$maxX = value;
-		}
-		
-		private var _$minY:Number;
-		public function get $minY():Number { return _$minY; }
-		public function set $minY(value:Number):void {
-			_$minY = value;
-		}
-		
-		private var _$maxY:Number;
-		public function get $maxY():Number { return _$maxY; }
-		public function set $maxY(value:Number):void {
-			_$maxY = value;
-		}		
-		
-		private var _$minZ:Number;
-		public function get $minZ():Number { return _$minZ; }
-		public function set $minZ(value:Number):void {
-			_$minZ = value;
-		}		
-	
-		private var _$maxZ:Number;
-		public function get $maxZ():Number { return _$maxZ; }
-		public function set $maxZ(value:Number):void {
-			_$maxZ = value;
-		}
-		
-		//scale
-		private var _$minScale:Number;
-		public function get $minScale():Number { return _$minScale; }
-		public function set $minScale(value:Number):void {
-			_$minScale = value;
-		}
-		
-		private var _$maxScale:Number;
-		public function get $maxScale():Number { return _$maxScale; }
-		public function set $maxScale(value:Number):void {
-			_$maxScale = value;
-		}			
-		
-		private var _$minScaleX:Number;
-		public function get $minScaleX():Number { return _$minScaleX; }
-		public function set $minScaleX(value:Number):void {
-			_$minScaleX = value;
-		}
-		
-		private var _$maxScaleX:Number;
-		public function get $maxScaleX():Number { return _$maxScaleX; }
-		public function set $maxScaleX(value:Number):void {
-			_$maxScaleX = value;
-		}			
-		
-		private var _$minScaleY:Number;
-		public function get $minScaleY():Number { return _$minScaleY; }
-		public function set $minScaleY(value:Number):void {
-			_$minScaleY = value;
-		}	
-		
-		private var _$maxScaleY:Number;
-		public function get $maxScaleY():Number { return _$maxScaleY; }
-		public function set $maxScaleY(value:Number):void {
-			_$maxScaleY = value;
-		}			
-		
-		private var _$minScaleZ:Number;
-		public function get $minScaleZ():Number { return _$minScaleZ; }
-		public function set $minScaleZ(value:Number):void {
-			_$minScaleZ = value;
-		}		
-		
-		private var _$maxScaleZ:Number;
-		public function get $maxScaleZ():Number { return _$maxScaleZ; }
-		public function set $maxScaleZ(value:Number):void {
-			_$maxScaleZ = value;
-		}		
-		
-		//rotation
-		private var _$minRotation:Number;
-		public function get $minRotation():Number { return _$minRotation; }
-		public function set $minRotation(value:Number):void {
-			_$minRotation = value;
-		}		
-		
-		private var _$maxRotation:Number;
-		public function get $maxRotation():Number { return _$maxRotation; }
-		public function set $maxRotation(value:Number):void {
-			_$maxRotation = value;
-		}
-		
-		private var _$minRotationX:Number;
-		public function get $minRotationX():Number { return _$minRotationX; }
-		public function set $minRotationX(value:Number):void {
-			_$minRotationX = value;
-		}		
-		
-		private var _$maxRotationX:Number;
-		public function get $maxRotationX():Number { return _$maxRotationX; }
-		public function set $maxRotationX(value:Number):void {
-			_$maxRotationX = value;
-		}
-		
-		private var _$minRotationY:Number;
-		public function get $minRotationY():Number { return _$minRotationY; }
-		public function set $minRotationY(value:Number):void {
-			_$minRotationY = value;
-		}		
-		
-		private var _$maxRotationY:Number;
-		public function get $maxRotationY():Number { return _$maxRotationY; }
-		public function set $maxRotationY(value:Number):void {
-			_$maxRotationY = value;
-		}
-		
-		private var _$minRotationZ:Number;
-		public function get $minRotationZ():Number { return _$minRotationZ; }
-		public function set $minRotationZ(value:Number):void {
-			_$minRotationZ = value;
-		}		
-		
-		private var _$maxRotationZ:Number;
-		public function get $maxRotationZ():Number { return _$maxRotationZ; }
-		public function set $maxRotationZ(value:Number):void {
-			_$maxRotationZ = value;
-		}		
-		
-		/////////////////////////////////////////////////////////////
-		// $ affine transform methods
-		/////////////////////////////////////////////////////////////
-		// x property
-		public function get $x():Number {return _$x;}
-		public function set $x(value:Number):void {_$x = value < $minX ? $minX : value > $maxX ? $maxX : value;}
-		// y property
-		public function get $y():Number {return _$y;}
-		public function set $y(value:Number):void {_$y = value < $minY ? $minY : value > $maxY ? $maxY : value;}
-		// z property
-		public function get $z():Number {return _$z;}
-		public function set $z(value:Number):void {_$z = value < $minZ ? $minZ : value > $maxZ ? $maxZ : value;}
-		// rotation property
-		public function get $rotation():Number{return _$rotation;}
-		public function set $rotation(value:Number):void {_$rotation = value < $minRotation ? $minRotation : value > $maxRotation ? $maxRotation : value;}
-		// rotationX property
-		public function get $rotationX():Number{return _$rotationX;}
-		public function set $rotationX(value:Number):void {_$rotationX = value < $minRotationX ? $minRotationX : value > $maxRotationX ? $maxRotationX : value;}
-		// rotationY property
-		public function get $rotationY():Number{return _$rotationY;}
-		public function set $rotationY(value:Number):void{	_$rotationY = value < $minRotationY ? $minRotationY : value > $maxRotationY ? $maxRotationY : value;}
-		// rotationZ property
-		public function get $rotationZ():Number{return _$rotationZ;}
-		public function set $rotationZ(value:Number):void{	_$rotationZ = value < $minRotationZ ? $minRotationZ : value > $maxRotationZ ? $maxRotationZ : value;}
-		// scaleX property
-		public function get $scaleX():Number {return _$scaleX;}
-		public function set $scaleX(value:Number):void{	_$scaleX = value < $minScaleX ? $minScaleX : value > $maxScaleX ? $maxScaleX : value;}
-		// scaleY property
-		public function get $scaleY():Number {return _$scaleY;}	
-		public function set $scaleY(value:Number):void{_$scaleY = value < $minScaleY ? $minScaleY : value > $maxScaleY ? $maxScaleY : value;}
-		// scaleZ property
-		public function get $scaleZ():Number {return _$scaleY;}	
-		public function set $scaleZ(value:Number):void{	_$scaleZ = value < $minScaleZ ? $minScaleZ : value > $maxScaleZ ? $maxScaleZ : value;}
 		// affine transform point  
-		public function get $transformPoint():Point { return new Point(trO?trO.x:0, trO?trO.y:0);} 
-		public function set $transformPoint(pt:Point):void
+		public function get transformPoint():Point { return new Point(trO?trO.x:0, trO?trO.y:0);} 
+		public function set transformPoint(pt:Point):void
 		{
 			if (!tt) return;
 			var tpt:Point = tt.affine_modifier.transformPoint(pt);
 			trO.x = tpt.x;
 			trO.y = tpt.y;
-		}
-		//affine scale
-		public function get $scale():Number{return _$scale;}
-		public function set $scale(value:Number):void
-		{
-			_$scale = value < $minScale ? $minScale : value > $maxScale ? $maxScale : value;
-			$scaleX = _$scale;
-			$scaleY = _$scale;
 		}		
-
-		public var _$x:Number = 0;
-		public var _$y:Number = 0;
-		public var _$z:Number = 0;
-		public var _$scale:Number = 1;		
-		public var _$scaleX:Number = 1;
-		public var _$scaleY:Number = 1;
-		public var _$scaleZ:Number = 1;
-		public var _$rotation:Number = 0;
-		public var _$rotationX:Number = 0;
-		public var _$rotationY:Number = 0;
-		public var _$rotationZ:Number = 0;
-		public var _$width:Number = 0;
-		public var _$height:Number = 0;				
 		
-	/**
-	 * @inheritDoc
-	 */
-	public function updateTransformation():void 
-	{
-		if(tt){
-			tt.transformManager();
-			tt.updateLocalProperties();
+		/**
+		 * @inheritDoc
+		 */
+		public function updateTransformation():void 
+		{
+			if(tt){
+				tt.transformManager();
+				tt.updateLocalProperties();
+			}
 		}
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function updateDebugDisplay():void
-	{
-		if(visualizer) visualizer.updateDebugDisplay()
-	}
 		
-	private var _debugDisplay:Boolean = false;
-	/**
-	 * @inheritDoc
-	 */
-	public function get debugDisplay():Boolean { return _debugDisplay;}	
-	public function set debugDisplay(value:Boolean):void {
-		if (debugDisplay == value) return;
-					
-		_debugDisplay = value;
-		if(visualizer)
-			visualizer.initDebug();
-	}
-	
-	private var _gestureFilters:Boolean = true;
-	/**
-	 * @inheritDoc
-	 */
-	public function get gestureFilters():Boolean {return _gestureFilters;}	
-	public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
-	
-	// BROADCASTING TEST
-	private var _broadcastTarget:Boolean = false;
-	/**
-	 * @inheritDoc
-	 */
-	public function get broadcastTarget():Boolean {return _broadcastTarget;}	
-	public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
-	
-	// TRANSFORM 3D
-	private var _transform3d:Boolean = false;
-	/**
-	 * @inheritDoc
-	 */
-	public function get transform3d():Boolean {return _transform3d;}	
-	public function set transform3d(value:Boolean):void {	_transform3d = value; }
-	
-	// TRANSFORM 3D
-	private var _motion3d:Boolean = false;
-	/**
-	 * @inheritDoc
-	 */
-	public function get motion3d():Boolean {return _motion3d;}	
-	public function set motion3d(value:Boolean):void{	_motion3d = value;}
-	
-	
-	private var _registerPoints:Boolean = true;
-	/**
-	 * @inheritDoc
-	 */
-	public function get registerPoints():Boolean { return _registerPoints} 
-	public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
-	
-	private var _away3d:Boolean = false;
-	/**
-	 * @inheritDoc
-	 */	
-	public function get away3d():Boolean {return _away3d;}	
-	public function set away3d(value:Boolean):void { _away3d = value; }
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function get eventListeners():Array { return _tsEventListeners; }		
-	
-	/**
-	 * Registers event listeners. 
-	 * @param	type
-	 * @param	listener
-	 * @param	useCapture
-	 * @param	priority
-	 * @param	useWeakReference
-	 */
-	override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
-	{			
-		addGWTouch(type, listener, useCapture, priority, useWeakReference);
+		/**
+		 * @inheritDoc
+		 */
+		public function updateDebugDisplay():void
+		{
+			if(visualizer) visualizer.updateDebugDisplay()
+		}
+			
+		private var _debugDisplay:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get debugDisplay():Boolean { return _debugDisplay;}	
+		public function set debugDisplay(value:Boolean):void {
+			if (debugDisplay == value) return;
+						
+			_debugDisplay = value;
+			if(visualizer)
+				visualizer.initDebug();
+		}
 		
-		//prevent duplicate events
-		if(searchEvent(type, listener, useCapture) < 0)
-			_tsEventListeners.push( { type:type, listener:listener, capture:useCapture } );
+		private var _gestureFilters:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */
+		public function get gestureFilters():Boolean {return _gestureFilters;}	
+		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
 		
-		super.addEventListener(type, listener, useCapture, priority, useWeakReference);
-	}
-	
-	/**
-	 * Processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
-	 * and dispatches appropriate events.
-	 * @param	type
-	 * @param	listener
-	 * @param	useCapture
-	 * @param	priority = 0
-	 * @param	useWeakReference
-	 */
-	private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
-	{
-		if (GWTouchEvent.isType(type))
-		{	
-			var listeners:Array = [];
-			for each(var gwt:String in GWTouchEvent.eventTypes(type,this)) {
-				function gwl(e:*):void {
-					dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, true));
+		// BROADCASTING TEST
+		private var _broadcastTarget:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
+		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
+		
+		// TRANSFORM 3D
+		private var _transform3d:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get transform3d():Boolean {return _transform3d;}	
+		public function set transform3d(value:Boolean):void {	_transform3d = value; }
+		
+		// TRANSFORM 3D
+		private var _motion3d:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get motion3d():Boolean {return _motion3d;}	
+		public function set motion3d(value:Boolean):void{	_motion3d = value;}
+		
+		
+		private var _registerPoints:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */
+		public function get registerPoints():Boolean { return _registerPoints} 
+		public function set registerPoints(value:Boolean):void{	_registerPoints = value}		
+		
+		private var _away3d:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */	
+		public function get away3d():Boolean {return _away3d;}	
+		public function set away3d(value:Boolean):void { _away3d = value; }
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get eventListeners():Array { return _tsEventListeners; }		
+		
+		/**
+		 * Registers event listeners. 
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 * @param	priority
+		 * @param	useWeakReference
+		 */
+		override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void 
+		{			
+			addGWTouch(type, listener, useCapture, priority, useWeakReference);
+			
+			//prevent duplicate events
+			if(searchEvent(type, listener, useCapture) < 0)
+				_tsEventListeners.push( { type:type, listener:listener, capture:useCapture } );
+			
+			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+		}
+		
+		/**
+		 * Processes GWTouchEvents by evaluating which types of touch events (TUIO, native touch, and mouse) are active then registers
+		 * and dispatches appropriate events.
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 * @param	priority = 0
+		 * @param	useWeakReference
+		 */
+		private function addGWTouch(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void
+		{
+			if (GWTouchEvent.isType(type))
+			{	
+				var listeners:Array = [];
+				for each(var gwt:String in GWTouchEvent.eventTypes(type,this)) {
+					function gwl(e:*):void {
+						dispatchEvent(new GWTouchEvent(e, e.type, e.bubbles, true));
+					}
+					super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
+					listeners.push( { type:gwt, listener:gwl } );
 				}
-				super.addEventListener(gwt, gwl, useCapture, priority, useWeakReference);
-				listeners.push( { type:gwt, listener:gwl } );
-			}
-			
-			listeners.push( { listener:listener } );
-			gwTouchListeners[type] = listeners;				
-		}			
-	}
-	
-	/**
-	 * Unregisters event listeners. 
-	 * @param	type
-	 * @param	listener
-	 * @param	useCapture
-	 */
-	override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void 
-	{
-		if (!super.hasEventListener(type))
-			return;
-			
-		removeGWTouch(type);
-		
-		//update event registration array	
-		var i:int = searchEvent(type, listener, useCapture);
-		if(i >= 0)
-			_tsEventListeners.splice(i, 1);
-		
-		super.removeEventListener(type, listener, useCapture);
-	}
-	
-	/**
-	 * Manages removal of GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
-	 * @param	type GWTouchEvent type
-	 */
-	private function removeGWTouch(type:String):void {
-		if (GWTouchEvent.isType(type)) {
-			for each(var l:* in gwTouchListeners[type]) {
-				if (l.type)
-					super.removeEventListener(l.type, l.listener);
-			}
-			delete gwTouchListeners[type];
-		}			
-	}
-	
-	/**
-	 * @inheritDoc
-	 */
-	public function removeAllListeners():void {
-		var eCnt:int = _tsEventListeners.length;
-		var e:*;
-		for(var i:int = eCnt-1; i >= 0; i--) {
-			e = _tsEventListeners[i];
-			removeEventListener(e.type, e.listener, e.capture);
+				
+				listeners.push( { listener:listener } );
+				gwTouchListeners[type] = listeners;				
+			}			
 		}
-		_tsEventListeners = null;
-	}
-	
-	/**
-	 * Search registerd events for provided event
-	 * @param	type Event type
-	 * @param	listener Listener function
-	 * @param	useCapture Capture flag
-	 * @return The index of the event in the registration list, or -1 if not registered
-	 */
-	private function searchEvent(type:String, listener:Function, useCapture:Boolean = false):int {
-		for (var i:int = 0; i < _tsEventListeners.length; i++) {
-			var el:* = _tsEventListeners[i];
-			if (el.type == type && el.listener == listener && el.capture == useCapture) {
-				return i;
+		
+		/**
+		 * Unregisters event listeners. 
+		 * @param	type
+		 * @param	listener
+		 * @param	useCapture
+		 */
+		override public function removeEventListener(type:String, listener:Function, useCapture:Boolean = false):void 
+		{
+			if (!super.hasEventListener(type))
+				return;
+				
+			removeGWTouch(type);
+			
+			//update event registration array	
+			var i:int = searchEvent(type, listener, useCapture);
+			if(i >= 0)
+				_tsEventListeners.splice(i, 1);
+			
+			super.removeEventListener(type, listener, useCapture);
+		}
+		
+		/**
+		 * Manages removal of GWTouchEvents and associated input (TUIO, native touch, and mouse) events.
+		 * @param	type GWTouchEvent type
+		 */
+		private function removeGWTouch(type:String):void {
+			if (GWTouchEvent.isType(type)) {
+				for each(var l:* in gwTouchListeners[type]) {
+					if (l.type)
+						super.removeEventListener(l.type, l.listener);
+				}
+				delete gwTouchListeners[type];
+			}			
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function removeAllListeners():void {
+			var eCnt:int = _tsEventListeners.length;
+			var e:*;
+			for(var i:int = eCnt-1; i >= 0; i--) {
+				e = _tsEventListeners[i];
+				removeEventListener(e.type, e.listener, e.capture);
 			}
-		}			
-		return -1;
-	}
-	
-	/**
-	 * Overrides dispatch event to deconlfict duplicate device input 
-	 * @param	event
-	 * @return
-	 */
-	override public function dispatchEvent(event:Event):Boolean 
-	{
-		if (event is GWTouchEvent && duplicateDeviceInput(GWTouchEvent(event)))
+			_tsEventListeners = null;
+		}
+		
+		/**
+		 * Search registerd events for provided event
+		 * @param	type Event type
+		 * @param	listener Listener function
+		 * @param	useCapture Capture flag
+		 * @return The index of the event in the registration list, or -1 if not registered
+		 */
+		private function searchEvent(type:String, listener:Function, useCapture:Boolean = false):int {
+			for (var i:int = 0; i < _tsEventListeners.length; i++) {
+				var el:* = _tsEventListeners[i];
+				if (el.type == type && el.listener == listener && el.capture == useCapture) {
+					return i;
+				}
+			}			
+			return -1;
+		}
+		
+		/**
+		 * Overrides dispatch event to deconlfict duplicate device input 
+		 * @param	event
+		 * @return
+		 */
+		override public function dispatchEvent(event:Event):Boolean 
+		{
+			if (event is GWTouchEvent && duplicateDeviceInput(GWTouchEvent(event)))
+				return false;
+			return super.dispatchEvent(event);
+		}		
+		
+		private static var input1:GWTouchEvent;
+		/**
+		 * Prioritizes native touch input over mouse input from the touch screen. Processing
+		 * both inputs from the same device produces undesired results. Assumes touch events
+		 * will precede mouse events.
+		 * @param	event
+		 * @return
+		 */
+		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
+			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
+				return true;
+			input1 = event;
 			return false;
-		return super.dispatchEvent(event);
-	}		
-	
-	private static var input1:GWTouchEvent;
-	/**
-	 * Prioritizes native touch input over mouse input from the touch screen. Processing
-	 * both inputs from the same device produces undesired results. Assumes touch events
-	 * will precede mouse events.
-	 * @param	event
-	 * @return
-	 */
-	private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
-		if (input1 && input1.source != event.source && (event.time - input1.time < 200))
-			return true;
-		input1 = event;
-		return false;
-	}		
-	
-	/**
-	 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
-	 * This is the root destructor intended to be called by overriding dispose functions. 
-	 */		
-	//public function dispose():void {
-		//
-		//remove all children
-		//for (var i:int = numChildren - 1; i >= 0; i--)
-		//{
-			//var child:Object = getChildAt(i);
-			//if (child.hasOwnProperty("dispose"))
-				//child["dispose"]();
-			//removeChildAt(i);
-		//}	
-		//
-		//unregister events
-		//removeAllListeners();
-		//
-		//remove from master list
-		//delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
-	//}
+		}		
+		
+		/**
+		 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
+		 * This is the root destructor intended to be called by overriding dispose functions. 
+		 */		
+		//public function dispose():void {
+			//
+			//remove all children
+			//for (var i:int = numChildren - 1; i >= 0; i--)
+			//{
+				//var child:Object = getChildAt(i);
+				//if (child.hasOwnProperty("dispose"))
+					//child["dispose"]();
+				//removeChildAt(i);
+			//}	
+			//
+			//unregister events
+			//removeAllListeners();
+			//
+			//remove from master list
+			//delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+		//}
 		
 	}
 }
