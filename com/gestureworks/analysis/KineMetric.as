@@ -493,7 +493,6 @@ package com.gestureworks.analysis
 			tcO.dthetaX = 0;
 			tcO.dthetaY = 0;
 			tcO.dthetaZ = 0;
-			tcO.dtheta = 0;
 			tcO.dx = 0;
 			tcO.dy = 0;
 			tcO.dz = 0;//-3D
@@ -529,6 +528,7 @@ package com.gestureworks.analysis
 		
 		public function findTouchInstDimention():void
 		{
+			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// cluster width, height and radius // OPERATION
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -547,6 +547,10 @@ package com.gestureworks.analysis
 					tcO.separationY = 0;
 					tcO.separationZ = 0;
 					tcO.rotation = 0;
+					tcO.dtheta = 0;
+					tcO.dthetaX = 0;
+					tcO.dthetaY = 0;
+					tcO.dthetaZ = 0;
 					tcO.mx = 0;
 					tcO.my = 0;
 					tcO.mz = 0;
@@ -619,17 +623,28 @@ package com.gestureworks.analysis
 							{
 								var dxs:Number = cO.pointArray[0].x - cO.pointArray[i].x;
 								var dys:Number = cO.pointArray[0].y - cO.pointArray[i].y;
-								var dyz:Number = cO.pointArray[0].z - cO.pointArray[i].z;
+								var dzs:Number = cO.pointArray[0].z - cO.pointArray[i].z;
 								//var ds:Number  = Math.sqrt(dx * dx + dy * dy);
 
 								// separation of group
 								tcO.separationX += Math.abs(dxs);
 								tcO.separationY += Math.abs(dys);
-								tcO.separationZ += Math.abs(dyz);
+								tcO.separationZ += Math.abs(dzs);
+								
 								
 								// rotation of group
-								tcO.rotation += (calcAngle(dxs, dys)) //|| 0 // TODO: ADD 3D
-								tcO.dthetaX = tcO.rotation; //|| 0 // TODO: ADD 3D
+								//tcO.rotation += (calcAngle(dxs, dys)) //|| 0 // TODO: ADD 3D 
+								//tcO.dthetaX = tcO.rotation; //|| 0 // TODO: ADD 3D
+
+
+								//tcO.dtheta += dtheta;
+								tcO.dthetaX += calcAngle(dys, dzs);
+								tcO.dthetaY += calcAngle(dxs, dzs);
+								tcO.dthetaZ += calcAngle(dxs, dys);
+								
+								tcO.rotation = tcO.dthetaZ;								
+								//tcO.dtheta = tcO.dthetaX + tcO.dthetaY + tcO.dthetaZ;																
+
 							}
 						}
 						/*
@@ -645,6 +660,8 @@ package com.gestureworks.analysis
 						tcO.separationZ *= tpnk0;
 						tcO.rotation *= tpnk0;
 						tcO.dthetaX *= tpnk0;
+						tcO.dthetaY *= tpnk0;
+						tcO.dthetaZ *= tpnk0;
 						tcO.mx *= tpnk0;
 						tcO.my *= tpnk0;
 						tcO.mz *= tpnk0;
@@ -747,7 +764,7 @@ package com.gestureworks.analysis
 										// scale 
 										sx += cO.pointArray[0].x - cO.pointArray[i + 1].x;
 										sy += cO.pointArray[0].y - cO.pointArray[i + 1].y;
-										sz += cO.pointArray[0].y - cO.pointArray[i + 1].z;
+										sz += cO.pointArray[0].z - cO.pointArray[i + 1].z;
 										sx_mc += cO.pointArray[0].history[mc].x - cO.pointArray[i + 1].history[mc].x;// could eliminate in point pair
 										sy_mc += cO.pointArray[0].history[mc].y - cO.pointArray[i + 1].history[mc].y;// could eliminate in point pair
 										sz_mc += cO.pointArray[0].history[mc].z - cO.pointArray[i + 1].history[mc].z;// could eliminate in point pair
@@ -784,7 +801,7 @@ package com.gestureworks.analysis
 												
 										if ((theta0y != 0) && (theta1y != 0)) 
 											{
-											if (Math.abs(theta0y - theta1y) > 180) dthetax = 0
+											if (Math.abs(theta0y - theta1y) > 180) dthetay = 0
 											else dthetay = (theta0y - theta1y);
 											}
 										else dthetay = 0;
@@ -816,13 +833,17 @@ package com.gestureworks.analysis
 								tcO.dthetaY *= tpnk1;
 								tcO.dthetaZ *= tpnk1;
 								tcO.dtheta = tcO.dthetaX + tcO.dthetaY + tcO.dthetaZ;
-								tcO.ds = (Math.sqrt(sx * sx  +  sy * sy + sz * sz) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc + sz_mc * sz_mc)) * tpnk1 * sck;
+								
+																
+								tcO.ds = (Math.sqrt(sx * sx + sy * sy + sz * sz) - Math.sqrt(sx_mc * sx_mc  + sy_mc * sy_mc + sz_mc * sz_mc)) * tpnk1 * sck;
+								//tcO.ds = 0;
+								//tcO.dtheta = 0;
 								
 								
 								
 								
 				}
-		//trace("transfromation",c_dx,c_dy, c_ds,c_dtheta)
+		//trace("transfromation",tcO.dx,tcO.dy, tcO.ds,tcO.dtheta)
 		}
 		
 		public function findMeanInstTranslation():void
@@ -1825,7 +1846,7 @@ package com.gestureworks.analysis
 		
 		// 3D MANIPULATE GENERIC 
 		public function find3DIPTransformation(index:int):void////type:String
-		{
+		{			
 			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			var hist:int = 1; //CREATES DELAY 
 			var hk:Number = 1 / hist;
