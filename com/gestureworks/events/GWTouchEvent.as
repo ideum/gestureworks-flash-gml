@@ -90,7 +90,7 @@ package com.gestureworks.events
 		 * @param	altKey
 		 * @param	shiftKey
 		 */
-		public function GWTouchEvent(event:Event, type:String = "touchBegin", bubbles:Boolean=true, cancelable:Boolean=false, touchPointID:int=0, isPrimaryTouchPoint:Boolean=false, localX:Number=NaN, localY:Number=NaN, sizeX:Number=NaN, sizeY:Number=NaN, pressure:Number=NaN, relatedObject:InteractiveObject=null, ctrlKey:Boolean=false, altKey:Boolean=false, shiftKey:Boolean=false)
+		public function GWTouchEvent(event:Event = null, type:String = "touchBegin", bubbles:Boolean=true, cancelable:Boolean=false, touchPointID:int=0, isPrimaryTouchPoint:Boolean=false, localX:Number=NaN, localY:Number=NaN, sizeX:Number=NaN, sizeY:Number=NaN, pressure:Number=NaN, relatedObject:InteractiveObject=null, ctrlKey:Boolean=false, altKey:Boolean=false, shiftKey:Boolean=false)
 		{
 			super(resolveType(type), bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
 			if(event)
@@ -144,6 +144,7 @@ package com.gestureworks.events
 		private var _time:Number;
 		/**
 		 * Time of instantiation
+		 * _time is initialized on object creation, no need for a set.
 		 */
 		public function get time():Number { return _time;}
 
