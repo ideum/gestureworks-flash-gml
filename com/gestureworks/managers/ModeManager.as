@@ -26,6 +26,13 @@ package com.gestureworks.managers
 	
 	public class ModeManager extends Sprite
 	{
+		/**
+		 * INSTALLER DEPENDENT VARIABLES - DO NOT MODIFY:
+		 * isOE
+		 * isT
+		 * OESplash
+		 * GWSplash
+		 */
 		private var isOE:Boolean = false; // open exhibits	
 		private var isT:Boolean = false; // gw trial		
 
