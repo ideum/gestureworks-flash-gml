@@ -23,6 +23,8 @@ package com.gestureworks.managers
 	import flash.net.*;
 	import flash.text.*;
 	import flash.utils.*;
+	import images.GWSplash;
+	import images.OESplash;
 	
 	public class ModeManager extends Sprite
 	{
@@ -63,7 +65,7 @@ package com.gestureworks.managers
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 					
 			if (isOE) {
-				splash = new Bitmaps_OESplash(); 
+				splash = new OESplash(); 
 				configSplash();
 				timer = new Timer(splashTime*1000);				
 				timer.addEventListener(TimerEvent.TIMER, onSplashComplete);
@@ -71,7 +73,7 @@ package com.gestureworks.managers
 				initialize();
 			}
 			else if (isT) {
-				splash = new Bitmaps_GWSplash();		
+				splash = new GWSplash();		
 				configSplash();
 				stage.addEventListener(MouseEvent.MOUSE_DOWN, openWebsite);
 				stage.addEventListener(TouchEvent.TOUCH_BEGIN, openWebsite);	

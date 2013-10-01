@@ -17,13 +17,16 @@
 package com.gestureworks.managers
 {
 	import flash.text.Font;
+	import fonts.OpenSansBold;
+	import fonts.OpenSansItalic;
+	import fonts.OpenSansRegular;
 	
 	public class FontManager 
 	{				
-		Font.registerFont(Fonts_OpenSansRegular);	
+		Font.registerFont(OpenSansRegular);	
 		
-		Font.registerFont(Fonts_OpenSansItalic); 
+		Font.registerFont(OpenSansItalic); 
 		
-		Font.registerFont(Fonts_OpenSansBold); 
+		Font.registerFont(OpenSansBold); 
 	}
 }
