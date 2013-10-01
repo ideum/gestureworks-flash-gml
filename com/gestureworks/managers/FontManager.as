@@ -20,39 +20,10 @@ package com.gestureworks.managers
 	
 	public class FontManager 
 	{				
-		// Open Sans
-		[Embed(source = '../../../../lib/fonts/OpenSansRegular.ttf', 
-			fontName = 'OpenSansRegular', 
-			fontFamily = 'OpenSans', 
-			fontWeight = 'normal', 
-			fontStyle = 'normal', 
-			mimeType = 'application/x-font-truetype', 
-			advancedAntiAliasing = 'true', 
-			embedAsCFF = 'false',
-			unicodeRange='U+0020-007E')]
-		public static var OpenSansRegular:Class;
-		Font.registerFont(OpenSansRegular);	
+		Font.registerFont(Fonts_OpenSansRegular);	
 		
-		[Embed(source = '../../../../lib/fonts/OpenSansItalic.ttf',
-			fontName = 'OpenSansItalic',
-			fontFamily = 'OpenSans', 
-			fontStyle = 'italic',
-			mimeType = 'application/x-font-truetype',
-			advancedAntiAliasing = 'true',
-			embedAsCFF='false',
-			unicodeRange='U+0020-007E')]		
-		public static var OpenSansItalic:Class;
-		Font.registerFont(OpenSansItalic);
+		Font.registerFont(Fonts_OpenSansItalic); 
 		
-		[Embed(source = '../../../../lib/fonts/OpenSansBold.ttf',
-			fontName = 'OpenSansBold',
-			fontFamily = 'OpenSans', 
-			fontStyle = 'bold',
-			mimeType = 'application/x-font-truetype',
-			advancedAntiAliasing = 'true',
-			embedAsCFF='false',
-			unicodeRange='U+0020-007E')]		
-		public static var OpenSansBold:Class;
-		Font.registerFont(OpenSansBold);
+		Font.registerFont(Fonts_OpenSansBold); 
 	}
 }

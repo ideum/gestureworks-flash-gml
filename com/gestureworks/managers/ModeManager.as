@@ -30,18 +30,9 @@ package com.gestureworks.managers
 		 * INSTALLER DEPENDENT VARIABLES - DO NOT MODIFY:
 		 * isOE
 		 * isT
-		 * OESplash
-		 * GWSplash
 		 */
 		private var isOE:Boolean = false; // open exhibits	
-		private var isT:Boolean = false; // gw trial		
-
-		// comment out image embed when not in mode
-		//[Embed(source = "../../../../lib/assets/oe_splash.png")] 
-		private var OESplash:Class;
-
-		//[Embed(source = "../../../../lib/assets/gw_splash.png")]
-		private var GWSplash:Class;		
+		private var isT:Boolean = false; // gw trial	
 		
 		private var splashTime:int = 5; // in seconds
 		private var trialTime:int = 1800; // in seconds		
@@ -72,7 +63,7 @@ package com.gestureworks.managers
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 					
 			if (isOE) {
-				splash = new OESplash;
+				splash = new Bitmaps_OESplash(); 
 				configSplash();
 				timer = new Timer(splashTime*1000);				
 				timer.addEventListener(TimerEvent.TIMER, onSplashComplete);
@@ -80,7 +71,7 @@ package com.gestureworks.managers
 				initialize();
 			}
 			else if (isT) {
-				splash = new GWSplash;		
+				splash = new Bitmaps_GWSplash();		
 				configSplash();
 				stage.addEventListener(MouseEvent.MOUSE_DOWN, openWebsite);
 				stage.addEventListener(TouchEvent.TOUCH_BEGIN, openWebsite);	
