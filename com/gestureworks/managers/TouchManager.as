@@ -62,6 +62,7 @@ package com.gestureworks.managers
 		public static var touchObjects:Dictionary = new Dictionary();
 		
 		private static var gms:*;
+		private static var hooks:Vector.<Function>;
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -123,6 +124,43 @@ package com.gestureworks.managers
 		}
 		
 		/**
+		 * Registers a function to externally modify the provided GWTouchEvent for point processing
+		 * @param  hook  The hook function with GWTouchEvent parameter
+		 */
+		public static function registerHook(hook:Function):void {
+			if (!hooks)
+				hooks = new Vector.<Function>();
+			hooks.push(hook);
+		}
+		
+		/**
+		 * Unregisters a hook function
+		 * @param	hook
+		 */
+		public static function deregisterHook(hook:Function):void {
+			if(hooks){
+				var index:int = hooks.indexOf(hook);
+				if (index > -1)
+					hooks.splice(index, 1);
+			}
+		}
+		
+		/**
+		 * Applies updates to GWTouchEvent through registered hook functions
+		 * @param	event
+		 */
+		private static function applyHooks(event:GWTouchEvent):void {
+			var gwt:GWTouchEvent;
+			for each(var hook:Function in hooks) {
+				gwt = hook(event);
+				if (gwt) {
+					event = gwt;
+					return;
+				}
+			}
+		}
+		
+		/**
 		 * Determines the event's target is valid based on activated state and local mode settings.
 		 * @param	event
 		 * @return
@@ -170,8 +208,7 @@ package com.gestureworks.managers
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
-			if(validTarget(event))
-				onTouchDown(event);
+			onTouchDown(event);
 		}
 		
 		/**
@@ -182,7 +219,8 @@ package com.gestureworks.managers
 		 */
 		public static function onTouchDown(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
 		{
-			if (event.target is ITouchObject) { 
+			applyHooks(event);
+			if (validTarget(event)) { 
 											
 				if ((ITouchObject(event.target).registerPoints) || overrideRegisterPoints) {
 				
