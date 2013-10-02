@@ -108,7 +108,6 @@ package com.gestureworks.managers
 							ev.target = obj;
 							ev.source = getDefinitionByName(getQualifiedClassName(this)) as Class;
 							
-						if(TouchManager.validTarget(ev))
 							TouchManager.onTouchDown(ev);
 					}
 					
