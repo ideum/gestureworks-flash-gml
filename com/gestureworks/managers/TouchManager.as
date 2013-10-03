@@ -411,6 +411,7 @@ package com.gestureworks.managers
 				pointObject.y = event.stageY; 
 				pointObject.z = event.stageZ; 
 				pointObject.objectList.push(target); // seeds cluster/touch object list
+				pointObject.view = event.view;
 				
 				//ADD TO LOCAL POINT LIST
 				target.pointArray.push(pointObject);

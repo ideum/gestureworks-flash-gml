@@ -19,7 +19,7 @@ package com.gestureworks.objects
 	import flash.geom.Vector3D;
 	
 	public class ClusterObject extends Object 
-	{
+	{		
 		// ID
 		public var id:int;
 		// cluster type
@@ -48,8 +48,9 @@ package com.gestureworks.objects
 		// CHANGE IN NUMBER OF INTERACTION POINTS
 		public var dipn:int = 0;
 		
+		 // The main view associated with the cluster, used for Away3D
+		public var view:int;
 		
-
 		/////////////////////////////////
 		// frame count
 		public var count:int = 0;

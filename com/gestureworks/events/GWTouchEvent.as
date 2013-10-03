@@ -19,6 +19,7 @@ package com.gestureworks.events
 	import com.gestureworks.core.ITouchObject;
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.utils.MousePoint;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -132,7 +133,7 @@ package com.gestureworks.events
 		
 		private var _stageZ:Number=0;
 		public function set stageZ(v:Number):void { _stageZ = v;}
-		public function get stageZ():Number { return _stageZ; }		
+		public function get stageZ():Number { return _stageZ; }				
 		
 		private var _source:Class;
 		/**
@@ -148,6 +149,14 @@ package com.gestureworks.events
 		 */
 		public function get time():Number { return _time;}
 
+		private var _view:DisplayObjectContainer;
+		/**
+		 * The main view or display object in which the touch object took place. 
+		 * Used for Away3D compatibility. 
+		 */
+		public function set view(v:DisplayObjectContainer):void { _view = v;}
+		public function get view():DisplayObjectContainer { return _view; }			
+		
 		override public function clone():Event
 		{
 			return new GWTouchEvent(sourceEvent, type, bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);

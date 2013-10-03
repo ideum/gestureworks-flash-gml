@@ -74,7 +74,8 @@ package com.gestureworks.objects
 		// number move updates for point in frame
 		public var moveCount:int=0;
 
-		
+		 // The main view associated with the point, used for Away3D
+		public var view:int;		
 		
 		//////////////////////////////////////////////////
 		// MAY NEED TO MOVE TO CLUSTER
