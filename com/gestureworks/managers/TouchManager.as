@@ -217,12 +217,12 @@ package com.gestureworks.managers
 		 * @param	event
 		 * @param	overrideRegisterPoints
 		 */
-		public static function onTouchDown(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
+		public static function onTouchDown(event:GWTouchEvent):void
 		{
 			applyHooks(event);
 			if (validTarget(event)) { 
 											
-				if ((ITouchObject(event.target).registerPoints) || overrideRegisterPoints) {
+				if (ITouchObject(event.target).registerPoints) {
 				
 					if (duplicateDeviceInput(event)) return;
 								
@@ -268,14 +268,15 @@ package com.gestureworks.managers
 		}		
 		
 		// stage on TOUCH_UP.
-		public static function onTouchUp(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
+		public static function onTouchUp(event:GWTouchEvent):void
 		{
+			applyHooks(event);
 			var pointObject:Object = points[event.touchPointID];
 			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if ((ITouchObject(pointObject.object).registerPoints) || overrideRegisterPoints) { 
+				if (ITouchObject(pointObject.object).registerPoints) { 
 					/////////////////////////////////////////////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////
 					// LOOP THROUGH ALL CLUSTERS LISTED ON POINT
@@ -334,15 +335,16 @@ package com.gestureworks.managers
 		private static var pointObject:PointObject;		
 		// the Stage TOUCH_MOVE event.	
 		// DRIVES POINT PATH UPDATES
-		public static function onTouchMove(event:GWTouchEvent, overrideRegisterPoints:Boolean=false):void
+		public static function onTouchMove(event:GWTouchEvent):void
 		{	
+			applyHooks(event);
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			pointObject = points[event.touchPointID];
 			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
-				if (pointObject.object["registerPoints"] || overrideRegisterPoints) { 
+				if (pointObject.object["registerPoints"]) { 
 					// UPDATE POINT POSITIONS
 					pointObject.x = event.stageX;					
 					pointObject.y = event.stageY;
