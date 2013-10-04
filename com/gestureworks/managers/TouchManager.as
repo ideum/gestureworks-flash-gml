@@ -18,7 +18,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
-	import com.gestureworks.core.ITouchObject;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchPipeline;
@@ -404,14 +404,14 @@ package com.gestureworks.managers
 				
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
-				pointObject.object = DisplayObject(target); // sets primary touch object/cluster
+				pointObject.object = target; // sets primary touch object/cluster
 				pointObject.id = target.pointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
 				pointObject.y = event.stageY; 
 				pointObject.z = event.stageZ; 
 				pointObject.objectList.push(target); // seeds cluster/touch object list
-				pointObject.view = event.view;
+				target.view = event.view;
 				
 				//ADD TO LOCAL POINT LIST
 				target.pointArray.push(pointObject);

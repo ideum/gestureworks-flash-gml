@@ -1,11 +1,13 @@
-package com.gestureworks.core 
+package com.gestureworks.interfaces 
 {
+	import com.gestureworks.core.*;	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
 	/**
@@ -163,7 +165,7 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
-		function get visualizer():TouchVisualizer;
+		function get visualizer():TouchVisualizer; 
 		function set visualizer(obj:TouchVisualizer):void;				
 		
 		/**
@@ -245,6 +247,12 @@ package com.gestureworks.core
 		 */		
 		function get targeting():Boolean;
 		function set targeting(value:Boolean):void;
+		
+		/**
+		 * Transform target
+		 */		
+		function get target():Object;
+		function set target(value:Object):void;		
 		
 		/**
 		 * Determines whether clusterEvents are processed and dispatched on the touchSprite.
@@ -604,6 +612,18 @@ package com.gestureworks.core
 		
 		function get parent(): DisplayObjectContainer;
 		
+		/**
+  		 * length of object
+		 * @default true
+		 */
+		function get length():Number;
+		function set length(value:Number):void;
+		
+		/**
+  		 * view container used for Away3D
+		 */
+		function get view():DisplayObjectContainer;
+		function set view(value:DisplayObjectContainer):void;		
 		
 		/////////////////////////////////////////////////////////////
 		////////////////////FUNCTIONS
@@ -615,7 +635,7 @@ package com.gestureworks.core
 		function updateTransformation():void;
 		
 		/**
-		 * 
+		 * @private
 		 */
 		function updateDebugDisplay():void;
 		
@@ -628,6 +648,11 @@ package com.gestureworks.core
 		 * Re-registers event listeners with updated mode settings
 		 */
 		function updateListeners():void;
+		
+		/**
+		 * Updates target's transform
+		 */
+		function updateTarget():void;		
 		
 	}
 }

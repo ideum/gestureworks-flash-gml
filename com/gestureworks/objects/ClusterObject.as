@@ -48,8 +48,6 @@ package com.gestureworks.objects
 		// CHANGE IN NUMBER OF INTERACTION POINTS
 		public var dipn:int = 0;
 		
-		 // The main view associated with the cluster, used for Away3D
-		public var view:int;
 		
 		/////////////////////////////////
 		// frame count

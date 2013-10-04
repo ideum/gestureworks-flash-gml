@@ -29,6 +29,7 @@ package com.gestureworks.core
 		
 	import com.codeazur.utils.StringUtils;
 	import com.gestureworks.core.*;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.managers.*;
 	import com.gestureworks.utils.*;
 	import flash.display.*;

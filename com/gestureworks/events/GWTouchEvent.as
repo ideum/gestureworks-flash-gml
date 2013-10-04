@@ -16,7 +16,7 @@
 package com.gestureworks.events
 {
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.ITouchObject;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.utils.MousePoint;
 	import flash.display.DisplayObjectContainer;
@@ -151,7 +151,7 @@ package com.gestureworks.events
 
 		private var _view:DisplayObjectContainer;
 		/**
-		 * The main view or display object in which the touch object took place. 
+		 * The main view or display object in which the touch event took place. 
 		 * Used for Away3D compatibility. 
 		 */
 		public function set view(v:DisplayObjectContainer):void { _view = v;}

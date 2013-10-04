@@ -327,13 +327,14 @@ package com.gestureworks.core
 						trO.scaleX = cO.separationX
 						trO.scaleY = cO.separationY
 						trO.scaleZ = cO.separationZ//3d--
+								
 						
 						trO.rotation = cO.rotation
 						trO.rotationX = cO.rotationX//3d--
 						trO.rotationY = cO.rotationY//3d--
 						trO.rotationZ = cO.rotationZ//3d--
 						trO.orientation = cO.orientation
-						
+							
 						
 						// TODO: Check into this, what does this mean?
 						trO.localx =100//cO.x-ts.x; 

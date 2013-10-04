@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
+	import com.gestureworks.interfaces.ITouchObject;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.TouchEvent;
@@ -74,9 +75,7 @@ package com.gestureworks.objects
 		// move count
 		// number move updates for point in frame
 		public var moveCount:int=0;
-
-		 // The main view associated with the point, used for Away3D
-		public var view:DisplayObjectContainer;		
+	
 		
 		//////////////////////////////////////////////////
 		// MAY NEED TO MOVE TO CLUSTER
@@ -104,7 +103,7 @@ package com.gestureworks.objects
 		// primary touch object (should be target)
 		//////////////////////////////////////////////////
 		// object
-		public var object:DisplayObject;
+		public var object:ITouchObject;
 
 		
 		///////////////////////////////////////////////////////

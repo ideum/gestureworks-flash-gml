@@ -178,8 +178,7 @@ package com.gestureworks.objects
 
 		// dalpha ------------------
 		public var dalpha:Number = 0;
-		
-		
+
 
 		///////////////////////////////////////////////
 		// pre_init_height ------------------

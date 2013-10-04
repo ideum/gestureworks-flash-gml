@@ -17,7 +17,7 @@ package com.gestureworks.managers
 {
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
-	import com.gestureworks.core.ITouchObject;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.TouchManager;

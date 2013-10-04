@@ -16,6 +16,8 @@
 package com.gestureworks.core
 {
 	import com.gestureworks.events.GWTransformEvent;
+	import com.gestureworks.interfaces.IAway3D;
+	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.TransformObject;
 	import flash.geom.*;
 	import flash.geom.Matrix3D;
@@ -111,7 +113,7 @@ package com.gestureworks.core
 			
 			trO.obj_width = ts.width;
 			trO.obj_height = ts.height;
-			//trO.obj_length = ts.length;
+			trO.obj_length = ts.length;
 			
 			trO.obj_rotation = ts.rotation;
 			trO.obj_rotationX = ts.rotationX;//3d--
@@ -230,8 +232,8 @@ package com.gestureworks.core
 	private function applyNativeTransform():void
 		{
 			
-			if ((ts.parent) && (ts.transformGestureVectors))
-			//if (ts.parent)
+				/*
+				//if ((ts.parent) && (ts.transformGestureVectors))
 				{
 				//trace("native parent")
 				// gives root cocatenated transform of parent space
@@ -262,9 +264,11 @@ package com.gestureworks.core
 				// translate center of transformation
 					t_x =  pt.x;
 					t_y =  pt.y;
+					//t_z =  pt.z;
 				// rotate translation vector
 					dx =  tpt.x;
 					dy =  tpt.y;
+					//dz =  tpt.z;
 				}
 				
 				else {	
@@ -277,12 +281,25 @@ package com.gestureworks.core
 						else {
 						t_x = trO.x;
 						t_y = trO.y;
+						t_z = trO.z;
 						}
 						dx = trO.dx;
 						dy = trO.dy;
+						dz = trO.dz;
 				}
-				
-				
+				*/	
+				if (centerTransform) {
+					t_x = trO.transAffinePoints[4].x
+					t_y = trO.transAffinePoints[4].y
+				}
+				else {
+					t_x = trO.x;
+					t_y = trO.y;
+					t_z = trO.z;
+				}
+				dx = trO.dx;
+				dy = trO.dy;
+				dz = trO.dz;				
 	
 				//var local_pt:Point = ts.globalToLocal(new Point(trO.x,trO.y));
 					//trO.localx = local_pt.x;
@@ -292,19 +309,19 @@ package com.gestureworks.core
 					//trO.localx = local_pt.x;
 					//trO.localy = local_pt.y;
 					
-				if(!ts.broadcastTarget){
+				//if(!ts.broadcastTarget){
 					//trO.localx = trO.x-ts.x;
 					//trO.localy = trO.y-ts.y;
 					//trace("pad",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
-				}
+				//}
 					
 					
 				// broadcast center of trans
-				else
-				{
-					t_x = trO.localx //+ ts.x;
-					t_y = trO.localy //+ ts.y;
-				}
+				//else
+				//{
+					//t_x = trO.localx //+ ts.x;
+					//t_y = trO.localy //+ ts.y;
+				//}
 				
 				///////////////////////////////////////////////////////////////////////////////////
 				// lock properties from transform
@@ -313,8 +330,8 @@ package com.gestureworks.core
 				
 				// leave scalar values untouched
 				dsx =  trO.dsx;
-				dsy =  dsx//trO.dsy;
-				dsz =  dsx//trO.dsz;
+				dsy =  trO.dsy;
+				dsz =  trO.dsz;
 				
 				// 3D matrix uses degrees
 				dtheta = trO.dtheta;
@@ -334,42 +351,38 @@ package com.gestureworks.core
 				if ((ts.rotationY+dthetaY < ts.minRotationY) || (ts.rotationY+dthetaY > ts.maxRotationY)) dthetaY = 0;
 				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;
 							
-				// check for manual away 3D flag with 3d input
-				if (ts.away3d)
+				// check for away 3D 
+				if (ts is IAway3D)
 				{
-						// away3d only
-						if (!ts.transform3d) 
-						{					
-							dthetaY = 0;
-							dthetaZ = 0;	
-						} 
-							
-							// modify transform
-							affine_modifier3D.copyFrom(ts.transform.matrix3D);
-								affine_modifier3D.appendTranslation( -trO.x, -trO.y, -trO.z);
-								//affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
-								affine_modifier3D.appendRotation(dtheta, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
-								//affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));							
-								affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1 + dsz); 		
-								affine_modifier3D.appendTranslation(trO.x + dx, trO.y + dy, trO.z + dz);
-							ts.transform.matrix3D = affine_modifier3D;	
+					var d:Number = ts.distance;
+					
+					// modify transform
+					affine_modifier3D.copyFrom(ts.transform.matrix3D);
+						affine_modifier3D.appendTranslation(-trO.x + dx, -trO.y + dy, -trO.z + dz);					
+						affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
+						affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
+						affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));							
+						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1 + dsz); 
+						affine_modifier3D.appendTranslation( trO.x, trO.y, trO.z);						
+					ts.transform.matrix3D = affine_modifier3D;	
+					
 				}
 				// flash 2.5D only
 				else if (ts.transform.matrix3D)// check for 3D matrix,
 				{							
-							// get the projection offset created by the z-position	
-							if (ts.transform.perspectiveProjection) // ts can define location projection
-								focalLength = ts.transform.perspectiveProjection.focalLength;
-							else // use global projection from root
-								focalLength = ts.root.transform.perspectiveProjection.focalLength;
-							ratio = focalLength / (focalLength + ts.z);
-							
-							affine_modifier3D.copyFrom(ts.transform.matrix3D);
-								affine_modifier3D.appendTranslation(-t_x, -t_y, 0);
-								affine_modifier3D.appendRotation(dtheta, Vector3D.Z_AXIS); 	
-								affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1); 		
-								affine_modifier3D.appendTranslation(t_x + dx/ratio, t_y + dy/ratio, 0);
-							ts.transform.matrix3D = affine_modifier3D;		
+					// get the projection offset created by the z-position	
+					if (ts.transform.perspectiveProjection) // ts can define location projection
+						focalLength = ts.transform.perspectiveProjection.focalLength;
+					else // use global projection from root
+						focalLength = ts.root.transform.perspectiveProjection.focalLength;
+					ratio = focalLength / (focalLength + ts.z);
+					
+					affine_modifier3D.copyFrom(ts.transform.matrix3D);
+						affine_modifier3D.appendTranslation(-t_x, -t_y, 0);
+						affine_modifier3D.appendRotation(dtheta, Vector3D.Z_AXIS); 	
+						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1); 		
+						affine_modifier3D.appendTranslation(t_x + dx/ratio, t_y + dy/ratio, 0);
+					ts.transform.matrix3D = affine_modifier3D;		
 				}
 				
 				////////////////////////////////////////////////////////////////////////////////
@@ -384,9 +397,14 @@ package com.gestureworks.core
 						affine_modifier.translate(t_x, t_y);
 					ts.transform.matrix = affine_modifier
 					transformAffineDebugPoints();
+
 				}
-				
+					//trace( ts.cO.x, ts.cO.y, ts.cO.z);
+							
 				updateLocalProperties();
+				
+				if (ts.target)
+					ts.updateTarget();			
 		}
 			 
 		/////////////////////////////////////////////////////////////////////////
@@ -547,6 +565,8 @@ package com.gestureworks.core
 					trO.affinePoints = affine_points;
 					trO.init_center_point = true;
 				}
+				
+
 				
 			}
 		}
