@@ -16,6 +16,7 @@
 package com.gestureworks.objects 
 {
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.events.TouchEvent;
 	
 	public class PointObject extends Object 
@@ -75,7 +76,7 @@ package com.gestureworks.objects
 		public var moveCount:int=0;
 
 		 // The main view associated with the point, used for Away3D
-		public var view:int;		
+		public var view:DisplayObjectContainer;		
 		
 		//////////////////////////////////////////////////
 		// MAY NEED TO MOVE TO CLUSTER
