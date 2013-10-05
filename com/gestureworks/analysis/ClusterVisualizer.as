@@ -117,7 +117,6 @@ package com.gestureworks.analysis
 	
 	public function draw():void
 	{
-		
 		tpn = ts.tpn;// cO.pointArray.length
 		ipn = cO.iPointArray2D.length; // ALWAYS ZERO WHEN ts.transform3d==FALSE // AS NOT POPULATED
 		
@@ -217,7 +216,7 @@ package com.gestureworks.analysis
 			if (style.web_shape == "starweb") {
 				//trace("starweb");
 				for (var p:int = 0; p < tpn; p++) {
-						var pt2:PointObject = cO.pointArray[k];
+						var pt2:PointObject = cO.pointArray[p];
 						graphics.moveTo(_x,_y);
 						graphics.lineTo(pt2.x, pt2.y);
 					}
