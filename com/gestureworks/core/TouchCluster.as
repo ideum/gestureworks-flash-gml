@@ -240,7 +240,7 @@ package com.gestureworks.core
 					//if (ts.touch_input) 
 					//getGeoMetrics2D(); 
 					//if (ts.motion_input) 
-					getGeoMetrics3D();
+					//getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
 				{	
@@ -506,17 +506,18 @@ package com.gestureworks.core
 												// when max 
 												else if (gdim.property_vars[0]["max"] != null) 
 												{	
-													if (num <= gdim.property_vars[0]["max"])	gdim.clusterDelta = cO[res];//dim_var = num;
-													else gdim.clusterDelta = 0;//dim_var = 0;
+													//if (num <= gdim.property_vars[0]["max"])	gdim.clusterDelta = cO[res];//dim_var = num;
+													//else gdim.clusterDelta = 0;//dim_var = 0;
 												}
 												// when no limits
-												else gdim.clusterDelta = tcO[res];//dim_var = num;
+												else 
+													gdim.clusterDelta = tcO[res];//dim_var = num;
 											}
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											else gdim.clusterDelta = tcO[res];//rtn_dim = 1;
 											/////////////////////////////////////////////////////////////
-											
+
 											//CLOSE DIM IF NO VALUE
 											if (gdim.clusterDelta == 0) gdim.activeDim = false;
 											//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);

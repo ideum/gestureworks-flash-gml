@@ -1181,9 +1181,9 @@ package com.gestureworks.analysis
 							// second diff of x anf y wrt t
 							for (j = 0; j < t; j++) 
 							{
-								tcO.etm_ddx += cO.pointArray[i].history[j+1].dx- cO.pointArray[i].history[j].dx;
-								tcO.etm_ddy += cO.pointArray[i].history[j + 1].dy -cO.pointArray[i].history[j].dy ;
-								tcO.etm_ddz += cO.pointArray[i].history[j + 1].dz -cO.pointArray[i].history[j].dz ;
+								tcO.etm_ddx += cO.pointArray[i].history[j + 1].dx - cO.pointArray[i].history[j].dx;
+								tcO.etm_ddy += cO.pointArray[i].history[j + 1].dy -cO.pointArray[i].history[j].dy;
+								tcO.etm_ddz += cO.pointArray[i].history[j + 1].dz -cO.pointArray[i].history[j].dz;
 								//cO.etm_ddx += pointList[i].history[0].dx - pointList[i].history[1].dx;
 								//cO.etm_ddy += pointList[i].history[0].dy - pointList[i].history[1].dy;
 							}

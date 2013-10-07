@@ -287,7 +287,7 @@ package com.gestureworks.analysis
 		public function findGestureDoubleTap(event:GWGestureEvent,key:int):void
 		{
 			//if (ts.traceDebugMode)
-			//trace("find d taps---------------------------------------------------------");
+			//trace("\nfind d taps---------------------------------------------------------");
 		
 				var dtap_time:int = 30//Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20frames
 				//var dtap_time:int = Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
