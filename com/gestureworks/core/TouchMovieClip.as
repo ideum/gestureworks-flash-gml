@@ -24,6 +24,7 @@ package com.gestureworks.core
 	import com.gestureworks.core.TouchVisualizer;
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -31,11 +32,13 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import flash.geom.Transform;
 	
 	
 	
@@ -60,7 +63,7 @@ package com.gestureworks.core
 	 * </pre>
 	 */
 	
-	public class TouchMovieClip extends MovieClip implements ITouchObject
+	public class TouchMovieClip extends MovieClip implements ITouchObject 
 	{
 		/**
 		 * @private
@@ -72,11 +75,14 @@ package com.gestureworks.core
 		private var _tsEventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
 
-		public function TouchMovieClip():void
+		public function TouchMovieClip(target:Object=null):void
 		{
 			super();
 			mouseChildren = false; 
 			debugDisplay = false;
+			// set transform to target
+			if (target && "transform" in target && target.transform is Transform)
+				transform.matrix = target.transform.matrix;	
         }
 		
 		private var _activated:Boolean = false;
@@ -403,6 +409,16 @@ package com.gestureworks.core
 		public function set targeting(value:Boolean):void
 		{
 			_targeting = value;
+		}
+
+		private var _target:Object;
+		/**
+		 * @inheritDoc
+		 */
+		public function get target():Object{return _target;}
+		public function set target(value:Object):void
+		{
+			_target = value;
 		}
 		
 		private var _clusterEvents:Boolean = false;
@@ -823,7 +839,25 @@ package com.gestureworks.core
 		public function get maxRotationZ():Number { return _maxRotationZ; }
 		public function set maxRotationZ(value:Number):void {
 			_maxRotationZ = value;
-		}		
+		}
+		
+		private var _length:Number;
+		/**
+		 * @inheritDoc
+		 */		
+		public function get length():Number { return _length; }
+		public function set length(value:Number):void {
+			_length = value;
+		}
+			
+		private var _view:DisplayObjectContainer;
+		/**
+		 * @inheritDoc
+		 */		
+		public function get view():DisplayObjectContainer { return _view; }
+		public function set view(value:DisplayObjectContainer):void {
+			_view = value;
+		}
 		
 		/////////////////////////////////////////////////////////////
 		//affine transformation deltas 
@@ -1002,6 +1036,15 @@ package com.gestureworks.core
 				tt.updateLocalProperties();
 			}
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function updateTarget():void 
+		{
+			if (target)
+				target.transform = transform;
+		}		
 		
 		/**
 		 * @inheritDoc
