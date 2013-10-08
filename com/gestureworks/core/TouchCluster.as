@@ -240,7 +240,7 @@ package com.gestureworks.core
 					//if (ts.touch_input) 
 					//getGeoMetrics2D(); 
 					//if (ts.motion_input) 
-					//getGeoMetrics3D();
+					getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
 				{	
