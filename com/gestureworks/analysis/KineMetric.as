@@ -1040,14 +1040,13 @@ package com.gestureworks.analysis
 								if ((tpn > i + 1)&&(cO.pointArray[0].history.length>mc) && (cO.pointArray[i + 1].history.length>mc))
 								{		
 									// SIMPLIFIED DELTA 
-									//var dtheta:Number = 0;
+									var dtheta:Number = 0;
 									var dthetaX:Number = 0;
 									var dthetaY:Number = 0;
 									var dthetaZ:Number = 0;
 
-									//var theta0:Number = calcAngle((cO.pointArray[0].x - cO.pointArray[i+1].x), (cO.pointArray[0].y - cO.pointArray[i+1].y));
-									////var theta1:Number = calcAngle((pointList[0].history[h].x - pointList[i + 1].history[h].x), (pointList[0].history[h].y - pointList[i + 1].history[h].y));
-									//var theta1:Number = calcAngle((cO.pointArray[0].history[mc].x - cO.pointArray[i+1].history[mc].x), (cO.pointArray[0].history[mc].y - cO.pointArray[i+1].history[mc].y));
+									var theta0:Number = calcAngle((cO.pointArray[0].x - cO.pointArray[i+1].x), (cO.pointArray[0].y - cO.pointArray[i+1].y));									
+									var theta1:Number = calcAngle((cO.pointArray[0].history[mc].x - cO.pointArray[i+1].history[mc].x), (cO.pointArray[0].history[mc].y - cO.pointArray[i+1].history[mc].y));
 								
 									var theta0x:Number = calcAngle((cO.pointArray[0].y - cO.pointArray[i+1].y), (cO.pointArray[0].z - cO.pointArray[i+1].z));
 									var theta1x:Number = calcAngle((cO.pointArray[0].history[mc].y - cO.pointArray[i + 1].history[mc].y), (cO.pointArray[0].history[mc].z - cO.pointArray[i + 1].history[mc].z));
@@ -1058,12 +1057,12 @@ package com.gestureworks.analysis
 									var theta0z:Number = calcAngle((cO.pointArray[0].x - cO.pointArray[i+1].x), (cO.pointArray[0].y - cO.pointArray[i+1].y));
 									var theta1z:Number = calcAngle((cO.pointArray[0].history[mc].x - cO.pointArray[i+1].history[mc].x), (cO.pointArray[0].history[mc].y - cO.pointArray[i+1].history[mc].y));									
 									
-									//if ((theta0 != 0) && (theta1 != 0)) 
-										//{
-										//if (Math.abs(theta0 - theta1) > 180) dtheta = 0
-										//else dtheta = (theta0 - theta1);
-										//}
-									//else dtheta = 0;
+									if ((theta0 != 0) && (theta1 != 0)) 
+										{
+										if (Math.abs(theta0 - theta1) > 180) dtheta = 0
+										else dtheta = (theta0 - theta1);
+										}
+									else dtheta = 0;
 									if ((theta0x != 0) && (theta1x != 0)) 
 										{
 										if (Math.abs(theta0x - theta1x) > 180) dthetaX = 0
@@ -1082,18 +1081,17 @@ package com.gestureworks.analysis
 										else dthetaZ = (theta0z - theta1z);
 										}
 									else dthetaZ = 0;										
-									//tcO.dtheta += dtheta;
+									tcO.dtheta += dtheta;
 									tcO.dthetaX += dthetaX;
 									tcO.dthetaY += dthetaY;
 									tcO.dthetaZ += dthetaZ;									
 								}
 						}
-						//tcO.dtheta *= tpnk1;
-						//trace(tcO.dtheta);
+						tcO.dtheta *= tpnk1;
 						tcO.dthetaX *= tpnk1;
 						tcO.dthetaY *= tpnk1;
 						tcO.dthetaZ *= tpnk1;						
-						tcO.dtheta = tcO.dthetaX + tcO.dthetaY + tcO.dthetaZ;
+						//tcO.dtheta = tcO.dthetaX + tcO.dthetaY + tcO.dthetaZ;
 						}
 						//trace(cO.dtheta);
 		}
