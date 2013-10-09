@@ -27,7 +27,6 @@ package com.gestureworks.core
 		
 	*/
 		
-	import com.codeazur.utils.StringUtils;
 	import com.gestureworks.core.*;
 	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.managers.*;
@@ -218,7 +217,7 @@ package com.gestureworks.core
 			if (value is String) {
 				for each(var arg:String in String(_tuio).split(",")) {
 					var keyVal:Array = arg.split(":");
-					var prop:String = StringUtils.trim(keyVal[0]).toLowerCase();
+					var prop:String = StringUtils.trim(keyVal[0]).toLowerCase(); 
 					var val:String = StringUtils.trim(keyVal[1]).toLowerCase(); 
 
 					switch(prop) {
