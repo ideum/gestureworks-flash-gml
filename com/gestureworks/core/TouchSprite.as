@@ -37,8 +37,8 @@ package com.gestureworks.core
 	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.utils.Dictionary;
 	import flash.geom.Transform;
+	import flash.utils.Dictionary;
 	
 	
 	
@@ -72,7 +72,7 @@ package com.gestureworks.core
 		public static var GESTRELIST_UPDATE:String = "gestureList update";
 		
 		//tracks event listeners
-		private var _tsEventListeners:Array = [];
+		private var _eventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
 
 		public function TouchSprite(target:Object=null):void
@@ -169,7 +169,6 @@ package com.gestureworks.core
 			}
 		}
 	
-
 		private var _touchObjectID:int = 0; // read only
 		/**
 		 * @inheritDoc
@@ -562,10 +561,10 @@ package com.gestureworks.core
 			if (_touchEnabled == t) return;			
 			_touchEnabled = t;
 			
-			var eCnt:int = _tsEventListeners.length;
+			var eCnt:int = _eventListeners.length;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
-				e = _tsEventListeners[i];
+				e = _eventListeners[i];
 				if (GWTouchEvent.isType(e.type) || GWGestureEvent.isType(e.type)) {
 					if (_touchEnabled) {
 						addGWTouch(e.type, e.listener, e.capture);
@@ -1116,7 +1115,7 @@ package com.gestureworks.core
 		/**
 		 * @inheritDoc
 		 */
-		public function get eventListeners():Array { return _tsEventListeners; }		
+		public function get eventListeners():Array { return _eventListeners; }		
 		
 		/**
 		 * Registers event listeners. 
@@ -1132,7 +1131,7 @@ package com.gestureworks.core
 			
 			//prevent duplicate events
 			if(searchEvent(type, listener, useCapture) < 0)
-				_tsEventListeners.push( { type:type, listener:listener, capture:useCapture } );
+				_eventListeners.push( { type:type, listener:listener, capture:useCapture } );
 			
 			super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
@@ -1150,6 +1149,10 @@ package com.gestureworks.core
 		{
 			if (GWTouchEvent.isType(type))
 			{	
+				//prevent duplicate registration
+				if (searchEvent(type, listener, useCapture) > -1) 
+					return;
+					
 				var listeners:Array = [];
 				for each(var gwt:String in GWTouchEvent.eventTypes(type,this)) {
 					function gwl(e:*):void {
@@ -1180,7 +1183,7 @@ package com.gestureworks.core
 			//update event registration array	
 			var i:int = searchEvent(type, listener, useCapture);
 			if(i >= 0)
-				_tsEventListeners.splice(i, 1);
+				_eventListeners.splice(i, 1);
 			
 			super.removeEventListener(type, listener, useCapture);
 		}
@@ -1203,13 +1206,13 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function removeAllListeners():void {
-			var eCnt:int = _tsEventListeners.length;
+			var eCnt:int = _eventListeners.length;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
-				e = _tsEventListeners[i];
+				e = _eventListeners[i];
 				removeEventListener(e.type, e.listener, e.capture);
 			}
-			_tsEventListeners = null;
+			_eventListeners = null;
 		}
 		
 		/**
@@ -1220,8 +1223,8 @@ package com.gestureworks.core
 		 * @return The index of the event in the registration list, or -1 if not registered
 		 */
 		private function searchEvent(type:String, listener:Function, useCapture:Boolean = false):int {
-			for (var i:int = 0; i < _tsEventListeners.length; i++) {
-				var el:* = _tsEventListeners[i];
+			for (var i:int = 0; i < _eventListeners.length; i++) {
+				var el:* = _eventListeners[i];
 				if (el.type == type && el.listener == listener && el.capture == useCapture) {
 					return i;
 				}
