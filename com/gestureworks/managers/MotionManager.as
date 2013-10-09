@@ -68,7 +68,7 @@ package com.gestureworks.managers
 			
 			// create gloabal motion sprite
 			motionSprite = new TouchSprite();
-				motionSprite.activated = true;
+				motionSprite.active = true;
 				motionSprite.debugDisplay = true;
 				motionSprite.tc.core = true; // fix for global core analysis
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;

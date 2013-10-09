@@ -85,14 +85,14 @@ package com.gestureworks.core
 				transform.matrix = target.transform.matrix;	
         }
 		
-		private var _activated:Boolean = false;
+		private var _active:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		public function get activated():Boolean { return _activated; }
-		public function set activated(a:Boolean):void {
-			if (!_activated && a) {
-				_activated = true;
+		public function get active():Boolean { return _active; }
+		public function set active(a:Boolean):void {
+			if (!_active && a) {
+				_active = true;
 				TouchManager.preinitBase(this);
 			}
 		}
@@ -328,7 +328,7 @@ package com.gestureworks.core
 			for (var n:* in value) { empty = false; break; }			
 			if (empty) return;
 			
-			activated = true;
+			active = true;
 			_gestureList = value;
 			
 			//for (var i:String in gestureList) 

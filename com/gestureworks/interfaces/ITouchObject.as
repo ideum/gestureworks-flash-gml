@@ -25,8 +25,8 @@ package com.gestureworks.interfaces
 		 * Lazy gesture activation (objects will not be registered until gestureList assignment).
 		 * @default false
 		 */
-		function get activated():Boolean;
-		function set activated(a:Boolean):void; 
+		function get active():Boolean;
+		function set active(a:Boolean):void; 
 		
 		/**
 		 * Flag indicating the application of local modes over the global settings. By default, all objects are enabled for input
