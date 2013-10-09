@@ -478,6 +478,19 @@ package com.gestureworks.core
 				dsz = ts.dsz;
 				dtheta = ts.dtheta * DEG_RAD;
 				
+				///////////////////////////////////////////////////
+				//affine transform boundaries
+				if ((ts.x+dx < ts.minX) || (ts.x+dx > ts.maxX)) dx = 0;
+				if ((ts.y+dy < ts.minY) || (ts.y+dy > ts.maxY)) dy = 0;					
+				if ((ts.z+dz < ts.minZ) || (ts.z+dz > ts.maxZ)) dz = 0;					
+				if ((ts.scaleX+dsx < ts.minScaleX) || (ts.scaleX+dsx > ts.maxScaleX)) dsx = 0;
+				if ((ts.scaleY+dsy < ts.minScaleY) || (ts.scaleY+dsy > ts.maxScaleY)) dsy = 0;
+				if ((ts.scaleZ+dsz < ts.minScaleZ) || (ts.scaleZ+dsz > ts.maxScaleZ)) dsz = 0;
+				if ((ts.rotation+dtheta < ts.minRotation) || (ts.rotation+dtheta > ts.maxRotation)) dtheta = 0;
+				if ((ts.rotationX+dthetaX < ts.minRotationX) || (ts.rotationX+dthetaX > ts.maxRotationX)) dthetaX = 0;
+				if ((ts.rotationY+dthetaY < ts.minRotationY) || (ts.rotationY+dthetaY > ts.maxRotationY)) dthetaY = 0;
+				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;				
+				
 				//////////////////////////////////////////////////////
 				// 3d
 				if (ts.transform3d) {
