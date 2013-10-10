@@ -229,17 +229,10 @@ package com.gestureworks.interfaces
 		function set targetParent(value:Boolean):void;
 		
 		/**
-		 * Allows touch and gesture events to explicitly target a touch object that can be outside the local parent child display list stack
-		 * @default false
-		 */
-		function get target():Object;
-		function set target(value:Object):void;
-		
-		/**
 		 * Allows touch and gesture events to explicitly target a group of defined touch objects which can be outside of the local parent child display list stack
 		 */
-		function get targetList():Array;
-		function set targetList(value:Array):void;	
+		function get targetList():*;
+		function set targetList(value:*):void;	
 		
 		/**
 		 * Turns off manual ALL targeting control, defaults to a simple hit test targeting model with exclusive target clustering
