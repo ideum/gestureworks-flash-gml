@@ -1,4 +1,4 @@
-package recorder
+package com.gestureworks.utils
 {
 	//import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.events.GWTouchEvent;

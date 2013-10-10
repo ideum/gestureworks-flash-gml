@@ -2,7 +2,7 @@
  * Recorder.as 
  * Consult onKey() function for controls. Requres TouchProxyEvent.as
  */
-package recorder
+package com.gestureworks.utils
 {
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.TouchManager;
@@ -18,7 +18,6 @@ package recorder
 	import flash.net.registerClassAlias;
 	import flash.utils.*;
 	import flash.utils.ByteArray;
-	import recorder.TouchEventProxy;
 	
 	public class Recorder extends Sprite {
 		private var bytes:ByteArray;
