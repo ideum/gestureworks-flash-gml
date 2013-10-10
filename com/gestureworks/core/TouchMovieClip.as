@@ -1247,26 +1247,26 @@ package com.gestureworks.core
 		}		
 		
 		/**
-		 * Calls the Dispose method for each child possessing a Dispose method then removes all children. 
-		 * This is the root destructor intended to be called by overriding dispose functions. 
+		 * Calls the dispose method for each child, then removes all children, unregisters all events, and
+		 * removes from global lists. This is the root destructor intended to be called by overriding dispose functions. 
 		 */		
-		//public function dispose():void {
-			//
+		public function dispose():void {
+			
 			//remove all children
-			//for (var i:int = numChildren - 1; i >= 0; i--)
-			//{
-				//var child:Object = getChildAt(i);
-				//if (child.hasOwnProperty("dispose"))
-					//child["dispose"]();
-				//removeChildAt(i);
-			//}	
-			//
+			for (var i:int = numChildren - 1; i >= 0; i--)
+			{
+				var child:Object = getChildAt(i);
+				if (child.hasOwnProperty("dispose"))
+					child["dispose"]();
+				removeChildAt(i);
+			}	
+			
 			//unregister events
-			//removeAllListeners();
-			//
+			removeAllListeners();
+			
 			//remove from master list
-			//delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
-		//}
+			delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+		}
 		
 	}
 }
