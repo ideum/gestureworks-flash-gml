@@ -414,8 +414,8 @@ package com.gestureworks.core
 							
 				updateLocalProperties();
 				
-				if (ts.target)
-					ts.updateTarget();			
+				if (ts.vto)
+					ts.updateVTO();			
 		}
 			 
 		/////////////////////////////////////////////////////////////////////////

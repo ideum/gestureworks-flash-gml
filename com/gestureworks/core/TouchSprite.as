@@ -75,14 +75,12 @@ package com.gestureworks.core
 		private var _eventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
 
-		public function TouchSprite(target:Object=null):void
+		public function TouchSprite(vto:Object=null):void
 		{
 			super();
 			mouseChildren = false; 
 			debugDisplay = false;
-			// set transform to target
-			if (target && "transform" in target && target.transform is Transform)
-				transform.matrix = target.transform.matrix;	
+			this.vto = vto;
         }
 		
 		private var _active:Boolean = false;
@@ -380,14 +378,14 @@ package com.gestureworks.core
 			_targetParent = value;
 		}
 		
-		private var _targetObject:Object;
+		private var _target:Object;
 		/**
 		 * @inheritDoc
 		 */
-		public function get targetObject():Object{return _targetObject;}
-		public function set targetObject(value:Object):void
+		public function get target():Object{return _target;}
+		public function set target(value:Object):void
 		{
-			_targetObject = value;
+			_target = value;
 		}
 		
 		private var _targetList:Array = [];
@@ -410,14 +408,20 @@ package com.gestureworks.core
 			_targeting = value;
 		}
 
-		private var _target:Object;
+		private var _vto:Object;
 		/**
 		 * @inheritDoc
 		 */
-		public function get target():Object{return _target;}
-		public function set target(value:Object):void
+		public function get vto():Object{return _vto;}
+		public function set vto(value:Object):void
 		{
-			_target = value;
+			if (!value) 
+				TouchManager.deregisterVTO(this);
+			else if (value && "transform" in value && value.transform is Transform) {
+				_vto = value;
+				transform.matrix = _vto.transform.matrix;
+				TouchManager.registerVTO(this);
+			}
 		}
 		
 		private var _clusterEvents:Boolean = false;
@@ -1039,10 +1043,10 @@ package com.gestureworks.core
 		/**
 		 * @inheritDoc
 		 */
-		public function updateTarget():void 
+		public function updateVTO():void 
 		{
-			if (target)
-				target.transform = transform;
+			if (vto)
+				vto.transform = transform;
 		}		
 		
 		/**

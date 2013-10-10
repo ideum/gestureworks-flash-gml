@@ -232,8 +232,8 @@ package com.gestureworks.interfaces
 		 * Allows touch and gesture events to explicitly target a touch object that can be outside the local parent child display list stack
 		 * @default false
 		 */
-		function get targetObject():Object;
-		function set targetObject(value:Object):void;
+		function get target():Object;
+		function set target(value:Object):void;
 		
 		/**
 		 * Allows touch and gesture events to explicitly target a group of defined touch objects which can be outside of the local parent child display list stack
@@ -249,10 +249,10 @@ package com.gestureworks.interfaces
 		function set targeting(value:Boolean):void;
 		
 		/**
-		 * Transform target
+		 * Virtual touch object (non-TouchSprite) to transfer the transformations to
 		 */		
-		function get target():Object;
-		function set target(value:Object):void;		
+		function get vto():Object;
+		function set vto(value:Object):void;		
 		
 		/**
 		 * Determines whether clusterEvents are processed and dispatched on the touchSprite.
@@ -652,7 +652,7 @@ package com.gestureworks.interfaces
 		/**
 		 * Updates target's transform
 		 */
-		function updateTarget():void;		
+		function updateVTO():void;		
 		
 	}
 }

@@ -60,6 +60,7 @@ package com.gestureworks.managers
 	{
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
+		private static var virtualTouchObjects:Dictionary = new Dictionary();
 		
 		private static var gms:*;
 		private static var hooks:Vector.<Function>;
@@ -123,6 +124,14 @@ package com.gestureworks.managers
 			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
 		}
 		
+		public static function registerVTO(t:ITouchObject):void {
+			virtualTouchObjects[t.vto] = t;  
+		}
+		
+		public static function deregisterVTO(t:ITouchObject):void {
+			delete virtualTouchObjects[t.vto];
+		}
+		
 		/**
 		 * Registers a function to externally modify the provided GWTouchEvent for point processing
 		 * @param  hook  The hook function with GWTouchEvent parameter
@@ -168,7 +177,7 @@ package com.gestureworks.managers
 		public static function validTarget(event:GWTouchEvent):Boolean {
 			activatedTarget(event);
 			
-			if (event.target is ITouchObject && event.target.activated) {
+			if (event.target is ITouchObject && event.target.active) {
 				
 				//local mode filters
 				if (event.target.localModes) {
@@ -196,9 +205,12 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function activatedTarget(event:GWTouchEvent):void {
-			if (!event.target || (event.target is ITouchObject && event.target.activated)) 
+			if (!event.target || (event.target is ITouchObject && event.target.active)) 
 				return;
-			event.target = event.target.parent;
+			else if (virtualTouchObjects[event.target])
+				event.target = virtualTouchObjects[event.target];
+			else
+				event.target = event.target.parent;
 			activatedTarget(event);
 		}
 		
@@ -226,13 +238,13 @@ package com.gestureworks.managers
 				
 					if (duplicateDeviceInput(event)) return;
 								
-					if (event.target.targetParent && event.target.parent is ITouchObject && event.target.parent.activated) { //ASSIGN PRIMARY CLUSTER TO PARENT
+					if (event.target.targetParent && event.target.parent is ITouchObject && event.target.parent.active) { //ASSIGN PRIMARY CLUSTER TO PARENT
 						event.target = event.target.parent;	
 						assignPoint(event);
 					}
-					else if (event.target.targetObject && event.target.targetObject is ITouchObject && event.target.targetObject.activated)	// ASSIGN PRIMARY CLUSTER TO TARGET
+					else if (event.target.target && event.target.target is ITouchObject && event.target.target.active)	// ASSIGN PRIMARY CLUSTER TO TARGET
 					{							
-						event.target = event.target.targetObject;
+						event.target = event.target.target;
 						assignPoint(event);
 						event.target.targetList[j].broadcastTarget = true;
 					}
