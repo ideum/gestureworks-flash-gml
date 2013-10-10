@@ -235,13 +235,6 @@ package com.gestureworks.interfaces
 		function set targetList(value:*):void;	
 		
 		/**
-		 * Turns off manual ALL targeting control, defaults to a simple hit test targeting model with exclusive target clustering
-		 * @default true
-		 */		
-		function get targeting():Boolean;
-		function set targeting(value:Boolean):void;
-		
-		/**
 		 * Virtual touch object (non-TouchSprite) to transfer the transformations to
 		 */		
 		function get vto():Object;

@@ -387,16 +387,6 @@ package com.gestureworks.core
 		{	
 			_targetList = value;
 		}
-				
-		private var _targeting:Boolean = true;
-		/**
-		 * @inheritDoc
-		 */
-		public function get targeting():Boolean{return _targeting;}
-		public function set targeting(value:Boolean):void
-		{
-			_targeting = value;
-		}
 
 		private var _vto:Object;
 		/**
