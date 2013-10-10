@@ -395,9 +395,9 @@ package com.gestureworks.core
 		public function get vto():Object{return _vto;}
 		public function set vto(value:Object):void
 		{
-			if (!value) {
+			if (_vto && !value) {
 				_vto = value;
-				transform.matrix = null;
+				transform.matrix = transform.matrix;
 				TouchManager.deregisterVTO(this);
 			}
 			else if (value && "transform" in value && value.transform is Transform) {
