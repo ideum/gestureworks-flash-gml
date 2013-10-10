@@ -16,7 +16,6 @@
 package com.gestureworks.core
 {
 	
-	import com.gestureworks.cml.utils.document;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
@@ -33,7 +32,6 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
-	import com.gestureworks.utils.StringUtils;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -387,13 +385,7 @@ package com.gestureworks.core
 		public function get targetList():*{return _targetList;}
 		public function set targetList(value:*):void
 		{	
-			if (value is XML) {				
-				var ids:Array = String(value).split(",");
-				for each(var id:String in ids) 					
-					_targetList.push(document.getElementById(StringUtils.trim(id))); 
-			}
-			else if(value is Array)
-				_targetList = value;
+			_targetList = value;
 		}
 				
 		private var _targeting:Boolean = true;
