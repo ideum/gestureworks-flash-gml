@@ -395,9 +395,9 @@ package com.gestureworks.core
 		public function get vto():Object{return _vto;}
 		public function set vto(value:Object):void
 		{
-			if (!value) {
+			if (_vto && !value) {
 				_vto = value;
-				transform.matrix = null;
+				transform.matrix = transform.matrix;
 				TouchManager.deregisterVTO(this);
 			}
 			else if (value && "transform" in value && value.transform is Transform) {
@@ -566,9 +566,7 @@ package com.gestureworks.core
 		}		
 
 		private var _disableNativeTransform:Boolean = true;
-		/**
-		 * @inheritDoc 
-		 */
+		[Deprecated (replacement="nativeTransform")]
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
 		public function set disableNativeTransform(value:Boolean):void { _disableNativeTransform = value; }
 		
@@ -587,9 +585,7 @@ package com.gestureworks.core
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 
 		private var _disableAffineTransform:Boolean = true;
-		/**
-		 * @inheritDoc
-		 */
+		[Deprecated (replacement="affineTransform")]
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
 		public function set disableAffineTransform(value:Boolean):void { _disableAffineTransform = value; }
 		
