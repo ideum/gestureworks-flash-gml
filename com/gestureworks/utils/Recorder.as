@@ -1,7 +1,3 @@
-/*
- * Recorder.as 
- * Consult onKey() function for controls. Requres TouchProxyEvent.as
- */
 package com.gestureworks.utils
 {
 	import com.gestureworks.events.GWTouchEvent;
@@ -19,6 +15,10 @@ package com.gestureworks.utils
 	import flash.utils.*;
 	import flash.utils.ByteArray;
 	
+	/*
+	 * Recorder.as 
+	 * Consult onKey() function for controls. Requres TouchProxyEvent.as
+	 */
 	public class Recorder extends Sprite {
 		private var bytes:ByteArray;
 		private var recording:Boolean;		
@@ -31,6 +31,9 @@ package com.gestureworks.utils
 		private var replayIndex:uint;
 		private var touchEndMarked:Boolean;
 
+		/**
+		 * Constructor
+		 */
 		public function Recorder():void {
 			if (stage)
 				init(null, null);
@@ -38,6 +41,11 @@ package com.gestureworks.utils
 				addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
+		/**
+		 * Init, prepares the class.
+		 * @param	e Event the will trigger init
+		 * @param	presetGeustures ByteArray if you want to send prerecorded gestures
+		 */
 		public function init(e:Event=null, presetGeustures:ByteArray = null):void {
 			registerClassAlias("TouchEventProxy", TouchEventProxy);  						
 			
@@ -139,6 +147,9 @@ package com.gestureworks.utils
 			}			
 		}
 		
+		/**
+		 * Enable replaying, will begin on the next frame
+		 */
 		public function replay():void {
 			if (replaying) {
 				return; 
@@ -215,11 +226,17 @@ package com.gestureworks.utils
 			}
 		}
 		
+		/**
+		 * Clears graphics
+		 */
 		public function clearCanvas():void {
 			this.graphics.clear();
 			//removeChildren();
 		}
 		
+		/**
+		 * Clears graphics and recorded gestures.
+		 */
 		public function clearAll():void {
 			frameEvents = [];
 			frameIndex = 0;
@@ -294,6 +311,9 @@ package com.gestureworks.utils
 			fr.removeEventListener(Event.CANCEL, _onRefCancel);
 		}
 		
+		/**
+		 * Create new file reference to load file, will trigger explorer dialog
+		 */
 		public function readBinFile():void {
 			fr = new FileReference();
 			fr.addEventListener(Event.SELECT, binFileSelected);
@@ -305,6 +325,11 @@ package com.gestureworks.utils
 			fr.load();
 		}
 		
+		/**
+		 * File selected and loaded, file parsed here.
+		 * @param	e Event which triggers funciton, usually Event.Complete.
+		 * @param	preloadedBytes ByteArray with prerecorded gestures.
+		 */
 		public function binFileLoaded(e:Event=null, preloadedBytes:ByteArray=null):void {
 			var tmpBytes:ByteArray;
 			
