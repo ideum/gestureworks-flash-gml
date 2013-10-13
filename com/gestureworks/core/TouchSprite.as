@@ -75,12 +75,12 @@ package com.gestureworks.core
 		private var _eventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
 
-		public function TouchSprite(vto:Object=null):void
+		public function TouchSprite(_vto:Object=null):void
 		{
 			super();
 			mouseChildren = false; 
 			debugDisplay = false;
-			this.vto = vto;
+			vto = _vto;
         }
 		
 		private var _active:Boolean = false;
@@ -403,6 +403,10 @@ package com.gestureworks.core
 			else if (value && "transform" in value && value.transform is Transform) {
 				_vto = value;
 				transform.matrix = _vto.transform.matrix;
+				TouchManager.registerVTO(this);
+			}
+			else {
+				_vto = value;
 				TouchManager.registerVTO(this);
 			}
 		}
