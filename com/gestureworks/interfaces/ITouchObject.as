@@ -290,11 +290,20 @@ package com.gestureworks.interfaces
 		function set gestureEvents(value:Boolean):void;
 		
 		/**
-		 * Determines whether release inertia is given to gestureEvents on the touchSprite.
+		 * Determines whether release inertia is applied on the touchSprite.
+		 * Same as releaseInertia()
 		 * @default false
 		 */
 		function get gestureReleaseInertia():Boolean;
 		function set gestureReleaseInertia(value:Boolean):void;
+		
+		/**
+		 * Determines whether release inertia is applied on the touchSprite.
+		 * Same as gestureReleaseInertia()
+		 * @default false
+		 */
+		function get releaseInertia():Boolean;
+		function set releaseInertia(value:Boolean):void;
 		
 		/**
 		 * @default false

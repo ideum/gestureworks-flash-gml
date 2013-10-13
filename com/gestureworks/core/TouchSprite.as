@@ -500,7 +500,12 @@ package com.gestureworks.core
 		 * @inheritDoc 
 		 */
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set gestureReleaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}
+		public function set gestureReleaseInertia(value:Boolean):void {	_gestureReleaseInertia = value; }
+		/**
+		 * @inheritDoc 
+		 */		
+		public function get releaseInertia():Boolean{return _gestureReleaseInertia;}
+		public function set releaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}		
 		
 		private var _gestureTweenOn:Boolean = false;
 		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }
