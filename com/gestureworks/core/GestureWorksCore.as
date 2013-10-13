@@ -423,7 +423,6 @@ package com.gestureworks.core
 			}
 			catch (e:Error) {
 				trace(e);
-				throw new Error("CML has not been properly intialized. You must make a renference to the CMLParser. ( e.g. CMLParser.addEventListener(CMLParser.COMPLETE, cmlInit); )");
 			}
 							
 			if (!gml && CML.Objects.@gml) {
