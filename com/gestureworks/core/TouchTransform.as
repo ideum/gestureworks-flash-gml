@@ -232,8 +232,8 @@ package com.gestureworks.core
 	private function applyNativeTransform():void
 		{
 			
-				/*
-				//if ((ts.parent) && (ts.transformGestureVectors))
+				
+				if ((ts.parent) && (ts.transformGestureVectors))
 				{
 				//trace("native parent")
 				// gives root cocatenated transform of parent space
@@ -287,7 +287,7 @@ package com.gestureworks.core
 						dy = trO.dy;
 						dz = trO.dz;
 				}
-				*/	
+				
 				if (centerTransform) {
 					t_x = trO.transAffinePoints[4].x
 					t_y = trO.transAffinePoints[4].y
