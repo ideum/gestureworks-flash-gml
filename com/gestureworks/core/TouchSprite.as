@@ -566,7 +566,7 @@ package com.gestureworks.core
 		}		
 
 		private var _disableNativeTransform:Boolean = true;
-		[Deprecated (replacement="nativeTransform")]
+//		[Deprecated (replacement="nativeTransform")]
 		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
 		public function set disableNativeTransform(value:Boolean):void { _disableNativeTransform = value; }
 		
@@ -585,7 +585,7 @@ package com.gestureworks.core
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 
 		private var _disableAffineTransform:Boolean = true;
-		[Deprecated (replacement="affineTransform")]
+	//	[Deprecated (replacement="affineTransform")]
 		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
 		public function set disableAffineTransform(value:Boolean):void { _disableAffineTransform = value; }
 		
