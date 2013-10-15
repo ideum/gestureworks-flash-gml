@@ -75,12 +75,12 @@ package com.gestureworks.core
 		private var _eventListeners:Array = [];
 		private var gwTouchListeners:Dictionary = new Dictionary();
 
-		public function TouchMovieClip(vto:Object=null):void
+		public function TouchMovieClip(_vto:Object=null):void
 		{
 			super();
 			mouseChildren = false; 
 			debugDisplay = false;
-			this.vto = vto;
+			vto = _vto;
         }
 		
 		private var _active:Boolean = false;
@@ -405,6 +405,10 @@ package com.gestureworks.core
 				transform.matrix = _vto.transform.matrix;
 				TouchManager.registerVTO(this);
 			}
+			else {
+				_vto = value;
+				TouchManager.registerVTO(this);
+			}
 		}
 		
 		private var _clusterEvents:Boolean = false;
@@ -496,7 +500,12 @@ package com.gestureworks.core
 		 * @inheritDoc 
 		 */
 		public function get gestureReleaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set gestureReleaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}
+		public function set gestureReleaseInertia(value:Boolean):void {	_gestureReleaseInertia = value; }
+		/**
+		 * @inheritDoc 
+		 */		
+		public function get releaseInertia():Boolean{return _gestureReleaseInertia;}
+		public function set releaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}		
 		
 		private var _gestureTweenOn:Boolean = false;
 		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }
