@@ -321,6 +321,8 @@ package com.gestureworks.core
 				MotionManager.leapmode = "3d";
 				motion = true;
 			}
+			else
+				motion = false;
 		}
 			
 		/**
