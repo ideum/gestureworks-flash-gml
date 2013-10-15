@@ -490,6 +490,7 @@ package com.gestureworks.analysis
 							
 							ts.gO.pOList[key].data.x = spt.x;
 							ts.gO.pOList[key].data.y = spt.y;
+							ts.gO.pOList[key].n_current = tapEventCount;
 							
 							for (DIM = 0; DIM < dn; DIM++)
 							{
