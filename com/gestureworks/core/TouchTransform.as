@@ -144,8 +144,8 @@ package com.gestureworks.core
 					
 					centerTransform = false;
 					
-					if (ts.disableNativeTransform){
-						if (!ts.disableAffineTransform) applyAffineTransform();//true
+					if (!ts.nativeTransform){
+						if (ts.affineTransform) applyAffineTransform();//true
 					}
 					else applyNativeTransform();//true
 					
@@ -159,8 +159,8 @@ package com.gestureworks.core
 				{
 					centerTransform = true;
 					
-					if (ts.disableNativeTransform) {
-						if (!ts.disableAffineTransform) applyAffineTransform();	//true//false
+					if (!ts.nativeTransform) {
+						if (ts.affineTransform) applyAffineTransform();	//true//false
 					}
 					else applyNativeTransform(); // false
 					
@@ -186,8 +186,8 @@ package com.gestureworks.core
 			
 			centerTransform = false;
 			
-			if (ts.disableNativeTransform){
-				if (!ts.disableAffineTransform) applyAffineTransform();
+			if (!ts.nativeTransform){
+				if (ts.affineTransform) applyAffineTransform();
 			}
 			else applyNativeTransform();
 			
@@ -202,8 +202,8 @@ package com.gestureworks.core
 		{
 			centerTransform = true;
 			
-			if (ts.disableNativeTransform) {
-				if (!ts.disableAffineTransform) applyAffineTransform();
+			if (!ts.nativeTransform) {
+				if (ts.affineTransform) applyAffineTransform();
 			}
 			else applyNativeTransform();
 			

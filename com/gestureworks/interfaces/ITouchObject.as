@@ -357,14 +357,6 @@ package com.gestureworks.interfaces
 			
 		/**
 		 * Determines whether transformations are handled internally (natively) on the touchSprite.
-		 * @default  true
-		 */
-		function get disableNativeTransform():Boolean;
-		function set disableNativeTransform(value:Boolean):void;
-		
-		/**
-		 * Determines whether transformations are handled internally (natively) on the touchSprite.
-		 * Same as !disableNativeTransform.
 		 * @default false
 		 */
 		function get nativeTransform():Boolean;
@@ -376,17 +368,9 @@ package com.gestureworks.interfaces
 		 */
 		function get transformGestureVectors():Boolean;
 		function set transformGestureVectors(value:Boolean):void;
-
-		/**
-		 * Determines whether gesture event driven transformations are affine on the touchSprite.
-		 * @default true
-		 */
-		function get disableAffineTransform():Boolean;
-		function set disableAffineTransform(value:Boolean):void;
 		
 		/**
 		 * Determines whether gesture event driven transformations are affine on the touchSprite.
-		 * Same as !disableAffineTransform
 		 * @default false
 		 */
 		function get affineTransform():Boolean;

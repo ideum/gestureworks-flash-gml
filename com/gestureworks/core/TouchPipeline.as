@@ -240,7 +240,7 @@ package com.gestureworks.core
 											/////////////////////////////////////////////////////////////////////////////////////////////
 											
 											//COULD IN THEORY WORK WITH NON NATIVE TRANSFORMS BUT FOR NOW NO
-											if ((gDim.boundary_filter)&&(!ts.disableNativeTransform))
+											if ((gDim.boundary_filter)&&(ts.nativeTransform))
 											{	
 												//trace(gDim.gestureValue,trO.obj_x,gDim.target_id) 
 												
@@ -346,7 +346,7 @@ package com.gestureworks.core
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// map dynamic cluster deltas results into gesture object
 			////////////////////////////////////////////////////////////////////////////////////////////////////////
-			if (!ts.disableNativeTransform)
+			if (ts.nativeTransform)
 			{	
 				for (i=0; i < gn; i++) 
 					{

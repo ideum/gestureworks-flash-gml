@@ -55,8 +55,8 @@ package com.gestureworks.core
 	 * 		mouseChildren="false"
 	 *		touchChildren="false"
 	 *		targetParent = "false"
-	 *		disableNativeTransform = "true"
-	 *		disableAffineTransform = "true"
+	 *		nativeTransform = "false"
+	 *		affineTransform = "false"
 	 *		gestureEvents = "true"
 	 *		clusterEvents = "false"
 	 *		transformEvents = "false"
@@ -573,17 +573,13 @@ package com.gestureworks.core
 				}
 			}
 		}		
-
-		private var _disableNativeTransform:Boolean = true;
-//		[Deprecated (replacement="nativeTransform")]
-		public function get disableNativeTransform():Boolean{return _disableNativeTransform;}
-		public function set disableNativeTransform(value:Boolean):void { _disableNativeTransform = value; }
 		
+		private var _nativeTransform:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		public function get nativeTransform():Boolean{return !_disableNativeTransform;}
-		public function set nativeTransform(value:Boolean):void {_disableNativeTransform = !value; }						
+		public function get nativeTransform():Boolean{return _nativeTransform;}
+		public function set nativeTransform(value:Boolean):void {_nativeTransform = value; }						
 
 		// default true so that all nested gestures are correct unless specidied
 		private var _transformGestureVectors:Boolean = true;
@@ -592,17 +588,13 @@ package com.gestureworks.core
 		 */
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
-
-		private var _disableAffineTransform:Boolean = true;
-	//	[Deprecated (replacement="affineTransform")]
-		public function get disableAffineTransform():Boolean{return _disableAffineTransform;}
-		public function set disableAffineTransform(value:Boolean):void { _disableAffineTransform = value; }
 		
+		private var _affineTransform:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		public function get affineTransform():Boolean{return !_disableAffineTransform;}
-		public function set affineTransform(value:Boolean):void{_disableAffineTransform = !value;}		
+		public function get affineTransform():Boolean{return _affineTransform;}
+		public function set affineTransform(value:Boolean):void{_affineTransform = value;}		
 		
 		private var _x_lock:Boolean = false;
 		/**
