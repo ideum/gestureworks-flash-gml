@@ -251,7 +251,7 @@ package com.gestureworks.analysis
 							
 									for (var j:int = 0; j < pointEventArray.length; j++) 
 									{
-										if ((pointEventArray[j].type =="touchBegin")&&(pointEventArray[j].touchPointID == event.touchPointID))
+										if ((pointEventArray[j].type =="gwTouchBegin")&&(pointEventArray[j].touchPointID == event.touchPointID))
 										{
 											var dx0:Number = Math.abs(pointEventArray[j].stageX - event.stageX)
 											var dy0:Number = Math.abs(pointEventArray[j].stageY - event.stageY)
@@ -592,6 +592,7 @@ package com.gestureworks.analysis
 						// default x and y		
 						ts.gO.pOList[key].data.x = spt2.x;
 						ts.gO.pOList[key].data.y = spt2.y;
+						ts.gO.pOList[key].n_current = dtapEventCount;
 						
 						for (DIM = 0; DIM < ddn; DIM++) {
 							//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
@@ -678,6 +679,7 @@ package com.gestureworks.analysis
 						ts.gO.pOList[key].activeEvent = true;
 						ts.gO.pOList[key].data.x = spt3.x;
 						ts.gO.pOList[key].data.y = spt3.y;
+						ts.gO.pOList[key].n_current = ttapEventCount;
 						
 						for (DIM = 0; DIM < tdn; DIM++) {
 							//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];

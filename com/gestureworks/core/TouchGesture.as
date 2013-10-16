@@ -363,9 +363,9 @@ package com.gestureworks.core
 						// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
 						
 						//search for touch end events on timeline						
-						if ((gO.pOList[key].match_TouchEvent == "gwTouchEnd")|| (gO.pOList[key].match_TouchEvent == "touchEnd") || (gO.pOList[key].match_GestureEvent == "tap") )
+						if ((gO.pOList[key].match_TouchEvent == "gwTouchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
 						{
-							if ((tiO.timelineOn) && (tiO.pointEvents) && (tiO.frame.pointEventArray))
+							if ((tiO.pointEvents) && (tiO.frame.pointEventArray))
 							{
 								
 							// in current frame
@@ -620,7 +620,7 @@ package com.gestureworks.core
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline"); //TODO: Required for tap but cause issue with vizualizer
+				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 			}
 			
 			// start OBJECT complete event gesturing
