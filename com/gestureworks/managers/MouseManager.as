@@ -128,7 +128,8 @@ package com.gestureworks.managers
 				return;
 			}
 			
-			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, currentMousePoint, false);
+			var event:GWTouchEvent = new GWTouchEvent(e);
+			event.touchPointID = currentMousePoint;
 			TouchManager.onTouchUp(event);
 		}
 		
