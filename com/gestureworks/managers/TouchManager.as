@@ -159,13 +159,8 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function applyHooks(event:GWTouchEvent):void {
-			var gwt:GWTouchEvent;
 			for each(var hook:Function in hooks) {
-				gwt = hook(event);
-				if (gwt) {
-					event = gwt;
-					return;
-				}
+				event = hook(event);
 			}
 		}
 		
@@ -674,7 +669,8 @@ package com.gestureworks.managers
 				
 				// clear frame 
 				// was just pushing events and never clearing object 
-				if(tO.tiO) tO.tiO.frame = new FrameObject();
+				if (tO.tiO) tO.tiO.frame = new FrameObject();
+
 			}
 			
 			// zero motion frame count
