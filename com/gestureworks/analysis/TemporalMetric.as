@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.analysis 
 {
+	import com.gestureworks.objects.GestureObject;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	
@@ -85,16 +86,21 @@ package com.gestureworks.analysis
 		////////////////////////////////////////////////////////////////////////////////////////
 		public function findLockedPoints(key:int):void
 		{
+			var g:GestureObject = ts.gO.pOList[key]; 
 			// REDUNDANT AS ONLY CALLED IF MEETS N CRITERIA
 			var hold_number:int = ts.N;//gO.pOList[key].n; 
-			var hold_dist:int = ts.gO.pOList[key].point_translation_max;
+			var hold_dist:int = g.point_translation_max;
+			
+			//POINT COUNT FILTERING
+			if (hold_number < g.nMin || hold_number > g.nMax)
+				return;
 			
 			//HOLD TIME MEASURED IN FRAMES
-			var	hold_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_min * GestureWorks.application.frameRate * 0.001)							
+			var	hold_time:int = Math.ceil(g.point_event_duration_min * GestureWorks.application.frameRate * 0.001)							
 			//trace("hold ",GestureGlobals.touchFrameInterval,hold_time,g.point_event_duration_min,GestureWorks.application.frameRate,t)
 											
 			
-			var dn:uint = ts.gO.pOList[key].dList.length;
+			var dn:uint = g.dList.length;
 			var N:uint = cO.n;
 			var LN:uint = cO.hold_n;
 			
@@ -168,15 +174,15 @@ package com.gestureworks.analysis
 									// push data (bypasses filtering for now)
 									/////////////////////////////////////
 									
-									ts.gO.pOList[key].data.x = cO.hold_x; 
-									ts.gO.pOList[key].data.y = cO.hold_y; 
+									g.data.x = cO.hold_x; 
+									g.data.y = cO.hold_y; 
 									
 									var d:Object = new Object();
 										d["x"] = cO.hold_x;
 										d["y"] = cO.hold_y;
 										d["n"] = cO.hold_n;
 									
-									for (DIM = 0; DIM < dn; DIM++)	ts.gO.pOList[key].dList[DIM].gestureDelta = d[ts.gO.pOList[key].dList[DIM].property_result];
+									for (DIM = 0; DIM < dn; DIM++)	g.dList[DIM].gestureDelta = d[g.dList[DIM].property_result];
 									
 									//////////////////////////////////////
 									
