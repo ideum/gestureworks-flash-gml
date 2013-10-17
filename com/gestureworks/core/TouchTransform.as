@@ -365,14 +365,9 @@ package com.gestureworks.core
 					// modify transform
 					affine_modifier3D.copyFrom(ts.transform.matrix3D);
 						affine_modifier3D.appendTranslation( -trO.x + dx, -trO.y + dy, -trO.z + dz);	
-						//if (dtheta) {
-						//	affine_modifier3D.appendRotation(dtheta, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));	
-						//}
-						//else if (dthetaX || dthetaY || dthetaZ) {
-							affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
-							affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
-							affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));								
-						//}
+						affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
+						affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
+						affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));								
 						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1 + dsz); 
 						affine_modifier3D.appendTranslation( trO.x, trO.y, trO.z);						
 					ts.transform.matrix3D = affine_modifier3D;	
