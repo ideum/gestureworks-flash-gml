@@ -199,12 +199,12 @@ package com.gestureworks.utils
 																nMin = n;
 																}
 															if (n==0) { // denotes range of values
-																nMax = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("point_number_min"));
-																nMin = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("point_number_max"));
+																nMax = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("point_number_max"));
+																nMin = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("point_number_min"));
 															}
 															gO.n = n
-															gO.nMin = nMax;
-															gO.nMax = nMin;
+															gO.nMax = nMax;
+															gO.nMin = nMin;
 															
 															//////////////////////
 															//advanced cluster properties
