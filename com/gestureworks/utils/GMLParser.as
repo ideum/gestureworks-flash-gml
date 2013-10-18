@@ -43,6 +43,7 @@ package com.gestureworks.utils
 			if (_settingsPath==value)
 				return;
 
+			settings = null;
 			settingsLoader = new URLLoader();
 			settingsLoader.addEventListener(Event.COMPLETE, settingsLoader_completeHandler);
 			_settingsPath = value;

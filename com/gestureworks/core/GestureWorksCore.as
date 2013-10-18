@@ -79,7 +79,6 @@ package com.gestureworks.core
 				startGmlParse();
 		}		
 		
-		
 		private var _cml:String;
 		/**
 		 * Sets cml file path. Path is relevant to application.
@@ -388,6 +387,36 @@ package com.gestureworks.core
 			GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
 			
 			//trace("start gml parse",gml,GMLParser.settingsPath)
+		}
+		
+		/**
+		 * Loads a gml file
+		 * @param	gml The gml file path
+		 */
+		public function loadGML(gml:String):void {
+			if (this.gml)
+				this.gml += "," + gml;
+			else
+				this.gml = gml;
+		}
+		
+		/**
+		 * Unloads a gml file
+		 * @param	gml The gml file path
+		 */
+		public function unloadGML(gml:String):void {
+			if (this.gml) {
+				var gmlNew:String;
+				var paths:Array = this.gml.split(",");
+				paths.splice(paths.indexOf(StringUtils.trim(gml)), 1);
+				for each(var path:String in paths) {
+					if (gmlNew)
+						gmlNew += "," + path;
+					else
+						gmlNew = path;
+				}
+				gml = gmlNew;
+			}
 		}
 		
 		// parse loaded cml file
