@@ -1,8 +1,8 @@
 package com.gestureworks.managers 
 {
 
-	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.Pointable;
 	import com.leapmotion.leap.Vector3;
@@ -28,6 +28,8 @@ package com.gestureworks.managers
 		private var _maxZ:Number = 200;
 		
 		private var _pressureThreshold:Number = 1;
+		
+		private var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();		
 		
 		/**
 		 * The Leap2DManager constructor allows arguments for screen and leap device calibration settings. The settings will map x and y Leap coordinate ranges to screen 
@@ -96,19 +98,33 @@ package com.gestureworks.managers
 
 				if (activePoints.indexOf(pid) == -1) {								
 					
+					var ev:GWTouchEvent;
 					//hit test
 					var obj:* = getTopDisplayObjectUnderPoint(point);
 					
-					if (obj is ITouchObject && pressure <= pressureThreshold) {
+					if ((obj || overlays.length) && pressure <= pressureThreshold) {
 						activePoints.push(pid);	
-						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
+						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
 							ev.stageX = point.x;
 							ev.stageY = point.y;
 							ev.pressure = pressure;
-							ev.target = obj;
 							ev.source = getDefinitionByName(getQualifiedClassName(this)) as Class;
 							
-							TouchManager.onTouchDown(ev);
+							if (obj) {
+								ev.target = obj;
+								TouchManager.onTouchDown(ev);
+							}
+							
+							//global overlays
+							for each(var overlay:ITouchObject in overlays) 	{							
+								if (overlay["width"] && (point.x < overlay["x"] || point.x > overlay["x"] + overlay["width"])) 
+									continue;
+								if (overlay["height"] && (point.y < overlay["y"] || point.y > overlay["y"] + overlay["height"]))
+									continue;
+								ev = ev.clone() as GWTouchEvent;
+								ev.target = overlay;
+								TouchManager.onTouchDown(ev);
+							}
 					}
 					
 					if(debug)
@@ -118,7 +134,6 @@ package com.gestureworks.managers
 					if (activePoints.indexOf(pid) != -1 && pressure > pressureThreshold){
 						activePoints.splice(activePoints.indexOf(pid), 1);
 						TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, pid, false));
-						0
 						if (debug)
 							trace("REMOVED:", pid, event.frame.pointable(pid));					
 					}
@@ -252,6 +267,14 @@ package com.gestureworks.managers
 		public function get pressureThreshold():Number { return _pressureThreshold; }
 		public function set pressureThreshold(p:Number):void {
 			_pressureThreshold = p;
+		}
+		
+		/**
+		 * Registers global overlays to receive point data
+		 */
+		public function get overlays():Vector.<ITouchObject> { return _overlays; }
+		public function set overlays(o:Vector.<ITouchObject>):void {
+			_overlays = o;
 		}
 		
 		/**
