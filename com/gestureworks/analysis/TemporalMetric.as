@@ -92,7 +92,9 @@ package com.gestureworks.analysis
 			var hold_dist:int = g.point_translation_max;
 			
 			//POINT COUNT FILTERING
-			if (hold_number < g.nMin || hold_number > g.nMax)
+			if (g.n && g.n != hold_number)
+				return;
+			else if (!g.n && (hold_number < g.nMin || hold_number > g.nMax))
 				return;
 			
 			//HOLD TIME MEASURED IN FRAMES
@@ -429,6 +431,8 @@ package com.gestureworks.analysis
 			//trace(Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001))
 			//var buffer:int = 4;
 			var tap_number:int = ts.gO.pOList[key].n;
+			var tap_number_min:int = ts.gO.pOList[key].nMin;
+			var tap_number_max:int = ts.gO.pOList[key].nMax;
 			var tap_x_mean:Number = 0
 			var tap_y_mean:Number = 0;
 			
@@ -474,7 +478,7 @@ package com.gestureworks.analysis
 					// check totals
 					if (tapEventCount != 0) 
 					{
-						if ((tap_number == 0)||(tapEventCount == tap_number))
+						if ((tap_number && tapEventCount == tap_number) || (!tap_number && tapEventCount >= tap_number_min && tapEventCount <= tap_number_max))
 						{
 							//trace("tap event count for last duration",tapEventCount);
 							var spt:Point = new Point (tap_x_mean/tapEventCount, tap_y_mean/tapEventCount); // stage point average

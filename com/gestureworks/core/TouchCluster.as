@@ -411,11 +411,11 @@ package com.gestureworks.core
 						{
 							//trace("call cluster calc",ts.N);
 							
-							// activate all by default
-							g.activeEvent = true;
-							
 							if (g.algorithm_class == "kinemetric")
 							{
+									// activate all by default
+									g.activeEvent = true;
+									
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
 									
 									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
