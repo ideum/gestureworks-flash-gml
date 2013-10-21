@@ -345,7 +345,7 @@ package com.gestureworks.analysis
 		{
 			if (ts.traceDebugMode) trace("find t taps---------------------------------------------------------");
 		
-				var ttap_time:int = 20
+				var ttap_time:int = 300
 				//var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var ttap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
@@ -531,6 +531,8 @@ package com.gestureworks.analysis
 			var dtap_countTime:int = ts.gO.pOList[key].dispatch_interval;
 			//trace(Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001))
 			var dtap_number:int = ts.gO.pOList[key].n;
+			var dtap_number_min:int = ts.gO.pOList[key].nMin;
+			var dtap_number_max:int = ts.gO.pOList[key].nMax;
 			var dtap_x_mean:Number = 0
 			var dtap_y_mean:Number = 0;
 			var ddn:uint = ts.gO.pOList[key].dList.length;
@@ -574,41 +576,40 @@ package com.gestureworks.analysis
 					if (dtapEventCount != 0) 
 					{
 						//trace("dtap event count", dtapEventCount)
-						
-						if ((dtap_number == 0)||(dtapEventCount == dtap_number))
+						if((dtap_number && dtapEventCount == dtap_number) ||(!dtap_number && dtapEventCount >= dtap_number_min && dtapEventCount <= dtap_number_max))
 						{
-						//trace("double tap event count for last duration", dtapEventCount);
-						var spt2:Point = new Point (dtap_x_mean/dtapEventCount, dtap_y_mean/dtapEventCount); // stage point average
-						var lpt2:Point = ts.globalToLocal(spt2); //local point average
-						ndtapID++;
-						
-						//-var ndtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt2.x, y:spt2.y,  stageX:spt2.x , stageY:spt2.y, localX:lpt2.x , localY:lpt2.y, gestureID:ndtapID,n:dtapEventCount, id:key} )
-						//-ts.dispatchEvent(ndtap_event);
-						// confuses counter // need to move taps to touch event layer
-						//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ndtap_event);
-						
-						ts.gO.pOList[key].activeEvent = true;
-						
-						// map to gesture object
-						//ts.gO.pOList[key].x = spt2.x;
-						//ts.gO.pOList[key].y = spt2.y;
-						//ts.gO.pOList[key].n = dtapEventCount;
-						
-						var dd:Object = new Object();
-								dd["x"] = spt2.x;
-								dd["y"] = spt2.y;
-								dd["n"] = dtapEventCount;
-								
-						// default x and y		
-						ts.gO.pOList[key].data.x = spt2.x;
-						ts.gO.pOList[key].data.y = spt2.y;
-						ts.gO.pOList[key].n_current = dtapEventCount;
-						
-						for (DIM = 0; DIM < ddn; DIM++) {
-							//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
-							ts.gO.pOList[key].dList[DIM].gestureDelta = dd[ts.gO.pOList[key].dList[DIM].property_result];
-						}
-						
+							//trace("double tap event count for last duration", dtapEventCount);
+							var spt2:Point = new Point (dtap_x_mean/dtapEventCount, dtap_y_mean/dtapEventCount); // stage point average
+							var lpt2:Point = ts.globalToLocal(spt2); //local point average
+							ndtapID++;
+							
+							//-var ndtap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.DOUBLE_TAP, { x:spt2.x, y:spt2.y,  stageX:spt2.x , stageY:spt2.y, localX:lpt2.x , localY:lpt2.y, gestureID:ndtapID,n:dtapEventCount, id:key} )
+							//-ts.dispatchEvent(ndtap_event);
+							// confuses counter // need to move taps to touch event layer
+							//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(ndtap_event);
+							
+							ts.gO.pOList[key].activeEvent = true;
+							
+							// map to gesture object
+							//ts.gO.pOList[key].x = spt2.x;
+							//ts.gO.pOList[key].y = spt2.y;
+							//ts.gO.pOList[key].n = dtapEventCount;
+							
+							var dd:Object = new Object();
+									dd["x"] = spt2.x;
+									dd["y"] = spt2.y;
+									dd["n"] = dtapEventCount;
+									
+							// default x and y		
+							ts.gO.pOList[key].data.x = spt2.x;
+							ts.gO.pOList[key].data.y = spt2.y;
+							ts.gO.pOList[key].n_current = dtapEventCount;
+							
+							for (DIM = 0; DIM < ddn; DIM++) {
+								//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
+								ts.gO.pOList[key].dList[DIM].gestureDelta = dd[ts.gO.pOList[key].dList[DIM].property_result];
+							}
+							
 						}
 					}
 		}
@@ -620,6 +621,8 @@ package com.gestureworks.analysis
 			ttapEventCount = 0;
 			var ttap_countTime:int = ts.gO.pOList[key].dispatch_interval;		//Math.ceil(ts.gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001);
 			var ttap_number:int = ts.gO.pOList[key].n;
+			var ttap_number_min:int = ts.gO.pOList[key].nMin;
+			var ttap_number_max:int = ts.gO.pOList[key].nMax;
 			var ttap_x_mean:Number = 0
 			var ttap_y_mean:Number = 0;
 			var tdn:uint = ts.gO.pOList[key].dList.length;
@@ -665,36 +668,36 @@ package com.gestureworks.analysis
 					if (ttapEventCount != 0) 
 					{
 						//trace("ttap event count", dtapEventCount)
-						if ((ttap_number == 0)||(ttapEventCount == ttap_number))
+						if((ttap_number && ttapEventCount == ttap_number) ||(!ttap_number && ttapEventCount >= ttap_number_min && ttapEventCount <= ttap_number_max))
 						{
-						//trace("triple tap event count for last duration", ttapEventCount);
-						var spt3:Point = new Point (ttap_x_mean/ttapEventCount, ttap_y_mean/ttapEventCount); // stage point average
-						var lpt3:Point = ts.globalToLocal(spt3); //local point average
-						nttapID++;
-						
-						
-						//-var nttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt3.x, y:spt3.y,  stageX:spt3.x , stageY:spt3.y, localX:lpt3.x , localY:lpt3.y, gestureID:nttapID, n:ttapEventCount, id:key} )
-							//-ts.dispatchEvent(nttap_event);
+							//trace("triple tap event count for last duration", ttapEventCount);
+							var spt3:Point = new Point (ttap_x_mean/ttapEventCount, ttap_y_mean/ttapEventCount); // stage point average
+							var lpt3:Point = ts.globalToLocal(spt3); //local point average
+							nttapID++;
 							
-							//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(nttap_event);
-						
-						var td:Object = new Object();
-								td["x"] = spt3.x;
-								td["y"] = spt3.y;
-								td["n"] = ttapEventCount;	
 							
-						// over write gesture object properties
-						
-						//ts.gO.pOList[key].gestureID = nttapID;
-						ts.gO.pOList[key].activeEvent = true;
-						ts.gO.pOList[key].data.x = spt3.x;
-						ts.gO.pOList[key].data.y = spt3.y;
-						ts.gO.pOList[key].n_current = ttapEventCount;
-						
-						for (DIM = 0; DIM < tdn; DIM++) {
-							//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
-							ts.gO.pOList[key].dList[DIM].gestureDelta = td[ts.gO.pOList[key].dList[DIM].property_result];
-						}
+							//-var nttap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TRIPLE_TAP, { x:spt3.x, y:spt3.y,  stageX:spt3.x , stageY:spt3.y, localX:lpt3.x , localY:lpt3.y, gestureID:nttapID, n:ttapEventCount, id:key} )
+								//-ts.dispatchEvent(nttap_event);
+								
+								//if(ts.tiO.pointEvents)ts.tiO.frame.gestureEventArray.push(nttap_event);
+							
+							var td:Object = new Object();
+									td["x"] = spt3.x;
+									td["y"] = spt3.y;
+									td["n"] = ttapEventCount;	
+								
+							// over write gesture object properties
+							
+							//ts.gO.pOList[key].gestureID = nttapID;
+							ts.gO.pOList[key].activeEvent = true;
+							ts.gO.pOList[key].data.x = spt3.x;
+							ts.gO.pOList[key].data.y = spt3.y;
+							ts.gO.pOList[key].n_current = ttapEventCount;
+							
+							for (DIM = 0; DIM < tdn; DIM++) {
+								//ts.gO.pOList[key].dList[DIM].gestureDelta = ts.cO[ts.gO.pOList[key].dList[DIM].property_result];
+								ts.gO.pOList[key].dList[DIM].gestureDelta = td[ts.gO.pOList[key].dList[DIM].property_result];
+							}
 						
 					
 					}
