@@ -210,7 +210,8 @@ package com.gestureworks.analysis
 			//trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			// CHECK GML COMPATABILITY
-			var tap_time:int = 10//Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold * GestureWorks.application.frameRate * 0.001);//10
+			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_max * GestureWorks.application.frameRate * 0.001)	
+			trace(tap_time);
 			//var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10
 			var tap_dist:int = ts.gO.pOList[key].point_translation_max;
 			
@@ -297,7 +298,7 @@ package com.gestureworks.analysis
 			//if (ts.traceDebugMode)
 			//trace("\nfind d taps---------------------------------------------------------");
 		
-				var dtap_time:int = 30//Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold * GestureWorks.application.frameRate * 0.001); //20frames
+				var dtap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_max * GestureWorks.application.frameRate * 0.001)	
 				//var dtap_time:int = Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var dtap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
@@ -345,7 +346,7 @@ package com.gestureworks.analysis
 		{
 			if (ts.traceDebugMode) trace("find t taps---------------------------------------------------------");
 		
-				var ttap_time:int = 300
+				var ttap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_max * GestureWorks.application.frameRate * 0.001);	
 				//var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var ttap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
