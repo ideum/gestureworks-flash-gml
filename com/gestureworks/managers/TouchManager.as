@@ -64,7 +64,7 @@ package com.gestureworks.managers
 		
 		private static var gms:*;
 		private static var hooks:Vector.<Function>;
-		private var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();	
+		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();	
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -176,10 +176,26 @@ package com.gestureworks.managers
 		/**
 		 * Registers global overlays to receive point data
 		 */
-		public function get overlays():Vector.<ITouchObject> { return _overlays; }
-		public function set overlays(o:Vector.<ITouchObject>):void {
+		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
+		public static function set overlays(o:Vector.<ITouchObject>):void {
 			_overlays = o;
-		}		
+		}	
+		
+		/**
+		 * Sends overlays through pipeline
+		 * @param	e
+		 */
+		private static function processOverlays(e:GWTouchEvent):void {
+			for each(var overlay:ITouchObject in overlays) 	{
+				if (overlay["width"] && (e.stageX < overlay["x"] || e.stageX > overlay["x"] + overlay["width"])) 
+					continue;
+				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
+					continue;
+				e = e.clone() as GWTouchEvent;
+				e.target = overlay;
+				onTouchDown(e);
+			}			
+		}
 		
 		/**
 		 * Determines the event's target is valid based on activated state and local mode settings.
@@ -233,6 +249,7 @@ package com.gestureworks.managers
 		private static function onTouchBegin(e:TouchEvent):void {			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
+			processOverlays(event);
 		}
 		
 		/**
