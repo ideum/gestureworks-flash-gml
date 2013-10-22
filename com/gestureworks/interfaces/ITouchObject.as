@@ -235,7 +235,7 @@ package com.gestureworks.interfaces
 		//function set targetList(value:*):void;	
 		
 		/**
-		 * Virtual touch object (non-TouchSprite) to transfer the transformations to
+		 * Virtual transform object (non-TouchSprite) to transfer the transformations to
 		 */		
 		function get vto():Object;
 		function set vto(value:Object):void;		
