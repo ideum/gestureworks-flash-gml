@@ -201,6 +201,13 @@ package com.gestureworks.core
 		 */
 		public function get ipn():int { return _ipn; }
 		public function set ipn(n:int):void { _ipn = n; }
+		
+		private var _mpn:int = 0; 
+		/**
+		 * @inheritDoc
+		 */
+		public function get mpn():int { return _mpn; }
+		public function set mpn(n:int):void { _mpn = n; }
 				
 		private var _dN:Number = 0; 
 		/**
@@ -542,11 +549,11 @@ package com.gestureworks.core
 
 		private var _transformEventStart:Boolean = true;
 		public function get transformEventStart():Boolean{return _transformEventStart;}
-		public function set transformEventStart(value:Boolean):void{	_transformEventStart=value;}
+		public function set transformEventStart(value:Boolean):void{_transformEventStart=value;}
 
 		private var _transformEventComplete:Boolean = true;
 		public function get transformEventComplete():Boolean{return _transformEventComplete;}
-		public function set transformEventComplete(value:Boolean):void {	_transformEventComplete = value; }
+		public function set transformEventComplete(value:Boolean):void {_transformEventComplete = value; }
 		
 		private var _touchEnabled:Boolean = true;
 		/**
@@ -572,7 +579,22 @@ package com.gestureworks.core
 					}
 				}
 			}
-		}		
+		}	
+		
+		private var _motionEnabled:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get motionEnabled():Boolean { return _motionEnabled; }
+		public function set motionEnabled(value:Boolean):void {	_motionEnabled = value;}
+		
+		private var _sensorEnabled:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get sensorEnabled():Boolean { return _sensorEnabled; }
+		public function set sesnorEnabled(value:Boolean):void {	_sensorEnabled = value;}
+		
 		
 		private var _nativeTransform:Boolean = false;
 		/**

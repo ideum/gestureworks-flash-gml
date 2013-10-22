@@ -38,6 +38,8 @@ package com.gestureworks.objects
 		
 		// number of touch points
 		public var tpn:int = 0;
+		// number of motion points
+		public var mpn:int = 0;
 		
 		// number of derived interactive points---------------------
 		public var ipn:int = 0;

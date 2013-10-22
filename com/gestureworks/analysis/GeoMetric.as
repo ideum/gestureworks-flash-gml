@@ -46,6 +46,8 @@ package com.gestureworks.analysis
 		private var i:uint = 0;
 		private var j:uint = 0;
 		
+		private var mpn:uint = 0;
+		
 		public function GeoMetric(_id:int) 
 		{
 			touchObjectID = _id;
@@ -70,6 +72,16 @@ package com.gestureworks.analysis
 			/////////////////////////////////////
 		}
 
+		
+		public function findMotionClusterConstants():void
+		{
+			mpn = cO.motionArray.length;
+			
+			ts.mpn = mpn;
+			ts.cO.mpn = mpn;
+			ts.cO.mcO.mpn = mpn;
+		}
+		
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		// 3d config analysis
@@ -79,7 +91,7 @@ package com.gestureworks.analysis
 		// clear derived point and cluster motion data
 		public function clearHandData():void
 		{
-			for (i = 0; i < cO.motionArray.length; i++)
+			for (i = 0; i < mpn; i++)
 				{	
 					if (cO.motionArray[i].type == "finger")
 					{	
@@ -121,9 +133,9 @@ package com.gestureworks.analysis
 		public function createHand():void 
 		{
 			//trace("create hand")
-			if (cO.motionArray.length !=0) // no points no hand
+			if (mpn !=0) // no points no hand
 			{
-				for (i = 0; i < cO.motionArray.length; i++)
+				for (i = 0; i < mpn; i++)
 					{
 					//////////////////////////////////////////////////////
 					/// create hand
@@ -152,7 +164,7 @@ package com.gestureworks.analysis
 					for (j = 0; j < cO.hn; j++)
 					{
 						
-						for (i = 0; i < cO.motionArray.length; i++)
+						for (i = 0; i < mpn; i++)
 								{	
 									var mp:MotionPointObject = cO.motionArray[i];
 									//trace(cO.handList[j].handID ,cO.motionArray[i].handID)

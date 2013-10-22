@@ -139,6 +139,10 @@ package com.gestureworks.core
 		{
 			//trace("update cluster count");
 			
+			// geometric on
+			cluster_geometric.findMotionClusterConstants();  // get mpn
+			
+			
 			// get point count
 			cluster_kinemetric.findTouchClusterConstants(); // get tpn
 			cluster_kinemetric.find3DGlobalIPConstants();  	// get ipn
@@ -239,14 +243,14 @@ package com.gestureworks.core
 				{	
 					//if (ts.touch_input) 
 					//getGeoMetrics2D(); 
-					//if (ts.motion_input) 
+					//if (ts.motionEnabled) 
 					getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
 				{	
-					//if (ts.touch_input) 
+					//if (ts.touchEnabled) 
 					getKineMetrics();
-					//if (ts.motion_input) 
+					//if (ts.motionEnabled) 
 					getKineMetrics3D();
 				}
 				
@@ -303,7 +307,7 @@ package com.gestureworks.core
 					cluster_geometric.findHandRadius(); // favdist 
 					cluster_geometric.findThumb(); // thumb // left// right
 				// ADVANCED SKELETON
-					//--cluster_geometric.findFingers(); // identify fingers
+					//--cluster_geometric.findFingers(); // uniquely identify fingers
 					//--cluster_geometric.findJoints(); // finger joints //knuckle / wrist
 				////////////////////////////////////////////////
 					

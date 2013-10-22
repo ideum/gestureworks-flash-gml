@@ -30,6 +30,8 @@ package com.gestureworks.objects
 		public var n:int = 0;
 		// number of touch points
 		public var tpn:int = 0;
+		// number of motion points
+		public var mpn:int = 0;
 		//number of sensor points
 		public var spn:int=0;
 		

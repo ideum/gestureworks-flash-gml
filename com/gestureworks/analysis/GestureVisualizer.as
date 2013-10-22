@@ -51,6 +51,8 @@ package com.gestureworks.analysis
 		private var id:Number = 0;
 		private var pointList:Vector.<PointObject>
 		private var N:int = 0;
+		private var tpn:int = 0;
+		private var ipn:int = 0;
 		private var path_data:Array = new Array();
 		private var gn:int = 0;
 		
@@ -112,12 +114,15 @@ package com.gestureworks.analysis
 			gO = ts.gO;
 			
 			orientation = cO.orientation;
+			
 		}
 			
 	public function draw():void
 	{	
-		pointList = cO.pointArray;
-		N = pointList.length;
+		//N = cO.n;//pointList.length;
+		tpn = cO.tpn;//pointList.length;
+		
+		
 		path_data = sO.path_data 
 		gn = gO.pOList.length;
 		
@@ -128,9 +133,9 @@ package com.gestureworks.analysis
 		// FIXME:
 		
 		// draw
-		draw_touch_gesture();
-		draw_motion_gesture();
-		//draw_sensor_gesture();
+		if (ts.touchEnabled) 	draw_touch_gesture();
+		if (ts.motionEnabled)	draw_motion_gesture();
+		//if (ts.sensorEnabled) draw_sensor_gesture();
 		
 	}
 	
@@ -145,7 +150,7 @@ package com.gestureworks.analysis
 		/////////////////////////////////////////////////////////////////////////////////
 		// draw pivot gesture vector
 		/////////////////////////////////////////////////////////////////////////////////
-		if (N)
+		if (tpn)
 		{			
 			if ((_drawPivot)&&(ts.trO.init_center_point) && (ts.trO.transformPointsOn))
 			{
@@ -214,13 +219,15 @@ package com.gestureworks.analysis
 		// draw orientation data
 		///////////////////////////////////////////////////////////////////////////////////
 			
-			if ((_drawOrientation)&&(N == 5))
+			if ((_drawOrientation)&&(tpn == 5))
 			{
 				// draw thimb ring
 				graphics.lineStyle(style.t_stroke_thickness,style.t_stroke_color, style.t_stroke_alpha);
 				
+				pointList = cO.pointArray;
+				
 					//trace("thumb",cO.thumbID)
-					for (var i:int = 0; i < N; i++) 
+					for (var i:int = 0; i < tpn; i++) 
 						{
 						if (pointList[i].id == cO.thumbID) graphics.drawCircle(pointList[i].x, pointList[i].y, 40);
 						}

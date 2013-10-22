@@ -123,9 +123,9 @@ package com.gestureworks.analysis
 		// init
 		graphics.clear();
 
-		drawClusterDims();
-		drawInteractionPoints();
-		drawSubClusterDims();
+		if (ts.touchEnabled||ts.motionEnabled)	drawClusterDims();
+		if (ts.motionEnabled)	drawInteractionPoints();
+		if (ts.motionEnabled)	drawSubClusterDims();
 		
 		//trace("draw", tpn,ipn, ts.ipn, cO.ipn,cO.iPointArray2D.length);
 	}

@@ -110,31 +110,33 @@ package com.gestureworks.analysis
 			
 			// TODO: only initialize if ts has motion 
 			
-			// init subclusters
-			cO.subClusterArray[0] = new ipClusterObject();// finger
-			cO.subClusterArray[0].type = "finger";		
-			cO.subClusterArray[1] = new ipClusterObject();// palm
-			cO.subClusterArray[1].type = "palm";	
-			cO.subClusterArray[2] = new ipClusterObject();// thumb
-			cO.subClusterArray[2].type = "thumb";		
-			cO.subClusterArray[3] = new ipClusterObject();// finger avergae
-			cO.subClusterArray[3].type = "finger_average";
-			
-			
-			cO.subClusterArray[4] = new ipClusterObject(); // trigger
-			cO.subClusterArray[4].type = "trigger";		
-			cO.subClusterArray[5] = new ipClusterObject(); // pinch
-			cO.subClusterArray[5].type = "pinch";
-			cO.subClusterArray[6] = new ipClusterObject(); // push
-			cO.subClusterArray[6].type = "push";
-			cO.subClusterArray[7] = new ipClusterObject(); // hook
-			cO.subClusterArray[7].type = "hook";
-			cO.subClusterArray[8] = new ipClusterObject(); //frame
-			cO.subClusterArray[8].type = "frame";
-			
-			cO.subClusterArray[9] = new ipClusterObject(); //finger and thumb
-			cO.subClusterArray[9].type = "digit";
-			
+			if (ts.motionEnabled)
+			{
+				// init subclusters
+				cO.subClusterArray[0] = new ipClusterObject();// finger
+				cO.subClusterArray[0].type = "finger";		
+				cO.subClusterArray[1] = new ipClusterObject();// palm
+				cO.subClusterArray[1].type = "palm";	
+				cO.subClusterArray[2] = new ipClusterObject();// thumb
+				cO.subClusterArray[2].type = "thumb";		
+				cO.subClusterArray[3] = new ipClusterObject();// finger avergae
+				cO.subClusterArray[3].type = "finger_average";
+				
+				
+				cO.subClusterArray[4] = new ipClusterObject(); // trigger
+				cO.subClusterArray[4].type = "trigger";		
+				cO.subClusterArray[5] = new ipClusterObject(); // pinch
+				cO.subClusterArray[5].type = "pinch";
+				cO.subClusterArray[6] = new ipClusterObject(); // push
+				cO.subClusterArray[6].type = "push";
+				cO.subClusterArray[7] = new ipClusterObject(); // hook
+				cO.subClusterArray[7].type = "hook";
+				cO.subClusterArray[8] = new ipClusterObject(); //frame
+				cO.subClusterArray[8].type = "frame";
+				
+				cO.subClusterArray[9] = new ipClusterObject(); //finger and thumb
+				cO.subClusterArray[9].type = "digit";
+			}
 			
 		}
 		
@@ -434,8 +436,6 @@ package com.gestureworks.analysis
 		{
 			//trace("KineMetric::findTouchClusterConstants");
 
-			
-			
 				//if (ts.traceDebugMode) trace("find cluster..............................",N);
 				
 				///////////////////////////////////////////////
@@ -447,7 +447,7 @@ package com.gestureworks.analysis
 				ts.cO.tpn = tpn;
 				ts.cO.tcO.tpn = tpn;
 				
-				//NEED TO FIX
+				//TODO: NEED TO FIX lock number
 				//LN = ts.tcO.hold_n // will need to move to interaction point structure or temporal metric mgmt
 				
 				// derived point totals
