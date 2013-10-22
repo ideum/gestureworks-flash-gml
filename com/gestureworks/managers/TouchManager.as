@@ -60,10 +60,11 @@ package com.gestureworks.managers
 	{
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
-		private static var virtualTouchObjects:Dictionary = new Dictionary();
+		private static var virtualTransformObjects:Dictionary = new Dictionary();
 		
 		private static var gms:*;
 		private static var hooks:Vector.<Function>;
+		private var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();	
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -124,12 +125,20 @@ package com.gestureworks.managers
 			points[event.touchPointID].history.unshift(PointHistories.historyObject(event))	
 		}
 		
+		/**
+		 * Register a virtual transform object with the touch manager
+		 * @param	t
+		 */
 		public static function registerVTO(t:ITouchObject):void {
-			virtualTouchObjects[t.vto] = t;  
+			virtualTransformObjects[t.vto] = t;  
 		}
 		
+		/**
+		 * Deregisters a virtual transform object 
+		 * @param	t
+		 */		
 		public static function deregisterVTO(t:ITouchObject):void {
-			delete virtualTouchObjects[t.vto];
+			delete virtualTransformObjects[t.vto];
 		}
 		
 		/**
@@ -163,6 +172,14 @@ package com.gestureworks.managers
 				event = hook(event);
 			}
 		}
+		
+		/**
+		 * Registers global overlays to receive point data
+		 */
+		public function get overlays():Vector.<ITouchObject> { return _overlays; }
+		public function set overlays(o:Vector.<ITouchObject>):void {
+			_overlays = o;
+		}		
 		
 		/**
 		 * Determines the event's target is valid based on activated state and local mode settings.
@@ -202,8 +219,8 @@ package com.gestureworks.managers
 		private static function activatedTarget(event:GWTouchEvent):void {
 			if (!event.target || (event.target is ITouchObject && event.target.active)) 
 				return;
-			else if (virtualTouchObjects[event.target])
-				event.target = virtualTouchObjects[event.target];
+			else if (virtualTransformObjects[event.target])
+				event.target = virtualTransformObjects[event.target];
 			else
 				event.target = event.target.parent;
 			activatedTarget(event);
