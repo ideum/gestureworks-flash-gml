@@ -415,7 +415,7 @@ package com.gestureworks.core
 					else
 						gmlNew = path;
 				}
-				gml = gmlNew;
+				this.gml = gmlNew;
 			}
 		}
 		

@@ -211,7 +211,6 @@ package com.gestureworks.analysis
 			
 			// CHECK GML COMPATABILITY
 			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_max * GestureWorks.application.frameRate * 0.001)	
-			trace(tap_time);
 			//var tap_time:int = Math.ceil(ts.gO.pOList[key]["tap_x"].point_event_duration_threshold / GestureGlobals.touchFrameInterval);//10
 			var tap_dist:int = ts.gO.pOList[key].point_translation_max;
 			
