@@ -385,15 +385,15 @@ package com.gestureworks.core
 			_targetParent = value;
 		}
 		
-		private var _targetList:Array = [];
-		/**
-		 * @inheritDoc
-		 */
-		public function get targetList():*{return _targetList;}
-		public function set targetList(value:*):void
-		{	
-			_targetList = value;
-		}
+		//private var _targetList:Array = [];
+		///**
+		 //* @inheritDoc
+		 //*/
+		//public function get targetList():*{return _targetList;}
+		//public function set targetList(value:*):void
+		//{	
+			//_targetList = value;
+		//}
 
 		private var _vto:Object;
 		/**
@@ -1080,12 +1080,12 @@ package com.gestureworks.core
 		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
 		
 		// BROADCASTING TEST
-		private var _broadcastTarget:Boolean = false;
-		/**
-		 * @inheritDoc
-		 */
-		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
-		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
+		//private var _broadcastTarget:Boolean = false;
+		///**
+		 //* @inheritDoc
+		 //*/
+		//public function get broadcastTarget():Boolean {return _broadcastTarget;}	
+		//public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
 		
 		// TRANSFORM 3D
 		private var _transform3d:Boolean = false;

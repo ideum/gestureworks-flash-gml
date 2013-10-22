@@ -237,26 +237,26 @@ package com.gestureworks.managers
 						event.target = event.target.parent;	
 						assignPoint(event);
 					}
-					else if (event.target.targetList.length)
-					{							
+					//else if (event.target.targetList.length)
+					//{							
 						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						assignPoint(event);
-						var tgt:Object;
-						
+						//assignPoint(event);
+						//var tgt:Object;
+						//
 						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-						for (var i:int = 0; i < event.target.targetList.length; i++) 
-						{
-							tgt = event.target.targetList[i];
-							
-							if (!tgt is ITouchObject)
-								tgt = virtualTouchObjects[tgt];
-							
-							if(tgt is ITouchObject && tgt.active){
-								assignPointClone(event, ITouchObject(tgt));
-								tgt.broadcastTarget = true;
-							}
-						}
-					}
+						//for (var i:int = 0; i < event.target.targetList.length; i++) 
+						//{
+							//tgt = event.target.targetList[i];
+							//
+							//if (!tgt is ITouchObject)
+								//tgt = virtualTouchObjects[tgt];
+							//
+							//if(tgt is ITouchObject && tgt.active){
+								//assignPointClone(event, ITouchObject(tgt));
+								//tgt.broadcastTarget = true;
+							//}
+						//}
+					//}
 					else {
 						 assignPoint(event);
 						 if (event.target.parent is ITouchObject) {

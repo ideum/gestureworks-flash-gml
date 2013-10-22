@@ -231,8 +231,8 @@ package com.gestureworks.interfaces
 		/**
 		 * Allows touch and gesture events to explicitly target a group of defined touch objects which can be outside of the local parent child display list stack
 		 */
-		function get targetList():*;
-		function set targetList(value:*):void;	
+		//function get targetList():*;
+		//function set targetList(value:*):void;	
 		
 		/**
 		 * Virtual touch object (non-TouchSprite) to transfer the transformations to
@@ -553,11 +553,11 @@ package com.gestureworks.interfaces
 		function get gestureFilters():Boolean;
 		function set gestureFilters(value:Boolean):void;
 		
-		/**
-		 * @default false
-		 */
-		function get broadcastTarget():Boolean;
-		function set broadcastTarget(value:Boolean):void;
+		///**
+		 //* @default false
+		 //*/
+		//function get broadcastTarget():Boolean;
+		//function set broadcastTarget(value:Boolean):void;
 		
 		/**
 		 * @default false

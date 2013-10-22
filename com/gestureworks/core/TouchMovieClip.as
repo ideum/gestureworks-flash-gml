@@ -385,15 +385,15 @@ package com.gestureworks.core
 			_targetParent = value;
 		}
 		
-		private var _targetList:Array = [];
-		/**
-		 * @inheritDoc
-		 */
-		public function get targetList():*{return _targetList;}
-		public function set targetList(value:*):void
-		{	
-			_targetList = value;
-		}
+		//private var _targetList:Array = [];
+		///**
+		 //* @inheritDoc
+		 //*/
+		//public function get targetList():*{return _targetList;}
+		//public function set targetList(value:*):void
+		//{	
+			//_targetList = value;
+		//}
 
 		private var _vto:Object;
 		/**
@@ -549,11 +549,11 @@ package com.gestureworks.core
 
 		private var _transformEventStart:Boolean = true;
 		public function get transformEventStart():Boolean{return _transformEventStart;}
-		public function set transformEventStart(value:Boolean):void{	_transformEventStart=value;}
+		public function set transformEventStart(value:Boolean):void{_transformEventStart=value;}
 
 		private var _transformEventComplete:Boolean = true;
 		public function get transformEventComplete():Boolean{return _transformEventComplete;}
-		public function set transformEventComplete(value:Boolean):void {	_transformEventComplete = value; }
+		public function set transformEventComplete(value:Boolean):void {_transformEventComplete = value; }
 		
 		private var _touchEnabled:Boolean = true;
 		/**
@@ -579,16 +579,16 @@ package com.gestureworks.core
 					}
 				}
 			}
-		}		
+		}	
 		
-		private var _motionEnabled:Boolean = true;
+		private var _motionEnabled:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
 		public function get motionEnabled():Boolean { return _motionEnabled; }
 		public function set motionEnabled(value:Boolean):void {	_motionEnabled = value;}
 		
-		private var _sensorEnabled:Boolean = true;
+		private var _sensorEnabled:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
@@ -1080,12 +1080,12 @@ package com.gestureworks.core
 		public function set gestureFilters(value:Boolean):void{	_gestureFilters = value;}
 		
 		// BROADCASTING TEST
-		private var _broadcastTarget:Boolean = false;
-		/**
-		 * @inheritDoc
-		 */
-		public function get broadcastTarget():Boolean {return _broadcastTarget;}	
-		public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
+		//private var _broadcastTarget:Boolean = false;
+		///**
+		 //* @inheritDoc
+		 //*/
+		//public function get broadcastTarget():Boolean {return _broadcastTarget;}	
+		//public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
 		
 		// TRANSFORM 3D
 		private var _transform3d:Boolean = false;
