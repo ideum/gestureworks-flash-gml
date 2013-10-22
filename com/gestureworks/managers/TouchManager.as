@@ -319,7 +319,7 @@ package com.gestureworks.managers
 						}
 						
 						// update broadcast state
-						if(tO.N == 0) tO.broadcastTarget = false;
+						//if(tO.N == 0) tO.broadcastTarget = false;
 						
 						////////////////////////////////////////////////////////
 						//FORCES IMMEDIATE UPDATE ON TOUCH UP
