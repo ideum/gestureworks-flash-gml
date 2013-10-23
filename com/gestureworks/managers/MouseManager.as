@@ -188,6 +188,9 @@ package com.gestureworks.managers
 					continue;
 				e = e.clone() as GWTouchEvent;
 				e.target = overlay;
+				currentMousePoint = e.touchPointID;
+				mousePointX = e.stageX;
+				mousePointY = e.stageY;					
 				TouchManager.onTouchDown(e);
 			}			
 		}		
