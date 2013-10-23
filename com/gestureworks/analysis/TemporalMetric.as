@@ -103,7 +103,7 @@ package com.gestureworks.analysis
 											
 			
 			var dn:uint = g.dList.length;
-			var N:uint = cO.n;
+			var N:uint = cO.tpn//cO.n;
 			var LN:uint = cO.hold_n;
 			
 			//clear hold position
