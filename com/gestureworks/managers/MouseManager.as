@@ -35,6 +35,7 @@ package com.gestureworks.managers
 		private static var hold:Boolean;
 		private static var allowMouseStartDrag:Boolean = false;
 		private static var circleGraphics:Array = [];
+		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();	
 		
 		/**
 		 * Sets the simulator graphic color.
@@ -86,6 +87,7 @@ package com.gestureworks.managers
 				mousePointX = event.stageX;
 				mousePointY = event.stageY;		
 			}
+			processOverlays(event);
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
@@ -165,5 +167,29 @@ package com.gestureworks.managers
 			event.stageY = mousePointY;
 			TouchManager.onTouchMove(event);
 		}
+		
+		/**
+		 * Registers global overlays to receive point data
+		 */
+		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
+		public static function set overlays(o:Vector.<ITouchObject>):void {
+			_overlays = o;
+		}	
+		
+		/**
+		 * Sends overlays through pipeline
+		 * @param	e
+		 */
+		private static function processOverlays(e:GWTouchEvent):void {
+			for each(var overlay:ITouchObject in overlays) 	{
+				if (overlay["width"] && (e.stageX < overlay["x"] || e.stageX > overlay["x"] + overlay["width"])) 
+					continue;
+				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
+					continue;
+				e = e.clone() as GWTouchEvent;
+				e.target = overlay;
+				TouchManager.onTouchDown(e);
+			}			
+		}		
 	}
 }

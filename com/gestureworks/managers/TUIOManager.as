@@ -18,6 +18,7 @@ package com.gestureworks.managers
 {
 	import com.gestureworks.core.*;
 	import com.gestureworks.events.*;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.managers.*;
 	import flash.display.*;
 	import flash.events.*;
@@ -49,6 +50,8 @@ package com.gestureworks.managers
 
 		private var _tuioDebug:TuioDebug;
 		public function get tuioDebug():TuioDebug { return _tuioDebug; }	
+		
+		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();		
 		
 	
 		gw_public static function initialize(host:String="127.0.0.1", port:int = NaN, protocol:String=null):void		
@@ -143,6 +146,7 @@ package com.gestureworks.managers
 			event.target = getTopDisplayObjectUnderPoint(new Point(event.stageX, event.stageY));
 				
 			TouchManager.onTouchDown(event);
+			processOverlays(event);
 		}
 		
 		private function onUpdate(e:TuioEvent):void
@@ -211,6 +215,30 @@ package com.gestureworks.managers
 			}
 			
 			return ancestors;
+		}
+		
+		/**
+		 * Registers global overlays to receive point data
+		 */
+		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
+		public static function set overlays(o:Vector.<ITouchObject>):void {
+			_overlays = o;
+		}	
+		
+		/**
+		 * Sends overlays through pipeline
+		 * @param	e
+		 */
+		private static function processOverlays(e:GWTouchEvent):void {
+			for each(var overlay:ITouchObject in overlays) 	{
+				if (overlay["width"] && (e.stageX < overlay["x"] || e.stageX > overlay["x"] + overlay["width"])) 
+					continue;
+				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
+					continue;
+				e = e.clone() as GWTouchEvent;
+				e.target = overlay;
+				TouchManager.onTouchDown(e);
+			}			
 		}		
 
 	}
