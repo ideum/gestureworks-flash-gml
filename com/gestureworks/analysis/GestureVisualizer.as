@@ -122,7 +122,6 @@ package com.gestureworks.analysis
 		//N = cO.n;//pointList.length;
 		tpn = cO.tpn;//pointList.length;
 		
-		
 		path_data = sO.path_data 
 		gn = gO.pOList.length;
 		
@@ -222,19 +221,21 @@ package com.gestureworks.analysis
 			if ((_drawOrientation)&&(tpn == 5))
 			{
 				// draw thimb ring
-				graphics.lineStyle(style.t_stroke_thickness,style.t_stroke_color, style.t_stroke_alpha);
+				//graphics.lineStyle(style.t_stroke_thickness, style.t_stroke_color, style.t_stroke_alpha);
+				graphics.lineStyle(8,style.b_stroke_color, 0.6);
 				
 				pointList = cO.pointArray;
 				
-					//trace("thumb",cO.thumbID)
+					//trace("drawing .....thumb",cO.thumbID,tpn,pointList[i].x, pointList[i].y,cO.x, cO.y,cO.orient_dx,cO.orient_dy)
 					for (var i:int = 0; i < tpn; i++) 
 						{
-						if (pointList[i].id == cO.thumbID) graphics.drawCircle(pointList[i].x, pointList[i].y, 40);
+						if (pointList[i].touchPointID == cO.thumbID) 	graphics.drawCircle(pointList[i].x, pointList[i].y, 40);
 						}
 						
 				// draw orientation vector based on 4 fingers / draw hand vector
 				graphics.moveTo(cO.x, cO.y);
 				graphics.lineTo(cO.x + cO.orient_dx * 3, cO.y + cO.orient_dy * 3);
+				//graphics.lineTo(cO.x + 50 * 3, cO.y + 50 * 3);
 			}
 			
 			
