@@ -1212,6 +1212,7 @@ package com.gestureworks.analysis
 									{
 										handArray[i] = new Array();
 										handArray[i].id = cO.pointArray[i].id; // set point id
+										handArray[i].touchPointID = cO.pointArray[i].touchPointID; // set point id
 									
 										// find distance between center of cluster and finger tip
 										var dxe:Number = (cO.pointArray[i].history[0].x - cO.x);
@@ -1253,21 +1254,31 @@ package com.gestureworks.analysis
 								}
 							handArray.sortOn("prob",Array.DESCENDING);
 							
-							tcO.thumbID = handArray[0].id;
+							///////////////////////////////////////////////////
+							//NOW CORRECT UNIQUE ID
+							tcO.thumbID = handArray[0].touchPointID;
+							//tcO.thumbID = handArray[0].id;
 							
+							// BUT NEED TO FIX
+							// RIGHT HAND RETURNS PINKY AS THUMB AS ANGLE INCORRECTLY CALCUKATED
+							// NEED TO ALSO DETERMIN LEFT HAND AND RIGHT HAND
+							trace("hand angle",handArray[0].angle)
 							
+							//trace("ID", tcO.thumbID,handArray[0].id, handArray[0].touchPointID)
 						
 							// calc orientation vector // FIND ORIENTATION USING CLUSTER RADIAL CENTER
 							for (i = 0; i < tpn; i++) 
 								{
 									if (cO.pointArray[i].id != handArray[0].id) 
 									{	
-										tcO.orient_dx += (cO.pointArray[i].history[0].x - cO.x);
-										tcO.orient_dy += (cO.pointArray[i].history[0].y - cO.y);
+										tcO.orient_dx += (cO.pointArray[i].history[0].x - tcO.x);
+										tcO.orient_dy += (cO.pointArray[i].history[0].y - tcO.y);
 									}
 								}
 							tcO.orient_dx *= tpnk1;
 							tcO.orient_dy *= tpnk1;	
+							
+							
 						
 		}
 		
@@ -1275,24 +1286,26 @@ package com.gestureworks.analysis
 		{
 			//trace("KineMetric::findInstPivot");			
 			
-					if(tpn==1)
+					//if (tpn == 1)
+					if(tpn)
 					{
 						var x_c:Number = 0
 						var y_c:Number = 0
 			
-							tcO.pivot_dtheta = 0
+						tcO.pivot_dtheta = 0
 					
-			
-								if (ts.trO.transAffinePoints) 
+						// CENTER OF DISPLAY OBJECT
+						if (ts.trO.transAffinePoints) 
+						{
+							//trace("test", tO.transAffinePoints[4])
+							x_c = ts.trO.transAffinePoints[4].x
+							y_c = ts.trO.transAffinePoints[4].y
+						}
+								if (cO.pointArray.length==1)
 								{
-									//trace("test", tO.transAffinePoints[4])
-									x_c = ts.trO.transAffinePoints[4].x
-									y_c = ts.trO.transAffinePoints[4].y
-								}
-					
-								//if ((pointList[0].history[0]) && (pointList[0].history[1])) 
-								if (cO.pointArray[0].history.length>1) 
-								{		
+								if(cO.pointArray[0].history.length > 1 ) {
+								//if (cO.pointArray[0].history.length>1) 
+									
 									// find touch point translation vector
 									var dxh:Number = cO.pointArray[0].history[1].x - x_c;
 									var dyh:Number = cO.pointArray[0].history[1].y - y_c;
@@ -1320,8 +1333,112 @@ package com.gestureworks.analysis
 										tcO.y = cO.pointArray[0].y;
 									//}
 									//else cO.pivot_dtheta = 0; 
+									}
 								}
-						}
+								
+								//trace(cO.pointArray.length)
+								/*
+								if ((cO.pointArray.length>1)) 
+								{		
+									
+									if ((cO.pointArray[0].history.length > 1) && (cO.pointArray[1].history.length > 1))
+									{
+									//trace("pivot")
+									var cx1:Number= (cO.pointArray[0].history[1].x + cO.pointArray[1].history[1].x) * 0.5
+									var cy1:Number = (cO.pointArray[0].history[1].y + cO.pointArray[1].history[1].y) * 0.5
+									
+									var cx0:Number = (cO.pointArray[0].history[0].x + cO.pointArray[1].history[0].x) * 0.5
+									var cy0:Number = (cO.pointArray[0].history[0].y + cO.pointArray[1].history[0].y) * 0.5
+									
+									
+									// find touch point translation vector
+									var dxh:Number = cx1 - x_c;
+									var dyh:Number = cy1 - y_c;
+											
+									// find vector that connects the center of the object and the touch point
+									var dxi:Number = cx0 - x_c;
+									var dyi:Number = cy0 - y_c;
+									var pdist:Number = Math.sqrt(dxi * dxi + dyi * dyi);
+											
+									var t0:Number = calcAngle(dxh, dyh);
+									var t1:Number = calcAngle(dxi, dyi);
+									if (t1 > 360) t1 = t1 - 360;
+									if (t0 > 360) t0 = t0 - 360;
+									var theta_diff:Number = t1 - t0
+									if (theta_diff>300) theta_diff = theta_diff -360; //trace("Flicker +ve")
+									if (theta_diff<-300) theta_diff = 360 + theta_diff; //trace("Flicker -ve");
+									
+									
+									//pivot thresholds
+									//if (Math.abs(theta_diff) > pivot_threshold)
+									//{	
+										// weighted effect
+										tcO.pivot_dtheta = theta_diff*Math.pow(pdist, 2)*pvk;
+										tcO.x = cx0;
+										tcO.y = cy0;
+									//}
+									//else cO.pivot_dtheta = 0; 
+									}
+								}	
+								*/
+								
+									if (cO.pointArray.length>1) 
+									{		
+									//trace("hist",cO.pointArray[0].history.length,cO.pointArray[1].history.length)
+									var cx1:Number = 0;
+									var cy1:Number = 0;
+									var cx0:Number = 0;
+									var cy0:Number = 0;
+									
+										for (i = 0; i < cO.pointArray.length; i++) 
+										{
+											if (cO.pointArray[i].history.length > 1)
+											{
+												//trace("pivot")
+												cx1 += cO.pointArray[i].history[1].x; 
+												cy1 += cO.pointArray[i].history[1].y; 
+												cx0 += cO.pointArray[i].history[0].x; 
+												cy0 += cO.pointArray[i].history[0].y;
+											}
+										}
+										
+									cx1 *= tpnk0;
+									cy1 *= tpnk0; 
+									cx0 *= tpnk0; 
+									cy0 *= tpnk0;	
+									
+									trace(tpn, tpnk0,cx1,cy1,cx0,cy0)
+									
+									// find touch point translation vector
+									var dxh:Number = cx1 - x_c;
+									var dyh:Number = cy1 - y_c;
+											
+									// find vector that connects the center of the object and the touch point
+									var dxi:Number = cx0 - x_c;
+									var dyi:Number = cy0 - y_c;
+									var pdist:Number = Math.sqrt(dxi * dxi + dyi * dyi);
+											
+									var t0:Number = calcAngle(dxh, dyh);
+									var t1:Number = calcAngle(dxi, dyi);
+									if (t1 > 360) t1 = t1 - 360;
+									if (t0 > 360) t0 = t0 - 360;
+									var theta_diff:Number = t1 - t0
+									if (theta_diff>300) theta_diff = theta_diff -360; //trace("Flicker +ve")
+									if (theta_diff<-300) theta_diff = 360 + theta_diff; //trace("Flicker -ve");
+									
+									
+									//pivot thresholds
+									//if (Math.abs(theta_diff) > pivot_threshold)
+									//{	
+										// weighted effect
+										tcO.pivot_dtheta = theta_diff*Math.pow(pdist, 2)*pvk;
+										tcO.x = cx0;
+										tcO.y = cy0;
+									//}
+									//else cO.pivot_dtheta = 0; 
+								}	
+								
+			}
 		} 
 		
 		
@@ -2587,6 +2704,12 @@ package com.gestureworks.analysis
 							cO.width = tcO.width;
 							cO.height = tcO.height;
 							cO.radius = tcO.radius;  
+							
+							cO.thumbID = tcO.thumbID;
+							cO.handednes = tcO.handednes;
+							cO.orient_dx = tcO.orient_dx; 
+							cO.orient_dy = tcO.orient_dy; 
+							cO.pivot_dtheta = tcO.pivot_dtheta; 
 							
 							
 							///////////////////////////////////////////////////////////////////
