@@ -69,7 +69,8 @@ package com.gestureworks.managers
 				object.separation = clusterObject.separation;
 				
 				object.thumbID = clusterObject.thumbID; //for 2D HAND
-				
+				//object.handednes = clusterObject.handednes; //for 2D HAND
+				//object.pivot_dtheta = clusterObject.pivot_dtheta; 
 		
 				// first order primary deltas
 				object.dx = clusterObject.dx;
