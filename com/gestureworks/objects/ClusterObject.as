@@ -231,6 +231,8 @@ package com.gestureworks.objects
 		/// 
 		// thumbID ------------------ FOR 2D STUFF (NEEDS TO MOVE TO 2D HAND OBJECT)
 		public var thumbID:int = 0;
+		//handednes-------------------- //left//right
+		public var handednes:String = "none";
 		// orientationAngle---------------------
 		public var orientation:Number = 0;
 		// orient_dx---------------------
