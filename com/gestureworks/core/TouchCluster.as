@@ -520,7 +520,12 @@ package com.gestureworks.core
 											
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											else gdim.clusterDelta = tcO[res];//rtn_dim = 1;
+											
 											/////////////////////////////////////////////////////////////
+											//GREAT FOR FINDING CLUSTER PROPERTIES
+											//trace(res,tcO[res])
+											/////////////////////////////////////////////////////////////
+											
 
 											//CLOSE DIM IF NO VALUE
 											if (gdim.clusterDelta == 0) gdim.activeDim = false;
@@ -587,8 +592,8 @@ package com.gestureworks.core
 						//cluster_kinemetric.find3dIPAcceleration(j);
 						
 						// FIND POINT MOTION CHARACTER
-						//cluster_kinemetric.find3DIPTapPoints(j);
-						//cluster_kinemetric.find3DIPHoldPoints(j);
+						cluster_kinemetric.find3DIPTapPoints(j);
+						cluster_kinemetric.find3DIPHoldPoints(j);
 					}
 				//////////////////////////////////////////////////////
 				
