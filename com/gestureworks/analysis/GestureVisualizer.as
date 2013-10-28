@@ -329,14 +329,14 @@ package com.gestureworks.analysis
 									
 									if (gestureEventArray[j].type =="drag")
 										{
-											var df:Number = 5;
-											dx = gestureEventArray[j].value.drag_dx*df
-											dy = gestureEventArray[j].value.drag_dy*df
+											//var df:Number = 5;
+											//dx = gestureEventArray[j].value.drag_dx*df
+											//dy = gestureEventArray[j].value.drag_dy*df
 											//trace("visualize gesture drag", x, y,dx,dy)
-											
-											graphics.lineStyle(10, style.stroke_color, style.stroke_alpha);
-											graphics.moveTo(x, y);
-											graphics.lineTo(x + dx, y + dy);
+											//
+											//graphics.lineStyle(10, style.stroke_color, style.stroke_alpha);
+											//graphics.moveTo(x, y);
+											//graphics.lineTo(x + dx, y + dy);
 										}
 										
 									// draw scale
