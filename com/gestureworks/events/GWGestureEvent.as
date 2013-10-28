@@ -98,6 +98,23 @@ package com.gestureworks.events
 		//public static var EXIT:String = "exit";
 		//public static var HOME:String = "home";
 		
+		
+		// kine-metric 3d 
+		public static var MOTION_MANIPULATE:String = "motion_manipulate";
+		public static var MOTION_DRAG:String = "motion_drag";
+		public static var MOTION_SWIPE:String = "motion_swipe";
+		public static var MOTION_SCROLL:String = "motion_scroll";
+		public static var MOTION_FLICK:String = "motion_flick";
+		public static var MOTION_ROTATE:String= "motion_rotate";
+		public static var MOTION_SCALE:String = "motion_scale";
+		public static var MOTION_TILT:String = "motion_tilt";
+		
+		public static var MOTION_HOLD:String = "motion_hold";
+		public static var MOTION_TAP:String = "motion_tap";
+		public static var MOTION_DOUBLE_TAP:String = "motion_double_tap";
+		public static var MOTION_TRIPLE_TAP:String = "motion_triple_tap";
+		
+		
 	
 		public static var CUSTOM:Object = 
 			{

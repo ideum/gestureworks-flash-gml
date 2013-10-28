@@ -91,7 +91,18 @@ package com.gestureworks.utils
 									"3d_stroke":true,
 									"3d_tap":true,
 									"3d_hold":true,
-									"3d_double_tap":true 
+									"3d_double_tap":true,
+									"motion_translate":true,
+									"motion_rotate":true, 
+									"motion_scale":true,
+									"motion_manipulate":true,
+									"motion_tilt":true,
+									"motion_swipe":true,
+									"motion_flick":true,
+									"motion_stroke":true,
+									"motion_tap":true,
+									"motion_hold":true,
+									"motion_double_tap":true
 									};			
 						
 						var gestureSetNum:int = gml.Gesture_set.length();

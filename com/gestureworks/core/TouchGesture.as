@@ -791,7 +791,7 @@ package com.gestureworks.core
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
 							//var GGWEVENT:GWGestureEvent = new GWGestureEvent(type, Data);
 							
-							//trace("type-----------", gO.pOList[key].event_type, type );
+							//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z);
 							
 							ts.dispatchEvent(GWEVENT);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)

@@ -584,16 +584,16 @@ package com.gestureworks.core
 						cluster_kinemetric.find3DIPDimension(j);
 						
 						// FIND CLUSTER MOTION CHARACTER
-						cluster_kinemetric.find3DIPTransformation(j);
-						//cluster_kinemetric.find3DIPTranslation(j);
-						//cluster_kinemetric.find3DIPRotation(j);
-						//cluster_kinemetric.find3DIPSeparation(j);
+						cluster_kinemetric.find3DIPTransformation(j);//MOVE
+						//cluster_kinemetric.find3DIPTranslation(j);//MOVE
+						//cluster_kinemetric.find3DIPRotation(j);//MOVE
+						//cluster_kinemetric.find3DIPSeparation(j);//MOVE
 						
-						//cluster_kinemetric.find3dIPAcceleration(j);
+						//cluster_kinemetric.find3dIPAcceleration(j);//MOVE
 						
 						// FIND POINT MOTION CHARACTER
-						cluster_kinemetric.find3DIPTapPoints(j);
-						cluster_kinemetric.find3DIPHoldPoints(j);
+						cluster_kinemetric.find3DIPTapPoints(j);//MOVE
+						cluster_kinemetric.find3DIPHoldPoints(j);//MOVE
 					}
 				//////////////////////////////////////////////////////
 				
@@ -708,13 +708,16 @@ package com.gestureworks.core
 									//if (g.algorithm == "3d_translate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
 									
 									// GENERIC 3D ROTATE
-									//if (g.algorithm == "3d_rotate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
+									//if (g.algorithm == "3d_rotate") 	cluster_kinemetric.findMeanInst3DMotionRotation();
 									
 									//GENERIC 3D DCALE
-									//if (g.algorithm == "3d_separate") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
+									//if (g.algorithm == "3d_separate") 	cluster_kinemetric.findMeanInst3DMotionSeperation();
 									
 									// GENERIC TAP 
-									//if (g.algorithm == "3d_tap") 	cluster_kinemetric.findMeanInst3DMotionTranslation();
+									//if (g.algorithm == "3d_tap") 	cluster_kinemetric.find3DIPHoldPoints();
+									
+									// GENERIC HOLD 
+									//if (g.algorithm == "3d_hold") 	cluster_kinemetric.find3DIPHoldPoints();
 									
 									///////////////////////////////////////////////////////////////////////////////////
 									// LIMIT DELTA BY CLUSTER VALUES
