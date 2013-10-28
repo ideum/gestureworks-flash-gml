@@ -158,9 +158,9 @@ package com.gestureworks.core
 			for (var type:String in gwTouchListeners) {
 				for each(var l:* in gwTouchListeners[type]) {
 					if(l.type)
-						super.removeEventListener(l.type, l.listener);
+						removeEventListener(l.type, l.listener);
 					else{
-						super.removeEventListener(type, l.listener);
+						removeEventListener(type, l.listener);
 						addEventListener(type, l.listener);
 					}
 				}
