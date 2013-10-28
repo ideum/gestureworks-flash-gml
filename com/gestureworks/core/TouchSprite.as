@@ -385,15 +385,15 @@ package com.gestureworks.core
 			_targetParent = value;
 		}
 		
-		//private var _targetList:Array = [];
-		///**
-		 //* @inheritDoc
-		 //*/
-		//public function get targetList():*{return _targetList;}
-		//public function set targetList(value:*):void
-		//{	
-			//_targetList = value;
-		//}
+		private var _targetList:Array = [];
+		/**
+		 * @inheritDoc
+		 */
+		public function get targetList():*{return _targetList;}
+		public function set targetList(value:*):void
+		{	
+			_targetList = value;
+		}
 
 		private var _vto:Object;
 		/**
@@ -1103,6 +1103,12 @@ package com.gestureworks.core
 		public function get motion3d():Boolean {return _motion3d;}	
 		public function set motion3d(value:Boolean):void{	_motion3d = value;}
 		
+		private var _touch3d:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get touch3d():Boolean {return _touch3d;}	
+		public function set touch3d(value:Boolean):void{ _touch3d = value;}		
 		
 		private var _registerPoints:Boolean = true;
 		/**
