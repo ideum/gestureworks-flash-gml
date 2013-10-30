@@ -50,8 +50,6 @@ package com.gestureworks.core
 			super();
 			fontManager = new FontManager;			
 			modeManager = new ModeManager;
-			if (stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
 		/**
@@ -350,9 +348,8 @@ package com.gestureworks.core
 		
 		// INITIALIZATION METHOD
 		private function init(e:Event = null):void 
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-			
+		{		
+			if (initialized) return;
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			_supportsTouch = Multitouch.supportsTouchEvents;			
 			
@@ -468,14 +465,12 @@ package com.gestureworks.core
 		private function gmlParserComplete(event:Event):void
 		{
 			GML.Gestures = GMLParser.settings;
-			//trace("complete gml parser settings", gml, GMLParser.settings);
+			init();
 			reapplyGestures();
 		}
 		
 		/**
-		 * TODO: Temporary patch to unreliable initialization sequence. Currently gestureworksInit can be called prior to parsing of GML file preventing AS3 objects from
-		 * activating intended gestures. Consider requireing an explicit init call in the constructor for users to control the order of operations by setting the gml and/or
-		 * cml paths prior to GestureWorks initialization.
+		 * Reapply gestures per gml assignment
 		 */
 		private function reapplyGestures():void{ 
 			for each(var obj:* in GestureGlobals.gw_public::touchObjects) {
