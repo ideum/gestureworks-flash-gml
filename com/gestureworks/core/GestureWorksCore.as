@@ -50,6 +50,12 @@ package com.gestureworks.core
 			super();
 			fontManager = new FontManager;			
 			modeManager = new ModeManager;
+			if (stage) setApplication();
+			else addEventListener(Event.ADDED_TO_STAGE, setApplication);			
+		}
+		
+		private function setApplication(event:Event = null):void {
+			GestureWorks.application = stage;	
 		}
 		
 		/**
@@ -354,11 +360,10 @@ package com.gestureworks.core
 			_supportsTouch = Multitouch.supportsTouchEvents;			
 			
 			GestureWorks.activeNativeTouch = _supportsTouch;
-			GestureWorks.application = stage;
 			
 			loadModeManager();
 			
-			initialized = true;			
+			initialized = true;	
 			
 			dispatchEvent(new Event(GestureWorks.GESTUREWORKS_COMPLETE));			
 			gestureworksInit();			
