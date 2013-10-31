@@ -450,7 +450,7 @@ package com.gestureworks.core
 				var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
 				var tmp:* = new CMLDisplay;
 				addChild(tmp);
-				tmp.init(CMLLoader.getInstance(cml).data);	
+				tmp.initialize(CMLLoader.getInstance(cml).data);	
 				cmlDisplays.push(tmp);
 				
 			}
