@@ -923,7 +923,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		override public function set x(value:Number):void {	
-			value < minX ? minX : value > maxX ? maxX : value;
+			value = value < minX ? minX : value > maxX ? maxX : value;
 			dx = value - super.x;
 			super.x = value;
 		}		
