@@ -367,9 +367,15 @@ package com.gestureworks.core
 									if (gO.pOList[i].dList[j].target_id == "dy") gO.pOList[i].dList[j].gestureValue = trO.obj_y;
 									if (gO.pOList[i].dList[j].target_id == "dz") gO.pOList[i].dList[j].gestureValue = trO.obj_z;//3d--
 								
+									////////////////////////////////////////////////////////////////////////////////////////////////
+									//NOTE: TAERGETS X,Y,Z WILL BE WRITTEN INTO DELTAS AND MAPPED INTO THE TRANSFORMATION OBJECT 
+									//WHEN NATIVE IS ON. THIS WILL CAUSE MOTION TAP TO TRY AND MOVE DISPLAY OBJECTS
+									////////////////////////////////////////////////////////////////////////////////////////////////
+									
 									// ENSURE DELTAS MAPPED TO THE SAME PROPERTY ARE ADDITIVE IN A "FRAME"
 									trO[gO.pOList[i].dList[j].target_id] += gO.pOList[i].dList[j].gestureDelta;
-									if (ts.traceDebugMode) trace("gesture data", i, j, gO.pOList[i].dList[j].gestureDelta, trO[ts.gO.pOList[i].dList[j].target_id]);
+									//if (ts.traceDebugMode) 
+									//trace("gesture data from pipeline", i, j, gO.pOList[i].gesture_id,gO.pOList[i].dList[j].gestureDelta, trO[ts.gO.pOList[i].dList[j].target_id],ts.gO.pOList[i].dList[j].target_id);
 													
 									//trace("target_values", ts.trO[ts.gO.pOList[i].dList[j].target_id]);
 									}

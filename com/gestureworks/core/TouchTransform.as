@@ -18,6 +18,7 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWTransformEvent;
 	import com.gestureworks.interfaces.IAway3D;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TransformObject;
 	import flash.geom.*;
 	import flash.geom.Matrix3D;
@@ -51,6 +52,7 @@ package com.gestureworks.core
 		private var dtheta:Number =  0;
 		private var ts:Object;
 		private var trO:TransformObject;
+		private var gO:GestureListObject;
 		private var id:int;
 		private var centerTransform:Boolean = false;
 		
@@ -66,6 +68,7 @@ package com.gestureworks.core
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
 			trO = ts.trO; //tra
+			gO = ts.gO; //tra
 			initTransform();
         }
 		  
@@ -80,7 +83,75 @@ package com.gestureworks.core
 			pre_InitTransformPoints();
 		}
 		
-		
+		public function updateTransformLimits():void 
+        {
+			//dO.target_id = "dsx";
+			
+			var gn:uint = gO.pOList.length;
+			
+			for (var i:uint=0; i < gn; i++) 
+					{
+						var dn1:uint = gO.pOList[i].dList.length;
+						for (var j:uint=0; j < dn1; j++) 
+							{
+							if (gO.pOList[i].dList[j].target_id)
+								{
+									// map transform limits
+									if (gO.pOList[i].dList[j].target_id == "dx") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minX = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxX = gO.pOList[i].dList[j].property_max; 
+									}
+									if (gO.pOList[i].dList[j].target_id == "dy") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minY = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxY = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dz") 
+									{
+										if (gO.pOList[i].dList[j].property_min)	ts.minZ = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max)	ts.maxZ = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dsx") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minScaleX = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxScaleX = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dsy") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minScaleY = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxScaleY = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dsz") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minScaleZ = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxScaleZ = gO.pOList[i].dList[j].property_max;
+									}
+									// map transform limits
+									if (gO.pOList[i].dList[j].target_id == "dtheta") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minRotation = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxRotation = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dthetaX") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minRotationX = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxRotationX = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dthetaY") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minRotationY = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxRotationY = gO.pOList[i].dList[j].property_max;
+									}
+									if (gO.pOList[i].dList[j].target_id == "dthetaZ") 
+									{
+										if (gO.pOList[i].dList[j].property_min) ts.minRotationZ = gO.pOList[i].dList[j].property_min;
+										if (gO.pOList[i].dList[j].property_max) ts.maxRotationZ = gO.pOList[i].dList[j].property_max;
+									}
+								}
+							}					
+					}
+		}
 
 		/**
 		* @private

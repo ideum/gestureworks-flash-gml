@@ -27,14 +27,11 @@ package com.gestureworks.analysis
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
-	//import com.gestureworks.objects.PointPairObject;
 	import com.gestureworks.managers.PointPairHistories;
 	import com.gestureworks.managers.InteractionPointTracker;
 	
-	//import com.leapmotion.leap.Frame 
-	//import com.leapmotion.leap.Finger 
-	//import com.leapmotion.leap.Hand
-	//import com.leapmotion.leap.Vector3;
+	//import com.gestureworks.events.GWEvent;
+	import com.gestureworks.events.GWGestureEvent;
 	
 	import flash.geom.Vector3D;
 	import flash.geom.Utils3D;
@@ -51,8 +48,9 @@ package com.gestureworks.analysis
 		private var touchObjectID:int;
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
-		private var mcO:ipClusterObject = new ipClusterObject();
-		private var tcO:ipClusterObject = new ipClusterObject();
+		private var mcO:ipClusterObject = new ipClusterObject(); 	//MOTION SUPER
+		private var tcO:ipClusterObject = new ipClusterObject(); 	//TOUCH SUPER
+		//private var scO:ipClusterObject = new ipClusterObject(); 	//SENSOR SUPER
 		
 		private var i:uint = 0;
 		private var j:uint = 0;
@@ -83,7 +81,13 @@ package com.gestureworks.analysis
 		private var dipn:int = 0;
 		private var ipnk:Number = 0;
 		private var ipnk0:Number = 0;
-
+		
+		//TAP COUNTS TO BE MOVED
+		private var mxTapID:uint = 0;
+		private var myTapID:uint = 0;
+		private var mzTapID:uint = 0;
+		
+		private var mHoldID:uint = 0;
 		
 		public function KineMetric(_id:int) 
 		{
@@ -104,15 +108,16 @@ package com.gestureworks.analysis
 			mcO = cO.mcO; // parent motion cluster
 			//scO = ts.scO; // parent sensor cluster
 			
+			// CREATE INTERACTION POINT SUBCLUSTERS
+			if (ts.motionEnabled)initSubClusters();
 			
 			if (ts.traceDebugMode) trace("init cluster kinemetric");
-			
-			
-			// TODO: only initialize if ts has motion 
-			
-			if (ts.motionEnabled)
-			{
-				// init subclusters
+		}
+		
+		public function initSubClusters():void
+		{
+			// TODO: MOVE TO CLUSTER MANAGER NOT "TOUCHCLUSTER"
+				// init MOTION SKELETAL subclusters
 				cO.subClusterArray[0] = new ipClusterObject();// finger
 				cO.subClusterArray[0].type = "finger";		
 				cO.subClusterArray[1] = new ipClusterObject();// palm
@@ -121,24 +126,53 @@ package com.gestureworks.analysis
 				cO.subClusterArray[2].type = "thumb";		
 				cO.subClusterArray[3] = new ipClusterObject();// finger avergae
 				cO.subClusterArray[3].type = "finger_average";
-				
-				
-				cO.subClusterArray[4] = new ipClusterObject(); // trigger
-				cO.subClusterArray[4].type = "trigger";		
-				cO.subClusterArray[5] = new ipClusterObject(); // pinch
-				cO.subClusterArray[5].type = "pinch";
-				cO.subClusterArray[6] = new ipClusterObject(); // push
-				cO.subClusterArray[6].type = "push";
+				cO.subClusterArray[4] = new ipClusterObject(); //finger and thumb
+				cO.subClusterArray[4].type = "digit";
+				// INIT MOTION VIRTUAL SUBCLUSTERS
+				cO.subClusterArray[5] = new ipClusterObject(); // trigger
+				cO.subClusterArray[5].type = "trigger";		
+				cO.subClusterArray[6] = new ipClusterObject(); // pinch
+				cO.subClusterArray[6].type = "pinch";
 				cO.subClusterArray[7] = new ipClusterObject(); // hook
 				cO.subClusterArray[7].type = "hook";
 				cO.subClusterArray[8] = new ipClusterObject(); //frame
 				cO.subClusterArray[8].type = "frame";
+				//cO.subClusterArray[9] = new ipClusterObject(); // push
+				//cO.subClusterArray[9].type = "push";
+				//cO.subClusterArray[10] = new ipClusterObject(); //region
+				//cO.subClusterArray[10].type = "region";
+				//OBJECT TRACKING 
+				//cO.subClusterArray[11] = new ipClusterObject(); //tool
+				//cO.subClusterArray[11].type = "tool";
 				
-				cO.subClusterArray[9] = new ipClusterObject(); //finger and thumb
-				cO.subClusterArray[9].type = "digit";
-			}
+				////////////////////////////////////////////////////////////
+				//
+		}
+		
+		public function initTouchSubClusters():void
+		{
+			//TOUCH SUBCLUSTERS
+			//cO.subClusterArray[11] = new ipClusterObject(); //touch pen
+			//cO.subClusterArray[11].type = "pen";
+			//cO.subClusterArray[11] = new ipClusterObject(); //fiducial patterns
+			//cO.subClusterArray[11].type = "fiducial";
+			//cO.subClusterArray[11] = new ipClusterObject(); //hold touch points
+			//cO.subClusterArray[11].type = "hold";
+			//cO.subClusterArray[11] = new ipClusterObject(); //dynamic touch points
+			//cO.subClusterArray[11].type = "dynamic";
+			//cO.subClusterArray[11] = new ipClusterObject(); //touch point chord patterns
+			//cO.subClusterArray[11].type = "chord"; //passes chrod prob
 			
 		}
+		
+		public function initSensorSubClusters():void
+		{
+			//SENSOR SUBCLUSTERS
+			// accelerometer
+			// myo
+			// watch
+		}
+		
 		
 		public function findRootClusterConstants():void
 		{
@@ -258,6 +292,7 @@ package com.gestureworks.analysis
 			mcO.x = 0;
 			mcO.y = 0;
 			mcO.z = 0;//-3D
+			
 			mcO.width = 0;
 			mcO.height = 0;
 			mcO.length = 0;//-3D
@@ -1445,11 +1480,13 @@ package com.gestureworks.analysis
 
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		// sensor analysis
+		// sensor IP analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		
-		
+		public function resetSensorCluster():void { }
+		public function resetSensorClusterConsts():void{}
+		public function findSensorClusterDimensions():void{}
+		public function findSensorVelocity():void{}
 		public function findSensorJolt():void
 		{
 			trace("accelerometer kinemetric");
@@ -1464,6 +1501,9 @@ package com.gestureworks.analysis
 			trace("timestamp", event.timestamp);
 			*/
 		}
+		
+		public function findSensorSubClusters():void{}
+		public function weaveSensorCluster():void{}
 		
 		
 		
@@ -1660,8 +1700,8 @@ package com.gestureworks.analysis
 			if ((sipn!=0))
 			{
 			//trace("sub dims",sipn)
-					if (sipn > 1)
-					{
+					//if (sipn > 1)
+					//{
 						for (i = 0; i < sipn; i++) 
 								{
 									//trace("add points")
@@ -1803,8 +1843,8 @@ package com.gestureworks.analysis
 								sub_cO.rotationX *= sipnk0;
 								sub_cO.rotationY *= sipnk0;
 								sub_cO.rotationZ *= sipnk0;
-					}
-						
+					//}
+					/*
 					else if (sipn == 1) 
 					{
 						sub_cO.x = ptArray[0].position.x;
@@ -1843,7 +1883,11 @@ package com.gestureworks.analysis
 						//sub_cO.rotationList.push(new Vector3D(0,0 ,0));
 						
 						//trace("dim",sub_cO.ipn, sub_cO.x,sub_cO.y,sub_cO.z)
+						
+						trace("ip cluster dims",sub_cO.ipn,sub_cO.x,sub_cO.y,sub_cO.z,ptArray[0].position.x,ptArray[0].position.y,ptArray[0].position.z, sub_cO.iPointArray[0].position.x,sub_cO.iPointArray[0].id);
 					}
+					*/
+					
 				//trace("sub dims",sub_cO.width,sub_cO.height,sub_cO.length,"motion",mcO.width,mcO.height,mcO.length,"root",cO.width,cO.height,cO.length)
 				//trace(sub_cO.rotationZ,sub_cO.rotation, sipn)
 			}
@@ -1854,6 +1898,7 @@ package com.gestureworks.analysis
 		// TAP POINTS
 		public function find3DIPTapPoints(index:int):void
 		{
+			//trace("---------------------tap kinemetric");
 			// LOOK FOR 
 				//VELOCITY SIGN CHANGE
 				//ACCLERATION SIGN CHANGE 
@@ -1872,6 +1917,10 @@ package com.gestureworks.analysis
 			var sipn:uint = sub_cO.ipn;
 			var sipnk:Number = sub_cO.ipnk;
 			//var dipn:int = sub_cO.dipn;
+			
+			var gpt:GesturePointObject = new GesturePointObject();
+			var gpt0:GesturePointObject = new GesturePointObject();
+			var gpt1:GesturePointObject = new GesturePointObject();
 			
 			//trace("tap testing--", sipn);
 	
@@ -1895,16 +1944,18 @@ package com.gestureworks.analysis
 										{	
 											if (Math.abs(pt.history[h].jolt.y) > tapThreshold) test = false;
 										}
-									if (test) {
-										
-										var gpt:GesturePointObject = new GesturePointObject();
+									if (test) 
+									{
+										// WILL KILL FOR GESTURE EVENT
+										gpt = new GesturePointObject();
 											gpt.position = pt.position;
+											gpt.jolt = pt.history[0].jolt;
 											gpt.type = "y tap";
+											//gpt.ipn = sipn;
+											
+										//trace("kinemetric 3d y tap-----scan clean", pt.jolt.y, pt.history[0].jolt.y, pt.history[1].jolt.y, pt.interactionPointID, pt.id);
 										cO.gPointArray.push(gpt);
-										
-										trace("y tap-----scan clean", pt.history[0].jolt.y, pt.history[1].jolt.y, pt.interactionPointID, pt.id);
-										}
-										//trace("y tap test")
+									}
 								}
 								
 								if (Math.abs(pt.history[1].jolt.x) > tapThreshold) 
@@ -1919,20 +1970,19 @@ package com.gestureworks.analysis
 										}
 									if (test0) {
 										
-										var gpt0:GesturePointObject = new GesturePointObject();
+										gpt0 = new GesturePointObject();
 											gpt0.position = pt.position;
+											gpt0.jolt = pt.history[0].jolt;
 											gpt0.type = "x tap";
+
+										//trace("kinemetric 3d x tap-----scan clean", pt.history[0].jolt.x, pt.interactionPointID, pt.id)
 										cO.gPointArray.push(gpt0);
-										
-										trace("x tap-----scan clean", pt.history[0].jolt.x,pt.interactionPointID, pt.id)
 									}
 									//trace("x tap test")
 								}
 								
 								if (Math.abs(pt.history[1].jolt.z) > tapThreshold) 
 								{
-									// CHECK PAST MAKE SURE HAVE NOT SET STATE FOR 10 FRAMES
-									//STOP AMBULANCE CHASERS //start after hist 1
 									var test1:Boolean = true;
 									
 									for (var h1:uint = 2; h1 < hist; h1++) 
@@ -1940,32 +1990,88 @@ package com.gestureworks.analysis
 											if (Math.abs(pt.history[h1].jolt.z) > tapThreshold) test = false;
 										}
 									if (test0) {
-										
-											var gpt1:GesturePointObject = new GesturePointObject();
+											gpt1 = new GesturePointObject();
 												gpt1.position = pt.position;
+												gpt1.jolt = pt.history[0].jolt;
 												gpt1.type = "z tap";
-											cO.gPointArray.push(gpt1);
-											
-										trace("z tap-----scan clean", pt.history[0].jolt.z, pt.interactionPointID, pt.id);
+										
+										//trace("kinemetric 3d z tap-----scan clean", pt.history[0].jolt.z, pt.interactionPointID, pt.id);
+										cO.gPointArray.push(gpt1);
 									}
 									//trace("z tap test")
 								}
 								
-								
-								//if (Math.abs(pt.history[1].jolt.x) > tapThreshold) trace("x tap-----------", pt.interactionPointID);
-								//if (Math.abs(pt.history[1].jolt.z) > tapThreshold) trace("z tap-----------", pt.interactionPointID);
-								
-								
-								
 							}
 						}
 					}
+					//////////////////////////////////////////////////////////////
+					// check if gppoint is cleared for sufficient time
+					var tap_period:int = 60// 120;
+					var ytap_clear:Boolean = true;
+					var xtap_clear:Boolean = true;
+					var ztap_clear:Boolean = true;
+					//trace("3d motion hold gesture events qualifier",gpn,ts.cO.history.length)
+					
+					
+					if (ts.cO.history.length >= tap_period)
+					{
+						for (var h:uint = 0; h < tap_period; h++) 
+						{
+							//trace("hist",h)
+							if (this.cO.history[h])
+							{
+							var gpn:uint = this.cO.history[h].gPointArray.length
+							
+							//trace("3d motion gesture events visualizer", gpn)
+						
+								//gesture points
+								for (var i:int = 0; i < gpn; i++) 
+								{	
+									if (cO.history[h].gPointArray[i].type == "y tap") ytap_clear = false;
+									if (cO.history[h].gPointArray[i].type == "x tap") xtap_clear = false;
+									if (cO.history[h].gPointArray[i].type == "z tap") ztap_clear = false;
+								}
+							}
+						}
+					}
+					
+					//////////////////////////////////////////////////////////////////////////////////
+					// SIMPLE TAP DISPLATCH CONTROL // USES SIMPLE PAUSE TIME
+					//////////////////////////////////////////////////////////////////////////////////
+					if ((ytap_clear)&&(gpt.type == "y tap"))
+					{
+						//trace("------------ytap--CLEAR");
+						myTapID++;
+						var myTap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_YTAP, {x:gpt.position.x , y:gpt.position.y, z:gpt.position.z, n:sipn, gestureID:myTapID});
+						ts.dispatchEvent(myTap_event);
+						ytap_clear = false;
+						ts.tiO.frame.gestureEventArray.push(myTap_event);
+					}
+					if ((xtap_clear)&&(gpt0.type == "x tap"))
+					{
+						//trace("------------xtap--CLEAR");
+						mxTapID++;
+						var mxTap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_XTAP, {x:gpt0.position.x , y:gpt0.position.y, z:gpt0.position.z, n:sipn, gestureID:mxTapID});
+						ts.dispatchEvent(mxTap_event);
+						xtap_clear = false;
+						ts.tiO.frame.gestureEventArray.push(mxTap_event);
+					}
+					if ((ztap_clear)&&(gpt1.type == "z tap"))
+					{
+						//trace("----------ztap----CLEAR");
+						mzTapID++;
+						var mzTap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_ZTAP, {x:gpt1.position.x , y:gpt1.position.y, z:gpt1.position.z, n:sipn, gestureID:mzTapID});
+						ts.dispatchEvent(mzTap_event);
+						ztap_clear = false;
+						ts.tiO.frame.gestureEventArray.push(mzTap_event);
+					}
+					/////////////////////////////////////////////////////////////////////////////////////
 		}
 		
 		//HOLD POINTS
 		public function find3DIPHoldPoints(index:int):void
 		{
-			
+			//trace("-----------------------hold kinemetric");
 			// GET SUBCLUSTER OBJECT
 			var sub_cO:ipClusterObject = cO.subClusterArray[index];
 			
@@ -1982,6 +2088,7 @@ package com.gestureworks.analysis
 			
 			var hist:int = 20;
 			var holdThreshold:Number = 3; 
+			var gpt3:GesturePointObject = new GesturePointObject();
 			
 			//trace("--");
 
@@ -1993,16 +2100,69 @@ package com.gestureworks.analysis
 							{
 							if ((pt.history[hist].velocity.length < holdThreshold) && (pt.history[hist].acceleration.length < (holdThreshold*0.1-0.1))) 
 								{
-									var gpt:GesturePointObject = new GesturePointObject();
-												gpt.position = pt.history[hist].position;// PREVENTS HOLD DRIFT
-												gpt.type = "hold";
-											cO.gPointArray.push(gpt);
+									gpt3 = new GesturePointObject();
+										gpt3.position = pt.history[hist].position;// PREVENTS HOLD DRIFT
+										gpt3.type = "hold";
+										
+									cO.gPointArray.push(gpt3);
 									
-									trace("hold...", pt.interactionPointID, pt.id);
+									//trace("kinemetric 3d hold...", pt.interactionPointID, pt.id);
 								}
 								//trace("v: ",v,"a: ",a)
 							}
 					}
+					
+					
+			//TODO: IMPLEMENT SCANNING OF GESTURELIST FOR RECENT HOLD EVENTS FROM SAME AREA
+			// LIMIT EVENTS CREATE MANDITORY PAUSE BETWEEN HOLD EVENT CHIPRS
+			// ADD OPTION TO REQUIRE MOVEMENT THEN REHOLD TO ALLOW NEXT CHRIP
+			
+			
+			
+			var hold_period:int = 60// 120;
+			var hold_clear:Boolean = true;
+			//trace("3d motion hold gesture events qualifier",gpn,ts.cO.history.length)
+			
+			
+			if (ts.cO.history.length >= hold_period)
+			{
+				for (var h:int = 0; h < hold_period; h++) 
+				{
+					//trace("hist",h)
+					if (this.cO.history[h])
+					{
+					var gpn:uint = this.cO.history[h].gPointArray.length
+					
+					//trace("3d motion gesture events visualizer", gpn)
+				
+						//gesture points
+						for (var i:int = 0; i < gpn; i++) 
+						{	
+							// SIDE TAP // YELLOW
+							if (cO.history[h].gPointArray[i].type == "hold") hold_clear = false;
+							//trace("not clear");
+						}
+					}
+				}
+			}
+			
+			
+			if (hold_clear)
+			{
+				//trace(gpt)
+				if (gpt3.type == "hold")
+					{
+						//trace("--------------CLEAR");
+						mHoldID++;
+						//var mHold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_HOLD, { x:gpt.position.x , y:gpt.position.y, z:gpt.position.z, n:sipn,  gestureID:mHoldID } );
+						var mHold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_HOLD, {x:gpt3.position.x , y:gpt3.position.y, z:gpt3.position.z, n:sipn, gestureID:mHoldID});
+						ts.dispatchEvent(mHold_event);
+						hold_clear = false;
+						ts.tiO.frame.gestureEventArray.push(mHold_event);
+					}
+			}	
+			
+			
 		}
 		
 		
@@ -2231,7 +2391,7 @@ package com.gestureworks.analysis
 		// 3D MANIPULATE GENERIC 
 		public function find3DIPRotation(index:int):void////type:String
 		{
-			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
+			//trace("motion rotation kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			var hist:int = 1; //CREATES DELAY 
 			var hk:Number = 1 / hist;
 		
@@ -2435,7 +2595,7 @@ package com.gestureworks.analysis
 		
 		public function find3DIPTranslation(index:int):void//type:String
 		{
-			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
+			//trace("-------------------------motion translate kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			var hist:int = 1;
 			var hk:Number = 1 / hist;
 			
@@ -2491,6 +2651,7 @@ package com.gestureworks.analysis
 							}
 							//trace("get diff");	
 			}
+			//trace("motion translate kinemetric",sub_cO.dx,sub_cO.dy,sub_cO.dz);
 		}
 		
 		public function find3DIPAcceleration(index:int):void//type:String
@@ -2586,13 +2747,16 @@ package com.gestureworks.analysis
 						if (sub_cO.ipn>0)
 						{
 							asc++;
-							//trace("weave ipcos",sub_cO.ipn);
+							//trace("weave ipcos",sub_cO.ipn, sub_cO.type);
 							
 							// recalculate cluster center
 							// average over all ip subcluster subclusters 
-							mcO.x = sub_cO.x  
-							mcO.y = sub_cO.y
-							mcO.z = sub_cO.z
+							// MAY NEED TO GIVE EQUAL WEIGHT TO ALL INTERACTION POINTS
+							// CURRENTLY CENTER OF 4 FINGER SUBCLUSTER IS SAME WEIGHT AS 1 PINCH POINT WHICH PUSHED AVERAGE CENTER CLOSER TO PINCH POINT
+							
+							mcO.x += sub_cO.x  
+							mcO.y += sub_cO.y
+							mcO.z += sub_cO.z
 							
 							
 							// recalculate based on ip subcluster totals
@@ -2639,18 +2803,41 @@ package com.gestureworks.analysis
 				asck = 1 / asc;
 				if (asc == 0) asck = 1; //DERR // need 1 or kills multi modal
 				
+				//trace("weave weight", asck,asc)
+				
 				// AVERAGE CLUSTER POSITION
 				mcO.x *= asck;  
 				mcO.y *= asck;
 				mcO.z *= asck;
 				
+				
 				//trace("motion",mcO.dx,mcO.dy)
-				//trace("weave",cO.x,cO.y,cO.z, cO.width,cO.height)
+				//trace("motion subclusterto motion prime",mcO.x,mcO.y,mcO.z, mcO.dx,mcO.dy,mcO.dz)
 		}
 		
 		public function WeaveMotionClusterData():void
 		{
 			//BLEND INTO ROOT CLUSTER
+			
+			/*
+			var motion_weave_list:Object = new Object();
+						motion_weave_list["dx"] = 0;
+						motion_weave_list["dy"] = 0;
+						motion_weave_list["dz"] = 0;
+			
+			
+			//clear weave counts
+			for each (key in cO)
+			{
+				motion_weave_list[key] = 0;
+			}
+			
+			// perform weave counts
+			for each (key in motion_weave_list)
+			{
+				if (mcO[key]!=0) motion_weave_list[key] += 1;
+			}
+			*/
 			
 					// each dimension / property must be merged independently
 						if (mcO.ipn>0)
@@ -2686,8 +2873,9 @@ package com.gestureworks.analysis
 							///////////////////////////////////////////////////////////////////////////////////////
 							
 							//trace("weave motion",cO.x,cO.y,cO.z, cO.width,cO.height)
+							
 						}
-				//trace("root",cO.dx,cO.dy)
+				//trace("motion prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
 		}
 		
 		public function WeaveTouchClusterData():void
@@ -2732,32 +2920,11 @@ package com.gestureworks.analysis
 							///////////////////////////////////////////////////////////////////////////////////////
 						//trace("weave touch",cO.x,cO.y,cO.z, cO.width,cO.height)
 						}
-
+					//trace("touch prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
 				
 		}
 		
-		
-		////////////////////////////////////////
-		//1 DEFINE A SET OF INTERACTION POINTS
-		//2 MATCH TO INTERACTION POINT HAND CONFIG (GEOMETRIC)
-		//3 HIT TEST QUALIFIED TO TARGET
-		//4 ANALYZE RELATIVE INTERACTION POINT CHANGES AND PROPERTIES 
-		//5 MATCH MOTION (KINEMETRIC)
-		//6 PUSH GESTURE POINT
-		//7 PROCESS GESTURE POINT FILTERS
-		//8 APPLY INTERNAL NATIVE TRANSFORMS
-		//9 ADD TO TIMELINE
-		//10 DISPTACH GESTURE EVENT
-		////////////////////////////////////////
 			
-		//E.G BIMANUAL HOLD & MANIPULATE
-			//FIND HOLD POINT LIST
-			//FIND MANIP POINT LIST 
-			// FIND AVERAGE HOLD POINT XY FIND HOLD TIME
-			// FIND DRAG,SCALE,ROTATE
-			// UPDATE PARENT CLUSTER WITH DELTAS
-			// UPDATE GESTURE PIPELINE
-		
 		////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////
 		// helper functions
