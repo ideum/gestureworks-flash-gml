@@ -17,21 +17,35 @@ package com.gestureworks.managers
 {
 	
 
-	import com.gestureworks.core.GestureGlobals;
-	import com.gestureworks.core.gw_public;
+	import com.gestureworks.away3d.TouchObject3D;
 	import com.gestureworks.core.TouchSprite;
-	import com.gestureworks.events.GWMotionEvent;
-	import com.gestureworks.objects.MotionPointObject;
-	import com.leapmotion.leap.events.LeapEvent;
-	import flash.utils.Dictionary;
 	//import com.gestureworks.objects.MotionFrameObject;
 	
 	
+	import flash.utils.Dictionary;
 	
+	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.GestureWorksCore;
+	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.gw_public;
 	
+	import com.gestureworks.utils.ArrangePoints;
+	import com.gestureworks.managers.PointHistories;
+	import com.gestureworks.events.GWEvent;
+	import com.gestureworks.events.GWMotionEvent;
+	import com.gestureworks.objects.MotionPointObject;
 	
+	import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.ipClusterObject;
+	import com.gestureworks.objects.GestureListObject;
+	import com.gestureworks.objects.TimelineObject;
+	import com.gestureworks.objects.DimensionObject;
 	
 
+	import com.leapmotion.leap.events.LeapEvent;
+	import com.leapmotion.leap.LeapMotion;
 	
 	
 	
