@@ -14,6 +14,59 @@ package com.gestureworks.utils
 	 */
 	public class Recorder extends Sprite
 	{
+		private var _drawingOn:Boolean = true;
+		/**
+		 * Draw circles of touch input
+		 */
+		public function get drawingOn():Boolean {
+			return _drawingOn;
+		}
+		
+		public function set drawingOn(value:Boolean):void {
+			_drawingOn = value;
+		}
+		
+		private var _drawOnReplay:Boolean = true;
+		/**
+		 * Draw circles of touch input on replay. Ignored if drawingOn is false.
+		 */
+		public function get drawOnReplay():Boolean {
+			return _drawOnReplay;
+		}
+		
+		public function set drawOnReplay(value:Boolean):void {
+			_drawOnReplay = value;
+		}
+		
+		private var _stopRecordingOnTouchUp:Boolean = false;
+		/**
+		 * Decides to stop recording on touch up events, instead of waiting for stop key. 
+		 * If true recording simple touch events is easier but multiple point event recording
+		 * is difficult.
+		 */
+		public function get stopRecordingOnTouchUp():Boolean {
+			return _stopRecordingOnTouchUp;
+		}
+		
+		public function set stopRecordingOnTouchUp(value:Boolean):void {
+			_stopRecordingOnTouchUp = value;
+		}
+		
+		private var _showDebugOutput:Boolean = true;
+		/**
+		 * Determines to show text on the stage with help info and output text.
+		 * Must be set before the call listenToStage
+		 */
+		public function get showDebugOutput():Boolean 
+		{
+			return _showDebugOutput;
+		}
+		
+		public function set showDebugOutput(value:Boolean):void 
+		{
+			_showDebugOutput = value;
+		}
+		
 		private var isReplaying:Boolean = false;
 		
 		private var debug:Boolean = false;
@@ -25,18 +78,6 @@ package com.gestureworks.utils
 		private var stopRecordingSet:Boolean = false;
 		
 		private var paused:Boolean = false;
-		
-		private static const drawingOn:Boolean = true;
-		
-		private var _stopRecordingOnTouchUp:Boolean = true;
-		
-		public function get stopRecordingOnTouchUp():Boolean {
-			return _stopRecordingOnTouchUp;
-		}
-		
-		public function set stopRecordingOnTouchUp(value:Boolean):void {
-			_stopRecordingOnTouchUp = value;
-		}
 		
 		private var touchEvents:Array = new Array();
 		
@@ -57,17 +98,6 @@ package com.gestureworks.utils
 		
 		private var fileReader:InputFileReader;
 		
-		private var _showDebugOutput:Boolean = true;
-		public function get showDebugOutput():Boolean 
-		{
-			return _showDebugOutput;
-		}
-		
-		public function set showDebugOutput(value:Boolean):void 
-		{
-			_showDebugOutput = value;
-		}
-		
 		private var debugDisplay:InputTestDisplay = null;
 		
 		public function set displayText(value:String):void {
@@ -82,6 +112,9 @@ package com.gestureworks.utils
 			registerClassAlias("TouchEventProxy", TouchEventProxy); 
 		}
 		
+		/**
+		 * The stage to listen to events from
+		 */ 
 		public function listenToStage(stage:Stage):void {
 			
 			stage.addEventListener(TouchEvent.TOUCH_BEGIN, onTouch);
@@ -107,7 +140,9 @@ package com.gestureworks.utils
 			switch (proxy.type) {
 				
 				case TouchEvent.TOUCH_BEGIN:
-					startRecording();
+					if(!isRecording) {
+						startRecording();
+					}
 					break;			
 					
 				case TouchEvent.TOUCH_END:
@@ -220,6 +255,7 @@ package com.gestureworks.utils
 		}
 		
 		private function startRecording():void {
+			
 			touchBeginTime = getTimer();
 			clearAll();
 			isRecording = true;
@@ -298,6 +334,11 @@ package com.gestureworks.utils
 		}
 		
 		public function drawCircle(e:TouchEventProxy):void {
+			
+			if (isReplaying && !drawOnReplay) {
+				return;
+			}
+			
 			const radius:int = 10;
 			
 			switch (e.type) {
