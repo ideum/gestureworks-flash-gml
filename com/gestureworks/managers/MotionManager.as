@@ -17,7 +17,6 @@ package com.gestureworks.managers
 {
 	
 
-	import com.gestureworks.away3d.TouchObject3D;
 	import com.gestureworks.core.TouchSprite;
 	//import com.gestureworks.objects.MotionFrameObject;
 	
@@ -35,14 +34,6 @@ package com.gestureworks.managers
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
-	
-	import com.gestureworks.objects.GestureObject;
-	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.objects.ipClusterObject;
-	import com.gestureworks.objects.GestureListObject;
-	import com.gestureworks.objects.TimelineObject;
-	import com.gestureworks.objects.DimensionObject;
-	
 
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
@@ -64,7 +55,6 @@ package com.gestureworks.managers
 		{	
 			//if(debug)
 				//trace("init leap motion device----------------------------------------------------",leapmode)
-				
 			
 			if(leapmode == "2d"){
 				lmManager = new Leap2DManager();
@@ -76,30 +66,31 @@ package com.gestureworks.managers
 			}
 
 			
-			///////////////////////////////////////////////////////////////////////////////////////
-			// ref gloabl motion point list
-			mpoints = GestureGlobals.gw_public::motionPoints;
-			touchObjects = GestureGlobals.gw_public::touchObjects;
-			
 			// create gloabal motion sprite
 			motionSprite = new TouchSprite();
 				motionSprite.active = true;
-				motionSprite.motionEnabled = true;
-				motionSprite.motion3d = true; 
-				
-				//NOT ADDED TO THE STAGE
-				//motionSprite.debugDisplay = true;
-				//motionSprite.visualizer.pointDisplay = true;
-				//motionSprite.visualizer.clusterDisplay = true;
-				//motionSprite.visualizer.gestureDisplay = true;
-				
+				motionSprite.debugDisplay = true;
 				motionSprite.tc.core = true; // fix for global core analysis
-				
-				//initialized gloabl geometric settings
-				//motionSprite.tc.initGeoMetric3D();
-				
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
 
+			
+			
+			///////////////////////////////////////////////////////////////////////////////////////
+			// ref gloabl motion point list
+			mpoints = GestureGlobals.gw_public::motionPoints;
+			//touchObjects = GestureGlobals.gw_public::touchObjects;
+			
+			
+			//if (GestureWorks.supportsMotion) {
+				
+				//DRIVES UPDATES ON POINT LIFETIME
+				//GestureWorks.application.addEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
+				//GestureWorks.application.addEventListener(GWMotionEvent.MOTION_BEGIN, onMotionBegin);
+				
+				// DRIVES UPDATES ON TOUCH POINT PATHS
+				//GestureWorks.application.addEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+			//}
+			
 			//////////////////////////////////////////
 			// init interaction manager
 			
@@ -108,6 +99,10 @@ package com.gestureworks.managers
 		
 		gw_public static function deInitialize():void
 		{
+			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_END, onMotionEnd);
+			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+			//GestureWorks.application.removeEventListener(GWMotionEvent.MOTION_MOVE, onMotionMove);
+			
 			if (leapmode == "2d" && lmManager) {
 				lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
 				Leap2DManager(lmManager).dispose();
@@ -155,7 +150,7 @@ package com.gestureworks.managers
 					mpointObject.width = event.value.width;
 					
 					
-					//ADD TO GLOBAL MOTION SPRITE POINT LIST
+					//ADD TO LOCAL POINT LIST
 					motionSprite.cO.motionArray.push(mpointObject);
 					motionSprite.motionPointCount++;
 				
@@ -236,69 +231,7 @@ package com.gestureworks.managers
 		}	
 	
 		
-		// init geometric
-		/*
-		public static function initGeoMetric3D(tO:TouchObject3D):void
-		{
-			trace("set geometric init", motionSprite);
-			
-			var key:uint;
-			// for each touchsprite/motionsprite
-			// go through gesture list on initialization
-			// look for motion gestures that need specific sub cluster types
-			// swithed on
-			// note global gesture list need that represents a compiled list of gestures from all objects??
-			
-			//for each(var tO:Object in touchObjects)
-			//{
-			// numbers of gestures on this object
-			var gn:uint = tO.gO.pOList.length;
-				//trace("gesture number",gn, tO.gO)
-			for (key = 0; key < gn; key++) 
-			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
-			{
-				
-				// if gesture object is active in gesture list
-				if (tO.gestureList[tO.gO.pOList[key].gesture_id])
-				{
-					var g:GestureObject = tO.gO.pOList[key];
-				
-					trace("matching gesture cluster input type",g.cluster_type)
-						/////////////////////////////////////////////////////
-						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
-						////////////////////////////////////////////////////
-					if (g.cluster_input_type == "motion")
-						{		
-						//g.cluster_type = "all"	
-							
-						// FUNDAMENTAL INTERACTION POINTS
-							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			motionSprite.tc.fingerPoints=true; 
-							if ((g.cluster_type == "thumb")||(g.cluster_type == "all")) 			motionSprite.tc.thumbPoints=true; 
-							if ((g.cluster_type == "palm")||(g.cluster_type == "all")) 				motionSprite.tc.palmPoints = true; 
-							if ((g.cluster_type == "finger_average") || (g.cluster_type == "all")) 	motionSprite.tc.fingerAveragePoints = true; 
-							if (g.cluster_type == "digit") 											motionSprite.tc.fingerAndThumbPoints = true; 
-							
-						//CONFIGURATION BASED INTERACTION POINTS
-							if ((g.cluster_type == "pinch")||(g.cluster_type == "all")) 			motionSprite.tc.pinchPoints = true; 
-							if ((g.cluster_type == "trigger")||(g.cluster_type == "all"))			motionSprite.tc.triggerPoints = true; 
-							if ((g.cluster_type == "push")||(g.cluster_type == "all")) 				motionSprite.tc.pushPoints = true; 
-							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) 				motionSprite.tc.hookPoints = true; 
-							if ((g.cluster_type == "frame") || (g.cluster_type == "all")) 			motionSprite.tc.framePoints = true; 
-
-						// LATER
-							//---cluster_geometric.find3DToolPoints();
-							//---cluster_geometric.find3DRegionPoints();
-							//---cluster_geometric.find3dTipTapPoints();
-						}
-					}
-			}
-				
-			//}
-			
-			
-			//motionSprite.tc.pinchPoints = true;
-			
-		}*/
+		
 		
 		
 		

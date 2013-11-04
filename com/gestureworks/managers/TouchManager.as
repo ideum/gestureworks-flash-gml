@@ -64,8 +64,7 @@ package com.gestureworks.managers
 		
 		private static var gms:*;
 		private static var hooks:Vector.<Function>;
-		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();
-		private static var gms_init:Boolean = false;
+		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();	
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -616,12 +615,6 @@ package com.gestureworks.managers
 				
 			//tp re init vector metric and get new stroke lib for comparison
 			if (obj.tc) obj.tc.initClusterAnalysisConfig();
-			
-			// update touch object transform proerty limits
-			// note: multiple gestures on same object will overwrite property limits is map to same property
-			if (obj.tt) obj.tt.updateTransformLimits();
-			
-			//trace("local gesture parser triggered init");
 		}	
 		
 		
@@ -659,15 +652,15 @@ package com.gestureworks.managers
 			/////////////////////////////////////////////////////////////////////////////
 			//GET MOTION POINT LIST
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
-			gms.tc.getSkeletalMetrics3D();
 			
-			//trace("FrameID");
-			if (GestureGlobals.frameID==2) gms.tc.initGeoMetric3D();
-			
+			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
+			//InteractionPointTracker.framePoints = gms.cO.iPointArray;
+			InteractionPointTracker.getActivePoints();
+
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
-				//trace("tm touchobject",tO, tO.tc.core);
+				//trace("tm touchobject",tO);
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
 				//COULD BE JUST INTERACTION POINT DATA ??
@@ -675,21 +668,26 @@ package com.gestureworks.managers
 				// PERHAPS A INTERACTION POINT CADIDATE LIST THEN PERFORM HIT LOCAL TO THE TOUCHOBJECT
 				
 				//GET GLOBAL MOTION POINTS		
-				//if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
+				if(GestureWorks.activeMotion){
 					if (tO.cO) 
-					{
 						tO.cO.motionArray = gms.cO.motionArray/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						tO.cO.handList = gms.cO.handList;///////////ONLY NEED WHEN NOT CLUSTER??????????????//////////////////////////////////////////////////////////////////////////////////
-						tO.cO.iPointArray = gms.cO.iPointArray//////////////////////////////////////////////////////////////////////////////////////////////////
-					}
 					else 
 						continue;
-				//}
+				}
 					
 				// update touch,cluster and gesture processing
 				updateTouchObject(ITouchObject(tO));
 				
-
+				// DISTRO HAND MODEL AND INTERACTION POINTS TO TOUCH OBJECTS
+				if(GestureWorks.activeMotion){
+					tO.cO.handList = gms.cO.handList;///////////////////////////////////////////////////////////////////////////////////////////////////////
+					tO.cO.iPointArray = gms.cO.iPointArray//////////////////////////////////////////////////////////////////////////////////////////////////
+				}				
+				
+				//UPDATE CLUSTER HISTORIES
+				// moved to touch object
+				//ClusterHistories.historyQueue(tO.touchObjectID);
+					
 				// move to timeline visualizer
 				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
 				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
@@ -708,10 +706,6 @@ package com.gestureworks.managers
 				if (tO.tiO) tO.tiO.frame = new FrameObject();
 
 			}
-			
-			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
-			// update interation point global list
-			InteractionPointTracker.getActivePoints();
 			
 			// zero motion frame count
 			GestureGlobals.motionFrameID = 1;
@@ -764,8 +758,6 @@ package com.gestureworks.managers
 						}
 					}
 				}
-		}
-		
-		
+		}				
 	}
 }
