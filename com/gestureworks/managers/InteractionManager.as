@@ -99,7 +99,10 @@ package com.gestureworks.managers
 						ipO.length = event.value.length;
 						ipO.width = event.value.width;
 						
-	
+				////////////////////////////////////////////
+				////////////////////////////////////////////
+				// HIT TEST ???????
+				////////////////////////////////////////////
 				//ADD TO LOCAL Interaction POINT LIST
 				gms.cO.iPointArray.push(ipO);
 				// update local touch object point count

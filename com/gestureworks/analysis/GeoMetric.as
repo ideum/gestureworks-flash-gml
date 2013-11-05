@@ -91,34 +91,36 @@ package com.gestureworks.analysis
 		// clear derived point and cluster motion data
 		public function clearHandData():void
 		{
-			for (i = 0; i < mpn; i++)
+			for (i = 0; i < mpn; i++)//mpn
 				{	
-					if (cO.motionArray[i].type == "finger")
-					{	
-						// reset thum alloc// move to cluster
-						cO.motionArray[i].fingertype = "finger";	 
+					if (cO.motionArray[i]){
+						if (cO.motionArray[i].type == "finger")
+						{	
+							// reset thum alloc// move to cluster
+							cO.motionArray[i].fingertype = "finger";	 
+							
+							// reset thumb probs // move to cluster
+							cO.motionArray[i].thumb_prob = 0;
+							cO.motionArray[i].mean_thumb_prob = 0
+							// normalized data
+							cO.motionArray[i].normalized_length = 0;
+							cO.motionArray[i].normalized_palmAngle = 0;
+							cO.motionArray[i].normalized_favdist = 0;
+						}
 						
-						// reset thumb probs // move to cluster
-						cO.motionArray[i].thumb_prob = 0;
-						cO.motionArray[i].mean_thumb_prob = 0
-						// normalized data
-						cO.motionArray[i].normalized_length = 0;
-						cO.motionArray[i].normalized_palmAngle = 0;
-						cO.motionArray[i].normalized_favdist = 0;
-					}
-					
-					if (cO.motionArray[i].type == "palm")
-					{	
-						// reset thum alloc// move to cluster
-						cO.motionArray[i].fingertype = null;	 
-						
-						// reset thumb probs // move to cluster
-						cO.motionArray[i].thumb_prob = 0;
-						cO.motionArray[i].mean_thumb_prob = 0
-						// normalized data
-						cO.motionArray[i].normalized_length = 0;
-						cO.motionArray[i].normalized_palmAngle = 0;
-						cO.motionArray[i].normalized_favdist = 0;
+						if (cO.motionArray[i].type == "palm")
+						{	
+							// reset thum alloc// move to cluster
+							cO.motionArray[i].fingertype = null;	 
+							
+							// reset thumb probs // move to cluster
+							cO.motionArray[i].thumb_prob = 0;
+							cO.motionArray[i].mean_thumb_prob = 0
+							// normalized data
+							cO.motionArray[i].normalized_length = 0;
+							cO.motionArray[i].normalized_palmAngle = 0;
+							cO.motionArray[i].normalized_favdist = 0;
+						}
 					}
 				}
 				
@@ -135,7 +137,7 @@ package com.gestureworks.analysis
 			//trace("create hand")
 			if (mpn !=0) // no points no hand
 			{
-				for (i = 0; i < mpn; i++)
+				for (i = 0; i < mpn; i++)//mpn
 					{
 					//////////////////////////////////////////////////////
 					/// create hand
@@ -164,7 +166,7 @@ package com.gestureworks.analysis
 					for (j = 0; j < cO.hn; j++)
 					{
 						
-						for (i = 0; i < mpn; i++)
+						for (i = 0; i <mpn; i++)//mpn
 								{	
 									var mp:MotionPointObject = cO.motionArray[i];
 									//trace(cO.handList[j].handID ,cO.motionArray[i].handID)
@@ -654,6 +656,8 @@ package com.gestureworks.analysis
 		// Find Interactive Pinch Points //PINCH IP
 		public function find3DPinchPoints():void
 		{
+			//trace("finding pinch points, geometric",cO.hn);
+			
 			var pinchThreshold:Number = 40 * 50//60; //GML CONFIG 
 			var distThreshold:Number = 50//60; //GML CONFIG 
 			
@@ -751,6 +755,7 @@ package com.gestureworks.analysis
 					
 					
 			}
+		
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
