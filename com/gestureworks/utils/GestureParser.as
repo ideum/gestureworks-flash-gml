@@ -81,7 +81,6 @@ package com.gestureworks.utils
 									"stroke_greek":true,
 									"stroke_shape":true,
 									"stroke_symbol":true,
-									"3d_drag":true,
 									"3d_translate":true,
 									"3d_rotate":true, 
 									"3d_scale":true,
@@ -93,7 +92,6 @@ package com.gestureworks.utils
 									"3d_tap":true,
 									"3d_hold":true,
 									"3d_double_tap":true,
-									"motion_drag":true,
 									"motion_translate":true,
 									"motion_rotate":true, 
 									"motion_scale":true,
@@ -105,9 +103,8 @@ package com.gestureworks.utils
 									"motion_tap":true,
 									"motion_hold":true,
 									"motion_double_tap":true
-									};		
-
-									
+									};			
+						
 						var gestureSetNum:int = gml.Gesture_set.length();
 						
 						for (var g:int = 0; g < gestureSetNum; g++) 
@@ -149,7 +146,6 @@ package com.gestureworks.utils
 									// for all matches in cml gesturelist and gml 
 									for (type in gestureTypeList)
 										{
-										//trace(type, gtype)
 										// check tha type is allowable 
 										if (type == gtype)
 										{
@@ -162,7 +158,7 @@ package com.gestureworks.utils
 											//pOList[gesture_id] = new GestureObject();
 											//pOList[gesture_id] = new GesturePropertyObject();
 											
-											trace("gesture:", gesture_id);
+											//trace("gesture:", gesture_id);
 												
 												gO.gesture_id = gesture_id;
 												gO.gesture_xml = gml.Gesture_set[g].Gesture[i];
@@ -221,41 +217,19 @@ package com.gestureworks.utils
 															gO.nMax = nMax;
 															gO.nMin = nMin;
 															
-															/////////////////////////////
+															//////////////////////
 															//advanced cluster properties
-															/////////////////////////////
+															///////////////////////
 															// cluster type
 															gO.cluster_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("type"));
 															gO.cluster_input_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("input_type"));
+															// hand number
+															gO.hn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("hand_number"));
 															
-															///////////////////////////////
-															// HAND BASED EXPLICIT CONGFIG
-															//////////////////////////////
-															// hand number total
-															gO.hn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("hands"));
-															// finger number total
-															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("finger_number"));
+															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number"));
+															//gO.fn_min = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number_min"));
+															//gO.fn_max = int(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("finger_number_max"));
 															
-															//handednes
-															gO.h_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("type"));
-															//hand orientation
-															gO.h_orientation = String(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("orientation"));
-															// hand finger splay
-															gO.h_splay = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("splay"));
-															//hand flatness
-															gO.h_flatness = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("flatness"));
-															
-															
-															
-															/////////////////////////////////////
-															// CREATE HAND CONFIG DATA STRUCTURE
-															/////////////////////////////////////
-															//left hand config (thumb,index,middle,ring,pinky)
-															//right hand config (thumb,index,middle,ring,pinky)
-															//lefthand finger count
-															//lefthand thumb count
-															//right hand finger count
-															//right hand thumb count
 															//trace("hand number",gO.hn,"finger number",gO.fn, "cluster", gO.cluster_type)
 														}
 													}
@@ -584,20 +558,7 @@ package com.gestureworks.utils
 														else if ((target == "x")||(target == "X")) 					dO.target_id = "dx";
 														else if ((target == "y") || (target == "Y")) 				dO.target_id = "dy";
 														else if ((target == "z") || (target == "Z")) 				dO.target_id = "dz";
-														else  dO.target_id = "";
-														
-														//////////////////////////////////////////////////////////////////////////////////////////
-														// mapped object property limits (applied int transform)
-														var min:String = String(gml.Gesture_set[g].Gesture[i].mapping.update.gesture_event.property[j].attribute("min"));
-														var max:String = String(gml.Gesture_set[g].Gesture[i].mapping.update.gesture_event.property[j].attribute("max"));
-														//trace("minmax",min,max);
-														
-														if (min!="") dO.property_min = Number(min);
-														else dO.property_min = undefined;
-														
-														if (max!="") dO.property_max = Number(max);
-														else dO.property_max = undefined;	
-														
+														else  dO.target_id = "";	
 													}
 													
 													//trace("id	", gesture_id, property_id, pOList[gesture_id][property_id].id);

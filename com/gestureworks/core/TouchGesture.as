@@ -125,15 +125,6 @@ package com.gestureworks.core
 						GestureGlobals.timelineHistoryCaptureLength = 80;
 						tapOn = true;
 					}
-					else if ((gO.pOList[key].gesture_type == "motion_tap") || (gO.pOList[key].gesture_type == "motion_hold"))
-					{
-						tiO.timelineOn = true;
-						//tiO.pointEvents = true;
-						tiO.gestureEvents = true; // for gestute feedback
-						tiO.timelineInit = true;
-						GestureGlobals.timelineHistoryCaptureLength = 80;
-						tapOn = true;
-					}
 				}
 				
 				
@@ -802,8 +793,7 @@ package com.gestureworks.core
 							
 							//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z);
 							
-					//-------ts.dispatchEvent(GWEVENT);
-					
+							ts.dispatchEvent(GWEVENT);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
 							//trace(GWEVENT)
 							//if ((tiO.timelineOn) && (tiO.gestureEvents))	

@@ -133,13 +133,5 @@ package com.gestureworks.objects
 		// r_inertia_factor count-Max--------------------
 		public var release_inertia_Maxcount:int = 60;
 		
-		
-		/////////////////////////////////////////////////////////
-		// mapped property value limits
-		//////////////////////////////////////////////////////////
-		// property max ----------------------
-		public var property_max:Number = 0;
-		// property_min ----------------------
-		public var property_min:Number = 0;
 	}
 }
