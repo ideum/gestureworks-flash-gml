@@ -31,7 +31,7 @@ package com.gestureworks.managers
 		private static var fp:InteractionPointObject;
 		private static var _ID:uint = 0;
 		
-		private static var d2:Number = 40;
+		private static var d2:Number = 30;//40
 		private static var d1:Number = 0;
 		private static var debug:Boolean = false;
 		

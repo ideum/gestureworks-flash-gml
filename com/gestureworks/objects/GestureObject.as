@@ -72,18 +72,44 @@ package com.gestureworks.objects
 
 		// nMin---------------------
 		public var nMin:int = 0;
-
-		// hand number---------------------
-		public var hn:int = 0;
-
-		// finger number---------------------
-		public var fn:int = 0;
-
+		
 		// CLUSTER TYPE---------------------
 		public var cluster_type:String = "";
 
 		// CLUSTER INPUT TYPE---------------------
 		public var cluster_input_type:String = "";
+		
+		////////////////////////////////////////
+		// generic hand properties
+		////////////////////////////////////////
+		
+		// hand total number---------------------
+		public var hn:int = 0;
+
+		// finger total number---------------------
+		public var fn:int = 0;
+		
+		// hand type ---------------------
+		public var h_type:String = "";
+		
+		// hand orinetation ---------------------
+		public var h_orientation:String = "";
+		
+		// hand splay ---------------------
+		public var h_splay:Number = 0;
+		
+		// hand flatness ---------------------
+		public var h_flatness:Number = 0;
+		
+		////////////////////////////////////////
+		//EXPLICIT HAND CONFIG
+		///////////////////////////////////////
+		// left hand explicit config ---------------------
+		//public var lh_config:Object;
+		
+		// right hand explicit config ---------------------
+		//public var rh_config:Object;
+		
 
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -199,7 +225,7 @@ package com.gestureworks.objects
 		// event dipatch mode
 		public var dispatch_mode:String;
 
-		//
+		//event displatch trigger
 		public var dispatch_reset:String;
 
 		// event dipatch interval
@@ -210,6 +236,7 @@ package com.gestureworks.objects
 		
 		
 		// SHOULD MOVE TO GESTURE EVENT OBJECT
+		//public var event_phase:uint = 0;
 		///////////////////////////////////////////////////
 		// GESTURE EVENT PHASE LOGIC 
 		// 0 null
