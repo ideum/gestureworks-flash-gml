@@ -227,7 +227,7 @@ package com.gestureworks.analysis
 					////////////////////////////////////////
 					
 					// match type and id
-					if ((pointEventArray[p].type =="gwTouchBegin")&&(pointEventArray[p].touchPointID == event.touchPointID))
+					if ((pointEventArray[p].type =="gwTouchBegin" || pointEventArray[p].type =="touchBegin")&&(pointEventArray[p].touchPointID == event.touchPointID))
 						{
 							var dx:Number = Math.abs(pointEventArray[p].stageX - event.stageX)
 							var dy:Number = Math.abs(pointEventArray[p].stageY - event.stageY)
@@ -259,7 +259,7 @@ package com.gestureworks.analysis
 							
 									for (var j:int = 0; j < pointEventArray.length; j++) 
 									{
-										if ((pointEventArray[j].type =="gwTouchBegin")&&(pointEventArray[j].touchPointID == event.touchPointID))
+										if ((pointEventArray[j].type =="gwTouchBegin" || pointEventArray[j].type =="touchBegin")&&(pointEventArray[j].touchPointID == event.touchPointID))
 										{
 											var dx0:Number = Math.abs(pointEventArray[j].stageX - event.stageX)
 											var dy0:Number = Math.abs(pointEventArray[j].stageY - event.stageY)
