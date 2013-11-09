@@ -68,6 +68,9 @@ package com.gestureworks.managers
 				object.handID =  ipo.handID;
 				object.type = ipo.type;
 				
+				object.flatness = ipo.flatness;
+				object.orientation = ipo.orientation;
+				
 			//	trace(ipo.history.length)
 				
 				if (ipo.history.length>1)

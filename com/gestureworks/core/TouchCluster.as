@@ -154,11 +154,6 @@ package com.gestureworks.core
 				if (vectormetricsOn)	cluster_vectormetric.init();
 				if (geometricsOn)		cluster_geometric.init();
 				
-				
-				// INITS HERE AS CALLED AFTER TS AND GML INIT
-				// CALLED ON EACH TOUCHSPRITE
-				// REMOVE
-				//initGeoMetric3D();
 		}
 		/**
 		 * @private
@@ -298,6 +293,9 @@ package com.gestureworks.core
 				if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
 				
 				//getGesturePoints();
+				
+				
+				//ts.cO.iPointArray.length = 0;
 		}
 		
 		////////////////////////////////////////
@@ -343,6 +341,23 @@ package com.gestureworks.core
 		// WOULD ALSO ALLOW FOR (FIDUCIAL + TOUCH) OR (PEN + TOUCH) GESTURES 
 		//AS EACH WOULD BE IN DIFFERENT LOCAL SUBCLUSTER
 		
+		public function ipSupported(type:String):Boolean
+		{
+			var result:Boolean = false;
+			
+							if ((type == "finger")&&(fingerPoints)) 						result = true; 
+							if ((type == "thumb")&&(thumbPoints))							result = true; 
+							if ((type == "palm")&&(palmPoints)) 							result = true; 
+							if ((type == "finger_average") && (fingerAveragePoints)) 	 	result = true; 
+							if ((type == "digit") &&(fingerAndThumbPoints))					result = true; 										 
+							if ((type == "pinch")&&(pinchPoints)) 							result = true; 			 
+							if ((type == "trigger")&&(triggerPoints ))						result = true; 		
+							if ((type == "push")&&(pushPoints)) 							result = true; 			 
+							if ((type == "hook")&&(hookPoints)) 							result = true; 			 
+							if ((type == "frame") && (framePoints)) 						result = true; 
+							
+			return result		
+		} 
 		
 			public function initGeoMetric2D():void
 		{
@@ -350,6 +365,8 @@ package com.gestureworks.core
 			// activate gloabl touch geometric 2d anlysis
 		}
 		
+		//ESTABLISHES GLOABL IP SUPPORT
+		// SEE TOUCH MANAGER
 		public function initGeoMetric3D():void
 		{
 			//trace("set geometric init",core);
@@ -370,7 +387,8 @@ package com.gestureworks.core
 			for (key = 0; key < gn; key++) 
 			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
 			{
-				
+				/////////////////////////////////////////////////////////
+				// 
 				// if gesture object is active in gesture list
 				//if (tO.gestureList[tO.gO.pOList[key].gesture_id])
 				//{
@@ -382,7 +400,7 @@ package com.gestureworks.core
 						////////////////////////////////////////////////////
 					if (g.cluster_input_type == "motion")
 						{		
-					//	g.cluster_type = "all"	
+						//g.cluster_type = "all"	
 							
 						// FUNDAMENTAL INTERACTION POINTS
 							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			fingerPoints = true; 
@@ -408,9 +426,59 @@ package com.gestureworks.core
 			}
 				
 			}
-			//pinchPoints = true;
-			//DINT REALLY NEED AS FRAME DRIVEN
+			//DIDNT REALLY NEED AS FRAME DRIVEN
 			core_init = true;
+			}
+		}
+		
+		
+		// ESTABLISHES LOCAL IP SUPPORT TO ALLOW IN LOCAL IP LIST
+		public function initIPSupport():void
+		{
+			if (!core) 
+			{
+			var gn:int = gO.pOList.length;
+			
+			//trace("hello", gn)
+			for (key = 0; key < gn; key++) 
+			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
+			{
+				// if gesture object is active in gesture list
+				if (ts.gestureList[gO.pOList[key].gesture_id])
+				{
+					var g:GestureObject = gO.pOList[key];
+				
+					//trace("matching gesture cluster input type",key, g.gesture_xml, g.gesture_id, g.gesture_type ,g.cluster_type,g.cluster_input_type)
+						/////////////////////////////////////////////////////
+						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
+						////////////////////////////////////////////////////
+					if (g.cluster_input_type == "motion")
+						{		
+						//g.cluster_type = "all"	
+							
+						// FUNDAMENTAL INTERACTION POINTS
+							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			fingerPoints = true; 
+							if ((g.cluster_type == "thumb")||(g.cluster_type == "all")) 			thumbPoints = true; 
+							if ((g.cluster_type == "palm")||(g.cluster_type == "all")) 				palmPoints = true; 
+							if ((g.cluster_type == "finger_average") || (g.cluster_type == "all")) 	fingerAveragePoints = true; 
+							if (g.cluster_type == "digit") 											fingerAndThumbPoints = true; 
+							
+						//CONFIGURATION BASED INTERACTION POINTS
+							if ((g.cluster_type == "pinch")||(g.cluster_type == "all")) 			pinchPoints = true; 
+							if ((g.cluster_type == "trigger")||(g.cluster_type == "all"))			triggerPoints = true; 
+							if ((g.cluster_type == "push")||(g.cluster_type == "all")) 				pushPoints = true; 
+							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) 				hookPoints = true; 
+							if ((g.cluster_type == "frame") || (g.cluster_type == "all")) 			framePoints = true; 
+
+						// LATER
+							//---cluster_geometric.find3DToolPoints();
+							//---cluster_geometric.find3DRegionPoints();
+							//---cluster_geometric.find3dTipTapPoints();
+						}
+				}
+				
+			}
+				
 			}
 			
 		}
@@ -532,14 +600,7 @@ package com.gestureworks.core
 				
 					// set dim length
 					dn = gO.pOList[key].dList.length;
-					
-					//////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////
-					// TODO: MOVE TO TC GLOBAL PRECURSOR
-					// AS CAUSES MULTI MODAL CLEARING
-					// zero cluster deltas
-					//for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
-					
+
 					var g:GestureObject = gO.pOList[key];
 					
 					////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -706,12 +767,19 @@ package com.gestureworks.core
 
 		public function getKineMetrics3D():void 
 		{		
-
+			
 			if (!core)
 			{
-				// FOR NATIVE MAPPING AND GESTURE OBJECT DATA STRUCTURE SIMPLIFICATION
-				if (!ts.transform3d) cluster_kinemetric.mapCluster3Dto2D();
+				// MUST PRECEED IP TRANSFORMATION 
 				
+				cluster_kinemetric.hitTestCluster();
+				
+				// FOR NATIVE MAPPING AND GESTURE OBJECT DATA STRUCTURE SIMPLIFICATION
+				// MAY NEED TO ALWAYS BE ON FOR STAGE OBJECTS
+				//if (!ts.transform3d) 
+				cluster_kinemetric.mapCluster3Dto2D();
+				
+
 				// GET IP SUBCLUSTERS // PUSH TO SUBCLUSTER MATRIX
 				cluster_kinemetric.getSubClusters();
 				
@@ -765,24 +833,6 @@ package com.gestureworks.core
 					// set dim length
 					dn = gO.pOList[key].dList.length;
 					
-					
-					
-					// zero cluster deltas
-					//////////////////////////////////////////////////////
-					//PROBLEM
-					/////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////
-					// TODO: MOVE TO TC GLOBAL PRECURSOR
-					// AS CAUSES MULTI MODAL CLEARING
-					//////////////////////////////////////////////////////
-					//for (DIM=0; DIM < dn; DIM++) gO.pOList[key].dList[DIM].clusterDelta = 0;	
-					//////////////////////////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////////
-					
-					
-					
-					
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// PROCESSING INTERACTION POINT KINEMETRICS
@@ -812,7 +862,7 @@ package com.gestureworks.core
 							// MATCH NUMBER OF THUMBS PER HAND
 								//0 ANY
 								//1
-								// 2 NONE??
+								//2 NONE??
 							// MATCH NUMBER OF FINGERS PER HAND
 								//5/4/3/2/1 DIGITS
 								//4/3/2/1 PURE FINGER
@@ -825,10 +875,6 @@ package com.gestureworks.core
 						var g:GestureObject = gO.pOList[key];
 						var c_type:String = g.cluster_type;
 						var b:int = 0;
-						
-						//var cluster_n:int = g.n;
-						//var cluster_nMax:int = g.nMax;
-						//var cluster_nMin:int = g.nMin;
 						
 						//TODO: CREATE SIMPLFIED DATA STRUCTURE FOR EASY REF
 						////////////////////////////////////
@@ -861,6 +907,9 @@ package com.gestureworks.core
 						{
 							//trace("call motion cluster calc",ts.cO.fn,g.algorithm);
 							
+							//trace();
+							
+							
 							
 							///////////////////////////////////////////////
 							// MOTION MATCH
@@ -872,7 +921,7 @@ package com.gestureworks.core
 							if (g.algorithm_class == "3d_kinemetric")
 							{
 									// BASIC 3D DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-									if (g.algorithm == "3d_manipulate") cluster_kinemetric.find3DIPTransformation(b); // PUSH INTERACTION POINT TYPE
+									if ((g.algorithm == "3d_manipulate") || (g.algorithm == "3d_transform")) cluster_kinemetric.find3DIPTransformation(b); 
 									
 									// BASIC 3D DRAG // ALGORITHM // type drag
 									if (g.algorithm == "3d_translate") 	cluster_kinemetric.find3DIPTranslation(b);
@@ -926,6 +975,9 @@ package com.gestureworks.core
 										//MAY EXTEND TO NEW ARCHITECTURE
 										//g.data.gp = cO.gesturePoint;					// gesture point created from kinemetric3d analysis
 										
+										//TODO:
+										// ADD TRANSFORMED POINT LOCALTION DATA 2D AND 3D LOCAL
+										// ADD TRANSFORMED DELTA DATA FOR NESTED GESTURE EVENTS
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////
 										
@@ -940,10 +992,10 @@ package com.gestureworks.core
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				}
 			}
-			
-			
+			////////////////////////////////////////////////////////
+			// DEFAULT STATIC WEAVING 
+			// NO MODAL HERACY FOR WEIGHTED BLENDING OF DELTAS
 			cluster_kinemetric.Weave3DIPClusterData();
-				
 			cluster_kinemetric.WeaveMotionClusterData();
 			}
 		}
@@ -951,16 +1003,15 @@ package com.gestureworks.core
 		
 		//TODO: KILL GESTUREPOINT AND USE GESTURE EVENT INSTEAD
 		// MULL OVER IMPLICATIONS TO VIRTUAL 3D INTERACTIVE SPACE
+		/*
 		public function getGesturePoints():void 
 		{		
-		
 		//	trace("-----")
-
 				for (var i:int = 0; i < cO.gPointArray.length; i++) 
 					{
 					trace(cO.gPointArray[i].type,cO.gPointArray[i].position);// cO.gPointArray[i].n
 					}
-		}
+		}*/
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -107,15 +107,17 @@ package com.gestureworks.events
 		public static var MOTION_FLICK:String = "motion_flick";
 		public static var MOTION_ROTATE:String= "motion_rotate";
 		public static var MOTION_SCALE:String = "motion_scale";
-		public static var MOTION_TILT:String = "motion_tilt";//??
+		public static var MOTION_TILT:String = "motion_tilt";//?? TODO: RECONSIDER
 		
 		public static var MOTION_HOLD:String = "motion_hold";
 		public static var MOTION_TAP:String = "motion_tap";
+		public static var MOTION_DOUBLE_TAP:String = "motion_double_tap";
+		public static var MOTION_TRIPLE_TAP:String = "motion_triple_tap";//?? TODO: RECONSIDER
+		
 		public static var MOTION_XTAP:String = "motion_xtap";
 		public static var MOTION_YTAP:String = "motion_ytap";
 		public static var MOTION_ZTAP:String = "motion_ztap";
-		public static var MOTION_DOUBLE_TAP:String = "motion_double_tap";
-		public static var MOTION_TRIPLE_TAP:String = "motion_triple_tap";//??
+		
 		
 		
 	

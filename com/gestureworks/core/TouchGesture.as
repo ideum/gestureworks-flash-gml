@@ -164,17 +164,23 @@ package com.gestureworks.core
 		public function manageGestureEventDispatch():void 
 		{
 			//trace("manage dispatch-----------------------------");
-			gn = gO.pOList.length;
 			
-			dispatchMode();
-			
-				//processKineMetric(); // will move here eventually
-				//processGeoMetric();
-				processVectorMetric();
-				processTemoralMetric();
-			
-			dispatchGestures();
-			dispatchReset();
+			//////////////////////////////////////////////////////////////
+			// ONLY IF GESTURE EVENTS ARE ACTIVE
+			if (ts.gestureEvents)
+			{
+				gn = gO.pOList.length;
+				
+				dispatchMode();
+				
+					//processKineMetric(); // will move here eventually
+					//processGeoMetric();
+					processVectorMetric();
+					processTemoralMetric();
+				
+				dispatchGestures();
+				dispatchReset();
+			}
 		}
 		
 		
@@ -792,27 +798,19 @@ package com.gestureworks.core
 							
 							
 							// USES THE DEFINED EVENT TYPE
-							//var str:String = gO.pOList[key].event_type
-							//var type:String = "GWGestureEvent." + str.toUpperCase();
-							
-							//trace("touchgesture",gO.pOList[key].event_type)
 							//var GWEVENT:GWGestureEvent = new GWGestureEvent(type, Data);
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
-							//var GGWEVENT:GWGestureEvent = new GWGestureEvent(type, Data);
 							
 							//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z);
-							
-					//-------ts.dispatchEvent(GWEVENT);
-					
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
 							//trace(GWEVENT)
+							ts.dispatchEvent(GWEVENT);
+					
+							//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
 							//if ((tiO.timelineOn) && (tiO.gestureEvents))	
 							ts.tiO.frame.gestureEventArray.push(GWEVENT);
+							//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							
-						//	trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
-							/////// split
-						
-							/////// anchor
 						
 						// reset dispatch
 						gO.pOList[key].dispatchEvent = false;	

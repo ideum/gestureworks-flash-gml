@@ -29,11 +29,16 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.managers.InteractionPointTracker;
 	
+	import com.gestureworks.away3d.TouchObject3D;
+	import com.gestureworks.away3d.TouchManager3D;
+	
 	public class InteractionManager 
 	{	
 		public static var ipoints:Dictionary = new Dictionary();
-		//public static var touchObjects:Dictionary = new Dictionary();
+		public static var touchObjects:Dictionary = new Dictionary();
 		private static var gms:TouchSprite;
+		private static var sw:int;
+		private static var sh:int;
 		
 		gw_public static function initialize():void
 
@@ -42,12 +47,15 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list
 			ipoints = GestureGlobals.gw_public::interactionPoints;
-			//touchObjects = GestureGlobals.gw_public::touchObjects;
+			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
 			// init interaction point manager
 			InteractionPointTracker.initialize();
 			
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
+			
+			sw = GestureWorks.application.stageWidth
+			sh = GestureWorks.application.stageHeight;
 
 			/////////////////////////////////////////////////////////////////////////////////////////
 			//DRIVES UPDATES ON POINT LIFETIME
@@ -99,12 +107,46 @@ package com.gestureworks.managers
 						ipO.length = event.value.length;
 						ipO.width = event.value.width;
 						
+						ipO.flatness = event.value.flatness;
+						ipO.orientation = event.value.orientation;
+						
+						ipO.phase = "begin"
+						//trace(ipO.interactionPointID)
+						
+				
+				
+				
 				////////////////////////////////////////////
-				////////////////////////////////////////////
-				// HIT TEST ???????
-				////////////////////////////////////////////
-				//ADD TO LOCAL Interaction POINT LIST
+				//ADD TO GLOABL Interaction POINT LIST
 				gms.cO.iPointArray.push(ipO);
+				
+				///////////////////////////////////////////////////////////////////
+				// ADD TO LOCAL OBJECT Interaction POINT LIST
+				for each(var tO:Object in touchObjects)
+				{
+					if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
+					{
+						var xh:Number = normalize(ipO.position.x, -180, 180) * sw;//tO.stage.stageWidth;//1920
+						var yh:Number = normalize(ipO.position.y, 270, -75) * sh;//tO.stage.stageHeight; //1080
+						
+						// 2D HIT TEST FOR 2D OBJECT
+						if ((tO is TouchSprite))
+						{
+							//trace("2d hit test");			
+							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
+						}			
+						//2D HIT TEST ON 3D OBJECT
+						if (tO is TouchObject3D)
+						{
+							// trace("3d hit test")
+							if (TouchManager3D.hitTest3D(tO as TouchObject3D, tO.view, xh, yh)) tO.cO.iPointArray.push(ipO);
+						}
+							
+					}
+				}
+				
+				
+				
 				// update local touch object point count
 				gms.interactionPointCount++;
 
@@ -131,8 +173,18 @@ package com.gestureworks.managers
 			
 			if (ipointObject)
 			{
-					// REMOVE POINT FROM LOCAL LIST
+				
+				ipointObject.phase="end"
+				
+					// REMOVE POINT FROM GLOBAL LIST
 					gms.cO.iPointArray.splice(ipointObject.id, 1);
+					
+					// REMOVE FROM LOCAL OBJECTES
+					for each(var tO:Object in touchObjects)
+					{
+						if (tO.motionClusterMode=="local_strong") tO.cO.iPointArray.splice(ipointObject.id, 1);
+					}
+					
 					
 					// REDUCE LOACAL POINT COUNT
 					gms.interactionPointCount--;
@@ -174,6 +226,10 @@ package com.gestureworks.managers
 					ipO.length = event.value.length;
 					ipO.width = event.value.width;
 					
+					ipO.flatness = event.value.flatness;
+					ipO.orientation = event.value.orientation;
+					
+					ipO.phase = "update"
 					//mpO.handID = event.value.handID;
 					//ipO.moveCount ++;
 					
@@ -186,7 +242,10 @@ package com.gestureworks.managers
 		}	
 	
 		
-		
+		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
+
+                        return (value - minimum) / (maximum - minimum);
+         }
 		
 		
 		

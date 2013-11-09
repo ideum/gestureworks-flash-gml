@@ -42,8 +42,12 @@ package com.gestureworks.managers
 	import flash.utils.Dictionary;
 	import org.tuio.TuioEvent;
 	
+	import flash.geom.Vector3D;
+	import com.gestureworks.objects.InteractionPointObject;
 	
-	
+	import com.gestureworks.core.TouchSprite; 
+	import com.gestureworks.core.TouchMovieClip; 
+	import com.gestureworks.away3d.TouchObject3D; 
 	
 	
 	
@@ -75,7 +79,6 @@ package com.gestureworks.managers
 			points = GestureGlobals.gw_public::points;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
-			//global_motion_sprite = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			
 			if (GestureWorks.activeNativeTouch) {			
 				
@@ -474,22 +477,6 @@ package com.gestureworks.managers
 
 				// add touch down to touch object gesture event timeline
 				if((target.tiO)&&(target.tiO.timelineOn)&&(target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
-
-				///////////////////////////////////////////////////////////////////////////////////////
-				//CREATE POINT PAIR
-				
-				/*
-				if(target.cO.pointArray.length>1){
-				var lastpointID:int = cO.pointArray[cO.pointArray.length - 2].touchPointID;
-				var ppt:PointPairObject = new PointPairObject();
-					ppt.idA = lastpointID;
-					ppt.idB = pointObject.touchPointID;
-					
-				//cO.pointPairArray.push(ppt);
-				
-				//trace("pair")
-				} */
-				
 		}	
 		
 		private static function assignPointClone(event:GWTouchEvent, target:ITouchObject=null):void // assigns point copy
@@ -509,18 +496,6 @@ package com.gestureworks.managers
 			//UPDATE LOCAL CLUSTER OBJECT
 			//touch object point list and cluster point list should be consolodated
 			target.cO.pointArray = target.pointArray;
-			
-			//create point pair
-			/*
-			if(target.cO.pointArray.length!=1){
-			var lastpointID:Number = target.cO.pointArray[target.cO.pointArray.length - 2].touchPointID;
-			var ppt:PointPairObject = new PointPairObject();
-				ppt.idA = lastpointID;
-				ppt.idB = pointObject.touchPointID;
-				
-			//cO.pointPairArray.push(ppt);
-			//trace("Clone pair");
-			}*/
 			
 			//UPDATE POINT LOCAL COUNT
 			target.pointCount++;
@@ -673,26 +648,15 @@ package com.gestureworks.managers
 				//trace("tm touchobject",tO, tO.tc.core);
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
-				//COULD BE JUST INTERACTION POINT DATA ??
-				// BUT NEEDS TO LOCALLY DETERMIN PICH HIT TEST
-				// PERHAPS A INTERACTION POINT CADIDATE LIST THEN PERFORM HIT LOCAL TO THE TOUCHOBJECT
-				
 				//GET GLOBAL MOTION POINTS		
 				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
 					if (tO.cO)
 					{
-						tO.cO.motionArray = gms.cO.motionArray/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						tO.cO.handList = gms.cO.handList;///////////ONLY NEED WHEN NOT CLUSTER??????????????//////////////////////////////////////////////////////////////////////////////////
+						if (GestureGlobals.frameID == 2) tO.tc.initIPSupport();
 						
-						////////////////////////////
-						/// hittest
-						////////////////////////////
-						
-						// for all ips in global cluster
-						// check if hits 2d touchobject if touch object
-						// check if hits 3d object if 3d display object
-						tO.cO.iPointArray = gms.cO.iPointArray//////////////////////////////////////////////////////////////////////////////////////////////////
-						////////////////////////////
+						tO.cO.motionArray = gms.cO.motionArray
+						tO.cO.handList = gms.cO.handList;
+						//tO.cO.iPointArray = gms.cO.iPointArray;
 					}
 					else 
 						continue;
@@ -714,11 +678,9 @@ package com.gestureworks.managers
 					tO.updateDebugDisplay();
 				}
 				
-				
 				// clear frame 
 				// was just pushing events and never clearing object 
 				if (tO.tiO) tO.tiO.frame = new FrameObject();
-
 			}
 			
 			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS

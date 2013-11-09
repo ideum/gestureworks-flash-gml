@@ -101,7 +101,9 @@ package com.gestureworks.managers
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
 
 			//////////////////////////////////////////
+			//TODO:
 			// init interaction manager
+			// CREATE MOLTIMODAL MANAGER
 			
 			
 		}

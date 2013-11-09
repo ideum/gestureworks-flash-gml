@@ -126,7 +126,7 @@ package com.gestureworks.managers
 						fp.interactionPointID = _ID;
 						activePoints.push(fp);
 						InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
-						if(debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
+						//if (debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
 					}
 					
 					/*
