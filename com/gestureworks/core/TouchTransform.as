@@ -423,7 +423,7 @@ package com.gestureworks.core
 				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;
 							
 				// check for away 3D 
-				if (ts is IAway3D) 
+				if (ts is IAway3D || ts.away3d) 
 				{
 					var d:Number = ts.distance;
 					
