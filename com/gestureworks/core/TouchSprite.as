@@ -1087,6 +1087,16 @@ package com.gestureworks.core
 		//public function get broadcastTarget():Boolean {return _broadcastTarget;}	
 		//public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
 		
+		
+		// TRANSFORM 3D
+		private var _motionClusterMode:String = "global";
+		/**
+		 * @inheritDoc
+		 */
+		public function get motionClusterMode():String {return _motionClusterMode;}	
+		public function set motionClusterMode(value:String):void {	_motionClusterMode = value; }
+		
+		
 		// TRANSFORM 3D
 		private var _transform3d:Boolean = false;
 		/**

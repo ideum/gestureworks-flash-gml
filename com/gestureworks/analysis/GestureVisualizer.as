@@ -133,7 +133,7 @@ package com.gestureworks.analysis
 		
 		// draw
 		if (ts.touchEnabled) 	draw_touch_gesture();
-		if (ts.motionEnabled)	draw_motion_gesture();
+		//if (ts.motionEnabled)	draw_motion_gesture();// DONT NEED YET // TODO: CLEAN UP GESTURE POINT VIEW
 		//if (ts.sensorEnabled) draw_sensor_gesture();
 		
 	}
@@ -648,7 +648,7 @@ package com.gestureworks.analysis
 								
 								if (gpt.type == "hold") 
 								{
-									trace("hold gesture point",gpt.position.x, gpt.position.y);
+									trace("draw hold gesture point 2d",gpt.position.x, gpt.position.y);
 									graphics.lineStyle(3, 0x00FFFF, 1);
 									graphics.drawRect(gpt.position.x, gpt.position.y, 50, 50);	
 									//graphics.drawRect(100, 100,50,50);	
@@ -657,6 +657,7 @@ package com.gestureworks.analysis
 								//PINK 0xE3716B // for pinch
 								if (gpt.type == "pinch") 
 								{
+									trace("draw pinch gesture point 2d",gpt.position.x, gpt.position.y);
 									graphics.lineStyle(3, 0x00FFFF, style.stroke_alpha);
 									graphics.drawCircle(gpt.position.x, gpt.position.y, 8);	
 									

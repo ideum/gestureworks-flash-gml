@@ -262,6 +262,14 @@ package com.gestureworks.analysis
 							if (orienAngle < 0) cO.handList[j].orientation = "up";
 							else cO.handList[j].orientation = "udefined";
 							//trace(orienAngle,cO.handList[j].orientation);
+							
+							///////////////////////////////////////////////////////////////////////////////////////////////////
+							// GET HANDEDNESS
+							// LEFT OR RIGHT
+							
+							
+							
+							
 				}
 				//trace("hand pos",cO.hand.position)
 		}
@@ -1160,19 +1168,36 @@ package com.gestureworks.analysis
 		public function find3DPalmPoints():void 
 		{
 			var hn:int = cO.handList.length;
-				
+			var flatness:Number = 1;
+			var orientation:String;
+			var handednes:String;
+			
+			// PALM IP MAY BE CREATED BASED ON FLATNESS , ORIENTATION AND HANDEDNESS CRITERIA
+			// IN THE SAME WAY AS PINCH, HOOK, TRIGGER MAY BE CREATED BASED ON SEPERATION AND EXTENSION CRITERIA
+			
 				for (j = 0; j < cO.hn; j++)
 				{
+					
+					if (cO.handList[j].flatness > flatness) 
+					{
 						var palm_pt:InteractionPointObject = new InteractionPointObject();
-							palm_pt.position =cO.handList[j].palm.position;
+							palm_pt.position = cO.handList[j].palm.position;
 							palm_pt.direction = cO.handList[j].palm.direction;
 							palm_pt.normal = cO.handList[j].palm.normal;
 							palm_pt.rotation = cO.handList[j].palm.rotation;
 							palm_pt.handID = cO.handList[j].palm.handID;
+							
+							palm_pt.flatness = cO.handList[j].flatness
+							palm_pt.orientation = cO.handList[j].orientation
+							//palm_pt.handednes  = cO.handList[j].handednes 
+							
 							palm_pt.type = "palm";
+							
+							//trace(cO.handList[j].flatness,cO.handList[j].orientation)
 
 						InteractionPointTracker.framePoints.push(palm_pt)
-						//trace("push plam ipoint");	
+						//trace("push plam ipoint");
+					}
 				}
 		}
 		

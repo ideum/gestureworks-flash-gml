@@ -69,6 +69,8 @@ package com.gestureworks.core
 			ts = GestureGlobals.gw_public::touchObjects[id];
 			trO = ts.trO; //tra
 			gO = ts.gO; //tra
+			
+			// gets transform proeprty limits form gml
 			initTransform();
         }
 		  
@@ -359,6 +361,10 @@ package com.gestureworks.core
 						dz = trO.dz;
 				}
 				
+				////////////////////////////////////////////////////////////////
+				///////////////////////////////////////////////////////////////
+				// 	IF PUT BACK WILL KILL NESTED GESTURE DELTA TRANSFORMS
+				/*
 				if (centerTransform) {
 					t_x = trO.transAffinePoints[4].x
 					t_y = trO.transAffinePoints[4].y
@@ -368,9 +374,12 @@ package com.gestureworks.core
 					t_y = trO.y;
 					t_z = trO.z;
 				}
-				dx = trO.dx;
-				dy = trO.dy;
-				dz = trO.dz;				
+				//dx = trO.dx;
+				//dy = trO.dy;
+				//dz = trO.dz;	
+				*/
+				////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////
 	
 				//var local_pt:Point = ts.globalToLocal(new Point(trO.x,trO.y));
 					//trO.localx = local_pt.x;
@@ -579,6 +588,7 @@ package com.gestureworks.core
 			
 				//////////////////////////////////////////////////////
 				// 2d
+				//else{
 				affine_modifier = ts.transform.matrix;
 					affine_modifier.translate( - t_x, - t_y);
 					affine_modifier.rotate(dtheta);
@@ -586,6 +596,7 @@ package com.gestureworks.core
 					affine_modifier.translate( dx + t_x, dy + t_y);
 				ts.transform.matrix =  affine_modifier
 				transformAffineDebugPoints();
+				//}
 
 				updateLocalProperties();				 
 		}

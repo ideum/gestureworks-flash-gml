@@ -32,6 +32,17 @@ package com.gestureworks.objects
 		// handID // parent hand ID (if type finger)
 		public var handID:int = 0;
 		
+		// hand orientation // up/down
+		public var orientation:String = new String("undefined");
+		
+		//flatness
+		public var flatness:Number = 0;
+		
+		//splay
+		public var splay:Number = 0;
+		
+		// interaction point phase //
+		public var phase:String = new String();
 		
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();
