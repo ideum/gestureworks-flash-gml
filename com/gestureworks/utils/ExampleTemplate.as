@@ -18,21 +18,6 @@ package com.gestureworks.utils
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
-			createHeader();
-		}
-		
-		public function createHeader():void {
-			
-			var backPane:Sprite = new Sprite();
-			
-			backPane.graphics.beginFill(0x111111, 1);
-			backPane.graphics.lineStyle(10);
-			backPane.graphics.drawRect(0, 0, 450, 700);
-			backPane.graphics.endFill();
-			
-			backPane.y = 10;
-			
-			addChild(backPane);
 		}
 		
 		public function createTitle(value:String):void {
