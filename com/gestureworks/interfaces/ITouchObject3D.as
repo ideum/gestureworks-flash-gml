@@ -2,8 +2,8 @@ package com.gestureworks.interfaces
 {
 	import com.gestureworks.interfaces.ITouchObject;
 	/**
-	 * Implements Away3D TouchObjects
+	 * Implements TouchObject3D
 	 * @author 
 	 */
-	public interface IAway3D extends ITouchObject{}
+	public interface ITouchObject3D extends ITouchObject{}
 }

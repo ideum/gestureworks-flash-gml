@@ -16,7 +16,7 @@
 package com.gestureworks.core
 {
 	import com.gestureworks.events.GWTransformEvent;
-	import com.gestureworks.interfaces.IAway3D;
+	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TransformObject;
@@ -432,7 +432,7 @@ package com.gestureworks.core
 				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;
 							
 				// check for away 3D 
-				if (ts is IAway3D || ts.away3d) 
+				if (ts is ITouchObject3D) 
 				{
 					var d:Number = ts.distance;
 					
