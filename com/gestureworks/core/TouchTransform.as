@@ -210,39 +210,46 @@ package com.gestureworks.core
 	public function transformManager():void 
 	{
 		//if (traceDebugMode) trace("touch object transform");
-				
-				if ((ts.N != 0)||(ts.cO.fn!=0))//
+
+			//////////////////////////////////////////////////////////////////////
+			// ACTIVE INTERACTION POINT TRANSFORM
+			//////////////////////////////////////////////////////////////////////
+			if ((ts.N != 0)||(ts.cO.fn!=0))//
 				{
 					if (!trO.init_center_point) initTransformPoints();
 					
 					centerTransform = false;
 					
-					if (!ts.nativeTransform){
-						if (ts.affineTransform) applyAffineTransform();//true
+					if (ts.nativeTransform){
+						if (ts.affineTransform) applyAffineTransform();	
+						else applyNativeTransform();
 					}
-					else applyNativeTransform();//true
 					
 					ts.transformComplete = false;
 					ts.transformStart = true;
 					if (ts.transformEvents) manageTransformEventDispatch();
 					//if (ts.traceDebugMode)trace("update", ts.touchObjectID)
 				}
-				
+				////////////////////////////////////////////////////////////////////////
+				// RELEASE INTERTIA TRANSFORM
+				///////////////////////////////////////////////////////////////////////
 				else if ((ts.N == 0)&&(ts.cO.fn == 0) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) //||
 				{
-					centerTransform = true;
+					centerTransform = true; // ENABLES RELEASED OBJECTS TO ROTATE ABOUT CENTER OF MASS
 					
-					if (!ts.nativeTransform) {
+					if (ts.nativeTransform){
 						if (ts.affineTransform) applyAffineTransform();	//true//false
+						else applyNativeTransform(); // false
 					}
-					else applyNativeTransform(); // false
 					
 					ts.transformComplete = false;
 					ts.transformStart = false;
 					if (ts.transformEvents) manageTransformEventDispatch();
 					//if (ts.traceDebugMode)trace("inertia", ts.touchObjectID)
 				}
-				
+				//////////////////////////////////////////////////////////////////////////
+				// TRANSFORM TERMINATION
+				/////////////////////////////////////////////////////////////////////////
 				else if ((ts.N == 0)&&(ts.cO.fn == 0) && (!ts.gestureTweenOn)&&(!ts.transformComplete)) //||
 				{
 					ts.transformComplete = true;
@@ -250,50 +257,7 @@ package com.gestureworks.core
 					if (ts.transformEvents) manageTransformEventDispatch();
 					//if (ts.traceDebugMode)trace("none", ts.touchObjectID)
 				}
-				
-				
-		// active point(s) transform
-		if ((ts.N != 0)&&(ts.cO.fn!=0))
-		{
-			if (!trO.init_center_point) initTransformPoints();
 			
-			centerTransform = false;
-			
-			if (!ts.nativeTransform){
-				if (ts.affineTransform) applyAffineTransform();
-			}
-			else applyNativeTransform();
-			
-			ts.transformComplete = false;
-			ts.transformStart = true;
-			if (ts.transformEvents) manageTransformEventDispatch();
-			//if (ts.traceDebugMode)trace("update", ts.touchObjectID)
-		}
-		
-		// release inertia transform
-		else if (((ts.N == 0)&&(ts.cO.fn == 0)) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) 
-		{
-			centerTransform = true;
-			
-			if (!ts.nativeTransform) {
-				if (ts.affineTransform) applyAffineTransform();
-			}
-			else applyNativeTransform();
-			
-			ts.transformComplete = false;
-			ts.transformStart = false;
-			if (ts.transformEvents) manageTransformEventDispatch();
-			//if (ts.traceDebugMode)trace("inertia", ts.touchObjectID)
-		}
-		
-		// end transform
-		else if (((ts.N == 0)&&(ts.cO.fn == 0)) && (!ts.gestureTweenOn)&&(!ts.transformComplete)) 
-		{
-			ts.transformComplete = true;
-			ts.transformStart = false;
-			if (ts.transformEvents) manageTransformEventDispatch();
-			//if (ts.traceDebugMode)trace("none", ts.touchObjectID)
-		}
 	}
 		
 	////////////////////////////////////////////////////////////////////////////////
@@ -304,8 +268,6 @@ package com.gestureworks.core
 	*/
 	private function applyNativeTransform():void
 		{
-			
-				
 				if ((ts.parent) && (ts.transformGestureVectors))
 				{
 				//trace("native parent")
@@ -381,28 +343,6 @@ package com.gestureworks.core
 				////////////////////////////////////////////////////////////////
 				////////////////////////////////////////////////////////////////
 	
-				//var local_pt:Point = ts.globalToLocal(new Point(trO.x,trO.y));
-					//trO.localx = local_pt.x;
-					//trO.localy = local_pt.y;
-				
-				//var local_pt:Point = ts.globalToLocal(trO.x,trO.y);
-					//trO.localx = local_pt.x;
-					//trO.localy = local_pt.y;
-					
-				//if(!ts.broadcastTarget){
-					//trO.localx = trO.x-ts.x;
-					//trO.localy = trO.y-ts.y;
-					//trace("pad",trO.x,trO.y,trO.localx,trO.localy,ts.x,ts.y);
-				//}
-					
-					
-				// broadcast center of trans
-				//else
-				//{
-					//t_x = trO.localx //+ ts.x;
-					//t_y = trO.localy //+ ts.y;
-				//}
-				
 				///////////////////////////////////////////////////////////////////////////////////
 				// lock properties from transform
 				if (ts.x_lock) { dx = 0 };
@@ -507,7 +447,7 @@ package com.gestureworks.core
 				{
 					//trace("transform parent")
 					// pre transfrom to compensate for parent transforms
-					ts.transform.matrix = ts.mtx;
+					//ts.transform.matrix = ts.mtx;
 					parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
 					parent_modifier.invert();
 					
@@ -578,16 +518,24 @@ package com.gestureworks.core
 				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;				
 				
 				//////////////////////////////////////////////////////
-				// 3d
+				// 3d affine transform here
+				
 				if (ts.transform3d) {
 					// TODO: 3D affine transformations
 					dthetaX = ts.dthetaX * DEG_RAD;//3d--
 					dthetaY = ts.dthetaY * DEG_RAD;//3d--
-					dthetaZ = ts.dthetaZ * DEG_RAD;//3d--					
+					dthetaZ = ts.dthetaZ * DEG_RAD;//3d--	
+					
+					
+					
+					
+					
+					
 				}
 			
 				//////////////////////////////////////////////////////
-				// 2d
+				// 2d display object only
+				// transform here
 				//else{
 				affine_modifier = ts.transform.matrix;
 					affine_modifier.translate( - t_x, - t_y);
