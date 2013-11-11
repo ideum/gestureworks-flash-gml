@@ -631,6 +631,7 @@ package com.gestureworks.managers
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
 			
+			//trace(GestureGlobals.frameID)
 			/////////////////////////////////////////////////////////////////////////////
 			//GET MOTION POINT LIST
 			if (GestureWorks.activeMotion)
@@ -639,9 +640,13 @@ package com.gestureworks.managers
 				gms.tc.getSkeletalMetrics3D();
 				
 				//trace("FrameID");
-				if (GestureGlobals.frameID == 2) gms.tc.initGeoMetric3D();
+				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED
+				// ON ALL OBJECTS
+				if (GestureGlobals.frameID == 200) gms.tc.initGeoMetric3D();
 			}
 			
+			//TODO: CLEAN UP INIT
+			// DISABLE BLOCK WHEN NO MOTION POINTS
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
@@ -652,7 +657,7 @@ package com.gestureworks.managers
 				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
 					if (tO.cO)
 					{
-						if (GestureGlobals.frameID == 2) tO.tc.initIPSupport();
+						if (GestureGlobals.frameID == 200) tO.tc.initIPSupport();
 						
 						tO.cO.motionArray = gms.cO.motionArray
 						tO.cO.handList = gms.cO.handList;

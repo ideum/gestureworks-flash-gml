@@ -295,7 +295,10 @@ package com.gestureworks.core
 				//getGesturePoints();
 				
 				
-				//ts.cO.iPointArray.length = 0;
+				//trace(ts.cO.motionArray.length);
+				//trace(ts.cO.iPointArray.length);
+				//trace(ts.cO.iPointArray2D.length);
+				
 		}
 		
 		////////////////////////////////////////
@@ -535,30 +538,52 @@ package com.gestureworks.core
 		
 		public function getGeoMetrics3D():void 
 		{
+			//TODO:  SET TO BE AWARE OF NUMBER OF FINGERS ASOCOCIATED WITH CONFIG
+			// SET TO BE AWARE OF REQUIRED HAND SETTINGS FLATNESS AND ORIENTATION
+			
 			if (core)
 			{
 			//trace("get core geometrics", core);
 			
-				if (fingerPoints)			cluster_geometric.find3DFingerPoints(); 
-				if (thumbPoints)			cluster_geometric.find3DThumbPoints(); 
-				if (palmPoints)				cluster_geometric.find3DPalmPoints(); 
-				if (fingerAveragePoints)	cluster_geometric.find3DFingerAveragePoints(); 
-				if (fingerAndThumbPoints)	cluster_geometric.find3DFingerAndThumbPoints(); 
-							
-				//CONFIGURATION BASED INTERACTION POINTS
-				if (pinchPoints)			cluster_geometric.find3DPinchPoints(); 
-				if (triggerPoints)			cluster_geometric.find3DTriggerPoints(); 
-				if (pushPoints)				cluster_geometric.find3DPushPoints(); 
-				if (hookPoints)				cluster_geometric.find3DHookPoints(); 
-				if (framePoints)			cluster_geometric.find3DFramePoints(); 
-				
-				// LATER
-					//---cluster_geometric.find3DToolPoints();
-					//---cluster_geometric.find3DRegionPoints();
-					//---cluster_geometric.find3dTipTapPoints();
+			//FOR EACH GESTURE ON TS
+			//var gn:int = ts.gO.pOList.length;
+			//trace("hello", gn)
+			
+			//for (key = 0; key < gn; key++) 
+			//{
+			//var g:GestureObject = gO.pOList[key];
+
+				//if (g.cluster_input_type == "motion")
+				//{
+				// FOR EACH HAND
+				//for (var j:int = 0; j < cO.hn; j++)
+					//{	
+					// IF H_FN AND FLATNESS AND ORINETATION MATCH
+					//trace(g.h_fn,g.h_flatness)
 					
-					
-				//trace("gemoetric config",pinchPoints);
+					//if ((cO.handList[j].fingerList.length == g.h_fn)&&(cO.handList[j].flatness == g.h_flatness))
+						//{
+						if (fingerPoints)			cluster_geometric.find3DFingerPoints(); 
+						if (thumbPoints)			cluster_geometric.find3DThumbPoints(); 
+						if (palmPoints)				cluster_geometric.find3DPalmPoints(); 
+						if (fingerAveragePoints)	cluster_geometric.find3DFingerAveragePoints(); 
+						if (fingerAndThumbPoints)	cluster_geometric.find3DFingerAndThumbPoints(); 
+									
+						//CONFIGURATION BASED INTERACTION POINTS
+						if (pinchPoints)			cluster_geometric.find3DPinchPoints(); 
+						if (triggerPoints)			cluster_geometric.find3DTriggerPoints(); 
+						if (pushPoints)				cluster_geometric.find3DPushPoints(); 
+						if (hookPoints)				cluster_geometric.find3DHookPoints(); 
+						if (framePoints)			cluster_geometric.find3DFramePoints(); 
+						
+						// LATER
+							//---cluster_geometric.find3DToolPoints();
+							//---cluster_geometric.find3DRegionPoints();
+							//---cluster_geometric.find3dTipTapPoints();
+						//}
+					//}
+				//}
+			//}
 			}
 		}
 		
@@ -871,6 +896,11 @@ package com.gestureworks.core
 						// IMPLICIT SKELETON CONFIG MATCH 
 						// FROM INTERACTION POINT TYPE DEFINITION
 						//////////////////////////////////////////////////
+						
+							// DONT PROCESS KINEMTRIC IF WRONG SETTING ON IP POINT
+							// MUST HAVE CORRECT NUMBER OF FINGERS ON HAND (1 FUBGER TRIGGER VS TWI FINGER TRIGGER)
+							// MUST HAVE CORRECT FLATNESS (OPEN PALM VS CLOSED PALM)
+							// CURRENTLY IS HARD CODED INTO THE PALM AND TRIGGER IP CREATION
 						
 						var g:GestureObject = gO.pOList[key];
 						var c_type:String = g.cluster_type;

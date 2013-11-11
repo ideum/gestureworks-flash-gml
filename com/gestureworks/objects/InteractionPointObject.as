@@ -32,6 +32,9 @@ package com.gestureworks.objects
 		// handID // parent hand ID (if type finger)
 		public var handID:int = 0;
 		
+		//finger number on hand config that created ip
+		public var fn:int = 0;
+		
 		// hand orientation // up/down
 		public var orientation:String = new String("undefined");
 		

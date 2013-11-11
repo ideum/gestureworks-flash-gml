@@ -234,8 +234,10 @@ package com.gestureworks.utils
 															// hand number total
 															gO.hn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("hands"));
 															// finger number total
-															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("finger_number"));
+															gO.fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("finger_total"));
 															
+															// finger number per hand
+															gO.h_fn = int(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("fingers"));
 															//handednes
 															gO.h_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("type"));
 															//hand orientation

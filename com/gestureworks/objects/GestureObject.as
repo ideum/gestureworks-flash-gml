@@ -89,6 +89,9 @@ package com.gestureworks.objects
 		// finger total number---------------------
 		public var fn:int = 0;
 		
+		// hand finger number---------fingers per hand (config diff)
+		public var h_fn:int = 0;
+		
 		// hand type ---------------------
 		public var h_type:String = "";
 		

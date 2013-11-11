@@ -648,9 +648,11 @@ package com.gestureworks.analysis
 							var thumbVector:Vector3D = cO.handList[j].thumb.position.subtract(cO.handList[j].palm.position);
 							var angle1:Number = palmcross.dotProduct(thumbVector)
 							
-							if (angle1 < 0) cO.handList[j].type = "left";
-							if (angle1 > 0) cO.handList[j].type = "right";
-							else cO.handList[j].type = "udefined";
+							if(angle1){
+								if (angle1 < 0) cO.handList[j].type = "left";
+								if (angle1 > 0) cO.handList[j].type = "right";
+							}
+							//else if (angle1 ==NaN) cO.handList[j].type = "undefined";
 							
 							//trace(angle, cO.handList[j].type)
 						}
@@ -733,6 +735,7 @@ package com.gestureworks.analysis
 				// find midpoint between fingertips
 					if ((best_pt1) && (best_pt2)&& (min_pprob != 0))
 					{	
+						// STRONG PINCH
 						if ((fn == 2) && (best_dist<distThreshold)) 
 						{
 						var pmp:InteractionPointObject = new InteractionPointObject();
@@ -746,6 +749,8 @@ package com.gestureworks.analysis
 						InteractionPointTracker.framePoints.push(pmp)
 						//trace("2 pinch push", best_dist)	
 						}
+						/*
+						 //WEAK PINCH
 						else if (min_pprob < pinchThreshold)
 						{
 						var pmp0:InteractionPointObject = new InteractionPointObject();
@@ -758,7 +763,7 @@ package com.gestureworks.analysis
 						//add to pinch point list
 						InteractionPointTracker.framePoints.push(pmp0)
 						//trace("n pinch push", pinchThreshold)
-						}
+						}*/
 					}
 					
 					
@@ -881,7 +886,8 @@ package com.gestureworks.analysis
 					//trace(thumb.extension)
 					if (thumb)
 					{
-						if (thumb.extension > triggerThreshold) //1 rad 90 deg ish
+						// ADDED ONLY ONE FINGER CONDITION
+						if ((thumb.extension > triggerThreshold)&&(cO.handList[j].fingerList.length>=1)) //1 rad 90 deg ish
 							{
 							var	t_pt:InteractionPointObject = new InteractionPointObject();
 							
@@ -911,7 +917,9 @@ package com.gestureworks.analysis
 							t_pt.direction.x *= hfnk;
 							t_pt.direction.y *= hfnk;
 							t_pt.direction.z *= hfnk;
-							//t_pt.handID = cO.hand.handID;						
+							//t_pt.handID = cO.hand.handID;		
+							
+							t_pt.fn = cO.handList[j].fingerList.length
 							t_pt.type = "trigger";
 							
 							// push when triggered
@@ -1168,7 +1176,7 @@ package com.gestureworks.analysis
 		public function find3DPalmPoints():void 
 		{
 			var hn:int = cO.handList.length;
-			var flatness:Number = 1;
+			var flatness:Number = 0.4;
 			var orientation:String;
 			var handednes:String;
 			
@@ -1177,8 +1185,10 @@ package com.gestureworks.analysis
 			
 				for (j = 0; j < cO.hn; j++)
 				{
-					
-					if (cO.handList[j].flatness > flatness) 
+					//trace("geo palm flatness", cO.handList[j].flatness,cO.handList[j].orientation)
+					//cO.handList[j].flatness == g.h_flatness
+					//ADDED FINGER TOTAL CONDITION
+					if ((cO.handList[j].flatness > flatness) &&(cO.handList[j].fingerList.length==0))
 					{
 						var palm_pt:InteractionPointObject = new InteractionPointObject();
 							palm_pt.position = cO.handList[j].palm.position;
@@ -1187,13 +1197,13 @@ package com.gestureworks.analysis
 							palm_pt.rotation = cO.handList[j].palm.rotation;
 							palm_pt.handID = cO.handList[j].palm.handID;
 							
-							palm_pt.flatness = cO.handList[j].flatness
-							palm_pt.orientation = cO.handList[j].orientation
+							palm_pt.fn = cO.handList[j].fingerList.length;
+							palm_pt.flatness = cO.handList[j].flatness;
+							palm_pt.orientation = cO.handList[j].orientation;
 							//palm_pt.handednes  = cO.handList[j].handednes 
 							
 							palm_pt.type = "palm";
 							
-							//trace(cO.handList[j].flatness,cO.handList[j].orientation)
 
 						InteractionPointTracker.framePoints.push(palm_pt)
 						//trace("push plam ipoint");
@@ -1244,7 +1254,7 @@ package com.gestureworks.analysis
 		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
 
                         return (value - minimum) / (maximum - minimum);
-         }
+        }
 
         private static function limit(value : Number, min : Number, max : Number) : Number {
                         return Math.min(Math.max(min, value), max);

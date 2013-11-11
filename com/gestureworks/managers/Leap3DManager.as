@@ -22,15 +22,52 @@ package com.gestureworks.managers
 	{				
 		private var activePoints:Array;
 		
+		///////////////////////////////////////
+		// USED TO FIT 3D VIEW 
+		///////////////////////////////////////
+		private var _minX:Number = -200;
+		private var _maxX:Number = 200;
+		
+		private var _minY:Number = -100;
+		private var _maxY:Number = 100;
+		
+		private var _minZ:Number = -200;
+		private var _maxZ:Number = 200;
+		
+		
+		
+		///////////////////////////////////////
+		// INTERNAL CAP RAW LEAP DEVICE VALUES
+		//////////////////////////////////////
+		private var lminX:Number = -300;
+		private var lmaxX:Number = 275;
+		
+		private var lminY:Number = 40;
+		private var lmaxY:Number = 400;
+		
+		private var lminZ:Number = -200;
+		private var lmaxZ:Number = 200;
+		
+		
+		
 		//private var motionPointID:int = 0;
 		
-		public function Leap3DManager() 
+		public function Leap3DManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0, minZ:Number=0, maxZ:Number=0) 
 		{
 			super();
 			activePoints = new Array();
 			
-			if(debug)
+			//if(debug)
 				trace("leap 3d manager init");
+				
+				
+			//if (minX) this.minX = minX;
+			//if (maxX) this.maxX = maxX;
+			//if (minY) this.minY = minY;
+			//if (maxY) this.maxY = maxY;
+			//if (minZ) this.minZ = minZ;
+			//if (maxZ) this.maxZ = maxZ;	
+				
 		}
 		
 		/**
@@ -93,7 +130,17 @@ package com.gestureworks.managers
 								if (aid == event.frame.hands[i].id) 
 								{
 									mp.handID = event.frame.hand[i].id;
-									mp.position = new Vector3D( event.frame.hands[i].palmPosition.x, event.frame.hands[i].palmPosition.y, event.frame.hands[i].palmPosition.z*-1);
+									
+									//var xp0:Number = normalize( event.frame.hands[i].palmPosition.x, minX, maxX)*1000;
+									//var yp0:Number = normalize(event.frame.hands[i].palmPosition.y, minY, maxY)*1000;
+									//var zp0:Number = normalize( -1*event.frame.hands[i].palmPosition.z, minZ, maxZ)*1000;
+
+									//var xp0:Number = map(event.frame.hands[i].palmPosition.x, lminX, lmaxX, minX, maxX);
+									//var yp0:Number = map(event.frame.hands[i].palmPosition.y, lminY, lmaxY, minY, maxY);
+									//var zp0:Number = map(-1*event.frame.hands[i].palmPosition.z, lminZ, lmaxZ, minZ, maxZ);
+									
+									mp.position = new Vector3D( event.frame.hands[i].palmPosition.x, event.frame.hands[i].palmPosition.y, event.frame.hands[i].palmPosition.z * -1);
+									//mp.position = new Vector3D(xp0,yp0,zp0);
 									mp.direction = new Vector3D(event.frame.hands[i].direction.x, event.frame.hands[i].direction.y, event.frame.hands[i].direction.z*-1);
 									mp.normal = new Vector3D(event.frame.hands[i].palmNormal.x, event.frame.hands[i].palmNormal.y, event.frame.hands[i].palmNormal.z*-1);
 									mp.velocity = new Vector3D(event.frame.hands[i].palmVelocity.x, event.frame.hands[i].palmVelocity.y, event.frame.hands[i].palmVelocity.z*-1);
@@ -114,7 +161,17 @@ package com.gestureworks.managers
 								mp.handID = event.frame.pointable(aid).hand.id
 								//trace("point hand id",mp.handID);
 							}
+							
+							//var x0:Number = normalize( event.frame.pointable(aid).tipPosition.x, minX, maxX)*1000;
+							//var y0:Number = normalize( event.frame.pointable(aid).tipPosition.y, minY, maxY)*1000;
+							//var z0:Number = normalize( -1*event.frame.pointable(aid).tipPosition.z, minZ, maxZ)*1000;
+							
+							//var x0:Number = map( event.frame.pointable(aid).tipPosition.x, lminX, lmaxX, minX, maxX);
+							//var y0:Number = map(event.frame.pointable(aid).tipPosition.y, lminY, lmaxY, minY, maxY);
+							//var z0:Number = map(-1*event.frame.pointable(aid).tipPosition.z, lminZ, lmaxZ, minZ, maxZ);
+
 							mp.position = new Vector3D(event.frame.pointable(aid).tipPosition.x, mp.position.y = event.frame.pointable(aid).tipPosition.y, mp.position.z = event.frame.pointable(aid).tipPosition.z*-1);
+							//mp.position = new Vector3D(x0,y0,z0);
 							mp.direction = new Vector3D(event.frame.pointable(aid).direction.x, event.frame.pointable(aid).direction.y, event.frame.pointable(aid).direction.z*-1);
 							mp.velocity = new Vector3D(event.frame.pointable(aid).tipVelocity.x, event.frame.pointable(aid).tipVelocity.y, event.frame.pointable(aid).tipVelocity.z*-1);
 							
@@ -157,7 +214,18 @@ package com.gestureworks.managers
 								if (pid == event.frame.hands[k].id) 
 								{
 								mp.handID = event.frame.hands[k].id;
-								mp.position = new Vector3D( event.frame.hands[k].palmPosition.x, event.frame.hands[k].palmPosition.y, event.frame.hands[k].palmPosition.z*-1);
+								
+								//var xp:Number = normalize( event.frame.hands[k].palmPosition.x, minX, maxX)*1000;
+								//var yp:Number = normalize(event.frame.hands[k].palmPosition.y, minY, maxY)*1000;
+								//var zp:Number = normalize( -1*event.frame.hands[k].palmPosition.z, minZ, maxZ)*1000;
+								
+								//var xp:Number = map(event.frame.hands[k].palmPosition.x, lminX, lmaxX, minX, maxX);
+								//var yp:Number = map(event.frame.hands[k].palmPosition.y, lminY, lmaxY, minY, maxY);
+								//var zp:Number = map(-1*event.frame.hands[k].palmPosition.z, lminZ, lmaxZ, minZ, maxZ);
+
+								
+								mp.position = new Vector3D( event.frame.hands[k].palmPosition.x, event.frame.hands[k].palmPosition.y, event.frame.hands[k].palmPosition.z * -1);
+								//mp.position = new Vector3D( xp,yp,xp);
 								mp.direction = new Vector3D(event.frame.hands[k].direction.x, event.frame.hands[k].direction.y, event.frame.hands[k].direction.z*-1);
 								mp.normal = new Vector3D(event.frame.hands[k].palmNormal.x, event.frame.hands[k].palmNormal.y, event.frame.hands[k].palmNormal.z*-1);
 								mp.velocity = new Vector3D(event.frame.hands[k].palmVelocity.x, event.frame.hands[k].palmVelocity.y, event.frame.hands[k].palmVelocity.z*-1);
@@ -179,7 +247,18 @@ package com.gestureworks.managers
 							mp.handID = event.frame.pointable(pid).hand.id
 							//trace("point hand id",mp.handID);
 						}
+						trace(event.frame.pointable(pid).tipPosition.z)
+						//var x:Number = normalize( event.frame.pointable(pid).tipPosition.x, minX, maxX)*1000;
+						//var y:Number = normalize( event.frame.pointable(pid).tipPosition.y, minY, maxY)*1000;
+						//var z:Number = normalize( -1*event.frame.pointable(pid).tipPosition.z, minZ, maxZ)*1000;
+						
+						//var x:Number = map(event.frame.pointable(pid).tipPosition.x, lminX, lmaxX, minX, maxX);
+						//var y:Number = map(event.frame.pointable(pid).tipPosition.y, lminY, lmaxY, minY, maxY);
+						//var z:Number = map(-1*event.frame.pointable(pid).tipPosition.z, lminZ, lmaxZ, minZ, maxZ);
+
+						
 						mp.position = new Vector3D( event.frame.pointable(pid).tipPosition.x, event.frame.pointable(pid).tipPosition.y, event.frame.pointable(pid).tipPosition.z*-1);
+						//mp.position = new Vector3D(x,y,z);
 						mp.direction = new Vector3D(event.frame.pointable(pid).direction.x, event.frame.pointable(pid).direction.y, event.frame.pointable(pid).direction.z*-1);
 						mp.velocity = new Vector3D(event.frame.pointable(pid).tipVelocity.x, event.frame.pointable(pid).tipVelocity.y, event.frame.pointable(pid).tipVelocity.z*-1);
 
@@ -212,8 +291,84 @@ package com.gestureworks.managers
 		}
 
 		
+		/**
+		 * The lowest x of the Leap x-coordinate range
+		 * @default -180
+		 */
+		public function get minX():Number { return _minX; }
+		public function set minX(x:Number):void {
+			_minX = x;
+		}
 		
+		/**
+		 * The highest x of the Leap x-coordinate range
+		 * @default 180
+		 */
+		public function get maxX():Number { return _maxX; }
+		public function set maxX(x:Number):void {
+			_maxX = x;
+		}
 		
+		/**
+		 * The lowest y of the Leap y-coordinate range
+		 * @default 75
+		 */
+		public function get minY():Number { return _minY; }
+		public function set minY(y:Number):void {
+			_minY = y;
+		}
+		
+		/**
+		 * The highest y of the Leap y-coordinate range
+		 * @default 270
+		 */
+		public function get maxY():Number { return _maxY; }
+		public function set maxY(y:Number):void {
+			_maxY = y;
+		}
+		
+		/**
+		 * The lowest z of the Leap z-coordinate range. Mapped to touch pressure. 
+		 * @default -110
+		 */
+		public function get minZ():Number { return _minZ; }
+		public function set minZ(z:Number):void {
+			_minZ = z;
+		}
+		
+		/**
+		 * The highest z of the Leap z-coordinate range. Mapped to touch pressure. 
+		 * @default 200
+		 */
+		public function get maxZ():Number { return _maxZ; }
+		public function set maxZ(z:Number):void {
+			_maxZ = z;
+		}	
+		
+		/**
+		 * Destructor
+		 */
+		override public function dispose():void 
+		{
+			super.dispose();
+			activePoints = null;
+		}
+		
+		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
+
+                        return (value - minimum) / (maximum - minimum);
+        }
+		
+		public static function map(num:Number, min1:Number, max1:Number, min2:Number, max2:Number, round:Boolean = false, constrainMin:Boolean = true, constrainMax:Boolean = true):Number
+		{
+			if (constrainMin && num < min1) return min2;
+			if (constrainMax && num > max1) return max2;
+		 
+			var num1:Number = (num - min1) / (max1 - min1);
+			var num2:Number = (num1 * (max2 - min2)) + min2;
+			if (round) return Math.round(num2);
+			return num2;
+		}
 		
 	}
 

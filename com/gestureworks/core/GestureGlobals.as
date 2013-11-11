@@ -64,6 +64,16 @@ package com.gestureworks.core
 		//gw_public static var pointHistory:Dictionary = new Dictionary();		
 		
 		
+		/**
+		 * min leap x value
+		 */
+		gw_public static var leapMinX:Number =-220;
+		gw_public static var leapMaxX:Number = 220;
+		gw_public static var leapMinY:Number = 350;
+		gw_public static var leapMaxY:Number = 120;
+		gw_public static var leapMinZ:Number = -220;
+		gw_public static var leapMaxZ:Number = 220;
+		
 		
 		public static var motionSpriteID:int = 0;//
 		
@@ -120,6 +130,7 @@ package com.gestureworks.core
 		 * current GestureWorks object count
 		 */
 		public static var objectCount:int;
+
 
 
 		//  gwPointID -----------------------------------------------

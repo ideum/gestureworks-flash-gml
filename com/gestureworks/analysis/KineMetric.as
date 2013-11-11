@@ -37,6 +37,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.TouchSprite; 
 	import com.gestureworks.core.TouchMovieClip; 
 	import com.gestureworks.away3d.TouchObject3D;
+	import com.gestureworks.cml.away3d.elements.TouchContainer3D;
 	import com.gestureworks.away3d.TouchManager3D;
 	
 	import flash.geom.Vector3D;
@@ -100,6 +101,16 @@ package com.gestureworks.analysis
 		private var sw:int
 		private var sh:int
 		
+		// min max leap raw values
+		// NOTE MOTION POINT SENSITIVITY TO PINCH/TRIGGER/ CONSTS AS SHOULD BE RELATIVE??????
+		// AND HIT TEST
+		private var minX:Number //=-220//180 
+		private var maxX:Number //=220//180
+		private var minY:Number //=350//270 
+		private var maxY:Number //=120//50//-75
+		private var minZ:Number //=350//270 
+		private var maxZ:Number //=120//50//-75
+		
 		public function KineMetric(_id:int) 
 		{
 			//trace("KineMetric::constructor");
@@ -124,6 +135,14 @@ package com.gestureworks.analysis
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			
+			
+			minX = GestureGlobals.gw_public::leapMinX;
+			maxX = GestureGlobals.gw_public::leapMaxX;
+			minY = GestureGlobals.gw_public::leapMinY;
+			maxY = GestureGlobals.gw_public::leapMaxY;
+			minZ = GestureGlobals.gw_public::leapMinZ;
+			maxZ = GestureGlobals.gw_public::leapMaxZ;
+			
 			// CREATE INTERACTION POINT SUBCLUSTERS
 			if (ts.motionEnabled)initSubClusters();
 			
@@ -132,6 +151,8 @@ package com.gestureworks.analysis
 		
 		public function initSubClusters():void
 		{
+			trace("init sublucster")
+			
 			// TODO: MOVE TO CLUSTER MANAGER NOT "TOUCHCLUSTER"
 				// init MOTION SKELETAL subclusters
 				cO.subClusterArray[0] = new ipClusterObject();// finger
@@ -1497,11 +1518,10 @@ package com.gestureworks.analysis
 		
 		public function hitTestCluster():void
 			{
-				if (gms)
+				//ONLY DOES HIT TEST IF MOTION POINTS EXIST
+				if ((gms))//&&(ts.mpn)
 				{
-					// must clear global lis t
-					// if (ts.motionClusterMode == "global") ts.cO.iPointArray = new Vector.<InteractionPointObject>();
-					//trace(ts.cO.iPointArray.length)
+					//trace("hit test ip cluster",gms.cO.iPointArray.length,ts.motionClusterMode,ts)
 					
 				if ((ts.motionClusterMode == "global")||(ts.motionClusterMode == "local_weak"))
 					{
@@ -1516,22 +1536,22 @@ package com.gestureworks.analysis
 								if ((ipt)&&(ts.tc.ipSupported(ipt.type)))
 								{
 									//trace(ts,gms);
-									var xh:Number = normalize(ipt.position.x, -180, 180) *sw;//1920
-									var yh:Number = normalize(ipt.position.y, 270, -75) * sh//ts.stage.stageHeight//1080;// ;
+									var xh:Number = normalize(ipt.position.x, minX, maxX) *sw;//1920
+									var yh:Number = normalize(ipt.position.y, minY, maxY) * sh//ts.stage.stageHeight//1080;// ;
 									//trace("ht",ts.motionClusterMode)
 
 									if (ts.motionClusterMode == "local_weak")
 									{
-										if ((ts is TouchSprite))
+										if ((ts is TouchSprite)||(ts is TouchMovieClip))
 										{
 											//trace("2d hit test");
 											if (ts.hitTestPoint(xh, yh, false)) cO.iPointArray.push(ipt);
 										}
-										if (ts is TouchObject3D)
+										if (ts is TouchContainer3D)//TouchObject3D
 										{
-											//trace("3d hit test", ts.vto, ts.vto.parent, ts.vto.parent.scene, ts.view, TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, xh0, yh0));
+											//trace("3d hit test", ts.vto, ts.vto.parent, ts.vto.parent.scene, ts.view, TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, xh, yh));
 											//trace("3d hit test", TouchManager3D.hitTest3D(ts as TouchObject3D, ipt.position.x, ipt.position.y));
-											if (TouchManager3D.hitTest3D(ts as TouchObject3D, ts.view, xh, yh)) cO.iPointArray.push(ipt);
+											if (TouchManager3D.hitTest3D(ts as TouchContainer3D, ts.view, xh, yh)) cO.iPointArray.push(ipt);
 											//if(TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, ipt.position.x, ipt.position.y))cO.iPointArray.push(ipt);
 										}
 									}
@@ -1540,6 +1560,7 @@ package com.gestureworks.analysis
 										cO.iPointArray.push(ipt);
 									}
 									//trace("phase",ipt.phase)
+									//cO.iPointArray.push(ipt);/////////////////////////////////////////////////
 								}
 							}
 					}
@@ -1587,8 +1608,8 @@ package com.gestureworks.analysis
 							
 							//pt2d.motionPointID = pt.motionPointID;
 							
-							pt2d.position.x = normalize(pt.position.x, -180, 180) * sw//1920;//stage.stageWidth;
-							pt2d.position.y = normalize(pt.position.y, 270, -75) * sh//1080;// stage.stageHeight;
+							pt2d.position.x = normalize(pt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
+							pt2d.position.y = normalize(pt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
 							pt2d.position.z = pt.position.z
 							
 							//normalized vector
@@ -1622,8 +1643,8 @@ package com.gestureworks.analysis
 								//trace("interaction point id",ipt.interactionPointID)
 								//ipt2d.id = ipt.interactionPointID;
 								
-								ipt2d.position.x = normalize(ipt.position.x, -180, 180) * sw//1920;//stage.stageWidth;
-								ipt2d.position.y = normalize(ipt.position.y, 270, -75) * sh//1080;// stage.stageHeight;
+								ipt2d.position.x = normalize(ipt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
+								ipt2d.position.y = normalize(ipt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
 								ipt2d.position.z = ipt.position.z
 								
 								//normalized vector

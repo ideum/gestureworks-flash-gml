@@ -24,10 +24,13 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	
 	import com.gestureworks.core.TouchSprite;
+	import com.gestureworks.core.TouchMovieClip;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWInteractionEvent;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.managers.InteractionPointTracker;
+	
+	import com.gestureworks.cml.away3d.elements.TouchContainer3D;
 	
 	import com.gestureworks.away3d.TouchObject3D;
 	import com.gestureworks.away3d.TouchManager3D;
@@ -39,6 +42,13 @@ package com.gestureworks.managers
 		private static var gms:TouchSprite;
 		private static var sw:int;
 		private static var sh:int;
+		
+		private static var minX:Number
+		private static var maxX:Number
+		private static var minY:Number
+		private static var maxY:Number
+		private static var minZ:Number
+		private static var maxZ:Number
 		
 		gw_public static function initialize():void
 
@@ -56,6 +66,13 @@ package com.gestureworks.managers
 			
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
+			
+			minX = GestureGlobals.gw_public::leapMinX;
+			maxX = GestureGlobals.gw_public::leapMaxX;
+			minY = GestureGlobals.gw_public::leapMinY;
+			maxY = GestureGlobals.gw_public::leapMaxY;
+			minZ = GestureGlobals.gw_public::leapMinZ;
+			maxZ = GestureGlobals.gw_public::leapMaxZ;
 
 			/////////////////////////////////////////////////////////////////////////////////////////
 			//DRIVES UPDATES ON POINT LIFETIME
@@ -126,20 +143,20 @@ package com.gestureworks.managers
 				{
 					if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
 					{
-						var xh:Number = normalize(ipO.position.x, -180, 180) * sw;//tO.stage.stageWidth;//1920
-						var yh:Number = normalize(ipO.position.y, 270, -75) * sh;//tO.stage.stageHeight; //1080
+						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
+						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
 						
 						// 2D HIT TEST FOR 2D OBJECT
-						if ((tO is TouchSprite))
+						if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
 						{
 							//trace("2d hit test");			
 							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
 						}			
 						//2D HIT TEST ON 3D OBJECT
-						if (tO is TouchObject3D)
+						if (tO is TouchContainer3D) //ITouchObject //TouchObject3D
 						{
 							// trace("3d hit test")
-							if (TouchManager3D.hitTest3D(tO as TouchObject3D, tO.view, xh, yh)) tO.cO.iPointArray.push(ipO);
+							if (TouchManager3D.hitTest3D(tO as TouchContainer3D, tO.view, xh, yh)) tO.cO.iPointArray.push(ipO);
 						}
 							
 					}
