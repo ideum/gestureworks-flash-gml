@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.interfaces.ITouchObject3D;
 	import flash.utils.Dictionary;
 	
 	import com.gestureworks.core.GestureWorks;
@@ -29,12 +30,7 @@ package com.gestureworks.managers
 	import com.gestureworks.events.GWInteractionEvent;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.managers.InteractionPointTracker;
-	
-	import com.gestureworks.cml.away3d.elements.TouchContainer3D;
-	
-	import com.gestureworks.away3d.TouchObject3D;
-	import com.gestureworks.away3d.TouchManager3D;
-	
+		
 	public class InteractionManager 
 	{	
 		public static var ipoints:Dictionary = new Dictionary();
@@ -49,6 +45,8 @@ package com.gestureworks.managers
 		private static var maxY:Number
 		private static var minZ:Number
 		private static var maxZ:Number
+		
+		public static var hitTest3D:Function;
 		
 		gw_public static function initialize():void
 
@@ -153,10 +151,16 @@ package com.gestureworks.managers
 							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
 						}			
 						//2D HIT TEST ON 3D OBJECT
-						if (tO is TouchContainer3D) //ITouchObject //TouchObject3D
+						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
 						{
-							// trace("3d hit test")
-							if (TouchManager3D.hitTest3D(tO as TouchContainer3D, tO.view, xh, yh)) tO.cO.iPointArray.push(ipO);
+							if (hitTest3D != null) {
+								// trace("3d hit test")
+								if (hitTest3D(tO as ITouchObject3D, tO.view, xh, yh)) {
+									tO.cO.iPointArray.push(ipO);								
+								}
+							}
+							
+
 						}
 							
 					}

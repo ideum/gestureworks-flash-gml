@@ -21,6 +21,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
+	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
@@ -36,9 +37,6 @@ package com.gestureworks.analysis
 	
 	import com.gestureworks.core.TouchSprite; 
 	import com.gestureworks.core.TouchMovieClip; 
-	import com.gestureworks.away3d.TouchObject3D;
-	import com.gestureworks.cml.away3d.elements.TouchContainer3D;
-	import com.gestureworks.away3d.TouchManager3D;
 	
 	import flash.geom.Vector3D;
 	import flash.geom.Utils3D;
@@ -110,6 +108,8 @@ package com.gestureworks.analysis
 		private var maxY:Number //=120//50//-75
 		private var minZ:Number //=350//270 
 		private var maxZ:Number //=120//50//-75
+		
+		public static var hitTest3D:Function;		
 		
 		public function KineMetric(_id:int) 
 		{
@@ -1547,11 +1547,14 @@ package com.gestureworks.analysis
 											//trace("2d hit test");
 											if (ts.hitTestPoint(xh, yh, false)) cO.iPointArray.push(ipt);
 										}
-										if (ts is TouchContainer3D)//TouchObject3D
+										if (ts is ITouchObject3D)//TouchObject3D
 										{
 											//trace("3d hit test", ts.vto, ts.vto.parent, ts.vto.parent.scene, ts.view, TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, xh, yh));
 											//trace("3d hit test", TouchManager3D.hitTest3D(ts as TouchObject3D, ipt.position.x, ipt.position.y));
-											if (TouchManager3D.hitTest3D(ts as TouchContainer3D, ts.view, xh, yh)) cO.iPointArray.push(ipt);
+											
+											if (hitTest3D != null) {
+												if (hitTest3D(ts as ITouchObject3D, ts.view, xh, yh)) cO.iPointArray.push(ipt);
+											}
 											//if(TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, ipt.position.x, ipt.position.y))cO.iPointArray.push(ipt);
 										}
 									}
