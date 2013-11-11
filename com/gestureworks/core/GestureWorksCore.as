@@ -327,6 +327,56 @@ package com.gestureworks.core
 			else
 				motion = false;
 		}
+		
+		public function loadCMLData(data:XML):void {
+			
+			if (!data) {
+				return;
+			}
+			
+			CML.Objects = data;
+				
+			if (CML.Objects.@nativeTouch == "false")
+				nativeTouch = false;
+			
+			if (CML.Objects.@simulator == "true") 
+				simulator = true;
+			
+			if (CML.Objects.@tuio == "true") 
+				tuio = true;
+			else if (CML.Objects.@tuio != undefined && CML.Objects.@tuio != "false")
+				tuio = CML.Objects.@tuio.toString();
+			
+			if (CML.Objects.@fullscreen == "true") 
+				fullscreen = true;	
+				
+			if (CML.Objects.@leap2D == "true") 
+				leap2D = true;
+			
+			if (CML.Objects.@leap3D == "true") 
+				leap3D = true;
+			
+			try {
+				var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
+				var tmp:* = new CMLDisplay;
+				addChild(tmp);
+				tmp.initialize(CMLLoader.getInstance(cml).data);	
+				cmlDisplays.push(tmp);
+				
+				trace("New cml display");
+				
+			}
+			catch (e:Error) {
+				trace(e);
+			}
+							
+			if (!gml && CML.Objects.@gml) {
+				_gml = CML.Objects.@gml;				
+				startGmlParse();
+				//trace("init no gml", gml)
+			}
+
+		}
 			
 		/**
 		 * Updates event listeners depending on the active modes
@@ -423,47 +473,8 @@ package com.gestureworks.core
 		
 		// parse loaded cml file
 		private function CMLLoaderComplete(event:Event):void
-		{			
-			CML.Objects = CMLLoader.getInstance(cml).data;
-				
-			if (CML.Objects.@nativeTouch == "false")
-				nativeTouch = false;
-			
-			if (CML.Objects.@simulator == "true") 
-				simulator = true;
-			
-			if (CML.Objects.@tuio == "true") 
-				tuio = true;
-			else if (CML.Objects.@tuio != undefined && CML.Objects.@tuio != "false")
-				tuio = CML.Objects.@tuio.toString();
-
-			if (CML.Objects.@fullscreen == "true") 
-				fullscreen = true;	
-				
-			if (CML.Objects.@leap2D == "true") 
-				leap2D = true;
-			
-			if (CML.Objects.@leap3D == "true") 
-				leap3D = true;
-			
-			try {
-				var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
-				var tmp:* = new CMLDisplay;
-				addChild(tmp);
-				tmp.initialize(CMLLoader.getInstance(cml).data);	
-				cmlDisplays.push(tmp);
-				
-			}
-			catch (e:Error) {
-				trace(e);
-			}
-							
-			if (!gml && CML.Objects.@gml) {
-				_gml = CML.Objects.@gml;				
-				startGmlParse();
-				//trace("init no gml", gml)
-			}
-			
+		{
+			loadCMLData(CMLLoader.getInstance(cml).data);
 		}
 		
 		// parse loaded gml file
