@@ -46,9 +46,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.InteractionPointObject;
 	
 	import com.gestureworks.core.TouchSprite; 
-	import com.gestureworks.core.TouchMovieClip; 
-	import com.gestureworks.away3d.TouchObject3D; 
-	
+	import com.gestureworks.core.TouchMovieClip; 	
 	
 	
 	/* 
