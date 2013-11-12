@@ -275,7 +275,7 @@ package com.gestureworks.analysis
 					
 					
 					
-					trace(sO.path_data_norm)
+				//	trace(sO.path_data_norm)
 				}
 			}
 		}

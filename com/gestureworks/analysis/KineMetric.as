@@ -151,7 +151,7 @@ package com.gestureworks.analysis
 		
 		public function initSubClusters():void
 		{
-			trace("init sublucster")
+			//trace("init sublucster")
 			
 			// TODO: MOVE TO CLUSTER MANAGER NOT "TOUCHCLUSTER"
 				// init MOTION SKELETAL subclusters
@@ -763,7 +763,7 @@ package com.gestureworks.analysis
 		
 		public function findSimpleMeanInstTransformation():void
 		{
-			trace("KineMetric::findSimpleMeanInstTransformation");
+			//trace("KineMetric::findSimpleMeanInstTransformation");
 			
 			
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1332,7 +1332,7 @@ package com.gestureworks.analysis
 							// BUT NEED TO FIX
 							// RIGHT HAND RETURNS PINKY AS THUMB AS ANGLE INCORRECTLY CALCUKATED
 							// NEED TO ALSO DETERMIN LEFT HAND AND RIGHT HAND
-							trace("hand angle",handArray[0].angle)
+							//trace("hand angle",handArray[0].angle)
 							
 							//trace("ID", tcO.thumbID,handArray[0].id, handArray[0].touchPointID)
 						
@@ -1497,11 +1497,11 @@ package com.gestureworks.analysis
 		public function findSensorVelocity():void{}
 		public function findSensorJolt():void
 		{
-			trace("accelerometer kinemetric");
+			//trace("accelerometer kinemetric");
 			
 			var snr:Vector.<Number> = cO.sensorArray;
 			
-			trace("timestamp", snr[0]);
+			//trace("timestamp", snr[0]);
 			/*	
             trace("ax", event.accelerationX);
             trace("ay", event.accelerationY);

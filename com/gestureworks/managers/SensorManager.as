@@ -67,7 +67,7 @@ package com.gestureworks.managers
 		
 		public static function accUpdateHandler(event:AccelerometerEvent):void
         {
-			trace("pushing accel data")
+			//trace("pushing accel data")
 			
 			var act_vector:Vector.<Number> = new Vector.<Number>
 				act_vector[0] = event.timestamp;

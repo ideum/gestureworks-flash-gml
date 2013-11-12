@@ -102,7 +102,6 @@ package com.gestureworks.core
 		public function get localModes():Boolean { return _localModes; }
 		public function set localModes(l:Boolean):void {
 			if (_localModes == l) return;
-			trace(this);
 			_localModes = l;
 			updateListeners();
 		}

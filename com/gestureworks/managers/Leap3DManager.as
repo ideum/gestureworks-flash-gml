@@ -58,7 +58,7 @@ package com.gestureworks.managers
 			activePoints = new Array();
 			
 			//if(debug)
-				trace("leap 3d manager init");
+				//trace("leap 3d manager init");
 				
 				
 			//if (minX) this.minX = minX;

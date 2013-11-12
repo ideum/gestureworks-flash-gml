@@ -317,7 +317,7 @@ package com.gestureworks.core
 						
 					if (gO.pOList[key].gesture_type == "path")
 						{
-							trace("find path data");
+							//trace("find path data");
 							// path layout tool
 							// resample based on number of touch object in group
 							// return point list to peg objects on path

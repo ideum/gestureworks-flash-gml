@@ -162,7 +162,7 @@ package com.gestureworks.utils
 											//pOList[gesture_id] = new GestureObject();
 											//pOList[gesture_id] = new GesturePropertyObject();
 											
-											trace("gesture:", gesture_id);
+											//trace("gesture:", gesture_id);
 												
 												gO.gesture_id = gesture_id;
 												gO.gesture_xml = gml.Gesture_set[g].Gesture[i];
@@ -632,17 +632,17 @@ package com.gestureworks.utils
 			
 			for (var i:uint = 0; i < gn; i++ )
 				{
-					trace("	new gesture object:--------------------------------");
-					trace("g xml....."+"\n",gOList.pOList[i].gesture_xml)
+					//trace("	new gesture object:--------------------------------");
+					//trace("g xml....."+"\n",gOList.pOList[i].gesture_xml)
 					var dn:uint = gOList.pOList[i].dList.length;
 					
 					
-					for (var j:uint = 0; j < dn; j++ )
+					/*for (var j:uint = 0; j < dn; j++ )
 					{
 							trace("		property item:",i,j,"__",gList[i].dList[j]);
-					}
+					}*/
 				}
-				trace("gesture object parsing complete");
+				//trace("gesture object parsing complete");
 		}
 	}
 }
