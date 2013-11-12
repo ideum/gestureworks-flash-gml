@@ -118,10 +118,10 @@ package com.gestureworks.core
 											if ((ts.gestureReleaseInertia) && (gDim.release_inertia_filter)) {
 											//trace("easing block")
 												// select new gesture delta or cached delta based // based on N activity
-												if (ts.N!=0)
+												if (ts.tpn!=0)
 												{
 													//when touching calculate new deltas 
-													if ((ts.N >= g.nMin) && (ts.N <= g.nMax) || (ts.N == g.n)) 
+													if ((ts.tpn >= g.nMin) && (ts.tpn <= g.nMax) || (ts.tpn == g.n)) 
 													{
 														// fill cache with new values
 														gDim.gestureDeltaCache = gDim.gestureDelta;
@@ -163,7 +163,7 @@ package com.gestureworks.core
 												}
 												
 												// when touching but when not matching n values // or when not touching // tween cached deltas 
-												if ((ts.N < g.nMin)||(ts.N > g.nMax)||(ts.N == 0))
+												if ((ts.tpn < g.nMin)||(ts.tpn > g.nMax)||(ts.tpn == 0))
 												{
 													// set to passive phase
 													g.passive = true;
@@ -269,7 +269,7 @@ package com.gestureworks.core
 									//if (g.activeEvent)
 									
 									// ONLY FILL CACHE WITH GENERATED VALUES
-									if ((ts.N!=0)) gDim.gestureDeltaCache = gDim.gestureDelta;//||(ts.fn!=0)
+									if ((ts.tpn!=0)) gDim.gestureDeltaCache = gDim.gestureDelta;//||(ts.fn!=0)
 									
 								}
 								//trace("pipeline end", gO.pOList[i].dList[j].gestureDeltaCache)
@@ -287,17 +287,25 @@ package com.gestureworks.core
 								// deactivates gesture processing on gesture object if gesture deltas are zero for each dimention
 								// is overrriden when object is touched ( when cluster analysis occures
 								////////////////////////////////////////////////////////////////////////////////////////////////////
+								
 								if (gDim.gestureDelta != 0) g.activeEvent = true;
-								//trace("gesturedelta",gDim.gestureDelta)
 								
-								
+								//trace("gesturedelta",g.event_type, gDim, gDim.gestureDelta)
+
 								//////////////////////////////////////////////////////////
-								//trace("pipeline out", gO.pOList[i].dList[j].gestureDelta);
+								//trace("pipeline out", gDim.gestureDelta);
 								//////////////////////////////////////////////////////////
 						}	
 						
+						//////////////////////////////////////////////////////////////////////////////
+						//FINAL GESTURE MODAL CHECK
+						//////////////////////////////////////////////////////////////////////////////
+						if ((!g.active) && (!g.passive)&&(!g.activeEvent)) 
+						{
+							//g.dispatchEvent = false;
+						}
 						
-									
+					//	trace(g.active,g.passive,g.activeEvent,g.dispatchEvent, ts.tpn, ts.mpn);			
 			}
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -418,6 +426,9 @@ package com.gestureworks.core
 			//}
 			//trace(ts.gestureTweenOn,gO.release,ts.gO.passive)
 			//////////////////////////////////////////////////////////////////////////////
+			
+			
+			
 		}
 		
 		private function functionGenerator(type:String,b:Number,k:Number):Number {

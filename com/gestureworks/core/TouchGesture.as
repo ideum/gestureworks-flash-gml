@@ -795,6 +795,8 @@ package com.gestureworks.core
 									Data[gO.pOList[key].dList[DIM].property_id] = new Object();
 									Data[gO.pOList[key].dList[DIM].property_id] = Number(gO.pOList[key].dList[DIM].gestureDelta);	
 									//trace(gO.pOList[key].dList[DIM].gestureDeltaCache);
+									
+									//trace(gO.pOList[key].dList[DIM].active);
 								}
 							
 							
@@ -804,19 +806,20 @@ package com.gestureworks.core
 							
 							//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
-							//trace(GWEVENT.type)
-							
 							if ((GWEVENT.type != "motion_hold") && (GWEVENT.type != "motion_tap")) //motion_flick, motion_swipe
 							{
+								//trace("touch gesture", gO.pOList[key].event_type, gO.pOList[key].activeEvent, gO.pOList[key].dispatchEvent)
+								//trace(gO.pOList[key].active, gO.release, gO.passive, gO.complete)
+								
 								ts.dispatchEvent(GWEVENT);
 								//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
 								//if ((tiO.timelineOn) && (tiO.gestureEvents))	
 								ts.tiO.frame.gestureEventArray.push(GWEVENT);
 								//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							}
-					
 							
-							
+							//NOTE TOUCGH GESTURE EVENTS WERE BEING REACTIVATED BY MOTION INOPUT AND INTERFERING WITH MOTION GESTURE EVENTS
+							// FIX WAS TO FILTER CLUSTER PROCESSING SO THAT EVENTACTIVE STATES WERE NOT OVERWRITTEN
 						
 						// reset dispatch
 						gO.pOList[key].dispatchEvent = false;	

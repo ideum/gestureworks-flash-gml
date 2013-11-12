@@ -241,6 +241,22 @@ package com.gestureworks.core
 					gO.passive = true;
 				}
 			}
+			/*
+			if (ts.dN > 0) ts.gO.start = true;
+			
+			if (ts.N != 0) 
+			{
+				gO.active = true;
+				gO.complete = false;
+				gO.release = false;
+			}
+			else {
+				if (ts.dN < 0) 
+				{
+					gO.release = true;
+					gO.passive = true;
+				}
+			}*/
 			///////////////////////////////////////////////////
 		}
 		
@@ -620,7 +636,13 @@ package com.gestureworks.core
 			{
 				
 				// if gesture object is active in gesture list
-				if (ts.gestureList[gO.pOList[key].gesture_id])
+				// FILTER BY INPUT TYPE
+				
+				//NOTE TOUCGH GESTURE EVENTS WERE BEING REACTIVATED BY MOTION INOPUT AND INTERFERING WITH MOTION GESTURE EVENTS
+				// FIX WAS TO FILTER CLUSTER PROCESSING SO THAT EVENTACTIVE STATES WERE NOT OVERWRITTEN
+				// NEED TO UPDATE TOUCH GESTURES AND TYPE THEM (TOUCH, MOTION, MOTION & TOUCH, SENSOR, SENSOR & TOUCH, SENSOR & MOTION...)	
+				
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type!="motion"))
 				{
 				
 					// set dim length
@@ -758,6 +780,8 @@ package com.gestureworks.core
 											
 											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
 											if (gdim.activeDim) g.activeEvent = true;
+											
+											//trace("TOUCH GESTURE OBJECT", res, tcO[res], gdim.clusterDelta, g.activeEvent,gdim.activeDim);
 										}
 
 
@@ -852,7 +876,8 @@ package com.gestureworks.core
 			{
 				
 				// if gesture object is active in gesture list
-				if (ts.gestureList[gO.pOList[key].gesture_id])
+				// FILTER BY INPUT TYPE
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type=="motion"))
 				{
 				
 					// set dim length
@@ -990,7 +1015,7 @@ package com.gestureworks.core
 											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
 											if (gdim.activeDim) g.activeEvent = true;
 											
-											//trace("GESTURE OBJECT", res, cO.subClusterArray[b][res], gdim.clusterDelta);
+											//trace("GESTURE MOTION OBJECT", res, cO.subClusterArray[b][res], gdim.clusterDelta, g.activeEvent,gdim.activeDim);
 										}
 										
 										//trace("sub_cluster data", g.activeEvent, g.dispatchEvent, cO.subClusterArray[b].dx,cO.subClusterArray[b].ipn,cO.hn, cO.fn );
