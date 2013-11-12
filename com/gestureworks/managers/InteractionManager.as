@@ -15,22 +15,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	import com.gestureworks.cml.away3d.elements.TouchContainer3D;
-	import com.gestureworks.interfaces.ITouchObject3D;
-	import flash.utils.Dictionary;
-	
-	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.core.GestureWorksCore;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
-	
-	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.core.TouchMovieClip;
-	import com.gestureworks.events.GWEvent;
+	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWInteractionEvent;
-	import com.gestureworks.objects.InteractionPointObject;
+	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.managers.InteractionPointTracker;
+	import com.gestureworks.objects.InteractionPointObject;
+	import flash.utils.Dictionary;
+	
+	
 		
 	public class InteractionManager 
 	{	
