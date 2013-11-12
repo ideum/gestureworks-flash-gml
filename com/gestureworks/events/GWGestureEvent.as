@@ -56,7 +56,7 @@ package com.gestureworks.events
 		// geo-metric
 		public static var ORIENT:String = "orient";
 		// public static var CLUSTER_TRIANGLE:String = "point_triangle";
-		// public static var CLUSTER_RECTANGLE:String = "point_rectagle";
+		// public static var CLUSTER_RECTANGLE:String = "point_square";
 		// public static var CLUSTER_LINE:String = "point_line";
 		
 		// vector-metric

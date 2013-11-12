@@ -205,7 +205,7 @@ package com.gestureworks.core
 						var dn:uint = gO.pOList[key].dList.length;
 						
 						//SET CURRENT N IN GESTURE OBJECT
-						gO.pOList[key].n_current = ts.N;
+						gO.pOList[key].n_current = ts.tpn;//N
 						
 						///////////////////////////////////
 						// set dispatch mode
@@ -552,7 +552,7 @@ package com.gestureworks.core
 					////////////////////////////
 					//
 					//////////////////////////////
-					gO.pOList[key].n_cache = ts.N;
+					gO.pOList[key].n_cache = ts.tpn;
 					
 					
 					/////////////////////////////////////////
@@ -566,7 +566,7 @@ package com.gestureworks.core
 						// when cluster has been removed
 						if (gO.pOList[key].dispatch_reset == "cluster_remove") 
 						{
-							if (ts.N == 0)
+							if (ts.tpn == 0)//N
 							{
 								//trace("cluster remove reset")
 								gO.pOList[key].complete = false;
@@ -695,7 +695,7 @@ package com.gestureworks.core
 							//////////////////////////////
 							// generic custom geture events
 							//////////////////////////////
-							//trace("testing all attached gestures",gO.pOList[key].activeEvent, key, gO.pOList[key].x, gO.pOList[key].y, gO.pOList[key].n);
+							//trace("testing all attached gestures",gO.pOList[key].activeEvent, key, gO.pOList[key].data.x, gO.pOList[key].data.y, gO.pOList[key].n);
 							
 							// transform center point
 							//var trans_pt:Point = globalToLocal(new Point(cO.x, cO.y)); //local point

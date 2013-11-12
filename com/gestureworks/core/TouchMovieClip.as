@@ -611,7 +611,8 @@ package com.gestureworks.core
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 		
-		private var _affineTransform:Boolean = false;
+		// TRUE BY DEFAULT AS MAJORITY OF TRANSFROMS ARE AFFINE
+		private var _affineTransform:Boolean = true;
 		/**
 		 * @inheritDoc
 		 */

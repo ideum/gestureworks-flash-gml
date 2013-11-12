@@ -603,7 +603,7 @@ package com.gestureworks.core
 		public function get nativeTransform():Boolean{return _nativeTransform;}
 		public function set nativeTransform(value:Boolean):void {_nativeTransform = value; }						
 
-		// default true so that all nested gestures are correct unless specidied
+		// default true so that all nested gestures are correct unless speciFied
 		private var _transformGestureVectors:Boolean = true;
 		/**
 		 * @inheritDoc 
@@ -611,7 +611,8 @@ package com.gestureworks.core
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 		
-		private var _affineTransform:Boolean = false;
+		//11/11/2013 TRUE BY DEFAULT AS MAJORITY OF TRANSFORMS ARE AFFINE
+		private var _affineTransform:Boolean = true; 
 		/**
 		 * @inheritDoc
 		 */

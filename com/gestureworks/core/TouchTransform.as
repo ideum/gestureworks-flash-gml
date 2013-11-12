@@ -210,7 +210,11 @@ package com.gestureworks.core
 	public function transformManager():void 
 	{
 		//if (traceDebugMode) trace("touch object transform");
-
+			
+		//TODO: MERGE "applyaffineTransform" and "applyNativeTransform()"
+		// set logic internally to the transform based on ts type
+		
+		
 			//////////////////////////////////////////////////////////////////////
 			// ACTIVE INTERACTION POINT TRANSFORM
 			//////////////////////////////////////////////////////////////////////
@@ -218,12 +222,18 @@ package com.gestureworks.core
 				{
 					if (!trO.init_center_point) initTransformPoints();
 					
+					// AFFINE BY DEFAULT
 					centerTransform = false;
 					
-					if (ts.nativeTransform){
-						if (ts.affineTransform) applyAffineTransform();	
-						else applyNativeTransform();
+					// AFFINE CAN BE OVERRIDEN ON TS
+					if (!ts.affineTransform) centerTransform = true; // 
+					
+					// ALL GESTURE LISTENER DRIVEN TS PROPERTY CHNAGES NEED "applyAffineTransform" TO INHERIT $ PROPERTY CHNAGES
+					// OTHERWISE WHEN IN NATIVE MODE (not gesture event driven) "applyNativeTransform()" will be used
+					if (!ts.nativeTransform){
+						if (ts.affineTransform) applyAffineTransform();
 					}
+					else applyNativeTransform();
 					
 					ts.transformComplete = false;
 					ts.transformStart = true;
@@ -235,12 +245,16 @@ package com.gestureworks.core
 				///////////////////////////////////////////////////////////////////////
 				else if ((ts.N == 0)&&(ts.cO.fn == 0) && (ts.gestureTweenOn) && (ts.gestureReleaseInertia)) //||
 				{
-					centerTransform = true; // ENABLES RELEASED OBJECTS TO ROTATE ABOUT CENTER OF MASS
+					// ALWAYS SET TO TRUE FOR RELEASED TS OBJECTS
+					// ENABLES RELEASED OBJECTS TO ROTATE ABOUT CENTER OF MASS
+					centerTransform = true; 
 					
-					if (ts.nativeTransform){
-						if (ts.affineTransform) applyAffineTransform();	//true//false
-						else applyNativeTransform(); // false
+					//ALL GESTURE LISTENER DRIVEN TS PROPERTY CHNAGES NEED "applyAffineTransform" TO INHERIT $ PROPERTY CHNAGES
+					//OTHERWISE WHEN IN NATIVE MODE (not gesture event driven) "applyNativeTransform()" will be used
+					if (!ts.nativeTransform){
+						if (ts.affineTransform) applyAffineTransform();
 					}
+					else applyNativeTransform();
 					
 					ts.transformComplete = false;
 					ts.transformStart = false;
@@ -257,6 +271,7 @@ package com.gestureworks.core
 					if (ts.transformEvents) manageTransformEventDispatch();
 					//if (ts.traceDebugMode)trace("none", ts.touchObjectID)
 				}
+				
 			
 	}
 		
@@ -271,12 +286,12 @@ package com.gestureworks.core
 				if ((ts.parent) && (ts.transformGestureVectors))
 				{
 				//trace("native parent")
+				
 				// gives root cocatenated transform of parent space
 				parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
 				parent_modifier.invert();
 
 				var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
-				
 				//var angle:Number = -calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
 				
 				ref_frame_angle = angle;
@@ -323,26 +338,6 @@ package com.gestureworks.core
 						dz = trO.dz;
 				}
 				
-				////////////////////////////////////////////////////////////////
-				///////////////////////////////////////////////////////////////
-				// 	IF PUT BACK WILL KILL NESTED GESTURE DELTA TRANSFORMS
-				/*
-				if (centerTransform) {
-					t_x = trO.transAffinePoints[4].x
-					t_y = trO.transAffinePoints[4].y
-				}
-				else {
-					t_x = trO.x;
-					t_y = trO.y;
-					t_z = trO.z;
-				}
-				//dx = trO.dx;
-				//dy = trO.dy;
-				//dz = trO.dz;	
-				*/
-				////////////////////////////////////////////////////////////////
-				////////////////////////////////////////////////////////////////
-	
 				///////////////////////////////////////////////////////////////////////////////////
 				// lock properties from transform
 				if (ts.x_lock) { dx = 0 };
@@ -370,7 +365,8 @@ package com.gestureworks.core
 				if ((ts.rotationX+dthetaX < ts.minRotationX) || (ts.rotationX+dthetaX > ts.maxRotationX)) dthetaX = 0;
 				if ((ts.rotationY+dthetaY < ts.minRotationY) || (ts.rotationY+dthetaY > ts.maxRotationY)) dthetaY = 0;
 				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;
-							
+					
+				////////////////////////////////////////////////////
 				// check for away 3D 
 				if (ts is ITouchObject3D) 
 				{
@@ -393,6 +389,7 @@ package com.gestureworks.core
 					ts.transform.matrix3D = affine_modifier3D;	
 					
 				}
+				////////////////////////////////////////////////////
 				// flash 2.5D only
 				else if (ts.transform.matrix3D)// check for 3D matrix,
 				{							
@@ -432,27 +429,29 @@ package com.gestureworks.core
 				if (ts.vto)
 					ts.updateVTO();			
 		}
-			 
+		
+		
 		/////////////////////////////////////////////////////////////////////////
 		// affine transform properties 
 		///////////////////////////////////////////////////////////////////////// 
-		/**
-		* @private
-		*/
 		public function applyAffineTransform():void
 			{
+				// FOR NOW 2D display OBJECTS ONLY
+				if((ts is TouchSprite)||(ts is TouchMovieClip)){
 				///////////////////////////////////////////////////////////////////////////////////
 				if ((ts.parent)&&(ts.transformGestureVectors))
-				//if (ts.parent)
 				{
 					//trace("transform parent")
+
+					// REPLACES $ METHODS ALLOWS FOR AFFINE TRANSFROMS FOR NON NATIVE METHODS(GESTURE EVENT DRIVEN PROPERTY UPDATE)
+					ts.transform.matrix = ts.mtx; 
+					
 					// pre transfrom to compensate for parent transforms
-					//ts.transform.matrix = ts.mtx;
 					parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
 					parent_modifier.invert();
 					
-					//var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
-					var angle:Number = calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
+					var angle:Number = -(Math.atan(parent_modifier.c / parent_modifier.a))//Math.acos(parent_modifier.a)
+					//var angle:Number = calcAngle(parent_modifier.a , parent_modifier.c) * DEG_RAD;
 					
 					
 					ref_frame_angle = angle;
@@ -520,18 +519,12 @@ package com.gestureworks.core
 				//////////////////////////////////////////////////////
 				// 3d affine transform here
 				
-				if (ts.transform3d) {
+				//if (ts.transform3d) {
 					// TODO: 3D affine transformations
 					dthetaX = ts.dthetaX * DEG_RAD;//3d--
 					dthetaY = ts.dthetaY * DEG_RAD;//3d--
-					dthetaZ = ts.dthetaZ * DEG_RAD;//3d--	
-					
-					
-					
-					
-					
-					
-				}
+					dthetaZ = ts.dthetaZ * DEG_RAD;//3d--		
+				//}
 			
 				//////////////////////////////////////////////////////
 				// 2d display object only
@@ -546,7 +539,8 @@ package com.gestureworks.core
 				transformAffineDebugPoints();
 				//}
 
-				updateLocalProperties();				 
+				updateLocalProperties();	
+			}
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////

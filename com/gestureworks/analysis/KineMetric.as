@@ -367,7 +367,7 @@ package com.gestureworks.analysis
 		//NEEDS WORK
 		public function findRootInstDimention():void
 		{
-			trace("KineMetric::findRootInstDimention");
+			//trace("KineMetric::findRootInstDimention");
 			
 			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////

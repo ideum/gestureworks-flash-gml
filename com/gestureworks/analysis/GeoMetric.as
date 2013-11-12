@@ -749,7 +749,7 @@ package com.gestureworks.analysis
 						InteractionPointTracker.framePoints.push(pmp)
 						//trace("2 pinch push", best_dist)	
 						}
-						/*
+						
 						 //WEAK PINCH
 						else if (min_pprob < pinchThreshold)
 						{
@@ -763,7 +763,7 @@ package com.gestureworks.analysis
 						//add to pinch point list
 						InteractionPointTracker.framePoints.push(pmp0)
 						//trace("n pinch push", pinchThreshold)
-						}*/
+						}
 					}
 					
 					
@@ -1185,10 +1185,13 @@ package com.gestureworks.analysis
 			
 				for (j = 0; j < cO.hn; j++)
 				{
+					trace("palm_pt",cO.handList[j].flatness, cO.handList[j].sphereRadius, cO.handList[j].palm.sphereRadius)
+					
 					//trace("geo palm flatness", cO.handList[j].flatness,cO.handList[j].orientation)
 					//cO.handList[j].flatness == g.h_flatness
-					//ADDED FINGER TOTAL CONDITION
-					if ((cO.handList[j].flatness > flatness) &&(cO.handList[j].fingerList.length==0))
+					//ADDED FINGER TOTAL CONDITION SO THAT IS NOT CONFUSED WITH TRIGGER OR PINCH
+					//NOTE EXPLORE PALM SPHERE AND IMPORVED FLATNESS ESTIMATOR
+					if ((cO.handList[j].flatness > flatness)&&(cO.handList[j].fingerList.length<2))//||(cO.handList[j].palm.sphereRadius<60))
 					{
 						var palm_pt:InteractionPointObject = new InteractionPointObject();
 							palm_pt.position = cO.handList[j].palm.position;
@@ -1203,6 +1206,7 @@ package com.gestureworks.analysis
 							//palm_pt.handednes  = cO.handList[j].handednes 
 							
 							palm_pt.type = "palm";
+							
 							
 
 						InteractionPointTracker.framePoints.push(palm_pt)
