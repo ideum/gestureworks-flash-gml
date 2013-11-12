@@ -1106,14 +1106,7 @@ package com.gestureworks.core
 		public function get transform3d():Boolean {return _transform3d;}	
 		public function set transform3d(value:Boolean):void {	_transform3d = value; }
 		
-		// TRANSFORM 3D
-		private var _motion3d:Boolean = false;
-		/**
-		 * @inheritDoc
-		 */
-		public function get motion3d():Boolean {return _motion3d;}	
-		public function set motion3d(value:Boolean):void{	_motion3d = value;}
-		
+		//DEFINES TOUCH MODE // ENABLED WHEN TOUCHING 3D OBJECTS AND USING NATIVE TRANSFORMS
 		private var _touch3d:Boolean = false;
 		/**
 		 * @inheritDoc

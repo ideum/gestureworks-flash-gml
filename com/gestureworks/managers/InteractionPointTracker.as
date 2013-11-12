@@ -15,7 +15,6 @@ package com.gestureworks.managers
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
-	//import flash.display.StageDisplayState;
 	
 	
 	/**

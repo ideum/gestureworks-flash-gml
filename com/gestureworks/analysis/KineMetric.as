@@ -1553,7 +1553,7 @@ package com.gestureworks.analysis
 											//trace("3d hit test", TouchManager3D.hitTest3D(ts as TouchObject3D, ipt.position.x, ipt.position.y));
 											
 											if (hitTest3D != null) {
-												if (hitTest3D(ts as ITouchObject3D, ts.view, xh, yh)) cO.iPointArray.push(ipt);
+												if (hitTest3D(ts as ITouchObject3D, xh, yh)) cO.iPointArray.push(ipt);
 											}
 											//if(TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, ipt.position.x, ipt.position.y))cO.iPointArray.push(ipt);
 										}
@@ -2218,7 +2218,7 @@ package com.gestureworks.analysis
 			
 			
 			
-			var hold_period:int = 45// 120;
+			var hold_period:int = 45//120//45// 120;
 			var hold_clear:Boolean = true;
 			//trace("3d motion hold gesture events qualifier",gpn,ts.cO.history.length)
 			
@@ -2239,11 +2239,13 @@ package com.gestureworks.analysis
 						{	
 							// SIDE TAP // YELLOW
 							if (cO.history[h].gPointArray[i].type == "hold") hold_clear = false;
-							//trace("not clear");
+							//trace("not clear",cO.history[h].gPointArray[i].type);
 						}
 					}
+					//else hold_clear = false;
 				}
 			}
+			//else hold_clear = false;
 			
 			// NO HIT TEST HERE AS HANDLED AT LOWER LEVEL
 			// IP MUST MATCH VIA HITTEST BEFORE HERE
@@ -2252,12 +2254,10 @@ package com.gestureworks.analysis
 				//trace(gpt)
 				if (gpt3.type == "hold")
 					{
-						//trace("--------------CLEAR");
+						//trace("--------------CLEAR",gpt3.type);
 						mHoldID++;
-						//var mHold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_HOLD, { x:gpt.position.x , y:gpt.position.y, z:gpt.position.z, n:sipn,  gestureID:mHoldID } );
+						
 						var mHold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.MOTION_HOLD, {x:gpt3.position.x , y:gpt3.position.y, z:gpt3.position.z, n:sipn, gestureID:mHoldID});
-						
-						
 						ts.dispatchEvent(mHold_event);
 						
 						hold_clear = false;

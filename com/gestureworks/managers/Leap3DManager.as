@@ -247,7 +247,7 @@ package com.gestureworks.managers
 							mp.handID = event.frame.pointable(pid).hand.id
 							//trace("point hand id",mp.handID);
 						}
-						trace(event.frame.pointable(pid).tipPosition.z)
+						//trace(event.frame.pointable(pid).tipPosition.z)
 						//var x:Number = normalize( event.frame.pointable(pid).tipPosition.x, minX, maxX)*1000;
 						//var y:Number = normalize( event.frame.pointable(pid).tipPosition.y, minY, maxY)*1000;
 						//var z:Number = normalize( -1*event.frame.pointable(pid).tipPosition.z, minZ, maxZ)*1000;

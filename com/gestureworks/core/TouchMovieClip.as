@@ -1097,12 +1097,12 @@ package com.gestureworks.core
 		public function set transform3d(value:Boolean):void {	_transform3d = value; }
 		
 		// TRANSFORM 3D
-		private var _motion3d:Boolean = false;
+		//private var _motion3d:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		public function get motion3d():Boolean {return _motion3d;}	
-		public function set motion3d(value:Boolean):void{	_motion3d = value;}
+		//public function get motion3d():Boolean {return _motion3d;}	
+		//public function set motion3d(value:Boolean):void{	_motion3d = value;}
 		
 		
 		private var _registerPoints:Boolean = true;

@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.cml.away3d.elements.TouchContainer3D;
 	import com.gestureworks.interfaces.ITouchObject3D;
 	import flash.utils.Dictionary;
 	
@@ -154,8 +155,8 @@ package com.gestureworks.managers
 						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
 						{
 							if (hitTest3D != null) {
-								// trace("3d hit test")
-								if (hitTest3D(tO as ITouchObject3D, tO.view, xh, yh)) {
+								 //trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as TouchContainer3D)
+								if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
 									tO.cO.iPointArray.push(ipO);								
 								}
 							}
@@ -164,6 +165,10 @@ package com.gestureworks.managers
 						}
 							
 					}
+					//else if if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
+					//{
+						
+					//}
 				}
 				
 				

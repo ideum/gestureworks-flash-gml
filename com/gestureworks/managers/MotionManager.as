@@ -15,15 +15,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	
-
-	//import com.gestureworks.away3d.TouchObject3D;
-	import com.gestureworks.core.TouchSprite;
-	//import com.gestureworks.objects.MotionFrameObject;
-	
-	
 	import flash.utils.Dictionary;
 	
+	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureWorksCore;
 	import com.gestureworks.core.GestureGlobals;
@@ -42,7 +36,6 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.DimensionObject;
-	
 
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
@@ -81,18 +74,10 @@ package com.gestureworks.managers
 			mpoints = GestureGlobals.gw_public::motionPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
-			// create gloabal motion sprite
+			// CREATE GLOBAL MOTION SPRITE TO HANDLE ALL GEOMETRIC GLOBAL ANALYSIS OF MOTION POINTS
 			motionSprite = new TouchSprite();
 				motionSprite.active = true;
 				motionSprite.motionEnabled = true;
-				motionSprite.motion3d = true; 
-				
-				//NOT ADDED TO THE STAGE
-				//motionSprite.debugDisplay = true;
-				//motionSprite.visualizer.pointDisplay = true;
-				//motionSprite.visualizer.clusterDisplay = true;
-				//motionSprite.visualizer.gestureDisplay = true;
-				
 				motionSprite.tc.core = true; // fix for global core analysis
 				
 				//initialized gloabl geometric settings

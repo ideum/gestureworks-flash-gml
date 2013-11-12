@@ -568,8 +568,8 @@ package com.gestureworks.interfaces
 		/**
 		 * @default false
 		 */
-		function get motion3d():Boolean;
-		function set motion3d(value:Boolean):void;
+		//function get motion3d():Boolean;
+		//function set motion3d(value:Boolean):void;
 		
 		/**
  		 * Determines if the touch points are registered to the TouchManager. One can override this behaivor by setting the value to false. This is useful when creating custom 

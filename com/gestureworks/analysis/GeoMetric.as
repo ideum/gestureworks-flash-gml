@@ -1185,7 +1185,7 @@ package com.gestureworks.analysis
 			
 				for (j = 0; j < cO.hn; j++)
 				{
-					trace("palm_pt",cO.handList[j].flatness, cO.handList[j].sphereRadius, cO.handList[j].palm.sphereRadius)
+					//trace("palm_pt",cO.handList[j].flatness, cO.handList[j].sphereRadius, cO.handList[j].palm.sphereRadius)
 					
 					//trace("geo palm flatness", cO.handList[j].flatness,cO.handList[j].orientation)
 					//cO.handList[j].flatness == g.h_flatness

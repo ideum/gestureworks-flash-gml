@@ -804,13 +804,18 @@ package com.gestureworks.core
 							
 							//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
-							//trace(GWEVENT)
-							ts.dispatchEvent(GWEVENT);
+							//trace(GWEVENT.type)
+							
+							if ((GWEVENT.type != "motion_hold") && (GWEVENT.type != "motion_tap")) //motion_flick, motion_swipe
+							{
+								ts.dispatchEvent(GWEVENT);
+								//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
+								//if ((tiO.timelineOn) && (tiO.gestureEvents))	
+								ts.tiO.frame.gestureEventArray.push(GWEVENT);
+								//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
+							}
 					
-							//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
-							//if ((tiO.timelineOn) && (tiO.gestureEvents))	
-							ts.tiO.frame.gestureEventArray.push(GWEVENT);
-							//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
+							
 							
 						
 						// reset dispatch
