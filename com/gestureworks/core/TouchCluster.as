@@ -475,6 +475,13 @@ package com.gestureworks.core
 						{		
 						//g.cluster_type = "all"	
 							
+						
+						
+						
+						
+						
+						
+						
 						// FUNDAMENTAL INTERACTION POINTS
 							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			fingerPoints = true; 
 							if ((g.cluster_type == "thumb")||(g.cluster_type == "all")) 			thumbPoints = true; 
@@ -641,6 +648,7 @@ package com.gestureworks.core
 				//NOTE TOUCGH GESTURE EVENTS WERE BEING REACTIVATED BY MOTION INOPUT AND INTERFERING WITH MOTION GESTURE EVENTS
 				// FIX WAS TO FILTER CLUSTER PROCESSING SO THAT EVENTACTIVE STATES WERE NOT OVERWRITTEN
 				// NEED TO UPDATE TOUCH GESTURES AND TYPE THEM (TOUCH, MOTION, MOTION & TOUCH, SENSOR, SENSOR & TOUCH, SENSOR & MOTION...)	
+				/// need to test more
 				
 				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type!="motion"))
 				{
