@@ -157,9 +157,9 @@ package com.gestureworks.core
 			for (var type:String in gwTouchListeners) {
 				for each(var l:* in gwTouchListeners[type]) {
 					if(l.type)
-						super.removeEventListener(l.type, l.listener);
+						removeEventListener(l.type, l.listener);
 					else{
-						super.removeEventListener(type, l.listener);
+						removeEventListener(type, l.listener);
 						addEventListener(type, l.listener);
 					}
 				}
@@ -384,15 +384,15 @@ package com.gestureworks.core
 			_targetParent = value;
 		}
 		
-		//private var _targetList:Array = [];
-		///**
-		 //* @inheritDoc
-		 //*/
-		//public function get targetList():*{return _targetList;}
-		//public function set targetList(value:*):void
-		//{	
-			//_targetList = value;
-		//}
+		private var _targetList:Array = [];
+		/**
+		 * @inheritDoc
+		 */
+		public function get targetList():*{return _targetList;}
+		public function set targetList(value:*):void
+		{	
+			_targetList = value;
+		}
 
 		private var _vto:Object;
 		/**
@@ -602,7 +602,7 @@ package com.gestureworks.core
 		public function get nativeTransform():Boolean{return _nativeTransform;}
 		public function set nativeTransform(value:Boolean):void {_nativeTransform = value; }						
 
-		// default true so that all nested gestures are correct unless specidied
+		// default true so that all nested gestures are correct unless speciFied
 		private var _transformGestureVectors:Boolean = true;
 		/**
 		 * @inheritDoc 
@@ -610,8 +610,8 @@ package com.gestureworks.core
 		public function get transformGestureVectors():Boolean{return _transformGestureVectors;}
 		public function set transformGestureVectors(value:Boolean):void{	_transformGestureVectors=value;}
 		
-		// TRUE BY DEFAULT AS MAJORITY OF TRANSFROMS ARE AFFINE
-		private var _affineTransform:Boolean = true;
+		//11/11/2013 TRUE BY DEFAULT AS MAJORITY OF TRANSFORMS ARE AFFINE
+		private var _affineTransform:Boolean = true; 
 		/**
 		 * @inheritDoc
 		 */
@@ -923,7 +923,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		override public function set x(value:Number):void {	
-			value < minX ? minX : value > maxX ? maxX : value;
+			value = value < minX ? minX : value > maxX ? maxX : value;
 			dx = value - super.x;
 			super.x = value;
 		}		
@@ -1087,6 +1087,16 @@ package com.gestureworks.core
 		//public function get broadcastTarget():Boolean {return _broadcastTarget;}	
 		//public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
 		
+		
+		// TRANSFORM 3D
+		private var _motionClusterMode:String = "global";
+		/**
+		 * @inheritDoc
+		 */
+		public function get motionClusterMode():String {return _motionClusterMode;}	
+		public function set motionClusterMode(value:String):void {	_motionClusterMode = value; }
+		
+		
 		// TRANSFORM 3D
 		private var _transform3d:Boolean = false;
 		/**
@@ -1095,14 +1105,13 @@ package com.gestureworks.core
 		public function get transform3d():Boolean {return _transform3d;}	
 		public function set transform3d(value:Boolean):void {	_transform3d = value; }
 		
-		// TRANSFORM 3D
-		//private var _motion3d:Boolean = false;
+		//DEFINES TOUCH MODE // ENABLED WHEN TOUCHING 3D OBJECTS AND USING NATIVE TRANSFORMS
+		private var _touch3d:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		//public function get motion3d():Boolean {return _motion3d;}	
-		//public function set motion3d(value:Boolean):void{	_motion3d = value;}
-		
+		public function get touch3d():Boolean {return _touch3d;}	
+		public function set touch3d(value:Boolean):void{ _touch3d = value;}		
 		
 		private var _registerPoints:Boolean = true;
 		/**
@@ -1285,6 +1294,23 @@ package com.gestureworks.core
 			
 			//remove from master list
 			delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+			
+			gml = null;
+			gwTouchListeners = null;
+			pointArray = null;
+			_cO = null;
+			_sO = null;
+			_tiO = null;
+			_trO = null;
+			_tc = null;
+			_tp = null;
+			_tg = null;
+			_tt = null;
+			_visualizer = null; 
+			_gestureList = null;
+			_vto = null;
+			_view = null;
+			transformPoint = null;
 		}
 		
 	}

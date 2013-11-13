@@ -1294,6 +1294,23 @@ package com.gestureworks.core
 			
 			//remove from master list
 			delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+			
+			gml = null;
+			gwTouchListeners = null;
+			pointArray = null;
+			_cO = null;
+			_sO = null;
+			_tiO = null;
+			_trO = null;
+			_tc = null;
+			_tp = null;
+			_tg = null;
+			_tt = null;
+			_visualizer = null; 
+			_gestureList = null;
+			_vto = null;
+			_view = null;
+			transformPoint = null;
 		}
 		
 	}
