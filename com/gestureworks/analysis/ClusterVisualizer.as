@@ -408,6 +408,13 @@ package com.gestureworks.analysis
 								}
 								
 								// draw PUSH
+								if (ipt.type == "fist") //grey //
+								{
+									graphics.lineStyle(3, 0x777777, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
+								
+								// draw PUSH
 								if (ipt.type == "push") //yellow 0xFFFF00 //
 								{
 									graphics.lineStyle(3, 0xFFFF00, style.stroke_alpha);
@@ -478,6 +485,7 @@ package com.gestureworks.analysis
 									if (sub_cO.type == "frame") style.stroke_color = 0xE3716B;//0x00FFFF;
 									if (sub_cO.type == "push") style.stroke_color = 0xFFFF00;//0x00FFFF;
 									if (sub_cO.type == "hook") style.stroke_color = 0x0000FF;
+									if (sub_cO.type == "fist") style.stroke_color = 0x777777;
 									//if (sub_cO.type == "tool") style.stroke_color = 0x0000FF;
 									
 									

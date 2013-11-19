@@ -71,6 +71,9 @@ package com.gestureworks.objects
 		//length
 		public var length:Number = 0;
 		
+		//fist state for palm ip
+		public var fist:Boolean = false;
+		
 		//rotation/////////////////////////////////////////////x,y,x
 		public var rotation:Matrix = new Matrix ();
 		

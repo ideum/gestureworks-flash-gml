@@ -99,6 +99,9 @@ package com.gestureworks.analysis
 		private var sw:int
 		private var sh:int
 		
+		//hand config object
+		private var handConfig:Object = new Object();
+		
 		// min max leap raw values
 		// NOTE MOTION POINT SENSITIVITY TO PINCH/TRIGGER/ CONSTS AS SHOULD BE RELATIVE??????
 		// AND HIT TEST
@@ -109,7 +112,7 @@ package com.gestureworks.analysis
 		private var minZ:Number //=350//270 
 		private var maxZ:Number //=120//50//-75
 		
-		public static var hitTest3D:Function;		
+		public static var hitTest3D:Function;	
 		
 		public function KineMetric(_id:int) 
 		{
@@ -174,6 +177,10 @@ package com.gestureworks.analysis
 				cO.subClusterArray[7].type = "hook";
 				cO.subClusterArray[8] = new ipClusterObject(); //frame
 				cO.subClusterArray[8].type = "frame";
+				cO.subClusterArray[9] = new ipClusterObject(); //fist
+				cO.subClusterArray[9].type = "fist";
+				
+				
 				//cO.subClusterArray[9] = new ipClusterObject(); // push
 				//cO.subClusterArray[9].type = "push";
 				//cO.subClusterArray[10] = new ipClusterObject(); //region
@@ -192,7 +199,7 @@ package com.gestureworks.analysis
 			//cO.subClusterArray[11] = new ipClusterObject(); //touch pen
 			//cO.subClusterArray[11].type = "pen";
 			//cO.subClusterArray[11] = new ipClusterObject(); //fiducial patterns
-			//cO.subClusterArray[11].type = "fiducial";
+			//cO.subClusterArray[11].type = "fiducial";// "tag" //"object"
 			//cO.subClusterArray[11] = new ipClusterObject(); //hold touch points
 			//cO.subClusterArray[11].type = "hold";
 			//cO.subClusterArray[11] = new ipClusterObject(); //dynamic touch points
@@ -208,6 +215,7 @@ package com.gestureworks.analysis
 			// accelerometer
 			// myo
 			// watch
+			// wii remote
 		}
 		
 		
@@ -1516,6 +1524,95 @@ package com.gestureworks.analysis
 		////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////
 		
+		public function initFilterIPCluster():void
+			{
+				///////////////////////////////////////////////////////
+				//palm ip config
+				handConfig.palm = new Object();
+				handConfig.palm.fist = false; // hand open closed state
+				handConfig.palm.orientation = undefined; //up/down
+				handConfig.palm.type = undefined; // left right
+				handConfig.palm.fn = undefined;//digits on the hand
+				handConfig.palm.flatness_min = undefined; //degree of flatness of fingers relative to plane of palm
+				handConfig.palm.flatness_max = undefined; //degree of flatness of fingers relative to plane of palm
+				handConfig.palm.splay_min = undefined; // finger separation
+				handConfig.palm.splay_max = undefined; // finger separation
+				
+				//fist ip config
+				handConfig.fist = new Object();
+				handConfig.fist.fist = true; // hand open closed state
+				handConfig.fist.orientation = undefined; //up/down
+				handConfig.fist.type = undefined; // left right
+				handConfig.fist.fn = undefined;//digits on the hand
+				handConfig.fist.flatness_min = undefined; //degree of flatness of fingers relative to plane of palm
+				handConfig.fist.flatness_max = undefined; //degree of flatness of fingers relative to plane of palm
+				handConfig.fist.splay_min = undefined; // finger separation
+				handConfig.fist.splay_max = undefined; // finger separation
+				
+				//pinch config
+				handConfig.pinch = new Object();
+				handConfig.pinch.distance_max = undefined;
+				handConfig.pinch.fn = undefined;
+			
+				//trigger config
+				handConfig.trigger = new Object();
+				handConfig.trigger.extension_min
+				handConfig.trigger.fn = undefined;
+			
+			
+			}
+		
+		
+		
+		public function filterIPCluster():void
+			{
+				// TODO: PULL FROM LOCAL GESTURE LIST
+				//OBJECT LEVEL GML DEFINED IP FILTERING
+				
+				
+				
+				
+				
+				if (ts.cO.iPointArray)
+					{
+					//var temp_iPointArray = new Vector.<InteractionPointObject>();
+						//temp_iPointArray = ts.cO.iPointArray;
+						
+						//ts.cO.iPointArray.length = 0;
+						
+					for (i = 0; i < ts.cO.iPointArray.length; i++)
+							{
+								var ipt:InteractionPointObject = ts.cO.iPointArray[i];
+								////////////////////////////////////////////////////////////////////
+								//check exists and check if ip type supported on display object
+								//trace("supported", ipt.type,ts.tc.ipSupported(ipt.type));
+								if (ipt)
+								{
+									
+									if((ipt.type=="palm")&&(handConfig.palm))
+									{
+										//trace("fist filter ip", ipt.fist, ts.cO.iPointArray[i].fist);
+										// NOTE CAN ONLY SPLICE AN IP ONCE
+										if (handConfig.palm.fist != undefined) if (ipt.fist != handConfig.palm.fist) 
+										{
+										trace("remove")
+										ts.cO.iPointArray.splice(ipt.id, 1);
+										}
+										//if (handConfig.palm.orientation != undefined) if (ipt.orientation != handConfig.palm.orientation) ts.cO.iPointArray.splice(ipt.id, 1);
+										//if (handConfig.palm.fn != undefined) if (ipt.fn != handConfig.palm.fn) ts.cO.iPointArray.splice(ipt.id, 1);
+										//if (handconfig.palm.fist != undefined) if (ipt.fist!=handconfig.palm.fist) ts.cO.iPointArray.splice(ipt.id, 1);
+									}
+							}
+						}
+					
+					
+					
+					
+					
+				}
+			}
+		
+		
 		public function hitTestCluster():void
 			{
 				//ONLY DOES HIT TEST IF MOTION POINTS EXIST
@@ -1565,6 +1662,8 @@ package com.gestureworks.analysis
 									//trace("phase",ipt.phase)
 									//cO.iPointArray.push(ipt);/////////////////////////////////////////////////
 								}
+								
+								//if(ipt.type=="palm")trace("fist hit test", ipt.fist)
 							}
 					}
 					
@@ -1578,7 +1677,6 @@ package com.gestureworks.analysis
 								//trace(ts.cO.iPointArray[i].interactionPointID,ts.cO.iPointArray[i].phase);
 								if(ts.cO.iPointArray[i].phase=="end") ts.cO.iPointArray.splice(i, 1);
 									//trace("no exist")
-									//ts.cO.iPointArray.splice(ipt.id, 1);
 								//}
 							}
 						}
@@ -1643,7 +1741,7 @@ package com.gestureworks.analysis
 								var ipt2d:InteractionPointObject = new InteractionPointObject();
 								
 								// stores root ip id
-								//trace("interaction point id",ipt.interactionPointID)
+								//trace("interaction point id",ipt.interactionPointID, ipt.type)
 								//ipt2d.id = ipt.interactionPointID;
 								
 								ipt2d.position.x = normalize(ipt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
@@ -1663,15 +1761,20 @@ package com.gestureworks.analysis
 								ipt2d.type = ipt.type;
 								ipt2d.history = ipt.history;
 								
+								// pass ip properties
+								ipt2d.fist = ipt.fist;
+								
 								
 							cO.iPointArray2D.push(ipt2d);
+							
+							//if(ipt2d.type=="palm")trace("fist 3d to 2d", ipt.fist)
 							}
 						}
 		}
 	
 	    public function getSubClusters():void
 			{
-				//trace("map cluster data 3d to 2d")
+			//trace("get sub clusters")
 			var temp_ipointArray:Vector.<InteractionPointObject>;
 				
 			if (!ts.transform3d) temp_ipointArray = cO.iPointArray2D;
@@ -1693,6 +1796,7 @@ package com.gestureworks.analysis
 						if (ipt.type==cO.subClusterArray[j].type) cO.subClusterArray[j].iPointArray.push(ipt);
 					}
 						//trace(ipt.type)
+					//if(ipt.type=="fist")trace("fist subcluster", ipt.fist)
 				}
 	}
 		

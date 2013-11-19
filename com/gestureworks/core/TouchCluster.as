@@ -80,6 +80,7 @@ package com.gestureworks.core
 		public var pushPoints:Boolean = false; 
 		public var hookPoints:Boolean = false; 
 		public var framePoints:Boolean = false; 
+		public var fistPoints:Boolean = false; 
 		
 		//private var motionSprite:Object;
 		
@@ -280,6 +281,7 @@ package com.gestureworks.core
 				
 				//CLEARS DELTAS STORED IN GESTURE OBJECT
 				//SO THAT VALUES DO NOT PERSIST BEYOND RELEASE (NOT TRUE FOR GESTURE DELTA)
+				// CLEARS PRIME CLUSTER PRIME MODAL CLUSTERS AND ALL SUBCLUSTERS
 				clearGestureObjectClusterDeltas();
 				
 				// must preceed kinemetrics
@@ -374,6 +376,7 @@ package com.gestureworks.core
 							if ((type == "push")&&(pushPoints)) 							result = true; 			 
 							if ((type == "hook")&&(hookPoints)) 							result = true; 			 
 							if ((type == "frame") && (framePoints)) 						result = true; 
+							if ((type == "fist") && (fistPoints)) 							result = true; 
 							
 			return result		
 		} 
@@ -434,6 +437,7 @@ package com.gestureworks.core
 							if ((g.cluster_type == "push")||(g.cluster_type == "all")) 				pushPoints = true; 
 							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) 				hookPoints = true; 
 							if ((g.cluster_type == "frame") || (g.cluster_type == "all")) 			framePoints = true; 
+							if ((g.cluster_type == "fist") || (g.cluster_type == "all")) 			fistPoints = true; 
 
 						// LATER
 							//---cluster_geometric.find3DToolPoints();
@@ -474,12 +478,6 @@ package com.gestureworks.core
 					if (g.cluster_input_type == "motion")
 						{		
 						//g.cluster_type = "all"	
-							
-						
-						
-						
-						
-						
 						
 						
 						// FUNDAMENTAL INTERACTION POINTS
@@ -495,6 +493,7 @@ package com.gestureworks.core
 							if ((g.cluster_type == "push")||(g.cluster_type == "all")) 				pushPoints = true; 
 							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) 				hookPoints = true; 
 							if ((g.cluster_type == "frame") || (g.cluster_type == "all")) 			framePoints = true; 
+							if ((g.cluster_type == "fist") || (g.cluster_type == "all")) 			fistPoints = true; 
 
 						// LATER
 							//---cluster_geometric.find3DToolPoints();
@@ -507,6 +506,13 @@ package com.gestureworks.core
 				
 			}
 			
+		}
+		
+		
+		
+		public function initIPFilters():void
+		{
+			cluster_kinemetric.initFilterIPCluster();
 		}
 		
 		public function getVectorMetrics():void 
@@ -598,6 +604,7 @@ package com.gestureworks.core
 						if (pushPoints)				cluster_geometric.find3DPushPoints(); 
 						if (hookPoints)				cluster_geometric.find3DHookPoints(); 
 						if (framePoints)			cluster_geometric.find3DFramePoints(); 
+						if (fistPoints)			cluster_geometric.find3DFistPoints(); 
 						
 						// LATER
 							//---cluster_geometric.find3DToolPoints();
@@ -744,6 +751,8 @@ package com.gestureworks.core
 											// STILL NEED TO MAP RETURN TO RESULT
 											if (gdim.property_vars[0])
 											{
+												//trace("tcO property ",gdim.property_vars[0],gdim.property_vars[0]["var"]);
+												//TODO: FIX VARAIBLES BLOCK
 												var num:Number = Math.abs(tcO[gdim.property_vars[0]["var"]]);
 												var dim_var:Number = 0;
 													
@@ -827,54 +836,38 @@ package com.gestureworks.core
 			
 			if (!core)
 			{
-				// MUST PRECEED IP TRANSFORMATION 
-				
+			///////////////////////////////////////////////////////////////////
+			// MUST PRECEED IP TRANSFORMATION 
+			///////////////////////////////////////////////////////////////////
+			
+				// PERFORM HIT TEST ON COLLECTED POINTS
+				// PULLS FROM GLOABL GMS SOURCES IN A VARIETY OF WAYS TO CREATE ROOT IP CLUSTER
 				cluster_kinemetric.hitTestCluster();
+				
+				// FILTER BY ROOT IP CLUSTER BY GML DEFINED IP CONDITIONS
+				//cluster_kinemetric.filterIPCluster(); //SEE TOUCCH MANAGE TO FILTER FOR LOCAL_STRONG
 				
 				// FOR NATIVE MAPPING AND GESTURE OBJECT DATA STRUCTURE SIMPLIFICATION
 				// MAY NEED TO ALWAYS BE ON FOR STAGE OBJECTS
 				//if (!ts.transform3d) 
 				cluster_kinemetric.mapCluster3Dto2D();
 				
-
 				// GET IP SUBCLUSTERS // PUSH TO SUBCLUSTER MATRIX
 				cluster_kinemetric.getSubClusters();
-				
-				
+				////////////////////////////////////////////////////////////////////
 				
 				// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
 				for (var j:uint = 0; j < cO.subClusterArray.length; j++) 
-					{	
-						// FIND CLUSTER DIMS
-						cluster_kinemetric.find3DIPConstants(j);
-						cluster_kinemetric.find3DIPDimension(j);
-						
-						// FIND CLUSTER MOTION CHARACTER
-						//--cluster_kinemetric.find3DIPTransformation(j);//MOVE
-						//cluster_kinemetric.find3DIPTranslation(j);//MOVE
-						//cluster_kinemetric.find3DIPRotation(j);//MOVE
-						//cluster_kinemetric.find3DIPSeparation(j);//MOVE
-						
-						//cluster_kinemetric.find3dIPAcceleration(j);//MOVE
-						
-						// FIND POINT MOTION CHARACTER
-						//--cluster_kinemetric.find3DIPTapPoints(j);//MOVE
-						//--cluster_kinemetric.find3DIPHoldPoints(j);//MOVE
-					}
-				//////////////////////////////////////////////////////
-				
-				// recalc parent cluster properties
-				//cluster_kinemetric.find3DConstants();
-				//cluster_kinemetric.find3DDimension();
-				
-				// WEAVE INTO PRIME CLUSTER OBJECT FOR PIPELINE INJECTION
-				//--cluster_kinemetric.Weave3DIPClusterData();
-				
-				//--cluster_kinemetric.WeaveMotionClusterData();
-			//--}
+				{	
+					// FIND CLUSTER DIMS
+					cluster_kinemetric.find3DIPConstants(j);
+					cluster_kinemetric.find3DIPDimension(j);
+				}
+					
+			//////////////////////////////////////////////////////
+
+			//trace("3d kinmetrics-------------------------");
 			
-			
-		
 			gn = gO.pOList.length;
 			
 			//trace("-touch cluster -----------------------------",gn);
@@ -953,12 +946,14 @@ package com.gestureworks.core
 						if (c_type == "pinch") b = 6;
 						if (c_type == "hook") b = 7;
 						if (c_type == "frame") b = 8;
-						//if (c_type == "push") b = 9;
-						//if (c_type == "region") b = 10;
+						if (c_type == "fist") b = 9;
+						//if (c_type == "push") b = 10;
+						//if (c_type == "region") b = 11;
 						/////////////////////////////////////
 						// OBJECTS IPS
-						//if (c_type == "tool") b = 11;
+						//if (c_type == "tool") b = 12;
 						
+						//trace(c_type)
 					
 						//var sub_cO_n:int =  ts.cO.subClusterArray[b].iPointArray.length;
 						var sub_cO_n:int =  ts.cO.subClusterArray[b].ipn;

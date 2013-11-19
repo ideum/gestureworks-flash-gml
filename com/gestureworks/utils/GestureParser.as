@@ -242,12 +242,21 @@ package com.gestureworks.utils
 															gO.h_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("type"));
 															//hand orientation
 															gO.h_orientation = String(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("orientation"));
+														
 															// hand finger splay
 															gO.h_splay = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("splay"));
+															gO.h_splay_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("splay_min"));
+															gO.h_splay_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("splay_max"));
+															
 															//hand flatness
 															gO.h_flatness = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("flatness"));
+															gO.h_flatness_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("flatness_min"));
+															gO.h_flatness_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("flatness_max"));
 															
-															
+															//hand radius // approx sizing
+															gO.h_radius = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("radius"));
+															gO.h_radius_min = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("radius_min"));
+															gO.h_radius_max = Number(gml.Gesture_set[g].Gesture[i].match.action.initial.hand.attribute("radius_max"));
 															
 															/////////////////////////////////////
 															// CREATE HAND CONFIG DATA STRUCTURE
