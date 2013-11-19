@@ -119,18 +119,24 @@ package com.gestureworks.managers
 						ipO.length = event.value.length;
 						ipO.width = event.value.width;
 						
+						//ADVANCED IP PROEPRTIES
 						ipO.flatness = event.value.flatness;
 						ipO.orientation = event.value.orientation;
+						ipO.fn = event.value.fn;
+						ipO.splay = event.value.splay;
+						ipO.fist = event.value.fist;
 						
 						ipO.phase = "begin"
 						//trace(ipO.interactionPointID)
 						
-				
+						
 				
 				
 				////////////////////////////////////////////
-				//ADD TO GLOABL Interaction POINT LIST
+				//ADD TO GLOBAL Interaction POINT LIST
 				gms.cO.iPointArray.push(ipO);
+				
+				//trace("ip begin",ipO.type)
 				
 				///////////////////////////////////////////////////////////////////
 				// ADD TO LOCAL OBJECT Interaction POINT LIST
@@ -195,7 +201,6 @@ package com.gestureworks.managers
 			
 			if (ipointObject)
 			{
-				
 				ipointObject.phase="end"
 				
 					// REMOVE POINT FROM GLOBAL LIST
@@ -250,6 +255,9 @@ package com.gestureworks.managers
 					
 					ipO.flatness = event.value.flatness;
 					ipO.orientation = event.value.orientation;
+					ipO.fn = event.value.fn;
+					ipO.splay = event.value.splay;
+					ipO.fist = event.value.fist;
 					
 					ipO.phase = "update"
 					//mpO.handID = event.value.handID;

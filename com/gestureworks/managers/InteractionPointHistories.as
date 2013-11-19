@@ -68,11 +68,16 @@ package com.gestureworks.managers
 				object.handID =  ipo.handID;
 				object.type = ipo.type;
 				
+				// advanced ip properties
 				object.flatness = ipo.flatness;
 				object.orientation = ipo.orientation;
+				object.splay = ipo.splay;
+				object.fn = ipo.fn;
+				object.fist = ipo.fist;
 				
 			//	trace(ipo.history.length)
 				
+				// ADVANCED MOTION PROEPRTIES
 				if (ipo.history.length>1)
 				{
 					//trace(ipo.position.x,ipo.history[1].position.x,ipo.history[2].position.x)

@@ -640,7 +640,8 @@ package com.gestureworks.managers
 				//trace("FrameID");
 				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED
 				// ON ALL OBJECTS
-				if (GestureGlobals.frameID == 200) gms.tc.initGeoMetric3D();
+				if (GestureGlobals.frameID == 200) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
+				
 			}
 			
 			//TODO: CLEAN UP INIT
@@ -655,7 +656,11 @@ package com.gestureworks.managers
 				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
 					if (tO.cO)
 					{
-						if (GestureGlobals.frameID == 200) tO.tc.initIPSupport();
+						if (GestureGlobals.frameID == 200) 
+						{
+							tO.tc.initIPSupport();
+							tO.tc.initIPFilters();
+						}
 						
 						tO.cO.motionArray = gms.cO.motionArray
 						tO.cO.handList = gms.cO.handList;

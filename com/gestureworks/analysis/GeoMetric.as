@@ -258,9 +258,13 @@ package com.gestureworks.analysis
 							var v:Vector3D = cO.handList[j].fingerAveragePosition.subtract(cO.handList[j].palm.position)
 							var orienAngle:Number = v.dotProduct(cO.handList[j].palm.normal);// Vector3D.angleBetween(v0, v1);
 							
-							if (orienAngle > 0) cO.handList[j].orientation = "down";
-							if (orienAngle < 0) cO.handList[j].orientation = "up";
-							else cO.handList[j].orientation = "udefined";
+							if (orienAngle > 0) {
+								cO.handList[j].orientation = "down";
+							}
+							else if (orienAngle < 0) {
+								cO.handList[j].orientation = "up";
+							}
+							//else cO.handList[j].orientation = "udefined";
 							//trace(orienAngle,cO.handList[j].orientation);
 							
 							///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,8 +300,10 @@ package com.gestureworks.analysis
 								//trace("favdist",cO.motionArray[i].favdist,cO.motionArray[i].fingertype, min_favdist, max_favdist )	
 								}
 					favlength = hfnk*favlength	
-										
+					
+					// AVERAGE HAND RADIUS
 					cO.handList[j].sphereRadius = favlength * palmratio;	
+					//cO.handList[j].sphereRadius = favdist * palmratio;	
 					//trace("rad",cO.handList[j].sphereRadius)
 				}
 		}
@@ -1185,15 +1191,12 @@ package com.gestureworks.analysis
 			
 				for (j = 0; j < cO.hn; j++)
 				{
-					//trace("palm_pt",cO.handList[j].flatness, cO.handList[j].sphereRadius, cO.handList[j].palm.sphereRadius)
-					
-					//trace("geo palm flatness", cO.handList[j].flatness,cO.handList[j].orientation)
-					//cO.handList[j].flatness == g.h_flatness
-					//ADDED FINGER TOTAL CONDITION SO THAT IS NOT CONFUSED WITH TRIGGER OR PINCH
-					//NOTE EXPLORE PALM SPHERE AND IMPORVED FLATNESS ESTIMATOR
-					if ((cO.handList[j].flatness > flatness)&&(cO.handList[j].fingerList.length<2))//||(cO.handList[j].palm.sphereRadius<60))
-					{
 						var palm_pt:InteractionPointObject = new InteractionPointObject();
+						
+						////////////////////////////////////////////////////////////////
+						// CREAT PALM POINT
+						////////////////////////////////////////////////////////////////
+						
 							palm_pt.position = cO.handList[j].palm.position;
 							palm_pt.direction = cO.handList[j].palm.direction;
 							palm_pt.normal = cO.handList[j].palm.normal;
@@ -1201,17 +1204,100 @@ package com.gestureworks.analysis
 							palm_pt.handID = cO.handList[j].palm.handID;
 							
 							palm_pt.fn = cO.handList[j].fingerList.length;
+							
 							palm_pt.flatness = cO.handList[j].flatness;
 							palm_pt.orientation = cO.handList[j].orientation;
-							//palm_pt.handednes  = cO.handList[j].handednes 
+							//palm_pt.type  = cO.handList[j].type 
+							palm_pt.sphereRadius  = cO.handList[j].sphereRadius  
+							palm_pt.type = "palm";	
 							
-							palm_pt.type = "palm";
+							//trace("fist: geometric", palm_pt.fist, cO.handList[j].orientation, cO.handList[j].flatness, cO.handList[j].splay, cO.handList[j].type);
 							
-							
-
 						InteractionPointTracker.framePoints.push(palm_pt)
-						//trace("push plam ipoint");
-					}
+				}
+		}
+		
+		public function find3DFistPoints():void 
+		{
+			var hn:int = cO.handList.length;
+			var flatness:Number = 0.4;
+			var orientation:String;
+			var handednes:String;
+			
+			//trace("find fist points");
+			
+			// PALM IP MAY BE CREATED BASED ON FLATNESS , ORIENTATION AND HANDEDNESS CRITERIA
+			// IN THE SAME WAY AS PINCH, HOOK, TRIGGER MAY BE CREATED BASED ON SEPERATION AND EXTENSION CRITERIA
+			
+				for (j = 0; j < cO.hn; j++)
+				{	
+						var fist_pt:InteractionPointObject = new InteractionPointObject();
+						
+							// TEST FOR OPENESS
+							//
+							if (cO.handList[j].fingerList.length == 0) 
+							{
+								if (cO.handList[j].flatness<10) fist_pt.fist = true;
+								//trace("fist: 0",cO.handList[j].sphereRadius,cO.handList[j].palm.sphereRadius,cO.handList[j].flatness);
+								
+							}
+							// STRONG TRACKING ERROR 2 FINGERS
+							else if (cO.handList[j].fingerList.length == 2)
+							{
+								if ((cO.handList[j].fingerList[0].length < 80) && (cO.handList[j].fingerList[1].length < 80))
+								{
+								//if ((cO.handList[j].flatness<0.2)&&(cO.handList[j].palm.sphereRadius<70)){
+									fist_pt.fist = true;
+								}
+								//trace("2 fist: ",palm_pt.fist,cO.handList[j].fingerAveragePosition,cO.handList[j].fingerList[0].length,cO.handList[j].fingerList[1].length);
+							}
+							// WEAK TRACKING ERROR 1 FINGER
+							else if (cO.handList[j].fingerList.length == 1)
+							{
+								if (cO.handList[j].fingerList[0].length<90){
+								//if ((cO.handList[j].flatness<0.4)&&(cO.handList[j].palm.sphereRadius<60)){
+									fist_pt.fist = true;
+								}
+								//trace("1 fist: ",palm_pt.fist,cO.handList[j].fingerList.length,cO.handList[j].palm.sphereRadius,cO.handList[j].flatness,cO.handList[j].fingerAveragePosition,cO.handList[j].fingerList[0].length);
+							}
+							else {
+								fist_pt.fist = false;
+							}
+							//trace("fist: ", palm_pt.fist);
+							///////////////////////////////////////////////////
+							//OVERIDE FLATNESS AND HAND ORIENTATION
+							///////////////////////////////////////////////////
+							if (fist_pt.fist) 
+							{
+								cO.handList[j].orientation = "unknown";
+								cO.handList[j].flatness = 0;
+								cO.handList[j].splay = 0;
+								cO.handList[j].type = "unknown";
+								//cO.handList[j].fist = true;
+								
+								
+								////////////////////////////////////////////////////////////////
+								// CREAT FIST POINT
+								////////////////////////////////////////////////////////////////
+						
+								fist_pt.position = cO.handList[j].palm.position;
+								fist_pt.direction = cO.handList[j].palm.direction;
+								fist_pt.normal = cO.handList[j].palm.normal;
+								fist_pt.rotation = cO.handList[j].palm.rotation;
+								fist_pt.handID = cO.handList[j].palm.handID;
+								
+								fist_pt.fn = cO.handList[j].fingerList.length;
+								
+								fist_pt.flatness = cO.handList[j].flatness;
+								fist_pt.orientation = cO.handList[j].orientation;
+								//palm_pt.type  = cO.handList[j].type 
+								fist_pt.sphereRadius  = cO.handList[j].sphereRadius  
+								fist_pt.type = "fist";	
+							
+								//trace("fist: geometric");
+							
+								InteractionPointTracker.framePoints.push(fist_pt)
+							}
 				}
 		}
 		

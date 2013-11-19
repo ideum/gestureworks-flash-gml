@@ -106,8 +106,17 @@ package com.gestureworks.managers
 									ap.direction = fp.direction;
 									ap.normal = fp.normal;
 									
+									// advanced ip features
+									ap.fist = fp.fist;
+									ap.splay = fp.splay;
+									ap.orientation = fp.orientation;
+									ap.sphereRadius = fp.sphereRadius;
+									ap.flatness = fp.flatness;
+									ap.fn = fp.fn;
+									
 									ap.handID = fp.handID;
 									ap.type = fp.type;
+									
 									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
 										
 									InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event

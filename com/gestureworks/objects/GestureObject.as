@@ -100,9 +100,18 @@ package com.gestureworks.objects
 		
 		// hand splay ---------------------
 		public var h_splay:Number = 0;
+		public var h_splay_min:Number = 0;
+		public var h_splay_max:Number = 0;
 		
 		// hand flatness ---------------------
 		public var h_flatness:Number = 0;
+		public var h_flatness_min:Number = 0;
+		public var h_flatness_max:Number = 0;
+		
+		//hand radius -----------------------
+		public var h_radius:Number = 0;
+		public var h_radius_min:Number = 0;
+		public var h_radius_max:Number = 0;
 		
 		////////////////////////////////////////
 		//EXPLICIT HAND CONFIG

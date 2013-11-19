@@ -305,35 +305,30 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////
 		// CLUSTER EVENT LOGIC
 		///////////////////////////////////////////////
-		
 		// add point
 		public var point_add:Boolean = false;
-		
 		// remove point
 		public var point_remove:Boolean = false;
-
 		// add cluster
 		public var add:Boolean = false;
-
 		// remove cluster
 		public var remove:Boolean = false;
 		
-				
+		
+		
+		
+		// PRIME MULTIMODAL POINT ARRAY COPIED FROM CLOBAL REGISTERED CACHE
 		public var mmPointArray:Array = new Array();
 
-		
 		/////////////////////////////////////////////////////////////////////////
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
 		public var pointArray:Vector.<PointObject> = new Vector.<PointObject>();
-
 		// motion point data list
 		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		
 		// motion point data list
 		public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		
 		// sensor point data list----------------
 		public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
 		
@@ -346,25 +341,24 @@ package com.gestureworks.objects
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
 		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		
-		
 		public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
 			
-		// TOUCH PARENT CLUSTER
+		//TOUCH PARENT CLUSTER ///////////////////////////////////////
 		public var tcO:ipClusterObject = new ipClusterObject ();
+		//TOUCH SUBCLUSTER ARRAY
+		public var tsubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
-		// MOTION PARENT CLUSTER
+		//MOTION PARENT CLUSTER///////////////////////////////////////
 		public var mcO:ipClusterObject = new ipClusterObject ();
-		
 		//MOTION SUBCLUSTER ARRAY
+		//TODO: CHANGE NAME TO mSubCluster
 		public var subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
-		/*
-		// SENSOR PARENT CLUSTER
+		// SENSOR PARENT CLUSTER//////////////////////////////////////
 		public var scO:ipClusterObject = new ipClusterObject ();
-		public function get scO():ipClusterObject { return _scO;}
-		public function set scO(value:ipClusterObject ):void	{ _scO = value; }*/
+		//TOUCH SUBCLUSTER ARRAY
+		public var ssubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
