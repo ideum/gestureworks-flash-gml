@@ -67,13 +67,13 @@ package com.gestureworks.utils
 			_showDebugOutput = value;
 		}
 		
-		private var isReplaying:Boolean = false;
+		public var isReplaying:Boolean = false;
 		
 		private var debug:Boolean = false;
 		
 		private var touchBeginTime:Number;
 		
-		private var isRecording:Boolean = false;
+		public var isRecording:Boolean = false;
 		
 		private var stopRecordingSet:Boolean = false;
 		
@@ -84,6 +84,8 @@ package com.gestureworks.utils
 		private var frameIndex:uint;
 		
 		private var replayIndex:uint;
+		
+		private var canRecord:Boolean = false;
 		
 		private var _frameEvents:Array = new Array();
 		
@@ -140,10 +142,10 @@ package com.gestureworks.utils
 			switch (proxy.type) {
 				
 				case TouchEvent.TOUCH_BEGIN:
-					if(!isRecording) {
-						startRecording();
-					}
-					break;			
+					 if(!isRecording && canRecord) {
+						 startRecording();
+					 }
+					 break;			
 					
 				case TouchEvent.TOUCH_END:
 					
@@ -153,10 +155,12 @@ package com.gestureworks.utils
 					break;
 			}
 			
-			touchEvents.push(proxy);
+			if (isRecording){
+				touchEvents.push(proxy);
 			
-			if (drawingOn) {
-				drawCircle(proxy);
+				if (drawingOn) {
+					drawCircle(proxy);
+				}
 			}
 			
 			if (proxy.type == TouchEvent.TOUCH_END &&
@@ -229,7 +233,7 @@ package com.gestureworks.utils
 			clearCanvas();
 		}
 		
-		private function stopReplaying():void {
+		public function stopReplaying():void {
 			
 			displayText = "Replay stopped";
 			
@@ -238,7 +242,7 @@ package com.gestureworks.utils
 			touchEvents = [];
 		}
 		
-		private function togglePause():void {
+		public function togglePause():void {
 			
 			if (!isReplaying) {
 				return;
@@ -272,7 +276,7 @@ package com.gestureworks.utils
 			stopRecordingSet = true;
 		}
 		
-		private function stopRecording():void {
+		public function stopRecording():void {
 			isRecording = false;
 			stopRecordingSet = false;
 			displayText = "Recording stopped";
@@ -383,6 +387,20 @@ package com.gestureworks.utils
 			fileReader.binFileLoaded(null, byteArray);
 		}
 		
+		public function saveToFile():void {
+				if(!isReplaying) {
+						fileReader.saveBinFile(frameEvents);
+					}
+				return;
+			}
+			
+		public function loadFile():void {
+				if(!isReplaying) {
+						fileReader.readBinFile();
+					}
+				return;
+			}
+		
 		private function onKey(e:KeyboardEvent):void{	
 							
 			switch (e.charCode) {
@@ -398,6 +416,12 @@ package com.gestureworks.utils
 					if(!isReplaying) {
 						fileReader.readBinFile();
 					}
+					break;
+					
+				case 114: // 'r' 
+					canRecord = !canRecord;
+					
+					trace(canRecord);
 					break;
 					
 				case 115: // 's' save
@@ -596,6 +620,7 @@ class InputFileReader
 		file.addEventListener(Event.SELECT, binFileSelected);
 		file.addEventListener(Event.COMPLETE, binFileLoaded);
 		file.browse(fileFilter);
+		
 	}
 	
 	public function saveBinFile(frameEvents:Array):void {
