@@ -191,16 +191,12 @@ package com.gestureworks.managers
 		 * Sends overlays through pipeline
 		 * @param	e
 		 */
-		private static function processOverlays(e:GWTouchEvent):void {
-			for each(var overlay:ITouchObject in overlays) 	{
-				if (overlay["width"] && (e.stageX < overlay["x"] || e.stageX > overlay["x"] + overlay["width"])) 
-					continue;
-				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
-					continue;
+		public static function processOverlays(e:GWTouchEvent, o:Vector.<ITouchObject> = null):void {
+			if (!o)
+				o = overlays;
+			for each(var overlay:ITouchObject in o) 	{
 					
-				var actual:Object = e.target;					
-				e = e.clone() as GWTouchEvent;
-				
+				var actual:Object = e.target;									
 				overlay.active = true;
 				e.target = overlay;
 				overlay.dispatchEvent(e);
