@@ -140,27 +140,39 @@ package com.gestureworks.managers
 		}
 				
 		private function onAdd(e:TuioEvent):void {
-			var event:GWTouchEvent = new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
+			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
 			event.stageX = e.tuioContainer.x * stage.stageWidth;
 			event.stageY = e.tuioContainer.y * stage.stageHeight;
-			event.target = getTopDisplayObjectUnderPoint(new Point(event.stageX, event.stageY));
-				
+			event.target = getTopDisplayObjectUnderPoint(new Point(event.stageX, event.stageY));			
 			TouchManager.onTouchDown(event);
-			processOverlays(event);
+			
+			if (overlays.length) {
+				TouchManager.processOverlays(event, overlays);
+			}
+			
 		}
 		
 		private function onUpdate(e:TuioEvent):void
 		{						
-			var event:GWTouchEvent = new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
+			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
 			event.stageX = e.tuioContainer.x * stage.stageWidth;
 			event.stageY = e.tuioContainer.y * stage.stageHeight;
 			TouchManager.onTouchMove(event);
+			
+			if (overlays.length) {
+				TouchManager.processOverlays(event, overlays);
+			}			
 		}
 		
 		
 		private function onRemove(e:TuioEvent):void
 		{
-			TouchManager.onTouchUp(new GWTouchEvent(null, e.type, e.bubbles, e.cancelable, e.tuioContainer.sessionID));				
+			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, e.bubbles, e.cancelable, e.tuioContainer.sessionID);			
+			TouchManager.onTouchUp(event);				
+			
+			if (overlays.length) {
+				TouchManager.processOverlays(event, overlays);
+			}			
 		}
 		
 		/**
@@ -218,28 +230,12 @@ package com.gestureworks.managers
 		}
 		
 		/**
-		 * Registers global overlays to receive point data
+		 * Registers global overlays to receive point data for TUIO input
 		 */
 		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
 		public static function set overlays(o:Vector.<ITouchObject>):void {
 			_overlays = o;
-		}	
-		
-		/**
-		 * Sends overlays through pipeline
-		 * @param	e
-		 */
-		private static function processOverlays(e:GWTouchEvent):void {
-			for each(var overlay:ITouchObject in overlays) 	{
-				if (overlay["width"] && (e.stageX < overlay["x"] || e.stageX > overlay["x"] + overlay["width"])) 
-					continue;
-				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
-					continue;
-				e = e.clone() as GWTouchEvent;
-				e.target = overlay;
-				TouchManager.onTouchDown(e);
-			}			
-		}		
+		}			
 
 	}
 }
