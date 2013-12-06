@@ -116,14 +116,8 @@ package com.gestureworks.managers
 							}
 							
 							//global overlays
-							for each(var overlay:ITouchObject in overlays) 	{							
-								if (overlay["width"] && (point.x < overlay["x"] || point.x > overlay["x"] + overlay["width"])) 
-									continue;
-								if (overlay["height"] && (point.y < overlay["y"] || point.y > overlay["y"] + overlay["height"]))
-									continue;
-								ev = ev.clone() as GWTouchEvent;
-								ev.target = overlay;
-								TouchManager.onTouchDown(ev);
+							if (overlays.length) {
+								TouchManager.processOverlays(ev, overlays);
 							}
 					}
 					
@@ -133,7 +127,13 @@ package com.gestureworks.managers
 				else {
 					if (activePoints.indexOf(pid) != -1 && pressure > pressureThreshold){
 						activePoints.splice(activePoints.indexOf(pid), 1);
-						TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, pid, false));
+						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, pid, false);
+						TouchManager.onTouchUp(ev);
+						
+						if (overlays.length) {
+							TouchManager.processOverlays(ev, overlays);
+						}						
+						
 						if (debug)
 							trace("REMOVED:", pid, event.frame.pointable(pid));					
 					}
@@ -142,7 +142,11 @@ package com.gestureworks.managers
 							ev.stageX = point.x;
 							ev.stageY = point.y;
 							ev.pressure = pressure;
-						TouchManager.onTouchMove(ev);											
+						TouchManager.onTouchMove(ev);
+												
+						if (overlays.length) {
+							TouchManager.processOverlays(ev, overlays);
+						}												
 						
 						if(debug)
 							trace("UPDATE:", pid, event.frame.pointable(pid));							
