@@ -194,8 +194,9 @@ package com.gestureworks.managers
 				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
 					continue;
 				e = e.clone() as GWTouchEvent;
+				overlay.active = true;
 				e.target = overlay;
-				onTouchDown(e);
+				overlay.dispatchEvent(e);
 			}			
 		}
 		
@@ -308,8 +309,10 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onTouchEnd(event:TouchEvent):void{
-			onTouchUp(new GWTouchEvent(event));
+		private static function onTouchEnd(e:TouchEvent):void {
+			var event:GWTouchEvent = new GWTouchEvent(e);
+			onTouchUp(event);
+			processOverlays(event);
 		}		
 		
 		// stage on TOUCH_UP.
@@ -373,8 +376,10 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onMove(event:TouchEvent):void{
-			onTouchMove(new GWTouchEvent(event));
+		private static function onMove(e:TouchEvent):void {
+			var event:GWTouchEvent = new GWTouchEvent(e);
+			onTouchMove(event);
+			processOverlays(event);			
 		}			
 	
 		private static var pointObject:PointObject;		
