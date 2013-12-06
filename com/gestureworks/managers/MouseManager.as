@@ -87,7 +87,12 @@ package com.gestureworks.managers
 				mousePointX = event.stageX;
 				mousePointY = event.stageY;		
 			}
-			processOverlays(event);
+			if (overlays.length) {
+				currentMousePoint = event.touchPointID;
+				mousePointX = event.stageX;
+				mousePointY = event.stageY;
+				TouchManager.processOverlays(event, overlays);
+			}
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
@@ -133,6 +138,10 @@ package com.gestureworks.managers
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			event.touchPointID = currentMousePoint;
 			TouchManager.onTouchUp(event);
+			
+			if (overlays.length) {
+				TouchManager.processOverlays(event, overlays);
+			}
 		}
 		
 		private static function removeSimulatorPoint(simPoint:SimulatorGraphic):void {
@@ -166,33 +175,18 @@ package com.gestureworks.managers
 			event.stageX = mousePointX;
 			event.stageY = mousePointY;
 			TouchManager.onTouchMove(event);
+			
+			if (overlays.length) {
+				TouchManager.processOverlays(event, overlays);
+			}
 		}
 		
 		/**
-		 * Registers global overlays to receive point data
+		 * Registers global overlays to receive point data for mouse input
 		 */
 		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
 		public static function set overlays(o:Vector.<ITouchObject>):void {
 			_overlays = o;
 		}	
-		
-		/**
-		 * Sends overlays through pipeline
-		 * @param	e
-		 */
-		private static function processOverlays(e:GWTouchEvent):void {
-			for each(var overlay:ITouchObject in overlays) 	{
-				if (overlay["width"] && (e.stageX < overlay["x"] || e.stageX > overlay["x"] + overlay["width"])) 
-					continue;
-				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
-					continue;
-				e = e.clone() as GWTouchEvent;
-				e.target = overlay;
-				currentMousePoint = e.touchPointID;
-				mousePointX = e.stageX;
-				mousePointY = e.stageY;					
-				TouchManager.onTouchDown(e);
-			}			
-		}		
 	}
 }
