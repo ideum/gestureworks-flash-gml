@@ -296,8 +296,8 @@ package com.gestureworks.core
 				
 				ref_frame_angle = angle;
 				var scalex:Number = parent_modifier.a / Math.cos(angle);
-				var scaley:Number = parent_modifier.a / Math.cos(angle);
-				var scalez:Number = parent_modifier.a / Math.cos(angle);
+				var scaley:Number = scalex;//parent_modifier.a / Math.cos(angle);
+				var scalez:Number = scalex;//parent_modifier.a / Math.cos(angle);
 				
 				//TRANSFORM CENTER POINT OF TRANSFORMATION
 				var pt:Point
@@ -456,7 +456,7 @@ package com.gestureworks.core
 					
 					ref_frame_angle = angle;
 					var scalex:Number = parent_modifier.a/Math.cos(angle)
-					var scaley:Number = parent_modifier.a/Math.cos(angle)
+					var scaley:Number = scalex;//parent_modifier.a/Math.cos(angle)
 					
 					// TRANSFORM AFFINE POINT
 					var pt:Point;
@@ -521,9 +521,9 @@ package com.gestureworks.core
 				
 				//if (ts.transform3d) {
 					// TODO: 3D affine transformations
-					dthetaX = ts.dthetaX * DEG_RAD;//3d--
-					dthetaY = ts.dthetaY * DEG_RAD;//3d--
-					dthetaZ = ts.dthetaZ * DEG_RAD;//3d--		
+					//dthetaX = ts.dthetaX * DEG_RAD;//3d--
+					//dthetaY = ts.dthetaY * DEG_RAD;//3d--
+					//dthetaZ = ts.dthetaZ * DEG_RAD;//3d--		
 				//}
 			
 				//////////////////////////////////////////////////////
