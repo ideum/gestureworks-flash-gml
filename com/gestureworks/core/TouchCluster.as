@@ -21,6 +21,7 @@ package com.gestureworks.core
 	import com.gestureworks.analysis.GeoMetric;
 	import com.gestureworks.objects.GestureObject;
 	
+	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -116,6 +117,10 @@ package com.gestureworks.core
 				initClusterVars();
 				initClusterAnalysis();
 				initClusterAnalysisConfig();
+				
+				// test 
+				//todo: move to gloabl control for gml access
+				initGeoMetric2D();
 		}
 		/**
 		 * @private
@@ -288,7 +293,7 @@ package com.gestureworks.core
 				if (geometricsOn)
 				{	
 					//TODO: GEOMRETRIC 2D (TRIANGLE TEST)
-					//if (ts.touchEnabled) getGeoMetrics2D(); 
+					if (ts.touchEnabled) getGeoMetrics2D(); 
 					if (ts.motionEnabled) getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
@@ -385,6 +390,20 @@ package com.gestureworks.core
 		{
 			// look at global gesture list and check what fiducials are required
 			// activate gloabl touch geometric 2d anlysis
+			
+			
+			// creat five point tag
+			cO.objectArray[0] = new Array()
+					cO.objectArray[0][0] = new PointObject();
+					cO.objectArray[0][0].dist = 100;
+					cO.objectArray[0][1] = new PointObject();
+					cO.objectArray[0][1].dist = 96;
+					cO.objectArray[0][2] = new PointObject();
+					cO.objectArray[0][2].dist = 92;
+					cO.objectArray[0][3] = new PointObject();
+					cO.objectArray[0][3].dist = 84;
+					cO.objectArray[0][4] = new PointObject();
+					cO.objectArray[0][4].dist = 76;
 		}
 		
 		//ESTABLISHES GLOABL IP SUPPORT
@@ -454,6 +473,12 @@ package com.gestureworks.core
 			}
 		}
 		
+		
+		public function getGeoMetrics2D():void
+		{
+			cluster_kinemetric.findTouchInstDimention();
+			cluster_geometric.find2DTagPoints(); 
+		}
 		
 		// ESTABLISHES LOCAL IP SUPPORT TO ALLOW IN LOCAL IP LIST
 		public function initIPSupport():void
@@ -643,6 +668,8 @@ package com.gestureworks.core
 			cluster_kinemetric.resetTouchCluster();
 			cluster_kinemetric.findTouchInstDimention();
 			
+			//cluster_geometric.find2DTagPoints(); 
+			
 			//trace("-touch cluster -----------------------------",gn);
 			
 			for (key = 0; key < gn; key++) 
@@ -657,7 +684,10 @@ package com.gestureworks.core
 				// NEED TO UPDATE TOUCH GESTURES AND TYPE THEM (TOUCH, MOTION, MOTION & TOUCH, SENSOR, SENSOR & TOUCH, SENSOR & MOTION...)	
 				/// need to test more
 				
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type!="motion"))
+				//trace(gO.pOList[key].cluster_input_type);
+				
+				
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type="")||(gO.pOList[key].cluster_input_type="touch"))&&(cluster_geometric.tag_match))//gO.pOList[key].cluster_input_type!="motion"
 				{
 				
 					// set dim length
