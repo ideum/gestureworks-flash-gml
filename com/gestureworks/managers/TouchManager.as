@@ -193,10 +193,20 @@ package com.gestureworks.managers
 					continue;
 				if (overlay["height"] && (e.stageY < overlay["y"] || e.stageY > overlay["y"] + overlay["height"]))
 					continue;
+					
+				var actual:Object = e.target;					
 				e = e.clone() as GWTouchEvent;
+				
 				overlay.active = true;
 				e.target = overlay;
 				overlay.dispatchEvent(e);
+				
+				if (e.type == "gwTouchBegin") {
+					if(actual)
+						assignPointClone(e);
+					else
+						onTouchDown(e);
+				}
 			}			
 		}
 		
