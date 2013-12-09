@@ -289,26 +289,6 @@ package com.gestureworks.core
 			if (_sensor) 
 				SensorManager.gw_public::initialize();
 		}
-		private var _wiimote:Boolean = false;
-		/**
-		 * Turns sensor input on. Currently only supports Accelerometer in Air.
-		 * @default false
-		 */
-		public function get wiimote():Boolean{return _wiimote;}
-		public function set wiimote(value:Boolean):void
-		{
-			if (wiimote == value) return;
-			_wiimote = value;
-			
-			GestureWorks.activeSensor = _wiimote;
-			if (_wiimote){
-				SensorManager.wiimoteEnabled = true;
-				sensor = true;
-			}
-			else
-				motion = false;
-				//SensorManager.gw_public::initialize();
-		}
 		
 		private var _leap2D:Boolean = false;
 		/**
