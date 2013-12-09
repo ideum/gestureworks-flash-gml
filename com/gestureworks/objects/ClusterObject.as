@@ -349,11 +349,6 @@ package com.gestureworks.objects
 		//TOUCH SUBCLUSTER ARRAY
 		public var tsubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
-		//TOUCH OBJECT ARRAY A LIST OF TAGGING STRCTURES FOR 2D
-		public var objectArray:Vector.<Object> = new Vector.<Object>();
-		
-		
-		
 		//MOTION PARENT CLUSTER///////////////////////////////////////
 		public var mcO:ipClusterObject = new ipClusterObject ();
 		//MOTION SUBCLUSTER ARRAY

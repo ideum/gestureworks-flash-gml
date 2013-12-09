@@ -32,40 +32,39 @@ package com.gestureworks.objects
 		/////////////////////////////////////////////
 		// x
 		public var x:Number=0;
+
 		// y
 		public var y:Number=0;
+
 		// Z //-3d
 		public var z:Number = 0;
 
 		
 		// width
 		public var w:Number=0;
+
 		// height
-		public var h:Number = 0;
-		
-		//////////////////////////////////
-		//TEST TODO MOVE TO SUBCLUSTER
-		// radial distance to local object cluster center
-		public var dist:Number=0;
-		// radial angle to local object cluster center 
-		public var angle:Number = 0;
-		// match tp tag point property in object
-		public var match:Boolean = false;
-		//////////////////////////////////
+		public var h:Number=0;
 
 		//////////////////////////////////////////////
+		
 		// dx
 		public var dx:Number=0;
+
 		// dy
 		public var dy:Number=0;
+
+		
 		// dz
 		public var dz:Number = 0;
 
 		                                                                                                                                                                                                  
 		// DX
 		public var DX:Number=0;
+
 		// DY
 		public var DY:Number=0;
+
 		// DZ
 		public var DZ:Number=0;		
 		

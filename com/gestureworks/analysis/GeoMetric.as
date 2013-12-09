@@ -30,7 +30,6 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.managers.InteractionPointTracker;
 		
 	public class GeoMetric
@@ -44,13 +43,10 @@ package com.gestureworks.analysis
 		private var touchObjectID:int;
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
-		private var tcO:ipClusterObject;
 		private var i:uint = 0;
 		private var j:uint = 0;
 		
 		private var mpn:uint = 0;
-		
-		public var tag_match:Boolean = false;
 		
 		public function GeoMetric(_id:int) 
 		{
@@ -62,8 +58,7 @@ package com.gestureworks.analysis
 		{
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID]; // need to find center of object for orientation and pivot
 			cO = ts.cO; // get motion data
-			tcO = ts.cO.tcO; 
-			
+		
 			if (ts.traceDebugMode) trace("init cluster geometric");
 		}
 		
@@ -86,87 +81,6 @@ package com.gestureworks.analysis
 			ts.cO.mpn = mpn;
 			ts.cO.mcO.mpn = mpn;
 		}
-		
-		///////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////
-		// 2d touch config analysis
-		///////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////
-		
-		public function find2DTagPoints():void
-		{
-			
-		// NEED TO LOCK INTO CENTER OF CLUSTER FIND CLOSEST RADIAL POINT TO CENTER THEN WORK OUTWARDS MATCHING  AND LOCKING IN FEATURES
-		// LIKE  A BARREL LOCK 
-			
-			
-			
-		if (ts.tpn) 
-		{
-			//trace("find 2d tag points")
-			
-			var count:int = 0;
-			var error:int = 8;
-			
-				for (i = 0; i < ts.cO.tpn; i++) 
-				{
-				//var pt:PointObject = cO.pointArray[i]
-				
-				var distx:Number = cO.tcO.x - cO.pointArray[i].x;
-				var disty:Number = cO.tcO.y - cO.pointArray[i].y;
-				
-				cO.pointArray[i].dist = Math.sqrt(distx * distx + disty * disty)
-				cO.pointArray[i].match = false;
-				//trace("tpoints",i,cO.pointArray[i].dist,cO.tcO.x,cO.tcO.y)
-				}
-				trace("--")
-				
-				for (i = 0; i < cO.objectArray.length; i++) 
-				{
-					for (j = 0; j < cO.objectArray[i].length; j++) 
-					{
-						// number of points in object tag structure
-						//cO.objectArray[i].object[j].length
-						
-						
-						for (var k:int = 0; k < ts.cO.tpn; k++) 
-						{
-							//var drx = cO.x - cO.objectArray[i][j].x;
-							//var dry = cO.y - cO.objectArray[i][j].y;
-							//var rdist =  Math.sqrt(drx * drx + dry * dry)
-							var rdist:Number = cO.objectArray[i][j].dist;
-							var diff:Number = Math.abs(cO.objectArray[i][j].dist -cO.pointArray[k].dist)
-							//var min:Number = rdist - error; 
-							//var max:Number = rdist + error; 
-							
-							
-							
-							//if (( min < cO.pointArray[k].dist < max ) && (!cO.pointArray[k].match))
-							//trace("rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist)
-							
-							//NEED DECENDING POINT MATCH TO CREATE BEST MATCH
-							// NEED ANGULAR 
-							if((!cO.pointArray[k].match)&&(diff < error))
-								{
-									cO.pointArray[k].match = true;
-									count++;
-									trace("rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist,k)
-								}
-						}
-					}
-				}
-				
-				// note reduce accuracey
-				if (count >= 4) {
-					//trace("tag feature match")
-					tag_match = true;
-				}
-				else tag_match =false
-				
-			}
-		}
-		
-		
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
