@@ -64,10 +64,14 @@ package com.gestureworks.managers
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
 		
+		private static var gts:*;
 		private static var gms:*;
+		private static var gss:*;
+		
 		private static var hooks:Vector.<Function>;
 		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();
 		private static var gms_init:Boolean = false;
+		private static var gss_init:Boolean = false;
 		
 		// initializes touchManager
 		gw_public static function initialize():void
@@ -636,7 +640,12 @@ package com.gestureworks.managers
 			if (obj.tg) obj.tg.initTimeline();
 		}		
 		
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
+		// WILL MOVE TO INTERACTION MANAGER AND MAKE GENERIC 
+		// FOR MULTIMODAL
+		
 		public static function touchFrameHandler(event:GWEvent):void
 		{
 			//trace("touch frame process ----------------------------------------------");	
@@ -646,10 +655,17 @@ package com.gestureworks.managers
 			
 			//trace(GestureGlobals.frameID)
 			/////////////////////////////////////////////////////////////////////////////
+			if (GestureWorks.activeSensor)
+			{
+				gss = GestureGlobals.gw_public::touchObjects[GestureGlobals.sensorSpriteID]; //REMOVE AND ASSIGN ONLY ONCE
+			}
+			
+			
+			
 			//GET MOTION POINT LIST
 			if (GestureWorks.activeMotion)
 			{
-				gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
+				gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID]; //REMOVE AND ASSIGN ONLY ONCE
 				gms.tc.getSkeletalMetrics3D();
 				
 				//trace("FrameID");
@@ -665,26 +681,46 @@ package com.gestureworks.managers
 			for each(var tO:Object in touchObjects)
 			{
 				//trace("tm touchobject",tO, tO.tc.core);
+				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
-				//GET GLOBAL MOTION POINTS		
-				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
+				//PULL SENSOR POINT DATA INTO EACH TOUCHOBJECT
+				//GET GLOBAL SENSOR POINTS		
+				if ((GestureWorks.activeSensor) && (tO.sensorEnabled) && (!tO.tc.core))
+				{
 					if (tO.cO)
 					{
-						if (GestureGlobals.frameID == 200) 
-						{
-							tO.tc.initIPSupport();
-							tO.tc.initIPFilters();
-						}
-						
-						tO.cO.motionArray = gms.cO.motionArray
-						tO.cO.handList = gms.cO.handList;
-						//tO.cO.iPointArray = gms.cO.iPointArray;
+						//trace("push global sensor to local touch object");
+						//GLOBAL PUSH TO ALL SENSOR ENABLED VIOs
+						tO.cO.sensorArray = gss.cO.sensorArray
 					}
 					else 
 						continue;
 				}
-					
+				
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
+				//GET GLOBAL MOTION POINTS		
+				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){ //MUST ADD !CORE
+					if (tO.cO)
+					{
+						if (GestureGlobals.frameID == 200) 
+						{
+							//trace("int ip support")
+							tO.tc.initIPSupport();
+							tO.tc.initIPFilters(); //CHECK
+						}
+						
+						tO.cO.motionArray = gms.cO.motionArray
+						tO.cO.handList = gms.cO.handList;
+						
+						
+						// NEED TO REMOVE FOR IP HIT TEST
+						//tO.cO.iPointArray = gms.cO.iPointArray; 
+					}
+					else 
+						continue;
+				}
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// update touch,cluster and gesture processing
 				updateTouchObject(ITouchObject(tO));
 				

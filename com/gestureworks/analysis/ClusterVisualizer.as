@@ -339,6 +339,7 @@ package com.gestureworks.analysis
 	
 	private function drawInteractionPoints():void
 	{
+		//trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
 		if (ipn)
 			{
 				for (var i:int = 0; i < ipn; i++) 

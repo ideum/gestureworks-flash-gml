@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.objects.SensorPointObject;
 	import flash.sensors.Accelerometer;
 	import flash.utils.Dictionary;
 	import flash.events.TouchEvent;
@@ -58,6 +59,14 @@ package com.gestureworks.managers
 		public static var nativeAccelerometerEnabled:Boolean = false;
 		public static var wiimoteEnabled:Boolean = false;
 		
+		public static var wii_pt:SensorPointObject;
+		
+		
+		public static var spoints:Dictionary = new Dictionary();
+		public static var touchObjects:Dictionary = new Dictionary();
+		public static var gss:*
+		
+		
 		public static var act:Accelerometer; 
 		
 		
@@ -77,6 +86,8 @@ package com.gestureworks.managers
 		// initializes sensorManager
 		gw_public static function initialize():void
 		{	
+			trace("init sensor manager");
+			
 			
 			if (nativeAccelerometerEnabled)
 			{
@@ -95,10 +106,26 @@ package com.gestureworks.managers
 				wiimote.addEventListener( Event.CONNECT, onWiimoteConnect );
 				wiimote.connect();
 				if (wiimote) trace("wiimote init", wiimote.id, wiimote.batteryLevel, wiimote.hasBalanceBoard, wiimote.hasClassicController,wiimote.hasNunchuk)
+			
+				//CREATE PAIRED SENSOR POINT ONE PER DEVICE FOR SIMPLE DEVICES
+				wii_pt new SensorPointObject();
+				// init
 			}
 		
-				// create gloabal sensor sprite
-				ms = new TouchSprite();
+				
+				
+			///////////////////////////////////////////////////////////////////////////////////////
+			// ref global motion point list
+			spoints = GestureGlobals.gw_public::sensorPoints;
+			touchObjects = GestureGlobals.gw_public::touchObjects;
+			
+			// CREATE GLOBAL SENSOR SPRITE TO HANDLE ALL GLOBAL ANALYSIS OF SENSOR POINTS
+			gss = new TouchSprite();
+				gss.active = true;
+				gss.sensorEnabled = true;
+				gss.tc.core = true; // fix for global core analysis
+				
+			GestureGlobals.sensorSpriteID = gss.touchObjectID;
 		}
 		
 		
@@ -113,8 +140,8 @@ package com.gestureworks.managers
 			// buttons
 			//wiimote.addEventListener(ButtonEvent.C_PRESS, c_buttonPressed);       
             //wiimote.addEventListener(ButtonEvent.C_RELEASE, c_buttonReleased);  
-            wiimote.addEventListener(ButtonEvent.B_PRESS, b_buttonPressed);       
-            wiimote.addEventListener(ButtonEvent.B_RELEASE, b_buttonReleased);  
+           // wiimote.addEventListener(ButtonEvent.B_PRESS, b_buttonPressed);       
+           // wiimote.addEventListener(ButtonEvent.B_RELEASE, b_buttonReleased);  
 			//wiimote.addEventListener(ButtonEvent.A_PRESS, a_buttonPressed);       
             //wiimote.addEventListener(ButtonEvent.A_RELEASE, a_buttonReleased); 
 			
@@ -175,7 +202,7 @@ package com.gestureworks.managers
 		public static function updateWiimote( pEvent:WiimoteEvent ):void
         {
 			//trace("wii update",wiimote.toString());
-			trace("wii update", wiimote.sensorX, wiimote.sensorY, wiimote.sensorZ, wiimote.roll, wiimote.pitch, wiimote.yaw);
+			//trace("wii update", wiimote.sensorX, wiimote.sensorY, wiimote.sensorZ, wiimote.roll, wiimote.pitch, wiimote.yaw);
 
 				//if (b_press)
 				//{
@@ -186,39 +213,80 @@ package com.gestureworks.managers
 				
 				if (wiimote.hasNunchuk) 
 				{
-					trace("nc", wiimote.nunchuk.sensorX, wiimote.nunchuk.sensorY, wiimote.nunchuk.sensorZ, wiimote.nunchuk.roll, wiimote.nunchuk.yaw, wiimote.nunchuk.pitch);
-					trace("nc", wiimote.nunchuk.stickX, wiimote.nunchuk.stickY)
-					trace("nc", wiimote.nunchuk.c, wiimote.nunchuk.z);
+					//trace("nc", wiimote.nunchuk.sensorX, wiimote.nunchuk.sensorY, wiimote.nunchuk.sensorZ, wiimote.nunchuk.roll, wiimote.nunchuk.yaw, wiimote.nunchuk.pitch);
+					//trace("nc", wiimote.nunchuk.stickX, wiimote.nunchuk.stickY)
+					//trace("nc", wiimote.nunchuk.c, wiimote.nunchuk.z);
 				}
 				
 				if (wiimote.hasBalanceBoard) 
 				{
-					trace("bb", wiimote.balanceBoard.centerOfGravity,wiimote.balanceBoard.bottomRightKg,wiimote.balanceBoard.bottomLeftKg,wiimote.balanceBoard.topLeftKg,wiimote.balanceBoard.topRightKg,wiimote.balanceBoard.totalKg);
+					//trace("bb", wiimote.balanceBoard.centerOfGravity,wiimote.balanceBoard.bottomRightKg,wiimote.balanceBoard.bottomLeftKg,wiimote.balanceBoard.topLeftKg,wiimote.balanceBoard.topRightKg,wiimote.balanceBoard.totalKg);
 				}
 				
+			//////////////////////////////////////////////////////////
+			/// push updated sensor data to 
+			// NOTE NEED TO CACHE SENSOR DATA AS FASTER THAN 60FPS
+			
+			var wii_pt:SensorPointObject = new SensorPointObject();
+				wii_pt.roll =  wiimote.roll;
+				wii_pt.pitch =  wiimote.pitch;
+				wii_pt.yaw =  wiimote.yaw;
+				
+				wii_pt.rotation.x =  wiimote.roll;
+				wii_pt.rotation.y =  wiimote.pitch;
+				wii_pt.rotation.z =  wiimote.yaw;
+				
+				wii_pt.acceleration.x =  wiimote.sensorX
+				wii_pt.acceleration.y =  wiimote.sensorY
+				wii_pt.acceleration.z =  wiimote.sensorZ
+				
+				wii_pt.buttons.a =  wiimote.a;
+				wii_pt.buttons.b =  wiimote.b;
+				wii_pt.buttons.one =  wiimote.one;
+				wii_pt.buttons.two =  wiimote.two;
+				
+				wii_pt.buttons.plus =  wiimote.plus;
+				wii_pt.buttons.minus =  wiimote.minus;
+				wii_pt.buttons.home =  wiimote.home;
+				wii_pt.buttons.up =  wiimote.up;
+				wii_pt.buttons.down =  wiimote.down;
+				wii_pt.buttons.left =  wiimote.left;
+				wii_pt.buttons.right =  wiimote.right;
+				
+				if (wiimote.hasNunchuk) 
+				{
+					wii_pt.buttons.c =  wiimote.nunchuk.c;
+					wii_pt.buttons.z =  wiimote.nunchuk.z;
+					wii_pt.buttons.stickX = wiimote.nunchuk.stickX;
+					wii_pt.buttons.stickY = wiimote.nunchuk.stickY;
+				}
+				
+			gss.cO.sensorArray[0] = wii_pt;
+			
+			//trace(wii_pt.acceleration.x, gss.cO.sensorArray[0].acceleration.x )
         }
          
         public static function b_buttonPressed( pEvent:ButtonEvent ):void
         {
-			trace("b button press")
+			//trace("b button press")
 			b_press = true;
         }
          
         public static function b_buttonReleased( pEvent:ButtonEvent ):void
         {
-			trace("b button release");
+			//trace("b button release");
 			b_press = false;
         } 
 		
 		 public static function a_buttonPressed( pEvent:ButtonEvent ):void
         {
-			trace("a button press")
+			//trace("a button press")
 			a_press = true;
         }
          
         public static function a_buttonReleased( pEvent:ButtonEvent ):void
         {
-			trace("a button release");
+			//trace("a button release");
 			a_press = false;
         } 
 		/////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +304,7 @@ package com.gestureworks.managers
 				act_vector[3] = event.accelerationZ;
 				
 			//push sensor data to cluster object
-			ms.cO.sensorArray = act_vector	
+			//ms.cO.sensorArray = act_vector	
 			// update cluster analysis
 			//ms.updateSensorClusterAnalysis()
         }

@@ -467,6 +467,9 @@ package com.gestureworks.analysis
 			{
 			// draw virtual accelerometer point
 			
+			// draw wii point 
+			
+			
 				// draw shape
 				// draw vector
 				

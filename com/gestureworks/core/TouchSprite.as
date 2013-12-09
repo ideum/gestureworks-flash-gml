@@ -207,6 +207,13 @@ package com.gestureworks.core
 		 */
 		public function get mpn():int { return _mpn; }
 		public function set mpn(n:int):void { _mpn = n; }
+		
+		private var _spn:int = 0; 
+		/**
+		 * @inheritDoc
+		 */
+		public function get spn():int { return _spn; }
+		public function set spn(n:int):void { _spn = n; }
 				
 		private var _dN:Number = 0; 
 		/**
@@ -592,7 +599,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get sensorEnabled():Boolean { return _sensorEnabled; }
-		public function set sesnorEnabled(value:Boolean):void {	_sensorEnabled = value;}
+		public function set sensorEnabled(value:Boolean):void {	_sensorEnabled = value;}
 		
 		
 		private var _nativeTransform:Boolean = false;

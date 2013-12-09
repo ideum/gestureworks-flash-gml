@@ -53,7 +53,7 @@ package com.gestureworks.utils
         public function parse(ID:int):void 
          {
 			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
-			//trace("parsing gml");
+			trace("parsing gml");
 			
 			gOList = GestureGlobals.gw_public::gestures[ID];
 			gml = new XMLList(GML.Gestures);
@@ -169,6 +169,7 @@ package com.gestureworks.utils
 												gO.gesture_type = String(gml.Gesture_set[g].Gesture[i].attribute("type"));
 
 												// MATHICNG CRITERIA
+												gO.match_ButtonEvent = String(gml.Gesture_set[g].Gesture[i].match.action.initial.event.attribute("button_event"));
 												gO.match_TouchEvent = String(gml.Gesture_set[g].Gesture[i].match.action.initial.event.attribute("touch_event"));
 												gO.match_GestureEvent = String(gml.Gesture_set[g].Gesture[i].match.action.initial.event.attribute("gesture_event"));
 											
@@ -227,6 +228,7 @@ package com.gestureworks.utils
 															// cluster type
 															gO.cluster_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("type"));
 															gO.cluster_input_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("input_type"));
+															gO.cluster_device_type = String(gml.Gesture_set[g].Gesture[i].match.action.initial.cluster.attribute("device_type"));
 															
 															///////////////////////////////
 															// HAND BASED EXPLICIT CONGFIG
@@ -595,6 +597,7 @@ package com.gestureworks.utils
 														else if ((target == "x")||(target == "X")) 					dO.target_id = "dx";
 														else if ((target == "y") || (target == "Y")) 				dO.target_id = "dy";
 														else if ((target == "z") || (target == "Z")) 				dO.target_id = "dz";
+														//else if ((target == "name") || (target == "name")) 				dO.target_id = "name";
 														else  dO.target_id = "";
 														
 														//////////////////////////////////////////////////////////////////////////////////////////
@@ -630,7 +633,7 @@ package com.gestureworks.utils
 						
 							gOList.pOList = gList;
 							
-						//traceGesturePropertyList()
+						traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
@@ -641,15 +644,19 @@ package com.gestureworks.utils
 			
 			for (var i:uint = 0; i < gn; i++ )
 				{
-					//trace("	new gesture object:--------------------------------");
+					trace("	new gesture object:--------------------------------");
 					//trace("g xml....."+"\n",gOList.pOList[i].gesture_xml)
 					var dn:uint = gOList.pOList[i].dList.length;
 					
+					trace("gesture top level props", gOList.pOList[i].cluster_input_type);
 					
-					/*for (var j:uint = 0; j < dn; j++ )
+					
+					
+					
+					for (var j:uint = 0; j < dn; j++ )
 					{
 							trace("		property item:",i,j,"__",gList[i].dList[j]);
-					}*/
+					}
 				}
 				//trace("gesture object parsing complete");
 		}
