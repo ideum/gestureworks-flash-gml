@@ -51,7 +51,7 @@ package com.gestureworks.core
 			fontManager = new FontManager;			
 			modeManager = new ModeManager;
 			if (stage) setApplication();
-			else addEventListener(Event.ADDED_TO_STAGE, setApplication);
+			else addEventListener(Event.ADDED_TO_STAGE, setApplication);			
 		}
 		
 		private function setApplication(event:Event = null):void {
@@ -98,21 +98,6 @@ package com.gestureworks.core
 				if (!cmlDisplays) cmlDisplays = [];
 				startCmlParse();
 			}
-		}	
-		
-		private var _dml:String;
-		/**
-		 * Sets dml file path. Path is relevant to application.
-		 */
-		public function get dml():String{return _dml;}
-		public function set dml(value:String):void
-		{
-			if (_dml == value) return;
-			if (value == "") return;
-			_dml = value;
-			
-			if (_dml)startDmlParse();
-		
 		}	
 		
 		
@@ -291,7 +276,7 @@ package com.gestureworks.core
 				
 		private var _sensor:Boolean = false;
 		/**
-		 * Turns sensor input on.
+		 * Turns sensor input on. Currently only supports Accelerometer in Air.
 		 * @default false
 		 */
 		public function get sensor():Boolean{return _sensor;}
@@ -301,17 +286,12 @@ package com.gestureworks.core
 			_sensor = value;
 			
 			GestureWorks.activeSensor = _sensor;
-			if (_sensor) {
+			if (_sensor) 
 				SensorManager.gw_public::initialize();
-			}
-			//else
-				//SensorManager.gw_public::deInitialize();
 		}
-		
-		
 		private var _wiimote:Boolean = false;
 		/**
-		 * Turns wiimote sensor input on.
+		 * Turns sensor input on. Currently only supports Accelerometer in Air.
 		 * @default false
 		 */
 		public function get wiimote():Boolean{return _wiimote;}
@@ -326,7 +306,8 @@ package com.gestureworks.core
 				sensor = true;
 			}
 			else
-				sensor = false;
+				motion = false;
+				//SensorManager.gw_public::initialize();
 		}
 		
 		private var _leap2D:Boolean = false;
@@ -430,28 +411,6 @@ package com.gestureworks.core
 			//trace("start gml parse",gml,GMLParser.settingsPath)
 		}
 		
-		// loads current dml file
-		private function startDmlParse():void
-		{			
-			DMLParser.settingsPath = dml;
-			DMLParser.addEventListener(DMLParser.settingsPath, dmlParserComplete);
-			
-			//trace("start gml parse",gml,GMLParser.settingsPath)
-		}
-		
-		/**
-		 * Loads a dml file
-		 * @param	dml The gml file path
-		 */
-		public function loadDML(dml:String):void {
-			if (this.dml)
-				this.dml += "," + dml;
-			else
-				this.dml = dml;
-		}
-		
-		
-		
 		/**
 		 * Loads a gml file
 		 * @param	gml The gml file path
@@ -506,13 +465,6 @@ package com.gestureworks.core
 			
 			if (CML.Objects.@leap3D == "true") 
 				leap3D = true;
-				
-			//NOTE NEED REDUNDANT OPTIONS FROM DML
-			// NATIVE ACCELEROMETER	
-			// WIIMOTE INIT
-			// VOICE INIT
-			// KINECT
-			// ARDUINO
 			
 			try {
 				var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
@@ -531,23 +483,6 @@ package com.gestureworks.core
 				startGmlParse();
 				//trace("init no gml", gml)
 			}
-			
-		}
-		
-		// parse loaded dml file
-		private function dmlParserComplete(event:Event):void
-		{
-			DML.Devices = DMLParser.settings;
-			//init();
-			//reapplyInitDevices();
-			
-			// wiimote init
-			if (DML.Devices.@wiimote == "true") wiimote = true;
-			
-			// NATIVE ACCELEROMETER	
-			// VOICE INIT
-			// KINECT
-			// ARDUINO
 			
 		}
 		

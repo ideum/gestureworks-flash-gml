@@ -62,7 +62,7 @@ package com.gestureworks.core
 		private var cO:ClusterObject
 		private var tcO:ipClusterObject
 		private var mcO:ipClusterObject
-		private var scO:ipClusterObject
+		//private var scO:ipClusterObject
 		
 		private var tiO:TimelineObject
 		
@@ -99,7 +99,7 @@ package com.gestureworks.core
 			cO = ts.cO;
 				tcO = cO.tcO;
 				mcO = cO.mcO;
-				scO = cO.scO;
+				//scO = cO.scO;
 			
 			tiO = ts.tiO;
 			
@@ -119,8 +119,8 @@ package com.gestureworks.core
 				initClusterAnalysisConfig();
 				
 				// test 
-				//todo: move to global control for gml access
-				//initGeoMetric2D();
+				//todo: move to gloabl control for gml access
+				initGeoMetric2D();
 		}
 		/**
 		 * @private
@@ -169,16 +169,12 @@ package com.gestureworks.core
 		{
 			//trace("update cluster count");
 			
-			// get motion point counts
+			// geometric on
 			cluster_geometric.findMotionClusterConstants();  // get mpn
 			
-			// get touch point count
+			
+			// get point count
 			cluster_kinemetric.findTouchClusterConstants(); // get tpn
-			
-			// get sensor point count
-			cluster_kinemetric.findSensorClusterConstants(); // get spn
-			
-		
 			cluster_kinemetric.find3DGlobalIPConstants();  	// get ipn
 			cluster_kinemetric.findRootClusterConstants(); 	// get n
 			
@@ -282,11 +278,9 @@ package com.gestureworks.core
 				updateClusterCount();
 				gn = gO.pOList.length;
 				
-				
 				cluster_kinemetric.resetRootCluster();
 				cluster_kinemetric.resetMotionCluster();
 				cluster_kinemetric.resetTouchCluster();
-				//cluster_kinemetric.resetSensorCluster();
 				
 				//cluster_kinemetric.findRootInstDimention();
 				
@@ -299,7 +293,7 @@ package com.gestureworks.core
 				if (geometricsOn)
 				{	
 					//TODO: GEOMRETRIC 2D (TRIANGLE TEST)
-					//if (ts.touchEnabled) getGeoMetrics2D(); 
+					if (ts.touchEnabled) getGeoMetrics2D(); 
 					if (ts.motionEnabled) getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
@@ -389,14 +383,10 @@ package com.gestureworks.core
 							if ((type == "frame") && (framePoints)) 						result = true; 
 							if ((type == "fist") && (fistPoints)) 							result = true; 
 							
-							
-							//add toch 
-							//add sensor
-							
 			return result		
 		} 
 		
-		public function initGeoMetric2D():void
+			public function initGeoMetric2D():void
 		{
 			// look at global gesture list and check what fiducials are required
 			// activate gloabl touch geometric 2d anlysis
@@ -486,8 +476,8 @@ package com.gestureworks.core
 		
 		public function getGeoMetrics2D():void
 		{
-			//cluster_kinemetric.findTouchInstDimention();
-			//cluster_geometric.find2DTagPoints(); 
+			cluster_kinemetric.findTouchInstDimention();
+			cluster_geometric.find2DTagPoints(); 
 		}
 		
 		// ESTABLISHES LOCAL IP SUPPORT TO ALLOW IN LOCAL IP LIST
@@ -497,7 +487,7 @@ package com.gestureworks.core
 			{
 			var gn:int = gO.pOList.length;
 			
-		//	trace("TOUCHCLUSTER core init ip support", gn)
+			//trace("hello", gn)
 			for (key = 0; key < gn; key++) 
 			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
 			{
@@ -535,10 +525,6 @@ package com.gestureworks.core
 							//---cluster_geometric.find3DRegionPoints();
 							//---cluster_geometric.find3dTipTapPoints();
 						}
-						
-						//if (g.cluster_input_type == "touch")
-						//if (g.cluster_input_type == "sesnor")
-						
 				}
 				
 			}
@@ -701,12 +687,7 @@ package com.gestureworks.core
 				//trace(gO.pOList[key].cluster_input_type);
 				
 				
-				////////////////////////////////////////////////
-				//TAG HACK
-				//if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type="")||(gO.pOList[key].cluster_input_type="touch"))&&(cluster_geometric.tag_match))
-				// also consider not motion
-				//gO.pOList[key].cluster_input_type!="motion"
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type=="")||(gO.pOList[key].cluster_input_type=="touch")))
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type="")||(gO.pOList[key].cluster_input_type="touch"))&&(cluster_geometric.tag_match))//gO.pOList[key].cluster_input_type!="motion"
 				{
 				
 					// set dim length
@@ -836,7 +817,7 @@ package com.gestureworks.core
 											
 											/////////////////////////////////////////////////////////////
 											//GREAT FOR FINDING CLUSTER PROPERTIES
-											//trace("touchcluster",res,tcO[res])
+											//trace(res,tcO[res])
 											/////////////////////////////////////////////////////////////
 											
 
@@ -877,7 +858,7 @@ package com.gestureworks.core
 			}
 			
 			//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
-			cluster_kinemetric.WeaveTouchClusterData(); // should move to cluster manager
+			cluster_kinemetric.WeaveTouchClusterData();
 		}
 
 		public function getKineMetrics3D():void 
@@ -927,8 +908,6 @@ package com.gestureworks.core
 				
 				// if gesture object is active in gesture list
 				// FILTER BY INPUT TYPE
-				//trace(gO.pOList[key].gesture_id,ts.gestureList[gO.pOList[key].gesture_id],gO.pOList[key].cluster_input_type)
-				
 				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type=="motion"))
 				{
 				
@@ -941,8 +920,6 @@ package com.gestureworks.core
 					// INTERACTION POINTS FROM // MOTION POINTS
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				//	trace("TOUCHCLUSTER: processing motion kinemetrics");
-					
 					// processing algorithms when in motion
 					if(ts.cO.ipn!=0){	//&&(sub_cO_n==gn))	// check kinemetric and if continuous analyze
 					
@@ -1017,6 +994,10 @@ package com.gestureworks.core
 						if((sub_cO_n >= g.nMin)&&(sub_cO_n<= g.nMax)||(sub_cO_n == g.n))
 						{
 							//trace("call motion cluster calc",ts.cO.fn,g.algorithm);
+							
+							//trace();
+							
+							
 							
 							///////////////////////////////////////////////
 							// MOTION MATCH
@@ -1109,7 +1090,6 @@ package com.gestureworks.core
 		
 		
 		//TODO: KILL GESTUREPOINT AND USE GESTURE EVENT INSTEAD
-		// use gesture points as replacement for internal gesture events for batching sequences
 		// MULL OVER IMPLICATIONS TO VIRTUAL 3D INTERACTIVE SPACE
 		/*
 		public function getGesturePoints():void 

@@ -40,6 +40,7 @@ package com.gestureworks.objects
 		
 		// gesture type
 		public var gesture_type:String;
+
 		
 		// algorithm id
 		public var algorithm:String;
@@ -62,8 +63,6 @@ package com.gestureworks.objects
 		//////////////////////////////////////
 		// global gesture matching criteria
 		//////////////////////////////////////
-		// phrase match
-		public var phrase:String = "";
 		
 		// n---------------------
 		public var n:int = 0;
@@ -79,9 +78,6 @@ package com.gestureworks.objects
 
 		// CLUSTER INPUT TYPE---------------------
 		public var cluster_input_type:String = "";
-		
-		// CLUSTER INPUT DEVICE TYPE---------------------
-		public var cluster_device_type:String = "";
 		
 		////////////////////////////////////////
 		// generic hand properties
@@ -214,11 +210,7 @@ package com.gestureworks.objects
 		
 		// path-match---------------
 		public var gmlPath:Array = new Array();
-		
-		//////////////////////////////////////////////////////////
-		// supplimetary matching criteria
-		public var match_ButtonEvent:String;
-		
+
 		// match event
 		public var match_TouchEvent:String;
 

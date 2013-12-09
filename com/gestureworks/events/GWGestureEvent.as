@@ -119,9 +119,6 @@ package com.gestureworks.events
 		public static var MOTION_ZTAP:String = "motion_ztap";
 		
 		
-		public static var SENSOR_ROTATE:String = "sensor_rotate"; //accelerometer rotate
-		public static var SENSOR_SELECT:String = "sensor_select"; //voice select
-		
 		
 	
 		public static var CUSTOM:Object = 
