@@ -56,7 +56,7 @@ package com.gestureworks.analysis
 		private var cO:ClusterObject;
 		private var mcO:ipClusterObject = new ipClusterObject(); 	//MOTION SUPER
 		private var tcO:ipClusterObject = new ipClusterObject(); 	//TOUCH SUPER
-		private var scO:ipClusterObject = new ipClusterObject(); 	//SENSOR SUPER
+		//private var scO:ipClusterObject = new ipClusterObject(); 	//SENSOR SUPER
 		
 		private var i:uint = 0;
 		private var j:uint = 0;
@@ -67,12 +67,6 @@ package com.gestureworks.analysis
 		private var N1:uint = 0;
 		private var k0:Number  = 0;
 		private var k1:Number  = 0;
-		
-		
-		//////////////////
-		//SENSOR point total
-		public var spn:uint = 0;
-		
 		
 		////////////////////////////////////////////////////////////
 		// TOUCH POINT TOTALS
@@ -137,7 +131,7 @@ package com.gestureworks.analysis
 			
 			tcO = cO.tcO; //parent touch cluster
 			mcO = cO.mcO; // parent motion cluster
-			scO = cO.scO; // parent sensor cluster
+			//scO = ts.scO; // parent sensor cluster
 			
 			
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
@@ -153,9 +147,7 @@ package com.gestureworks.analysis
 			maxZ = GestureGlobals.gw_public::leapMaxZ;
 			
 			// CREATE INTERACTION POINT SUBCLUSTERS
-			//if (ts.touchEnabled) initTouchSubClusters();
-			if (ts.motionEnabled) initSubClusters();
-			//if (ts.sensorEnabled)initSensorSubClusters();
+			if (ts.motionEnabled)initSubClusters();
 			
 			if (ts.traceDebugMode) trace("init cluster kinemetric");
 		}
@@ -222,9 +214,8 @@ package com.gestureworks.analysis
 			//SENSOR SUBCLUSTERS
 			// accelerometer
 			// myo
-			// arduino
 			// watch
-			// wiiremote
+			// wii remote
 		}
 		
 		
@@ -963,7 +954,7 @@ package com.gestureworks.analysis
 		
 		public function findMeanInstTranslation():void
 		{
-			//trace("KineMetric::findMeanInstTranslation", tpn,cO.pointArray.length);
+			//trace("KineMetric::findMeanInstTranslation");
 
 			
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -977,7 +968,6 @@ package com.gestureworks.analysis
 					
 					if (tpn == 1) 
 						{
-							//trace("KineMetric::findMeanInstTranslation", tpn,cO.pointArray[0].x,cO.pointArray[0].dx,cO.pointArray[0].DX );
 							if (cO.pointArray[0])
 								{
 								tcO.dx = cO.pointArray[0].DX;
@@ -1001,7 +991,7 @@ package com.gestureworks.analysis
 						tcO.dy *= tpnk0;
 						tcO.dz *= tpnk0;
 					}
-			//trace("drag calc kine",tcO.dx,tcO.dy);
+					//	trace("drag calc kine",c_dx,c_dy);
 		}
 		
 		public function findSimpleMeanInstSeparation():void
@@ -1509,27 +1499,15 @@ package com.gestureworks.analysis
 		// sensor IP analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		
-		public function findSensorClusterConstants():void
-		{
-				spn = ts.cO.sensorArray.length;
-				
-				ts.spn = spn;
-				ts.cO.spn = spn;
-				ts.cO.scO.spn = spn;
-		}
-		
-		
 		public function resetSensorCluster():void { }
 		public function resetSensorClusterConsts():void{}
 		public function findSensorClusterDimensions():void{}
 		public function findSensorVelocity():void{}
-		
 		public function findSensorJolt():void
 		{
 			//trace("accelerometer kinemetric");
 			
-			//var snr:Vector.<Number> = cO.sensorArray;
+			var snr:Vector.<Number> = cO.sensorArray;
 			
 			//trace("timestamp", snr[0]);
 			/*	
@@ -1541,7 +1519,7 @@ package com.gestureworks.analysis
 		}
 		
 		public function findSensorSubClusters():void{}
-		//public function weaveSensorCluster():void{}
+		public function weaveSensorCluster():void{}
 		
 		////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////
@@ -1581,6 +1559,7 @@ package com.gestureworks.analysis
 				handConfig.trigger.extension_min
 				handConfig.trigger.fn = undefined;
 			
+			
 			}
 		
 		
@@ -1589,8 +1568,10 @@ package com.gestureworks.analysis
 			{
 				// TODO: PULL FROM LOCAL GESTURE LIST
 				//OBJECT LEVEL GML DEFINED IP FILTERING
-					
-				trace("kinemetric filtering ip points");
+				
+				
+				
+				
 				
 				if (ts.cO.iPointArray)
 					{
@@ -1614,7 +1595,7 @@ package com.gestureworks.analysis
 										// NOTE CAN ONLY SPLICE AN IP ONCE
 										if (handConfig.palm.fist != undefined) if (ipt.fist != handConfig.palm.fist) 
 										{
-										trace("removed as not in fist")
+										trace("remove")
 										ts.cO.iPointArray.splice(ipt.id, 1);
 										}
 										//if (handConfig.palm.orientation != undefined) if (ipt.orientation != handConfig.palm.orientation) ts.cO.iPointArray.splice(ipt.id, 1);
@@ -1649,9 +1630,7 @@ package com.gestureworks.analysis
 								////////////////////////////////////////////////////////////////////
 								//check exists and check if ip type supported on display object
 								//trace("supported", ipt.type,ts.tc.ipSupported(ipt.type));
-								//CURRENTLY ONLY IP TYPE SUPPORT IS INITIAED IN THE CORE MOTION SPRITE
-								//TODO INIT IN EACH MS
-								if (ipt)//&&(ts.tc.ipSupported(ipt.type))
+								if ((ipt)&&(ts.tc.ipSupported(ipt.type)))
 								{
 									//trace(ts,gms);
 									var xh:Number = normalize(ipt.position.x, minX, maxX) *sw;//1920
@@ -2879,7 +2858,7 @@ package com.gestureworks.analysis
 							}
 							//trace("get diff");	
 			}
-			//trace("motion translate kinemetric",sub_cO.type, sub_cO.dx,sub_cO.dy,sub_cO.dz);
+			//trace("motion translate kinemetric",sub_cO.dx,sub_cO.dy,sub_cO.dz);
 		}
 		
 		public function find3DIPAcceleration(index:int):void//type:String
@@ -3024,7 +3003,7 @@ package com.gestureworks.analysis
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
 							
-							//trace("sub",sub_cO.type,sub_cO.x,sub_cO.y,sub_cO.z,sub_cO.dx, sub_cO.dy,sub_cO.dz)
+							//trace("sub",sub_cO.dx, sub_cO.dy)
 						}
 				}
 				
@@ -3103,7 +3082,7 @@ package com.gestureworks.analysis
 							//trace("weave motion",cO.x,cO.y,cO.z, cO.width,cO.height)
 							
 						}
-				//trace("motion prime to core cluster", mcO.x,mcO.y,mcO.z,mcO.dx,mcO.dy,mcO.dz, cO.x,cO.y, cO.dx,cO.dy)
+				//trace("motion prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
 		}
 		
 		public function WeaveTouchClusterData():void
@@ -3144,52 +3123,6 @@ package com.gestureworks.analysis
 							cO.dsx += tcO.dsx;
 							cO.dsy += tcO.dsy;
 							cO.dsz += tcO.dsz;
-							///////////////////////////////////////////////////////////////////////////////////////
-							///////////////////////////////////////////////////////////////////////////////////////
-						//trace("weave touch",cO.x,cO.y,cO.z, cO.width,cO.height)
-						}
-					//trace("touch prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
-				
-		}
-		
-		public function WeaveSensorClusterData():void
-		{
-						// each dimension / property must be merged independently
-						if (scO.spn>0)
-						{
-							// recalculate cluster center
-							// average over all ip subcluster subclusters 
-							cO.x = scO.x  
-							cO.y = scO.y
-							cO.z = scO.z
-							
-							cO.width = scO.width;
-							cO.height = scO.height;
-							cO.radius = scO.radius;  
-							
-							cO.thumbID = scO.thumbID;
-							cO.handednes = scO.handednes;
-							cO.orient_dx = scO.orient_dx; 
-							cO.orient_dy = scO.orient_dy; 
-							cO.pivot_dtheta = scO.pivot_dtheta; 
-							
-							
-							///////////////////////////////////////////////////////////////////
-							// map non zero deltas // accumulate 
-							// perhaps find average 
-							cO.dx += scO.dx;
-							cO.dy += scO.dy;
-							cO.dz += scO.dz;	
-								
-							cO.dtheta += scO.dtheta;
-							cO.dthetaX += scO.dthetaX;
-							cO.dthetaY += scO.dthetaY;
-							cO.dthetaZ += scO.dthetaZ;
-													
-							cO.ds += scO.ds; // must not be affected by cluster change in radius
-							cO.dsx += scO.dsx;
-							cO.dsy += scO.dsy;
-							cO.dsz += scO.dsz;
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
 						//trace("weave touch",cO.x,cO.y,cO.z, cO.width,cO.height)

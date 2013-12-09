@@ -39,10 +39,6 @@ package com.gestureworks.core
 		 */		
 		gw_public static var motionPoints:Dictionary = new Dictionary();
 		/**
-		 * Contains a dictionary of all sensor points present to the framework.
-		 */		
-		gw_public static var sensorPoints:Dictionary = new Dictionary();
-		/**
 		 * Contains a dictionary of all interaction points present to the framework.
 		 */			
 		gw_public static var interactionPoints:Dictionary = new Dictionary();
@@ -80,8 +76,6 @@ package com.gestureworks.core
 		
 		
 		public static var motionSpriteID:int = 0;//
-		
-		public static var sensorSpriteID:int = 0;//
 		
 		/**
 		 * frameID frame stamp relative to start of application.

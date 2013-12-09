@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    MotionPointObject.as
+//  File:    PointObject.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file

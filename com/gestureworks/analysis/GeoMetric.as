@@ -96,7 +96,8 @@ package com.gestureworks.analysis
 		public function find2DTagPoints():void
 		{
 			
-		//NEED TO FIND SINGNATURE CLUSTER WEB 
+		// NEED TO LOCK INTO CENTER OF CLUSTER FIND CLOSEST RADIAL POINT TO CENTER THEN WORK OUTWARDS MATCHING  AND LOCKING IN FEATURES
+		// LIKE  A BARREL LOCK 
 			
 			
 			
@@ -149,7 +150,7 @@ package com.gestureworks.analysis
 								{
 									cO.pointArray[k].match = true;
 									count++;
-									trace(" touch gemetric rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist,k)
+									trace("rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist,k)
 								}
 						}
 					}
@@ -757,7 +758,7 @@ package com.gestureworks.analysis
 		// Find Interactive Pinch Points //PINCH IP
 		public function find3DPinchPoints():void
 		{
-			//trace("finding pinch points, geometric");
+			//trace("finding pinch points, geometric",cO.hn);
 			
 			var pinchThreshold:Number = 40 * 50//60; //GML CONFIG 
 			var distThreshold:Number = 50//60; //GML CONFIG 

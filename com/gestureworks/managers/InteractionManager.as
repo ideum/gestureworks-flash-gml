@@ -25,7 +25,6 @@ package com.gestureworks.managers
 	import com.gestureworks.managers.InteractionPointTracker;
 	import com.gestureworks.objects.InteractionPointObject;
 	import flash.utils.Dictionary;
-	import images.GWSplash;
 	
 	
 		
@@ -143,10 +142,7 @@ package com.gestureworks.managers
 				// ADD TO LOCAL OBJECT Interaction POINT LIST
 				for each(var tO:Object in touchObjects)
 				{
-					//trace("test", tO.motionClusterMode,tO.tc.ipSupported(ipO.type), ipO.type);
-					//NOTE SUPPORT IP TYPES IS ONLY GLOBAL FOR NOW
-					//WILL HAVE TO INIT SUPPORTED TYPES FOR EACH VIO
-					if (tO.motionClusterMode == "local_strong")//&&(tO.tc.ipSupported(ipO.type)))
+					if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
 					{
 						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
 						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
@@ -161,8 +157,7 @@ package com.gestureworks.managers
 						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
 						{
 							if (hitTest3D != null) {
-								//trace("3d hit test"));
-							//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
+								 //trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as TouchContainer3D)
 								if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
 									tO.cO.iPointArray.push(ipO);								
 								}

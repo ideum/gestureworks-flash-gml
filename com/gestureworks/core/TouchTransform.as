@@ -540,9 +540,6 @@ package com.gestureworks.core
 				//}
 
 				updateLocalProperties();	
-				
-				// test 6/12/13 to fix rotationX //paul
-				if (ts.vto) ts.updateVTO();	
 			}
 		}
 		

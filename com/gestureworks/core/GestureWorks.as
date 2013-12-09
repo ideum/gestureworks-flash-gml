@@ -30,11 +30,9 @@ package com.gestureworks.core
 	
 	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GML;
-	//import com.gestureworks.core.DML;
 	import com.gestureworks.managers.ModeManager;
 	import com.gestureworks.utils.CMLLoader;
 	import com.gestureworks.utils.GMLParser;
-	//import com.gestureworks.utils.DMLParser;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
