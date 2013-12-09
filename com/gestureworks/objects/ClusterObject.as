@@ -16,6 +16,7 @@
 package com.gestureworks.objects 
 {
 	import com.gestureworks.objects.InteractionPointObject;
+	import com.gestureworks.objects.SensorPointObject;
 	import flash.geom.Vector3D;
 	
 	public class ClusterObject extends Object 
@@ -330,7 +331,7 @@ package com.gestureworks.objects
 		// motion point data list
 		public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		// sensor point data list----------------
-		public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
+		public var sensorArray:Vector.<SensorPointObject> = new Vector.<SensorPointObject>();
 		
 		
 		/////////////////////////////////////////////////////////////////////////////
@@ -362,7 +363,7 @@ package com.gestureworks.objects
 		
 		// SENSOR PARENT CLUSTER//////////////////////////////////////
 		public var scO:ipClusterObject = new ipClusterObject ();
-		//TOUCH SUBCLUSTER ARRAY
+		//SENSOR SUBCLUSTER ARRAY
 		public var ssubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		///////////////////////////////////////////////////////////////////////////////////
