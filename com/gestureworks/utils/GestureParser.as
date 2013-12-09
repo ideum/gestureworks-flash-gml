@@ -633,7 +633,7 @@ package com.gestureworks.utils
 						
 							gOList.pOList = gList;
 							
-						traceGesturePropertyList()
+						//traceGesturePropertyList()
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
