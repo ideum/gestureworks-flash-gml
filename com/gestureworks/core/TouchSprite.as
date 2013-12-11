@@ -25,6 +25,7 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.interfaces.ITouchObject;
+	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -1293,24 +1294,24 @@ package com.gestureworks.core
 			removeAllListeners();
 			
 			//remove from master list
-			delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+			ObjectManager.unRegisterTouchObject(this);
 			
-			gml = null;
-			gwTouchListeners = null;
-			pointArray = null;
-			_cO = null;
-			_sO = null;
-			_tiO = null;
-			_trO = null;
-			_tc = null;
-			_tp = null;
-			_tg = null;
-			_tt = null;
-			_visualizer = null; 
-			_gestureList = null;
-			_vto = null;
-			_view = null;
-			transformPoint = null;
+			//gml = null;
+			//gwTouchListeners = null;
+			//pointArray = null;
+			//_cO = null;
+			//_sO = null;
+			//_tiO = null;
+			//_trO = null;
+			//_tc = null;
+			//_tp = null;
+			//_tg = null;
+			//_tt = null;
+			//_visualizer = null; 
+			//_gestureList = null;
+			//_vto = null;
+			//_view = null;
+			//transformPoint = null;
 		}
 		
 	}
