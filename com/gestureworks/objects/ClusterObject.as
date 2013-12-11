@@ -369,5 +369,115 @@ package com.gestureworks.objects
 		// cluster history
 		/////////////////////////////////////////////////////////////////////////
 		public var history:Vector.<ClusterObject> = new Vector.<ClusterObject>();
+		
+		
+		/**
+		 * Reset attributes to initial values
+		 */
+		public function reset():void {
+			id = NaN;
+			type = null;
+			n = 0;
+			tpn = 0;
+			mpn = 0;
+			spn=0;
+			hn=0;
+			fn=0;
+			ipn = 0;
+			ipnk = 0;
+			ipnk0 = 0;
+			dn=0;
+			dipn = 0;
+			count = 0;
+			x=0;
+			y=0;
+			z=0;
+			width=0;
+			height=0;
+			length=0;
+			radius=0;		
+			separation=0;
+			separationX=0;
+			separationY=0;
+			separationZ=0;
+			rotation=0;
+			rotationX=0;
+			rotationY=0;
+			rotationZ=0;
+			mx=0;
+			my=0;
+			mz=0;
+			dx=0;
+			dy=0;
+			dz=0;
+			dw=0;
+			dh=0;
+			dr=0;
+			ds=0;
+			dsx=0;
+			dsy=0;
+			dsz=0;
+			dtheta=0;
+			dthetaX=0;
+			dthetaY=0;
+			dthetaZ=0;
+			pivot_dtheta=0;
+			mdx=0;
+			mdy=0;
+			mdz=0;
+			ddx=0;
+			ddy=0;
+			ddz=0;
+			ddtheta=0;
+			ddsx=0;
+			ddsy=0;
+			ddsz=0;
+			dds=0;
+			dds3d=0;
+			etm_dx=0;
+			etm_dy=0;
+			etm_dz=0;
+			etm_ddx=0;
+			etm_ddy=0;
+			etm_ddz=0;
+			handList.length = 0;
+			thumbID = 0;
+			handednes = "none";
+			orientation = 0;
+			orient_dx = 0;
+			orient_dy = 0;
+			orient_dz = 0;
+			hold_x = 0;
+			hold_y = 0;
+			hold_z = 0;
+			hold_n = 0;		
+			position.setTo(0,0,0);
+			direction.setTo(0,0,0);
+			scale.setTo(0,0,0);
+			scaleDelta.setTo(0,0,0);
+			rotationDelta.setTo(0,0,0);
+			velocity.setTo(0,0,0);
+			acceleration.setTo(0,0,0);
+			jolt.setTo(0,0,0);
+			point_add = false;
+			point_remove = false;
+			add = false;
+			remove = false;
+			mmPointArray.length = 0;
+			pointArray.length = 0;
+			motionArray.length = 0;
+			motionArray2D.length = 0;
+			sensorArray.length = 0;
+			iPointArray.length = 0;
+			iPointArray2D.length = 0;
+			tcO.reset();
+			tsubClusterArray.length = 0;
+			mcO.reset();
+			subClusterArray.length = 0;
+			scO.reset();
+			ssubClusterArray.length = 0;
+			gPointArray.length = 0;
+			history.length = 0;
+		}
 	}
 }

@@ -33,5 +33,16 @@ package com.gestureworks.objects
 
 		//transformEventArray
 		public var transformEventArray:Array = new Array();
+		
+		/**
+		 * Resets attributes to initial values
+		 */
+		public function reset():void {
+			id = NaN;
+			pointEventArray.length = 0;			
+			clusterEventArray.length = 0;			
+			gestureEventArray.length = 0;			
+			transformEventArray.length = 0;			
+		}
 	}
 }
