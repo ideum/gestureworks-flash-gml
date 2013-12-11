@@ -29,16 +29,18 @@ package com.gestureworks.managers
 		{	
 			touchObject.clusterID = count;
 			GestureGlobals.gw_public::touchObjects[count] = touchObject;
-			GestureGlobals.gw_public::objectCount++;
+			GestureGlobals.objectCount++;
+			PoolingManager.registerPools();
 			count++;
 			return touchObject.clusterID;
 		}
 		
 		public static function unRegisterTouchObject(touchObject:Object):void
 		{
-			delete GestureGlobals.gw_public::touchObjects[count];
+			delete GestureGlobals.gw_public::touchObjects[touchObject.touchObjectID];
+			GestureGlobals.objectCount--;			
+			PoolingManager.unregisterPools();
 			count--;
-			GestureGlobals.gw_public::objectCount--;
 		}
 	}
 }
