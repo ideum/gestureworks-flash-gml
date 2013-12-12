@@ -699,7 +699,7 @@ package com.gestureworks.managers
 				
 				// clear frame 
 				// was just pushing events and never clearing object 
-				if (tO.tiO) tO.tiO.frame = PoolingManager.frameObject;
+				if (tO.tiO) tO.tiO.frame = PoolManager.frameObject;
 			}
 			
 			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS

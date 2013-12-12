@@ -30,7 +30,7 @@ package com.gestureworks.managers
 			touchObject.clusterID = count;
 			GestureGlobals.gw_public::touchObjects[count] = touchObject;
 			GestureGlobals.objectCount++;
-			PoolingManager.registerPools();
+			PoolManager.registerPools();
 			count++;
 			return touchObject.clusterID;
 		}
@@ -39,7 +39,7 @@ package com.gestureworks.managers
 		{
 			delete GestureGlobals.gw_public::touchObjects[touchObject.touchObjectID];
 			GestureGlobals.objectCount--;			
-			PoolingManager.unregisterPools();
+			PoolManager.unregisterPools();
 			count--;
 		}
 	}
