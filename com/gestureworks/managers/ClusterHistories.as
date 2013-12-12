@@ -47,7 +47,7 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(clusterObject:ClusterObject):Object
 		{
-			var object:ClusterObject = PoolingManager.clusterObject;
+			var object:ClusterObject = PoolManager.clusterObject;
 				
 				// native properties
 				object.n = clusterObject.n;

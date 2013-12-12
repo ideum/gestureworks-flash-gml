@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
-	import com.gestureworks.managers.PoolingManager;
+	import com.gestureworks.managers.PoolManager;
 	import flash.display.Sprite;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
@@ -637,7 +637,7 @@ package com.gestureworks.core
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = PoolingManager.frameObject;
+				tiO.frame = PoolManager.frameObject;
 			}
 			
 			// start OBJECT complete event gesturing
