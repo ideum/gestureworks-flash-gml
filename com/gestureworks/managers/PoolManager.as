@@ -40,21 +40,12 @@ package com.gestureworks.managers {
 			updateCOPool();
 			updateFramePool();
 		}
-		
-		/**
-		 * Updates the queue of the specific pool by shifting the top object to the bottom
-		 * @param	pool Specific object pool
-		 * @return  The next object on top of the queue
-		 */
-		private static function next(pool:Vector.<Object>):Object {
-			var obj:Object = pool.shift();
-			obj.reset();
-			pool.push(obj);
-			return obj;
-		}		
-		
-		
+
 		/********************ClusterObject********************/
+		/**
+		 * Updates the queue of the pool by shifting the top object to the bottom
+		 * @return  The next object on top of the queue
+		 */		
 		private static function updateCOPool():void {
 			poolSize = objCnt * GestureGlobals.clusterHistoryCaptureLength;
 			
@@ -70,11 +61,18 @@ package com.gestureworks.managers {
 		 * @return the top ClusterObject
 		 */
 		public static function get clusterObject():ClusterObject {
-			return ClusterObject(next(Vector.<Object>(cOPool)));
+			var cO:ClusterObject = cOPool.shift();
+			cO.reset();
+			cOPool.push(cO);			
+			return cO;
 		}
 		
 		
 		/********************FrameObject********************/		
+		/**
+		 * Updates the queue of the pool by shifting the top object to the bottom
+		 * @return  The next object on top of the queue
+		 */				
 		private static function updateFramePool():void {
 			poolSize = objCnt * GestureGlobals.timelineHistoryCaptureLength;
 			
@@ -90,7 +88,10 @@ package com.gestureworks.managers {
 		 * @return the top FrameObject
 		 */
 		public static function get frameObject():FrameObject {
-			return FrameObject(next(Vector.<Object>(framePool)));
+			var frame:FrameObject = framePool.shift();
+			frame.reset();
+			framePool.push(frame);			
+			return frame;
 		}
 		
 	}
