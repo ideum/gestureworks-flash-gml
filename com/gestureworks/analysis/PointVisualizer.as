@@ -475,7 +475,8 @@ package com.gestureworks.analysis
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
-					// draw wii point 
+					///////////////////////////////////////////
+					// DRAW WII CONTROLLER POINT
 					if (sp.type == "wiimote")
 						{
 							if (_drawShape)
@@ -488,28 +489,39 @@ package com.gestureworks.analysis
 								graphics.endFill();
 							}
 						}
+					
+					//////////////////////////////////////////
+					// DRAW NATIVE ACCELEROMETER
+					if (sp.type == "nativeAccelerometer")
+					{	
+						// draw virtual accelerometer point
+						if (_drawShape)
+						{
+							// sensor center
+							graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+							graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
+							graphics.beginFill(0xFFFF00, style.fill_alpha);
+							graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
+							graphics.endFill();
+						}
+					}
 						
-						if (sp.type == "nativeAccelerometer")
-						{	
-							// draw virtual accelerometer point
+					///////////////////////////////////////////
+					// DRAW MYO CONTROLLER POINT
+					if (sp.type == "myo")
+						{
 							if (_drawShape)
 							{
 								// sensor center
-								graphics.lineStyle(2, 0xFFFF00, style.stroke_alpha);
+								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
 								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
-								graphics.beginFill(0xFFFF00, style.fill_alpha);
+								graphics.beginFill(0x00FFFF, style.fill_alpha);
 								graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
 								graphics.endFill();
 							}
 						}
 						
-						
-						
 					}
-			
-				// triangle ???
-				// square ?? 
-				// cross ??
 			}
 
 	
