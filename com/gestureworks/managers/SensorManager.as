@@ -108,7 +108,10 @@ package com.gestureworks.managers
 				if (wiimote) trace("wiimote init", wiimote.id, wiimote.batteryLevel, wiimote.hasBalanceBoard, wiimote.hasClassicController,wiimote.hasNunchuk)
 			
 				//CREATE PAIRED SENSOR POINT ONE PER DEVICE FOR SIMPLE DEVICES
-				wii_pt new SensorPointObject();
+				wii_pt = new SensorPointObject();
+					wii_pt.position.x = 500;
+					wii_pt.position.y = 500;
+					
 				// init
 			}
 		
@@ -227,7 +230,14 @@ package com.gestureworks.managers
 			/// push updated sensor data to 
 			// NOTE NEED TO CACHE SENSOR DATA AS FASTER THAN 60FPS
 			
-			var wii_pt:SensorPointObject = new SensorPointObject();
+			//var wii_pt:SensorPointObject = new SensorPointObject();
+			
+				wii_pt.type = "wiimote";
+				wii_pt.devicetype = "controller"
+				
+				wii_pt.position.x += 2 * wiimote.roll;
+				wii_pt.position.y += 2 * wiimote.pitch;
+			
 				wii_pt.roll =  wiimote.roll;
 				wii_pt.pitch =  wiimote.pitch;
 				wii_pt.yaw =  wiimote.yaw;

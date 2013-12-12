@@ -35,6 +35,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
+	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.ClusterObject;
@@ -53,6 +54,7 @@ package com.gestureworks.analysis
 		private var ts:Object;
 		private var tpn:uint = 0;
 		private var mpn:uint = 0;
+		private var spn:uint = 0;
 		private var mptext_array:Array = new Array();
 		private var tptext_array:Array = new Array();
 		private var i:int
@@ -163,7 +165,7 @@ package com.gestureworks.analysis
 			//N = cO.pointArray.length;
 			tpn = cO.tpn;
 			mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
-			
+			spn = cO.sensorArray.length;
 			
 			
 			// clear graphics
@@ -173,7 +175,7 @@ package com.gestureworks.analysis
 			// draw
 			if (ts.touchEnabled)	draw_touchPoints();
 			if (ts.motionEnabled)	draw_motionPoints();
-			//if (ts._sensorEnabled)	draw_sensorPoints();
+			if (ts.sensorEnabled)	draw_sensorPoints();
 		}
 		
 		
@@ -465,14 +467,46 @@ package com.gestureworks.analysis
 		////////////////////////////////////////////////////////////////
 		private function draw_sensorPoints():void
 			{
-			// draw virtual accelerometer point
-			
-			// draw wii point 
-			
-			
-				// draw shape
-				// draw vector
+			//trace("drawing sensor points", spn);
 				
+			for (i = 0; i < spn; i++) 
+					{
+					var sp:SensorPointObject = cO.sensorArray[i];
+
+					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
+					
+					// draw wii point 
+					if (sp.type == "wiimote")
+						{
+							if (_drawShape)
+							{
+								// sensor center
+								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
+								graphics.beginFill(0xFFFFFF, style.fill_alpha);
+								graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
+								graphics.endFill();
+							}
+						}
+						
+						if (sp.type == "nativeAccelerometer")
+						{	
+							// draw virtual accelerometer point
+							if (_drawShape)
+							{
+								// sensor center
+								graphics.lineStyle(2, 0xFFFF00, style.stroke_alpha);
+								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
+								graphics.beginFill(0xFFFF00, style.fill_alpha);
+								graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
+								graphics.endFill();
+							}
+						}
+						
+						
+						
+					}
+			
 				// triangle ???
 				// square ?? 
 				// cross ??

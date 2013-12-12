@@ -676,7 +676,7 @@ package com.gestureworks.managers
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
-				//trace("tm touchobject",tO, tO.tc.core);
+				//trace("tm touchobject",tO, tO.tc.core,GestureWorks.activeSensor,tO.sensorEnabled);
 				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL SENSOR POINT DATA INTO EACH TOUCHOBJECT

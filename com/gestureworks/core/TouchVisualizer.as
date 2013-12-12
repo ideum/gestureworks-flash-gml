@@ -206,7 +206,7 @@ package com.gestureworks.core
 			{
 			// touch points or interaction points
 			// REMOVE MPN WHEN TESTING COMPLETE
-			if ((ts.N)||(ts.mpn)||(ts.ipn))//ts.cO.sn //ts.cO.fn
+			if ((ts.N)||(ts.mpn)||(ts.ipn)||(ts.spn))//ts.cO.sn //ts.cO.fn
 			{
 				if ((pointDisplay)&&(point)) 		point.draw();
 				if ((clusterDisplay)&&(cluster))	cluster.draw();
