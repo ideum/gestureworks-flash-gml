@@ -146,8 +146,13 @@ package com.gestureworks.managers
 					//trace("test", tO.motionClusterMode,tO.tc.ipSupported(ipO.type), ipO.type);
 					//NOTE SUPPORT IP TYPES IS ONLY GLOBAL FOR NOW
 					//WILL HAVE TO INIT SUPPORTED TYPES FOR EACH VIO
+					
+					//trace(ipO.type, ipO.modal_type, ipO.input_type)
+					
 					if (tO.motionClusterMode == "local_strong")//&&(tO.tc.ipSupported(ipO.type)))
 					{
+						
+						
 						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
 						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
 						

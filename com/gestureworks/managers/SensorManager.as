@@ -235,8 +235,8 @@ package com.gestureworks.managers
 				wii_pt.type = "wiimote";
 				wii_pt.devicetype = "controller"
 				
-				wii_pt.position.x += 2 * wiimote.roll;
-				wii_pt.position.y += 2 * wiimote.pitch;
+				wii_pt.position.x += 1 * wiimote.roll;
+				wii_pt.position.y += 1 * wiimote.pitch;
 			
 				wii_pt.roll =  wiimote.roll;
 				wii_pt.pitch =  wiimote.pitch;

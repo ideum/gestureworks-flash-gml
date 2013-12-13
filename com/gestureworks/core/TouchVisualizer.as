@@ -18,9 +18,9 @@ package com.gestureworks.core
 	import flash.events.Event;
 	import flash.display.Sprite;
 	
-	import com.gestureworks.analysis.PointVisualizer;
-	import com.gestureworks.analysis.ClusterVisualizer;
-	import com.gestureworks.analysis.GestureVisualizer;
+	import com.gestureworks.visualizer.PointVisualizer;
+	import com.gestureworks.visualizer.ClusterVisualizer;
+	import com.gestureworks.visualizer.GestureVisualizer;
 	
 	import com.gestureworks.managers.ClusterHistories;
 	import com.gestureworks.managers.TransformHistories;
