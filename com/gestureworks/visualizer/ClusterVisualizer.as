@@ -454,7 +454,7 @@ package com.gestureworks.visualizer
 	private function drawSubClusterDims():void
 	{	
 		//FIND NUMBER OF SUBCLUSTERS
-		var scn:uint = cO.subClusterArray.length;
+		var scn:uint = cO.mSubClusterArray.length;
 		
 		//trace("draw",ipn,scn)
 		
@@ -466,7 +466,7 @@ package com.gestureworks.visualizer
 					
 					if (true) //ctype == "finger"// only shows finger now
 						{
-						var sub_cO:ipClusterObject = cO.subClusterArray[c]; //= cO.finger_cO;
+						var sub_cO:ipClusterObject = cO.mSubClusterArray[c]; //= cO.finger_cO;
 						var sipn:int = sub_cO.ipn;
 			
 						// DO FOR EACH EXISTING NONZERO SUBCLUSTER

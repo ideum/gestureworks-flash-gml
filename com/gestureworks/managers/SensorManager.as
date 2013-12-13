@@ -30,14 +30,14 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.GML;
 	
-	import com.gestureworks.utils.ArrangePoints;
-	import com.gestureworks.managers.PointHistories;
-	import com.gestureworks.events.GWEvent;
+	//import com.gestureworks.utils.ArrangePoints;
+	//import com.gestureworks.managers.PointHistories;
+	//import com.gestureworks.events.GWEvent;
 	
-	import com.gestureworks.objects.PointObject;
-	import com.gestureworks.objects.TouchObject;
-	import com.gestureworks.managers.PointHistories;
-	import com.gestureworks.utils.Simulator;
+	//import com.gestureworks.objects.PointObject;
+	//import com.gestureworks.objects.TouchObject;
+	//import com.gestureworks.managers.PointHistories;
+	//import com.gestureworks.utils.Simulator;
 	
 	// accelerometer
 	import flash.events.AccelerometerEvent;

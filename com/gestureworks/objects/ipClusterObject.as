@@ -25,6 +25,8 @@ package com.gestureworks.objects
 	
 		// cluster type
 		public var type:String;
+		// cluster motion type
+		public var motion_type:String;
 		
 		///////////////////////////////////////
 		// cluster properties//////////////////

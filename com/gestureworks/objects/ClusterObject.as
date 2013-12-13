@@ -348,7 +348,7 @@ package com.gestureworks.objects
 		//TOUCH PARENT CLUSTER ///////////////////////////////////////
 		public var tcO:ipClusterObject = new ipClusterObject ();
 		//TOUCH SUBCLUSTER ARRAY
-		public var tsubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public var tSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		//TOUCH OBJECT ARRAY A LIST OF TAGGING STRCTURES FOR 2D
 		public var objectArray:Vector.<Object> = new Vector.<Object>();
@@ -358,13 +358,12 @@ package com.gestureworks.objects
 		//MOTION PARENT CLUSTER///////////////////////////////////////
 		public var mcO:ipClusterObject = new ipClusterObject ();
 		//MOTION SUBCLUSTER ARRAY
-		//TODO: CHANGE NAME TO mSubCluster
-		public var subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public var mSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		// SENSOR PARENT CLUSTER//////////////////////////////////////
 		public var scO:ipClusterObject = new ipClusterObject ();
 		//SENSOR SUBCLUSTER ARRAY
-		public var ssubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public var sSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS

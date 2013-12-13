@@ -706,7 +706,7 @@ package com.gestureworks.core
 				//if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type="")||(gO.pOList[key].cluster_input_type="touch"))&&(cluster_geometric.tag_match))
 				// also consider not motion
 				//gO.pOList[key].cluster_input_type!="motion"
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type=="")||(gO.pOList[key].cluster_input_type=="touch")))
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type=="")||(gO.pOList[key].cluster_input_type=="touch")||(gO.pOList[key].cluster_input_type=="touch_")))
 				{
 				
 					// set dim length
@@ -874,6 +874,48 @@ package com.gestureworks.core
 				//}
 
 				}
+				
+				
+				/*
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// MULTIMODAL TRANSMODAL CROSS MODAL CLUSTER ANALYSIS
+				// TOUCH AND MOTION ///////////////////////////////////////////////////////
+				if (gO.pOList[key].cluster_input_type == "touch_motion") 
+				{
+					// set dim length
+					dn = gO.pOList[key].dList.length;
+
+					var g:GestureObject = gO.pOList[key];
+					
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					// PROCESSING TOUCH KINEMETRICS
+					// TOUCH POINTS
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+					if (ts.tpn != 0) // check kinemetric and if continuous analyze
+					{		
+						// check point number requirements
+						if((ts.tpn >= g.nMin)&&(ts.tpn <= g.nMax)||(ts.tpn == g.n))
+						{
+							//trace("call cluster calc",ts.N);
+							
+							if (g.algorithm_class == "kinemetric")
+							{
+									// activate all by default
+									g.activeEvent = true;
+									
+									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
+									
+									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
+									//if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformationMModal();
+							}
+						}
+					}
+				}*/
+				
+				// TOUCH AND SENSOR
+				// MOTION AND SENSOR
+				
 			}
 			
 			//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
@@ -906,7 +948,7 @@ package com.gestureworks.core
 				////////////////////////////////////////////////////////////////////
 				
 				// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
-				for (var j:uint = 0; j < cO.subClusterArray.length; j++) 
+				for (var j:uint = 0; j < cO.mSubClusterArray.length; j++) 
 				{	
 					// FIND CLUSTER DIMS
 					cluster_kinemetric.find3DIPConstants(j);
@@ -1009,7 +1051,7 @@ package com.gestureworks.core
 						//trace(c_type)
 					
 						//var sub_cO_n:int =  ts.cO.subClusterArray[b].iPointArray.length;
-						var sub_cO_n:int =  ts.cO.subClusterArray[b].ipn;
+						var sub_cO_n:int =  ts.cO.mSubClusterArray[b].ipn;
 
 						//trace(sub_cO_n,cluster_n)
 
@@ -1059,7 +1101,7 @@ package com.gestureworks.core
 										var	res:String = gdim.property_result
 										
 											//WHEN THERE ARE NO LIMITS IMPOSED
-											gdim.clusterDelta = cO.subClusterArray[b][res];
+											gdim.clusterDelta = cO.mSubClusterArray[b][res];
 
 											//CLOSE DIM IF NO VALUE
 											if (gdim.clusterDelta == 0) gdim.activeDim = false;
@@ -1073,12 +1115,12 @@ package com.gestureworks.core
 										//trace("sub_cluster data", g.activeEvent, g.dispatchEvent, cO.subClusterArray[b].dx,cO.subClusterArray[b].ipn,cO.hn, cO.fn );
 										
 										//NEED TO PULL FROM RELVANT GESTURE OBJECT//SUBCLUSTER OBJECT
-										g.data.x = cO.subClusterArray[b].x; 		// gesture position
-										g.data.y = cO.subClusterArray[b].y; 		// gesture position
-										g.data.z = cO.subClusterArray[b].z; 		// gesture position
+										g.data.x = cO.mSubClusterArray[b].x; 		// gesture position
+										g.data.y = cO.mSubClusterArray[b].y; 		// gesture position
+										g.data.z = cO.mSubClusterArray[b].z; 		// gesture position
 										g.data.hn = cO.hn;							// current hand number
 										g.data.fn = cO.fn; 							// current finger total
-										g.data.ipn = cO.subClusterArray[b].ipn; 	// current ip total
+										g.data.ipn = cO.mSubClusterArray[b].ipn; 	// current ip total
 										//MAY EXTEND TO NEW ARCHITECTURE
 										//g.data.gp = cO.gesturePoint;					// gesture point created from kinemetric3d analysis
 										
