@@ -6,7 +6,7 @@
 //
 //  GestureWorks
 //
-//  File:    GestureParser.as
+//  File:    DeviceParser.as
 //  Authors:  Ideum
 //             
 //  NOTICE: Ideum permits you to use, modify, and distribute this file
@@ -21,23 +21,19 @@ package com.gestureworks.utils
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.DML;
-	//import com.gestureworks.managers.TouchManager;
+
 	
-	//import com.gestureworks.objects.DimensionObject;
-	//import com.gestureworks.objects.GestureObject;
+	import com.gestureworks.objects.DeviceObject;
 	//import com.gestureworks.objects.GestureListObject;
-	
-	//import com.gestureworks.events.GWGestureEvent;
 	
 	public class DeviceParser
 	{
 		//public var gOList:GestureListObject;
-		public var deviceList:Object;
-		public var deviceTypeList:Object;
-		//private var dList:Vector.<GestureObject>;
-		public var dml:XMLList;
+		public static var  deviceList:Vector.<DeviceObject>
+		public static var  deviceTypeList:Object; 
+		public static var  dml:XMLList;
 		
-		public function GestureParser():void
+		public function DeviceParser():void
 		{
 			init();
         }
@@ -45,115 +41,75 @@ package com.gestureworks.utils
 		public function init():void 
          {
 		 //ID = touchSpriteID;
+		 //trace("init device parser");
 		 }
 		
 		/////////////////////////////////////////////////////////////////////
-		// GML
+		// DML
 		/////////////////////////////////////////////////////////////////////
-        public function parse(ID:int):void 
+		public function parseXML():void 
          {
-			//GWGestureEvent.CUSTOM.NEW_GESTURE = "new-gesture";
-			//trace("parsing gml");
+			//trace("parsing dml");
+			dml = new XMLList(DML.Devices);
+			trace(dml)
 			
-			//gOList = GestureGlobals.gw_public::gestures[ID];
-			gml = new XMLList(DML.Gestures);
-			//gList = new Vector.<GestureObject>;
-			
-			//trace(gml)
 			deviceTypeList = { 
-								"wiimote":true, 
-								"kinect":true, 
-								"accelerometer":true, 
-								"arduio":true
-							};		
-
-						
-						
-						/*	
-									
-						var gestureSetNum:int = gml.devices.length();
-						
-						for (var g:int = 0; g < gestureSetNum; g++) 
-							{
-						
-							var gestureNum:int = gml.Gesture_set[g].Gesture.length();
+							"wiimote":true, 
+							"kinect":true, 
+							"accelerometer":true, 
+							"arduino":true
+							};	
 							
-							//trace("gesture number",gestureNum)
-						
-							for (var i:int = 0; i < gestureNum; i++) 
+						deviceList = new Vector.<DeviceObject>();
+
+							var deviceGroupNum:int = dml.devices.input_globals.length();
+							
+							//trace("device group num",deviceGroupNum)
+
+							for (var i:int = 0; i < deviceGroupNum; i++) 
 							{
-								var gesture_id:String = String(gml.Gesture_set[g].Gesture[i].attribute("id"));
-								var gesture_set_id:String = String(gml.Gesture_set[g].attribute("id"));
-								var propertyNum:int = int(gml.Gesture_set[g].Gesture[i].analysis.algorithm.returns.property.length());
 								
+								var touch_deviceNum:int = dml.devices.input_globals[i].touch.length();
+								var motion_deviceNum:int = dml.devices.input_globals[i].motion.length();
+								var sensor_deviceNum:int = dml.devices.input_globals[i].sensor.length();
 								
-								//trace("gesture id",gesture_id,"gesture set id",gesture_set_id)
-								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-								// properties of the gesture 
-								///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-								
-								// check to see if in the gesture list for this touch object
-								var key:String;
-								var type:String;
-								
-								// 	for all gestures listed for touchspriteID
-								for (key in gestureList)
+								//trace("device type",touch_deviceNum,motion_deviceNum, sensor_deviceNum )
+
+								for (var j:int = 0; j < sensor_deviceNum; j++) 
 								{
-								//trace("key", key, gesture_id, gesture_set_id);
-								
-								// check for key match in gml // gesture sets set match
-								
-								if ((gesture_id == key)||(gesture_set_id == key)) 
-								{	
-									var gtype:String = String(gml.Gesture_set[g].Gesture[i].attribute("type"));
+									var sensor_typeNum:int = dml.devices.input_globals[i].sensor[j].wii.length;
 									
-									//trace("gtype-----------------------------",gtype);
-									
-									// for all matches in cml gesturelist and gml 
-									for (type in gestureTypeList)
+									for (var k:int = 0; k < sensor_typeNum; k++) 
 										{
-										//trace(type, gtype)
-										// check tha type is allowable 
-										if (type == gtype)
-										{
-											//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-											// create new gesture object for handling gesture data structure
-											//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-											
-											var gO:GestureObject = new GestureObject();
-
-											
-											// PUSH GESTURE OBJECT INTO GESTURE LIST VECTOR
-											gList.push(gO);
-										}
-									}
-											//////////////////////////////////////////////////////////////////////////////////
-											//////////////////////////////////////////////////////////////////////////////////
-									}
-									
-								}
-							} // gestures
-						}// gesture sets
-						
-							gOList.pOList = gList;
-							
-			*/			
 				
-				//traceDeviceList()
+										var device:DeviceObject = new DeviceObject();
+											device.type = "wiimote";
+											//device.input_type = "sensor";
+											device.active =  dml.devices.input_globals[i].motion[j].wii[k].attribute("active");
+											device.id = dml.devices.input_globals[i].motion[j].wii[k].attribute("id");
+											//device.controller = dml.devices.input_globals[i].motion[j].wii[k].attribute("controller");
+											//device.nunchk = dml.devices.input_globals[i].motion[j].wii[k].attribute("nunchuk");
+											//device.balanceboard = dml.devices.input_globals[i].motion[j].wii[k].attribute("balanceboad");
+											
+										deviceList.push(device);
+										}
+								}
+							}
+				
+				traceDeviceList();
 		}
 		////////////////////////////////////////////////////////////////////////////
 		
-		public function traceDeviceList():void
+		public static function traceDeviceList():void
 		{
 			//trace("new display object created in gesture parser util");
-			var gn:uint = gOList.pOList.length;
+			var dn:uint = 0//deviceList.length;
 			
-			for (var i:uint = 0; i < gn; i++ )
+			for (var i:uint = 0; i < dn; i++ )
 				{
-					//trace("	new gesture object:--------------------------------");
-					//trace("g xml....."+"\n",gOList.pOList[i].gesture_xml)
-					var dn:uint = gOList.pOList[i].dList.length;
-
+					trace("	new device object:--------------------------------");
+						//trace("d xml....."+"\n", gOList.pOList[i].gesture_xml)
+						trace(deviceList[i].type);
 				}
 				//trace("gesture object parsing complete");
 		}

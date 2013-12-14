@@ -538,17 +538,8 @@ package com.gestureworks.core
 		private function dmlParserComplete(event:Event):void
 		{
 			DML.Devices = DMLParser.settings;
-			//init();
-			//reapplyInitDevices();
 			
-			// wiimote init
-			if (DML.Devices.@wiimote == "true") wiimote = true;
-			
-			// NATIVE ACCELEROMETER	
-			// VOICE INIT
-			// KINECT
-			// ARDUINO
-			
+			DeviceManager.callDeviceParser();
 		}
 		
 		// parse loaded gml file
