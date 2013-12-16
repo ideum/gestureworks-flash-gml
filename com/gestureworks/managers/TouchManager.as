@@ -660,6 +660,10 @@ package com.gestureworks.managers
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
+				if (tO.disposal) {
+					tO.dispose();
+					continue;
+				}
 				//trace("tm touchobject",tO, tO.tc.core);
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT

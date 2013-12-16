@@ -25,6 +25,7 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.interfaces.ITouchObject;
+	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -1272,13 +1273,24 @@ package com.gestureworks.core
 				return true;
 			input1 = event;
 			return false;
-		}		
+		}	
+		
+		/**
+		 * Marks object for disposal and lets TouchManager handle call to prevent concurrent modification
+		 * errors on frame processes
+		 */
+		public var disposal:Boolean = false;
 		
 		/**
 		 * Calls the dispose method for each child, then removes all children, unregisters all events, and
 		 * removes from global lists. This is the root destructor intended to be called by overriding dispose functions. 
 		 */		
 		public function dispose():void {
+			
+			if (!disposal) {
+				disposal = true;
+				return; 
+			}
 			
 			//remove all children
 			for (var i:int = numChildren - 1; i >= 0; i--)
@@ -1293,7 +1305,7 @@ package com.gestureworks.core
 			removeAllListeners();
 			
 			//remove from master list
-			delete GestureGlobals.gw_public::touchObjects[_touchObjectID];
+			ObjectManager.unRegisterTouchObject(this);
 			
 			gml = null;
 			gwTouchListeners = null;
