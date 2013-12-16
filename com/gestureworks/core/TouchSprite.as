@@ -1273,13 +1273,24 @@ package com.gestureworks.core
 				return true;
 			input1 = event;
 			return false;
-		}		
+		}	
+		
+		/**
+		 * Marks object for disposal and lets TouchManager handle call to prevent concurrent modification
+		 * errors on frame processes
+		 */
+		public var disposal:Boolean = false;
 		
 		/**
 		 * Calls the dispose method for each child, then removes all children, unregisters all events, and
 		 * removes from global lists. This is the root destructor intended to be called by overriding dispose functions. 
 		 */		
 		public function dispose():void {
+			
+			if (!disposal) {
+				disposal = true;
+				return; 
+			}
 			
 			//remove all children
 			for (var i:int = numChildren - 1; i >= 0; i--)
@@ -1296,22 +1307,22 @@ package com.gestureworks.core
 			//remove from master list
 			ObjectManager.unRegisterTouchObject(this);
 			
-			//gml = null;
-			//gwTouchListeners = null;
-			//pointArray = null;
-			//_cO = null;
-			//_sO = null;
-			//_tiO = null;
-			//_trO = null;
-			//_tc = null;
-			//_tp = null;
-			//_tg = null;
-			//_tt = null;
-			//_visualizer = null; 
-			//_gestureList = null;
-			//_vto = null;
-			//_view = null;
-			//transformPoint = null;
+			gml = null;
+			gwTouchListeners = null;
+			pointArray = null;
+			_cO = null;
+			_sO = null;
+			_tiO = null;
+			_trO = null;
+			_tc = null;
+			_tp = null;
+			_tg = null;
+			_tt = null;
+			_visualizer = null; 
+			_gestureList = null;
+			_vto = null;
+			_view = null;
+			transformPoint = null;
 		}
 		
 	}
