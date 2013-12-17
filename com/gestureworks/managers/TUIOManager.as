@@ -38,7 +38,8 @@ package com.gestureworks.managers
 	 */	
 	public class TUIOManager extends Sprite
 	{
-		private static var gwTUIOMngr:TUIOManager;
+		private static var _gwTUIOMngr:TUIOManager;
+		public static function get gwTUIOMngr():TUIOManager { return _gwTUIOMngr; }
 		
 		private var connector:*;	
 		
@@ -57,21 +58,21 @@ package com.gestureworks.managers
 		gw_public static function initialize(host:String="127.0.0.1", port:int = NaN, protocol:String=null):void		
 		{			
 			// create gestureworks TUIOManager
-			if(!gwTUIOMngr){
-				gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop", host, port, protocol);
-				GestureWorks.application.addChild(gwTUIOMngr); 
+			if(!_gwTUIOMngr){
+				_gwTUIOMngr = new TUIOManager(Capabilities.playerType == "Desktop", host, port, protocol);
+				GestureWorks.application.addChild(_gwTUIOMngr); 
 			}
 			else {
-				gwTUIOMngr.activate();
-				GestureWorks.application.addChild(gwTUIOMngr);
+				_gwTUIOMngr.activate();
+				GestureWorks.application.addChild(_gwTUIOMngr);
 			}
 		}			
 		
 		gw_public static function deInitialize():void
 		{
-			if (gwTUIOMngr) {
-				gwTUIOMngr.deactivate();
-				GestureWorks.application.removeChild(gwTUIOMngr);
+			if (_gwTUIOMngr) {
+				_gwTUIOMngr.deactivate();
+				GestureWorks.application.removeChild(_gwTUIOMngr);
 			}
 		}
 
