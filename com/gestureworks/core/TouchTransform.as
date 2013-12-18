@@ -539,7 +539,10 @@ package com.gestureworks.core
 				transformAffineDebugPoints();
 				//}
 
-				updateLocalProperties();	
+				updateLocalProperties();
+				
+				if (ts.vto)
+					ts.updateVTO();	
 			}
 		}
 		
