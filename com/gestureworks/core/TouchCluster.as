@@ -657,7 +657,7 @@ package com.gestureworks.core
 				// NEED TO UPDATE TOUCH GESTURES AND TYPE THEM (TOUCH, MOTION, MOTION & TOUCH, SENSOR, SENSOR & TOUCH, SENSOR & MOTION...)	
 				/// need to test more
 				
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type!="motion"))
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type=="")||(gO.pOList[key].cluster_input_type=="touch")))//(gO.pOList[key].cluster_input_type!="motion"
 				{
 				
 					// set dim length
