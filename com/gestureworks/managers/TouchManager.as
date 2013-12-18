@@ -86,22 +86,14 @@ package com.gestureworks.managers
 				
 				//DRIVES POINT REGISTRATION
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
-				
 				//DRIVES UPDATES ON POINT LIFETIME
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
-				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);
 			}
 
 			// leave this on for all input types
-			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler);
-		}
-		
-		gw_public static function resetGlobalClock():void
-		{
-			//globalClock = new Timer(GestureGlobals.touchFrameInterval, 0);
-			//globalClock = new Timer(2000, 0);
+			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, touchFrameHandler); //MOVE TO 
 		}
 		
 		gw_public static function deInitialize():void

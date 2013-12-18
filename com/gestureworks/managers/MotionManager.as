@@ -47,6 +47,8 @@ package com.gestureworks.managers
 
 		public static var lmManager:LeapManager
 		public static var motionSprite:TouchSprite;
+		
+		public static var leapEnabled:Boolean = false;
 		public static var leapmode:String = "3d"//"2d"; //======================================================================
 		
 		public static var mpoints:Dictionary = new Dictionary();
@@ -58,16 +60,17 @@ package com.gestureworks.managers
 			//if(debug)
 				//trace("init leap motion device----------------------------------------------------",leapmode)
 				
-			
-			if(leapmode == "2d"){
-				lmManager = new Leap2DManager();
-				lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+			if (leapEnabled)
+			{
+				if(leapmode == "2d"){
+					lmManager = new Leap2DManager();
+					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				}
+				if (leapmode == "3d"){
+					lmManager = new Leap3DManager();
+					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				}
 			}
-			if (leapmode == "3d"){
-				lmManager = new Leap3DManager();
-				lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
-			}
-
 			
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list

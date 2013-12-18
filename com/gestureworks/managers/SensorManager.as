@@ -56,11 +56,13 @@ package com.gestureworks.managers
 	public class SensorManager
 	{	
 		public static var ms:TouchSprite;
-		public static var nativeAccelerometerEnabled:Boolean = false;
+		public static var nativeAccelEnabled:Boolean = false;
+		public static var arduinoEnabled:Boolean = false;
+		public static var voiceEnabled:Boolean = false;
 		public static var wiimoteEnabled:Boolean = false;
 		
 		public static var wii_pt:SensorPointObject;
-		
+		public static var na_pt:SensorPointObject;
 		
 		public static var spoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
@@ -88,17 +90,29 @@ package com.gestureworks.managers
 		{	
 			trace("init sensor manager");
 			
-			
-			if (nativeAccelerometerEnabled)
+			//INIT NATIVE ACCELEROMTER CONSTRUCTOR
+			if (nativeAccelEnabled)
 			{
 				if (Accelerometer.isSupported)
 				{
-					trace("accelerometer manager init")
+					// create native accel object // can be only one
+					trace("native accelerometer manager init")
 					act = new Accelerometer();
+					// GET DEVICE CONFIG DATA FROM DEVICE LIST OBJECT FROM DML
+					// if(updateinterval) 
+					// else set interval to framerate
+					act.setRequestedUpdateInterval((1/60)*1000);// miliseconds
 					act.addEventListener(AccelerometerEvent.UPDATE, accUpdateHandler);
+					if (act) trace("native accel init")
+					
+					
+					na_pt = new SensorPointObject();
+						na_pt.position.x = 500;
+						na_pt.position.y = 500;
 				}
 			}
 			
+			//INIT WIIMOTE CONSTRUCTOR
 			if (wiimoteEnabled) 
 			{	
 				// create wii manager
@@ -112,10 +126,19 @@ package com.gestureworks.managers
 					wii_pt.position.x = 500;
 					wii_pt.position.y = 500;
 					
-				// init
+			
 			}
-		
-				
+			//INIT ARDUINO CONSTRUCTOR
+			if (arduinoEnabled) 
+			{
+				trace("arduino constructor")
+			}
+			
+			//INIT VOICE CONSTRUCTOR
+			if (voiceEnabled) 
+			{
+				trace("voice constructor")
+			}
 				
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref global motion point list
@@ -131,6 +154,35 @@ package com.gestureworks.managers
 			GestureGlobals.sensorSpriteID = gss.touchObjectID;
 		}
 		
+		//////////////////////////////////////////////////////////////////////////////
+		//
+		//////////////////////////////////////////////////////////////////////////////
+		public static function accUpdateHandler(event:AccelerometerEvent):void
+        {
+			trace("pushing accel data",event.accelerationX, event.accelerationY, event.accelerationZ, event.timestamp)
+			 
+				na_pt.type = "nativeAccel";
+				na_pt.devicetype = "android"
+				
+				na_pt.position.x += event.accelerationX * 10;
+				na_pt.position.y += event.accelerationY * 10;
+				//na_pt.position.z += event.accelerationZ * 10;
+			
+				//na_pt.roll =  wiimote.roll;
+				//na_pt.pitch =  wiimote.pitch;
+				//na_pt.yaw =  wiimote.yaw;
+				
+				//na_pt.rotation.x =  wiimote.roll;
+				//na_pt.rotation.y =  wiimote.pitch;
+				//na_pt.rotation.z =  wiimote.yaw;
+				
+				na_pt.acceleration.x =  event.accelerationX;
+				na_pt.acceleration.y =  event.accelerationY;
+				na_pt.acceleration.z =  event.accelerationZ;
+
+			gss.cO.sensorArray[1] = na_pt;
+            
+		}
 		
 		//////////////////////////////////////////////////////////////////////////////
 		//
@@ -301,23 +353,6 @@ package com.gestureworks.managers
         } 
 		/////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////
-		
-		
-		public static function accUpdateHandler(event:AccelerometerEvent):void
-        {
-			//trace("pushing accel data")
-			
-			var act_vector:Vector.<Number> = new Vector.<Number>
-				act_vector[0] = event.timestamp;
-				act_vector[1] = event.accelerationX;
-				act_vector[2] = event.accelerationY;
-				act_vector[3] = event.accelerationZ;
-				
-			//push sensor data to cluster object
-			//ms.cO.sensorArray = act_vector	
-			// update cluster analysis
-			//ms.updateSensorClusterAnalysis()
-        }
 		
 	}
 }

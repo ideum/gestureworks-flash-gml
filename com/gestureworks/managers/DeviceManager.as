@@ -20,6 +20,15 @@ package com.gestureworks.managers
 	//import com.gestureworks.core.GestureWorksCore;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.DML;
+	import com.gestureworks.core.*;
+	
+	import com.gestureworks.utils.Simulator;
+
+	
+	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
+
+	
 	
 	public class DeviceManager
 	{
@@ -36,7 +45,7 @@ package com.gestureworks.managers
 		
 		public static function callDeviceParser():void
 		{
-			trace("call gloabal device parser ");
+			trace("call gloabal device parser DML");
 			dp = new DeviceParser();
 			dp.init();
 			dp.parseXML();
@@ -45,31 +54,112 @@ package com.gestureworks.managers
 		
 		public static function configDevices():void
 		{	
+			// NOTE WILL USE DEVICE LIST FOR THIS BUT FOR NOW ACESSING RAW XML STATE
 		
-			// MOTION INIT
-			//if (DML.Devices.motion.@active == "true") 
-			//{
-				//trace(" Motion input devices",DML.Devices.devices.input_globals);
-			//}
-			
-			//SENSOR INIT /////////////////////////////////////
-			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
+			if (DML.Devices.devices.input_globals.touch.@active == "true") 
 			{
-				trace("Sensor input devices active");
+				//trace("touch input devices", DML.Devices.devices.input_globals.touch.screen.@active );
 				
-				// wiimote init
-				if (DML.Devices.devices.input_globals.sensor.wiimote.@active == "true")
+				if (DML.Devices.devices.input_globals.touch.screen.@active == "true")
 				{
-					GestureWorksCore.wiimote = true;
-					trace("wiimote active");
+					// NATIVE TOUCH DATA
+					if (DML.Devices.devices.input_globals.touch.screen.device[0].@input_mode == "native")
+					{
+						GestureWorks.activeNativeTouch = true;
+						Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+						trace("native touch screen dml activated");
+					}
+					// TUIO TOUCH DATA
+					if (DML.Devices.devices.input_globals.touch.screen.device[0].@input_mode == "tuio")
+					{
+						GestureWorks.activeTUIO = true;
+						Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+						trace("tuio touch screen dml activated");
+					}
+					// SIMULATOR TOUCH DATA
+					if (DML.Devices.devices.input_globals.touch.screen.device[0].@input_mode == "sim")
+					{
+						GestureWorks.activeSim = true;
+						//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+						trace("mouse touch simulator dml activated");
+						Simulator.gw_public::initialize();
+					}
+					
+				}
+				TouchManager.gw_public::initialize();
+			}
+			
+			
+			
+			
+			
+			// MOTION INIT ////////////////////////////////////
+			if (DML.Devices.devices.input_globals.motion.@active == "true") 
+			{
+				//trace("Motion input devices dml init");
+				
+				// LEAP MOTION SENSOR INIT //////////////////////////////////
+				if (DML.Devices.devices.input_globals.motion.leap.@active == "true")
+				{
+					GestureWorks.activeMotion = true;
+					MotionManager.leapEnabled = true;
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "2d") MotionManager.leapmode = "2d";
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") MotionManager.leapmode = "3d";
+					trace("leap motion device dml activated");
 				}
 				
-				// NATIVE ACCELEROMETER	
-				// VOICE INIT
-				// KINECT
-				// ARDUINO
+				// KINECT ///////////////////////////////
+				// SOFTKINECTIC /////////////////////////
+				// PMD //////////////////////////////////
+				// STRUCTURE ////////////////////////////
+				// XITION ///////////////////////////////
 				
-				GestureWorksCore.sensor = true;  // needs to be last
+				MotionManager.gw_public::initialize();
+			}
+			
+			
+			//SENSORS INIT /////////////////////////////////////
+			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
+			{
+				//trace("Sensor input devices dml init");
+				
+				// NATIVE ACCELEROMETER	INIT//////////////////
+				if (DML.Devices.devices.input_globals.sensor.android.@active == "true")
+				{
+					//trace("android active",DML.Devices.devices.input_globals.sensor.android.device[0].@input_type)
+					if (DML.Devices.devices.input_globals.sensor.android.device[0].@input_type == "native_accelerometer")
+					{
+						GestureWorks.activeSensor = true;
+						SensorManager.nativeAccelEnabled = true;
+						trace("native accel device dml activated");
+					}
+				}
+				// WIIMOTE INIT////////////////////////////
+				if (DML.Devices.devices.input_globals.sensor.wiimote.@active == "true")
+				{
+					GestureWorks.activeSensor = true;
+					SensorManager.wiimoteEnabled = true;
+					trace("wiimote device dml activated");
+				}
+				// ARDUINO INIT///////////////////////////////
+				if (DML.Devices.devices.input_globals.sensor.arduino.@active == "true")
+				{
+					GestureWorks.activeSensor = true;
+					SensorManager.arduinoEnabled = true;
+					trace("arduino device dml activated");
+				}
+				// VOICE INIT ////////////////////////////
+				if (DML.Devices.devices.input_globals.sensor.voice.@active == "true")
+				{
+					GestureWorks.activeSensor = true;
+					SensorManager.voiceEnabled = true;
+					trace("voice device dml activated");
+				}
+				
+
+				// INIT SENSOR MANAGER WITH SENSOR TYPES ACTIVATED
+				// NEEDS TO BE LAST
+				SensorManager.gw_public::initialize();
 			}
 		}
 

@@ -187,7 +187,32 @@ package com.gestureworks.core
 				TouchManager.gw_public::deInitialize();				
 				trace("native touch is off");
 			}
-		}	
+		}
+		
+		private var _nativeAccel:Boolean = true;
+		/**
+		 * Overrides native accel input
+		 * @default true
+		 */
+		public function get nativeAccel():Boolean { return _nativeAccel; }
+		public function set nativeAccel(value:Boolean):void
+		{
+			if (_nativeAccel == value) return;
+			_nativeAccel = value;
+			
+			GestureWorks.activeNativeAccel = _nativeAccel;	
+			
+			if(_nativeAccel) {
+				//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+				//TouchManager.gw_public::initialize();
+				//trace("native touch is on");
+			}
+			else {
+				//Multitouch.inputMode = MultitouchInputMode.NONE;
+				//TouchManager.gw_public::deInitialize();				
+				//trace("native touch is off");
+			}
+		}
 		
 		private var _simulator:Boolean = false;
 		/**
@@ -304,8 +329,8 @@ package com.gestureworks.core
 			if (_sensor) {
 				SensorManager.gw_public::initialize();
 			}
-			//else
-				//SensorManager.gw_public::deInitialize();
+			else
+				SensorManager.gw_public::deInitialize();
 		}
 		
 		
@@ -329,6 +354,48 @@ package com.gestureworks.core
 				sensor = false;
 		}
 		
+		private var _voice:Boolean = false;
+		/**
+		 * Turns voice sensor input on.
+		 * @default false
+		 */
+		public function get voice():Boolean{return _voice;}
+		public function set voice(value:Boolean):void
+		{
+			if (voice == value) return;
+			_voice = value;
+			
+			GestureWorks.activeSensor = _voice;
+			if (_voice){
+				SensorManager.voiceEnabled = true;
+				sensor = true;
+			}
+			else
+				sensor = false;
+		}
+		private var _arduino:Boolean = false;
+		/**
+		 * Turns arduino sensor input on.
+		 * @default false
+		 */
+		public function get arduino():Boolean{return _arduino;}
+		public function set arduino(value:Boolean):void
+		{
+			if (arduino == value) return;
+			_arduino = value;
+			
+			GestureWorks.activeSensor = _arduino;
+			if (_wiimote){
+				SensorManager.arduinoEnabled = true;
+				sensor = true;
+			}
+			else
+				sensor = false;
+		}
+		
+		
+		
+		
 		private var _leap2D:Boolean = false;
 		/**
 		 * Turns leap 2D motion input on
@@ -340,7 +407,8 @@ package com.gestureworks.core
 			if (_leap2D == value) return;
 			_leap2D = value;
 			
-			if (_leap2D){
+			if (_leap2D) {
+				MotionManager.leapEnabled = true;
 				MotionManager.leapmode = "2d";
 				motion = true;
 			}
@@ -359,7 +427,8 @@ package com.gestureworks.core
 			if (_leap3D == value) return;
 			_leap3D = value;
 			
-			if (_leap3D){
+			if (_leap3D) {
+				MotionManager.leapEnabled = true;
 				MotionManager.leapmode = "3d";
 				motion = true;
 			}
@@ -507,12 +576,12 @@ package com.gestureworks.core
 			if (CML.Objects.@leap3D == "true") 
 				leap3D = true;
 				
-			//NOTE NEED REDUNDANT OPTIONS FROM DML
-			// NATIVE ACCELEROMETER	
-			// WIIMOTE INIT
-			// VOICE INIT
-			// KINECT
-			// ARDUINO
+				//NOTE NEED REDUNDANT OPTIONS FROM DML
+				// NATIVE ACCELEROMETER	
+				// WIIMOTE INIT
+				// VOICE INIT
+				// KINECT
+				// ARDUINO
 			
 			try {
 				var CMLDisplay:Class = getDefinitionByName("com.gestureworks.cml.core.CMLDisplay") as Class;
