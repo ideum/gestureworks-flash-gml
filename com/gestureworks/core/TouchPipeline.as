@@ -374,6 +374,7 @@ package com.gestureworks.core
 									if (gO.pOList[i].dList[j].target_id == "dx") gO.pOList[i].dList[j].gestureValue = trO.obj_x;
 									if (gO.pOList[i].dList[j].target_id == "dy") gO.pOList[i].dList[j].gestureValue = trO.obj_y;
 									if (gO.pOList[i].dList[j].target_id == "dz") gO.pOList[i].dList[j].gestureValue = trO.obj_z;//3d--
+									
 								
 									////////////////////////////////////////////////////////////////////////////////////////////////
 									//NOTE: TAERGETS X,Y,Z WILL BE WRITTEN INTO DELTAS AND MAPPED INTO THE TRANSFORMATION OBJECT 
