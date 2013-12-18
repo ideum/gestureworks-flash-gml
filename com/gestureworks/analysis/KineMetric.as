@@ -21,6 +21,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.MotionPointObject;
@@ -95,7 +96,7 @@ package com.gestureworks.analysis
 		
 		private var mHoldID:uint = 0;
 		
-		private var gms:TouchSprite;
+		private var gms:ITouchObject;
 		private var sw:int
 		private var sh:int
 		
