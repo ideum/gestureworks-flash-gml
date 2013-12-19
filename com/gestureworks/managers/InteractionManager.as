@@ -59,7 +59,6 @@ package com.gestureworks.managers
 			InteractionPointTracker.initialize();
 			
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
-			
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			

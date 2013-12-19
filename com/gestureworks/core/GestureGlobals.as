@@ -27,10 +27,6 @@ package com.gestureworks.core
 	public class GestureGlobals
 	{		
 		/**
-		 * Contains a dictionary of all touchObjects available to the framework.
-		 */
-		gw_public static var touchObjects:Dictionary = new Dictionary();
-		/**
 		 * Contains a dictionary of all touch points present to the framework.
 		 */
 		gw_public static var points:Dictionary = new Dictionary();
@@ -46,11 +42,17 @@ package com.gestureworks.core
 		 * Contains a dictionary of all interaction points present to the framework.
 		 */			
 		gw_public static var interactionPoints:Dictionary = new Dictionary();
+		
+		
+		
+		/**
+		 * Contains a dictionary of all touchObjects available to the framework.
+		 */
+		gw_public static var touchObjects:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all clusters present to the framework.
 		 */
 		gw_public static var clusters:Dictionary = new Dictionary();
-		
 		/**
 		 * Contains a dictionary of all gestures present to the framework.
 		 */
@@ -92,6 +94,11 @@ package com.gestureworks.core
 		 * frameID frame stamp relative to start of application.
 		 */
 		public static var motionFrameID:uint = 0;//int.MAX_VALUE
+		
+		/**
+		 * frameID frame stamp relative to start of application.
+		 */
+		public static var sensorFrameID:uint = 0;//int.MAX_VALUE
 
 		/**
 		 * touch frame interval, time between touch processing cycles.
@@ -118,7 +125,12 @@ package com.gestureworks.core
 		/**
 		 * motion history capture length
 		 */
-		public static var motionHistoryCaptureLength:int =120;//int.MAX_VALUE
+		public static var motionHistoryCaptureLength:int = 120;//int.MAX_VALUE
+		
+		/**
+		 * motion history capture length
+		 */
+		public static var sensorHistoryCaptureLength:int =60;//int.MAX_VALUE
 
 		
 		/**

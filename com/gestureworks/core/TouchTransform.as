@@ -172,6 +172,7 @@ package com.gestureworks.core
 			ts.dthetaY = 0;
 			ts.dthetaZ = 0;	
 			ts.mtx = ts.transform.matrix;
+			ts.mtx3D = ts.transform.matrix3D;
 			
 			// update transform 2d debug object properties
 			if (trO.transAffinePoints)
@@ -444,7 +445,9 @@ package com.gestureworks.core
 					//trace("transform parent")
 
 					// REPLACES $ METHODS ALLOWS FOR AFFINE TRANSFROMS FOR NON NATIVE METHODS(GESTURE EVENT DRIVEN PROPERTY UPDATE)
-					ts.transform.matrix = ts.mtx; 
+					//FIX 3D NATIVE TRANSFORM
+					if (ts.transform.matrix3D){}// neet to add 3d matrix cache method
+					else ts.transform.matrix = ts.mtx; 
 					
 					// pre transfrom to compensate for parent transforms
 					parent_modifier.copyFrom(ts.parent.transform.concatenatedMatrix);
@@ -525,11 +528,29 @@ package com.gestureworks.core
 					//dthetaY = ts.dthetaY * DEG_RAD;//3d--
 					//dthetaZ = ts.dthetaZ * DEG_RAD;//3d--		
 				//}
+				
+				////////////////////////////////////////////////////
+				// flash 2.5D only
+				if (ts.transform.matrix3D)// check for 3D matrix,
+				{							
+					// get the projection offset created by the z-position	
+					if (ts.transform.perspectiveProjection) // ts can define location projection
+						focalLength = ts.transform.perspectiveProjection.focalLength;
+					else // use global projection from root
+						focalLength = ts.root.transform.perspectiveProjection.focalLength;
+					ratio = focalLength / (focalLength + ts.z);
+					
+					affine_modifier3D.copyFrom(ts.transform.matrix3D);
+						affine_modifier3D.appendTranslation(-t_x, -t_y, 0);
+						affine_modifier3D.appendRotation(dtheta, Vector3D.Z_AXIS); 	
+						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1); 		
+						affine_modifier3D.appendTranslation(t_x + dx/ratio, t_y + dy/ratio, 0);
+					ts.transform.matrix3D = affine_modifier3D;		
+				}
 			
 				//////////////////////////////////////////////////////
 				// 2d display object only
-				// transform here
-				//else{
+				else{
 				affine_modifier = ts.transform.matrix;
 					affine_modifier.translate( - t_x, - t_y);
 					affine_modifier.rotate(dtheta);
@@ -537,7 +558,7 @@ package com.gestureworks.core
 					affine_modifier.translate( dx + t_x, dy + t_y);
 				ts.transform.matrix =  affine_modifier
 				transformAffineDebugPoints();
-				//}
+				}
 
 				updateLocalProperties();	
 				

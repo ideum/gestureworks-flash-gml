@@ -36,6 +36,7 @@ package com.gestureworks.core
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Transform;
 	import flash.utils.Dictionary;
@@ -920,6 +921,12 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public var mtx:Matrix;
+		/**
+		 * For non-native affine 3d tranformations, used to cache previous transform in order to revert modifications made through direct transformation settings
+		 * (i.e. x,y,rotation,etc.) allowing the TouchTransform to apply all gesture tranformations
+		 * @private
+		 */
+		public var mtx3D:Matrix3D;
 		
 		
 		/////////////////////////////////////////////////////////////
@@ -1095,13 +1102,29 @@ package com.gestureworks.core
 		//public function set broadcastTarget(value:Boolean):void{	_broadcastTarget = value;}
 		
 		
-		// TRANSFORM 3D
+		// motion point clustering mode 
 		private var _motionClusterMode:String = "global";
 		/**
 		 * @inheritDoc
 		 */
 		public function get motionClusterMode():String {return _motionClusterMode;}	
 		public function set motionClusterMode(value:String):void {	_motionClusterMode = value; }
+		
+		// sensor point clustering mode 
+		private var _sensorClusterMode:String = "global";
+		/**
+		 * @inheritDoc
+		 */
+		public function get sensorClusterMode():String {return _sensorClusterMode;}	
+		public function set sensorClusterMode(value:String):void {	_sensorClusterMode = value; }
+		
+		// touch point clustering mode 
+		private var _touchClusterMode:String = "global";
+		/**
+		 * @inheritDoc
+		 */
+		public function get touchClusterMode():String {return _touchClusterMode;}	
+		public function set touchClusterMode(value:String):void {	_touchClusterMode = value; }
 		
 		
 		// TRANSFORM 3D

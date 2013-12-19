@@ -29,7 +29,6 @@ package com.gestureworks.analysis
 	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
-	import com.gestureworks.managers.PointPairHistories;
 	import com.gestureworks.managers.InteractionPointTracker;
 	
 	//import com.gestureworks.events.GWEvent;
