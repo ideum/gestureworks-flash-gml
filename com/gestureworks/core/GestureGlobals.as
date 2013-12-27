@@ -130,7 +130,7 @@ package com.gestureworks.core
 		/**
 		 * motion history capture length
 		 */
-		public static var sensorHistoryCaptureLength:int =60;//int.MAX_VALUE
+		public static var sensorHistoryCaptureLength:int = 240;//int.MAX_VALUE
 
 		
 		/**

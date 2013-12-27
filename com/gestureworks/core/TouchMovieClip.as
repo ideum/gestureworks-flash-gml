@@ -315,6 +315,14 @@ package com.gestureworks.core
 		public function get motionPointCount():int{return _motionPointCount;}
 		public function set motionPointCount(value:int):void {	_motionPointCount = value; }
 		
+		private var _sensorPointCount:int;
+		/**
+		 * @inheritDoc
+		 */
+		public function get sensorPointCount():int{return _sensorPointCount;}
+		public function set sensorPointCount(value:int):void {	_sensorPointCount = value; }
+		
+		
 		private var _interactionPointCount:int;
 		/**
 		 * @inheritDoc

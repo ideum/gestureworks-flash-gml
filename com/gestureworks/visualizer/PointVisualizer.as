@@ -492,7 +492,7 @@ package com.gestureworks.visualizer
 					
 					//////////////////////////////////////////
 					// DRAW NATIVE ACCELEROMETER
-					if (sp.type == "nativeAccelerometer")
+					if (sp.type == "nativeAccel")
 					{	
 						// draw virtual accelerometer point
 						if (_drawShape)

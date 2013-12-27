@@ -34,6 +34,7 @@ package com.gestureworks.managers
 		public static function historyQueue(ClusterID:Object):void//event:ClusterEvent
 		{
 			var clusterObject:ClusterObject = GestureGlobals.gw_public::clusters[ClusterID]
+			
 			var history:Vector.<ClusterObject> = clusterObject.history;
 			
 			history.unshift(historyObject(clusterObject));
