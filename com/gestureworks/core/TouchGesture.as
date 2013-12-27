@@ -335,6 +335,8 @@ package com.gestureworks.core
 			var ttapCalled:Boolean = false;
 			
 		//	trace("process temporalmetric");
+		
+		
 			
 			//gn = gO.pOList.length;
 			for (key=0; key < gn; key++) 
@@ -410,6 +412,8 @@ package com.gestureworks.core
 
 						if (gO.pOList[key].match_GestureEvent == "tap") 
 						{
+							if (tiO.history.length > 0)
+							{
 								if (tiO.history[0])
 								{
 								for (var k:int = 0; k < tiO.history[0].gestureEventArray.length; k++) 
@@ -442,6 +446,7 @@ package com.gestureworks.core
 										}
 									}
 								}
+							}
 						}	
 						
 						///////////////////////////////////////////////////////////////////////////
@@ -536,6 +541,8 @@ package com.gestureworks.core
 						}
 					}
 				}
+				
+				//traceTimeline();
 		}
 		
 		
@@ -629,22 +636,14 @@ package com.gestureworks.core
 		{	
 			//if (traceDebugMode) trace("continuous gesture event dispatch");
 			//trace("touch gesture dispatch--------------------------",gO.release);
-		
 			
+			//traceTimeline();
 			
-			// MANAGE TIMELINE
-			if (tiO.timelineOn)
-			{
-				//if (traceDebugMode) trace("timeline frame update");
-				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = PoolManager.frameObject;
-			}
-			
-			// start OBJECT complete event gesturing
+			// start OBJECT start event gesturing
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
-				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:cO.x,y:cO.y}));
+				//if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:cO.x,y:cO.y}));
 				gO.start = false;
 				//trace("start fired",cO.x,cO.y);
 			}
@@ -670,7 +669,7 @@ package com.gestureworks.core
 			if ((gO.release)&&(ts.gestureEventRelease))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
-				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:cO.x,y:cO.y}));
+				//if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:cO.x,y:cO.y}));
 				gO.release = false;
 				//trace("release fired",cO.x,cO.y);
 			}
@@ -679,14 +678,43 @@ package com.gestureworks.core
 			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE,{id:gO.id}));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:cO.x,y:cO.y}));
+				//if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:cO.x,y:cO.y}));
 				gO.complete = false;
 				//trace("complete fired",cO.x,cO.y);
 			}
 		
 			gO.start = false;
 			gO.release = false;
-			gO.complete = false;			
+			gO.complete = false;	
+			
+			// get hist, clear frame
+			manageTimeline();
+			//traceTimeline();
+			
+		}
+		public function traceTimeline():void
+		{
+			var gn:int = ts.tiO.frame.gestureEventArray.length
+			
+			for (var j:uint = 0; j <gn ; j++) 
+			{
+				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
+			}
+		}
+									
+									
+		
+		public function manageTimeline():void
+		{
+			//trace("timline mgmt");
+			// MANAGE TIMELINE
+			if (tiO.timelineOn)
+			{
+				//if (traceDebugMode) trace("timeline frame update");
+				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
+				tiO.frame = PoolManager.frameObject;
+				//tiO.frame = new FrameObject();
+			}
 		}
 		
 		public function constructGestureEvents(key:uint):void 
