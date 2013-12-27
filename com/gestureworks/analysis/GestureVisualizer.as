@@ -320,7 +320,8 @@ package com.gestureworks.analysis
 									var y:Number = gestureEventArray[j].value.y;
 									var dx:Number;
 									var dy:Number;
-									//trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
+									
+									trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
 									
 									
 									//if (gestureEventArray[j].type =="manipulate")
@@ -464,6 +465,8 @@ package com.gestureworks.analysis
 				
 				
 				for (i = 0; i < scan_time; i++) 
+					{
+					if ((ts.tiO.history.length > 0)&&(ts.tiO.history.length > scan_time))
 					{
 					if (ts.tiO.history[i])
 						{
@@ -615,8 +618,9 @@ package com.gestureworks.analysis
 										// draw hold rotate
 									}
 							}
+					}
 							
-						}
+					}
 		
 		
 	}

@@ -50,7 +50,8 @@ package com.gestureworks.objects
 
 		// NEEEDS TO BE VECTOR
 		// timeline history
-		public var history:Array = new Array();
+		//public var history:Array = new Array();
+		public var history:Vector.<FrameObject> = new Vector.<FrameObject>();
 
 	}
 }

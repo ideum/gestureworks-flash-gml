@@ -47,6 +47,7 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(gestureObject:Object):Object
 		{
+			//MUST CHNAGE TO GESTURE OBJECT 
 			var object:Object = new Object();
 				
 				///////////////////////////////////////////////

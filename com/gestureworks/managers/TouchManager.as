@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import com.gestureworks.cml.elements.Frame;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
@@ -701,9 +702,8 @@ package com.gestureworks.managers
 					tO.updateDebugDisplay();
 				}
 				
-				// clear frame 
-				// was just pushing events and never clearing object 
-				if (tO.tiO) tO.tiO.frame = PoolManager.frameObject;
+				// MANAGE TIMELINE FRAMES
+				//if (tO.tg) tO.tg.manageTimeline(); //??? doesnt seem to work when put here
 			}
 			
 			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
@@ -720,7 +720,7 @@ package com.gestureworks.managers
 		
 		public static function updateTouchObject(tO:ITouchObject):void
 		{
-				//trace("hello", ts, ts.N);
+				//trace("touch object update pulse--------------------------------------------------------------------------------------------");
 				// THERFOR CLUSTER ANALYSIS IS N SPECICIFC AND SELF MAMANGED SWITCHING
 				// PIPELINE PROCESSING IS GESTURE OBJECT STATE DEPENDANT AND NOT N DEPENDANT
 				
