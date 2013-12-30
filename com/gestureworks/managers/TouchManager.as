@@ -15,7 +15,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	import com.gestureworks.cml.elements.Frame;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
