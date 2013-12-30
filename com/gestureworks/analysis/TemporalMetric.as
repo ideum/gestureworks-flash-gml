@@ -29,6 +29,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.PointObject;
 	
 	import com.gestureworks.events.GWEvent;
+	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	
 	//import com.gestureworks.analysis.paths.PathCollection;
@@ -216,7 +217,7 @@ package com.gestureworks.analysis
 			
 			//trace(tap_time,tap_dist);
 			
-			var pointEventArray:Array = ts.tiO.frame.pointEventArray
+			var pointEventArray:Vector.<GWTouchEvent> = ts.tiO.frame.pointEventArray
 				
 				for (var p:int = 0; p < pointEventArray.length; p++) 
 				{
@@ -303,7 +304,7 @@ package com.gestureworks.analysis
 				//var dtap_time:int = Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var dtap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
-				var	gestureEventArray:Array = new Array();
+				var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>;
 				
 				//trace(dtap_time, dtap_dist);
 				
@@ -354,7 +355,7 @@ package com.gestureworks.analysis
 				//var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var ttap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
-				var	gestureEventArray:Array = new Array();
+				var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>;
 				
 					//trace( ttap_time,ttap_dist);
 				
@@ -388,7 +389,7 @@ package com.gestureworks.analysis
 												{
 												if (ts.tiO.history[k])
 												{
-												var gestureEventArray2:Array = ts.tiO.history[k].gestureEventArray;
+												var gestureEventArray2:Vector.<GWGestureEvent> = ts.tiO.history[k].gestureEventArray;
 												
 												//trace("ge length",gestureEventArray2.length);
 												
@@ -452,7 +453,7 @@ package com.gestureworks.analysis
 			var dn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
-				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
 					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
@@ -561,7 +562,7 @@ package com.gestureworks.analysis
 			var ddn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
-				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
 					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
@@ -656,7 +657,7 @@ package com.gestureworks.analysis
 			var tdn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
-				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
 					for (var p:int = 0; p < gestureEventArray.length; p++) 
 					{

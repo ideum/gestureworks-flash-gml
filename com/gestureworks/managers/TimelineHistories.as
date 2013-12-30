@@ -25,6 +25,11 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.FrameObject;
 	
+	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.events.GWClusterEvent;
+	import com.gestureworks.events.GWGestureEvent;
+	import com.gestureworks.events.GWTransformEvent;
+	
 	public class TimelineHistories 
 	{
 		//////////////////////////////////////////////////////
@@ -62,8 +67,8 @@ package com.gestureworks.managers
 				//object.gestureEventArray = frame.gestureEventArray;
 				
 				
-				object.pointEventArray = new Array();
-				object.gestureEventArray = new Array();
+				object.pointEventArray = new Vector.<GWTouchEvent>;
+				object.gestureEventArray = new Vector.<GWGestureEvent>();
 				
 				for (var i:uint = 0; i < ten; i++) 
 				{
