@@ -19,6 +19,7 @@ package com.gestureworks.analysis
 	import flash.display.Shape;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
+	import org.openzoom.flash.viewport.controllers.ViewportControllerBase;
 	
 	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GestureGlobals;
@@ -33,6 +34,9 @@ package com.gestureworks.analysis
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.StrokeObject;
+	
+	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.events.GWGestureEvent;
 	
 	
 
@@ -141,8 +145,8 @@ package com.gestureworks.analysis
 	private function draw_touch_gesture():void
 	{
 		
-		var	gestureEventArray:Array = new Array();
-		var	pointEventArray:Array = new Array();
+		var	gestureEventArray:Vector.<GWGestureEvent>= new Vector.<GWGestureEvent>;
+		var	pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
 				
 		//trace("draw gesture", ts);
 		

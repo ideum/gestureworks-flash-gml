@@ -15,6 +15,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
+	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.events.GWClusterEvent;
+	import com.gestureworks.events.GWGestureEvent;
+	import com.gestureworks.events.GWTransformEvent;
+	
 	public class FrameObject extends Object 
 	{
 		// ID
@@ -23,16 +28,18 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////
 		// UPDATE TO VECTORS
 		//pointEventArray
-		public var pointEventArray:Array = new Array();
+		//public var pointEventArray:Array = new Array();
+		public var pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
 
 		//clusterEventArray
-		public var clusterEventArray:Array = new Array();
+		public var clusterEventArray:Vector.<GWClusterEvent> = new Vector.<GWClusterEvent>();
 
 		//gestureEventArray
-		public var gestureEventArray:Array = new Array();
+		public var gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>();
 
 		//transformEventArray
-		public var transformEventArray:Array = new Array();
+		public var transformEventArray:Vector.<GWTransformEvent> = new Vector.<GWTransformEvent>();
+		//public var transformEventArray:Array = new Array();
 		
 		/**
 		 * Resets attributes to initial values
