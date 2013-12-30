@@ -243,7 +243,7 @@ package com.gestureworks.analysis
 								tapID ++;
 								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
 								ts.tiO.frame.gestureEventArray.push(tap_event);
-								//trace("tap detected");
+								trace("tap detected in frame");
 								//ts.onGestureTap(tap_event);
 								return; // must exit if finds as do not want to refind
 							}	
@@ -278,7 +278,7 @@ package com.gestureworks.analysis
 												var tap_event0:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
 												//if (ts.tiO.pointEvents)
 												ts.tiO.frame.gestureEventArray.push(tap_event0);
-												//trace("tap detected");
+												trace("tap detected in recent history");
 												//-- would normally call custom tap count function and double count checks ts.onGestureTap(tap_event0);
 												
 												//ts.gO.pOList[key].activeEvent = true;
