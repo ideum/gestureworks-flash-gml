@@ -208,7 +208,7 @@ package com.gestureworks.analysis
 		public function findGestureTap(event:TouchEvent, key:int ):void // each time there is a touchEnd
 		{
 			//if (ts.traceDebugMode) 
-			//trace("find taps---------------------------------------------------------", key, ts.gO.release);
+			trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			// CHECK GML COMPATABILITY
 			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_max * GestureWorks.application.frameRate * 0.001)	
@@ -227,7 +227,7 @@ package com.gestureworks.analysis
 					// check current frame first
 					////////////////////////////////////////
 					
-					/*
+					
 					// match type and id
 					if ((pointEventArray[p].type =="gwTouchBegin" || pointEventArray[p].type =="touchBegin")&&(pointEventArray[p].touchPointID == event.touchPointID))
 						{
@@ -247,8 +247,8 @@ package com.gestureworks.analysis
 								//ts.onGestureTap(tap_event);
 								return; // must exit if finds as do not want to refind
 							}	
-						}*/
-					//else {
+						}
+					else {
 					////////////////////////////////////////
 					//look in history
 					////////////////////////////////////////
@@ -289,7 +289,7 @@ package com.gestureworks.analysis
 									}
 								}	
 								}	
-						//}
+						}
 						/////////////////////////////////////////
 				}
 		}
