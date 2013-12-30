@@ -13,7 +13,7 @@
 //  in accordance with the terms of the license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////////////////////////
-package com.gestureworks.visualizer
+package com.gestureworks.analysis
 {
 	import com.gestureworks.objects.InteractionPointObject;
 	import flash.display.Shape;
@@ -321,7 +321,7 @@ package com.gestureworks.visualizer
 									var dx:Number;
 									var dy:Number;
 									
-									trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
+									//trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
 									
 									
 									//if (gestureEventArray[j].type =="manipulate")
@@ -465,6 +465,8 @@ package com.gestureworks.visualizer
 				
 				
 				for (i = 0; i < scan_time; i++) 
+					{
+					if ((ts.tiO.history.length > 0)&&(ts.tiO.history.length > scan_time))
 					{
 					if (ts.tiO.history[i])
 						{
@@ -616,8 +618,9 @@ package com.gestureworks.visualizer
 										// draw hold rotate
 									}
 							}
+					}
 							
-						}
+					}
 		
 		
 	}
