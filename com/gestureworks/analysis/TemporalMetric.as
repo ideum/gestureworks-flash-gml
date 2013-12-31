@@ -208,7 +208,7 @@ package com.gestureworks.analysis
 		public function findGestureTap(event:TouchEvent, key:int ):void // each time there is a touchEnd
 		{
 			//if (ts.traceDebugMode) 
-			trace("find taps---------------------------------------------------------", key, ts.gO.release);
+			//trace("find taps---------------------------------------------------------", key, ts.gO.release);
 			
 			// CHECK GML COMPATABILITY
 			var tap_time:int = Math.ceil(ts.gO.pOList[key].point_event_duration_max * GestureWorks.application.frameRate * 0.001)	
@@ -243,7 +243,7 @@ package com.gestureworks.analysis
 								tapID ++;
 								var tap_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
 								ts.tiO.frame.gestureEventArray.push(tap_event);
-								trace("tap detected in frame");
+								//trace("tap detected in frame");
 								//ts.onGestureTap(tap_event);
 								return; // must exit if finds as do not want to refind
 							}	
@@ -278,7 +278,7 @@ package com.gestureworks.analysis
 												var tap_event0:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, { x:event.stageX, y:event.stageY, localX:event.localX, localY:event.localY, gestureID:tapID , id:key} );
 												//if (ts.tiO.pointEvents)
 												ts.tiO.frame.gestureEventArray.push(tap_event0);
-												trace("tap detected in recent history");
+												//trace("tap detected in recent history");
 												//-- would normally call custom tap count function and double count checks ts.onGestureTap(tap_event0);
 												
 												//ts.gO.pOList[key].activeEvent = true;
