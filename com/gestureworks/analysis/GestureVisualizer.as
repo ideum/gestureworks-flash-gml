@@ -19,7 +19,6 @@ package com.gestureworks.analysis
 	import flash.display.Shape;
 	import flash.geom.Point;
 	import flash.geom.Vector3D;
-	import org.openzoom.flash.viewport.controllers.ViewportControllerBase;
 	
 	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GestureGlobals;
