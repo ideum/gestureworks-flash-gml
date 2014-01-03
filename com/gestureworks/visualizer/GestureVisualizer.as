@@ -321,7 +321,7 @@ package com.gestureworks.visualizer
 									var dx:Number;
 									var dy:Number;
 									
-									trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
+									//trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
 									
 									
 									//if (gestureEventArray[j].type =="manipulate")

@@ -189,6 +189,7 @@ package com.gestureworks.analysis
 							cO.motionArray[i].mean_thumb_prob = 0
 							// normalized data
 							cO.motionArray[i].normalized_length = 0;
+							cO.motionArray[i].normalized_width = 0;
 							cO.motionArray[i].normalized_palmAngle = 0;
 							cO.motionArray[i].normalized_favdist = 0;
 						}
@@ -203,6 +204,7 @@ package com.gestureworks.analysis
 							cO.motionArray[i].mean_thumb_prob = 0
 							// normalized data
 							cO.motionArray[i].normalized_length = 0;
+							cO.motionArray[i].normalized_width = 0;
 							cO.motionArray[i].normalized_palmAngle = 0;
 							cO.motionArray[i].normalized_favdist = 0;
 						}
@@ -268,6 +270,7 @@ package com.gestureworks.analysis
 											tpt.position = mp.position;
 											tpt.direction = mp.direction;
 											tpt.length = mp.length;
+											tpt.width = mp.width;
 											tpt.handID = mp.handID;
 											tpt.type = "tool";
 																			
@@ -403,8 +406,8 @@ package com.gestureworks.analysis
 			var max_max_length:Number;
 			var min_length:Number;
 			var max_length:Number;
-			//var min_width:Number
-			//var max_width:Number
+			var min_width:Number
+			var max_width:Number
 			var min_palmAngle:Number
 			var max_palmAngle:Number
 			var min_favdist:Number;
@@ -418,10 +421,10 @@ package com.gestureworks.analysis
 			max_max_length = 0;
 			min_length = 0;
 			max_length = 0;
-			// min_width
-			// max_width
-			min_palmAngle = 0
-			max_palmAngle = 0
+			min_width = 0;
+			max_width = 0;
+			min_palmAngle = 0;
+			max_palmAngle = 0;
 			min_favdist = 0;
 			max_favdist = 0;
 				
@@ -474,7 +477,7 @@ package com.gestureworks.analysis
 							fpt.extension = normalize(angle_diff, 0, Math.PI*0.5);
 				}
 						
-				
+				// find max and min values
 				for (i = 0; i < hfn; i++)
 				{
 					var fpt0:MotionPointObject = cO.handList[j].fingerList[i];
@@ -487,7 +490,12 @@ package com.gestureworks.analysis
 						// length max and min
 						var value_length:Number = fpt0.length;
 						if (value_length > max_length) max_length = value_length;
-						if ((value_length < min_length)&&(value_length!=0)) min_length = value_length;
+						if ((value_length < min_length) && (value_length != 0)) min_length = value_length;
+						
+						// width max and min
+						var value_width:Number = fpt0.width;
+						if (value_width > max_width) max_width = value_width;
+						if ((value_width < min_width)&&(value_width!=0)) min_width = value_width;
 						
 						// palm angle max and min
 						var value_palm:Number = fpt0.palmAngle;
@@ -502,15 +510,18 @@ package com.gestureworks.analysis
 				
 				var avg_palm_angle:Number = 0;
 				
-				
-				//normalized values and update
+				//normalize values and update
 				for (i = 0; i < hfn; i++)
 					{
 						var fpt1:MotionPointObject = cO.handList[j].fingerList[i];
 						
 						fpt1.normalized_max_length = normalize(fpt1.max_length, min_max_length, max_max_length);
 						fpt1.normalized_length = normalize(fpt1.length, min_length, max_length);
-						//cO.motionArray[i].normalized_width = normalize(cO.motionArray[i].width, min_width, max_width);
+						
+						// native websocket does not provice width
+						if (fpt1.width) fpt1.normalized_width = normalize(fpt1.width, min_width, max_width);
+						else fpt1.normalized_width = 0;
+						
 						fpt1.normalized_palmAngle = normalize(fpt1.palmAngle, min_palmAngle, max_palmAngle);
 						fpt1.normalized_favdist = normalize(fpt1.favdist, min_favdist, max_favdist);
 						
@@ -575,6 +586,8 @@ package com.gestureworks.analysis
 							// get largest thumb prob
 							var thumb_list:Array = new Array()
 							
+							//trace("--");
+							
 							for (i = 0; i < hfn; i++)
 								{
 									fpt = cO.handList[j].fingerList[i];
@@ -582,9 +595,12 @@ package com.gestureworks.analysis
 									//ALL
 									fpt.thumb_prob += 2*(1- fpt.normalized_length)
 									fpt.thumb_prob += 5*(fpt.normalized_favdist) //WORKS VERY WELL ON OWN
-									fpt.thumb_prob += 2*(fpt.normalized_palmAngle)
+									fpt.thumb_prob += 2 * (fpt.normalized_palmAngle);
+									//fpt.thumb_prob += 1 * (fpt.normalized_width);
 
 									thumb_list[i] = fpt.thumb_prob;
+									
+									//trace(i, fpt.width,fpt.normalized_width, fpt.length,fpt.thumb_prob)
 								}	
 							
 						///////////////////////////////////////////////////////////////////////////////////
@@ -696,6 +712,8 @@ package com.gestureworks.analysis
 							}
 								
 							}
+						
+						
 						
 						// note sorting point list at this pahse doesnt seem to have any issues??
 						// probably because there are no transformations yet

@@ -435,6 +435,30 @@ package com.gestureworks.core
 			else
 				motion = false;
 		}
+		
+		private var _deviceServer:Boolean = false;
+		/**
+		 * Turns leap 3D motion input on
+		 * @default false
+		 */
+		public function get deviceServer():Boolean { return _deviceServer; }
+		public function set deviceServer(value:Boolean):void
+		{
+			if (_deviceServer == value) return;
+			_deviceServer = value;
+			
+			if (_deviceServer) {
+				
+				DeviceServerManager.gw_public::initialize();
+				
+				MotionManager.leapEnabled = true;
+				MotionManager.leapmode = "3d_ds";
+				motion = true;
+			}
+			else
+				motion = false;
+		}
+		
 			
 		/**
 		 * Updates event listeners depending on the active modes

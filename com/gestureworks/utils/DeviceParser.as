@@ -33,6 +33,11 @@ package com.gestureworks.utils
 		public static var  deviceTypeList:Object; 
 		public static var  dml:XMLList;
 		
+		public var host:String;
+		public var port:int;
+		public var protocol:String;
+		public var mode:String
+		
 		public function DeviceParser():void
 		{
 			init();
@@ -63,6 +68,12 @@ package com.gestureworks.utils
 						deviceList = new Vector.<DeviceObject>();
 
 							var deviceGroupNum:int = dml.devices.input_globals.length();
+							
+							host = String(dml.devices.@host);
+							port = int(dml.devices.@port);
+							mode = String (dml.devices.@mode);
+							protocol = String(dml.devices.@protcol);
+							
 							
 							//trace("device group num",deviceGroupNum)
 

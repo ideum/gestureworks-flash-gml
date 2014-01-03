@@ -22,18 +22,20 @@ package com.gestureworks.managers
 	import com.gestureworks.core.DML;
 	import com.gestureworks.core.*;
 	
+	import com.gestureworks.managers.DeviceServerManager;
 	import com.gestureworks.utils.Simulator;
 
 	
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	
 
 	
 	
 	public class DeviceManager
 	{
 		private static var dp:DeviceParser;
-			
+		private static var ds:DeviceServerManager;
 		
 		// initializes deviceManager
 		public function initialize():void
@@ -45,7 +47,7 @@ package com.gestureworks.managers
 		
 		public static function callDeviceParser():void
 		{
-			trace("call gloabal device parser DML");
+			//trace("call gloabal device parser DML");
 			dp = new DeviceParser();
 			dp.init();
 			dp.parseXML();
@@ -53,9 +55,79 @@ package com.gestureworks.managers
 		}
 		
 		public static function configDevices():void
+		{
+			
+			//trace("config devices mode:", dp.mode);
+			
+			if (dp.mode == "native")
+			{
+				trace("configuring natively connected devices using dml specs");
+				configNativeDevices();
+			}
+			else if (dp.mode == "server") 
+			{
+				
+				ds = new DeviceServerManager();
+					//ds.host = dp.host;
+					//ds.port = dp.port;
+					ds.init();
+					
+				trace("configuring server connected devices using dml specs");
+				configServerDevices();
+			}
+		}
+		
+		public static function configServerDevices():void
+		{
+			
+			// MOTION INIT ////////////////////////////////////
+			if (DML.Devices.devices.input_globals.motion.@active == "true") 
+			{
+				//trace("Motion input devices dml init");
+				//GestureWorks.activeMotion = true;
+				
+				// LEAP MOTION SENSOR INIT //////////////////////////////////
+				if (DML.Devices.devices.input_globals.motion.leap.@active == "true")
+				{
+					GestureWorks.activeMotion = true;
+					MotionManager.leapEnabled = true;
+			
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "2d") MotionManager.leapmode = "2d_ds";
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") MotionManager.leapmode = "3d_ds"; 
+					trace("leapmotion device dml activated");
+				}
+				
+				// SOFTKINECTIC /////////////////////////
+				if (DML.Devices.devices.input_globals.motion.sofkinetic.@active == "true")
+				{
+					//GestureWorks.activeMotion = true;
+					//MotionManager.softkinecticEnabled = true;
+			
+					//if (DML.Devices.devices.input_globals.motion.softkinetic.device[0].@input_mode == "2d") MotionManager.sofkineticmode = "2d"; // no native option
+					//if (DML.Devices.devices.input_globals.motion.softkinetic.device[0].@input_mode == "3d") MotionManager.sofkineticmode = "3d"; // no native option
+					
+					//trace("softkinectic device  dml activated");
+				}
+				
+				
+				// PMD //////////////////////////////////
+				// STRUCTURE ////////////////////////////
+				// KINECT ///////////////////////////////
+				// XITION ///////////////////////////////
+				
+				MotionManager.gw_public::initialize();
+				InteractionManager.gw_public::initialize();
+			}
+			
+		}
+		
+		
+		public static function configNativeDevices():void
 		{	
 			// NOTE WILL USE DEVICE LIST FOR THIS BUT FOR NOW ACESSING RAW XML STATE
 		
+			///////////////////////////////////////////////////////////////////////
+			//TOUCH INIT //////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.touch.@active == "true") 
 			{
 				//trace("touch input devices", DML.Devices.devices.input_globals.touch.screen.@active );
@@ -84,7 +156,6 @@ package com.gestureworks.managers
 						trace("mouse touch simulator dml activated");
 						Simulator.gw_public::initialize();
 					}
-					
 				}
 				TouchManager.gw_public::initialize();
 			}
@@ -92,7 +163,7 @@ package com.gestureworks.managers
 			
 			
 			
-			
+			////////////////////////////////////////////////////////////////////////////////////////////
 			// MOTION INIT ////////////////////////////////////
 			if (DML.Devices.devices.input_globals.motion.@active == "true") 
 			{
@@ -105,7 +176,7 @@ package com.gestureworks.managers
 					MotionManager.leapEnabled = true;
 					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "2d") MotionManager.leapmode = "2d";
 					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") MotionManager.leapmode = "3d";
-					trace("leap motion device dml activated");
+					trace("LeapMotion device dml activated");
 				}
 				
 				// KINECT ///////////////////////////////
@@ -117,7 +188,7 @@ package com.gestureworks.managers
 				MotionManager.gw_public::initialize();
 			}
 			
-			
+			///////////////////////////////////////////////////////////////////////////////////////////
 			//SENSORS INIT /////////////////////////////////////
 			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
 			{
@@ -131,7 +202,7 @@ package com.gestureworks.managers
 					{
 						GestureWorks.activeSensor = true;
 						SensorManager.nativeAccelEnabled = true;
-						trace("native accel device dml activated");
+						trace("Android/IOS native accel device dml activated");
 					}
 				}
 				// WIIMOTE INIT////////////////////////////
@@ -139,21 +210,21 @@ package com.gestureworks.managers
 				{
 					GestureWorks.activeSensor = true;
 					SensorManager.wiimoteEnabled = true;
-					trace("wiimote device dml activated");
+					trace("Wiimote device dml activated");
 				}
 				// ARDUINO INIT///////////////////////////////
 				if (DML.Devices.devices.input_globals.sensor.arduino.@active == "true")
 				{
 					GestureWorks.activeSensor = true;
 					SensorManager.arduinoEnabled = true;
-					trace("arduino device dml activated");
+					trace("Arduino device dml activated");
 				}
 				// VOICE INIT ////////////////////////////
 				if (DML.Devices.devices.input_globals.sensor.voice.@active == "true")
 				{
 					GestureWorks.activeSensor = true;
 					SensorManager.voiceEnabled = true;
-					trace("voice device dml activated");
+					trace("M$ voice device dml activated");
 				}
 				
 

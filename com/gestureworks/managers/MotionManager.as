@@ -40,16 +40,20 @@ package com.gestureworks.managers
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
 	
+	import com.gestureworks.managers.Leap3DSManager;
+	
 	
 	
 	public class MotionManager 
 	{	
 
 		public static var lmManager:LeapManager
+		public static var LeapsocketMgr:Leap3DSManager
+		
 		public static var motionSprite:TouchSprite;
 		
 		public static var leapEnabled:Boolean = false;
-		public static var leapmode:String = "3d"//"2d"; //======================================================================
+		public static var leapmode:String = "3d"//"2d";
 		
 		public static var mpoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
@@ -58,7 +62,7 @@ package com.gestureworks.managers
 
 		{	
 			//if(debug)
-				//trace("init leap motion device----------------------------------------------------",leapmode)
+				trace("init leap motion device----------------------------------------------------",leapmode)
 				
 			if (leapEnabled)
 			{
@@ -69,6 +73,20 @@ package com.gestureworks.managers
 				if (leapmode == "3d"){
 					lmManager = new Leap3DManager();
 					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				}
+				
+				if (leapmode == "2d_ds") {
+					trace(leapmode)
+				}
+				
+				if (leapmode == "3d_ds") {
+					trace(leapmode)
+					
+					// init leap socker mgr
+					//leapsocketMgr = new Leap3DSManager;
+					
+					//lmManager = new Leap3DManager();
+					//lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
 				}
 			}
 			
@@ -82,9 +100,6 @@ package com.gestureworks.managers
 				motionSprite.active = true;
 				motionSprite.motionEnabled = true;
 				motionSprite.tc.core = true; // fix for global core analysis
-				
-				//initialized gloabl geometric settings
-				//motionSprite.tc.initGeoMetric3D();
 				
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
 
@@ -165,7 +180,8 @@ package com.gestureworks.managers
 			//trace("Motion point End, motionManager", event.value.motionPointID)
 			var motionPointID:int = event.value.motionPointID;
 			var pointObject:MotionPointObject = mpoints[motionPointID];
-		
+			
+			//trace("ready to remove", pointObject);
 			
 			if (pointObject)
 			{
@@ -186,6 +202,8 @@ package com.gestureworks.managers
 					delete mpoints[event.value.motionPointID];
 			}
 			
+			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
+			
 			//trace("motion point tot",motionSprite.motionPointCount)
 		}
 		
@@ -196,10 +214,12 @@ package com.gestureworks.managers
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			var mpO:MotionPointObject = mpoints[event.value.motionPointID];
 			
-			//trace("motion move event, motionManager", event.value.motionPointID);
+			//trace("motion move/Update event, motionManager", event.value.motionPointID);
 			
 				if (mpO)
 				{	
+					
+					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
 					//mpO = event.value;
 					
 					//mpO.id  = event.value.id;
@@ -215,7 +235,7 @@ package com.gestureworks.managers
 					mpO.length = event.value.length;
 					mpO.width = event.value.width;
 					//mpO.handID = event.value.handID;
-
+					
 				
 					mpO.moveCount ++;
 					//trace( mpO.moveCount);
@@ -224,73 +244,5 @@ package com.gestureworks.managers
 				// UPDATE POINT HISTORY 
 				MotionPointHistories.historyQueue(event);
 		}	
-	
-		
-		// init geometric
-		/*
-		public static function initGeoMetric3D(tO:TouchObject3D):void
-		{
-			trace("set geometric init", motionSprite);
-			
-			var key:uint;
-			// for each touchsprite/motionsprite
-			// go through gesture list on initialization
-			// look for motion gestures that need specific sub cluster types
-			// swithed on
-			// note global gesture list need that represents a compiled list of gestures from all objects??
-			
-			//for each(var tO:Object in touchObjects)
-			//{
-			// numbers of gestures on this object
-			var gn:uint = tO.gO.pOList.length;
-				//trace("gesture number",gn, tO.gO)
-			for (key = 0; key < gn; key++) 
-			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
-			{
-				
-				// if gesture object is active in gesture list
-				if (tO.gestureList[tO.gO.pOList[key].gesture_id])
-				{
-					var g:GestureObject = tO.gO.pOList[key];
-				
-					trace("matching gesture cluster input type",g.cluster_type)
-						/////////////////////////////////////////////////////
-						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
-						////////////////////////////////////////////////////
-					if (g.cluster_input_type == "motion")
-						{		
-						//g.cluster_type = "all"	
-							
-						// FUNDAMENTAL INTERACTION POINTS
-							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			motionSprite.tc.fingerPoints=true; 
-							if ((g.cluster_type == "thumb")||(g.cluster_type == "all")) 			motionSprite.tc.thumbPoints=true; 
-							if ((g.cluster_type == "palm")||(g.cluster_type == "all")) 				motionSprite.tc.palmPoints = true; 
-							if ((g.cluster_type == "finger_average") || (g.cluster_type == "all")) 	motionSprite.tc.fingerAveragePoints = true; 
-							if (g.cluster_type == "digit") 											motionSprite.tc.fingerAndThumbPoints = true; 
-							
-						//CONFIGURATION BASED INTERACTION POINTS
-							if ((g.cluster_type == "pinch")||(g.cluster_type == "all")) 			motionSprite.tc.pinchPoints = true; 
-							if ((g.cluster_type == "trigger")||(g.cluster_type == "all"))			motionSprite.tc.triggerPoints = true; 
-							if ((g.cluster_type == "push")||(g.cluster_type == "all")) 				motionSprite.tc.pushPoints = true; 
-							if ((g.cluster_type == "hook")||(g.cluster_type == "all")) 				motionSprite.tc.hookPoints = true; 
-							if ((g.cluster_type == "frame") || (g.cluster_type == "all")) 			motionSprite.tc.framePoints = true; 
-
-						// LATER
-							//---cluster_geometric.find3DToolPoints();
-							//---cluster_geometric.find3DRegionPoints();
-							//---cluster_geometric.find3dTipTapPoints();
-						}
-					}
-			}
-				
-			//}
-			
-			
-			//motionSprite.tc.pinchPoints = true;
-			
-		}*/
-		
-		
-		
 	}
 }
