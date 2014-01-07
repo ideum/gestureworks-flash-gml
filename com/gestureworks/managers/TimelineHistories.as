@@ -58,7 +58,7 @@ package com.gestureworks.managers
 		public static function historyObject(frame:FrameObject):Object
 		{
 			//trace("in hist");
-			var object:FrameObject = new FrameObject();
+			var object:FrameObject = PoolManager.frameObject;
 				
 				var ten:int = frame.pointEventArray.length
 				var gen:int = frame.gestureEventArray.length
