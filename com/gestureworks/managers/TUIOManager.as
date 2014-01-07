@@ -99,7 +99,7 @@ package com.gestureworks.managers
 						connector = new TCPConnector(host, port, protocol == "flosc");
 				}
 				catch (e:Error) {
-					throw new Error("If you are trying to utilize TUIO in AIR, please make sure that you have included this statement into your Main Document class:  'import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR;'. ");
+					throw new Error("If you are trying to utilize TUIO in AIR, please make sure your Main Document class extends GestureWorksAIR or that you have included this statement:  'import com.gestureworks.core.GestureWorksAIR; GestureWorksAIR;'. ");
 				}
 			}
 			else {
