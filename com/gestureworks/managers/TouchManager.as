@@ -210,10 +210,15 @@ package com.gestureworks.managers
 		public static function validTarget(event:GWTouchEvent):Boolean {
 			activatedTarget(event);
 			
+			//trace("valid target check",event.target,event.source)
+			
 			if (event.target is ITouchObject && event.target.active) {
 				
 				//local mode filters
 				if (event.target.localModes) {
+					
+					trace("event source",event.source, event.target.localModes)
+					
 					switch(event.source) {
 						case TouchEvent:
 							return event.target.nativeTouch;
@@ -223,6 +228,8 @@ package com.gestureworks.managers
 							return event.target.tuio;
 						case Leap2DManager:
 							return event.target.leap2D;
+						case Touch2DSManager:
+							return event.target.server;
 						default:
 							return true;
 					}
@@ -238,6 +245,9 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function activatedTarget(event:GWTouchEvent):void {
+			
+			trace("activated target",event.target)
+			
 			if (!event.target || (event.target is ITouchObject && event.target.active)) 
 				return;
 			else if (virtualTransformObjects[event.target])
@@ -265,6 +275,8 @@ package com.gestureworks.managers
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
 		{
+			//trace("touch manager on touch down")
+			
 			applyHooks(event);
 			if (validTarget(event)) { 
 											
@@ -304,7 +316,9 @@ package com.gestureworks.managers
 						 }
 					}
 				}
-			}								
+			}
+			
+			trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
 		}
 		
 	/**
@@ -389,6 +403,8 @@ package com.gestureworks.managers
 		// DRIVES POINT PATH UPDATES
 		public static function onTouchMove(event:GWTouchEvent):void
 		{	
+			//trace("touch manager on touch move", event.touchPointID)
+			
 			applyHooks(event);
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			pointObject = points[event.touchPointID];
@@ -401,13 +417,19 @@ package com.gestureworks.managers
 					pointObject.x = event.stageX;					
 					pointObject.y = event.stageY;
 					pointObject.z = event.stageZ;
+					
 					pointObject.moveCount++;
 					
 					// UPDATE POINT HISTORY 
 					// PUSHES NEWEST LOCATION DATA TO POINT PATH/HISTORY
+					
+					// SHOULD PUSH POINT OBJECT NOT EVENT 
+					// TO REDUCE REFERENING
 					PointHistories.historyQueue(event);
 				}
+				//trace("PointObject",pointObject.source,pointObject.target )
 			}
+			trace("TM MOVE",event.stageX,event.stageY,event.stageZ,event.source, event.target,event.touchPointID);
 		}		
 		
 		private static var input1:GWTouchEvent;

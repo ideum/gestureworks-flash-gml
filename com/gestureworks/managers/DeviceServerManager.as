@@ -23,7 +23,9 @@ package com.gestureworks.managers
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.core.gw_public;
-	import com.gestureworks.managers.Leap3DSManager;
+	
+	import com.gestureworks.managers.Motion3DSManager;
+	import com.gestureworks.managers.Touch2DSManager;
 
 	/**
 	 * The DeviceServerManager class handles the communication via an XML Socket.
@@ -40,11 +42,12 @@ package com.gestureworks.managers
 		public static var _host:String = "127.0.0.1"//"localhost";
 		public static var _port:int = 49191;
 		
-		
 		private static var XMLFrameList:XMLList;
 		
-		//private static var leapsocket2DMgr:Leap2DSManager
-		private static var leapsocket3DMgr:Leap3DSManager
+		
+		private static var motionManagerSocket:Motion3DSManager;
+		private static var touchManagerSocket:Touch2DSManager;
+		//private static var sensorManagerSocket:SensorSManager;
 		
 		
 		public function DeviceServerManager():void
@@ -58,7 +61,16 @@ package com.gestureworks.managers
 			trace("device server manager init");
 			
 			//////////////////////////////////////////////////
-			leapsocket3DMgr = new Leap3DSManager();
+			motionManagerSocket = new Motion3DSManager();
+			//leapsocket2DMgr = new Leap2DSManager();
+			
+			touchManagerSocket = new Touch2DSManager();
+			
+			
+			//sensorManagerSocket = new SensorSManager();
+			
+			
+			
 			initXMLSocket();
 		}
 		
@@ -67,10 +79,11 @@ package com.gestureworks.managers
 			trace("device server manager init");
 			
 			//////////////////////////////////////////////////
-			leapsocket3DMgr = new Leap3DSManager();
+			motionManagerSocket = new Motion3DSManager();
 			
-			//leapsocket2DMgr = new Leap2DSManager();
+			touchManagerSocket = new Touch2DSManager(); 
 			
+			//sensorManagerSocket = new SensorSManager(); 
 			
 			initXMLSocket();
 		}
@@ -117,8 +130,8 @@ package com.gestureworks.managers
 			//trace("message", event, event.bytesLoaded, event.bytesTotal);
 			var str:String = socket.readUTFBytes(socket.bytesAvailable);
 			var lg:int = str.length;
-			var start:String = str.substr(0,6)
-			var end:String = str.substr(lg - 8, 8)
+			var start:String = str.substr(0,6)//str.substr(0,6)
+			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
 			//trace(str)
 			//trace(lg,start,end);
 			
@@ -131,23 +144,149 @@ package com.gestureworks.managers
 				if (XMLFrameList) 
 				{
 					var dfrn:int = int(XMLFrameList.length());
-					var deviceType:String
-					var inputType:String
-					var frameId:int 
-					var timestamp:int 
-					var frame:XML
+					var deviceType:String;
+					var inputType:String;
+					var inputMode:String;
+					var frameId:int; 
+					var timestamp:int; 
+					var frame:XML;
+					var message:XML;
+					var mn:int;
 				
 					for (var i:int = 0; i < dfrn; i++ )
 					{
 						frame = XMLFrameList[i]
-						deviceType = frame.Messages.Message.InputPoint.@deviceType;
-						inputType = frame.Messages.Message.InputPoint.InputTypes.InputType[0].@input;
-						//trace("data types",deviceType,inputType)
+						mn = frame.Messages.length();
+						
+						//trace("message length",mn);
+						
+						for (var j:int = 0; j< mn; j++ )
+						{
+							message = frame.Messages.Message[j]
+							deviceType = message.InputPoint.@deviceType;
+							inputMode = message.InputPoint.@deviceMode;
+							inputType = message.InputPoint.InputTypes.InputType[0].@input;// simplify as likely use different output in seperate message
+							//trace("data types",deviceType,inputType)
+							
+							//if (inputMode=="motion"){
+							//////////////////////////////////////////////////////////////
+							//MOTION//////////////////////////////////////////////////////
+							//////////////////////////////////////////////////////////////
+							
+								//HAND/FINGER TRACKING////////////////////////////////////////
+								if (deviceType == "LeapMotion")
+								{
+									if (inputType == "Hands3d") 
+									{
+										//trace(deviceType,": ", inputType);
+										motionManagerSocket.processMotion3DSocketData(message);
+									}
+									if (inputType == "Hands2d") 
+									{
+										//trace(deviceType,": ", inputType);
+										//leapsocket2DMgr.processLeap2DSocketData(frame);
+									}
+								}
+								//if ((deviceType == "Creative_Senz3d") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
+								//if ((deviceType == "PMD_Nano") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
+								//if ((deviceType == "occipital_Structure") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
+								
+								// EYE TRACKING////////////////////////////////////////////////////////////////////
+									// mouse position // left or right or both
+										// left click (left wink)
+										// right click (right wink)
+										// hold (stare/gaze lock)
+										// (flare)
+										// pupil size (presure dist??)
+								if ((deviceType == "EYETRIBE") && (inputType == "Eyes2d"))trace(deviceType,": ", inputType);
+								if ((deviceType == "TOBII") && (inputType == "Eyes2d"))trace(deviceType,": ", inputType);
+							
+								//BODY TRACKING
+									//KINECT
+									//XITION
+									//SOFKINECTIC
+									
+								//FACE TRACKING
+									//SOKINECTIC
+							
+							
+							//if (inputMode=="touch"){
+							///////////////////////////////////////////////////////////////
+							// TOUCH //////////////////////////////////////////////////////
+								if ((deviceType == "PQ") && (inputType == "Points2D"))
+								{
+									trace(deviceType,": ", inputType);
+									//touchManagerSocket.processTouch2DSocketData(message);
+								}
+								//3M
+								//ZYTRONIC
+								
+								if ((deviceType == "LeapMotion")&&(inputType == "Points2D"))
+								{
+									trace(deviceType,": ", inputType);
+									//leapsocket2DMgr.processLeap2DSocketData(frame);
+								}
+								if ((deviceType == "Android")&&(inputType == "Points2D")) // touch input from Android remote device
+								{
+									trace(deviceType,": ", inputType);
+									//leapsocket2DMgr.processLeap2DSocketData(frame);
+								}
+							
+							//if (inputMode=="sensor"){
+							///////////////////////////////////////////////////////////////
+							// SENSOR //////////////////////////////////////////////////////
+							
+								
+								if ((deviceType == "Arduino") && (inputType == ""))
+								{
+									trace(deviceType,": ", inputType);
+									//tt.processSensorArduinoSocketData(message);
+								}
+								
+								//ACCELEROMETER
+								if ((deviceType == "Android")&&(inputType == "Accel3D")) // accel input from Android remote device
+								{
+									trace(deviceType,": ", inputType);
+									//leapsocket2DMgr.processLeap2DSocketData(frame);
+								}
+								if ((deviceType == "MUSE") && (inputType == "Accel3D")) trace(deviceType, ": ", inputType);
+								
+								//GPS
+								//MAGNOMETER
+								//GYROMETER
+								//IR SENSOR
+							
+								// CONTROLLERS
+								if ((deviceType == "Wiimote") && (inputType == "Controller"))
+								{
+									trace(deviceType,": ", inputType);
+									//tt.processSensorControllerSocketData(message);
+								}
+								if ((deviceType == "SNES") && (inputType == "Controller"))
+								{
+									trace(deviceType,": ", inputType);
+									//tt.processSensorControllerSocketData(message);
+								}
+								if ((deviceType == "NES") && (inputType == "Controller"))
+								{
+									trace(deviceType,": ", inputType);
+									//tt.processSensorControllerSocketData(message);
+								}
+								//PS3 MOVE
+								
 
-						if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
-						//if ((deviceType =="LeapMotion")&&(inputType=="Hands2d")) leapsocket2DMgr.processLeap2DSocketData(frame);
+								//BCI DEVICES////////////////////////////////////////////
+								if ((deviceType == "MUSE") && (inputType == "EEG"))trace(deviceType, ": ", inputType);
+								if ((deviceType == "INSIGHT") && (inputType == "EEG"))trace(deviceType, ": ", inputType);
+								
+								//MYO////////////////////////////////////////////////////
+								if ((deviceType == "MYO") && (inputType == "EMG")) trace(deviceType, ": ", inputType);
+								
+								//VOICE
+								
 					}
 				}
+			}
 			}
 			else trace("xml frame parsing error");
 		}	

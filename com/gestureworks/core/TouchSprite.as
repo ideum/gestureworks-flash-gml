@@ -118,6 +118,17 @@ package com.gestureworks.core
 			updateListeners();
 		}
 		
+		private var _serverTouch:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */		
+		public function get serverTouch():Boolean { return _serverTouch && GestureWorks.activeServerTouch; }
+		public function set serverTouch(n:Boolean):void {
+			if (_serverTouch == n) return;
+			_serverTouch = n;
+			updateListeners();
+		}
+		
 		private var _simulator:Boolean = false;
 		/**
 		 * @inheritDoc

@@ -78,10 +78,10 @@ package com.gestureworks.objects
 		public var rotation:Matrix = new Matrix ();
 		
 		//palm radius
-		public var sphereRadius:Number = 0;
+		public var radius:Number = 0;
 		
 		// sphere center
-		public var sphereCenter:Vector3D = new Vector3D ();
+		//public var sphereCenter:Vector3D = new Vector3D ();
 		
 		//min length of this motion point for sesioon
 		public var min_length:Number = 100000000;

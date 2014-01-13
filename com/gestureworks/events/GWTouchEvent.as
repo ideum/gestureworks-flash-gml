@@ -226,7 +226,13 @@ package com.gestureworks.events
 			active = target && target.localModes ? target.nativeTouch: GestureWorks.activeNativeTouch;				
 			if (active)
 				types.push(correspondingType(TouchEvent, type));
-				
+			
+			///test //////server touch methods///////////////////////////////////////////////////////////////////
+			active = target && target.localModes ? target.serverTouch: GestureWorks.activeServerTouch;				
+			if (active)
+				types.push(correspondingType(TouchEvent, type));
+			/////////////////////////////////////////////////////////////////////////////////////////////
+					
 			active = target && target.localModes ? target.simulator : GestureWorks.activeSim;				
 			if (active)
 				types.push(correspondingType(MouseEvent, type));

@@ -376,7 +376,7 @@ package com.gestureworks.visualizer
 								// palm point and radius 
 								if (ipt.type == "palm")
 								{
-									var hr:Number = ipt.sphereRadius * 0.5 + ipt.position.z;
+									var hr:Number = ipt.radius * 0.5 + ipt.position.z;
 									graphics.lineStyle(3, 0xFFFFFF, style.stroke_alpha);
 									graphics.drawCircle(ipt.position.x , ipt.position.y, hr);
 								}

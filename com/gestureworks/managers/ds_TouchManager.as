@@ -14,7 +14,7 @@ package com.gestureworks.managers
 	/**
 	 * @author
 	 */
-	public class Leap2DSManager extends Sprite
+	public class ds_TouchManager extends Sprite
 	{	
 		private static var pids:Array= new Array()
 		private static var activePoints:Array;	
@@ -50,44 +50,37 @@ package com.gestureworks.managers
 		 * @param	minZ minimum Leap Z coordinate
 		 * @param	maxZ maximum Leap Z coordinate
 		 */
-		public function Leap2DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0, minZ:Number=0, maxZ:Number=0) 
+		public function ds_TouchManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
 		{
-			trace("leap 2d server manager constructor");
+			trace("touch 2d server manager constructor");
 			activePoints = new Array();
 			
 			if (minX) this.minX = minX;
 			if (maxX) this.maxX = maxX;
 			if (minY) this.minY = minY;
 			if (maxY) this.maxY = maxY;
-			if (minZ) this.minZ = minZ;
-			if (maxZ) this.maxZ = maxZ;
 		}
-		
-		public static function processLeap2DSocketData(frame:XML):void 
-		{
-				message = frame.Messages.Message;
-			//	trace(message)
-				
-				handCount = int(message.InputPoint.Values.Hand.length());
 
+		public function processTouch2DSocketData(message:XML):void 
+		{
 				// CREATE POINT LIST
 				pointList = new Array();
+				fingerCount = int(message.InputPoint.Values.Surface.Point.length());
 				
-				for (var j:int = 0; j < handCount; j++ )
-				{
-				fingerCount = int(message.InputPoint.Values.Hand[j].@FingerCount);
-				
-				// CREATE FINGER TIP MOTION POINTS
+				// CREATE Touch POINTS
 				for (var k:int = 0; k < fingerCount; k++ )
 				{
-					var f =  message.InputPoint.Values.Hand[j].Finger[k];
-					var ptf:Vector3D = new Vector3D(f.Position.@x, f.Position.@y, f.Position.@z * -1);
+					var f =  message.InputPoint.Values.Surface.Point[k];
+					var ptf:Object = new Object();
+						ptf.x = f.@x; 
+						ptf.y = f.@y;
+						ptf.pressure = f.@pressure;
+						ptf.width = f.@width;
+						ptf.height = f.@height;
 					pointList.push(ptf);
 				}
-				}
-			
 				// CALL LEAP PROCESSING
-				processLeap2DData(frame);
+				processTouch2DData(message);
 		}
 		
 		
@@ -95,32 +88,22 @@ package com.gestureworks.managers
 		 * Process points
 		 * @param	event
 		 */
-		private static function processLeap2DData(frame:XML):void 
+		private static function processTouch2DData(message:XML):void 
 		{
-			pushids(frame);
+			pushids(message);
 			addRemoveUpdatePoints();
 		}
-		private static function pushids(frame:XML):void 
+		private static function pushids(message:XML):void 
 		{
 			//store frame's point ids
 			pids = new Array();
 			
-			var f = frame;
-			var hn:int = int(f.Messages.Message.InputPoint.Values.length());
-			var fn:int;
-
-			//CREATE HANDS THEN... FINGERS AND TOOLS
-			for (var i:int = 0; i < hn; i++)
-			{
-				fn = int(f.Messages.Message.InputPoint.Values.Hand[i].@FingerCount);
-	
-				//finger points
-				for (var j:int = 0; j < int(f.Messages.Message.InputPoint.Values.Hand[i].@FingerCount); j++)
+			var pn:int = int(message.InputPoint.Values.Surface.Point.length());
+				//push touch point ids
+				for (var j:int = 0; j < pn; j++)
 				{
-					pids.push(int(f.Messages.Message.InputPoint.Values.Hand[i].Finger[j].@id)) 
-					//trace("FINGERID",f.Messages.Message.InputPoint.Values.Hand[i].Finger[j].@id);
+					pids.push(int(message.InputPoint.Values.Surface.Point[j].@Id)) 
 				}
-			}
 			//trace("pid array length",pids.length);
 		}
 		
@@ -130,13 +113,12 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////
 			//point removal
 			var temp:Array = activePoints;  //prevent concurrent mods
-			
+
 			for each(var aid:int in activePoints) {
 				if (pids.indexOf(aid) == -1) {
 					temp.splice(temp.indexOf(aid), 1);
 					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false));
-					
-						//trace("REMOVED:", aid);					
+					//trace("REMOVED:", aid);					
 				}
 			}
 			activePoints = temp;
@@ -148,71 +130,59 @@ package com.gestureworks.managers
 				var pt = getFramePoint(pid);
 				
 				var point:Point = new Point();
-					point.x = map(pt.x, minX, maxX, 0, stage.stageWidth);
-					point.y = map(pt.y, minY, maxY, stage.stageHeight, 0);
-				var pressure:Number = map(pt.z, minZ, maxZ, 0, 1);
+					point.x = pt.x//map(pt.x, minX, maxX, 0, stage.stageWidth);
+					point.y = pt.y//map(pt.y, minY, maxY, stage.stageHeight, 0);
+				var pressure:Number = pt.pressure;// map(pt.z, minZ, maxZ, 0, 1);
+				//var pressure:Number = pt.Width;
+				//var pressure:Number = pt.Height;
+				//trace("tip z:", pt.z, pressure);
 				
-				
-					//trace("tip z:", pt.z, pressure);
-				
-
-				if (activePoints.indexOf(pid) == -1) {								
-					
-					var ev:GWTouchEvent;
-					//hit test
-					var obj:* = getTopDisplayObjectUnderPoint(point);
-					
-					if ((obj || overlays.length) && pressure <= pressureThreshold) {
-						activePoints.push(pid);	
-						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
-							ev.stageX = point.x;
-							ev.stageY = point.y;
-							ev.pressure = pressure;
-							//ev.source = getDefinitionByName(getQualifiedClassName(this)) as Class; // error
-							
-							if (obj) {
-								ev.target = obj;
+					if (pt) 
+					{
+					if (activePoints.indexOf(pid) == -1) 
+					{
+						var ev:GWTouchEvent;
+						//hit test
+						//var obj:* = getTopDisplayObjectUnderPoint(point);
+						
+						//if (obj || overlays.length) {
+							activePoints.push(pid);	
+							ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
+								ev.stageX = pt.x;
+								ev.stageY = pt.y;
+								ev.pressure = pt.pressure;
+								//ev.source = getDefinitionByName(getQualifiedClassName(this)) as Class; // error
+								
 								TouchManager.onTouchDown(ev);
-							}
-							
-							//global overlays
-							if (overlays.length) {
-								TouchManager.processOverlays(ev, overlays);
-							}
+								
+								/*
+								if (obj) {
+									ev.target = obj;
+									TouchManager.onTouchDown(ev);
+								}
+								
+								//global overlays
+								if (overlays.length) {
+									TouchManager.processOverlays(ev, overlays);
+								}*/
+						//}
+						//trace("ADDED:", pid);		
 					}
 					
-					
-						//trace("ADDED:", pid);	
-				}
-				
-				else {
-					if (activePoints.indexOf(pid) != -1 && pressure > pressureThreshold){
-						activePoints.splice(activePoints.indexOf(pid), 1);
-						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, pid, false);
-						TouchManager.onTouchUp(ev);
-						
-						if (overlays.length) {
-							TouchManager.processOverlays(ev, overlays);
-						}						
-						
-						
-							//trace("REMOVED:", pid);					
-					}
-					else{
-						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
-							ev.stageX = point.x;
-							ev.stageY = point.y;
-							ev.pressure = pressure;
-						TouchManager.onTouchMove(ev);
+					else {
+						var ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
+							ev.stageX = pt.x;
+							ev.stageY = pt.y;
+							ev.pressure = pt.pressure;
+							TouchManager.onTouchMove(ev);
 												
-						if (overlays.length) {
-							TouchManager.processOverlays(ev, overlays);
-						}												
-						
-						
-							//trace("UPDATE:", pid);							
+						//if (overlays.length) {
+							//TouchManager.processOverlays(ev, overlays);
+						//}												
+						//trace("UPDATE:", pid);
 					}
 				}
+
 			}
 		}
 		
@@ -354,14 +324,7 @@ package com.gestureworks.managers
 			_overlays = o;
 		}
 		
-		/**
-		 * Destructor
-		 */
-		override public function dispose():void 
-		{
-			super.dispose();
-			activePoints = null;
-		}
+
 	}
 
 }

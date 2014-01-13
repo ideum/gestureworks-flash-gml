@@ -42,9 +42,23 @@ package com.gestureworks.objects
 		
 		// fingerArray 
 		public var fingerList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var knuckeList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var jointList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		
 		// thumb
 		public var thumb:MotionPointObject = new MotionPointObject();
+		
+		// index finger
+		public var index:MotionPointObject = new MotionPointObject();
+		
+		// middle finger
+		public var middle:MotionPointObject = new MotionPointObject();
+		
+		// fing finger
+		public var ring:MotionPointObject = new MotionPointObject();
+		
+		// pinky finger
+		public var pinky:MotionPointObject = new MotionPointObject();
 		
 		// palm
 		public var palm:MotionPointObject = new MotionPointObject();
@@ -66,9 +80,8 @@ package com.gestureworks.objects
 		//length
 		public var length:Number = 0;
 		
-		// could move in size??
 		//palm radius
-		public var sphereRadius:Number = 0;
+		public var radius:Number = 0;
 		
 		// sphere center
 		public var sphereCenter:Vector3D = new Vector3D ();

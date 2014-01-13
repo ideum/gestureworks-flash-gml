@@ -15,16 +15,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
-	import com.gestureworks.utils.DeviceParser;
-	//import com.gestureworks.core.GestureWorks;
-	//import com.gestureworks.core.GestureWorksCore;
+	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.DML;
 	import com.gestureworks.core.*;
-	
 	import com.gestureworks.managers.DeviceServerManager;
 	import com.gestureworks.utils.Simulator;
-
+	import com.gestureworks.utils.DeviceParser;
 	
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
@@ -158,6 +155,8 @@ package com.gestureworks.managers
 					}
 				}
 				TouchManager.gw_public::initialize();
+				//InteractionManager.gw_public::initialize(); when interaction points are created from raw touch
+				// still workin on refactor
 			}
 			
 			
@@ -174,8 +173,12 @@ package com.gestureworks.managers
 				{
 					GestureWorks.activeMotion = true;
 					MotionManager.leapEnabled = true;
+					
 					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "2d") MotionManager.leapmode = "2d";
-					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") MotionManager.leapmode = "3d";
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") 
+					{
+						MotionManager.leapmode = "3d";
+					}
 					trace("LeapMotion device dml activated");
 				}
 				
@@ -186,6 +189,7 @@ package com.gestureworks.managers
 				// XITION ///////////////////////////////
 				
 				MotionManager.gw_public::initialize();
+				InteractionManager.gw_public::initialize();
 			}
 			
 			///////////////////////////////////////////////////////////////////////////////////////////
@@ -231,6 +235,7 @@ package com.gestureworks.managers
 				// INIT SENSOR MANAGER WITH SENSOR TYPES ACTIVATED
 				// NEEDS TO BE LAST
 				SensorManager.gw_public::initialize();
+				//InteractionManager.gw_public::initialize(); when interaction points are created by sensor
 			}
 		}
 

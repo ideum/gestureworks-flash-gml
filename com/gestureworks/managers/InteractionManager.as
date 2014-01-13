@@ -113,9 +113,8 @@ package com.gestureworks.managers
 						ipO.normal = event.value.normal;
 						ipO.velocity = event.value.velocity;
 
-						ipO.sphereCenter = event.value.sphereCenter;
-						ipO.sphereRadius = event.value.sphereRadius;
 						
+						ipO.radius = event.value.radius;
 						ipO.length = event.value.length;
 						ipO.width = event.value.width;
 						
@@ -256,9 +255,7 @@ package com.gestureworks.managers
 					ipO.normal = event.value.normal;
 					ipO.velocity = event.value.velocity;
 					
-					ipO.sphereRadius = event.value.sphereRadius;
-					ipO.sphereCenter = event.value.sphereCenter;
-					
+					ipO.radius = event.value.radius
 					ipO.length = event.value.length;
 					ipO.width = event.value.width;
 					

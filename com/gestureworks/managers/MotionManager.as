@@ -40,7 +40,7 @@ package com.gestureworks.managers
 	import com.leapmotion.leap.events.LeapEvent;
 	import com.leapmotion.leap.LeapMotion;
 	
-	import com.gestureworks.managers.Leap3DSManager;
+	import com.gestureworks.managers.Motion3DSManager;
 	
 	
 	
@@ -48,7 +48,7 @@ package com.gestureworks.managers
 	{	
 
 		public static var lmManager:LeapManager
-		public static var LeapsocketMgr:Leap3DSManager
+	//	public static var motionSocketMgr:Motion3DSManager
 		
 		public static var motionSprite:TouchSprite;
 		

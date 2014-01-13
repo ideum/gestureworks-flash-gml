@@ -98,6 +98,10 @@ package com.gestureworks.core
 		 */
 		public static var activeNativeTouch:Boolean = true;
 		/**
+		 * Returns whether server touch is activated
+		 */
+		public static var activeServerTouch:Boolean = true;
+		/**
 		 * Returns whether native accel is activated
 		 */
 		public static var activeNativeAccel:Boolean = true;

@@ -45,6 +45,14 @@ package com.gestureworks.interfaces
 		 */
 		function get nativeTouch():Boolean;
 		function set nativeTouch(n:Boolean):void;
+		
+		/**
+		 * Local override to enable/disable server touch input.
+		 * @see localModes
+		 * @default false
+		 */
+		function get serverTouch():Boolean;
+		function set serverTouch(n:Boolean):void;
 
 		/**
 		 * Local override to enable/disable mouse input.

@@ -373,8 +373,8 @@ package com.gestureworks.analysis
 			for (j = 0; j < cO.hn; j++)
 				{
 					//trace("number finger",fn,fnk,fav_pt.x,fav_pt.y,fav_pt.z)
-					var favlength:Number = 100//100;
-					var palmratio:Number = 1.4;
+					var favlength:Number = 0//100//100;
+					var palmratio:Number = 0.6//1.4;
 							
 					var hfn:int = cO.handList[j].fingerList.length;
 					var hfnk:Number = 0;
@@ -382,15 +382,19 @@ package com.gestureworks.analysis
 					
 						for (i = 0; i < hfn; i++)
 								{
+								//if(){
 								cO.handList[j].fingerList[i].favdist = Vector3D.distance(cO.handList[j].fingerList[i].position, cO.handList[j].fingerAveragePosition);
 								// find average max length
-								favlength += cO.handList[j].fingerList[i].max_length; //??????
-								//trace("favdist",cO.motionArray[i].favdist,cO.motionArray[i].fingertype, min_favdist, max_favdist )	
+								//favlength += cO.handList[j].fingerList[i].max_length; //??????
+								favlength += cO.handList[j].fingerList[i].favdist; 
+								//trace("favdist", cO.handList[j].fingerList[i].max_length, cO.handList[j].fingerList[i].favdist,cO.handList[j].fingerList[i].fingertype, hfnk)
+								//}
 								}
-					favlength = hfnk*favlength	
+					favlength *= hfnk;	
+					//trace(palmratio , favlength);
 					
 					// AVERAGE HAND RADIUS
-					cO.handList[j].sphereRadius = favlength * palmratio;	
+					cO.handList[j].radius = favlength * palmratio;	
 					//cO.handList[j].sphereRadius = favdist * palmratio;	
 					//trace("rad",cO.handList[j].sphereRadius)
 				}
@@ -483,9 +487,9 @@ package com.gestureworks.analysis
 					var fpt0:MotionPointObject = cO.handList[j].fingerList[i];
 					
 						//max length max and min
-						var value_max_length:Number = fpt0.max_length;
-						if (value_max_length > max_max_length) max_max_length = value_max_length;
-						if ((value_max_length < min_max_length)&&(value_max_length!=0)) min_max_length = value_max_length;
+						//var value_max_length:Number = fpt0.max_length;
+						//if (value_max_length > max_max_length) max_max_length = value_max_length;
+						//if ((value_max_length < min_max_length)&&(value_max_length!=0)) min_max_length = value_max_length;
 						
 						// length max and min
 						var value_length:Number = fpt0.length;
@@ -508,13 +512,24 @@ package com.gestureworks.analysis
 						if ((value < min_favdist)&&(value!=0)) min_favdist = value;
 				}
 				
+				for (i = 0; i < hfn; i++)
+				{
+					var fpt:MotionPointObject = cO.handList[j].fingerList[i];
+					
+						//max length max and min
+						var value_max_length:Number = fpt.max_length;
+						if (value_max_length > max_max_length) max_max_length = value_max_length;
+						if ((value_max_length < min_max_length)&&(value_max_length!=0)) min_max_length = value_max_length;
+				}
+				
+				
 				var avg_palm_angle:Number = 0;
 				
 				//normalize values and update
 				for (i = 0; i < hfn; i++)
 					{
 						var fpt1:MotionPointObject = cO.handList[j].fingerList[i];
-						
+						//trace(fpt1.max_length, min_max_length, max_max_length)
 						fpt1.normalized_max_length = normalize(fpt1.max_length, min_max_length, max_max_length);
 						fpt1.normalized_length = normalize(fpt1.length, min_length, max_length);
 						
@@ -528,6 +543,8 @@ package com.gestureworks.analysis
 						
 						//AVERGE PALM ANGLE
 						avg_palm_angle += fpt1.normalized_palmAngle;
+						
+						trace("hand normalized values",fpt1.normalized_length,fpt1.normalized_max_length,fpt1.normalized_palmAngle,fpt1.normalized_favdist)
 					}
 					
 					
@@ -1311,7 +1328,7 @@ package com.gestureworks.analysis
 							palm_pt.flatness = cO.handList[j].flatness;
 							palm_pt.orientation = cO.handList[j].orientation;
 							//palm_pt.type  = cO.handList[j].type 
-							palm_pt.sphereRadius  = cO.handList[j].sphereRadius  
+							palm_pt.radius  = cO.handList[j].radius  
 							palm_pt.type = "palm";	
 							
 							//trace("fist: geometric", palm_pt.fist, cO.handList[j].orientation, cO.handList[j].flatness, cO.handList[j].splay, cO.handList[j].type);
@@ -1394,7 +1411,7 @@ package com.gestureworks.analysis
 								fist_pt.flatness = cO.handList[j].flatness;
 								fist_pt.orientation = cO.handList[j].orientation;
 								//palm_pt.type  = cO.handList[j].type 
-								fist_pt.sphereRadius  = cO.handList[j].sphereRadius  
+								fist_pt.radius  = cO.handList[j].radius  
 								fist_pt.type = "fist";	
 							
 								//trace("fist: geometric");

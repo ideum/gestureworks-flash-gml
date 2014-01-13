@@ -110,7 +110,7 @@ package com.gestureworks.managers
 									ap.fist = fp.fist;
 									ap.splay = fp.splay;
 									ap.orientation = fp.orientation;
-									ap.sphereRadius = fp.sphereRadius;
+									ap.radius = fp.radius;
 									ap.flatness = fp.flatness;
 									ap.fn = fp.fn;
 									

@@ -443,7 +443,9 @@ package com.gestureworks.visualizer
 												//normal
 												graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
 												graphics.moveTo(mp.position.x,mp.position.y);
-												graphics.lineTo(mp.position.x + 50*mp.normal.x, mp.position.y + 50*mp.normal.y);
+												graphics.lineTo(mp.position.x + 50 * mp.normal.x, mp.position.y + 50 * mp.normal.y);
+												
+												//trace(mp.normal.x,mp.position.x,mp.direction.x)
 											}
 											
 											/*
