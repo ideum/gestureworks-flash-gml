@@ -424,12 +424,11 @@ package com.gestureworks.core
 					transformAffineDebugPoints();
 
 				}
-					//trace( ts.cO.x, ts.cO.y, ts.cO.z);
 							
 				updateLocalProperties();
 				
-				//if (ts.vto)
-					//ts.updateVTO();			
+				if (ts.vto)
+					ts.updateVTO();			
 		}
 		
 		
