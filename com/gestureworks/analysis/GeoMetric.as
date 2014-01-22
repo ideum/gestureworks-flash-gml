@@ -18,6 +18,7 @@ package com.gestureworks.analysis
 	/**
  * @private
  */
+	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	import flash.geom.Utils3D;
 	import flash.geom.Point;
@@ -149,7 +150,7 @@ package com.gestureworks.analysis
 								{
 									cO.pointArray[k].match = true;
 									count++;
-									trace(" touch gemetric rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist,k)
+									//trace(" touch gemetric rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist,k)
 								}
 						}
 					}
@@ -176,10 +177,16 @@ package com.gestureworks.analysis
 		// clear derived point and cluster motion data
 		public function clearHandData():void
 		{
-			for (i = 0; i < mpn; i++)//mpn
+			var clear_fingers:Boolean = false;
+			var clear_palm:Boolean = false;
+			
+			
+			
+			for (i = 0; i < cO.motionArray.length; i++)//mpn
 				{	
-					if (cO.motionArray[i]){
-						if (cO.motionArray[i].type == "finger")
+					if (cO.motionArray[i]) {
+						
+						if ((cO.motionArray[i].type == "finger")&&(clear_fingers))
 						{	
 							// reset thum alloc// move to cluster
 							cO.motionArray[i].fingertype = "finger";	 
@@ -194,7 +201,7 @@ package com.gestureworks.analysis
 							cO.motionArray[i].normalized_favdist = 0;
 						}
 						
-						if (cO.motionArray[i].type == "palm")
+						if ((cO.motionArray[i].type == "palm")&&(clear_palm))
 						{	
 							// reset thum alloc// move to cluster
 							cO.motionArray[i].fingertype = null;	 
@@ -211,83 +218,399 @@ package com.gestureworks.analysis
 					}
 				}
 				
+				// reset motion points in list
+				//cO.handList.length = 0;
+			
 				// reset hands
-				cO.handList.length = 0;
-				cO.hn = 0;
-				cO.fn = 0;
+				//cO.hn = 0;
+				//cO.fn = 0;
 		}
 		
 		
-		// get noamlized finger length and palm angle
-		public function createHand():void 
+		// get normalized finger length and palm angle
+		// create basic hand
+		public function updateMotionPoints():void 
 		{
-			//trace("create hand")
-			if (mpn !=0) // no points no hand
-			{
 				for (i = 0; i < mpn; i++)//mpn
 					{
-					//////////////////////////////////////////////////////
-					/// create hand
+						//////////////////////////////////////////////////////
+						/// create hand
 						if (cO.motionArray[i].type == "palm") 
 						{
-						var hand:HandObject = new HandObject();	
-							hand.position = cO.motionArray[i].position //palmID
-							hand.direction = cO.motionArray[i].direction
-							hand.normal = cO.motionArray[i].normal
-							hand.handID = cO.motionArray[i].handID;
-							hand.palm = cO.motionArray[i]; // link palm point
-		
-						cO.handList.push(hand);
-						//trace("p",cO.motionArray[i].handID)
-						}
-				
+										if (cO.hn != 0)
+										{
+										for (j = 0; j < cO.handList.length; j++)
+										{
+											if ((cO.handList[j].handID != cO.motionArray[i].handID)&&(cO.handList.length < 2))
+											{
+												//trace("create another hand");
+												//create hand
+												var hand:HandObject = new HandObject();	
+													hand.position = cO.motionArray[i].position //palmID
+													hand.direction = cO.motionArray[i].direction
+													hand.normal = cO.motionArray[i].normal
+													hand.handID = cO.motionArray[i].handID;
+													hand.palm = cO.motionArray[i]; // link palm point
+								
+												cO.handList.push(hand);
+												//trace("p",cO.motionArray[i].handID)
+											}
+											else {
+												//trace("update hand",j);
+												//update hand
+												//cO.handList[j] = cO.motionArray[i];
+												cO.handList[j].position = cO.motionArray[i].position;
+												cO.handList[j].direction = cO.motionArray[i].direction
+												cO.handList[j].normal = cO.motionArray[i].normal
+												cO.handList[j].palm = cO.motionArray[i];
+												
+												cO.handList[j].knuckleList.length=0; //TO KILL OR NOT?
+												
+												}	
+											}
+										}
+										else {
+											//trace("zero create hand");
+											//create hand
+											var hand:HandObject = new HandObject();	
+													hand.position = cO.motionArray[i].position //palmID
+													hand.direction = cO.motionArray[i].direction
+													hand.normal = cO.motionArray[i].normal
+													hand.handID = cO.motionArray[i].handID;
+													hand.palm = cO.motionArray[i]; // link palm point
+								
+											cO.handList.push(hand);
+										}
+								//}
+								//else {
+									//update hand
+									//cO.handList[j].position = cO.motionArray[i].position;
+									//cO.handList[j].direction = cO.motionArray[i].direction
+									//cO.handList[j].normal = cO.motionArray[i].normal
+									//cO.handList[j].palm = cO.motionArray[i];
+								//}
+							
+							}
 					}
 					///////////////////////////////////////////////
 					// GET HAND NUM TOTAL
 					cO.hn = cO.handList.length;
 					
+					
+					
 					///////////////////////////////////////////////
 					// PUSH FINGERS
 					var fn:int = 0;
 					
-					for (j = 0; j < cO.hn; j++)
-					{
+					//for (j = 0; j < cO.hn; j++)
+					//{
+						//clear previos motion points
+						//cO.handList[j].fingerList.length = 0;
+						
+						trace("-------");
 						
 						for (i = 0; i <mpn; i++)//mpn
 								{	
+									if (cO.motionArray[i].type != "palm") 
+									{
 									var mp:MotionPointObject = cO.motionArray[i];
-									//trace(cO.handList[j].handID ,cO.motionArray[i].handID)
-									if ((mp.type == "finger")&&(cO.handList[j].handID == mp.handID))
-									{
-										// push fingers into finger list
-										cO.handList[j].fingerList.push(mp);
-									}
 									
-									if ((mp.type == "tool")&&(cO.handList[j].handID == mp.handID))
-									{
-										// push tool into interaction point list
-										var tpt:InteractionPointObject = new InteractionPointObject();
-											tpt.position = mp.position;
-											tpt.direction = mp.direction;
-											tpt.length = mp.length;
-											tpt.width = mp.width;
-											tpt.handID = mp.handID;
-											tpt.type = "tool";
-																			
-										//add to pinch point list
-										InteractionPointTracker.framePoints.push(tpt)
-										
-										//trace("tool..........................................");
-									}
+									for (j = 0; j < cO.handList.length; j++)
+										{
 									
-								}
-						//BUILD FINGER NUM TOTAL
-						fn += cO.handList[j].fingerList.length;
+											if (cO.handList[j].fingerList.length != 0)
+											{
+											var newPoint:Boolean = true;
+											
+											for (var k:int = 0; k < cO.handList[j].fingerList.length; k++)
+											{
+												var fp = cO.handList[j].fingerList[k];
+												
+												trace(fp.motionPointID, mp.motionPointID);
+												
+												if (fp.motionPointID == mp.motionPointID) 
+												{
+													newPoint = false;
+												}
+												// UPDATE FINGER MOTION POINT DATA
+												else {
+													if ((mp.type == "finger")&&(fp.motionPointID == mp.motionPointID))
+													{
+													trace("update finger", k, mp.motionPointID, mp.id , mp.position, mp.type, mp.fingertype);
+													fp.position = mp.position;
+													fp.direction = mp.direction;
+													fp.length = mp.length;
+													fp.width = mp.width;
+													fp.type = mp.type;
+													//fp.fingertype = mp.fingertype;
+													}	
+												}
+											}
+											if (newPoint) 
+												{
+													//CREATE NEW MOTIN POINT 
+													//trace(cO.handList[j].handID ,cO.motionArray[i].handID)
+														if ((mp.type == "finger")&&(fp.handID == mp.handID))
+														{
+															trace("new point",k, fp.motionPointID, fp.id, mp.id, mp.motionPointID, mp.position);
+															mp.fingertype = "finger";
+															//trace("mp finger type",mp.fingertype)
+															//trace("create new finger",i);
+															// push fingers into finger list
+															cO.handList[j].fingerList.push(mp);
+														}
+														
+														/*
+														if ((mp.type == "tool")&&(cO.handList[j].handID == mp.handID))
+														{
+															// push tool into interaction point list
+															var tpt:InteractionPointObject = new InteractionPointObject();
+																tpt.position = mp.position;
+																tpt.direction = mp.direction;
+																tpt.length = mp.length;
+																tpt.width = mp.width;
+																tpt.handID = mp.handID;
+																tpt.type = mp.type;
+																								
+															//add to pinch point list
+															InteractionPointTracker.framePoints.push(tpt)
+															
+															//trace("tool..........................................");
+														}*/
+												}
+											}
+											
+											// CREATE NEW FINGER
+											else {
+												if ((mp.type == "finger")&&(cO.handList[j].handID == mp.handID))
+													{
+													trace("CREATE NEW FINGER ZERO", mp.motionPointID, mp.id ,mp.position,cO.handList[j].fingerList.length)
+													mp.fingertype = "finger";
+													// push fingers into finger list
+													cO.handList[j].fingerList.push(mp);
+													}
+											}
+											//BUILD FINGER NUM TOTAL
+											fn += cO.handList[j].fingerList.length;
+											// push local finger list total
+											//cO.handList[j].hfn = cO.handList[j].fingerList.length;
+									}
+						}	
 					}
 					/////////////////////////////////////////////
 					//GET FINGER NUM TOTAL
 					cO.fn = fn;
-			}
+		}
+		
+		public function createHand():void 
+		{
+			var force_update:Boolean = false;
+			
+			trace("create hand")
+			
+			
+			//if (fn !=0) // no points no hand
+			//{
+					for (j = 0; j < cO.hn; j++)
+					{
+						
+						cO.handList[j].knuckleList.length = 0;
+						cO.handList[j].jointList.length = 0;
+						
+						
+							var vArray:Array = new Array();
+		
+							
+							var align:Number = -(Math.PI / 24);
+							var t3:Number = (Math.PI / 3);
+							var t6:Number = (Math.PI / 6);
+							var rad:int = 40;
+							
+							
+							if (cO.handList[j].type == "right")
+							{
+									var x0 = rad * Math.cos(7*t6);
+									var y0 = rad * Math.sin(7*t6);
+										
+									var x1 = rad * Math.cos(2*t3);
+									var y1 = rad * Math.sin(2*t3);
+										
+									var x2 = rad * Math.cos(3*t6);
+									var y2 = rad * Math.sin(3*t6);
+										
+									var x3 = rad * Math.cos(t3);
+									var y3 = rad * Math.sin(t3);
+										
+									var x4 = rad * Math.cos(t6);
+									var y4 = rad * Math.sin(t6);
+										
+										vArray[0] = new Vector3D(x0, 0,y0);
+										vArray[1]= new Vector3D(x1,0, y1);
+										vArray[2]= new Vector3D(x2,0, y2);
+										vArray[3] = new Vector3D(x3,0, y3);
+										vArray[4] = new Vector3D(x4,0, y4);
+							}
+							
+							else if (cO.handList[j].type == "left")
+							{
+								var x0 = rad * Math.cos(-t6+align);
+								var y0 = rad * Math.sin(-t6+align);
+								
+								var x1 = rad * Math.cos(t3-align);
+								var y1 = rad * Math.sin(t3-align);
+								
+								var x2 = rad * Math.cos(3*t6-align);
+								var y2 = rad * Math.sin(3*t6-align);
+										
+								var x3 = rad * Math.cos(2*t3-align);
+								var y3 = rad * Math.sin(2 * t3 - align);
+										
+								var x4 = rad * Math.cos(5*t6-align);
+								var y4 = rad * Math.sin(5*t6-align);
+
+									vArray[0] = new Vector3D(x0, 0,y0);
+									vArray[1]= new Vector3D(x1,0, y1);
+									vArray[2]= new Vector3D(x2,0, y2);
+									vArray[3] = new Vector3D(x3,0, y3);
+									vArray[4] = new Vector3D(x4,0, y4);
+							}
+							else {
+								vArray[0] = new Vector3D();
+								vArray[1]= new Vector3D();
+								vArray[2]= new Vector3D();
+								vArray[3] = new Vector3D();
+								vArray[4] = new Vector3D();
+							}
+							
+							
+							var s = 30;
+							var p = cO.handList[j].position;
+							var ds = new Vector3D(cO.handList[j].direction.x * s, cO.handList[j].direction.y * s, cO.handList[j].direction.z * s);
+							var r = cO.handList[j].direction.crossProduct(cO.handList[j].normal);
+							var rs = new Vector3D(r.x * s, r.y * s, r.z * s);
+										
+							var rotX:Number = RAD_DEG * Math.asin(cO.handList[j].normal.x);
+							var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
+							var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
+							
+							// roate in 3d space
+							var m:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
+								m.appendRotation(rotX, new Vector3D(0, 0, 1));
+								m.appendRotation(rotZ, new Vector3D(-1, 0, 0));
+								m.appendRotation(rotY,new Vector3D(0,1,0)); //direction
+							
+								
+								for (i = 0; i <5; i++)//mpn
+								{	
+									// create static number of knuckles
+									var kp:MotionPointObject = new MotionPointObject();
+										kp.handID = cO.handList[j].handID;	
+										kp.type = "mcp" + (i+1);
+										
+										var v = vArray[i];
+										var pv = Utils3D.projectVector(m, v);			
+										// translate
+										var rv = p.add(pv);
+										
+										kp.position = rv;
+									cO.handList[j].knuckleList.push(kp);
+									
+									//create joints
+									var jp:MotionPointObject = new MotionPointObject();
+										jp.handID = cO.handList[j].handID;	
+										jp.type = "dip" + (i+1);
+										
+										//var v = vArray[i];
+										var vd:Vector3D = kp.position.add(ds);
+										jp.position = vd;
+									cO.handList[j].jointList.push(jp);
+								}
+								
+								//trace(cO.handList[j].knuckleList.length);
+								
+					}
+		}
+		
+		
+		
+		// UNIQUE FINGER IDS
+		public function matchFingers():void 
+		{
+			var force_update:Boolean = false;
+			
+			//trace("create hand")
+			//if (fn !=0) // no points no hand
+			//{
+					for (j = 0; j < cO.hn; j++)
+					{	
+						// FIND MATCHING FINGER TIPS
+						var fn = cO.handList[j].fingerList.length;
+						
+						for (i = 0; i < 5; i++)//knucles
+						{
+							var min_value:Number = 100;
+							var fingerID:int;
+							var fk:int;
+							var dist:Number;
+							var pf_v:Vector3D;
+							var pk_v:Vector3D = cO.handList[j].position.subtract(cO.handList[j].knuckleList[i].position)
+							var ang:Number;
+							var k_value;
+							var type = cO.handList[j].knuckleList[i].type;
+							
+							for (var k:int = 0; k <fn; k++)// fingertips
+							{
+								if (cO.handList[j].fingerList[k].fingertype != "thumb")
+								{
+									dist = Vector3D.distance(cO.handList[j].knuckleList[i].position, cO.handList[j].fingerList[k].position);
+									pf_v = cO.handList[j].position.subtract(cO.handList[j].fingerList[k].palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
+	
+									ang = Vector3D.angleBetween(pk_v, pf_v);
+									
+									//trace("finger assignment", dist, ang)
+									
+									//k_value = ang
+									//k_value = dist//*ang
+									k_value = dist + 50* ang;
+									
+									if (k_value < min_value)
+									{
+										min_value = k_value;
+										fingerID = cO.handList[j].fingerList[k].id;
+										fk = k;
+									}	
+								}
+							}
+							
+							// SET FINGER TYPES
+							if ((fn > 0) && (cO.handList[j].fingerList[fk].fingertype != "thumb")) 
+							{
+								//trace(type,cO.handList[j].fingerList[fk].fingertype);
+							if (force_update)
+							{	
+								//DONT UPDATE THUMB//if (type == "mcp1") cO.handList[j].fingerList[fk].fingertype = "thumb"; // GET MAX WIDTH
+								if (type == "mcp2") cO.handList[j].fingerList[fk].fingertype = "index";
+								if (type == "mcp3") cO.handList[j].fingerList[fk].fingertype = "middle";
+								if (type == "mcp4") cO.handList[j].fingerList[fk].fingertype = "ring";
+								if (type == "mcp5") cO.handList[j].fingerList[fk].fingertype = "pinky";
+							}
+							else {
+								if (cO.handList[j].fingerList[fk].fingertype == "finger")
+								{
+									if (type == "mcp2") cO.handList[j].fingerList[fk].fingertype = "index";
+									if (type == "mcp3") cO.handList[j].fingerList[fk].fingertype = "middle";
+									if (type == "mcp4") cO.handList[j].fingerList[fk].fingertype = "ring";
+									if (type == "mcp5") cO.handList[j].fingerList[fk].fingertype = "pinky";
+									}
+								}
+							}
+							
+								
+						}
+						force_update = false;		
+								
+					}
+			//}
 		}
 		
 		public function findFingerAverage():void 
@@ -312,8 +635,9 @@ package com.gestureworks.analysis
 									fav_pt.x += fpt.position.x;
 									fav_pt.y += fpt.position.y;
 									fav_pt.z += fpt.position.z;
-	
-									if (cO.motionArray[i].fingertype == "finger") // add other finger types
+									
+									if (fpt.fingertype == "finger") 
+									//if (cO.motionArray[i].fingertype == "finger") // add other finger types
 									{
 										// finger average point
 										pfav_pt.x += fpt.position.x;
@@ -354,14 +678,6 @@ package com.gestureworks.analysis
 							}
 							//else cO.handList[j].orientation = "udefined";
 							//trace(orienAngle,cO.handList[j].orientation);
-							
-							///////////////////////////////////////////////////////////////////////////////////////////////////
-							// GET HANDEDNESS
-							// LEFT OR RIGHT
-							
-							
-							
-							
 				}
 				//trace("hand pos",cO.hand.position)
 		}
@@ -408,6 +724,8 @@ package com.gestureworks.analysis
 		{
 			var min_max_length:Number;
 			var max_max_length:Number;
+			var min_max_width:Number;
+			var max_max_width:Number;
 			var min_length:Number;
 			var max_length:Number;
 			var min_width:Number
@@ -416,6 +734,8 @@ package com.gestureworks.analysis
 			var max_palmAngle:Number
 			var min_favdist:Number;
 			var max_favdist:Number;
+			var min_mwlr:Number;
+			var max_mwlr:Number;
 			
 			
 			for (j = 0; j < cO.hn; j++)
@@ -423,6 +743,8 @@ package com.gestureworks.analysis
 				
 			min_max_length = 0;
 			max_max_length = 0;
+			min_max_width = 0;
+			max_max_width = 0;
 			min_length = 0;
 			max_length = 0;
 			min_width = 0;
@@ -431,6 +753,8 @@ package com.gestureworks.analysis
 			max_palmAngle = 0;
 			min_favdist = 0;
 			max_favdist = 0;
+			min_mwlr = 0;
+			max_mwlr = 0;
 				
 			var hfn:uint = cO.handList[j].fingerList.length;
 			var palm_mpoint:MotionPointObject = cO.handList[j].palm; // NEED TO SIMPLIFY		
@@ -509,7 +833,21 @@ package com.gestureworks.analysis
 						//finge raverage distance max and min
 						var value:Number = fpt0.favdist;
 						if (value > max_favdist) max_favdist = value;
-						if ((value < min_favdist)&&(value!=0)) min_favdist = value;
+						if ((value < min_favdist) && (value != 0)) min_favdist = value;
+						
+						
+						//////////////////////////////////////////////////////////////////////////////
+						// FIND MAX AND MIN LENGTHS AND WIDTH THAT ARE STORED IN THE MOTION POINT OBJECT
+						
+						// length max and min
+						var value_length:Number = fpt0.length;
+						if (value_length > fpt0.max_length) fpt0.max_length = value_length;
+						if ((value_length < fpt0.min_length) && (value_length != 0)) fpt0.min_length = value_length;
+						
+						// width max and min
+						var value_width:Number = fpt0.width;
+						if (value_width > fpt0.max_width) fpt0.max_width = value_width;
+						if ((value_width < fpt0.min_width)&&(value_width!=0)) fpt0.min_width = value_width;
 				}
 				
 				for (i = 0; i < hfn; i++)
@@ -519,7 +857,15 @@ package com.gestureworks.analysis
 						//max length max and min
 						var value_max_length:Number = fpt.max_length;
 						if (value_max_length > max_max_length) max_max_length = value_max_length;
-						if ((value_max_length < min_max_length)&&(value_max_length!=0)) min_max_length = value_max_length;
+						if ((value_max_length < min_max_length) && (value_max_length != 0)) min_max_length = value_max_length;
+						
+						var value_max_width:Number = fpt.max_width;
+						if (value_max_width > max_max_width) max_max_width = value_max_width;
+						if ((value_max_width < min_max_width) && (value_max_width != 0)) min_max_width = value_max_width;
+						
+						
+						//CACULATE MAX_WIDTH TO MAX_LENGTH RATIO FOR EACH FINGER
+						fpt.max_width_length_ratio = fpt.max_width/fpt.max_length
 				}
 				
 				
@@ -534,18 +880,41 @@ package com.gestureworks.analysis
 						fpt1.normalized_length = normalize(fpt1.length, min_length, max_length);
 						
 						// native websocket does not provice width
-						if (fpt1.width) fpt1.normalized_width = normalize(fpt1.width, min_width, max_width);
-						else fpt1.normalized_width = 0;
+						
+						if (fpt1.width) {
+							fpt1.normalized_max_width = normalize(fpt1.max_width, min_max_width, max_max_width);
+							fpt1.normalized_width = normalize(fpt1.width, min_width, max_width);
+						}
+						else {
+							fpt1.normalized_width = 0;
+							fpt1.normalized_max_width = 0;
+						}
 						
 						fpt1.normalized_palmAngle = normalize(fpt1.palmAngle, min_palmAngle, max_palmAngle);
 						fpt1.normalized_favdist = normalize(fpt1.favdist, min_favdist, max_favdist);
 						
 						
+						
 						//AVERGE PALM ANGLE
 						avg_palm_angle += fpt1.normalized_palmAngle;
 						
-						trace("hand normalized values",fpt1.normalized_length,fpt1.normalized_max_length,fpt1.normalized_palmAngle,fpt1.normalized_favdist)
+						//trace("hand normalized values",i,fpt1.type,fpt1.fingertype,fpt1.normalized_length,fpt1.normalized_max_length,fpt1.normalized_palmAngle,fpt1.normalized_favdist)
+						
+						//GET MAX AND MIN WLRATIO
+						var value_mwlr:Number = fpt1.max_width_length_ratio;
+						if (value_mwlr > max_mwlr) max_mwlr = value_mwlr;
+						if ((value_mwlr < min_mwlr)&&(value_mwlr!=0))min_mwlr = value_mwlr;
 					}
+					
+					// set normalized mwlr values
+					for (i = 0; i < hfn; i++)
+					{
+						var fpt3 = cO.handList[j].fingerList[i];
+						fpt3.normalized_mwlr = normalize(fpt3.max_width_length_ratio, min_mwlr, max_mwlr);
+						//trace("hand normalized values",i,fpt3.normalized_length,fpt3.normalized_width, fpt3.normalized_max_length,fpt3.normalized_max_width,fpt3.normalized_mwlr)
+
+					}
+					
 					
 					
 					///////////////////////////////////////////////////////////////////////////////////////////////
@@ -571,7 +940,6 @@ package com.gestureworks.analysis
 							var dist0:Number = Vector3D.distance(cO.handList[j].fingerList[i].position,cO.handList[j].fingerList[q].position);
 							splay_d += dist0;
 						}
-						
 					}
 					}
 					
@@ -589,7 +957,13 @@ package com.gestureworks.analysis
 		
 		for (j = 0; j < cO.hn; j++)
 				{
-	
+					
+			if (cO.handList[j].fingerList.length == 5)//&&(cO.handList[j].thumb==undefined))
+			{
+				
+				trace("splay",cO.handList[j].splay)
+				
+				
 			cO.handList[j].pair_table = new Array();
 			
 			var hfn:int = cO.handList[j].fingerList.length;
@@ -613,8 +987,10 @@ package com.gestureworks.analysis
 									fpt.thumb_prob += 2*(1- fpt.normalized_length)
 									fpt.thumb_prob += 5*(fpt.normalized_favdist) //WORKS VERY WELL ON OWN
 									fpt.thumb_prob += 2 * (fpt.normalized_palmAngle);
-									//fpt.thumb_prob += 1 * (fpt.normalized_width);
-
+									fpt.thumb_prob += 2 * (fpt.normalized_mwlr); //width to length ratio
+									
+									//trace("norm mwlr", fpt.thumb_prob,fpt.normalized_mwlr,fpt.normalized_width,fpt.normalized_length);
+									
 									thumb_list[i] = fpt.thumb_prob;
 									
 									//trace(i, fpt.width,fpt.normalized_width, fpt.length,fpt.thumb_prob)
@@ -656,7 +1032,7 @@ package com.gestureworks.analysis
 									//trace("assign thumb", hfn);
 								}
 								else {
-									cO.handList[j].fingerList[max_index].fingertype = "finger";
+									cO.handList[j].fingerList[max_index].fingertype != "thumb";
 									cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
 									//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
 								}
@@ -673,7 +1049,7 @@ package com.gestureworks.analysis
 									//trace("assign thumb", hfn);
 								}
 								else {
-									cO.handList[j].fingerList[max_index].fingertype = "finger";
+									cO.handList[j].fingerList[max_index].fingertype != "thumb"//"finger";
 									cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
 									//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
 								}
@@ -690,7 +1066,7 @@ package com.gestureworks.analysis
 									//trace("assign thumb", hfn);
 								}
 								else {
-									cO.handList[j].fingerList[max_index].fingertype = "finger";
+									cO.handList[j].fingerList[max_index].fingertype != "thumb"//"finger";
 									cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
 									//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
 								}
@@ -706,7 +1082,7 @@ package com.gestureworks.analysis
 									}
 									
 									else {
-									cO.handList[j].fingerList[max_index].fingertype = "finger";
+									cO.handList[j].fingerList[max_index].fingertype !="thumb"// "finger";
 									cO.handList[j].thumb = null;
 									}
 								}
@@ -782,7 +1158,7 @@ package com.gestureworks.analysis
 							
 							//trace(angle, cO.handList[j].type)
 						}
-						
+					}
 				}		
 							
 		}

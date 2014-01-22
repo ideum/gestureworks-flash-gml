@@ -319,7 +319,7 @@ package com.gestureworks.objects
 		
 		
 		// PRIME MULTIMODAL POINT ARRAY COPIED FROM CLOBAL REGISTERED CACHE
-		public var mmPointArray:Array = new Array();
+		public var mmPointArray:Array = new Array(); //USED FOR CLUSTER DIM ANALYSIS
 
 		/////////////////////////////////////////////////////////////////////////
 		//default cluster level RAW data structures
@@ -334,8 +334,10 @@ package com.gestureworks.objects
 		public var sensorArray:Vector.<SensorPointObject> = new Vector.<SensorPointObject>();
 		
 		
-		/////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////////////////////
 		// cluster Interaction Point list
+		// WILL BE USED AS A UNIVERSAL POINT TYPE FOR GESTURE ANALYSIS
+		// ALL GESTURES WILL COME FROM INTERACTION POINTS
 		/////////////////////////////////////////////////////////////////////////////
 		// DERIVED POINT LIST BASED ON PRIMARY INTERACTION CRITERIA
 		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
@@ -344,22 +346,32 @@ package com.gestureworks.objects
 		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
-			
+		// MUST ADD 
+		//TOUCH_FINGER
+		//TOUCH_PEN
+		//TOUCH_TAG/OBJECT
+		
+		//SENSOR_BTN
+		//SENSOR_ACCEL
+		//SENSOR_GYO
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		//TOUCH PARENT CLUSTER ///////////////////////////////////////
 		public var tcO:ipClusterObject = new ipClusterObject ();
 		//TOUCH SUBCLUSTER ARRAY
 		public var tSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
-		
+		//MOVE INTO TOUCH A OBJECT TYPED SUBCLUSTER
 		//TOUCH OBJECT ARRAY A LIST OF TAGGING STRCTURES FOR 2D
 		public var objectArray:Vector.<Object> = new Vector.<Object>();
 		
-		
-		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		//MOTION PARENT CLUSTER///////////////////////////////////////
 		public var mcO:ipClusterObject = new ipClusterObject ();
 		//MOTION SUBCLUSTER ARRAY
 		public var mSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		// SENSOR PARENT CLUSTER//////////////////////////////////////
 		public var scO:ipClusterObject = new ipClusterObject ();
 		//SENSOR SUBCLUSTER ARRAY

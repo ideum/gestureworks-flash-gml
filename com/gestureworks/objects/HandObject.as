@@ -42,7 +42,7 @@ package com.gestureworks.objects
 		
 		// fingerArray 
 		public var fingerList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		public var knuckeList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var knuckleList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		public var jointList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		
 		// thumb
@@ -102,6 +102,7 @@ package com.gestureworks.objects
 		//pure finger average position//////////////////////////////////////////// //dx,dy,dz
 		public var pureFingerAveragePosition:Vector3D = new Vector3D ();
 		
+		//TODO: REMOVE
 		//pair table/////////////////////////////////////////////x,y,x
 		public var pair_table:Array = new Array();
 	}

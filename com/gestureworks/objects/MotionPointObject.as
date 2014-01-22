@@ -105,7 +105,17 @@ package com.gestureworks.objects
 
 		//max length of this motion for session
 		public var max_length:Number = 0;
+		
+		//min width of this motion point for sesioon
+		public var min_width:Number = 100000000;
 
+		//max width of this motion for session
+		public var max_width:Number = 0;
+
+		//max width:length of this motion for session
+		public var max_width_length_ratio:Number = 0;
+
+		
 		//extension percentage based on max and min length for session
 		public var extension:Number = 0;
 		
@@ -129,9 +139,13 @@ package com.gestureworks.objects
 		public var normalized_length:Number = 0;
 		
 		public var normalized_max_length:Number = 0;
+		public var normalized_max_width:Number = 0;
 
 		//normalized_dAngle based on other fingers in local hand
 		public var normalized_palmAngle:Number = 0;
+		
+		// normalized max width to length ratio
+		public var normalized_mwlr:Number = 0;
 		
 		
 		// hand structure probs

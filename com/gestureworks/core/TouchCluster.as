@@ -580,6 +580,8 @@ package com.gestureworks.core
 				//////////////////////////////////////////////////////
 				//cluster_geometric.resetGeoCluster();
 				
+				cluster_geometric.clearHandData();	
+				
 				
 				// NEEDS TO UPDATE HERE TO STAY CURRENT
 				// NEED TO FIND OUT WHY ??
@@ -590,15 +592,17 @@ package com.gestureworks.core
 				/////////////////////////////////////////////////////
 				
 				// BASIC HAND
-					cluster_geometric.clearHandData();	
-					cluster_geometric.createHand(); // palm points // finger list palm ip 
+					
+					cluster_geometric.updateMotionPoints();//createHand(); // palm points // finger list palm ip 
 				// SKELETAL DETAIL
 					cluster_geometric.findFingerAverage();// finger average point// up down 
 					cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
 					cluster_geometric.findHandRadius(); // favdist 
 					cluster_geometric.findThumb(); // thumb // left// right
-				// ADVANCED SKELETON
-					//--cluster_geometric.findFingers(); // uniquely identify fingers
+				
+					// ADVANCED SKELETON
+					cluster_geometric.createHand(); 
+					cluster_geometric.matchFingers(); // uniquely identify fingers
 					//--cluster_geometric.findJoints(); // finger joints //knuckle / wrist
 				////////////////////////////////////////////////
 			}
