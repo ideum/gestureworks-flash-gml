@@ -170,9 +170,13 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function applyHooks(event:GWTouchEvent):void {
+			var e:GWTouchEvent = null;
 			for each(var hook:Function in hooks) {
-				event = hook(event);
+				e = hook(event);
+				if (e) { break; }
 			}
+			if (e)
+				event = e;
 		}
 		
 		/**
