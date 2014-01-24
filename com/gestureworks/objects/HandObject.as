@@ -28,6 +28,10 @@ package com.gestureworks.objects
 		
 		// hand type // left / right
 		public var type:String = new String("undefined");
+		public var typeCache:int = 0;
+		public var scanCount:int = 0;
+		public var lockedType:String = new String("undefined");
+		public var handLock:Boolean = false;
 		
 		// hand orientation // up/down
 		public var orientation:String = new String("undefined");
@@ -39,11 +43,15 @@ package com.gestureworks.objects
 		public var splay:Number = 0;
 		
 		/////////////////////////////////////////////////////////////////////////////////////////
+		public var seedList:Vector.<Vector3D> = new Vector.<Vector3D>();
+		
 		
 		// fingerArray 
 		public var fingerList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		public var knuckleList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		public var jointList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var tipList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var dipList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var pipList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		
 		// thumb
 		public var thumb:MotionPointObject = new MotionPointObject();
@@ -67,6 +75,7 @@ package com.gestureworks.objects
 		
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();
+		public var positionCached:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();

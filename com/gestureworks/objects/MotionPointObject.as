@@ -76,9 +76,11 @@ package com.gestureworks.objects
 		
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();
+		public var positionCached:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();
+		public var directionCached:Vector3D = new Vector3D ();
 		
 		//normal/////////////////////////
 		public var normal:Vector3D = new Vector3D ();
