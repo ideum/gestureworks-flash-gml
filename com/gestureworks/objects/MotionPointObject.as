@@ -40,6 +40,9 @@ package com.gestureworks.objects
 		// motionID
 		public var motionFrameID:int;
 		
+		//match, flaggged when tip is matched to motion point type
+		public var match:Boolean;
+		
 		// move count 
 		// number move updates for point in frame
 		public var moveCount:int =0;

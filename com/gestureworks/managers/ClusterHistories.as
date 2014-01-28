@@ -132,6 +132,8 @@ package com.gestureworks.managers
 				//objec.acceleration = clusterObject.acceleration;
 				//object.jolt = clusterObject.jolt;
 				
+				object.handList = clusterObject.handList;
+				
 				
 				var sipn:int = clusterObject.mSubClusterArray.length
 				//trace("hist", sipn);

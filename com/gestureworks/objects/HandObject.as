@@ -111,6 +111,8 @@ package com.gestureworks.objects
 		//pure finger average position//////////////////////////////////////////// //dx,dy,dz
 		public var pureFingerAveragePosition:Vector3D = new Vector3D ();
 		
+		public var projectedPureFingerAveragePosition:Vector3D = new Vector3D ();
+		
 		//TODO: REMOVE
 		//pair table/////////////////////////////////////////////x,y,x
 		public var pair_table:Array = new Array();

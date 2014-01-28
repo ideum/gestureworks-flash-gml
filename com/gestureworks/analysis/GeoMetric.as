@@ -18,6 +18,7 @@ package com.gestureworks.analysis
 	/**
  * @private
  */
+	import com.gestureworks.managers.MotionPointHistories;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	import flash.geom.Utils3D;
@@ -49,7 +50,8 @@ package com.gestureworks.analysis
 		private var i:uint = 0;
 		private var j:uint = 0;
 		
-	
+		private var std_radius:int = 30;
+		
 		
 		private var mpn:uint = 0;
 		
@@ -265,9 +267,6 @@ package com.gestureworks.analysis
 												cO.handList[j].direction = cO.motionArray[i].direction
 												cO.handList[j].normal = cO.motionArray[i].normal
 												cO.handList[j].palm = cO.motionArray[i];
-												
-												cO.handList[j].knuckleList.length=0; //TO KILL OR NOT?
-												
 												}	
 											}
 										}
@@ -283,15 +282,6 @@ package com.gestureworks.analysis
 								
 											cO.handList.push(hand);
 										}
-								//}
-								//else {
-									//update hand
-									//cO.handList[j].position = cO.motionArray[i].position;
-									//cO.handList[j].direction = cO.motionArray[i].direction
-									//cO.handList[j].normal = cO.motionArray[i].normal
-									//cO.handList[j].palm = cO.motionArray[i];
-								//}
-							
 							}
 					}
 					///////////////////////////////////////////////
@@ -358,20 +348,24 @@ package com.gestureworks.analysis
 				{
 					if ((cO.handList[j].type)&&(cO.handList[j].fingerList.length==5))
 						{
-							
+						
+						//trace("hand type",cO.handList[j].type);
 						if (cO.handList[j].type == "right") cO.handList[j].typeCache ++;
 						else if (cO.handList[j].type == "left") cO.handList[j].typeCache --;
 						
 						cO.handList[j].scanCount ++;
 							
 						//test if can be locked 
-						 if ((cO.handList[j].scanCount > 30) &&(!cO.handList[j].handLock))
+						 if ((cO.handList[j].scanCount > 20) &&(!cO.handList[j].handLock))
 						 {
+							
 							 cO.handList[j].handLock = true;
 							 cO.handList[j].scanCount = 0;
 							 
 							 if (cO.handList[j].typeCache > 0) cO.handList[j].lockedType = "right";
 							 if (cO.handList[j].typeCache < 0) cO.handList[j].lockedType = "left";
+							 
+							// trace("lockedtype",cO.handList[j].lockedType);
 						}
 						}
 				}
@@ -381,100 +375,121 @@ package com.gestureworks.analysis
 		{
 			for (j = 0; j < cO.hn; j++)
 				{
-					if ((cO.handList[j].type)&&(cO.handList[j].fingerList.length==5)&&(cO.handList[j].handLock)&&(cO.handList[j].splay>0.8))
-						{
-							trace("reset hand skeleton");
-							createSkeleton(true);
+					if (cO.handList[j].handLock) 
+					{	
+						if ((cO.handList[j].type) && (cO.handList[j].fingerList.length == 5) && (cO.handList[j].seedList.length == 0)) 
+							{
+								//trace("create new hand skeleton", cO.handList[j].type, cO.handList[j].lockedType);
+								createSkeleton(true);
+							}
+						else if ((cO.handList[j].type) && (cO.handList[j].fingerList.length == 5) &&(cO.handList[j].splay> 0.8))
+							{
+								//trace("reset hand skeleton");
+								//reset hand type
+									cO.handList[j].handLock = false;
+									lockHandType()
+								// reset skeleton
+								createSkeleton(true);
+							}
+						else{
+								//trace("update skeleton")
+								createSkeleton(false);
 						}
+					}
+					
 				}
+		}
+		
+		public function pushSeeds():void 
+		{
+			//RESET SEED LIST
+			cO.handList[j].seedList.length = 0 ;
+			cO.handList[j].seedList = new Vector.<Vector3D>();
+			
+			var align:Number = -(Math.PI / 24);
+			var t3:Number = (Math.PI / 3);
+			var t6:Number = (Math.PI / 6);
+			var t12:Number = (Math.PI / 12);
+			var x0:Number;
+			var y0:Number;		
+			var x1:Number;
+			var y1:Number;		
+			var x2:Number;
+			var y2:Number;		
+			var x3:Number;
+			var y3:Number;		
+			var x4:Number;
+			var y4:Number;
+									
+									
+									
+									if (cO.handList[j].lockedType == "right")
+									{
+											 x0 = std_radius* Math.cos(7*t6);
+											 y0 = std_radius* Math.sin(7*t6);
+												
+											 x1 = std_radius* Math.cos(2*t3);
+											 y1 = std_radius * Math.sin(2*t3);
+												
+											 x2 = std_radius * Math.cos(3*t6);
+											 y2 = std_radius * Math.sin(3*t6);
+												
+											 x3 = std_radius * Math.cos(t3);
+											 y3 = std_radius * Math.sin(t3);
+												
+											 x4 = std_radius * Math.cos(t6);
+											 y4 = std_radius * Math.sin(t6);
+												
+												cO.handList[j].seedList[0] = new Vector3D(x0, 0,y0);
+												cO.handList[j].seedList[1]= new Vector3D(x1,0, y1);
+												cO.handList[j].seedList[2]= new Vector3D(x2,0, y2);
+												cO.handList[j].seedList[3] = new Vector3D(x3,0, y3);
+												cO.handList[j].seedList[4] = new Vector3D(x4,0, y4);
+									}
+									
+									else if (cO.handList[j].lockedType == "left")
+									{
+										 x0 = std_radius*1.2 * Math.cos(-t6+align); //
+										 y0 = std_radius*1.2 * Math.sin(-t6+align); //
+										
+										 x1 = std_radius * Math.cos(t3-t12-align);
+										 y1 = std_radius * Math.sin(t3-t12-align);
+										
+										 x2 = std_radius * Math.cos(3*t6-align);
+										 y2 = std_radius * Math.sin(3*t6-align);
+												
+										 x3 = std_radius*1.0 * Math.cos(2*t3 + t12-align);
+										 y3 = std_radius*1.0 * Math.sin(2*t3 + t12- align);
+												
+										 x4 = std_radius*1.4 * Math.cos(6*t6-align);
+										 y4 = std_radius*1.4 * Math.sin(6*t6-align);
+
+											cO.handList[j].seedList[0] = new Vector3D(x0, 0,y0);
+											cO.handList[j].seedList[1] = new Vector3D(x1,0, y1);
+											cO.handList[j].seedList[2] = new Vector3D(x2,0, y2);
+											cO.handList[j].seedList[3] = new Vector3D(x3,0, y3);
+											cO.handList[j].seedList[4] = new Vector3D(x4,0, y4);
+									}
+									else {
+										cO.handList[j].seedList[0] = new Vector3D();
+										cO.handList[j].seedList[1]= new Vector3D();
+										cO.handList[j].seedList[2]= new Vector3D();
+										cO.handList[j].seedList[3] = new Vector3D();
+										cO.handList[j].seedList[4] = new Vector3D();
+									}
 		}
 		
 		public function createSkeleton(force_update:Boolean):void 
 		{
 			//trace("create hand")
-		
+
 			for (j = 0; j < cO.hn; j++)
 				{
-
-						if ((cO.handList[j].handLock) || (force_update))
-						{
-							
-						if (force_update) trace("skeleton rebuilt");
-						
-						// WILL NEED TO KEEP AND NOT KILL
-						cO.handList[j].knuckleList.length = 0;
-						cO.handList[j].tipList.length = 0;
-						cO.handList[j].dipList.length = 0;
-						cO.handList[j].pipList.length = 0;
-						
-						
-							var vArray:Array = new Array();
-		
-							
-							var align:Number = -(Math.PI / 24);
-							var t3:Number = (Math.PI / 3);
-							var t6:Number = (Math.PI / 6);
-							var t12:Number = (Math.PI / 12);
-							var rad:int = 30;
-							
-							
-							if (cO.handList[j].lockedType == "right")
-							{
-									var x0 = rad * Math.cos(7*t6);
-									var y0 = rad * Math.sin(7*t6);
-										
-									var x1 = rad * Math.cos(2*t3);
-									var y1 = rad * Math.sin(2*t3);
-										
-									var x2 = rad * Math.cos(3*t6);
-									var y2 = rad * Math.sin(3*t6);
-										
-									var x3 = rad * Math.cos(t3);
-									var y3 = rad * Math.sin(t3);
-										
-									var x4 = rad * Math.cos(t6);
-									var y4 = rad * Math.sin(t6);
-										
-										vArray[0] = new Vector3D(x0, 0,y0);
-										vArray[1]= new Vector3D(x1,0, y1);
-										vArray[2]= new Vector3D(x2,0, y2);
-										vArray[3] = new Vector3D(x3,0, y3);
-										vArray[4] = new Vector3D(x4,0, y4);
-							}
-							
-							else if (cO.handList[j].lockedType == "left")
-							{
-								var x0 = rad*1.3 * Math.cos(-t6+align); //
-								var y0 = rad*1.3 * Math.sin(-t6+align); //
-								
-								var x1 = rad * Math.cos(t3-t12-align);
-								var y1 = rad * Math.sin(t3-t12-align);
-								
-								var x2 = rad * Math.cos(3*t6-align);
-								var y2 = rad * Math.sin(3*t6-align);
-										
-								var x3 = rad*1.1 * Math.cos(2*t3 + t12-align);
-								var y3 = rad*1.1 * Math.sin(2*t3 + t12- align);
-										
-								var x4 = rad*1.3 * Math.cos(6*t6-align);
-								var y4 = rad*1.3 * Math.sin(6*t6-align);
-
-									vArray[0] = new Vector3D(x0, 0,y0);
-									vArray[1]= new Vector3D(x1,0, y1);
-									vArray[2]= new Vector3D(x2,0, y2);
-									vArray[3] = new Vector3D(x3,0, y3);
-									vArray[4] = new Vector3D(x4,0, y4);
-							}
-							else {
-								vArray[0] = new Vector3D();
-								vArray[1]= new Vector3D();
-								vArray[2]= new Vector3D();
-								vArray[3] = new Vector3D();
-								vArray[4] = new Vector3D();
-							}
-							
-							var s:int = 30;
-							var p:Vector3D = cO.handList[j].position;
+					// SEED SKELTON GEOMETRY
+					if (cO.handList[j].seedList.length==0) pushSeeds()
+					
+						var s:int = 30;
+						var p:Vector3D = cO.handList[j].position;
 							var rotX:Number = RAD_DEG * Math.asin(cO.handList[j].normal.x);
 							var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
 							var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
@@ -484,85 +499,178 @@ package com.gestureworks.analysis
 								m.appendRotation(rotX, new Vector3D(0, 0, 1));
 								m.appendRotation(rotZ, new Vector3D(-1, 0, 0));
 								m.appendRotation(rotY, new Vector3D(0, 1, 0)); //direction
+					
+							var sn:int = cO.handList[j].seedList.length;
+					
+						//trace("sn",sn);
+	
+								if (force_update)
+								{
+								//trace("skeleton rebuilt");
 								
+								// CLEAR OUT LISTS
+								cO.handList[j].knuckleList.length = 0;
+								cO.handList[j].tipList.length = 0;
+								cO.handList[j].dipList.length = 0;
+								cO.handList[j].pipList.length = 0;
 								
-								for (i = 0; i <5; i++)//mpn
-								{	
-									cO.handList[j].seedList.push(vArray[i]);
-									
-									// create static number of knuckles
-									var kp:MotionPointObject = new MotionPointObject();
-										kp.handID = cO.handList[j].handID;	
-										kp.type = "mcp" + (i+1);
+								//CLEAR FINGER REFERENCES TO FORCE ID CYCLE
+								//cO.handList[j].thumb = null; // MUST RESET IN THUMB ID FUNCTION
+								cO.handList[j].index = new MotionPointObject();
+								cO.handList[j].middle = new MotionPointObject()//null;
+								cO.handList[j].ring = new MotionPointObject()//null;
+								cO.handList[j].pinky = new MotionPointObject()//null;
+								
+								//CLEAR FINGER IDS
+								for (i = 0; i <cO.handList[j].fingerList.length; i++)
+									{	
+									if (cO.handList[j].fingerList[i].fingertype!="thumb") cO.handList[j].fingerList[i].fingertype = "";
+									}
+								
+								//trace("create knuckle", sn)
+								////////////////////////////////////////////////
+								// CREATE SKELTAL KNUCLE, JOINTS AND TIPS SEEDS
+								////////////////////////////////////////////////
+									for (i = 0; i <sn; i++)//mpn
+									{	
+										//cO.handList[j].seedList.push(vArray[i]);
 										
-										kp.position = vArray[i];
+										// create static number of knuckles
+										var kp:MotionPointObject = new MotionPointObject();
+											kp.handID = cO.handList[j].handID;	
+											kp.type = "mcp" + (i+1);
+											
+											var v:Vector3D = cO.handList[j].seedList[i];
+											var pv:Vector3D = Utils3D.projectVector(m, v);			
+											// translate
+											var rv:Vector3D = p.add(pv);
+								
+											kp.position = rv;
+											
+										cO.handList[j].knuckleList.push(kp);
 										
-										var v:Vector3D = vArray[i];
+										//exclude thumb
+										if (i != 0)
+										{
+											//create joints PIPS
+											var j_pip:MotionPointObject = new MotionPointObject();
+												j_pip.handID = cO.handList[j].handID;	
+												j_pip.type = "pip" + (i);
+												
+												var ds:Vector3D = new Vector3D(cO.handList[j].direction.x * s, cO.handList[j].direction.y * s, cO.handList[j].direction.z * s);
+												var vd:Vector3D = kp.position.add(ds);
+												
+												j_pip.position = vd;
+											cO.handList[j].pipList.push(j_pip);
+										}
+										
+										//create joints DIPS
+										var j_dip:MotionPointObject = new MotionPointObject();
+											j_dip.handID = cO.handList[j].handID;	
+											j_dip.type = "dip" + (i+1);
+											
+											var ds2:Vector3D = new Vector3D(cO.handList[j].direction.x * s*1.3, cO.handList[j].direction.y * s*1.3, cO.handList[j].direction.z * s*1.3);
+											var vd2:Vector3D = kp.position.add(ds2);
+											j_dip.position = vd2;
+										cO.handList[j].dipList.push(j_dip);
+										
+										// create TIPS
+										var j_tip:MotionPointObject = new MotionPointObject();
+											j_tip.handID = cO.handList[j].handID;	
+											j_tip.type = "tip" + (i+1);
+											
+											var ds3:Vector3D = new Vector3D(cO.handList[j].direction.x * s*1.6, cO.handList[j].direction.y * s*1.6, cO.handList[j].direction.z * s*1.6);
+											var vd3:Vector3D = kp.position.add(ds3);
+											j_tip.position = vd3;
+										cO.handList[j].tipList.push(j_tip);
+										
+									}
+							
+									//trace("build",cO.handList[j].knuckleList.length)
+							}
+							else
+							{
+								var kn:int = cO.handList[j].knuckleList.length;
+								var dn:int = cO.handList[j].dipList.length
+								var pn:int = cO.handList[j].pipList.length
+								var tn:int = cO.handList[j].tipList.length;
+								
+								//trace("update joints",kn, dn,pn,tn, sn)
+								
+								//update knuckles
+								for (i = 0; i <kn; i++)//mpn
+									{	
+										var v:Vector3D = cO.handList[j].seedList[i];
 										var pv:Vector3D = Utils3D.projectVector(m, v);			
+											
 										// translate
 										var rv:Vector3D = p.add(pv);
-							
-										kp.position = rv;
-										
-									cO.handList[j].knuckleList.push(kp);
-									
-									//exclude thumb
-									if (i != 0)
-									{
-										//create joints PIPS
-										var j_pip:MotionPointObject = new MotionPointObject();
-											j_pip.handID = cO.handList[j].handID;	
-											j_pip.type = "pip" + (i);
-											
-											var ds:Vector3D = new Vector3D(cO.handList[j].direction.x * s, cO.handList[j].direction.y * s, cO.handList[j].direction.z * s);
-											var vd:Vector3D = kp.position.add(ds);
-											
-											j_pip.position = vd;
-										cO.handList[j].pipList.push(j_pip);
+										cO.handList[j].knuckleList[i].position = rv;
 									}
-									
-									//create joints DIPS
-									var j_dip:MotionPointObject = new MotionPointObject();
-										j_dip.handID = cO.handList[j].handID;	
-										j_dip.type = "dip" + (i+1);
 										
-										var ds2:Vector3D = new Vector3D(cO.handList[j].direction.x * s*1.3, cO.handList[j].direction.y * s*1.3, cO.handList[j].direction.z * s*1.3);
-										var vd2:Vector3D = kp.position.add(ds2);
-										j_dip.position = vd2;
-									cO.handList[j].dipList.push(j_dip);
-									
-									// create TIPS
-									var j_tip:MotionPointObject = new MotionPointObject();
-										j_tip.handID = cO.handList[j].handID;	
-										j_tip.type = "tip" + (i+1);
+								//update tips to cached values
+								for (i = 0; i <tn; i++)//mpn
+									{		
+										var v2:Vector3D = cO.handList[j].positionCached;
+										var palm_vel:Vector3D = cO.handList[j].palm.position.subtract(v2);
 										
-										var ds3:Vector3D = new Vector3D(cO.handList[j].direction.x * s*1.6, cO.handList[j].direction.y * s*1.6, cO.handList[j].direction.z * s*1.6);
-										var vd3:Vector3D = kp.position.add(ds3);
-										j_tip.position = vd3;
-									cO.handList[j].tipList.push(j_tip);
-									
-								}
+										//GET POSITION CACHE
+										if (cO.handList[j].tipList[i].positionCached)
+										{
+											var normal:Vector3D = cO.handList[j].palm.normal;
+											var v0:Vector3D = cO.handList[j].tipList[i].positionCached;
+												
+											// FIND RELATIVE POSITON TO PALM
+											var v:Vector3D = v0.subtract(cO.handList[j].palm.position);
+											
+											// PROJECT INTO THE PALM PLANE
+											var dist:Number = (v.x * normal.x) + (v.y * normal.y) + (v.z * normal.z);
+											var palm_plane_chachedtip:Vector3D = new Vector3D((v0.x - dist * normal.x), (v0.y -dist*normal.y), (v0.z - dist*normal.z));
+											
+											cO.handList[j].tipList[i].position = palm_plane_chachedtip.add(palm_vel);
+										}
+										//GET DIRECTION CACHE
+										if (cO.handList[j].tipList[i].directionCached)
+										{
+											// get direction vector
+											var v0:Vector3D = cO.handList[j].tipList[i].directionCached;
+											
+											//TRANSFORM VECTOR WITH PALM
+											////project direction vecotr into the aplm plane 
+											//var normal:Vector3D = cO.handList[j].palm.normal;
+											//var dist:Number = v0.length; //(v0.x * normal.x) + (v0.y * normal.y) + (v0.z * normal.z);
+											//var pp_ctip:Vector3D = new Vector3D((v0.x - dist * normal.x), (v0.y -dist*normal.y), (v0.z - dist*normal.z));
+											//var pv:Vector3D = Utils3D.projectVector(m,  pp_ctip);//v0
+
+											cO.handList[j].tipList[i].direction = v0;
+										}
+										
+									}	
+							}
+						
+						
 							//trace(cO.handList[j].knuckleList.length);
+							
 					}
-			}
 		}
 		
 		
 		
 		// UNIQUE FINGER IDS
-		public function matchFingers():void 
+		public function matchFingers(force_update:Boolean):void 
 		{
-			var force_update:Boolean = true;
+			force_update = true;
 			
+			
+			// NEED TO PREVENT MULTIPLE MATCHES (MULTIPLE PINKIES....)
+			//
 					for (j = 0; j < cO.hn; j++)
 					{	
 						// FIND MATCHING FINGER TIPS
 						var fn = cO.handList[j].fingerList.length;
-						
-						if (cO.handList[j].knuckleList.length!=0) // ONLY WHEN KNUCKLES EXIST
-							{
-
-							for (i = 0; i < 5; i++)//knucles
+						var kn = cO.handList[j].knuckleList.length // ONLY WHEN KNUCKLES EXIST
+							
+							for (i = 0; i < kn; i++)//knucles
 							{
 							var min_value:Number = 100;
 							var fingerID:int;
@@ -573,66 +681,365 @@ package com.gestureworks.analysis
 							var ang:Number;
 							var k_value;
 							var type = cO.handList[j].knuckleList[i].type;
+							var knuckle = cO.handList[j].knuckleList[i];
 							
-							for (var k:int = 0; k <fn; k++)// fingertips
-							{
-								if (cO.handList[j].fingerList[k].fingertype != "thumb")
-								{
-									dist = Vector3D.distance(cO.handList[j].knuckleList[i].position, cO.handList[j].fingerList[k].position);
-									//pf_v = cO.handList[j].position.subtract(cO.handList[j].fingerList[k].palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
-									pf_v = cO.handList[j].projectedFingerAveragePosition.subtract(cO.handList[j].fingerList[k].palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
-	
-									ang = Vector3D.angleBetween(pk_v, pf_v);
-									
-									//trace("finger assignment", dist, ang)
-									
-									//k_value = ang
-									//k_value = dist//*ang
-									k_value = dist + 50* ang;
-									
-									if (k_value < min_value)
-									{
-										min_value = k_value;
-										fingerID = cO.handList[j].fingerList[k].id;
-										fk = k;
-									}	
-								}
-							}
-							
-							// SET FINGER TYPES
-							if ((fn > 0) && (cO.handList[j].fingerList[fk].fingertype != "thumb")) 
-							{
-								//trace(type,cO.handList[j].fingerList[fk].fingertype);
 							if (force_update)
-							{	
-								//DONT UPDATE THUMB//if (type == "mcp1") cO.handList[j].fingerList[fk].fingertype = "thumb"; // GET MAX WIDTH
-								if (type == "mcp2") cO.handList[j].fingerList[fk].fingertype = "index";
-								if (type == "mcp3") cO.handList[j].fingerList[fk].fingertype = "middle";
-								if (type == "mcp4") cO.handList[j].fingerList[fk].fingertype = "ring";
-								if (type == "mcp5") cO.handList[j].fingerList[fk].fingertype = "pinky";
-							}
-							else {
-								if (cO.handList[j].fingerList[fk].fingertype == "finger")
+							{
+								for (var k:int = 0; k <fn; k++)// fingertips
 								{
-									if (type == "mcp2") cO.handList[j].fingerList[fk].fingertype = "index";
-									if (type == "mcp3") cO.handList[j].fingerList[fk].fingertype = "middle";
-									if (type == "mcp4") cO.handList[j].fingerList[fk].fingertype = "ring";
-									if (type == "mcp5") cO.handList[j].fingerList[fk].fingertype = "pinky";
+									//trace(cO.handList[j].fingerList[k].type, cO.handList[j].fingerList[k].fingertype);
+									
+									var finger = cO.handList[j].fingerList[k];
+									
+									if (finger.fingertype != "thumb")
+									{
+										dist = Vector3D.distance(knuckle.position, finger.position);
+										//pf_v = cO.handList[j].position.subtract(cO.handList[j].fingerList[k].palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
+										pf_v = cO.handList[j].projectedFingerAveragePosition.subtract(finger.palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
+										//SHOULD TRY PROJECTED PRURE FINGER
+										// NEED TO CALCUALTE PROJECTED PRURE FINGER POSITION
+										
+										ang = Vector3D.angleBetween(pk_v, pf_v);
+										
+										//trace("finger assignment", dist, ang)
+										
+										//k_value = ang
+										//k_value = dist//*ang
+										k_value = dist + 50* ang;
+										
+										if (k_value < min_value)//&&(!knuckle.match))
+										{
+											min_value = k_value;
+											fingerID = finger.id;
+											fk = k;
+										}	
 									}
 								}
-							}
-							}
 								
-						}
-						//force_update = false;		
-								
+									if (fn > 0)
+									{
+										//DONT UPDATE THUMB ID
+										
+										if (type == "mcp2") {
+											cO.handList[j].fingerList[fk].fingertype = "index";
+											cO.handList[j].index = cO.handList[j].fingerList[fk];
+										}
+										if (type == "mcp3") {
+											cO.handList[j].fingerList[fk].fingertype = "middle";
+											cO.handList[j].middle = cO.handList[j].fingerList[fk];
+										}
+										if (type == "mcp4") {
+											cO.handList[j].fingerList[fk].fingertype = "ring";
+											cO.handList[j].ring = cO.handList[j].fingerList[fk];
+										}
+										if (type == "mcp5") {
+											cO.handList[j].fingerList[fk].fingertype = "pinky";
+											cO.handList[j].pinky = cO.handList[j].fingerList[fk];
+										}
+									}
+								}
+							
+							}
+	
 					}
-			//}
+		}
+		
+		// UNIQUE FINGER IDS
+		public function matchFingers2(force_update:Boolean):void 
+		{
+			force_update = true;
+			
+			
+					for (j = 0; j < cO.hn; j++)
+					{	
+						
+						// FIND MATCHING FINGER TIPS
+						var fn = cO.handList[j].fingerList.length;
+						var kn = cO.handList[j].knuckleList.length // ONLY WHEN KNUCKLES EXIST
+						
+						if (fn &&kn)
+						{	
+							//for (i = 0; i < kn; i++)//knucles
+							//{
+							//var min_value:Number = 100;
+							//var fingerID:int;
+							//var fk:int;
+							
+							var dist:Number;
+							var hplane_pk:Vector3D
+							var hplane_kf:Vector3D 
+							var ang_hor:Number;
+							var ang_palmdir:Number;
+							
+							//var k_value;
+							//var type = cO.handList[j].knuckleList[i].type;
+							var knuckle
+							var palm = cO.handList[j].palm
+							var projectedFAV = cO.handList[j].projectedFingerAveragePosition
+							
+							var minDist 
+							var maxDist
+							var maxAngleVert
+							var maxAngleHor
+							var maxAnglePalmDir
+							
+							
+							//trace("t",cO.handList[j].thumb.motionPointID,cO.handList[j].thumb);
+							
+							//var tmpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].thumb.motionPointID];
+							if (cO.handList[j].thumb)
+							{
+							if (cO.handList[j].thumb.motionPointID) 
+									{
+										//test to see if middle finger motion poin still being tracked
+										var mpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].thumb.motionPointID];
+										if (!mpo) {
+											cO.handList[j].thumb.id = null;
+											//trace("thumb nullified")
+										}
+										
+									}
+							}
+							
+							
+							
+							// make sure thumb eXists
+							if (cO.handList[j].thumb)// tmpo
+							{		
+								
+								//MIDDLE FINGER
+								knuckle = cO.handList[j].knuckleList[2];
+								maxDist = 80;
+								minDist = 40;
+								maxAngleHor = Math.PI / 30;
+								maxAnglePalmDir = Math.PI / 40;
+							
+								for (var k:int = 0; k <fn; k++)// fingertips
+								{
+									//trace(cO.handList[j].fingerList[k].type, cO.handList[j].fingerList[k].fingertype);
+									
+									var finger = cO.handList[j].fingerList[k];
+									
+									//trace("middle",cO.handList[j].middle.id,cO.handList[j].middle.motionPointID)
+									
+									if ((finger.fingertype != "thumb")&&(finger.fingertype == "")&&(finger.fingertype != "middle")&&(!cO.handList[j].middle.id))
+									{
+										//GET FINGER KNUCKLE DISTANCE
+										dist = Vector3D.distance(knuckle.position, finger.position);
+										//GET PALM TO KNUCKLE VECTOR IN horizontal PLANE
+										hplane_pk = knuckle.position.subtract(palm.position);
+										//GET FINGER TO KNUCKLE VECTOR IN Horizontal PLANE
+										hplane_kf = finger.palmplane_position.subtract(knuckle.position);
+										
+										//get angle btween in horizontal
+										ang_hor = Vector3D.angleBetween(hplane_pk, hplane_kf);
+										
+										//get angle btween in horizontal
+										//ang_ver = Vector3D.angleBetween(vplane_pk, vplane_kf);
+										
+										//GET ANGLE BETWEEN FINGER AND PLAM DIRECTION
+										ang_palmdir = Vector3D.angleBetween( palm.direction, hplane_kf);
+										
+										//trace("finger assignment", dist, ang_hor, ang_palmdir)
+
+										if ((dist < maxDist)&&((dist > minDist))&&(ang_hor<maxAngleHor)&&(ang_hor<maxAnglePalmDir))
+										{
+											//trace("middle finger assignment", dist, ang_hor,maxAngleHor,ang_palmdir,   cO.handList[j].fingerList[k].fingertype,cO.handList[j].middle.id)
+											cO.handList[j].fingerList[k].fingertype = "middle";
+											cO.handList[j].middle = cO.handList[j].fingerList[k];
+										}
+									}
+									else if (cO.handList[j].middle) 
+									{
+										//test to see if middle finger motion poin still being tracked
+										var mpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].middle.motionPointID];
+										if (!mpo) {
+											cO.handList[j].middle.id = null;
+											//trace("middle nullified")
+										}
+										
+									}
+								}
+								
+								
+								//PINKY FINGER
+								// USE HANDEDNESS TO STRENGTHERN ID
+								knuckle = cO.handList[j].knuckleList[4];
+								maxDist = 70;
+								minDist = 30;
+								maxAngleHor = Math.PI / 2//30;
+								maxAnglePalmDir = Math.PI/3;
+							
+								for (var k:int = 0; k <fn; k++)// fingertips
+								{
+									//trace(cO.handList[j].fingerList[k].type, cO.handList[j].fingerList[k].fingertype);
+									
+									var finger = cO.handList[j].fingerList[k];
+									
+									//trace("pinky",cO.handList[j].pinky.id,cO.handList[j].pinky.motionPointID)
+									
+									if ((finger.fingertype != "thumb")&&(finger.fingertype == "")&&(finger.fingertype != "pinky")&&(!cO.handList[j].pinky.id))
+									{
+										//GET FINGER KNUCKLE DISTANCE
+										dist = Vector3D.distance(knuckle.position, finger.position);
+										//GET PALM TO KNUCKLE VECTOR IN horizontal PLANE
+										hplane_pk = knuckle.position.subtract(palm.position);
+										//GET FINGER TO KNUCKLE VECTOR IN Horizontal PLANE
+										hplane_kf = finger.palmplane_position.subtract(knuckle.position);
+										
+										//get angle between finger and knuckle in horizontal palm plane
+										ang_hor = Vector3D.angleBetween( hplane_kf,hplane_pk);
+										
+										//get angle btween in horizontal
+										//ang_ver = Vector3D.angleBetween(vplane_pk, vplane_kf);
+										
+										//GET ANGLE BETWEEN FINGER AND PLAM DIRECTION
+										ang_palmdir = Vector3D.angleBetween( palm.direction, hplane_kf);
+										
+										//trace("pinky finger assignment", dist, ang_hor)
+
+										if ((dist < maxDist)&&(dist > minDist)&&(ang_hor<maxAngleHor)&&(ang_palmdir<maxAnglePalmDir))
+										{
+											//trace("finger",k, dist, ang_hor,maxAngleHor, ang_palmdir)
+											cO.handList[j].fingerList[k].fingertype = "pinky";
+											cO.handList[j].pinky = cO.handList[j].fingerList[k];
+										}
+									}
+									else if (cO.handList[j].pinky) 
+									{
+										//test to see if middle finger motion poin still being tracked
+										var mpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].pinky.motionPointID];
+										if (!mpo){
+											cO.handList[j].pinky.id = null;
+											//trace("pinky nullified")
+										}
+									}
+								}
+								
+								
+								
+								//INDEX FINGER
+								// WANTS TO CONFUSE WITH MIDDLE AND THUMB
+								// USE HANDEDNESS TO STRENGTHERN ID
+								knuckle = cO.handList[j].knuckleList[1];
+								maxDist = 70;
+								minDist = 35;
+								maxAngleHor = Math.PI / 5;
+								maxAnglePalmDir = Math.PI/5;
+							
+								for (var k:int = 0; k <fn; k++)// fingertips
+								{
+									//trace(cO.handList[j].fingerList[k].type, cO.handList[j].fingerList[k].fingertype);
+									
+									var finger = cO.handList[j].fingerList[k];
+									
+									//trace("pinky",cO.handList[j].pinky.id,cO.handList[j].pinky.motionPointID)
+									
+									if ((finger.fingertype != "thumb")&&(finger.fingertype == "")&&(finger.fingertype != "index")&&(!cO.handList[j].index.id))
+									{
+										//GET FINGER KNUCKLE DISTANCE
+										dist = Vector3D.distance(knuckle.position, finger.position);
+										//GET PALM TO KNUCKLE VECTOR IN horizontal PLANE
+										hplane_pk = knuckle.position.subtract(palm.position);
+										//GET FINGER TO KNUCKLE VECTOR IN Horizontal PLANE
+										//hplane_kf = finger.palmplane_position.subtract(knuckle.position);
+										hplane_kf = finger.position.subtract(knuckle.position);
+										
+										//get angle between finger and knuckle in horizontal palm plane
+										ang_hor = Vector3D.angleBetween( hplane_kf,hplane_pk);
+										
+										//get angle btween in horizontal
+										//ang_ver = Vector3D.angleBetween(vplane_pk, vplane_kf);
+										
+										//GET ANGLE BETWEEN FINGER AND PLAM DIRECTION
+										ang_palmdir = Vector3D.angleBetween( palm.direction, hplane_kf);
+										
+										//trace("pinky finger assignment", dist, ang_hor)
+
+										if ((dist < maxDist)&&(dist > minDist)&&(ang_hor<maxAngleHor)&&(ang_palmdir<maxAnglePalmDir))
+										{
+											//trace("finger",k,knuckle.type, dist, ang_hor, maxAngleHor, ang_palmdir,maxAnglePalmDir)
+											cO.handList[j].fingerList[k].fingertype = "index";
+											cO.handList[j].index = cO.handList[j].fingerList[k];
+										}
+									}
+									else if (cO.handList[j].index) 
+									{
+										//test to see if middle finger motion poin still being tracked
+										var mpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].index.motionPointID];
+										if (!mpo) {
+											cO.handList[j].index.id = null;
+											//trace("index nullified")
+										}
+									}
+								}
+								
+								
+								
+								//RING FINGER
+								//WANTS TO CONFUSE WITH PINKY (MUST FIND PINKY FIRST)
+								// USE HANDEDNESS TO STRENGTHERN ID
+								knuckle = cO.handList[j].knuckleList[3];
+								maxDist = 70;
+								minDist = 35;
+								maxAngleHor = Math.PI / 4;
+								//minAngleHor = Math.PI / 3;
+								maxAnglePalmDir = Math.PI/15;
+							
+								for (var k:int = 0; k <fn; k++)// fingertips
+								{
+									//trace(cO.handList[j].fingerList[k].type, cO.handList[j].fingerList[k].fingertype);
+									
+									var finger = cO.handList[j].fingerList[k];
+									
+									//trace("pinky",cO.handList[j].pinky.id,cO.handList[j].pinky.motionPointID)
+									
+									if ((finger.fingertype != "thumb")&&(finger.fingertype == "")&&(finger.fingertype != "ring")&&(!cO.handList[j].ring.id))
+									{
+										//GET FINGER KNUCKLE DISTANCE
+										dist = Vector3D.distance(knuckle.position, finger.position);
+										//GET PALM TO KNUCKLE VECTOR IN horizontal PLANE
+										hplane_pk = knuckle.position.subtract(palm.position);
+										//GET FINGER TO KNUCKLE VECTOR IN Horizontal PLANE
+										hplane_kf = finger.palmplane_position.subtract(knuckle.position);
+										//hplane_kf = finger.position.subtract(knuckle.position);
+										
+										//get angle between finger and knuckle in horizontal palm plane
+										ang_hor = Vector3D.angleBetween( hplane_kf,hplane_pk);
+										
+										//get angle btween in horizontal
+										//ang_ver = Vector3D.angleBetween(vplane_pk, vplane_kf);
+										
+										//GET ANGLE BETWEEN FINGER AND PLAM DIRECTION
+										ang_palmdir = Vector3D.angleBetween( palm.direction, hplane_kf);
+										
+										//trace("pinky finger assignment", dist, ang_hor)
+
+										if ((dist < maxDist)&&(dist > minDist)&&(ang_hor<maxAngleHor))//&&(ang_palmdir<maxAnglePalmDir))
+										{
+											//trace("finger",k,knuckle.type, dist, ang_hor, maxAngleHor, ang_palmdir,maxAnglePalmDir)
+											cO.handList[j].fingerList[k].fingertype = "ring";
+											cO.handList[j].ring = cO.handList[j].fingerList[k];
+										}
+									}
+									else if (cO.handList[j].ring) 
+									{
+										//test to see if middle finger motion poin still being tracked
+										var mpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].ring.motionPointID];
+										if (!mpo) {
+											cO.handList[j].ring.id = null;
+											//trace("ring nullified")
+										}
+									}
+								}
+								}
+							}
+					}
 		}
 		
 		public function positionKnuckles():void 
 		{
-			
+			/*
 			for (j = 0; j < cO.hn; j++)
 				{		
 					if (cO.handList[j].knuckleList.length != 0)// ONLY WHEN KNUCKLES EXIST
@@ -658,135 +1065,114 @@ package com.gestureworks.analysis
 							kp.position = rv;	
 						}
 					}
-				}
+				}*/
 		}
 		
 		public function positionTips():void 
 		{
-			
+			//force_update = true;
 			//trace("positionTips");
 			
 				for (j = 0; j < cO.hn; j++)
 					{	
 						// FIND MATCHING FINGER TIPS
-						var fn = cO.handList[j].fingerList.length;
 						
-						if (cO.handList[j].knuckleList.length != 0) // ONLY WHEN KNUCKLES EXIST
+						var tn = cO.handList[j].tipList.length;
+						var kn = cO.handList[j].knuckleList.length;
+						
+						if (kn&&tn) // ONLY WHEN KNUCKLES EXIST
 						{
+						///////////////////////////////////////////////////////////
+						// asing tip postitions
 						
-						//trace(fn)
+						//var rotX:Number = RAD_DEG * Math.asin(cO.handList[j].normal.x);
+						//var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
+						//var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
+											
+						// roate in 3d space
+						//var mx:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
+							//mx.appendRotation(rotX, new Vector3D(0, 0, 1));
+							//mx.appendRotation(rotZ, new Vector3D(-1, 0, 0));
+							//mx.appendRotation(rotY, new Vector3D(0, 1, 0)); //direction
 						
-							for (var k:int = 0; k <fn; k++)// fingertips
-							{
-								// put tips where matching motion points are
-								var ft = cO.handList[j].fingerList[k];
-								
-									
-									
-								var tn = cO.handList[j].tipList.length
-								
-								for (var m:int = 0; m <tn; m++)// fingertips
+						
+							//thumb	
+							if (cO.handList[j].thumb){
+								if (cO.handList[j].thumb.id)
 								{
-									var tp = cO.handList[j].tipList[m];
-									
-									// position tips
-								//	trace("type",tp.type,ft.fingertype)
-									
-								
-								
-									if ((tp.type == "tip1") && (ft.fingertype == "thumb"))
-									{
-										tp.position = ft.position;
-										tp.direction = ft.direction;
-										tp.length = ft.length;
-										tp.width= ft.width;
-									}
-									else if ((tp.type == "tip2") && (ft.fingertype == "index"))
-									{
-										tp.position = ft.position;
-										tp.direction = ft.direction;
-										tp.length = ft.length;
-										tp.width= ft.width;
-									}
-									else if ((tp.type == "tip3") && (ft.fingertype == "middle"))
-									{
-										tp.position = ft.position;
-										tp.direction = ft.direction;
-										tp.length = ft.length;
-										tp.width= ft.width;
-									}
-									else if ((tp.type == "tip4") && (ft.fingertype == "ring"))
-									{
-										tp.position = ft.position;
-										tp.direction = ft.direction;
-										tp.length = ft.length;
-										tp.width= ft.width;
-									}
-									else if ((tp.type == "tip5") && (ft.fingertype == "pinky"))
-									{
-										tp.position = ft.position;
-										tp.direction = ft.direction;
-										tp.length = ft.length;
-										tp.width= ft.width;
-									}
-									else {
-										/*
-										//FROZEN FINGER
-										trace("used cached value relative to hand that can be transformed with palm", ft.fingertype,tp.type);
-										
-											var rotX:Number = RAD_DEG * Math.asin(cO.handList[j].normal.x);
-											var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
-											var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
-											
-											// roate in 3d space
-											var mx:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
-												mx.appendRotation(rotX, new Vector3D(0, 0, 1));
-												mx.appendRotation(rotZ, new Vector3D(-1, 0, 0));
-												mx.appendRotation(rotY, new Vector3D(0, 1, 0)); //direction
-											
-											//RELATIVE POSITON
-											//SHOULD CALCUALTE POSITION OF TIP RELATIVE TO PALM
-											//var rpos:Vector3D = cO.handList[j].positionCached.subtract(tp.positionCached);
-											
-											var v = cO.handList[j].position.add(tp.positionCached)
-											
-											// TRANSFORMED POSITON
-											var pos:Vector3D = Utils3D.projectVector(mx, v);	//tp.positionCached	 
-											var dir:Vector3D = Utils3D.projectVector(mx, tp.directionCached);		
-
-											// set static pose positon
-											tp.position = pos;
-											tp.direction = dir;*/
-									}
-									
-									
-									
-									
-									
-									
-								}	
-						}
-						
-						
-							///////////////////////////
-							//CACHE FINGER VALUES
-							var tn = cO.handList[j].tipList.length
-								
-								for (var m:int = 0; m <tn; m++)// fingertips
-								{
-									var tp = cO.handList[j].tipList[m];
-										tp.positionCached = tp.position;
-										tp.directionCached = tp.direction;
+								cO.handList[j].tipList[0].position = cO.handList[j].thumb.position;
+								cO.handList[j].tipList[0].direction = cO.handList[j].thumb.direction;
+								//trace("thumb",cO.handList[j].thumb);
 								}
-						
+								else {
+									//trace("used cached thumb")
+								}
+							}
+							//index	
+							if (cO.handList[j].index.id)
+							{
+								cO.handList[j].tipList[1].position = cO.handList[j].index.position;
+								cO.handList[j].tipList[1].direction = cO.handList[j].index.direction;
+								//trace("index",cO.handList[j].index);
+							}
+							else {
+								//trace("used cached index");
+							}
+							
+							//middle
+							if (cO.handList[j].middle.id)
+							{
+							cO.handList[j].tipList[2].position = cO.handList[j].middle.position;
+							cO.handList[j].tipList[2].direction = cO.handList[j].middle.direction;
+							}
+							else {
+								//trace("used cached middle");
+							}
+							//ring	
+							if (cO.handList[j].ring.id)
+							{
+							cO.handList[j].tipList[3].position = cO.handList[j].ring.position;
+							cO.handList[j].tipList[3].direction = cO.handList[j].ring.direction;
+							}
+							else {
+								//trace("used cached ring");
+							}
+							//pinky		
+							if (cO.handList[j].pinky.id)
+							{
+							cO.handList[j].tipList[4].position = cO.handList[j].pinky.position;
+							cO.handList[j].tipList[4].direction = cO.handList[j].pinky.direction;
+							}
+							else {
+								//trace("used cached pinky");
+							}
+							
+							
+							
+							///////////////////////////
+							//CACHE FINGER TIP VALUES
+							for (var m:int = 0; m <tn; m++)// fingertips
+							{
+							var tp = cO.handList[j].tipList[m];
+								tp.positionCached = tp.position;
+								tp.directionCached = tp.direction;
+								
+								//trace("cache test",m,tp.positionCached, tp.position)
+							}
+							
 						
 
 						}
+						////////////////////////
+						//cache palm position
+						cO.handList[j].positionCached = cO.handList[j].position;
 					}
 		}
 		
 		public function positionJoints():void 
 		{
+			// JOINT ALWAYS REPOSITIONED AS ARE DIRECT CONSEQUENCE ON TIPS AND KNUCKLES WHICH "ALWAYS" EXIST
+			
 					for (j = 0; j < cO.hn; j++)
 					{	
 						// FIND MATCHING FINGER TIPS
@@ -797,54 +1183,57 @@ package com.gestureworks.analysis
 							
 							for (var k:int = 0; k <fn; k++)// fingertips
 							{
-								//get tip
-								var ft = cO.handList[j].tipList[k];
-								
-								// draw back to knucle from tip to knuckle
-								for (var m:int = 0; m <cO.handList[j].dipList.length; m++)// fingertips
-								{
-									var dp = cO.handList[j].dipList[m];
-								
-									//POSITION DIPS
-									if (k==m) 
-									{
-										var pos:Vector3D = ft.position;
-										var dir:Vector3D = ft.direction;
-										var scale:Number = 15
-										var dir_scale:Vector3D = new Vector3D(dir.x*scale,dir.y*scale,dir.z*scale)
-										var v:Vector3D  = pos.subtract(dir_scale);
-										
-										//trace(v)
-										dp.position = v;
-									}
-								}
-								
-								//POSITION PIPS
-								for (var m:int = 0; m <cO.handList[j].pipList.length; m++)// fingertips
-								{
-									var pp = cO.handList[j].pipList[m];
+							
+									//get tip
+									var ft = cO.handList[j].tipList[k];
 									
-									if ((k-1)==m) 
+									// draw back to knucle from tip to knuckle
+									for (var m:int = 0; m <cO.handList[j].dipList.length; m++)// fingertips
 									{
-										// get anchor point
-										var pos:Vector3D = ft.position;
-										var dir:Vector3D = ft.direction;
-										var scale:Number = 30
-										var dir_scale:Vector3D = new Vector3D(dir.x*scale,dir.y*scale,dir.z*scale)
-										var v:Vector3D  = pos.subtract(dir_scale);
-										
-										// get knuckle direction
-										var kp:Vector3D = cO.handList[j].knuckleList[m + 1].position;
-										var dir:Vector3D = v.subtract(kp);
-										var scale2:Number = 0.3;
-										var dir_scale2:Vector3D = new Vector3D(dir.x * scale2, dir.y * scale2, dir.z * scale2);
-										// move dist towards knuckle
-										var v2:Vector3D = v.subtract(dir_scale2);
-										
-										pp.position = v2;
+										var dp = cO.handList[j].dipList[m];
+									
+										//POSITION DIPS
+										if (k==m) 
+										{
+											var pos:Vector3D = ft.position;
+											var dir:Vector3D = ft.direction;
+											var scale:Number = 15
+											var dir_scale:Vector3D = new Vector3D(dir.x*scale,dir.y*scale,dir.z*scale)
+											var v:Vector3D  = pos.subtract(dir_scale);
+											
+											//trace(v)
+											dp.position = v;
+										}
 									}
-								}
-							}
+									
+									//POSITION PIPS
+									for (var m:int = 0; m <cO.handList[j].pipList.length; m++)// fingertips
+									{
+										var pp = cO.handList[j].pipList[m];
+										
+										if ((k-1)==m) 
+										{
+											// get anchor point
+											var pos:Vector3D = ft.position;
+											var dir:Vector3D = ft.direction;
+											var scale:Number = 30
+											var dir_scale:Vector3D = new Vector3D(dir.x*scale,dir.y*scale,dir.z*scale)
+											var v:Vector3D  = pos.subtract(dir_scale);
+											
+											// get knuckle direction
+											var kp:Vector3D = cO.handList[j].knuckleList[m + 1].position;
+											var dir:Vector3D = v.subtract(kp);
+											var scale2:Number = 0.3;
+											var dir_scale2:Vector3D = new Vector3D(dir.x * scale2, dir.y * scale2, dir.z * scale2);
+											// move dist towards knuckle
+											var v2:Vector3D = v.subtract(dir_scale2);
+											
+											pp.position = v2;
+										}
+									}
+								
+								
+						}
 					}
 					}
 			
@@ -1000,7 +1389,6 @@ package com.gestureworks.analysis
 			var hfn:uint = cO.handList[j].fingerList.length;
 			var palm_mpoint:MotionPointObject = cO.handList[j].palm; // NEED TO SIMPLIFY		
 			
-			
 			var normal:Vector3D = palm_mpoint.normal;
 			var p_pos:Vector3D = palm_mpoint.position;
 			var fav_pos:Vector3D = cO.handList[j].fingerAveragePosition;
@@ -1036,8 +1424,8 @@ package com.gestureworks.analysis
 							fpt.palmAngle =  Vector3D.angleBetween(ppp_dir, palm_mpoint.direction);
 							//palmAngle = Math.abs(Vector3D.angleBetween(cO.motionArray[i].direction, palm_mpoint.direction));
 
-							// calc proper length
-							fpt.length = Vector3D.distance(p_pos, f_pos);
+							// calc proper length from palm
+							fpt.length = Vector3D.distance(p_pos, f_pos) //- std_radius;
 							
 							// FIND EXTENSION MEASURE
 							var palm_finger_vector:Vector3D = fpt.position.subtract(palm_mpoint.position);
@@ -1199,8 +1587,8 @@ package com.gestureworks.analysis
 		for (j = 0; j < cO.hn; j++)
 				{
 					
-			if (cO.handList[j].fingerList.length == 5)//&&(cO.handList[j].thumb==undefined))
-			{
+			//if (cO.handList[j].fingerList.length == 5)//&&(cO.handList[j].thumb==undefined))
+			//{
 				
 				//trace("splay",cO.handList[j].splay)
 				
@@ -1215,26 +1603,46 @@ package com.gestureworks.analysis
 						///////////////////////////////////////////////////////////////////////////////////
 						// MOD THUMB PROB WITH FINGER LENGTH AND WIDTH
 						
+							// reset thumb
+							//cO.handList[j].thumb = new MotionPointObject();
+							
 							// get largest thumb prob
 							var thumb_list:Array = new Array()
 							
 							//trace("--");
 							
+							
+							if ((cO.handList[j].lockedType == "left") || (cO.handList[j].lockedType == "right")) 
+							{
+								//trace("handedness known, check context of new candidates", cO.handList[j].type,cO.handList[j].lockedType);
+								var palmcross:Vector3D = cO.handList[j].palm.normal.crossProduct(cO.handList[j].palm.direction);
+							}
+							
+							
 							for (i = 0; i < hfn; i++)
 								{
 									fpt = cO.handList[j].fingerList[i];
 									
-									//ALL
-									fpt.thumb_prob += 2*(1- fpt.normalized_length)
+									// RESET THUMB PROB HIST
+									//if (fpt.fingertype == "thumb") trace(fpt.thumb_prob);//fpt.thumb_prob = 1; 
+									//else { fpt.thumb_prob = 0};
+									fpt.thumb_prob = 0
+									//fpt.fingertype = "";
+									
+									
+									//ALL FEATURES////////////////////////////////////////////////////////////
+									fpt.thumb_prob += 2*(1- fpt.normalized_length)//2
 									fpt.thumb_prob += 5*(fpt.normalized_favdist) //WORKS VERY WELL ON OWN
-									fpt.thumb_prob += 2 * (fpt.normalized_palmAngle);
-									fpt.thumb_prob += 2 * (fpt.normalized_mwlr); //width to length ratio
+									fpt.thumb_prob += 2 * (fpt.normalized_palmAngle);//2
+									fpt.thumb_prob += 1 * (fpt.normalized_mwlr); //width to length ratio
+									//fpt.thumb_prob += 1 * (fpt.normalized_width) // exeperimentatal
+									//ALSO USE NORLAIZED AVERAGE EXTENSION (THUMB TENDS TO BEND MORE AS NO PIP)
 									
 									//trace("norm mwlr", fpt.thumb_prob,fpt.normalized_mwlr,fpt.normalized_width,fpt.normalized_length);
+									//trace(i, fpt.width, fpt.normalized_width, fpt.length, fpt.normalized_length, fpt.normalized_favdist,fpt.normalized_palmAngle,fpt.normalized_mwlr, fpt.thumb_prob);
 									
 									thumb_list[i] = fpt.thumb_prob;
-									
-									//trace(i, fpt.width,fpt.normalized_width, fpt.length,fpt.thumb_prob)
+									/////////////////////////////////////////////////////////////////////////
 								}	
 							
 						///////////////////////////////////////////////////////////////////////////////////
@@ -1242,7 +1650,7 @@ package com.gestureworks.analysis
 						var max_tp:Number = Math.max.apply(null, thumb_list);
 						var max_index:int = thumb_list.indexOf(max_tp);
 						
-						if ((max_index != -1) && ( cO.handList[j].fingerList[max_index]) && (cO.handList[j].fingerList[max_index].type == "finger")) 
+						if ((max_index != -1) && ( cO.handList[j].fingerList[max_index]) && (cO.handList[j].fingerList[max_index].type == "finger")) //&&(!cO.handList[j].thumb)
 						{
 							
 							// 
@@ -1254,139 +1662,152 @@ package com.gestureworks.analysis
 							var length:int = cO.handList[j].fingerList[max_index].length;
 							var favdist:Number = cO.handList[j].fingerList[max_index].favdist;
 							
-							
+								//////////////////////////////////////////////////////////////////////
 								// QUICK EFFECTIVE METRIC/////////////////////////////////////////////
+								// FOR WHEN FN!=5
 								var ratio:Number = (1.1*length) / (favdist + 50 * angle)
 								//////////////////////////////////////////////////////////
-							
-							
-								//trace(ratio);
-								if (hfn == 5)
-								{
-								if ((ratio < 0.8))//0.56
-								{
-									// SET THUMB TYPE
-									cO.handList[j].fingerList[max_index].fingertype = "thumb";	
-								
-									// SET THUMB IN HAND OBJECT
-									cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
-									//trace("assign thumb", hfn);
-								}
-								else {
-									cO.handList[j].fingerList[max_index].fingertype != "thumb";
-									cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
-									//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
-								}
-								}
-								if (hfn == 4)
-								{
-								if ((ratio < 0.70))
-								{
-									// SET THUMB TYPE
-									cO.handList[j].fingerList[max_index].fingertype = "thumb";	
-								
-									// SET THUMB IN HAND OBJECT
-									cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
-									//trace("assign thumb", hfn);
-								}
-								else {
-									cO.handList[j].fingerList[max_index].fingertype != "thumb"//"finger";
-									cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
-									//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
-								}
-								}
-								if (hfn == 3)
-								{
-								if (ratio < 1.2)
-								{
-									// SET THUMB TYPE
-									cO.handList[j].fingerList[max_index].fingertype = "thumb";	
-								
-									// SET THUMB IN HAND OBJECT
-									cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
-									//trace("assign thumb", hfn);
-								}
-								else {
-									cO.handList[j].fingerList[max_index].fingertype != "thumb"//"finger";
-									cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
-									//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
-								}
-								}
 								
 								
-								if (hfn == 2) 
-								{
-									if (ratio < 2.1)
+								//////////////////////////////////////////////////////////////////////
+								// THUMB VALIDITY CHECK
+								var validthumb:Boolean = true;// init value when no type lock
+								if ((cO.handList[j].lockedType == "left") || (cO.handList[j].lockedType == "right")) 
 									{
-									cO.handList[j].fingerList[max_index].fingertype = "thumb";
-									cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
+										validthumb = false; 
+										
+											if ((cO.handList[j].fingerList[max_index]) && (cO.handList[j].palm))
+											{
+												var tVector:Vector3D = cO.handList[j].fingerList[max_index].position.subtract(cO.handList[j].palm.position);
+												var angle2:Number = palmcross.dotProduct(tVector);
+												
+												if ((angle2 < 0)&&(cO.handList[j].lockedType == "left")) {
+													validthumb = true;
+												}
+												//right match
+												if ((angle2 > 0)&&(cO.handList[j].lockedType == "right")) {
+													validthumb = true;
+												}
+											}
+									}
+								/////////////////////////////////////////////////////////////////////////
+								
+
+								if (validthumb)
+								{
+									//trace(ratio);
+									if (hfn == 5)
+									{
+									if ((ratio < 0.8))//0.56
+									{
+										// SET THUMB TYPE
+										cO.handList[j].fingerList[max_index].fingertype = "thumb";	
+									
+										// SET THUMB IN HAND OBJECT
+										cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
+										//trace("assign thumb", hfn);
+										return
+									}
+									else {
+										cO.handList[j].fingerList[max_index].fingertype = "";
+										cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
+										//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
+									}
+									}
+									else if (hfn == 4)
+									{
+									if ((ratio < 0.70))
+									{
+										// SET THUMB TYPE
+										cO.handList[j].fingerList[max_index].fingertype = "thumb";	
+									
+										// SET THUMB IN HAND OBJECT
+										cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
+										//trace("assign thumb", hfn);
+										return
+									}
+									else {
+										cO.handList[j].fingerList[max_index].fingertype = ""//"finger";
+										cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
+										//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
+									}
+									}
+									else if (hfn == 3)
+									{
+									if (ratio < 1.2)
+									{
+										// SET THUMB TYPE
+										cO.handList[j].fingerList[max_index].fingertype = "thumb";	
+									
+										// SET THUMB IN HAND OBJECT
+										cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
+										//trace("assign thumb", hfn);
+										return
+									}
+									else {
+										cO.handList[j].fingerList[max_index].fingertype = ""//"finger";
+										cO.handList[j].thumb = null//cO.handList[j].fingerList[max_index];//null
+										//trace("fail", hfn,cO.handList[j].fingerList[max_index].position);
+									}
 									}
 									
-									else {
-									cO.handList[j].fingerList[max_index].fingertype !="thumb"// "finger";
-									cO.handList[j].thumb = null;
+									else if (hfn == 2) 
+									{
+										if (ratio < 2.1)
+										{
+										cO.handList[j].fingerList[max_index].fingertype = "thumb";
+										cO.handList[j].thumb = cO.handList[j].fingerList[max_index];
+										return
+										}
+										
+										else {
+										cO.handList[j].fingerList[max_index].fingertype =""// "finger";
+										cO.handList[j].thumb = null;
+										}
 									}
 								}
 							//}
 						}
 						
-						if (hfn == 1)
+						
+						// NEED SECONDARY CONDITIONS TO ENSURE PINKY NOT SELECTED
+						// CHECK LOCKED TYPE SEE IF ON CORRECT SIDE OF HAND
+						else if ((validthumb)&&(hfn == 1))
 						{
 							// RATIO BREAKS APPART AS LENGTH AND FAV DIST NO LONGER RELEVANT
 							// ANGLE IS ONLY REMAINING METRIC
 							var v0:Vector3D = cO.handList[j].palm.direction
 							var v10:Vector3D = cO.handList[j].fingerList[0].palmplane_position.subtract(cO.handList[j].palm.position)
 							var angle0:Number = Vector3D.angleBetween(v0, v10)
-							//trace("one", angle)
-							if (angle0 > 0.2)
-							{
-								//trace("one")
-								cO.handList[j].fingerList[0].fingertype = "thumb";
-								cO.handList[j].thumb = cO.handList[j].fingerList[0];
-							}
+							//trace("one", angle);
+							
+								if (angle0 > 0.2)
+								{
+									//trace("one")
+									cO.handList[j].fingerList[0].fingertype = "thumb";
+									cO.handList[j].thumb = cO.handList[j].fingerList[0];
+									return
+								}
+								else {
+									cO.handList[j].fingerList[0].fingertype =""// "finger";
+									cO.handList[j].thumb = null;
+								}
 								
 							}
+						//}
+	
 						
 						
-						
-						// note sorting point list at this pahse doesnt seem to have any issues??
-						// probably because there are no transformations yet
-						
-						/*
-						thumb_list.sortOn("thumb_prob",Array.DESCENDING);
-						
-						
-						/// find min 
-						if (thumb_list[fn - 1]) {
-							//min_dist = thumb_list[n - 1]
-							//trace("min", thumb_list[fn - 1].thumb_prob, thumb_list[fn - 1].motionPointID);
-							if((thumb_list[fn-1].type == "finger")) thumb_list[fn-1].fingertype = "middle";
-						}
-						
-						// find max
-						if (thumb_list[1]) {
-							//max_dist = thumb_list[0];
-							//trace("pinky", thumb_list[0].thumb_prob, thumb_list[1].motionPointID);
-							if((thumb_list[0].type == "finger")) thumb_list[1].fingertype = "pinky";
-						}
-						
-						// find max
-						if (thumb_list[0]) {
-							//max_dist = thumb_list[0];
-							//trace("max", thumb_list[0].thumb_prob, thumb_list[0].motionPointID);
-							if((thumb_list[0].type == "finger")) thumb_list[0].fingertype = "thumb";
-						}
-						*/	
-						
-						
-						
-						
-						
-						
+							
+							
+							
 						////////////////////////////////////////////////////////////////////////////////
 						// GET HANDEDNESS
+						// PERHAPS CROSS CHECK WITH ORIENTATION
 						if (cO.handList[j].thumb)
 						{
+							//trace("thumb",cO.handList[j].thumb.width,cO.handList[j].thumb.normalized_width,cO.handList[j].thumb.normalized_mwlr)
+							
 							var palmcross:Vector3D = cO.handList[j].palm.normal.crossProduct(cO.handList[j].palm.direction);
 							var thumbVector:Vector3D = cO.handList[j].thumb.position.subtract(cO.handList[j].palm.position);
 							var angle1:Number = palmcross.dotProduct(thumbVector)
@@ -1399,9 +1820,7 @@ package com.gestureworks.analysis
 							
 							//trace(angle, cO.handList[j].type)
 						}
-					}
-				}		
-							
+					}				
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
