@@ -371,7 +371,7 @@ package com.gestureworks.analysis
 				}
 		}
 		
-		public function checkDynamicUpdate():void 
+		public function dynamicSkeletonUpdate():void 
 		{
 			for (j = 0; j < cO.hn; j++)
 				{
@@ -381,7 +381,12 @@ package com.gestureworks.analysis
 							{
 								//trace("create new hand skeleton", cO.handList[j].type, cO.handList[j].lockedType);
 								createSkeleton(true);
+								matchFingers(true);
+								positionTips();
+								positionJoints();
 							}
+						// SHOULD ADD NEW CONDITION TO CHECK TO FOR ORIENTATION FLIPS 
+						// UPDATE KNUCKELES BUT PRESERVE CACHED STATES AND
 						else if ((cO.handList[j].type) && (cO.handList[j].fingerList.length == 5) &&(cO.handList[j].splay> 0.8))
 							{
 								//trace("reset hand skeleton");
@@ -390,16 +395,23 @@ package com.gestureworks.analysis
 									lockHandType()
 								// reset skeleton
 								createSkeleton(true);
+								matchFingers(true);
+								positionTips();
+								positionJoints();
 							}
 						else{
 								//trace("update skeleton")
 								createSkeleton(false);
+								matchFingers(false);
+								positionTips();
+								positionJoints();
 						}
 					}
 					
 				}
 		}
 		
+		//NEED TO INCLUDE ORIENATION
 		public function pushSeeds():void 
 		{
 			//RESET SEED LIST
@@ -607,8 +619,11 @@ package com.gestureworks.analysis
 										var rv:Vector3D = p.add(pv);
 										cO.handList[j].knuckleList[i].position = rv;
 									}
-										
+								
+								//////////////////////////////////////////////////////////////////
+								//CACHED POSITONS
 								//update tips to cached values
+								//TODO: MUST INCLUDE PALM ROATION IN PLANE
 								for (i = 0; i <tn; i++)//mpn
 									{		
 										var v2:Vector3D = cO.handList[j].positionCached;
@@ -626,6 +641,8 @@ package com.gestureworks.analysis
 											// PROJECT INTO THE PALM PLANE
 											var dist:Number = (v.x * normal.x) + (v.y * normal.y) + (v.z * normal.z);
 											var palm_plane_chachedtip:Vector3D = new Vector3D((v0.x - dist * normal.x), (v0.y -dist*normal.y), (v0.z - dist*normal.z));
+											
+											
 											
 											cO.handList[j].tipList[i].position = palm_plane_chachedtip.add(palm_vel);
 										}
@@ -654,101 +671,11 @@ package com.gestureworks.analysis
 					}
 		}
 		
-		
-		
+
 		// UNIQUE FINGER IDS
 		public function matchFingers(force_update:Boolean):void 
 		{
-			force_update = true;
-			
-			
-			// NEED TO PREVENT MULTIPLE MATCHES (MULTIPLE PINKIES....)
-			//
-					for (j = 0; j < cO.hn; j++)
-					{	
-						// FIND MATCHING FINGER TIPS
-						var fn = cO.handList[j].fingerList.length;
-						var kn = cO.handList[j].knuckleList.length // ONLY WHEN KNUCKLES EXIST
-							
-							for (i = 0; i < kn; i++)//knucles
-							{
-							var min_value:Number = 100;
-							var fingerID:int;
-							var fk:int;
-							var dist:Number;
-							var pf_v:Vector3D;
-							var pk_v:Vector3D = cO.handList[j].position.subtract(cO.handList[j].knuckleList[i].position)
-							var ang:Number;
-							var k_value;
-							var type = cO.handList[j].knuckleList[i].type;
-							var knuckle = cO.handList[j].knuckleList[i];
-							
-							if (force_update)
-							{
-								for (var k:int = 0; k <fn; k++)// fingertips
-								{
-									//trace(cO.handList[j].fingerList[k].type, cO.handList[j].fingerList[k].fingertype);
-									
-									var finger = cO.handList[j].fingerList[k];
-									
-									if (finger.fingertype != "thumb")
-									{
-										dist = Vector3D.distance(knuckle.position, finger.position);
-										//pf_v = cO.handList[j].position.subtract(cO.handList[j].fingerList[k].palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
-										pf_v = cO.handList[j].projectedFingerAveragePosition.subtract(finger.palmplane_position);//USE PROJECTED FINGER POINT IN PALM PLANE
-										//SHOULD TRY PROJECTED PRURE FINGER
-										// NEED TO CALCUALTE PROJECTED PRURE FINGER POSITION
-										
-										ang = Vector3D.angleBetween(pk_v, pf_v);
-										
-										//trace("finger assignment", dist, ang)
-										
-										//k_value = ang
-										//k_value = dist//*ang
-										k_value = dist + 50* ang;
-										
-										if (k_value < min_value)//&&(!knuckle.match))
-										{
-											min_value = k_value;
-											fingerID = finger.id;
-											fk = k;
-										}	
-									}
-								}
-								
-									if (fn > 0)
-									{
-										//DONT UPDATE THUMB ID
-										
-										if (type == "mcp2") {
-											cO.handList[j].fingerList[fk].fingertype = "index";
-											cO.handList[j].index = cO.handList[j].fingerList[fk];
-										}
-										if (type == "mcp3") {
-											cO.handList[j].fingerList[fk].fingertype = "middle";
-											cO.handList[j].middle = cO.handList[j].fingerList[fk];
-										}
-										if (type == "mcp4") {
-											cO.handList[j].fingerList[fk].fingertype = "ring";
-											cO.handList[j].ring = cO.handList[j].fingerList[fk];
-										}
-										if (type == "mcp5") {
-											cO.handList[j].fingerList[fk].fingertype = "pinky";
-											cO.handList[j].pinky = cO.handList[j].fingerList[fk];
-										}
-									}
-								}
-							
-							}
-	
-					}
-		}
-		
-		// UNIQUE FINGER IDS
-		public function matchFingers2(force_update:Boolean):void 
-		{
-			force_update = true;
-			
+			//force_update = true;
 			
 					for (j = 0; j < cO.hn; j++)
 					{	
@@ -759,12 +686,7 @@ package com.gestureworks.analysis
 						
 						if (fn &&kn)
 						{	
-							//for (i = 0; i < kn; i++)//knucles
-							//{
-							//var min_value:Number = 100;
-							//var fingerID:int;
-							//var fk:int;
-							
+
 							var dist:Number;
 							var hplane_pk:Vector3D
 							var hplane_kf:Vector3D 
@@ -810,7 +732,7 @@ package com.gestureworks.analysis
 								//MIDDLE FINGER
 								knuckle = cO.handList[j].knuckleList[2];
 								maxDist = 80;
-								minDist = 40;
+								minDist = 0//40;
 								maxAngleHor = Math.PI / 30;
 								maxAnglePalmDir = Math.PI / 40;
 							
@@ -866,7 +788,7 @@ package com.gestureworks.analysis
 								// USE HANDEDNESS TO STRENGTHERN ID
 								knuckle = cO.handList[j].knuckleList[4];
 								maxDist = 70;
-								minDist = 30;
+								minDist = 0//30;
 								maxAngleHor = Math.PI / 2//30;
 								maxAnglePalmDir = Math.PI/3;
 							
@@ -923,7 +845,7 @@ package com.gestureworks.analysis
 								// USE HANDEDNESS TO STRENGTHERN ID
 								knuckle = cO.handList[j].knuckleList[1];
 								maxDist = 70;
-								minDist = 35;
+								minDist = 0//35;
 								maxAngleHor = Math.PI / 5;
 								maxAnglePalmDir = Math.PI/5;
 							
@@ -974,14 +896,13 @@ package com.gestureworks.analysis
 									}
 								}
 								
-								
-								
+
 								//RING FINGER
 								//WANTS TO CONFUSE WITH PINKY (MUST FIND PINKY FIRST)
 								// USE HANDEDNESS TO STRENGTHERN ID
 								knuckle = cO.handList[j].knuckleList[3];
 								maxDist = 70;
-								minDist = 35;
+								minDist = 0//35;
 								maxAngleHor = Math.PI / 4;
 								//minAngleHor = Math.PI / 3;
 								maxAnglePalmDir = Math.PI/15;
@@ -1037,37 +958,9 @@ package com.gestureworks.analysis
 					}
 		}
 		
-		public function positionKnuckles():void 
-		{
-			/*
-			for (j = 0; j < cO.hn; j++)
-				{		
-					if (cO.handList[j].knuckleList.length != 0)// ONLY WHEN KNUCKLES EXIST
-					{
-					
-						var p:Vector3D = cO.handList[j].position;
-						var rotX:Number = RAD_DEG * Math.asin(cO.handList[j].normal.x);
-						var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
-						var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
-							
-						// roate in 3d space
-						var m:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
-							m.appendRotation(rotX, new Vector3D(0, 0, 1));
-							m.appendRotation(rotZ, new Vector3D(-1, 0, 0));
-							m.appendRotation(rotY, new Vector3D(0, 1, 0)); //direction
 
-						for (i = 0; i < 5; i++)//knucles
-						{
-							var kp = cO.handList[j].knuckleList[i];
-								var v = cO.handList[j].seedList[i];
-								var pv = Utils3D.projectVector(m, v);			
-								var rv = p.add(pv);
-							kp.position = rv;	
-						}
-					}
-				}*/
-		}
-		
+		//TODO FIGURE OUT FRONZEN TIP PROBLEM (IS IT BECAUSE NO CACHE POSITON EXISTS??)
+		// FIGURE OUT WHY CACHING IS SLOW (CACHED POSITON SEEMS TO BE 10 FRAMES BACK WHEN LOOK ING AT HIGH CURL)
 		public function positionTips():void 
 		{
 			//force_update = true;
@@ -1082,20 +975,6 @@ package com.gestureworks.analysis
 						
 						if (kn&&tn) // ONLY WHEN KNUCKLES EXIST
 						{
-						///////////////////////////////////////////////////////////
-						// asing tip postitions
-						
-						//var rotX:Number = RAD_DEG * Math.asin(cO.handList[j].normal.x);
-						//var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
-						//var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
-											
-						// roate in 3d space
-						//var mx:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
-							//mx.appendRotation(rotX, new Vector3D(0, 0, 1));
-							//mx.appendRotation(rotZ, new Vector3D(-1, 0, 0));
-							//mx.appendRotation(rotY, new Vector3D(0, 1, 0)); //direction
-						
-						
 							//thumb	
 							if (cO.handList[j].thumb){
 								if (cO.handList[j].thumb.id)
@@ -1103,10 +982,7 @@ package com.gestureworks.analysis
 								cO.handList[j].tipList[0].position = cO.handList[j].thumb.position;
 								cO.handList[j].tipList[0].direction = cO.handList[j].thumb.direction;
 								//trace("thumb",cO.handList[j].thumb);
-								}
-								else {
-									//trace("used cached thumb")
-								}
+								}	
 							}
 							//index	
 							if (cO.handList[j].index.id)
@@ -1115,18 +991,11 @@ package com.gestureworks.analysis
 								cO.handList[j].tipList[1].direction = cO.handList[j].index.direction;
 								//trace("index",cO.handList[j].index);
 							}
-							else {
-								//trace("used cached index");
-							}
-							
 							//middle
 							if (cO.handList[j].middle.id)
 							{
 							cO.handList[j].tipList[2].position = cO.handList[j].middle.position;
 							cO.handList[j].tipList[2].direction = cO.handList[j].middle.direction;
-							}
-							else {
-								//trace("used cached middle");
 							}
 							//ring	
 							if (cO.handList[j].ring.id)
@@ -1134,20 +1003,12 @@ package com.gestureworks.analysis
 							cO.handList[j].tipList[3].position = cO.handList[j].ring.position;
 							cO.handList[j].tipList[3].direction = cO.handList[j].ring.direction;
 							}
-							else {
-								//trace("used cached ring");
-							}
 							//pinky		
 							if (cO.handList[j].pinky.id)
 							{
 							cO.handList[j].tipList[4].position = cO.handList[j].pinky.position;
 							cO.handList[j].tipList[4].direction = cO.handList[j].pinky.direction;
 							}
-							else {
-								//trace("used cached pinky");
-							}
-							
-							
 							
 							///////////////////////////
 							//CACHE FINGER TIP VALUES

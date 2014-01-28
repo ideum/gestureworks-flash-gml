@@ -604,17 +604,16 @@ package com.gestureworks.core
 				// ADVANCED SKELETON
 					cluster_geometric.lockHandType();
 					//cluster_geometric.lockThumb();
-					cluster_geometric.checkDynamicUpdate();
+					cluster_geometric.dynamicSkeletonUpdate();
 					
 					
 					//cluster_geometric.createSkeleton(false); // ONLY CALL ONCE // tips // joints // knuckles // wrist
 					
-					cluster_geometric.positionKnuckles();
+					//cluster_geometric.positionKnuckles();
 					//cluster_geometric.matchFingers(false); // uniquely identify fingers
-					cluster_geometric.matchFingers2(false); // uniquely identify fingers
 						
-					cluster_geometric.positionTips();
-					cluster_geometric.positionJoints();
+					//cluster_geometric.positionTips();
+					//cluster_geometric.positionJoints();
 					
 				////////////////////////////////////////////////
 			}
