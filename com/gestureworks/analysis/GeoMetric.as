@@ -184,8 +184,6 @@ package com.gestureworks.analysis
 			var clear_fingers:Boolean = false;
 			var clear_palm:Boolean = false;
 			
-			
-			
 			for (i = 0; i < cO.motionArray.length; i++)//mpn
 				{	
 					if (cO.motionArray[i]) {
@@ -193,7 +191,7 @@ package com.gestureworks.analysis
 						if ((cO.motionArray[i].type == "finger")&&(clear_fingers))
 						{	
 							// reset thum alloc// move to cluster
-							cO.motionArray[i].fingertype = "finger";	 
+							//cO.motionArray[i].fingertype = "finger";	 
 							
 							// reset thumb probs // move to cluster
 							cO.motionArray[i].thumb_prob = 0;
@@ -221,7 +219,6 @@ package com.gestureworks.analysis
 						}
 					}
 				}
-				
 				// reset motion points in list
 				//cO.handList.length = 0;
 			
@@ -235,6 +232,8 @@ package com.gestureworks.analysis
 		// create basic hand
 		public function updateMotionPoints():void 
 		{
+			//trace(mpn,cO.motionArray.length, cO.handList.length, cO.hn)
+			
 				for (i = 0; i < mpn; i++)//mpn
 					{
 						//////////////////////////////////////////////////////
@@ -243,13 +242,14 @@ package com.gestureworks.analysis
 						{
 										if (cO.hn != 0)
 										{
-										for (j = 0; j < cO.handList.length; j++)
+										for (j = 0; j < cO.hn; j++)//cO.handList.length
 										{
 											if ((cO.handList[j].handID != cO.motionArray[i].handID)&&(cO.handList.length < 2))
 											{
 												//trace("create another hand");
 												//create hand
 												var hand:HandObject = new HandObject();	
+													hand.motionPointID = cO.motionArray[i].motionPointID //palmID
 													hand.position = cO.motionArray[i].position //palmID
 													hand.direction = cO.motionArray[i].direction
 													hand.normal = cO.motionArray[i].normal
@@ -260,7 +260,7 @@ package com.gestureworks.analysis
 												//trace("p",cO.motionArray[i].handID)
 											}
 											else {
-												//trace("update hand",j);
+												//trace("update hand",j,cO.handList[j].handID,cO.motionArray[i].handID);
 												//update hand
 												//cO.handList[j] = cO.motionArray[i];
 												cO.handList[j].position = cO.motionArray[i].position;
@@ -274,6 +274,7 @@ package com.gestureworks.analysis
 											//trace("zero create hand");
 											//create hand
 											var hand:HandObject = new HandObject();	
+													hand.motionPointID = cO.motionArray[i].motionPointID //palmID
 													hand.position = cO.motionArray[i].position //palmID
 													hand.direction = cO.motionArray[i].direction
 													hand.normal = cO.motionArray[i].normal
@@ -284,6 +285,37 @@ package com.gestureworks.analysis
 										}
 							}
 					}
+					
+					// CHECK PALM POINT STILL EXISTS
+					// IF NOT REMOVE FROM HAND LIST
+					//MOTION POINTS NOT KILLED FROM SERVER PROPERLY
+					var mpo:MotionPointObject
+					var hn:int = cO.handList.length
+					
+					for (j = 0; j < hn; j++)
+					{
+						mpo = GestureGlobals.gw_public::motionPoints[cO.handList[j].palm.motionPointID];
+						if (!mpo) {
+							trace("palm gone", cO.handList[j].palm.motionPointID, cO.handList[j].motionPointID, cO.handList[j].handID);
+							
+							//WILL NEED better VALID HAND LIST PLACEMENT
+							cO.handList[j].seedList.length = 0;
+							cO.handList[j].fingerList.length = 0;
+							cO.handList[j].pipList.length = 0;
+							cO.handList[j].dipList.length = 0;
+							cO.handList[j].tipList.length = 0;
+							cO.handList[j].palm = null;
+							cO.handList[j].index = null;
+							cO.handList[j].middle = null;
+							cO.handList[j].ring = null;
+							cO.handList[j].pinky = null;
+							cO.handList.splice(j, 1);
+							
+						}
+					}
+					
+					
+					
 					///////////////////////////////////////////////
 					// GET HAND NUM TOTAL
 					cO.hn = cO.handList.length;
@@ -346,7 +378,7 @@ package com.gestureworks.analysis
 			
 			for (j = 0; j < cO.hn; j++)
 				{
-					if ((cO.handList[j].type)&&(cO.handList[j].fingerList.length==5))
+					if ((cO.handList[j].type)&&(cO.handList[j].fingerList.length==5)&&(cO.handList[j].orientation=="down"))
 						{
 						
 						//trace("hand type",cO.handList[j].type);
@@ -365,21 +397,62 @@ package com.gestureworks.analysis
 							 if (cO.handList[j].typeCache > 0) cO.handList[j].lockedType = "right";
 							 if (cO.handList[j].typeCache < 0) cO.handList[j].lockedType = "left";
 							 
-							// trace("lockedtype",cO.handList[j].lockedType);
+							 trace("lockedtype",cO.handList[j].typeCache, cO.handList[j].lockedType);
 						}
 						}
 				}
+		}
+		
+		public function lockThumb():void 
+		{
+			for (j = 0; j < cO.hn; j++)
+				{
+					//if (cO.handList[j].type)
+						//{
+						/*
+						if (cO.handList[j].thumb) {
+							
+							if (cO.handList[j].thumb.id) cO.handList[j].thumbCount ++;
+							cO.handList[j].thumbCount --;
+						}
+						else cO.handList[j].thumbCount --;
+						
+						//trace("tc",cO.handList[j].thumbCount);
+						
+						//test if can be locked 
+						if ((cO.handList[j].thumbCount > 20)&&(!cO.handList[j].thumbLock))
+						{
+							
+							 cO.handList[j].thumbLock = true;
+							 cO.handList[j].thumbCount = 0;
+							 trace("locked thumb",cO.handList[j].thumbCount, cO.handList[j].thumbLock);
+						}
+						else if ((cO.handList[j].thumbCount <0) &&(Math.abs(cO.handList[j].thumbCount)>20))//&& (cO.handList[j].thumbLock))
+						{
+							trace("start looking for thumb");
+							cO.handList[j].thumbLock = false;
+							// cO.handList[j].thumbCount = 0;
+							
+						}
+						// trace("attempted thumb lock", cO.handList[j].thumbCount, cO.handList[j].thumbLock);
+						//}
+						*/
+				}
+				
 		}
 		
 		public function dynamicSkeletonUpdate():void 
 		{
 			for (j = 0; j < cO.hn; j++)
 				{
-					if (cO.handList[j].handLock) 
+					var h:HandObject = cO.handList[j];
+					
+					if (h.handLock) 
 					{	
-						if ((cO.handList[j].type) && (cO.handList[j].fingerList.length == 5) && (cO.handList[j].seedList.length == 0)) 
+						if ((h.type) && (h.fingerList.length == 5) && (h.seedList.length == 0)) 
 							{
 								//trace("create new hand skeleton", cO.handList[j].type, cO.handList[j].lockedType);
+								lockThumb();
 								createSkeleton(true);
 								matchFingers(true);
 								positionTips();
@@ -387,12 +460,17 @@ package com.gestureworks.analysis
 							}
 						// SHOULD ADD NEW CONDITION TO CHECK TO FOR ORIENTATION FLIPS 
 						// UPDATE KNUCKELES BUT PRESERVE CACHED STATES AND
-						else if ((cO.handList[j].type) && (cO.handList[j].fingerList.length == 5) &&(cO.handList[j].splay> 0.8))
+						else if ((h.type) && (h.fingerList.length == 5) &&(h.splay> 0.8))
 							{
 								//trace("reset hand skeleton");
 								//reset hand type
-									cO.handList[j].handLock = false;
-									lockHandType()
+									h.handLock = false;
+									lockHandType();
+									
+								//reset thumb
+									h.thumbLock = false;
+									lockThumb();
+									
 								// reset skeleton
 								createSkeleton(true);
 								matchFingers(true);
@@ -401,11 +479,17 @@ package com.gestureworks.analysis
 							}
 						else{
 								//trace("update skeleton")
+								lockThumb();
 								createSkeleton(false);
 								matchFingers(false);
 								positionTips();
 								positionJoints();
 						}
+					}
+					else {
+						trace("lock hand type");
+						lockHandType();
+						//lock thumb
 					}
 					
 				}
@@ -506,11 +590,22 @@ package com.gestureworks.analysis
 							var rotY:Number = RAD_DEG * Math.asin(cO.handList[j].direction.x);
 							var rotZ:Number = RAD_DEG * Math.asin(cO.handList[j].normal.z);
 							
+							var orient:Number = 0//180//Math.PI/2//0;
+							
+							//ADJUST ROTATION MATRIX BASED ON ORIENTATION
+							// MUST FOX FINGER MATHCING AND MAKE ORIENTATIION INDEPEDANT
+							// AND FIX DOT PRODCT PROBLEM
+							if (cO.handList[j].orientation == "up") orient = 180//Math.PI;
+							else orient = 0;
+							
+							//trace(cO.handList[j].orientation, orient, rotX, rotX + orient,cO.handList[j].type,cO.handList[j].lockedType)
+							//
+							
 							// roate in 3d space
 							var m:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
-								m.appendRotation(rotX, new Vector3D(0, 0, 1));
+								m.appendRotation(rotX + orient, new Vector3D(0, 0, 1));
 								m.appendRotation(rotZ, new Vector3D(-1, 0, 0));
-								m.appendRotation(rotY, new Vector3D(0, 1, 0)); //direction
+								m.appendRotation(rotY , new Vector3D(0, 1, 0)); //direction
 					
 							var sn:int = cO.handList[j].seedList.length;
 					
@@ -708,7 +803,8 @@ package com.gestureworks.analysis
 							
 							//trace("t",cO.handList[j].thumb.motionPointID,cO.handList[j].thumb);
 							
-							//var tmpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[cO.handList[j].thumb.motionPointID];
+							/////////////////////////////////////////////////////////////////////////////////
+							// check for valid thumb
 							if (cO.handList[j].thumb)
 							{
 							if (cO.handList[j].thumb.motionPointID) 
@@ -722,13 +818,14 @@ package com.gestureworks.analysis
 										
 									}
 							}
-							
+							/////////////////////////////////////////////////////////////////////////////////////////
 							
 							
 							// make sure thumb eXists
 							if (cO.handList[j].thumb)// tmpo
 							{		
-								
+								if (cO.handList[j].thumb.id)
+								{
 								//MIDDLE FINGER
 								knuckle = cO.handList[j].knuckleList[2];
 								maxDist = 80;
@@ -954,6 +1051,7 @@ package com.gestureworks.analysis
 									}
 								}
 								}
+								}
 							}
 					}
 		}
@@ -965,6 +1063,9 @@ package com.gestureworks.analysis
 		{
 			//force_update = true;
 			//trace("positionTips");
+			
+			// WHEN NO FINGER ASSIGNED TO A FINGER TYPE THERE IS NO DATA TO PULL FROM CACHE
+			// SO FINGER TIP LOCKS ON FIXED POSITION IN SPACE.
 			
 				for (j = 0; j < cO.hn; j++)
 					{	
@@ -1102,7 +1203,45 @@ package com.gestureworks.analysis
 		
 		
 		
-		
+		public function findHandOrientation():void 
+		{
+			///////////////////////////////////////////////////////////////////////////////////////////////////			
+			// GET HAND ORIENTATION
+			// CREATE METHOD WHEN NO FINGERS EXIST BUT THUMB IS PRESENT
+			// CREATE ORIENTATION LOCK SO STABLE TO FINGER NUMBER AND TYPE JBUT CHANGES IF FLIPS FROM PREVIOUS STATE
+			for (j = 0; j < cO.hn; j++)
+				{
+					//var v:Vector3D = cO.handList[j].fingerAveragePosition.subtract(cO.handList[j].palm.position)
+					var v:Vector3D = cO.handList[j].pureFingerAveragePosition.subtract(cO.handList[j].palm.position)
+					var orienAngle:Number = v.dotProduct(cO.handList[j].palm.normal);// Vector3D.angleBetween(v0, v1);
+							
+					if (orienAngle > 0) {
+							cO.handList[j].orientation = "down";
+						}
+					else if (orienAngle < 0) {
+							cO.handList[j].orientation = "up";
+						}
+					else cO.handList[j].orientation = "undefined";	
+					//trace(orienAngle,cO.handList[j].orientation);
+					
+					
+					// TEST
+					///////////////////////////////////////////////////////////////////////
+					// CALCUALTE DIRECTION OF HAND
+					//var direction:Vector3D = cO.handList[j].pureFingerAveragePosition.subtract(cO.handList[j].palm.position);
+					//var length:Number = direction.length;
+					//var unit_dir:Vector3D = new Vector3D(direction.x / length, direction.y / length, direction.z / length);
+					// PROJECT INTO THE PLANE OF THE PALM???
+					// ASSIGN CORRECTED DIRECTION?????
+				//	cO.handList[j].palm.direction = unit_dir//direction;
+					//cO.handList[j].direction = unit_dir//direction;
+					//trace(cO.handList[j].direction,cO.handList[j].palm.direction, direction, unit_dir, ndir, length)
+					//////////////////////////////////////////////////////////////////////
+				}
+				
+				
+			
+		}
 		
 		public function findFingerAverage():void 
 		{
@@ -1144,31 +1283,10 @@ package com.gestureworks.analysis
 							pfav_pt.y *= hfnk-1;
 							pfav_pt.z *= hfnk - 1;
 							
-							// TEST
-							///////////////////////////////////////////////////////////////////////
-							// CALCUALTE DIRECTION OF HAND
-							//var direction:Vector3D = fav_pt.subtract(cO.handList[j].palm.position);
-							//cO.handList[j].palm.direction = direction;
-							//////////////////////////////////////////////////////////////////////
-							
 							//////////////////////////////////////////////////////////////////////////////////////////////////
 							// push fav point to hand object
 							cO.handList[j].fingerAveragePosition = fav_pt;
 							cO.handList[j].pureFingerAveragePosition = pfav_pt;
-								
-							///////////////////////////////////////////////////////////////////////////////////////////////////			
-							// GET HAND ORIENTATION
-							var v:Vector3D = cO.handList[j].fingerAveragePosition.subtract(cO.handList[j].palm.position)
-							var orienAngle:Number = v.dotProduct(cO.handList[j].palm.normal);// Vector3D.angleBetween(v0, v1);
-							
-							if (orienAngle > 0) {
-								cO.handList[j].orientation = "down";
-							}
-							else if (orienAngle < 0) {
-								cO.handList[j].orientation = "up";
-							}
-							//else cO.handList[j].orientation = "udefined";
-							//trace(orienAngle,cO.handList[j].orientation);
 				}
 				//trace("hand pos",cO.hand.position)
 		}
@@ -1442,17 +1560,17 @@ package com.gestureworks.analysis
 		
 		
 		// find thumb .. generate pair data
+		//TODO: FIND ORIENTATION REQUIREMENT FOR THUMB
 		public function findThumb():void
 		{
 		
 		for (j = 0; j < cO.hn; j++)
-				{
-					
-			//if (cO.handList[j].fingerList.length == 5)//&&(cO.handList[j].thumb==undefined))
-			//{
-				
-				//trace("splay",cO.handList[j].splay)
-				
+			{
+						
+			// ONLY RECALCULATE THUMB OF NOT LOCKED DOWN
+			if (!cO.handList[j].thumbLock)
+			{
+			//trace("find thumb");
 				
 			cO.handList[j].pair_table = new Array();
 			
@@ -1485,18 +1603,18 @@ package com.gestureworks.analysis
 									fpt = cO.handList[j].fingerList[i];
 									
 									// RESET THUMB PROB HIST
-									//if (fpt.fingertype == "thumb") trace(fpt.thumb_prob);//fpt.thumb_prob = 1; 
-									//else { fpt.thumb_prob = 0};
 									fpt.thumb_prob = 0
-									//fpt.fingertype = "";
-									
-									
+
 									//ALL FEATURES////////////////////////////////////////////////////////////
 									fpt.thumb_prob += 2*(1- fpt.normalized_length)//2
 									fpt.thumb_prob += 5*(fpt.normalized_favdist) //WORKS VERY WELL ON OWN
 									fpt.thumb_prob += 2 * (fpt.normalized_palmAngle);//2
-									fpt.thumb_prob += 1 * (fpt.normalized_mwlr); //width to length ratio
-									//fpt.thumb_prob += 1 * (fpt.normalized_width) // exeperimentatal
+									
+									// NO WIDTH WHEN IN WEBSOCKET
+									trace("width",i,fpt.width)
+									if (fpt.width) fpt.thumb_prob += 1 * (fpt.normalized_mwlr); //width to length ratio
+									
+									//fpt.thumb_prob += 1 * (fpt.normalized_width) // experimentatal
 									//ALSO USE NORLAIZED AVERAGE EXTENSION (THUMB TENDS TO BEND MORE AS NO PIP)
 									
 									//trace("norm mwlr", fpt.thumb_prob,fpt.normalized_mwlr,fpt.normalized_width,fpt.normalized_length);
@@ -1550,6 +1668,10 @@ package com.gestureworks.analysis
 													validthumb = true;
 												}
 											}
+									}
+									//THERE CAN BE ONLY ONE THUMB
+									else if (cO.handList[j].thumb) {
+										if (cO.handList[j].thumb.id)validthumb = false; 
 									}
 								/////////////////////////////////////////////////////////////////////////
 								
@@ -1633,7 +1755,7 @@ package com.gestureworks.analysis
 						
 						// NEED SECONDARY CONDITIONS TO ENSURE PINKY NOT SELECTED
 						// CHECK LOCKED TYPE SEE IF ON CORRECT SIDE OF HAND
-						else if ((validthumb)&&(hfn == 1))
+						else if ((validthumb)&&(hfn == 1)&&(cO.handList[j].fingerList[max_index].type == "finger"))
 						{
 							// RATIO BREAKS APPART AS LENGTH AND FAV DIST NO LONGER RELEVANT
 							// ANGLE IS ONLY REMAINING METRIC
@@ -1665,7 +1787,8 @@ package com.gestureworks.analysis
 						////////////////////////////////////////////////////////////////////////////////
 						// GET HANDEDNESS
 						// PERHAPS CROSS CHECK WITH ORIENTATION
-						if (cO.handList[j].thumb)
+						// INCASE SYSTEM THINKS HAND IS UPSIDE DOWN
+						if ((cO.handList[j].thumb)&&(cO.handList[j].orientation=="down"))
 						{
 							//trace("thumb",cO.handList[j].thumb.width,cO.handList[j].thumb.normalized_width,cO.handList[j].thumb.normalized_mwlr)
 							
@@ -1681,7 +1804,8 @@ package com.gestureworks.analysis
 							
 							//trace(angle, cO.handList[j].type)
 						}
-					}				
+					}
+			}
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////

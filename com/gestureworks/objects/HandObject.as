@@ -24,7 +24,10 @@ package com.gestureworks.objects
 		public var id:int;
 		
 		// motionPointID
+		public var motionPointID:int;
+		
 		public var handID:int;
+		
 		
 		// hand type // left / right
 		public var type:String = new String("undefined");
@@ -32,6 +35,8 @@ package com.gestureworks.objects
 		public var scanCount:int = 0;
 		public var lockedType:String = new String("undefined");
 		public var handLock:Boolean = false;
+		public var thumbLock:Boolean = false;
+		public var thumbCount:int = 0;
 		
 		// hand orientation // up/down
 		public var orientation:String = new String("undefined");

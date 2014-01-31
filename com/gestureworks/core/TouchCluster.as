@@ -592,30 +592,17 @@ package com.gestureworks.core
 				/////////////////////////////////////////////////////
 				
 				// BASIC HAND
-					
 					cluster_geometric.updateMotionPoints();//createHand(); // palm points // finger list palm ip 
 					
 				// SKELETAL DETAIL
 					cluster_geometric.findFingerAverage();// finger average point// up down 
+					cluster_geometric.findHandOrientation();
 					cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
 					cluster_geometric.findHandRadius(); // favdist 
 					cluster_geometric.findThumb(); // thumb // left// right
 				
 				// ADVANCED SKELETON
-					cluster_geometric.lockHandType();
-					//cluster_geometric.lockThumb();
 					cluster_geometric.dynamicSkeletonUpdate();
-					
-					
-					//cluster_geometric.createSkeleton(false); // ONLY CALL ONCE // tips // joints // knuckles // wrist
-					
-					//cluster_geometric.positionKnuckles();
-					//cluster_geometric.matchFingers(false); // uniquely identify fingers
-						
-					//cluster_geometric.positionTips();
-					//cluster_geometric.positionJoints();
-					
-				////////////////////////////////////////////////
 			}
 		}
 		

@@ -85,13 +85,13 @@ package com.gestureworks.managers
 				{
 				fingerCount = int(message.InputPoint.Values.Hand[j].@FingerCount);
 				objectCount = int(message.InputPoint.Values.Hand[j].@ObjectCount);
-				//trace(handCount, fingerCount, objectCount);
+				//trace("3ds manager",handCount, fingerCount, objectCount);
 				
 				
 				// CREATE FINGER TIP MOTION POINTS
 				for (var k:int = 0; k < fingerCount; k++ )
 				{
-					var f =  message.InputPoint.Values.Hand[j].Finger[k];
+					var f:Object =  message.InputPoint.Values.Hand[j].Finger[k];
 					
 					var ptf:MotionPointObject = new MotionPointObject();// new Object();
 						ptf.type = "finger";
@@ -111,9 +111,9 @@ package com.gestureworks.managers
 				}
 				
 				// CREATE PALM MOTION POINT
-					var p =  message.InputPoint.Values.Hand[j].Palm;
+					var p:Object =  message.InputPoint.Values.Hand[j].Palm;
 					
-					var ptp:MotionPointObject = new MotionPointObject()//new Object();
+					var ptp:Object = new MotionPointObject()//new Object();
 						ptp.type = "palm";
 						ptp.handID = j;
 						ptp.id = j//p.@Id;
@@ -207,7 +207,7 @@ package com.gestureworks.managers
 
 		private static function addRemoveUpdatePoints():void 
 		{
-			//trace("----------------------------------------------");
+			//trace("----------------------------------------------", activePoints.length);
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//POINT REMOVAL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			for each(var aid:int in activePoints) 
