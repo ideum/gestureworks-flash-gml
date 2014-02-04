@@ -7,6 +7,8 @@ package com.gestureworks.utils {
 	import flash.events.TimerEvent;
 	import flash.system.System;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.utils.getTimer;
 	import flash.utils.Timer;
 	
@@ -15,10 +17,15 @@ package com.gestureworks.utils {
 		private var _trackFPS:Boolean = true;
 		private var _trackRAM:Boolean = true;
 		private var _textColor:uint;
-		private var _textBackgroundColor:uint;
-		private var _textFillBackground:Boolean;
+		private var _backgroundColor:uint;
+		private var _fillBackground:Boolean;
+		private var _resetOnTouch:Boolean;
 		
+		private var padding:Number = 4;		//pixels to pad.
+		private var textFormat:TextFormat = new TextFormat(null, '10', null, null, null, null, null, null, TextFormatAlign.CENTER);
 		private var textFields:Vector.<TextField> = new Vector.<TextField>();
+		private var fpsLabel:TextField;
+		private var ramLabel:TextField;
 		private var curFpsText:TextField;
 		private var avgFpsText:TextField;
 		private var minFpsText:TextField;
@@ -28,6 +35,7 @@ package com.gestureworks.utils {
 		private var minRamText:TextField;
 		private var maxRamText:TextField;
 		private var textFieldsHeight:Number = 0;
+		private var textFieldsWidth:Number = 0;
 		
 		private var fpsHistory:Vector.<int> = new Vector.<int>();
 		private var fpsHistoryLength:uint;
@@ -55,20 +63,28 @@ package com.gestureworks.utils {
 				super.x = xPos;
 				super.y = yPos;
 				_textColor = color;
-				_textFillBackground = fillBackground;
-				_textBackgroundColor = backgroundColor;
+				_fillBackground = fillBackground;
+				_backgroundColor = backgroundColor;
 				this.fpsHistoryLength = fpsHistoryLength;
 				this.ramHistoryLength = ramHistoryLength;
-				
-				//TODO: check for and only enable in dev mode.
-				curFpsText = initializeField('cur. FPS: ---');
-				avgFpsText = initializeField('avg. FPS: ---');
-				minFpsText = initializeField('min. FPS: ---');
-				maxFpsText = initializeField('max. FPS: ---');
-				curRamText = initializeField();
-				avgRamText = initializeField();
-				minRamText = initializeField();
-				maxRamText = initializeField();
+				textFieldsHeight = padding;
+				textFieldsWidth = padding;
+				fpsLabel = initializeField('FPS');
+				curFpsText = initializeField('cur: 60.0');
+				avgFpsText = initializeField('avg: 60.0');
+				minFpsText = initializeField('min: 60.0');
+				maxFpsText = initializeField('max: 60.0');
+				fpsLabel.width = curFpsText.textWidth;
+				textFieldsWidth = curFpsText.textWidth + padding * 2;
+				textFieldsHeight = padding;
+				ramLabel = initializeField('RAM');
+				curRamText = initializeField('cur: 999.9M');
+				avgRamText = initializeField('avg: 999.9M');
+				minRamText = initializeField('min: 999.9M');
+				maxRamText = initializeField('max: 999.9M');
+				textFieldsWidth += curRamText.textWidth + padding * 2;
+				textFieldsHeight += padding;
+				this.fillBackground = fillBackground;
 				
 				//TODO: conditional add listener
 				ramTimer = new Timer(ramUpdateFrequency);
@@ -81,14 +97,14 @@ package com.gestureworks.utils {
 		private function initializeField(text:String = ' '):TextField {
 			var tf:TextField = new TextField();
 			tf.textColor = _textColor;
-			tf.background = _textFillBackground;
-			tf.backgroundColor = _textBackgroundColor;
 			tf.selectable = false;
 			tf.text = text;
 			//position field beneath last initialized field
+			tf.x = textFieldsWidth;
 			tf.y = textFieldsHeight;
-			tf.height = tf.textHeight + 2;
-			textFieldsHeight += tf.height;
+			tf.height = tf.textHeight + padding * 2;
+			tf.width = tf.textWidth + padding * 2;
+			textFieldsHeight += tf.height - padding;
 			super.addChild(tf);
 			textFields.push(tf);
 			return tf;
@@ -109,19 +125,18 @@ package com.gestureworks.utils {
 		private function onRamTick(e:TimerEvent):void {
 			if (_trackRAM) {
 				ram = System.totalMemory;
-				curRamText.text = 'cur. RAM: '+formatMemoryValue(ram);
+				curRamText.text = 'cur: '+formatMemoryValue(ram);
 				//TODO: average ram
 				
-				avgRamText.text = 'avg. RAM: ';
-				
+				avgRamText.text = 'avg: ';
 				
 				if (ram < minRam) {
 					minRam = ram;
-					minRamText.text = 'min. RAM: '+formatMemoryValue(minRam);
+					minRamText.text = 'min: '+formatMemoryValue(minRam);
 				}
 				if (ram > maxRam) {
 					maxRam = ram;
-					maxRamText.text = 'max. RAM: '+formatMemoryValue(maxRam);
+					maxRamText.text = 'max: '+formatMemoryValue(maxRam);
 				}
 				
 			}
@@ -134,24 +149,28 @@ package com.gestureworks.utils {
 				deltaTime = currentTime - lastTime;
 				if (deltaTime >= 1000) {
 					fps = ticks / deltaTime * 1000;
-					curFpsText.text = 'cur. FPS: ' + fps.toFixed(1);
+					curFpsText.text = 'cur: ' + fps;
 					
 					if (fps > maxFps) {
 						maxFps = fps;
-						maxFpsText.text = 'max. FPS: '+maxFps.toFixed(1);
+						maxFpsText.text = 'max: '+maxFps;
 					}
 					if (fps < minFps) {
 						minFps = fps;
-						minFpsText.text = 'min. FPS: '+minFps.toFixed(1);
+						minFpsText.text = 'min: '+minFps;
 					}
 					//TODO: average fps
 					
 					
-					avgFpsText.text = 'avg. FPS: ';
+					avgFpsText.text = 'avg: ';
 					ticks = 0;
 					lastTime = currentTime;
 				}
 			}
+		}
+		
+		public function reset():void {
+			//TODO: reset all data
 		}
 		
 		
@@ -190,31 +209,39 @@ package com.gestureworks.utils {
 			}
 		}
 		
-		public function get textBackgroundColor():uint {
-			return _textBackgroundColor;
+		public function get backgroundColor():uint {
+			return _backgroundColor;
 		}
 		
-		public function set textBackgroundColor(value:uint):void {
-			if(value!=_textBackgroundColor) {
-				_textBackgroundColor = value;
-				for (var i:int = 0; i < textFields.length; i++) {
-					textFields[i].backgroundColor = _textBackgroundColor;
-				}
+		public function set backgroundColor(value:uint):void {
+			if(value!=_backgroundColor) {
+				_backgroundColor = value;
+				fillBackground = fillBackground;
 			}
 			
 		}
 		
-		public function get textFillBackground():Boolean {
-			return _textFillBackground;
+		public function get fillBackground():Boolean {
+			return _fillBackground;
 		}
 		
-		public function set textFillBackground(value:Boolean):void {
-			if (value != _textFillBackground) {
-				_textFillBackground = value;
-				for (var i:int = 0; i < textFields.length; i++) {
-					textFields[i].background = _textFillBackground;
-				}
+		public function set fillBackground(value:Boolean):void {
+			_fillBackground = value;
+			if (_fillBackground) {
+				super.graphics.beginFill(_backgroundColor);
+				super.graphics.drawRect(0, 0, textFieldsWidth, textFieldsHeight);
+				super.graphics.endFill();
+			} else {
+				super.graphics.clear();
 			}
+		}
+		
+		public function get resetOnTouch():Boolean {
+			return _resetOnTouch;
+		}
+		
+		public function set resetOnTouch(value:Boolean):void {
+			_resetOnTouch = value;
 		}
 		
 	}
