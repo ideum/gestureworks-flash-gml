@@ -329,7 +329,7 @@ package com.gestureworks.utils {
 		public function set fillBackground(value:Boolean):void {
 			_fillBackground = value;
 			if (_fillBackground) {
-				super.graphics.beginFill(_backgroundColor);
+				super.graphics.beginFill(_backgroundColor, 0.8);
 				super.graphics.drawRect(0, 0, textFieldsWidth, textFieldsHeight);
 				super.graphics.endFill();
 			} else {
