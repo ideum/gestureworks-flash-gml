@@ -25,6 +25,9 @@ package com.gestureworks.objects
 		// ID
 		public var id:int;
 		
+		//determins is clasified and tracked
+		public var isValid:Boolean;
+		
 		// motionPointID
 		public var motionPointID:int;
 		
@@ -80,10 +83,16 @@ package com.gestureworks.objects
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();
 		public var positionCached:Vector3D = new Vector3D ();
+		public var planePositionCached:Vector3D = new Vector3D ();
+		public var relativePositionCached:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();
 		public var directionCached:Vector3D = new Vector3D ();
+		public var projected_finger_direction:Vector3D = new Vector3D ();
+		
+		//
+		public var palmplane_finger_knuckle_direction:Vector3D = new Vector3D ();
 		
 		//normal/////////////////////////
 		public var normal:Vector3D = new Vector3D ();
@@ -93,6 +102,12 @@ package com.gestureworks.objects
 		
 		//palm plane position/////////////////////////////////////////////x,y,x
 		public var palmplane_position:Vector3D = new Vector3D ();
+		// palm plane line position
+		public var palmplaneline_position:Vector3D = new Vector3D ();
+		
+		//palm finger direction vectors
+		public var palm_finger_direction:Vector3D = new Vector3D ();
+		public var projected_palm_finger_direction:Vector3D = new Vector3D ();
 		
 		/*
 		//size///////////////////////////////////////////w,h,l

@@ -218,7 +218,7 @@ package com.gestureworks.managers
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
 					
-						var mp = new MotionPointObject();
+						var mp:MotionPointObject  = new MotionPointObject();
 							mp.motionPointID = aid;
 
 					MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END,mp, true,false));
@@ -236,7 +236,7 @@ package com.gestureworks.managers
 					if (pt) 
 					{
 					//trace("pt", pt.type);
-					var mp = new MotionPointObject();
+					var mp:MotionPointObject = new MotionPointObject();
 						mp.motionPointID = pt.id;
 						mp.handID = pt.handID;
 						mp.type = pt.type;

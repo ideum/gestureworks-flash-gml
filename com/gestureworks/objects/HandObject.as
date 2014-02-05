@@ -84,6 +84,8 @@ package com.gestureworks.objects
 		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();
+		// direction from classified fingers only
+		public var direction_finger:Vector3D = new Vector3D ();
 		
 		//normal/////////////////////////
 		public var normal:Vector3D = new Vector3D ();
@@ -96,6 +98,8 @@ package com.gestureworks.objects
 		
 		//palm radius
 		public var radius:Number = 0;
+		public var favlength:Number = 0;
+		public var max_favlength:Number = 0;
 		
 		// sphere center
 		public var sphereCenter:Vector3D = new Vector3D ();
@@ -117,6 +121,8 @@ package com.gestureworks.objects
 		public var pureFingerAveragePosition:Vector3D = new Vector3D ();
 		
 		public var projectedPureFingerAveragePosition:Vector3D = new Vector3D ();
+		
+		public var d_n_crossproduct:Vector3D = new Vector3D ();
 		
 		//TODO: REMOVE
 		//pair table/////////////////////////////////////////////x,y,x

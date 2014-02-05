@@ -597,7 +597,8 @@ package com.gestureworks.core
 				// SKELETAL DETAIL
 					cluster_geometric.findFingerAverage();// finger average point// up down 
 					cluster_geometric.findHandOrientation();
-					cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
+					cluster_geometric.findHandDirection();
+					cluster_geometric.normalizeFingerFeatures(); // norm lengths (palm distances)
 					cluster_geometric.findHandRadius(); // favdist 
 					cluster_geometric.findThumb(); // thumb // left// right
 				

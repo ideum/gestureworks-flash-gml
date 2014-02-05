@@ -211,7 +211,7 @@ package com.gestureworks.managers
 					}
 					
 					else {
-						var ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
+						var ev:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
 							ev.stageX = pt.x;
 							ev.stageY = pt.y;
 							ev.pressure = pt.pressure;
