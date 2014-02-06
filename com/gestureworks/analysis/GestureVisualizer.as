@@ -24,7 +24,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	//import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.GesturePointObject;
@@ -49,7 +49,7 @@ package com.gestureworks.analysis
 		
 		private var trO:TransformObject;
 		private var id:Number = 0;
-		private var pointList:Vector.<PointObject>
+		private var pointList:Vector.<TouchPointObject>
 		private var N:int = 0;
 		private var tpn:int = 0;
 		private var ipn:int = 0;

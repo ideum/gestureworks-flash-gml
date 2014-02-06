@@ -29,7 +29,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	
 	import com.gestureworks.objects.HandObject;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
@@ -117,8 +117,8 @@ package com.gestureworks.analysis
 				{
 				//var pt:PointObject = cO.pointArray[i]
 				
-				var distx:Number = cO.tcO.x - cO.pointArray[i].x;
-				var disty:Number = cO.tcO.y - cO.pointArray[i].y;
+				var distx:Number = cO.tcO.position.x - cO.pointArray[i].position.x;
+				var disty:Number = cO.tcO.position.y - cO.pointArray[i].position.y;
 				
 				cO.pointArray[i].dist = Math.sqrt(distx * distx + disty * disty)
 				cO.pointArray[i].match = false;
@@ -295,6 +295,7 @@ package com.gestureworks.analysis
 					
 					for (j = 0; j < hn; j++)
 					{
+						
 						if (cO.handList[j])
 						{
 						if (cO.handList[j].palm)
@@ -316,7 +317,7 @@ package com.gestureworks.analysis
 								cO.handList[j].pinky = null;
 								
 								cO.handList.splice(j, 1);
-								
+								hn -= 1;//note splicing error
 							}
 						}
 						else {
@@ -332,6 +333,7 @@ package com.gestureworks.analysis
 							cO.handList[j].pinky = null;
 							
 							cO.handList.splice(j, 1);
+							hn -= 1;
 						}
 						}
 					}

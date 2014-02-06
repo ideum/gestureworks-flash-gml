@@ -37,7 +37,7 @@ package com.gestureworks.visualizer
 	
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.MotionPointObject;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	
 	import com.gestureworks.utils.AddSimpleText;
@@ -191,13 +191,13 @@ package com.gestureworks.visualizer
 			
 				for (i = 0; i < n; i++) 
 				{
-					var pt:PointObject = cO.pointArray[i]
+					var pt:TouchPointObject = cO.pointArray[i]
 					///////////////////////////////////////////////////////////////////
 					// Point positons and shapes
 					///////////////////////////////////////////////////////////////////
 					
-					var x:Number = pt.x;
-					var y:Number = pt.y;
+					var x:Number = pt.position.x;
+					var y:Number = pt.position.y;
 					
 					if (_drawText)
 					{
@@ -291,8 +291,8 @@ package com.gestureworks.visualizer
 								
 										alpha = 0.08*(hist-j)
 										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-										graphics.moveTo(pt.history[0].x, pt.history[0].y);
-										graphics.lineTo(pt.history[hist].x,pt.history[hist].y);
+										graphics.moveTo(pt.history[0].position.x, pt.history[0].position.y);
+										graphics.lineTo(pt.history[hist].position.x,pt.history[hist].position.y);
 									
 							}
 							else if (style.trail_shape == "curve") {
@@ -302,8 +302,8 @@ package com.gestureworks.visualizer
 									if (j + 1 <= hist) {
 										alpha = 0.08 * (hist - j)
 										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-										graphics.moveTo(pt.history[j].x, pt.history[j].y);
-										graphics.lineTo(pt.history[j + 1].x, pt.history[j + 1].y);
+										graphics.moveTo(pt.history[j].position.x, pt.history[j].position.y);
+										graphics.lineTo(pt.history[j + 1].position.x, pt.history[j + 1].position.y);
 									}
 								}
 							}
@@ -313,7 +313,7 @@ package com.gestureworks.visualizer
 								{
 									alpha = 0.08 * (hist - j)
 									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-									graphics.drawCircle(pt.history[j].x, pt.history[j].y, style.radius);									
+									graphics.drawCircle(pt.history[j].position.x, pt.history[j].position.y, style.radius);									
 								}
 							}
 							else if (style.trail_shape == "curve") {
@@ -322,7 +322,7 @@ package com.gestureworks.visualizer
 								{
 									alpha = 0.08 * (hist - j)
 									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-									graphics.drawCircle(pt.history[j].x, pt.history[j].y, style.radius);									
+									graphics.drawCircle(pt.history[j].position.x, pt.history[j].position.y, style.radius);									
 								}
 							}	
 							else if (style.trail_shape == "circle-fill") {
@@ -331,8 +331,8 @@ package com.gestureworks.visualizer
 								
 								for (k=0; k < num; k++) 
 								{										
-									trails[i][k].x = pt.history[k].x - style.radius+3; 
-									trails[i][k].y = pt.history[k].y - style.radius+3;
+									trails[i][k].x = pt.history[k].position.x - style.radius+3; 
+									trails[i][k].y = pt.history[k].position.y - style.radius+3;
 									trails[i][k].alpha = 1;
 									if (parent) {
 										parent.addChild(trails[i][k]);	

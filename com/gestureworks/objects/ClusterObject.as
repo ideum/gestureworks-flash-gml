@@ -57,11 +57,12 @@ package com.gestureworks.objects
 		public var count:int = 0;
 		
 		// x---------------------
-		public var x:Number=0;
+		//public var x:Number=0;
 		// y---------------------
-		public var y:Number=0;
+		//public var y:Number=0;
 		// z---------------------
-		public var z:Number=0;
+		//public var z:Number = 0;
+		
 
 		// width----------------------
 		public var width:Number=0;
@@ -325,7 +326,7 @@ package com.gestureworks.objects
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
-		public var pointArray:Vector.<PointObject> = new Vector.<PointObject>();
+		public var pointArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
 		// motion point data list
 		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		// motion point data list

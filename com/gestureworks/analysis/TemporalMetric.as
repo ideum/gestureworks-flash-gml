@@ -26,7 +26,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.GML;
 	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
@@ -126,7 +126,7 @@ package com.gestureworks.analysis
 				
 							for (var i:int = 0; i < N; i++)
 								{
-								var pt:PointObject = cO.pointArray[i]
+								var pt:TouchPointObject = cO.pointArray[i]
 								
 								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
 								if ((Math.abs(pt.dx) < hold_dist) && (Math.abs(pt.dy) < hold_dist))
@@ -138,8 +138,8 @@ package com.gestureworks.analysis
 										if (pt.holdCount >= hold_time) 
 											{
 											pt.holdLock = true; 
-											cO.hold_x += pt.x;
-											cO.hold_y += pt.y;
+											cO.hold_x += pt.position.x;
+											cO.hold_y += pt.position.y;
 											//trace("why here")
 											}	
 										}

@@ -46,13 +46,14 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(transformObject:Object):Object
 		{
-			var object:Object = new Object();
+			var object:TransformObject = new TransformObject();
 				
 				// native properties
-				object.x = transformObject.x;
-				object.y = transformObject.y;
-				object.w = transformObject.width;
-				object.h = transformObject.height;
+				object.position.x = transformObject.position.x;
+				object.position.y = transformObject.position.y;
+				object.position.z = transformObject.position.z;//--
+				object.width = transformObject.width;
+				object.height = transformObject.height;
 				object.rotation = transformObject.rotation;
 				object.scaleX = transformObject.scaleX;
 				object.scaleY = transformObject.scaleY;

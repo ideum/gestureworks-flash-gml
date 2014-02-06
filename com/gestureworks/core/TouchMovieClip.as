@@ -28,7 +28,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
@@ -186,12 +186,12 @@ package com.gestureworks.core
 		public function get touchObjectID():int { return _touchObjectID; }
 		public function set touchObjectID(id:int):void { _touchObjectID = id; }
 		
-		private var _pointArray:Vector.<PointObject> = new Vector.<PointObject>(); // read only
+		private var _pointArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>(); // read only
 		/**
 		 * @inheritDoc
 		 */
-		public function get pointArray():Vector.<PointObject> { return _pointArray; }
-		public function set pointArray(pa:Vector.<PointObject>):void { _pointArray = pa; }
+		public function get pointArray():Vector.<TouchPointObject> { return _pointArray; }
+		public function set pointArray(pa:Vector.<TouchPointObject>):void { _pointArray = pa; }
 		
 		private var _N:int = 0; 
 		/**
@@ -1055,13 +1055,13 @@ package com.gestureworks.core
 		}					
 		
 		// affine transform point  
-		public function get transformPoint():Point { return new Point(trO?trO.x:0, trO?trO.y:0);} 
+		public function get transformPoint():Point { return new Point(trO?trO.position.x:0, trO?trO.position.y:0);} 
 		public function set transformPoint(pt:Point):void
 		{
 			if (!tt) return;
 			var tpt:Point = tt.affine_modifier.transformPoint(pt);
-			trO.x = tpt.x;
-			trO.y = tpt.y;
+			trO.position.x = tpt.x;
+			trO.position.y = tpt.y;
 		}		
 		
 		/**

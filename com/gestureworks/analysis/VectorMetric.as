@@ -20,7 +20,7 @@ package com.gestureworks.analysis
  */
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.GestureListObject;;
@@ -45,7 +45,7 @@ package com.gestureworks.analysis
 		private var cO:ClusterObject;
 		private var sO:StrokeObject;
 		private var gO:GestureListObject;;
-		public var pointList:Vector.<PointObject>;
+		public var pointList:Vector.<TouchPointObject>;
 		
 		// number in group
 		//private var N:uint = 0;
@@ -127,8 +127,8 @@ package com.gestureworks.analysis
 				//trace("--",pointList[0].history[i].x, pointList[0].history[i].y)
 				//path.push(new Object(pointList[0].history[i].x, pointList[0].history[i].y, pointList[0].history[i].w, pointList[0].history[i].h));
 				var tpt:Object = new Object()
-					tpt.x = pointList[0].history[i].x;
-					tpt.y = pointList[0].history[i].y;
+					tpt.x = pointList[0].history[i].position.x;
+					tpt.y = pointList[0].history[i].position.y;
 					tpt.w = pointList[0].history[i].w;
 					tpt.h = pointList[0].history[i].h;
 				path.push(tpt);

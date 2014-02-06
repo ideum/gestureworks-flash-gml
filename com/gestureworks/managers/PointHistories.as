@@ -20,7 +20,7 @@ package com.gestureworks.managers
 	 * @author Paul Lacey
 	 */
 	import com.gestureworks.events.GWTouchEvent;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
@@ -29,8 +29,8 @@ package com.gestureworks.managers
 	
 	public class PointHistories 
 	{
-		private static var point:PointObject = new PointObject();
-		private static var pt:PointObject = new PointObject();
+		private static var point:TouchPointObject = new TouchPointObject();
+		private static var pt:TouchPointObject = new TouchPointObject();
 		private static var currentFrameID:int;
 		private static var FrameID:int;
 		
@@ -55,11 +55,11 @@ package com.gestureworks.managers
 	//	public static function historyObject(X:Number, Y:Number, FrameID:int, moveCount:int, event:TouchEvent, point:PointObject):Object
 		
 		///public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
-		public static function historyObject(event:GWTouchEvent):PointObject
+		public static function historyObject(event:GWTouchEvent):TouchPointObject
 		{
 			//var c0:Number = 1 / moveCount;
 			point = GestureGlobals.gw_public::points[event.touchPointID];
-			pt = new PointObject;
+			pt = new TouchPointObject;
 			
 			currentFrameID = GestureGlobals.frameID;
 			FrameID = 0;
@@ -74,15 +74,15 @@ package com.gestureworks.managers
 				
 				//trace(FrameID,pt.frameID);
 				
-				pt.x = event.stageX;
-				pt.y = event.stageY;
-				pt.z = event.stageZ;
+				pt.position.x = event.stageX;
+				pt.position.y = event.stageY;
+				pt.position.z = event.stageZ;
 				pt.w = event.sizeX;
 				pt.h = event.sizeY;
 				//pt.l = event.sizeZ;
-				pt.dx = event.stageX - point.history[0].x;
-				pt.dy = event.stageY - point.history[0].y;
-				pt.dz = event.stageZ - point.history[0].z;
+				pt.dx = event.stageX - point.history[0].position.x;
+				pt.dy = event.stageY - point.history[0].position.y;
+				pt.dz = event.stageZ - point.history[0].position.z;
 				// NO SUB-PIXEL RESOLUTION
 				//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
 				
@@ -101,9 +101,9 @@ package com.gestureworks.managers
 				pt.dy = 0;
 				pt.dz = 0;
 				
-				pt.x = event.stageX;
-				pt.y = event.stageY;
-				pt.z = event.stageZ;
+				pt.position.x = event.stageX;
+				pt.position.y = event.stageY;
+				pt.position.z = event.stageZ;
 				pt.w = event.sizeX;
 				pt.h = event.sizeY;
 				//pt.l = event.sizeZ;

@@ -3,7 +3,7 @@ package com.gestureworks.interfaces
 	import com.gestureworks.core.*;	
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
@@ -87,8 +87,8 @@ package com.gestureworks.interfaces
 		/**
 		 * @private
 		 */
-		function get pointArray():Vector.<PointObject>;
-		function set pointArray(pa:Vector.<PointObject>):void;
+		function get pointArray():Vector.<TouchPointObject>;
+		function set pointArray(pa:Vector.<TouchPointObject>):void;
 
 		/**
 		 * Number of points in the super cluster

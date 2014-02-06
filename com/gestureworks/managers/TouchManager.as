@@ -31,7 +31,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.objects.GestureListObject;
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
@@ -318,7 +318,7 @@ package com.gestureworks.managers
 				}
 			}
 			
-			trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
+			//trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
 		}
 		
 	/**
@@ -398,7 +398,7 @@ package com.gestureworks.managers
 			processOverlays(event);			
 		}			
 	
-		private static var pointObject:PointObject;		
+		private static var pointObject:TouchPointObject;		
 		// the Stage TOUCH_MOVE event.	
 		// DRIVES POINT PATH UPDATES
 		public static function onTouchMove(event:GWTouchEvent):void
@@ -414,9 +414,10 @@ package com.gestureworks.managers
 				// NOTE: when enabling targeting object will have to be replaced with objectList
 				if (pointObject.object["registerPoints"]) { 
 					// UPDATE POINT POSITIONS
-					pointObject.x = event.stageX;					
-					pointObject.y = event.stageY;
-					pointObject.z = event.stageZ;
+					//pointObject.position.x = event.stageX;					
+					//pointObject.position.y = event.stageY;
+					//pointObject.position.z = event.stageZ;
+					pointObject.position = new Vector3D(event.stageX, event.stageY,event.stageZ); 
 					
 					pointObject.moveCount++;
 					
@@ -429,7 +430,7 @@ package com.gestureworks.managers
 				}
 				//trace("PointObject",pointObject.source,pointObject.target )
 			}
-			trace("TM MOVE",event.stageX,event.stageY,event.stageZ,event.source, event.target,event.touchPointID);
+			//trace("TM MOVE",event.stageX,event.stageY,event.stageZ,event.source, event.target,event.touchPointID);
 		}		
 		
 		private static var input1:GWTouchEvent;
@@ -477,13 +478,15 @@ package com.gestureworks.managers
 				target = event.target as ITouchObject;
 				
 			// create new point object
-			var pointObject:PointObject  = new PointObject();	
+			var pointObject:TouchPointObject  = new TouchPointObject();	
 				pointObject.object = target; // sets primary touch object/cluster
 				pointObject.id = target.pointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
-				pointObject.x = event.stageX;
-				pointObject.y = event.stageY; 
-				pointObject.z = event.stageZ; 
+				//pointObject.position.x = event.stageX;
+				//pointObject.position.y = event.stageY; 
+				//pointObject.position.z = event.stageZ; 
+				pointObject.position = new Vector3D(event.stageX, event.stageY,event.stageZ); 
+				
 				pointObject.objectList.push(target); // seeds cluster/touch object list
 				target.view = event.view;
 				
@@ -512,7 +515,7 @@ package com.gestureworks.managers
 				target = event.target as ITouchObject;
 				
 			// assign existing point object
-			var pointObject:PointObject = GestureGlobals.gw_public::points[event.touchPointID]
+			var pointObject:TouchPointObject = GestureGlobals.gw_public::points[event.touchPointID]
 				// add this touch object to touchobject list on point
 				pointObject.touchPointID = event.touchPointID;//-??
 				pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE

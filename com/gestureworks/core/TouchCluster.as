@@ -21,7 +21,7 @@ package com.gestureworks.core
 	import com.gestureworks.analysis.GeoMetric;
 	import com.gestureworks.objects.GestureObject;
 	
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -82,6 +82,9 @@ package com.gestureworks.core
 		public var hookPoints:Boolean = false; 
 		public var framePoints:Boolean = false; 
 		public var fistPoints:Boolean = false; 
+		//touch
+		public var penPoints:Boolean = false; 
+		public var tagPoints:Boolean = false; 
 		
 		//private var motionSprite:Object;
 		
@@ -306,6 +309,7 @@ package com.gestureworks.core
 				{	
 					if (ts.touchEnabled) getKineMetrics();
 					if (ts.motionEnabled) getKineMetrics3D();
+					//if (ts.sensorEnabled) getSensorKineMetrics();
 				}
 				
 				if (vectormetricsOn) 
@@ -376,7 +380,8 @@ package com.gestureworks.core
 		public function ipSupported(type:String):Boolean
 		{
 			var result:Boolean = false;
-			
+							
+							//motion
 							if ((type == "finger")&&(fingerPoints)) 						result = true; 
 							if ((type == "thumb")&&(thumbPoints))							result = true; 
 							if ((type == "palm")&&(palmPoints)) 							result = true; 
@@ -390,7 +395,10 @@ package com.gestureworks.core
 							if ((type == "fist") && (fistPoints)) 							result = true; 
 							
 							
-							//add toch 
+							//touch 
+							if ((type == "pen") && (penPoints)) 						result = true; 
+							if ((type == "tag") && (tagPoints)) 						result = true; 
+							
 							//add sensor
 							
 			return result		
@@ -401,19 +409,60 @@ package com.gestureworks.core
 			// look at global gesture list and check what fiducials are required
 			// activate gloabl touch geometric 2d anlysis
 			
+			//trace("set geometric init",core);
+			if ((core)&&(!core_init)){
 			
-			// creat five point tag
-			cO.objectArray[0] = new Array()
-					cO.objectArray[0][0] = new PointObject();
-					cO.objectArray[0][0].dist = 100;
-					cO.objectArray[0][1] = new PointObject();
-					cO.objectArray[0][1].dist = 96;
-					cO.objectArray[0][2] = new PointObject();
-					cO.objectArray[0][2].dist = 92;
-					cO.objectArray[0][3] = new PointObject();
-					cO.objectArray[0][3].dist = 84;
-					cO.objectArray[0][4] = new PointObject();
-					cO.objectArray[0][4].dist = 76;
+			var key:int;
+			// for each touchsprite/motionsprite
+			// go through gesture list on initialization
+			// look for motion gestures that need specific sub cluster types
+			// swithed on
+			// note global gesture list need that represents a compiled list of gestures from all objects??
+			
+			for each(var tO:Object in touchObjects)
+			{
+			// numbers of gestures on this object
+			var gn:int = tO.gO.pOList.length;
+				//trace("gesture number",tO,gn, tO.gO,tO.gO.pOList,tO.gO.pOList.length)
+			for (key = 0; key < gn; key++) 
+			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
+			{
+				/////////////////////////////////////////////////////////
+				// 
+				// if gesture object is active in gesture list
+				//if (tO.gestureList[tO.gO.pOList[key].gesture_id])
+				//{
+					var g:GestureObject = tO.gO.pOList[key];
+				
+					//trace("matching gesture cluster input type",key, g.gesture_xml, g.gesture_id, g.gesture_type ,g.cluster_type,g.cluster_input_type)
+						/////////////////////////////////////////////////////
+						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
+						////////////////////////////////////////////////////
+					if (g.cluster_input_type == "touch")
+						
+					
+					if ((g.cluster_type == "tag") || (g.cluster_type == "all")) 
+					{			
+						tagPoints = true; 
+					
+							// creat five point tag
+							cO.objectArray[0] = new Array()
+								cO.objectArray[0][0] = new TouchPointObject();
+								cO.objectArray[0][0].dist = 100;
+								cO.objectArray[0][1] = new TouchPointObject();
+								cO.objectArray[0][1].dist = 96;
+								cO.objectArray[0][2] = new TouchPointObject();
+								cO.objectArray[0][2].dist = 92;
+								cO.objectArray[0][3] = new TouchPointObject();
+								cO.objectArray[0][3].dist = 84;
+								cO.objectArray[0][4] = new TouchPointObject();
+								cO.objectArray[0][4].dist = 76;
+					}
+					if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 			penPoints = true; 
+			}
+			}
+			}
+					
 		}
 		
 		//ESTABLISHES GLOABL IP SUPPORT
@@ -510,10 +559,12 @@ package com.gestureworks.core
 						/////////////////////////////////////////////////////
 						// ESTABLISH GLOBAL VIRTUAL INTERACTION POINTS SEEDS
 						////////////////////////////////////////////////////
-					if (g.cluster_input_type == "motion")
+						
+					
+						////////////////////////////////////////////////////////////
+						if (g.cluster_input_type == "motion")
 						{		
 						//g.cluster_type = "all"	
-						
 						
 						// FUNDAMENTAL INTERACTION POINTS
 							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			fingerPoints = true; 
@@ -535,9 +586,15 @@ package com.gestureworks.core
 							//---cluster_geometric.find3DRegionPoints();
 							//---cluster_geometric.find3dTipTapPoints();
 						}
+						/////////////////////////////////////////////////////////
+						if (g.cluster_input_type == "touch")
+						{
+							if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 			penPoints = true; 
+							if ((g.cluster_type == "tag")||(g.cluster_type == "all")) 				tagPoints = true; 
+						}
 						
-						//if (g.cluster_input_type == "touch")
-						//if (g.cluster_input_type == "sesnor")
+						/////////////////////////////////////////////////////////
+						//if (g.cluster_input_type == "sensor")
 						
 				}
 				
@@ -793,7 +850,7 @@ package com.gestureworks.core
 												gdim.activeDim = true; // ACTIVATE DIM
 											var res:String = gdim.property_result
 											
-											
+											//trace("touch result",res);
 											////////////////////////////////////////////////////
 											// CHECK FOR CLUSTER PROEPERTY VALUE LIMITS IF EXIST
 											////////////////////////////////////////////////////
@@ -829,13 +886,27 @@ package com.gestureworks.core
 													//if (num <= gdim.property_vars[0]["max"])	gdim.clusterDelta = cO[res];//dim_var = num;
 													//else gdim.clusterDelta = 0;//dim_var = 0;
 												}
-												// when no limits
-												else 
-													gdim.clusterDelta = tcO[res];//dim_var = num;
+												else {
+													//TODO: APPLY MAPPING PROPERTIES
+													gdim.clusterDelta = tcO[res];
+												}
+												
 											}
 											
+											
+											
 											//WHEN THERE ARE NO LIMITS IMPOSED
-											else gdim.clusterDelta = tcO[res];//rtn_dim = 1;
+											else {
+												// check new vector map
+												// note will chnage to touchcluster array //cO.tSubClusterArray[b].position.z;
+												//trace("touch result",res,tcO["position"],tcO["position"].x,tcO["position"]["x"]);//
+												if (res == "x") gdim.clusterDelta = tcO.position.x;
+												else if (res == "y") gdim.clusterDelta = tcO.position.y;
+												else if (res == "z") gdim.clusterDelta = tcO.position.z;
+												//TODO:WILL NEED FOR SCALE AND ROTATE,SIZE, DELTA_POSITION, DELTA_SCALE, DELTA_ROTATE, ACCELERATION, JOLT, JERK....
+												//or map one to one using name
+												else gdim.clusterDelta = tcO[res];
+											}
 											
 											/////////////////////////////////////////////////////////////
 											//GREAT FOR FINDING CLUSTER PROPERTIES
@@ -854,9 +925,9 @@ package com.gestureworks.core
 										}
 
 
-										g.data.x = tcO.x;
-										g.data.y = tcO.y;
-										g.data.z = tcO.z;
+										g.data.x = tcO.position.x;
+										g.data.y = tcO.position.y;
+										g.data.z = tcO.position.z;
 										//g.data.n = tpn;
 										
 										//////////////////////////////////////////////////////////////////
@@ -1103,9 +1174,17 @@ package com.gestureworks.core
 												gdim.activeDim = true; // ACTIVATE DIM
 										var	res:String = gdim.property_result
 										
+										if (res == "x") gdim.clusterDelta = cO.mSubClusterArray[b].position.x;
+										else if(res == "y") gdim.clusterDelta = cO.mSubClusterArray[b].position.y;
+										else if (res == "z") gdim.clusterDelta = cO.mSubClusterArray[b].position.z;
+										
+										else
+										{
 											//WHEN THERE ARE NO LIMITS IMPOSED
 											gdim.clusterDelta = cO.mSubClusterArray[b][res];
-
+										}
+										trace("result", res);
+										
 											//CLOSE DIM IF NO VALUE
 											if (gdim.clusterDelta == 0) gdim.activeDim = false;
 
@@ -1118,9 +1197,9 @@ package com.gestureworks.core
 										//trace("sub_cluster data", g.activeEvent, g.dispatchEvent, cO.subClusterArray[b].dx,cO.subClusterArray[b].ipn,cO.hn, cO.fn );
 										
 										//NEED TO PULL FROM RELVANT GESTURE OBJECT//SUBCLUSTER OBJECT
-										g.data.x = cO.mSubClusterArray[b].x; 		// gesture position
-										g.data.y = cO.mSubClusterArray[b].y; 		// gesture position
-										g.data.z = cO.mSubClusterArray[b].z; 		// gesture position
+										g.data.x = cO.mSubClusterArray[b].position.x; 		// gesture position
+										g.data.y = cO.mSubClusterArray[b].position.y; 		// gesture position
+										g.data.z = cO.mSubClusterArray[b].position.z; 		// gesture position
 										g.data.hn = cO.hn;							// current hand number
 										g.data.fn = cO.fn; 							// current finger total
 										g.data.ipn = cO.mSubClusterArray[b].ipn; 	// current ip total

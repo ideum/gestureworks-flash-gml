@@ -322,9 +322,9 @@ package com.gestureworks.core
 						/////////////////////////////////////////////////////
 						// TOUCH CLUSTER
 						/////////////////////////////////////////////////////
-						trO.x =	cO.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
-						trO.y =	cO.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
-						trO.z =	cO.z; // 3d--
+						trO.position.x =	cO.position.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						trO.position.y =	cO.position.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						trO.position.z =	cO.position.z; // 3d--
 						
 						trO.width = cO.width
 						trO.height = cO.height

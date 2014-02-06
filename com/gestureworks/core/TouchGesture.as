@@ -643,7 +643,7 @@ package com.gestureworks.core
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
-				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:cO.x,y:cO.y}));
+				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:cO.position.x,y:cO.position.y}));
 				gO.start = false;
 				//trace("start fired",cO.x,cO.y);
 			}
@@ -669,7 +669,7 @@ package com.gestureworks.core
 			if ((gO.release)&&(ts.gestureEventRelease))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
-				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:cO.x,y:cO.y}));
+				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:cO.position.x,y:cO.position.y}));
 				gO.release = false;
 				//trace("release fired",cO.x,cO.y);
 			}
@@ -678,7 +678,7 @@ package com.gestureworks.core
 			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE,{id:gO.id}));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:cO.x,y:cO.y}));
+				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:cO.position.x,y:cO.position.y}));
 				gO.complete = false;
 				//trace("complete fired",cO.x,cO.y);
 			}

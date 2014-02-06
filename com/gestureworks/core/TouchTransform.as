@@ -302,7 +302,7 @@ package com.gestureworks.core
 				
 				//TRANSFORM CENTER POINT OF TRANSFORMATION
 				var pt:Point
-				if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+				if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.position.x, trO.position.y));
 				else pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
 				
 				// TRANSFORM TRANSFORMATION VECTOR
@@ -330,9 +330,9 @@ package com.gestureworks.core
 							t_y = trO.transAffinePoints[4].y
 						}
 						else {
-						t_x = trO.x;
-						t_y = trO.y;
-						t_z = trO.z;
+						t_x = trO.position.x;
+						t_y = trO.position.y;
+						t_z = trO.position.z;
 						}
 						dx = trO.dx;
 						dy = trO.dy;
@@ -374,19 +374,19 @@ package com.gestureworks.core
 					var d:Number = ts.distance;
 					
 					if (ts.centerTransform) {
-						trO.x = ts.x;
-						trO.y = ts.y;
-						trO.z = ts.z;
+						trO.position.x = ts.x;
+						trO.position.y = ts.y;
+						trO.position.z = ts.z;
 					}
 					
 					// modify transform
 					affine_modifier3D.copyFrom(ts.transform.matrix3D);
-						affine_modifier3D.appendTranslation( -trO.x + dx, -trO.y + dy, -trO.z + dz);	
+						affine_modifier3D.appendTranslation( -trO.position.x + dx, -trO.position.y + dy, -trO.position.z + dz);	
 						affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));
 						affine_modifier3D.appendRotation(dthetaY, new Vector3D(affine_modifier3D.rawData[4], affine_modifier3D.rawData[5], affine_modifier3D.rawData[6]));
 						affine_modifier3D.appendRotation(dthetaZ, new Vector3D(affine_modifier3D.rawData[8], affine_modifier3D.rawData[9], affine_modifier3D.rawData[10]));								
 						affine_modifier3D.appendScale(1 + dsx, 1 + dsy, 1 + dsz); 
-						affine_modifier3D.appendTranslation( trO.x, trO.y, trO.z);						
+						affine_modifier3D.appendTranslation( trO.position.x, trO.position.y, trO.position.z);						
 					ts.transform.matrix3D = affine_modifier3D;	
 					
 				}
@@ -463,7 +463,7 @@ package com.gestureworks.core
 					
 					// TRANSFORM AFFINE POINT
 					var pt:Point;
-					if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.x, trO.y));
+					if (!centerTransform) pt = parent_modifier.transformPoint(new Point(trO.position.x, trO.position.y));
 					else pt = new Point( trO.transAffinePoints[4].x,trO.transAffinePoints[4].y);
 					
 					// TRANSFORM VECTOR
@@ -487,8 +487,8 @@ package com.gestureworks.core
 							t_y = trO.transAffinePoints[4].y
 						}
 						else {
-							t_x = trO.x;
-							t_y = trO.y;
+							t_x = trO.position.x;
+							t_y = trO.position.y;
 						}
 						dx = ts.dx;
 						dy = ts.dy;

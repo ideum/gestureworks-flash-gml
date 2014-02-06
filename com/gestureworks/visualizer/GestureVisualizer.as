@@ -24,7 +24,7 @@ package com.gestureworks.visualizer
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	//import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.GesturePointObject;
@@ -49,7 +49,7 @@ package com.gestureworks.visualizer
 		
 		private var trO:TransformObject;
 		private var id:Number = 0;
-		private var pointList:Vector.<PointObject>
+		private var pointList:Vector.<TouchPointObject>
 		private var N:int = 0;
 		private var tpn:int = 0;
 		private var ipn:int = 0;
@@ -229,12 +229,12 @@ package com.gestureworks.visualizer
 					//trace("drawing .....thumb",cO.thumbID,tpn,pointList[i].x, pointList[i].y,cO.x, cO.y,cO.orient_dx,cO.orient_dy)
 					for (var i:int = 0; i < tpn; i++) 
 						{
-						if (pointList[i].touchPointID == cO.thumbID) 	graphics.drawCircle(pointList[i].x, pointList[i].y, 40);
+						if (pointList[i].touchPointID == cO.thumbID) 	graphics.drawCircle(pointList[i].position.x, pointList[i].position.y, 40);
 						}
 						
 				// draw orientation vector based on 4 fingers / draw hand vector
-				graphics.moveTo(cO.x, cO.y);
-				graphics.lineTo(cO.x + cO.orient_dx * 3, cO.y + cO.orient_dy * 3);
+				graphics.moveTo(cO.position.x, cO.position.y);
+				graphics.lineTo(cO.position.x + cO.orient_dx * 3, cO.position.y + cO.orient_dy * 3);
 				//graphics.lineTo(cO.x + 50 * 3, cO.y + 50 * 3);
 			}
 			

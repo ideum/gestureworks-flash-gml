@@ -166,7 +166,7 @@ package com.gestureworks.managers
 			//point addition and update
 			for each(var pid:int in pids) 
 			{
-				var pt = getFramePoint(pid);
+				var pt:Object = getFramePoint(pid);
 				//trace("point",pt);
 				
 				if (pt) 

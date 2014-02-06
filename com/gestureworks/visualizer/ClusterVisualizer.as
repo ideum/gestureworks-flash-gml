@@ -23,7 +23,7 @@ package com.gestureworks.visualizer
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
-	import com.gestureworks.objects.PointObject;
+	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
@@ -139,8 +139,8 @@ package com.gestureworks.visualizer
 				
 			style.stroke_color = 0xFFAE1F;
 			
-			_x = cO.x;
-			_y = cO.y;
+			_x = cO.position.x;
+			_y = cO.position.y;
 			
 			//trace("cluster vis",cO.x,cO.y, _x, _y);
 			
@@ -203,14 +203,14 @@ package com.gestureworks.visualizer
 			if (style.web_shape == "fullweb") {
 					for (var k:int = 0; k < tpn; k++) {
 						
-						var pt:PointObject = cO.pointArray[k];
+						var pt:TouchPointObject = cO.pointArray[k];
 						
 							for (var l:int=0; l<tpn; l++){
 								if (k != l) {
-									var pt1:PointObject = cO.pointArray[l];
+									var pt1:TouchPointObject = cO.pointArray[l];
 									//trace(i,j)
-									graphics.moveTo(pt.x,pt.y);
-									graphics.lineTo(pt1.x,pt1.y);
+									graphics.moveTo(pt.position.x,pt.position.y);
+									graphics.lineTo(pt1.position.x,pt1.position.y);
 								}
 							}
 					}
@@ -218,9 +218,9 @@ package com.gestureworks.visualizer
 			if (style.web_shape == "starweb") {
 				//trace("starweb");
 				for (var p:int = 0; p < tpn; p++) {
-						var pt2:PointObject = cO.pointArray[p];
+						var pt2:TouchPointObject = cO.pointArray[p];
 						graphics.moveTo(_x,_y);
-						graphics.lineTo(pt2.x, pt2.y);
+						graphics.lineTo(pt2.position.x, pt2.position.y);
 					}
 			}
 			}
@@ -490,8 +490,8 @@ package com.gestureworks.visualizer
 									//if (sub_cO.type == "tool") style.stroke_color = 0x0000FF;
 									
 									
-									_x = sub_cO.x;
-									_y = sub_cO.y;
+									_x = sub_cO.position.x;
+									_y = sub_cO.position.y;
 									_width = sub_cO.width;
 									_height = sub_cO.height;
 									_radius = sub_cO.radius-50 -i*10;
@@ -551,14 +551,14 @@ package com.gestureworks.visualizer
 									if (style.web_shape == "fullweb") {
 											for (var k:int = 0; k < tpn; k++) {
 												
-												var pt:PointObject = sub_cO.pointArray[k];
+												var pt:TouchPointObject = sub_cO.pointArray[k];
 												
 													for (var l:int=0; l<tpn; l++){
 														if (k != l) {
-															var pt1:PointObject = sub_cO.pointArray[l];
+															var pt1:TouchPointObject = sub_cO.pointArray[l];
 															//trace(i,j)
-															graphics.moveTo(pt.x,pt.y);
-															graphics.lineTo(pt1.x,pt1.y);
+															graphics.moveTo(pt.position.x,pt.position.y);
+															graphics.lineTo(pt1.position.x,pt1.position.y);
 														}
 													}
 											}
