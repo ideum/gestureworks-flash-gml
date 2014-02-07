@@ -301,7 +301,7 @@ package com.gestureworks.analysis
 				//var dtap_time:int = Math.ceil(ts.gO.pOList[key]["double_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var dtap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
-				var	gestureEventArray:Array = new Array();
+				var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>();
 				
 				//trace(dtap_time);
 				
@@ -349,7 +349,7 @@ package com.gestureworks.analysis
 				//var ttap_time:int = Math.ceil(ts.gO.pOList[key]["triple_tap_x"].point_interevent_duration_threshold / GestureGlobals.touchFrameInterval);//20
 				var ttap_dist:int = ts.gO.pOList[key].point_translation_max;
 				
-				var	gestureEventArray:Array = new Array();
+				var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>();
 				
 					//trace(ttap_time);
 				
@@ -380,7 +380,7 @@ package com.gestureworks.analysis
 													
 												if (ts.tiO.history[k])
 												{
-												var gestureEventArray2:Array = ts.tiO.history[k].gestureEventArray;
+												var gestureEventArray2:Vector.<GWGestureEvent> = ts.tiO.history[k].gestureEventArray;
 												
 												for (var q:uint = 0; q < gestureEventArray2.length; q++) 
 												{
@@ -439,7 +439,7 @@ package com.gestureworks.analysis
 			var dn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
-				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
 					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
@@ -453,7 +453,11 @@ package com.gestureworks.analysis
 					}
 				
 					//count history
-					for (var i:uint = 0; i < tap_countTime; i++) // 20 fames block for single tap
+					var ct:int = 0;
+					if (tap_countTime > ts.tiO.history.length) ct = ts.tiO.history.length;
+					else ct = tap_countTime;
+					
+					for (var i:uint = 0; i < ct; i++) // 20 fames block for single tap
 						{
 						if (ts.tiO.history[i])
 						{
@@ -538,7 +542,7 @@ package com.gestureworks.analysis
 			var ddn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
-				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
 					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
@@ -552,7 +556,11 @@ package com.gestureworks.analysis
 					}
 				
 				//count history
-				for (var i:uint = 0; i < dtap_countTime; i++) // 20 fames block for single tap
+				var dct:int = 0;
+				if (dtap_countTime > ts.tiO.history.length) dct = ts.tiO.history.length;
+				else dct = dtap_countTime;
+					
+				for (var i:uint = 0; i < dct; i++) // 20 fames block for single tap
 						{
 						if (ts.tiO.history[i])
 						{
@@ -628,7 +636,7 @@ package com.gestureworks.analysis
 			var tdn:uint = ts.gO.pOList[key].dList.length;
 				
 				// count in current frame
-				var gestureEventArray:Array = ts.tiO.frame.gestureEventArray
+				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
 					for (var p:int = 0; p < gestureEventArray.length; p++) 
 					{
@@ -642,7 +650,11 @@ package com.gestureworks.analysis
 					}
 				
 				//count history
-				for (var i:uint = 0; i < ttap_countTime; i++) // 20 fames block for single tap
+				var tct:int = 0;
+				if (ttap_countTime > ts.tiO.history.length) tct = ts.tiO.history.length;
+				else tct = ttap_countTime;
+					
+				for (var i:uint = 0; i < tct; i++) // 20 fames block for single tap
 						{
 						if (ts.tiO.history[i])
 						{

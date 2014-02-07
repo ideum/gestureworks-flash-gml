@@ -410,7 +410,8 @@ package com.gestureworks.core
 
 						if (gO.pOList[key].match_GestureEvent == "tap") 
 						{
-								if (tiO.history[0])
+							
+								if (tiO.history.length>=1)
 								{
 								for (var k:int = 0; k < tiO.history[0].gestureEventArray.length; k++) 
 									{
@@ -442,6 +443,7 @@ package com.gestureworks.core
 										}
 									}
 								}
+							
 						}	
 						
 						///////////////////////////////////////////////////////////////////////////
@@ -696,12 +698,23 @@ package com.gestureworks.core
 		public function traceTimeline():void
 		{
 			var gn:int = ts.tiO.frame.gestureEventArray.length
+			var tn:int = ts.tiO.frame.pointEventArray.length
+			var cn:int = ts.tiO.frame.clusterEventArray.length
 			
 			for (var j:uint = 0; j <gn ; j++) 
 			{
 				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
 			}
-			trace("timeline on?",tiO.timelineOn)
+			for (var j:uint = 0; j <tn ; j++) 
+			{
+				trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
+			}
+			for (var j:uint = 0; j <cn ; j++) 
+			{
+				trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
+			}
+			
+			//trace("timeline on?",tiO.timelineOn)
 		}
 		
 		
