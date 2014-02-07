@@ -19,10 +19,17 @@ package com.gestureworks.managers
 	 * ...
 	 * @author Paul Lacey
 	 */
-	
+	import com.gestureworks.managers.PoolManager;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.TimelineObject;
+	import com.gestureworks.objects.FrameObject;
+	
+	
+	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.events.GWClusterEvent;
+	import com.gestureworks.events.GWGestureEvent;
+	import com.gestureworks.events.GWTransformEvent;
 	
 	public class TimelineHistories 
 	{
@@ -35,11 +42,12 @@ package com.gestureworks.managers
 			//trace("capturing timline histories");
 			
 			var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID];
-			var history:Array = tiO.history;
+			var history:Vector.<FrameObject> = tiO.history;
 			
 			//GestureGlobals.timelineHistoryCaptureLength = 120;
 			
-			history.unshift(tiO.frame);
+			//history.unshift(tiO.frame);
+			history.unshift(historyObject(tiO.frame));
 			
 			if (history.length-1>=GestureGlobals.timelineHistoryCaptureLength)
 			{
@@ -48,13 +56,39 @@ package com.gestureworks.managers
 		}
 		
 		// loads history object and returns value.
-		public static function historyObject(frame:Object):Object
+		public static function historyObject(frame:FrameObject):Object
 		{
 			//trace("in hist");
-			var object:Object = new Object();
-				
-				object = frame;
+			//var object:Object = new Object();
+				//object = frame;
 		
+			//return object;
+			
+			//trace("in hist");
+			//var object:FrameObject = PoolManager.frameObject;
+			var object:FrameObject = new FrameObject;
+				
+				var ten:int = frame.pointEventArray.length
+				var gen:int = frame.gestureEventArray.length
+				//trace("arrays", ten,gen);
+				//object.pointEventArray = frame.pointEventArray;
+				//object.gestureEventArray = frame.gestureEventArray;
+				
+				
+				object.pointEventArray = new Vector.<GWTouchEvent>();
+				object.gestureEventArray = new Vector.<GWGestureEvent>();
+				
+				for (var i:uint = 0; i < ten; i++) 
+				{
+					object.pointEventArray[i] = frame.pointEventArray[i];
+				}
+				
+				for (var j:uint = 0; j < gen; j++) 
+				{
+					object.gestureEventArray[j] = frame.gestureEventArray[j];
+				}
+				
+				
 			return object;
 		}
 		

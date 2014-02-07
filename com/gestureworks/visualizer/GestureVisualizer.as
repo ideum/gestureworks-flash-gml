@@ -34,6 +34,10 @@ package com.gestureworks.visualizer
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.StrokeObject;
 	
+		import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.events.GWClusterEvent;
+	import com.gestureworks.events.GWGestureEvent;
+	
 	
 
 	public class GestureVisualizer extends Shape
@@ -141,8 +145,8 @@ package com.gestureworks.visualizer
 	private function draw_touch_gesture():void
 	{
 		
-		var	gestureEventArray:Array = new Array();
-		var	pointEventArray:Array = new Array();
+		var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>;
+		var	pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
 				
 		//trace("draw gesture", ts);
 		
@@ -462,9 +466,11 @@ package com.gestureworks.visualizer
 				
 				
 				//trace("visulaize event frame",ts.tiO.timelineOn,ts.tiO.history.length,GestureGlobals.frameID);
+				var st:int = 0;
+				if (scan_time > ts.tiO.history.length) st = ts.tiO.history.length;
+				else st = scan_time
 				
-				
-				for (i = 0; i < scan_time; i++) 
+				for (i = 0; i < st; i++) 
 					{
 					if (ts.tiO.history[i])
 						{

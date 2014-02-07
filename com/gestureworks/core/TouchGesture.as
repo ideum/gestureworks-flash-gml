@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.core
 {
+	import com.gestureworks.managers.PoolManager;
 	import flash.display.Sprite;
 	import flash.events.TouchEvent;
 	import flash.geom.Point;
@@ -409,7 +410,8 @@ package com.gestureworks.core
 
 						if (gO.pOList[key].match_GestureEvent == "tap") 
 						{
-								if (tiO.history[0])
+							
+								if (tiO.history.length>=1)
 								{
 								for (var k:int = 0; k < tiO.history[0].gestureEventArray.length; k++) 
 									{
@@ -441,6 +443,7 @@ package com.gestureworks.core
 										}
 									}
 								}
+							
 						}	
 						
 						///////////////////////////////////////////////////////////////////////////
@@ -630,14 +633,14 @@ package com.gestureworks.core
 			//trace("touch gesture dispatch--------------------------",gO.release);
 		
 			
-			
+			/*
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
 				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
-			}
+			}*/
 			
 			// start OBJECT complete event gesturing
 			if ((gO.start)&&(ts.gestureEventStart))
@@ -685,7 +688,52 @@ package com.gestureworks.core
 		
 			gO.start = false;
 			gO.release = false;
-			gO.complete = false;			
+			gO.complete = false;	
+			
+			
+			manageTimeline();
+			//traceTimeline();
+		}
+		
+		public function traceTimeline():void
+		{
+			if (ts.tiO.frame)
+			{
+				var gn:int = ts.tiO.frame.gestureEventArray.length
+				var tn:int = ts.tiO.frame.pointEventArray.length
+				var cn:int = ts.tiO.frame.clusterEventArray.length
+				
+				for (var j:uint = 0; j <gn ; j++) 
+				{
+					trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
+				}
+				for (var j:uint = 0; j <tn ; j++) 
+				{
+					trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
+				}
+				for (var j:uint = 0; j <cn ; j++) 
+				{
+					trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
+				}
+			}
+			//trace("timeline on?",tiO.timelineOn)
+		}
+		
+		
+		public function manageTimeline():void 
+		{	
+			// MANAGE TIMELINE
+			if (tiO.timelineOn)
+			{
+				//if (traceDebugMode) trace("timeline frame update");
+				TimelineHistories.historyQueue(ts.clusterID);		// push histories 
+				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
+				//tiO.frame = PoolManager.frameObject;
+			}
+			else {
+				//tiO.frame = PoolManager.frameObject;
+				tiO.frame = new FrameObject();				
+			}
 		}
 		
 		public function constructGestureEvents(key:uint):void 

@@ -42,11 +42,19 @@ package com.gestureworks.objects
 		public var transformEvents:Boolean = false;
 		
 		//frame object
-		public var frame:FrameObject = new FrameObject();
+		//public var frame:FrameObject = new FrameObject();
+		
+		//frame object
+		private var _frame:FrameObject = new FrameObject();
+		public function get frame():FrameObject { return _frame; }
+		public function set frame(value:FrameObject):void {
+			_frame = value;
+		}
+		
 
 		// NEEEDS TO BE VECTOR
 		// timeline history
-		public var history:Array = new Array();
+		public var history:Vector.<FrameObject> = new Vector.<FrameObject>;
 
 	}
 }
