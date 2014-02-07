@@ -298,8 +298,8 @@ package com.gestureworks.core
 				
 				ref_frame_angle = angle;
 				var scalex:Number = parent_modifier.a / Math.cos(angle);
-				var scaley:Number = parent_modifier.a / Math.cos(angle);
-				var scalez:Number = parent_modifier.a / Math.cos(angle);
+				var scaley:Number =  scalex;//parent_modifier.a / Math.cos(angle);
+				var scalez:Number =  scalex;//parent_modifier.a / Math.cos(angle);
 				
 				//TRANSFORM CENTER POINT OF TRANSFORMATION
 				var pt:Point
@@ -460,7 +460,7 @@ package com.gestureworks.core
 					
 					ref_frame_angle = angle;
 					var scalex:Number = parent_modifier.a / Math.cos(angle);
-					var scaley:Number = parent_modifier.a / Math.cos(angle);
+					var scaley:Number = scalex//parent_modifier.a / Math.cos(angle);
 					
 					// TRANSFORM AFFINE POINT
 					var pt:Point;
@@ -502,20 +502,10 @@ package com.gestureworks.core
 				
 				///////////////////////////////////////////////////
 				// leave scalar values untouched
-				//dsx = ts.dsx;
-				//dsy = ts.dsy;
-				//dsz = ts.dsz;
-				//dtheta = ts.dtheta * DEG_RAD;
-				
-				// 3D matrix uses degrees
-				dsx = trO.dsx;///new
-				dsy = trO.dsy;///new
-				dsz = trO.dsz;///new
-				
-				dtheta = trO.dtheta; ///new
-				dthetaX = trO.dthetaX; //new
-				dthetaY = trO.dthetaY; //new
-				dthetaZ = trO.dthetaZ; //new
+				dsx = ts.dsx;
+				dsy = ts.dsy;
+				dsz = ts.dsz;
+				dtheta = ts.dtheta * DEG_RAD;
 				
 				///////////////////////////////////////////////////
 				//affine transform boundaries
@@ -541,7 +531,7 @@ package com.gestureworks.core
 				////////////////////////////////////////////////////
 				// flash 2.5D only
 				// HAVING 3D MATRIX PASS THROUGH ENABLES ROTATEXYZ TO PASS THROUGH
-				else if (ts.transform.matrix3D)// check for 3D matrix,
+				if (ts.transform.matrix3D)// check for 3D matrix,
 				{							
 					// get the projection offset created by the z-position	
 					if (ts.transform.perspectiveProjection) // ts can define location projection
@@ -562,7 +552,7 @@ package com.gestureworks.core
 				// 2d display object only
 				else
 				{
-					dtheta *= DEG_RAD; // new 
+					//dtheta *= DEG_RAD; // new 
 					affine_modifier = ts.transform.matrix;
 					//affine_modifier = ts.transform.matrix3D;
 						affine_modifier.translate( - t_x, - t_y);
@@ -575,8 +565,7 @@ package com.gestureworks.core
 
 				updateLocalProperties();
 				
-				if (ts.vto)
-					ts.updateVTO();	
+				if (ts.vto) ts.updateVTO();	
 			}
 		}
 		
