@@ -59,6 +59,7 @@ package com.gestureworks.managers
 		{
 			//trace("in hist");
 			var object:FrameObject = PoolManager.frameObject;
+			//var object:FrameObject = new FrameObject;
 				
 				var ten:int = frame.pointEventArray.length
 				var gen:int = frame.gestureEventArray.length
@@ -79,6 +80,7 @@ package com.gestureworks.managers
 				{
 					object.gestureEventArray[j] = frame.gestureEventArray[j];
 				}
+				
 				
 			return object;
 		}

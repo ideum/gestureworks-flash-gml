@@ -314,7 +314,7 @@ package com.gestureworks.analysis
 					// gest current gesture event array from frame
 					gestureEventArray = ts.tiO.frame.gestureEventArray;
 
-					//trace("gesture event array--------------------------------------------",gestureEventArray.length);
+					trace("gesture event array--------------------------------------------",gestureEventArray.length);
 							
 						
 								for (var j:uint = 0; j < gestureEventArray.length; j++) 
@@ -324,7 +324,7 @@ package com.gestureworks.analysis
 									var dx:Number;
 									var dy:Number;
 									
-									trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
+								//	trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
 									
 									
 									//if (gestureEventArray[j].type =="manipulate")
