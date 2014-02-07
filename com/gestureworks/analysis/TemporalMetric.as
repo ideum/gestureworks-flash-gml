@@ -30,6 +30,7 @@ package com.gestureworks.analysis
 	
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
+	import com.gestureworks.events.GWTouchEvent;
 	
 	//import com.gestureworks.analysis.paths.PathCollection;
 	//import com.gestureworks.analysis.paths.PathCollectionIterator; PathCollectionIterator;
@@ -216,7 +217,7 @@ package com.gestureworks.analysis
 			
 			
 			
-			var pointEventArray:Array = ts.tiO.frame.pointEventArray
+			var pointEventArray:Vector.<GWTouchEvent>= ts.tiO.frame.pointEventArray
 				
 				for (var p:int = 0; p < pointEventArray.length; p++) 
 				{

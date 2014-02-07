@@ -697,23 +697,25 @@ package com.gestureworks.core
 		
 		public function traceTimeline():void
 		{
-			var gn:int = ts.tiO.frame.gestureEventArray.length
-			var tn:int = ts.tiO.frame.pointEventArray.length
-			var cn:int = ts.tiO.frame.clusterEventArray.length
-			
-			for (var j:uint = 0; j <gn ; j++) 
+			if (ts.tiO.frame)
 			{
-				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
+				var gn:int = ts.tiO.frame.gestureEventArray.length
+				var tn:int = ts.tiO.frame.pointEventArray.length
+				var cn:int = ts.tiO.frame.clusterEventArray.length
+				
+				for (var j:uint = 0; j <gn ; j++) 
+				{
+					trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
+				}
+				for (var j:uint = 0; j <tn ; j++) 
+				{
+					trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
+				}
+				for (var j:uint = 0; j <cn ; j++) 
+				{
+					trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
+				}
 			}
-			for (var j:uint = 0; j <tn ; j++) 
-			{
-				trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
-			}
-			for (var j:uint = 0; j <cn ; j++) 
-			{
-				trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
-			}
-			
 			//trace("timeline on?",tiO.timelineOn)
 		}
 		
@@ -725,10 +727,14 @@ package com.gestureworks.core
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);		// push histories 
-				//tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
-				tiO.frame = PoolManager.frameObject;
+				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
+				//tiO.frame = PoolManager.frameObject;
 			}
-			//else tiO.frame = PoolManager.frameObject;
+			else {
+				
+				//tiO.frame = PoolManager.frameObject;
+				tiO.frame = new FrameObject();				
+			}
 		}
 		
 		public function constructGestureEvents(key:uint):void 

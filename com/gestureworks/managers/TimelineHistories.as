@@ -65,8 +65,8 @@ package com.gestureworks.managers
 			//return object;
 			
 			//trace("in hist");
-			var object:FrameObject = PoolManager.frameObject;
-			//var object:FrameObject = new FrameObject;
+			//var object:FrameObject = PoolManager.frameObject;
+			var object:FrameObject = new FrameObject;
 				
 				var ten:int = frame.pointEventArray.length
 				var gen:int = frame.gestureEventArray.length
@@ -75,7 +75,7 @@ package com.gestureworks.managers
 				//object.gestureEventArray = frame.gestureEventArray;
 				
 				
-				object.pointEventArray = new Vector.<GWTouchEvent>;
+				object.pointEventArray = new Vector.<GWTouchEvent>();
 				object.gestureEventArray = new Vector.<GWGestureEvent>();
 				
 				for (var i:uint = 0; i < ten; i++) 
