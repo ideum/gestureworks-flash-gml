@@ -89,7 +89,7 @@ package com.gestureworks.managers {
 		 */
 		public static function get frameObject():FrameObject {
 			var frame:FrameObject = framePool.shift();
-				//frame.reset();
+				frame.reset();
 				framePool.push(frame);			
 			return frame;
 		}

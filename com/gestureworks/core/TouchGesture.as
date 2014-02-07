@@ -731,7 +731,6 @@ package com.gestureworks.core
 				//tiO.frame = PoolManager.frameObject;
 			}
 			else {
-				
 				//tiO.frame = PoolManager.frameObject;
 				tiO.frame = new FrameObject();				
 			}
