@@ -690,7 +690,7 @@ package com.gestureworks.core
 			
 			
 			manageTimeline();
-			//traceTimeline();
+			traceTimeline();
 		}
 		
 		public function traceTimeline():void
@@ -701,6 +701,7 @@ package com.gestureworks.core
 			{
 				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
 			}
+			trace("timeline on?",tiO.timelineOn)
 		}
 		
 		
@@ -714,6 +715,7 @@ package com.gestureworks.core
 				//tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 				tiO.frame = PoolManager.frameObject;
 			}
+			//else tiO.frame = PoolManager.frameObject;
 		}
 		
 		public function constructGestureEvents(key:uint):void 
