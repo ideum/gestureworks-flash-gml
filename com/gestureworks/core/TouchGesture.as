@@ -692,7 +692,7 @@ package com.gestureworks.core
 			
 			
 			manageTimeline();
-			traceTimeline();
+			//traceTimeline();
 		}
 		
 		public function traceTimeline():void
