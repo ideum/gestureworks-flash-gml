@@ -19,7 +19,7 @@ package com.gestureworks.managers
 	 * ...
 	 * @author Paul Lacey
 	 */
-	
+	import com.gestureworks.managers.PoolManager;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.TimelineObject;
@@ -65,8 +65,8 @@ package com.gestureworks.managers
 			//return object;
 			
 			//trace("in hist");
-			//var object:FrameObject = PoolManager.frameObject;
-			var object:FrameObject = new FrameObject;
+			var object:FrameObject = PoolManager.frameObject;
+			//var object:FrameObject = new FrameObject;
 				
 				var ten:int = frame.pointEventArray.length
 				var gen:int = frame.gestureEventArray.length
