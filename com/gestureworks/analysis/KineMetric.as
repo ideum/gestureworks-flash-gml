@@ -1828,18 +1828,37 @@ package com.gestureworks.analysis
 				//zero subcluster data //////////////////////////////
 				for (j = 0; j < cO.mSubClusterArray.length; j++) 
 				{
-					cO.mSubClusterArray[j].iPointArray.length=0;
+					cO.mSubClusterArray[j].iPointArray.length = 0;
+				}
+				for (j = 0; j < cO.tSubClusterArray.length; j++) 
+				{
+					cO.tSubClusterArray[j].iPointArray.length = 0;
+				}
+				for (j = 0; j < cO.sSubClusterArray.length; j++) 
+				{
+					cO.sSubClusterArray[j].iPointArray.length=0;
 				}
 			
 				//update subcluster point arrays //////////////////////////////
 				for (i = 0; i < temp_ipointArray.length; i++) 
 				{
 					var ipt:InteractionPointObject = temp_ipointArray[i];
-						
+					
+					//SORT INTERACTION POINTS INTO SUBCLUSTERS
+					//TODO: REMOVE LOOPS
 					for (j = 0; j < cO.mSubClusterArray.length; j++) 
 					{
 						if (ipt.type==cO.mSubClusterArray[j].type) cO.mSubClusterArray[j].iPointArray.push(ipt);
 					}
+					for (j = 0; j < cO.tSubClusterArray.length; j++) 
+					{
+						if (ipt.type==cO.tSubClusterArray[j].type) cO.tSubClusterArray[j].iPointArray.push(ipt);
+					}
+					for (j = 0; j < cO.sSubClusterArray.length; j++) 
+					{
+						if (ipt.type==cO.sSubClusterArray[j].type) cO.sSubClusterArray[j].iPointArray.push(ipt);
+					}
+					
 						//trace(ipt.type)
 					//if(ipt.type=="fist")trace("fist subcluster", ipt.fist)
 				}
@@ -2979,8 +2998,8 @@ package com.gestureworks.analysis
 			}
 		}
 		
-		
-		public function Weave3DIPClusterData():void
+		// WEAVE MOTION SUBCLUSTERS INTO ROOT MOTION CLUSTER
+		public function WeaveMotionSubClusterData():void
 		{
 			var asc:int = 0;
 			var asck:Number = 0;
@@ -3068,7 +3087,96 @@ package com.gestureworks.analysis
 				//trace("motion subclusterto motion prime",mcO.x,mcO.y,mcO.z, mcO.dx,mcO.dy,mcO.dz)
 		}
 		
-		public function WeaveMotionClusterData():void
+		// WEAVE TOUCH SUBCLUSTERS INTO ROOT MOTION CLUSTER
+		public function WeaveTouchSubClusterData():void
+		{
+			var asc:int = 0;
+			var asck:Number = 0;
+			
+			//BLEND INTO SINGLE CLUSTER
+			/////////////////////////////////////////////////////////////////////////////////////////
+			// loop for all sub clusters/////////////////////////////////////////////////////////////
+			
+			
+			
+			for (i = 0; i < cO.tSubClusterArray.length; i++) 
+				{		
+					// GET CLUSTER ANALYSIS FROM EACH SUBCLUSTER
+					var sub_cO:ipClusterObject = cO.tSubClusterArray[i];
+
+						// each dimension / property must be merged independently
+						if (sub_cO.ipn>0)
+						{
+							asc++;
+							//trace("weave ipcos",sub_cO.ipn, sub_cO.type);
+							
+							// recalculate cluster center
+							// average over all ip subcluster subclusters 
+							// MAY NEED TO GIVE EQUAL WEIGHT TO ALL INTERACTION POINTS
+							// CURRENTLY CENTER OF 4 FINGER SUBCLUSTER IS SAME WEIGHT AS 1 PINCH POINT WHICH PUSHED AVERAGE CENTER CLOSER TO PINCH POINT
+							
+							tcO.position.x += sub_cO.position.x  
+							tcO.position.y += sub_cO.position.y
+							tcO.position.z += sub_cO.position.z
+							
+							
+							// recalculate based on ip subcluster totals
+							tcO.width = sub_cO.width; // get max
+							tcO.height = sub_cO.height;// get max
+							tcO.length = sub_cO.length;// get max
+							tcO.radius = sub_cO.radius;// get max
+										
+							// recalculate based on ip subcluster totals
+							tcO.separation = sub_cO.separation;// get max
+							tcO.separationX = sub_cO.separationX;// get max
+							tcO.separationY = sub_cO.separationY;// get max
+							tcO.separationZ = sub_cO.separationZ;// get max
+									
+							// recalculate based on ip subcluster totals
+							tcO.rotation = sub_cO.rotation;// get max
+							tcO.rotationX = sub_cO.rotationX;// get max
+							tcO.rotationY = sub_cO.rotationY;// get max
+							tcO.rotationZ = sub_cO.rotationZ;// get max
+							
+							
+							// map non zero deltas // accumulate 
+							// perhaps find average 
+							tcO.dx += sub_cO.dx;
+							tcO.dy += sub_cO.dy;
+							tcO.dz += sub_cO.dz;	
+								
+							tcO.dtheta += sub_cO.dtheta;
+							tcO.dthetaX += sub_cO.dthetaX;
+							tcO.dthetaY += sub_cO.dthetaY;
+							tcO.dthetaZ += sub_cO.dthetaZ;
+													
+							tcO.ds += sub_cO.ds; // must not be affected by cluster chnage in radius
+							tcO.dsx += sub_cO.dsx;
+							tcO.dsy += sub_cO.dsy;
+							tcO.dsz += sub_cO.dsz;
+							///////////////////////////////////////////////////////////////////////////////////////
+							///////////////////////////////////////////////////////////////////////////////////////
+							
+							//trace("sub",sub_cO.type,sub_cO.x,sub_cO.y,sub_cO.z,sub_cO.dx, sub_cO.dy,sub_cO.dz)
+						}
+				}
+				
+				asck = 1 / asc;
+				if (asc == 0) asck = 1; //DERR // need 1 or kills multi modal
+				
+				//trace("weave weight", asck,asc)
+				
+				// AVERAGE CLUSTER POSITION
+				tcO.position.x *= asck;  
+				tcO.position.y *= asck;
+				tcO.position.z *= asck;
+				
+				//trace("touch",tcO.dx,tcO.dy)
+				//trace("motion subclusterto motion prime",mcO.x,mcO.y,mcO.z, mcO.dx,mcO.dy,mcO.dz)
+		}
+		
+		//WEAVE ROOT MOTION CLUSTER INTO ROOT MULTIMODAL CLUSTER
+		public function WeaveMotionRootClusterData():void
 		{
 			//BLEND INTO ROOT CLUSTER
 			
@@ -3131,7 +3239,8 @@ package com.gestureworks.analysis
 				//trace("motion prime to core cluster", mcO.x,mcO.y,mcO.z,mcO.dx,mcO.dy,mcO.dz, cO.x,cO.y, cO.dx,cO.dy)
 		}
 		
-		public function WeaveTouchClusterData():void
+		//WEAVE ROOT TOUCH CLUSTER INTO ROOT MULTIMODAL CLUSTER
+		public function WeaveTouchRootClusterData():void
 		{
 						// each dimension / property must be merged independently
 						if (tcO.tpn>0)
@@ -3177,7 +3286,8 @@ package com.gestureworks.analysis
 				
 		}
 		
-		public function WeaveSensorClusterData():void
+		//WEAVE ROOT SENSOR CLUSTER INTO MULTIMODAL ROOT CLUSTER
+		public function WeaveSensorRootClusterData():void
 		{
 						// each dimension / property must be merged independently
 						if (scO.spn>0)

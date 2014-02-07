@@ -993,7 +993,7 @@ package com.gestureworks.core
 			}
 			
 			//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
-			cluster_kinemetric.WeaveTouchClusterData(); // should move to cluster manager
+			cluster_kinemetric.WeaveTouchRootClusterData(); // should move to cluster manager
 		}
 
 		public function getKineMetrics3D():void 
@@ -1226,8 +1226,8 @@ package com.gestureworks.core
 			////////////////////////////////////////////////////////
 			// DEFAULT STATIC WEAVING 
 			// NO MODAL HERACY FOR WEIGHTED BLENDING OF DELTAS
-			cluster_kinemetric.Weave3DIPClusterData();
-			cluster_kinemetric.WeaveMotionClusterData();
+			cluster_kinemetric.WeaveMotionSubClusterData();
+			cluster_kinemetric.WeaveMotionRootClusterData();
 			}
 		}
 		
