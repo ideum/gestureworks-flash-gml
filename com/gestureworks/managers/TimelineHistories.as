@@ -52,7 +52,6 @@ package com.gestureworks.managers
 		{
 			//trace("in hist");
 			var object:Object = new Object();
-				
 				object = frame;
 		
 			return object;
