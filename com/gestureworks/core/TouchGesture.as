@@ -729,6 +729,7 @@ package com.gestureworks.core
 			}
 			else {
 				//RESET FRAME ANYWAY TP PREVENT EVENT OVERFLOW
+				//TOUCH OBJECTS CAN CACHE GESTURE EVENTS (TO THE TIMELINE OBJECT) WHEN NOT USING GESTURES THAT "REQUIRE" THER TEMPORALMETRIC
 				tiO.frame = PoolManager.frameObject;
 			}
 		}
