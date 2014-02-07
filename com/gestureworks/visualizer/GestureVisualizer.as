@@ -462,9 +462,11 @@ package com.gestureworks.visualizer
 				
 				
 				//trace("visulaize event frame",ts.tiO.timelineOn,ts.tiO.history.length,GestureGlobals.frameID);
+				var st:int = 0;
+				if (scan_time > ts.tiO.history.length) st = ts.tiO.history.length;
+				else st = scan_time
 				
-				
-				for (i = 0; i < scan_time; i++) 
+				for (i = 0; i < st; i++) 
 					{
 					if (ts.tiO.history[i])
 						{

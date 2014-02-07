@@ -685,7 +685,21 @@ package com.gestureworks.core
 		
 			gO.start = false;
 			gO.release = false;
-			gO.complete = false;			
+			gO.complete = false;	
+			
+			
+			manageTimeline();
+		}
+		
+		public function manageTimeline():void 
+		{	
+			// MANAGE TIMELINE
+			if (tiO.timelineOn)
+			{
+				//if (traceDebugMode) trace("timeline frame update");
+				TimelineHistories.historyQueue(ts.clusterID);		// push histories 
+				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
+			}
 		}
 		
 		public function constructGestureEvents(key:uint):void 

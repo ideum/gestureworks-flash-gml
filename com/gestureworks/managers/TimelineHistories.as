@@ -23,6 +23,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.TimelineObject;
+	import com.gestureworks.objects.FrameObject;
 	
 	public class TimelineHistories 
 	{
@@ -35,7 +36,7 @@ package com.gestureworks.managers
 			//trace("capturing timline histories");
 			
 			var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID];
-			var history:Array = tiO.history;
+			var history:Vector.<FrameObject> = tiO.history;
 			
 			//GestureGlobals.timelineHistoryCaptureLength = 120;
 			
