@@ -689,7 +689,7 @@ package com.gestureworks.core
 			
 			// get hist, clear frame
 			manageTimeline();
-			//traceTimeline();
+			traceTimeline();
 			
 		}
 		public function traceTimeline():void
@@ -700,6 +700,8 @@ package com.gestureworks.core
 			{
 				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
 			}
+			
+			//trace("timeline on?",tiO.timelineOn)
 		}
 									
 									
@@ -712,10 +714,10 @@ package com.gestureworks.core
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				//tiO.frame.reset();
 				tiO.frame = PoolManager.frameObject;
 				//tiO.frame = new FrameObject();
 			}
+			else tiO.frame = PoolManager.frameObject;
 		}
 		
 		public function constructGestureEvents(key:uint):void 
