@@ -406,9 +406,9 @@ package com.gestureworks.objects
 			dn=0;
 			dipn = 0;
 			count = 0;
-			x=0;
-			y=0;
-			z=0;
+			position.x=0;
+			position.y=0;
+			position.z=0;
 			width=0;
 			height=0;
 			length=0;
@@ -487,12 +487,12 @@ package com.gestureworks.objects
 			sensorArray.length = 0;
 			iPointArray.length = 0;
 			iPointArray2D.length = 0;
-			//tcO.reset();
-			//tsubClusterArray.length = 0;
-			//mcO.reset();
-			//subClusterArray.length = 0;
-			//scO.reset();
-			//ssubClusterArray.length = 0;
+			tcO.reset();
+			tSubClusterArray.length = 0;
+			mcO.reset();
+			mSubClusterArray.length = 0;
+			scO.reset();
+			sSubClusterArray.length = 0;
 			gPointArray.length = 0;
 			history.length = 0;
 		}
