@@ -705,8 +705,7 @@ package com.gestureworks.managers
 					tO.updateDebugDisplay();
 				}
 				
-				// MANAGE TIMELINE FRAMES
-				//if (tO.tg) tO.tg.manageTimeline(); //??? doesnt seem to work when put here
+				// MANAGE TIMELINE FRAMES IN TOUCH GESTURE
 			}
 			
 			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS

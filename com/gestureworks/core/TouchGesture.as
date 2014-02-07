@@ -689,16 +689,26 @@ package com.gestureworks.core
 			
 			// get hist, clear frame
 			manageTimeline();
-			traceTimeline();
+			//traceTimeline();
 			
 		}
 		public function traceTimeline():void
 		{
 			var gn:int = ts.tiO.frame.gestureEventArray.length
+			var tn:int = ts.tiO.frame.pointEventArray.length
+			var cn:int = ts.tiO.frame.clusterEventArray.length
 			
 			for (var j:uint = 0; j <gn ; j++) 
 			{
 				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
+			}
+			for (var j:uint = 0; j <tn ; j++) 
+			{
+				trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
+			}
+			for (var j:uint = 0; j <cn ; j++) 
+			{
+				trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
 			}
 			
 			//trace("timeline on?",tiO.timelineOn)
@@ -708,16 +718,19 @@ package com.gestureworks.core
 		
 		public function manageTimeline():void
 		{
-			//trace("timline mgmt");
+			//trace("TOUCH GESTURE timEline mgmt");
+			
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = PoolManager.frameObject;
-				//tiO.frame = new FrameObject();
+				tiO.frame = PoolManager.frameObject; 					//tiO.frame = new FrameObject();
 			}
-			else tiO.frame = PoolManager.frameObject;
+			else {
+				//RESET FRAME ANYWAY TP PREVENT EVENT OVERFLOW
+				tiO.frame = PoolManager.frameObject;
+			}
 		}
 		
 		public function constructGestureEvents(key:uint):void 
