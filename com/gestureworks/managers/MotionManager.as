@@ -25,7 +25,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	
 	import com.gestureworks.utils.ArrangePoints;
-	import com.gestureworks.managers.PointHistories;
+	import com.gestureworks.managers.TouchPointHistories;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
@@ -99,7 +99,8 @@ package com.gestureworks.managers
 			motionSprite = new TouchSprite();
 				motionSprite.active = true;
 				motionSprite.motionEnabled = true;
-				motionSprite.tc.core = true; // fix for global core analysis
+				motionSprite.tc.motion_core = true; // fix for global core analysis
+				motionSprite.tc.core = true;
 				
 			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
 
@@ -143,7 +144,7 @@ package com.gestureworks.managers
 			// create new point object
 			var mpointObject:MotionPointObject  = new MotionPointObject();
 					
-					mpointObject.id = motionSprite.motionPointCount; // NEEDED FOR THUMBID ?????????????? not in motion
+					mpointObject.id = motionSprite.motionPointCount; 
 					mpointObject.motionPointID = event.value.motionPointID;
 					mpointObject.type = event.value.type;
 					mpointObject.handID = event.value.handID;

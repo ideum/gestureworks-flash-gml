@@ -186,8 +186,8 @@ package com.gestureworks.interfaces
 		/**
 		 * 
 		 */
-		function get pointCount():int;
-		function set pointCount(value:int):void;
+		function get touchPointCount():int;
+		function set touchPointCount(value:int):void;
 		
 		/**
 		 * 

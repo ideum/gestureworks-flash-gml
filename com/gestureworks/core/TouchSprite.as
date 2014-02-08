@@ -311,12 +311,12 @@ package com.gestureworks.core
 		public function get traceDebugMode():Boolean{return _traceDebugMode;}
 		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
 		
-		private var _pointCount:int;
+		private var _touchPointCount:int;
 		/**
 		 * @inheritDoc
 		 */
-		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void {	_pointCount = value; }
+		public function get touchPointCount():int{return _touchPointCount;}
+		public function set touchPointCount(value:int):void {	_touchPointCount = value; }
 		
 		private var _motionPointCount:int;
 		/**

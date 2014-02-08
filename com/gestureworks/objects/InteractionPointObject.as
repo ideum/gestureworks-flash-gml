@@ -26,6 +26,9 @@ package com.gestureworks.objects
 		// interactionPointID
 		public var interactionPointID:int;
 		
+		// input mode of interaction point touch/motion/sensor
+		public var mode:String = new String();
+		
 		// interaction point type // tool/pen/brush/ pin/pinch/hook/trigger/
 		public var type:String = new String();
 		

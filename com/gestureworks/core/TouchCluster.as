@@ -66,6 +66,9 @@ package com.gestureworks.core
 		
 		private var tiO:TimelineObject
 		
+		public var motion_core:Boolean;
+		public var touch_core:Boolean;
+		public var sensor_core:Boolean;
 		public var core:Boolean;
 		public var core_init:Boolean= false;
 		
@@ -83,8 +86,9 @@ package com.gestureworks.core
 		public var framePoints:Boolean = false; 
 		public var fistPoints:Boolean = false; 
 		//touch
-		public var penPoints:Boolean = false; 
-		public var tagPoints:Boolean = false; 
+		public var penTouchPoints:Boolean = false; 
+		public var tagTouchPoints:Boolean = false; 
+		public var fingerTouchPoints:Boolean = false; 
 		
 		//private var motionSprite:Object;
 		
@@ -95,7 +99,6 @@ package com.gestureworks.core
 			
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			//motionSprite = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
 			gO = ts.gO;
@@ -302,7 +305,7 @@ package com.gestureworks.core
 				if (geometricsOn)
 				{	
 					//TODO: GEOMRETRIC 2D (TRIANGLE TEST)
-					//if (ts.touchEnabled) getGeoMetrics2D(); 
+					if (ts.touchEnabled) getGeoMetrics2D(); 
 					if (ts.motionEnabled) getGeoMetrics3D();
 				}
 				if (kinemetricsOn) 
@@ -396,8 +399,9 @@ package com.gestureworks.core
 							
 							
 							//touch 
-							if ((type == "pen") && (penPoints)) 						result = true; 
-							if ((type == "tag") && (tagPoints)) 						result = true; 
+							if ((type == "pen") && (penTouchPoints)) 						result = true; 
+							if ((type == "tag") && (tagTouchPoints)) 						result = true; 
+							if ((type == "finger") && (fingerTouchPoints)) 						result = true; 
 							
 							//add sensor
 							
@@ -410,7 +414,7 @@ package com.gestureworks.core
 			// activate gloabl touch geometric 2d anlysis
 			
 			//trace("set geometric init",core);
-			if ((core)&&(!core_init)){
+			if ((touch_core)&&(!core_init)){
 			
 			var key:int;
 			// for each touchsprite/motionsprite
@@ -440,10 +444,13 @@ package com.gestureworks.core
 						////////////////////////////////////////////////////
 					if (g.cluster_input_type == "touch")
 						
-					
+					if ((g.cluster_type == "finger") || (g.cluster_type == "all")) 
+					{
+						fingerTouchPoints = true; 
+					}
 					if ((g.cluster_type == "tag") || (g.cluster_type == "all")) 
 					{			
-						tagPoints = true; 
+						tagTouchPoints = true; 
 					
 							// creat five point tag
 							cO.objectArray[0] = new Array()
@@ -458,7 +465,10 @@ package com.gestureworks.core
 								cO.objectArray[0][4] = new TouchPointObject();
 								cO.objectArray[0][4].dist = 76;
 					}
-					if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 			penPoints = true; 
+					if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 
+					{
+						penTouchPoints = true; 
+					}
 			}
 			}
 			}
@@ -470,7 +480,7 @@ package com.gestureworks.core
 		public function initGeoMetric3D():void
 		{
 			//trace("set geometric init",core);
-			if ((core)&&(!core_init)){
+			if ((motion_core)&&(!core_init)){
 			
 			var key:int;
 			// for each touchsprite/motionsprite
@@ -535,14 +545,17 @@ package com.gestureworks.core
 		
 		public function getGeoMetrics2D():void
 		{
+			trace("get geometric 2d");
 			//cluster_kinemetric.findTouchInstDimention();
-			//cluster_geometric.find2DTagPoints(); 
+			//cluster_geometric.find2DTagTouchPoints();
+			cluster_geometric.findFingerTouchPoints();
+			//cluster_geometric.findPenTouchPoints
 		}
 		
 		// ESTABLISHES LOCAL IP SUPPORT TO ALLOW IN LOCAL IP LIST
 		public function initIPSupport():void
 		{
-			if (!core) 
+			if ((!motion_core)&&(!touch_core)) 
 			{
 			var gn:int = gO.pOList.length;
 			
@@ -589,8 +602,9 @@ package com.gestureworks.core
 						/////////////////////////////////////////////////////////
 						if (g.cluster_input_type == "touch")
 						{
-							if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 			penPoints = true; 
-							if ((g.cluster_type == "tag")||(g.cluster_type == "all")) 				tagPoints = true; 
+							if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 			penTouchPoints = true; 
+							if ((g.cluster_type == "tag") || (g.cluster_type == "all")) 			tagTouchPoints = true; 
+							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			fingerTouchPoints = true; 
 						}
 						
 						/////////////////////////////////////////////////////////
@@ -628,7 +642,7 @@ package com.gestureworks.core
 		{
 			//trace("get skeletal geometric");
 			
-			if (core)
+			if (motion_core)
 			{
 				//trace("get core geometrics")
 				
@@ -669,7 +683,7 @@ package com.gestureworks.core
 			//TODO:  SET TO BE AWARE OF NUMBER OF FINGERS ASOCOCIATED WITH CONFIG
 			// SET TO BE AWARE OF REQUIRED HAND SETTINGS FLATNESS AND ORIENTATION
 			
-			if (core)
+			if (motion_core)
 			{
 			//trace("get core geometrics", core);
 			
@@ -999,7 +1013,7 @@ package com.gestureworks.core
 		public function getKineMetrics3D():void 
 		{		
 			
-			if (!core)
+			if ((!motion_core)&&(!touch_core))
 			{
 			///////////////////////////////////////////////////////////////////
 			// MUST PRECEED IP TRANSFORMATION 

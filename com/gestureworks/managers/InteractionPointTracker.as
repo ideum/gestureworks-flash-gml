@@ -22,7 +22,7 @@ package com.gestureworks.managers
 	 */
 	public class InteractionPointTracker
 	{				
-		private static var activePoints:Vector.<InteractionPointObject>;
+		public static var activePoints:Vector.<InteractionPointObject>;
 		public static var framePoints:Vector.<InteractionPointObject>;
 		private static var temp_framePoints:Vector.<InteractionPointObject>;
 		

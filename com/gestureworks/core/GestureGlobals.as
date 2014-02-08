@@ -29,7 +29,7 @@ package com.gestureworks.core
 		/**
 		 * Contains a dictionary of all touch points present to the framework.
 		 */
-		gw_public static var points:Dictionary = new Dictionary();
+		gw_public static var touchPoints:Dictionary = new Dictionary();
 		/**
 		 * Contains a dictionary of all motion points present to the framework.
 		 */		
@@ -82,7 +82,7 @@ package com.gestureworks.core
 		
 		
 		public static var motionSpriteID:int = 0;//
-		
+		public static var touchSpriteID:int = 0;//
 		public static var sensorSpriteID:int = 0;//
 		
 		/**

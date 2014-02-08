@@ -34,6 +34,8 @@ package com.gestureworks.managers
 		public static var ipoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var gms:TouchSprite;
+		private static var gts:TouchSprite;
+		private static var gss:TouchSprite;
 		private static var sw:int;
 		private static var sh:int;
 		
@@ -59,6 +61,9 @@ package com.gestureworks.managers
 			InteractionPointTracker.initialize();
 			
 			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
+			gts = GestureGlobals.gw_public::touchObjects[GestureGlobals.touchSpriteID];
+			gss = GestureGlobals.gw_public::touchObjects[GestureGlobals.sensorSpriteID];
+			
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			
@@ -96,14 +101,20 @@ package com.gestureworks.managers
 		{			
 			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
 			
-			//NEED IP COUNT FOR ID
-			//for each(var tO:Object in touchObjects)
-			//{
+			trace("event mode",event.value.mode )
+			
+			var ref:*
+			
+			if (event.value.mode = "touch") ref = gts;
+			else if (event.value.mode = "motion") ref = gms;
+			else if (event.value.mode = "sensor") ref = gss;
+			
 				// DUPE CORE IP LIST FOR NOW
 				// create new interaction point clone for each interactive display object 
 				var ipO:InteractionPointObject  = new InteractionPointObject();	
 				
-						ipO.id = gms.interactionPointCount; // NEEDED FOR THUMBID
+						// need to make it modaly invariant
+						ipO.id = ref.interactionPointCount; // NEEDED FOR THUMBID
 						ipO.interactionPointID = event.value.interactionPointID;
 						ipO.handID = event.value.handID;
 						ipO.type = event.value.type;
@@ -133,7 +144,7 @@ package com.gestureworks.managers
 				
 				////////////////////////////////////////////
 				//ADD TO GLOBAL Interaction POINT LIST
-				gms.cO.iPointArray.push(ipO);
+				ref.cO.iPointArray.push(ipO);
 				
 				//trace("ip begin",ipO.type)
 				
@@ -159,6 +170,7 @@ package com.gestureworks.managers
 						{
 							//trace("2d hit test");			
 							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
+									// CALL ASSIGN......
 						}			
 						//2D HIT TEST ON 3D OBJECT
 						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
@@ -167,7 +179,8 @@ package com.gestureworks.managers
 								//trace("3d hit test"));
 							//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
 								if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
-									tO.cO.iPointArray.push(ipO);								
+									tO.cO.iPointArray.push(ipO);
+									// CALL ASSIGN.......
 								}
 							}
 							

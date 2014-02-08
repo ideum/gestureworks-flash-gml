@@ -99,6 +99,42 @@ package com.gestureworks.analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Find Interactive Finger Touch Points 
+		public function findFingerTouchPoints():void
+		{
+			//var sizeThreshold:Number = 0.46; // GML ADJUST
+			var fn:int = cO.pointArray.length;
+				
+				for (var i:int = 0; i < fn; i++)
+				{
+					//if(!locked){
+					var tp:TouchPointObject = cO.pointArray[i];
+					
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = tp.position;
+							tip.mode = "touch";
+							tip.type = "touch_finger_dynamic";
+								
+						// push to interactive point list
+						InteractionPointTracker.framePoints.push(tip);
+					//}
+					/*else {
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = tp.position;
+							tip.type = "touch_finger_hold";
+								
+						// push to interactive point list
+						InteractionPointTracker.fingerTouchPoints.push(tip);
+					}*/
+				}
+		}
+		
+		public function findPenTouchPoints():void
+		{
+			
+		}
+		
 		public function find2DTagPoints():void
 		{
 			
