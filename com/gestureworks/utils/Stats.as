@@ -74,48 +74,46 @@ package com.gestureworks.utils {
 		 * @param	resetOnTouch If true, touching the widget will cause all existing data to be reset
 		 * @param	ramUpdateFrequency This parameter determines how often (in milliseconds) the ram will be updated.
 		 */
-		public function Stats(xPos:int = 0, yPos:int = 0, color:uint = 0xffffff, fillBackground:Boolean = true, backgroundColor:uint = 0x000000, fpsHistoryDuration:uint = 5000, ramHistoryDuration:uint = 5000, resetOnTouch:Boolean = true, ramUpdateFrequency:uint = 200) {
+		public function Stats(x:int = 0, y:int = 0, color:uint = 0xffffff, fillBackground:Boolean = true, backgroundColor:uint = 0x000000, fpsHistoryDuration:uint = 5000, ramHistoryDuration:uint = 5000, resetOnTouch:Boolean = true, ramUpdateFrequency:uint = 200) {
 			super();
-			if (CONFIG::debug == true) {
-				super.x = xPos;
-				super.y = yPos;
-				_textColor = color;
-				_backgroundColor = backgroundColor;
-				this.fpsHistoryDuration = fpsHistoryDuration;
-				this.ramHistoryDuration = ramHistoryDuration;
-				
-				textFieldsHeight = padding;
-				textFieldsWidth = padding;
-				fpsLabel = initializeField('FPS');
-				curFpsText = initializeField('cur: 6000.0');
-				avgFpsText = initializeField('avg: 6000.0');
-				minFpsText = initializeField('min: 6000.0');
-				maxFpsText = initializeField('max: 6000.0');
-				fpsLabel.width = curFpsText.textWidth;
-				textFieldsWidth = curFpsText.textWidth + padding * 2;
-				textFieldsHeight = padding;
-				ramLabel = initializeField('RAM');
-				curRamText = initializeField('cur: 999.9M');
-				avgRamText = initializeField('avg: 999.9M');
-				minRamText = initializeField('min: 999.9M');
-				maxRamText = initializeField('max: 999.9M');
-				textFieldsWidth += curRamText.textWidth + padding * 2;
-				textFieldsHeight += padding;
-				hitBox = new Sprite();
-				addChild(hitBox);
-				hitBox.graphics.beginFill(0, 0);
-				hitBox.graphics.drawRect(0, 0, textFieldsWidth, textFieldsHeight);
-				hitBox.graphics.endFill();
-				this.fillBackground = fillBackground;	//fill the bg now that we know how big the text is
-				this.resetOnTouch = resetOnTouch;
-				reset();
-				
-				//TODO: conditional add listener
-				ramTimer = new Timer(ramUpdateFrequency);
-				ramTimer.addEventListener(TimerEvent.TIMER, onRamTick);
-				ramTimer.start();
-				super.addEventListener(Event.ENTER_FRAME, framerateTick);
-			}			
+			super.x = xPos;
+			super.y = yPos;
+			_textColor = color;
+			_backgroundColor = backgroundColor;
+			this.fpsHistoryDuration = fpsHistoryDuration;
+			this.ramHistoryDuration = ramHistoryDuration;
+			
+			textFieldsHeight = padding;
+			textFieldsWidth = padding;
+			fpsLabel = initializeField('FPS');
+			curFpsText = initializeField('cur: 6000.0');
+			avgFpsText = initializeField('avg: 6000.0');
+			minFpsText = initializeField('min: 6000.0');
+			maxFpsText = initializeField('max: 6000.0');
+			fpsLabel.width = curFpsText.textWidth;
+			textFieldsWidth = curFpsText.textWidth + padding * 2;
+			textFieldsHeight = padding;
+			ramLabel = initializeField('RAM');
+			curRamText = initializeField('cur: 999.9M');
+			avgRamText = initializeField('avg: 999.9M');
+			minRamText = initializeField('min: 999.9M');
+			maxRamText = initializeField('max: 999.9M');
+			textFieldsWidth += curRamText.textWidth + padding * 2;
+			textFieldsHeight += padding;
+			hitBox = new Sprite();
+			addChild(hitBox);
+			hitBox.graphics.beginFill(0, 0);
+			hitBox.graphics.drawRect(0, 0, textFieldsWidth, textFieldsHeight);
+			hitBox.graphics.endFill();
+			this.fillBackground = fillBackground;	//fill the bg now that we know how big the text is
+			this.resetOnTouch = resetOnTouch;
+			reset();
+			
+			//TODO: conditional add listener
+			ramTimer = new Timer(ramUpdateFrequency);
+			ramTimer.addEventListener(TimerEvent.TIMER, onRamTick);
+			ramTimer.start();
+			super.addEventListener(Event.ENTER_FRAME, framerateTick);		
 		}
 		
 		private function initializeField(text:String = ' '):TextField {
