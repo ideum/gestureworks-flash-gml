@@ -147,7 +147,8 @@ package com.gestureworks.managers
 			TouchManager.onTouchDown(event);
 			
 			if (overlays.length) {
-				TouchManager.processOverlays(event, overlays);
+				//TouchManager.processOverlays(event, overlays);
+				InteractionManager.processOverlays(event, overlays);
 			}
 			
 		}
@@ -160,7 +161,8 @@ package com.gestureworks.managers
 			TouchManager.onTouchMove(event);
 			
 			if (overlays.length) {
-				TouchManager.processOverlays(event, overlays);
+				//TouchManager.processOverlays(event, overlays);
+				InteractionManager.processOverlays(event, overlays);
 			}			
 		}
 		
@@ -171,7 +173,8 @@ package com.gestureworks.managers
 			TouchManager.onTouchUp(event);				
 			
 			if (overlays.length) {
-				TouchManager.processOverlays(event, overlays);
+				//TouchManager.processOverlays(event, overlays);
+				InteractionManager.processOverlays(event, overlays);
 			}			
 		}
 		

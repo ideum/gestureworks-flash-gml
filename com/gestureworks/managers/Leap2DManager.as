@@ -11,6 +11,8 @@ package com.gestureworks.managers
 	import flash.geom.Point;
 	import flash.utils.*;
 	
+	import com.gestureworks.managers.TouchManager;
+	
 	/**
 	 * @author
 	 */
@@ -117,7 +119,8 @@ package com.gestureworks.managers
 							
 							//global overlays
 							if (overlays.length) {
-								TouchManager.processOverlays(ev, overlays);
+								//TouchManager.processOverlays(ev, overlays);
+								InteractionManager.processOverlays(ev, overlays);
 							}
 					}
 					
@@ -131,7 +134,9 @@ package com.gestureworks.managers
 						TouchManager.onTouchUp(ev);
 						
 						if (overlays.length) {
-							TouchManager.processOverlays(ev, overlays);
+							//TouchManager.processOverlays(ev, overlays);
+							InteractionManager.processOverlays(ev, overlays);
+							
 						}						
 						
 						if (debug)
@@ -145,7 +150,8 @@ package com.gestureworks.managers
 						TouchManager.onTouchMove(ev);
 												
 						if (overlays.length) {
-							TouchManager.processOverlays(ev, overlays);
+							//TouchManager.processOverlays(ev, overlays);
+							InteractionManager.processOverlays(ev, overlays);
 						}												
 						
 						if(debug)

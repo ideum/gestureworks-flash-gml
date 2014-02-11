@@ -42,9 +42,10 @@ package com.gestureworks.objects
 
 		
 		// width
-		public var w:Number=0;
+		//public var w:Number=0;
 		// height
-		public var h:Number = 0;
+		//public var h:Number = 0;
+		public var size:Vector3D = new Vector3D();
 		
 		//////////////////////////////////
 		//TEST TODO MOVE TO SUBCLUSTER

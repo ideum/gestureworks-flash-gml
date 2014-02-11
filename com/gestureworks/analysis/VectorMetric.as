@@ -129,8 +129,8 @@ package com.gestureworks.analysis
 				var tpt:Object = new Object()
 					tpt.x = pointList[0].history[i].position.x;
 					tpt.y = pointList[0].history[i].position.y;
-					tpt.w = pointList[0].history[i].w;
-					tpt.h = pointList[0].history[i].h;
+					tpt.w = pointList[0].history[i].size.x;
+					tpt.h = pointList[0].history[i].size.y;
 				path.push(tpt);
 				}
 			sO.path_data = path

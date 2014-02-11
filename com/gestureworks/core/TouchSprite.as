@@ -25,7 +25,8 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.interfaces.ITouchObject;
-	import com.gestureworks.managers.TouchManager;
+	//import com.gestureworks.managers.TouchManager;
+	import com.gestureworks.managers.InteractionManager;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TouchPointObject;
@@ -92,7 +93,8 @@ package com.gestureworks.core
 		public function set active(a:Boolean):void {
 			if (!_active && a) {
 				_active = true;
-				TouchManager.preinitBase(this);
+				//TouchManager.preinitBase(this);
+				InteractionManager.preinitBase(this);
 			}
 		}
 		
@@ -370,7 +372,8 @@ package com.gestureworks.core
 			// Convert GML into Property Objects That describe how to match,analyze, 
 			// process and map point/clusterobject properties
 			/////////////////////////////////////////////////////////////////////
-			TouchManager.callLocalGestureParser(this);
+			//TouchManager.callLocalGestureParser(this);
+			InteractionManager.callLocalGestureParser(this);
 			
 			
 			//////////////////////////////////////////////////////////////////////////
@@ -430,16 +433,19 @@ package com.gestureworks.core
 			if (_vto && !value) {
 				_vto = value;
 				transform.matrix = transform.matrix;
-				TouchManager.deregisterVTO(this);
+				//TouchManager.deregisterVTO(this);
+				InteractionManager.deregisterVTO(this);
 			}
 			else if (value && "transform" in value && value.transform is Transform) {
 				_vto = value;
 				transform.matrix = _vto.transform.matrix;
-				TouchManager.registerVTO(this);
+				//TouchManager.registerVTO(this);
+				InteractionManager.registerVTO(this);
 			}
 			else {
 				_vto = value;
-				TouchManager.registerVTO(this);
+				//TouchManager.registerVTO(this);
+				InteractionManager.registerVTO(this);
 			}
 		}
 		
@@ -1137,7 +1143,7 @@ package com.gestureworks.core
 		public function set sensorClusterMode(value:String):void {	_sensorClusterMode = value; }
 		
 		// touch point clustering mode 
-		private var _touchClusterMode:String = "global";
+		private var _touchClusterMode:String = "local_strong";
 		/**
 		 * @inheritDoc
 		 */

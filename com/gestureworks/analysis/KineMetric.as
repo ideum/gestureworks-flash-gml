@@ -100,7 +100,8 @@ package com.gestureworks.analysis
 		
 		private var mHoldID:uint = 0;
 		
-		private var gms:TouchSprite;
+		private var gs:TouchSprite;
+		
 		private var sw:int
 		private var sh:int
 		
@@ -139,7 +140,8 @@ package com.gestureworks.analysis
 			scO = cO.scO; // parent sensor cluster
 			
 			
-			gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
+			gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
+			
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			
@@ -1658,7 +1660,7 @@ package com.gestureworks.analysis
 		public function hitTestCluster():void
 			{
 				//ONLY DOES HIT TEST IF MOTION POINTS EXIST
-				if ((gms))//&&(ts.mpn)
+				if ((gs))//&&(ts.mpn)
 				{
 					//trace("hit test ip cluster",gms.cO.iPointArray.length,ts.motionClusterMode,ts)
 					
@@ -1666,9 +1668,9 @@ package com.gestureworks.analysis
 					{
 					ts.cO.iPointArray = new Vector.<InteractionPointObject>();
 					
-					for (i = 0; i < gms.cO.iPointArray.length; i++)
+					for (i = 0; i < gs.cO.iPointArray.length; i++)
 							{
-								var ipt:InteractionPointObject = gms.cO.iPointArray[i];
+								var ipt:InteractionPointObject = gs.cO.iPointArray[i];
 								////////////////////////////////////////////////////////////////////
 								//check exists and check if ip type supported on display object
 								//trace("supported", ipt.type,ts.tc.ipSupported(ipt.type));

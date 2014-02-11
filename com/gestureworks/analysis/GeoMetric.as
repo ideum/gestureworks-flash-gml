@@ -105,12 +105,14 @@ package com.gestureworks.analysis
 		{
 			//var sizeThreshold:Number = 0.46; // GML ADJUST
 			var fn:int = cO.pointArray.length;
+			var minSize:int = 83;
 				
 				for (var i:int = 0; i < fn; i++)
 				{
-					//if(!locked){
 					var tp:TouchPointObject = cO.pointArray[i];
-					
+					//if(!locked){
+					//if ((tp.size.x >= minSize) && (tp.size.y >= minSize))
+					//{
 						var tip:InteractionPointObject = new InteractionPointObject();
 							tip.position = tp.position;
 							tip.mode = "touch";
@@ -118,6 +120,9 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
+						
+						//trace("size",tp.size.x, tp.size.y);
+					//}
 					//}
 					/*else {
 						var tip:InteractionPointObject = new InteractionPointObject();
@@ -132,7 +137,26 @@ package com.gestureworks.analysis
 		
 		public function findPenTouchPoints():void
 		{
+			var fn:int = cO.pointArray.length;
+			var minSize:int = 83;
 			
+				for (var i:int = 0; i < fn; i++)
+				{
+					var tp:TouchPointObject = cO.pointArray[i];
+					//if(!locked){
+					if ((tp.size.x < minSize) && (tp.size.y < minSize))
+					{
+					
+					
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = tp.position;
+							tip.mode = "touch";
+							tip.type = "touch_pen_dynamic";
+								
+						// push to interactive point list
+						InteractionPointTracker.framePoints.push(tip);
+					}
+				}
 		}
 		
 		public function find2DTagPoints():void
@@ -2298,10 +2322,11 @@ package com.gestureworks.analysis
 							pmp.position.z = best_pt1.position.z - (best_pt1.position.z - best_pt2.position.z) * 0.5;
 							//pmp.handID = cO.hand.handID;
 							pmp.type = "pinch";
+							pmp.mode = "motion";
 															
 						//add to pinch point list
 						InteractionPointTracker.framePoints.push(pmp)
-						//trace("2 pinch push", best_dist)	
+						trace("2 pinch push", best_dist)	
 						}
 						
 						 //WEAK PINCH
@@ -2313,10 +2338,11 @@ package com.gestureworks.analysis
 							pmp0.position.z = best_pt1.position.z - (best_pt1.position.z - best_pt2.position.z) * 0.5;
 							//pmp.handID = cO.hand.handID;
 							pmp0.type = "pinch";
+							pmp0.mode = "motion";
 															
 						//add to pinch point list
 						InteractionPointTracker.framePoints.push(pmp0)
-						//trace("n pinch push", pinchThreshold)
+						trace("n pinch push", pinchThreshold)
 						}
 					}
 					

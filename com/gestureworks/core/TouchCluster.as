@@ -480,7 +480,7 @@ package com.gestureworks.core
 		public function initGeoMetric3D():void
 		{
 			//trace("set geometric init",core);
-			if ((motion_core)&&(!core_init)){
+			if ((motion_core)&&(!core_init)&&(!touch_core)){
 			
 			var key:int;
 			// for each touchsprite/motionsprite
@@ -545,7 +545,7 @@ package com.gestureworks.core
 		
 		public function getGeoMetrics2D():void
 		{
-			trace("get geometric 2d");
+			//trace("get geometric 2d");
 			//cluster_kinemetric.findTouchInstDimention();
 			//cluster_geometric.find2DTagTouchPoints();
 			cluster_geometric.findFingerTouchPoints();
@@ -683,7 +683,7 @@ package com.gestureworks.core
 			//TODO:  SET TO BE AWARE OF NUMBER OF FINGERS ASOCOCIATED WITH CONFIG
 			// SET TO BE AWARE OF REQUIRED HAND SETTINGS FLATNESS AND ORIENTATION
 			
-			if (motion_core)
+			if (motion_core)//
 			{
 			//trace("get core geometrics", core);
 			
@@ -1071,7 +1071,7 @@ package com.gestureworks.core
 					// INTERACTION POINTS FROM // MOTION POINTS
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				//	trace("TOUCHCLUSTER: processing motion kinemetrics");
+					//trace("TOUCHCLUSTER: processing motion kinemetrics",ts.cO.ipn);
 					
 					// processing algorithms when in motion
 					if(ts.cO.ipn!=0){	//&&(sub_cO_n==gn))	// check kinemetric and if continuous analyze

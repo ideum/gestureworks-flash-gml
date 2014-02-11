@@ -35,6 +35,7 @@ package com.gestureworks.visualizer
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
+	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.TouchPointObject;
@@ -55,6 +56,7 @@ package com.gestureworks.visualizer
 		private var tpn:uint = 0;
 		private var mpn:uint = 0;
 		private var spn:uint = 0;
+		private var ipn:uint = 0;
 		private var mptext_array:Array = new Array();
 		private var tptext_array:Array = new Array();
 		private var i:int
@@ -166,7 +168,7 @@ package com.gestureworks.visualizer
 			tpn = cO.tpn;
 			mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
 			spn = cO.sensorArray.length;
-			
+			ipn =  cO.iPointArray.length;
 			
 			// clear graphics
 			graphics.clear();
@@ -176,6 +178,8 @@ package com.gestureworks.visualizer
 			if (ts.touchEnabled)	draw_touchPoints();
 			if (ts.motionEnabled)	draw_motionPoints();
 			if (ts.sensorEnabled)	draw_sensorPoints();
+			
+			draw_interactionPoints();
 		}
 		
 		
@@ -522,6 +526,46 @@ package com.gestureworks.visualizer
 								graphics.endFill();
 							}
 						}
+						
+					}
+			}
+			
+		private function draw_interactionPoints():void
+			{
+		//	trace("drawing interaction points", ipn);
+				
+			for (i = 0; i < ipn; i++) 
+					{
+					var sp:InteractionPointObject = cO.iPointArray[i];
+
+					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
+					
+					///////////////////////////////////////////
+					// DRAW WII CONTROLLER POINT
+					if (sp.type == "touch_finger_dynamic")//finger
+						{
+							if (_drawShape)
+							{
+								// sensor center
+								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+								graphics.beginFill(0x0000FF, style.fill_alpha);
+								graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
+								graphics.endFill();
+							}
+						}
+						else if (sp.type == "pen")
+						{
+							if (_drawShape)
+							{
+								// sensor center
+								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+								graphics.beginFill(0x00FF00, style.fill_alpha);
+								graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
+								graphics.endFill();
+							}
+						}
+						
+						
 						
 					}
 			}

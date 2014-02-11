@@ -59,8 +59,9 @@ package com.gestureworks.managers
 		
 		public static var spoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
-		public static var gss:*
+		public static var gs:TouchSprite
 		
+		private static var sensor_init:Boolean = false;
 		public static var nativeAccelEnabled:Boolean = false;
 		public static var arduinoEnabled:Boolean = false;
 		public static var voiceEnabled:Boolean = false;
@@ -92,6 +93,8 @@ package com.gestureworks.managers
 		// initializes sensorManager
 		gw_public static function initialize():void
 		{	
+			if (!sensor_init)
+			{
 			////////////////////////////////////////////////////////////////////////////////////////
 			// ref global motion point list
 			spoints = GestureGlobals.gw_public::sensorPoints;
@@ -99,19 +102,27 @@ package com.gestureworks.managers
 			//sw = GestureWorks.application.stageWidth;
 			//sh = GestureWorks.application.stageHeight;
 			
+			if (!gs)
+			{
 			// CREATE GLOBAL SENSOR SPRITE TO HANDLE ALL GLOBAL ANALYSIS OF SENSOR POINTS
-			gss = new TouchSprite();
-				gss.active = true;
-				gss.sensorEnabled = true;
-				gss.tc.core = true; // fix for global core analysis
+			gs = new TouchSprite();
+				gs.active = true;
+				gs.sensorEnabled = true;
+				gs.tc.core = true; // fix for global core analysis
 				
-			GestureGlobals.sensorSpriteID = gss.touchObjectID;
-
+			GestureGlobals.globalSpriteID = gs.touchObjectID;
+			}
+			//activate 
+			else {
+				gs.sensorEnabled = true;
+				gs.tc.sensor_core = true;
+			}
 			trace("init sensor manager");
 			//////////////////////////////////////////////////////////////////////////////////////
 			
 			// CALL INIT SENSORS
 			initSensors();
+			}
 		}
 			
 		public static function initSensors():void
@@ -184,7 +195,7 @@ package com.gestureworks.managers
 				// create new interaction point clone for each interactive display object 
 				var spO:SensorPointObject = new SensorPointObject();	//event.value.sensorpoint; //
 						
-						spO.id = gss.sensorPointCount; 
+						spO.id = gs.sensorPointCount; 
 						spO.sensorPointID = event.value.sensorPointID;
 						spO.type = event.value.type;
 						spO.devicetype = event.value.devicetype;
@@ -212,7 +223,7 @@ package com.gestureworks.managers
 						
 				////////////////////////////////////////////
 				//ADD TO GLOBAL Interaction POINT LIST
-				gss.cO.sensorArray.push(spO);
+				gs.cO.sensorArray.push(spO);
 				
 				//trace("ip begin",ipO.type)
 				
@@ -257,7 +268,7 @@ package com.gestureworks.managers
 				
 				
 				// update local sensor object point count
-				gss.sensorPointCount++;
+				gs.sensorPointCount++;
 
 				///////////////////////////////////////////////////////////////////////////
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
@@ -285,7 +296,7 @@ package com.gestureworks.managers
 				spointObject.phase="end"
 				
 					// REMOVE POINT FROM GLOBAL LIST
-					gss.cO.sensorArray.splice(spointObject.id, 1);
+					gs.cO.sensorArray.splice(spointObject.id, 1);
 					
 					// REMOVE FROM LOCAL OBJECTES
 					for each(var tO:Object in touchObjects)
@@ -295,12 +306,12 @@ package com.gestureworks.managers
 					
 					
 					// REDUCE LOACAL POINT COUNT
-					gss.sensorPointCount--;
+					gs.sensorPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < gss.cO.sensorArray.length; i++)
+					for (var i:int = 0; i < gs.cO.sensorArray.length; i++)
 					{
-						gss.cO.sensorArray[i].id = i;
+						gs.cO.sensorArray[i].id = i;
 					}
 				
 					// DELETE FROM GLOBAL POINT LIST

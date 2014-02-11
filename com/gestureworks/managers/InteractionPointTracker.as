@@ -39,7 +39,7 @@ package com.gestureworks.managers
 			activePoints = new Vector.<InteractionPointObject>;
 			framePoints = new Vector.<InteractionPointObject>;
 			temp_framePoints = new Vector.<InteractionPointObject>;
-			//trace("i manager init");
+			trace("interaction point tracker init");
 		}
 		
 		
@@ -102,6 +102,7 @@ package com.gestureworks.managers
 							
 							if (dist0 < d2)  ////update
 								{
+									
 									ap.position = fp.position;
 									ap.direction = fp.direction;
 									ap.normal = fp.normal;
@@ -116,6 +117,7 @@ package com.gestureworks.managers
 									
 									ap.handID = fp.handID;
 									ap.type = fp.type;
+									ap.mode = fp.mode;
 									
 									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
 										
@@ -132,6 +134,8 @@ package com.gestureworks.managers
 					{
 						_ID++;
 						fp.interactionPointID = _ID;
+						//trace(fp)
+						trace(activePoints);
 						activePoints.push(fp);
 						InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
 						//if (debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);

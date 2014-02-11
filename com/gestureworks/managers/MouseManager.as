@@ -21,6 +21,7 @@ package com.gestureworks.managers
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.managers.TouchManager;
+	import com.gestureworks.managers.InteractionManager;
 	import com.gestureworks.utils.SimulatorGraphic;
 	import flash.display.DisplayObject;
 	import flash.events.Event;
@@ -81,7 +82,8 @@ package com.gestureworks.managers
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);							
 			
 			var event:GWTouchEvent = new GWTouchEvent(e);						
-			if (TouchManager.validTarget(event)) {				
+			//if (TouchManager.validTarget(event)) {	
+			if (InteractionManager.validTarget(event)) {			
 				TouchManager.onTouchDown(event);			
 				currentMousePoint = event.touchPointID;
 				mousePointX = event.stageX;
@@ -91,7 +93,8 @@ package com.gestureworks.managers
 				currentMousePoint = event.touchPointID;
 				mousePointX = event.stageX;
 				mousePointY = event.stageY;
-				TouchManager.processOverlays(event, overlays);
+				//TouchManager.processOverlays(event, overlays);
+				InteractionManager.processOverlays(event, overlays);
 			}
 		}
 		
@@ -140,7 +143,8 @@ package com.gestureworks.managers
 			TouchManager.onTouchUp(event);
 			
 			if (overlays.length) {
-				TouchManager.processOverlays(event, overlays);
+				//TouchManager.processOverlays(event, overlays);
+				InteractionManager.processOverlays(event, overlays);
 			}
 		}
 		
@@ -177,7 +181,8 @@ package com.gestureworks.managers
 			TouchManager.onTouchMove(event);
 			
 			if (overlays.length) {
-				TouchManager.processOverlays(event, overlays);
+				//TouchManager.processOverlays(event, overlays);
+				InteractionManager.processOverlays(event, overlays);
 			}
 		}
 		

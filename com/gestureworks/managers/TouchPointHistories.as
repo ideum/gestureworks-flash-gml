@@ -77,8 +77,8 @@ package com.gestureworks.managers
 				pt.position.x = event.stageX;
 				pt.position.y = event.stageY;
 				pt.position.z = event.stageZ;
-				pt.w = event.sizeX;
-				pt.h = event.sizeY;
+				pt.size.x = event.sizeX;
+				pt.size.y = event.sizeY;
 				//pt.l = event.sizeZ;
 				pt.dx = event.stageX - point.history[0].position.x;
 				pt.dy = event.stageY - point.history[0].position.y;
@@ -104,8 +104,8 @@ package com.gestureworks.managers
 				pt.position.x = event.stageX;
 				pt.position.y = event.stageY;
 				pt.position.z = event.stageZ;
-				pt.w = event.sizeX;
-				pt.h = event.sizeY;
+				pt.size.x = event.sizeX;
+				pt.size.y = event.sizeY;
 				//pt.l = event.sizeZ;
 			}
 			

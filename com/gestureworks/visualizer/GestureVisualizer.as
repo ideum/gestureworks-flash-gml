@@ -157,7 +157,7 @@ package com.gestureworks.visualizer
 		{			
 			if ((_drawPivot)&&(ts.trO.init_center_point) && (ts.trO.transformPointsOn))
 			{
-				if ((ts.cO.x != 0) && (ts.cO.y != 0) && (ts.cO.dx != 0) && (ts.cO.dy != 0)) {
+				if ((ts.cO.position.x != 0) && (ts.cO.position.y != 0) && (ts.cO.dx != 0) && (ts.cO.dy != 0)) {
 				
 				var x_c:Number = 0;
 				var y_c:Number = 0;
@@ -171,16 +171,16 @@ package com.gestureworks.visualizer
 				graphics.lineStyle(3, 0xFFFFFF, 0.8);
 				//graphics.moveTo(tO.x, tO.y);
 				graphics.moveTo(x_c, y_c);
-				graphics.lineTo(ts.cO.x, ts.cO.y);
+				graphics.lineTo(ts.cO.position.x, ts.cO.position.y);
 				
 				graphics.lineStyle(3, 0xFF0000, 0.8);
-				graphics.moveTo(ts.cO.x, ts.cO.y);
-				graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
+				graphics.moveTo(ts.cO.position.x, ts.cO.position.y);
+				graphics.lineTo(ts.cO.position.x + ts.cO.dx, ts.cO.position.y + ts.cO.dy);
 				
 				graphics.lineStyle(3, 0x00FF00, 0.8);
 				//graphics.moveTo(tO.x, tO.y);
 				graphics.moveTo(x_c, y_c);
-				graphics.lineTo(ts.cO.x + ts.cO.dx, ts.cO.y + ts.cO.dy);
+				graphics.lineTo(ts.cO.position.x + ts.cO.dx, ts.cO.position.y + ts.cO.dy);
 				}
 			}
 			

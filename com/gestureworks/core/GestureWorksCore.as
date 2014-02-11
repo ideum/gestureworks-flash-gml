@@ -164,7 +164,7 @@ package com.gestureworks.core
 				simulator = true;			
 		}			
 		
-		private var _nativeTouch:Boolean = true;
+		private var _nativeTouch:Boolean = false; // if default true will not init properly
 		/**
 		 * Overrides native touch input
 		 * @default true
@@ -172,14 +172,18 @@ package com.gestureworks.core
 		public function get nativeTouch():Boolean { return _nativeTouch; }
 		public function set nativeTouch(value:Boolean):void
 		{
+			
 			if (_nativeTouch == value) return;
 			_nativeTouch = value;
 			
-			GestureWorks.activeNativeTouch = _nativeTouch;	
+			GestureWorks.activeNativeTouch = _nativeTouch;
+			//trace("gw core ",GestureWorks.activeNativeTouch,_nativeTouch)
 			
-			if(_nativeTouch) {
+			if (_nativeTouch) 
+			{
 				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
 				TouchManager.gw_public::initialize();
+				InteractionManager.gw_public::initialize(); // NEED NOW FOR 
 				trace("native touch is on");
 			}
 			else {
@@ -206,6 +210,7 @@ package com.gestureworks.core
 				//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
 				//TouchManager.gw_public::initialize();
 				//trace("native touch is on");
+				
 			}
 			else {
 				//Multitouch.inputMode = MultitouchInputMode.NONE;
@@ -328,6 +333,7 @@ package com.gestureworks.core
 			GestureWorks.activeSensor = _sensor;
 			if (_sensor) {
 				SensorManager.gw_public::initialize();
+				InteractionManager.gw_public::initialize();
 			}
 			else
 				SensorManager.gw_public::deInitialize();

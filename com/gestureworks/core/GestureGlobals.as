@@ -81,9 +81,9 @@ package com.gestureworks.core
 		gw_public static var leapMaxZ:Number = 220;
 		
 		
-		public static var motionSpriteID:int = 0;//
-		public static var touchSpriteID:int = 0;//
-		public static var sensorSpriteID:int = 0;//
+		public static var globalSpriteID:int = 0;//
+		//public static var touchSpriteID:int = 0;//
+		//public static var sensorSpriteID:int = 0;//
 		
 		/**
 		 * frameID frame stamp relative to start of application.

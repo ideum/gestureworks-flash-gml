@@ -204,7 +204,8 @@ package com.gestureworks.managers
 								
 								//global overlays
 								if (_overlays.length) {
-									TouchManager.processOverlays(ev, _overlays);
+									//TouchManager.processOverlays(ev, _overlays);
+									InteractionManager.processOverlays(ev, _overlays);
 								}
 						}
 						//trace("ADDED:", pid);		

@@ -49,8 +49,8 @@ package com.gestureworks.managers
 
 		public static var lmManager:LeapManager
 	//	public static var motionSocketMgr:Motion3DSManager
-		
-		public static var motionSprite:TouchSprite;
+		private static var motion_init:Boolean = false;
+		public static var gs:TouchSprite;
 		
 		public static var leapEnabled:Boolean = false;
 		public static var leapmode:String = "3d"//"2d";
@@ -90,26 +90,32 @@ package com.gestureworks.managers
 				}
 			}
 			
-			///////////////////////////////////////////////////////////////////////////////////////
-			// ref gloabl motion point list
-			mpoints = GestureGlobals.gw_public::motionPoints;
-			touchObjects = GestureGlobals.gw_public::touchObjects;
-			
-			// CREATE GLOBAL MOTION SPRITE TO HANDLE ALL GEOMETRIC GLOBAL ANALYSIS OF MOTION POINTS
-			motionSprite = new TouchSprite();
-				motionSprite.active = true;
-				motionSprite.motionEnabled = true;
-				motionSprite.tc.motion_core = true; // fix for global core analysis
-				motionSprite.tc.core = true;
+			if (!motion_init)
+			{
+				trace("motion init");
+				///////////////////////////////////////////////////////////////////////////////////////
+				// ref gloabl motion point list
+				mpoints = GestureGlobals.gw_public::motionPoints;
+				touchObjects = GestureGlobals.gw_public::touchObjects;
 				
-			GestureGlobals.motionSpriteID = motionSprite.touchObjectID;
-
-			//////////////////////////////////////////
-			//TODO:
-			// init interaction manager
-			// CREATE MOLTIMODAL MANAGER
-			
-			
+				if (!gs)
+				{
+				// CREATE GLOBAL MOTION SPRITE TO HANDLE ALL GEOMETRIC GLOBAL ANALYSIS OF MOTION POINTS
+				gs = new TouchSprite();
+					gs.active = true;
+					gs.motionEnabled = true;
+					gs.tc.motion_core = true; // fix for global core analysis
+					gs.tc.core = true;
+					
+				GestureGlobals.globalSpriteID = gs.touchObjectID;
+				}
+				
+				else {
+					//ACTIVATE
+					gs.motionEnabled = true
+					gs.tc.motion_core = true;
+				}
+			}
 		}
 		
 		gw_public static function deInitialize():void
@@ -144,7 +150,7 @@ package com.gestureworks.managers
 			// create new point object
 			var mpointObject:MotionPointObject  = new MotionPointObject();
 					
-					mpointObject.id = motionSprite.motionPointCount; 
+					mpointObject.id = gs.motionPointCount; 
 					mpointObject.motionPointID = event.value.motionPointID;
 					mpointObject.type = event.value.type;
 					mpointObject.handID = event.value.handID;
@@ -162,8 +168,8 @@ package com.gestureworks.managers
 					
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					motionSprite.cO.motionArray.push(mpointObject);
-					motionSprite.motionPointCount++;
+					gs.cO.motionArray.push(mpointObject);
+					gs.motionPointCount++;
 				
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
@@ -187,16 +193,16 @@ package com.gestureworks.managers
 			if (pointObject)
 			{
 					// REMOVE POINT FROM LOCAL LIST
-					motionSprite.cO.motionArray.splice(pointObject.id, 1);
+					gs.cO.motionArray.splice(pointObject.id, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
 					
 					// REDUCE LOACAL POINT COUNT
-					motionSprite.motionPointCount--;
+					gs.motionPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < motionSprite.cO.motionArray.length; i++)
+					for (var i:int = 0; i < gs.cO.motionArray.length; i++)
 					{
-						motionSprite.cO.motionArray[i].id = i;
+						gs.cO.motionArray[i].id = i;
 					}
 				
 					// DELETE FROM GLOBAL POINT LIST
