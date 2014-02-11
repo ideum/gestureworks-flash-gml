@@ -76,8 +76,8 @@ package com.gestureworks.utils {
 		 */
 		public function Stats(x:int = 0, y:int = 0, color:uint = 0xffffff, fillBackground:Boolean = true, backgroundColor:uint = 0x000000, fpsHistoryDuration:uint = 5000, ramHistoryDuration:uint = 5000, resetOnTouch:Boolean = true, ramUpdateFrequency:uint = 200) {
 			super();
-			super.x = xPos;
-			super.y = yPos;
+			super.x = x;
+			super.y = y;
 			_textColor = color;
 			_backgroundColor = backgroundColor;
 			this.fpsHistoryDuration = fpsHistoryDuration;
