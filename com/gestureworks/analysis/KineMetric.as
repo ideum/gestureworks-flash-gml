@@ -53,9 +53,9 @@ package com.gestureworks.analysis
 		private var touchObjectID:int;
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
-		private var mcO:ipClusterObject = new ipClusterObject(); 	//MOTION SUPER
-		private var tcO:ipClusterObject = new ipClusterObject(); 	//TOUCH SUPER
-		private var scO:ipClusterObject = new ipClusterObject(); 	//SENSOR SUPER
+		private var mcO:ipClusterObject //= new ipClusterObject(); 	//MOTION SUPER
+		private var tcO:ipClusterObject //= new ipClusterObject(); 	//TOUCH SUPER
+		private var scO:ipClusterObject //= new ipClusterObject(); 	//SENSOR SUPER
 		
 		private var i:uint = 0;
 		private var j:uint = 0;
@@ -135,9 +135,9 @@ package com.gestureworks.analysis
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID]; // need to find center of object for orientation and pivot
 			cO = ts.cO; // super cluster
 			
-			tcO = cO.tcO; //parent touch cluster
-			mcO = cO.mcO; // parent motion cluster
-			scO = cO.scO; // parent sensor cluster
+			if (ts.touchEnabled)tcO = cO.tcO; //parent touch cluster
+			if (ts.motionEnabled)mcO = cO.mcO; // parent motion cluster
+			if (ts.sensorEnabled)scO = cO.scO; // parent sensor cluster
 			
 			
 			gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
@@ -154,9 +154,9 @@ package com.gestureworks.analysis
 			maxZ = GestureGlobals.gw_public::leapMaxZ;
 			
 			// CREATE INTERACTION POINT SUBCLUSTERS
-			//if (ts.touchEnabled) initTouchSubClusters();
+			if (ts.touchEnabled)  initTouchSubClusters();
 			if (ts.motionEnabled) initMotionSubClusters();
-			if (ts.sensorEnabled)initSensorSubClusters();
+			if (ts.sensorEnabled) initSensorSubClusters();
 			
 			if (ts.traceDebugMode) trace("init cluster kinemetric");
 		}
@@ -168,25 +168,35 @@ package com.gestureworks.analysis
 			// TODO: MOVE TO CLUSTER MANAGER NOT "TOUCHCLUSTER"
 				// init MOTION SKELETAL subclusters
 				cO.mSubClusterArray[0] = new ipClusterObject();// finger
+				cO.mSubClusterArray[0].active = true; //TODO: AUTOMATE ACTIVATION
 				cO.mSubClusterArray[0].type = "finger";		
 				cO.mSubClusterArray[1] = new ipClusterObject();// palm
+				cO.mSubClusterArray[1].active = true;
 				cO.mSubClusterArray[1].type = "palm";	
 				cO.mSubClusterArray[2] = new ipClusterObject();// thumb
+				cO.mSubClusterArray[2].active = true;
 				cO.mSubClusterArray[2].type = "thumb";		
 				cO.mSubClusterArray[3] = new ipClusterObject();// finger avergae
+				cO.mSubClusterArray[3].active = true;
 				cO.mSubClusterArray[3].type = "finger_average";
 				cO.mSubClusterArray[4] = new ipClusterObject(); //finger and thumb
+				cO.mSubClusterArray[4].active = true;
 				cO.mSubClusterArray[4].type = "digit";
 				// INIT MOTION VIRTUAL SUBCLUSTERS
 				cO.mSubClusterArray[5] = new ipClusterObject(); // trigger
+				cO.mSubClusterArray[5].active = true;
 				cO.mSubClusterArray[5].type = "trigger";		
 				cO.mSubClusterArray[6] = new ipClusterObject(); // pinch
+				cO.mSubClusterArray[6].active = true;
 				cO.mSubClusterArray[6].type = "pinch";
 				cO.mSubClusterArray[7] = new ipClusterObject(); // hook
+				cO.mSubClusterArray[7].active = true;
 				cO.mSubClusterArray[7].type = "hook";
 				cO.mSubClusterArray[8] = new ipClusterObject(); //frame
+				cO.mSubClusterArray[8].active = true;
 				cO.mSubClusterArray[8].type = "frame";
 				cO.mSubClusterArray[9] = new ipClusterObject(); //fist
+				cO.mSubClusterArray[9].active = true;
 				cO.mSubClusterArray[9].type = "fist";
 				
 				//cO.subClusterArray[10] = new ipClusterObject(); //region
@@ -209,11 +219,23 @@ package com.gestureworks.analysis
 			//TOUCH SUBCLUSTERS
 			//finger//////////////////
 			cO.tSubClusterArray[0] = new ipClusterObject();
-			cO.tSubClusterArray[0].type = "finger";
+			cO.tSubClusterArray[0].active = true; //TODO: AUTOMATE ACTIVATION
+			cO.tSubClusterArray[0].type = "finger_dynamic";
+			cO.tSubClusterArray[0].motion_type = "dynamic";
+			
+			cO.tSubClusterArray[1] = new ipClusterObject();
+			cO.tSubClusterArray[1].type = "finger_static";
+			cO.tSubClusterArray[1].motion_type = "static";
+			
+			/*
+			cO.tSubClusterArray[0] = new ipClusterObject();
+			cO.tSubClusterArray[0].type = "finger_";
 			cO.tSubClusterArray[0].motion_type = "dynamic";
 			cO.tSubClusterArray[1] = new ipClusterObject();
 			cO.tSubClusterArray[1].type = "finger";
 			cO.tSubClusterArray[1].motion_type = "static";
+			*/
+			
 			//pen//////////////////////
 			cO.tSubClusterArray[2] = new ipClusterObject();
 			cO.tSubClusterArray[2].type = "pen";
@@ -221,13 +243,16 @@ package com.gestureworks.analysis
 			cO.tSubClusterArray[3] = new ipClusterObject();
 			cO.tSubClusterArray[3].type = "pen";
 			cO.tSubClusterArray[3].motion_type = "static";
+			
 			// tag/////////////////////
 			cO.tSubClusterArray[4] = new ipClusterObject();
 			cO.tSubClusterArray[4].type = "tag";
 			cO.tSubClusterArray[4].motion_type = "dynamic";
+			
 			cO.tSubClusterArray[5] = new ipClusterObject();
 			cO.tSubClusterArray[5].type = "tag";
 			cO.tSubClusterArray[5].motion_type = "static";
+			
 			//chord////////////////////
 			cO.tSubClusterArray[6] = new ipClusterObject();
 			cO.tSubClusterArray[6].type = "chord";
@@ -260,7 +285,7 @@ package com.gestureworks.analysis
 				
 				///////////////////////////////////////////////
 				// get number of touch points in cluster
-				N = ts.cO.tpn + ts.cO.ipn;
+				N = ts.cO.tpn + ts.cO.ipn; //TODO: REMOVE TOUCH POINT EXPLICIT NOW ROLLED INTO IP
 				cO.n = N;
 				
 				if (N) 
@@ -366,42 +391,44 @@ package com.gestureworks.analysis
 		public function resetMotionCluster():void 
 		{
 			//trace("KineMetric::resetMotionCluster");
-			
-			mcO.position.x = 0;
-			mcO.position.y = 0;
-			mcO.position.z = 0;//-3D
-			
-			mcO.width = 0;
-			mcO.height = 0;
-			mcO.length = 0;//-3D
-			mcO.radius = 0;
-			
-			//cO.separation
-			mcO.separationX = 0;
-			mcO.separationY = 0;
-			mcO.separationZ = 0;//-3D
-			
-			mcO.rotation = 0;
-			mcO.rotationX = 0;//-3D
-			mcO.rotationY = 0;//-3D
-			mcO.rotationZ = 0;//-3D
-			mcO.orientation =  0;
+			if (mcO)
+			{
+				mcO.position.x = 0;
+				mcO.position.y = 0;
+				mcO.position.z = 0;//-3D
+				
+				mcO.width = 0;
+				mcO.height = 0;
+				mcO.length = 0;//-3D
+				mcO.radius = 0;
+				
+				//cO.separation
+				mcO.separationX = 0;
+				mcO.separationY = 0;
+				mcO.separationZ = 0;//-3D
+				
+				mcO.rotation = 0;
+				mcO.rotationX = 0;//-3D
+				mcO.rotationY = 0;//-3D
+				mcO.rotationZ = 0;//-3D
+				mcO.orientation =  0;
 
-			/////////////////////////
-			// first diff
-			/////////////////////////
-			mcO.dtheta = 0;
-			mcO.dthetaX = 0;
-			mcO.dthetaY = 0;
-			mcO.dthetaZ = 0;
-			mcO.dtheta = 0;
-			mcO.dx = 0;
-			mcO.dy = 0;
-			mcO.dz = 0;//-3D
-			mcO.ds = 0;
-			mcO.dsx = 0;
-			mcO.dsy = 0;
-			mcO.dsz = 0;//-
+				/////////////////////////
+				// first diff
+				/////////////////////////
+				mcO.dtheta = 0;
+				mcO.dthetaX = 0;
+				mcO.dthetaY = 0;
+				mcO.dthetaZ = 0;
+				mcO.dtheta = 0;
+				mcO.dx = 0;
+				mcO.dy = 0;
+				mcO.dz = 0;//-3D
+				mcO.ds = 0;
+				mcO.dsx = 0;
+				mcO.dsy = 0;
+				mcO.dsz = 0;//-
+			}
 		}
 		
 		
@@ -581,7 +608,9 @@ package com.gestureworks.analysis
 		public function resetTouchCluster():void 
 		{
 			//trace("KineMetric::resetTouchCluster");
-
+			
+			
+			//tcO.position = new Vector3D(0,0,0)
 			tcO.position.x = 0;
 			tcO.position.y = 0;
 			tcO.position.z = 0;//-3D
@@ -1528,7 +1557,217 @@ package com.gestureworks.analysis
 		} 
 		
 		
+		//////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////
+		
+		public function find2DIPTranslation(index:int):void//type:String
+		{
+			
+			var hist:int = 1;
+			var hk:Number = 1 / hist;
+			
+			// Get subcluster
+			var sub_cO:ipClusterObject = cO.tSubClusterArray[index];
+			
+			//trace("-------------------------touch translate kinemetric2d ",sub_cO.iPointArray.length, sub_cO.ipn,sub_cO.dipn);
 
+			//GET TRANSFORMED IP ARRAY
+			//var ptArray:Vector.<InteractionPointObject> = sub_cO.iPointArray;
+			
+			var sipn:uint = sub_cO.ipn;
+			var sdipn:uint = sub_cO.dipn;
+			
+			// reset deltas
+			sub_cO.dx = 0;
+			sub_cO.dy = 0;
+			sub_cO.dz = 0;
+				
+			// dipn ==0 when no changes in inpn between frames
+			if ((sipn!= 0)&&(cO.history[hist].tSubClusterArray[index])&&(sdipn==0))//
+				{
+					//trace("t",ptArray[0].position.x,ptArray[0].history.length, cO.iPointArray2D[0].history.length,cO.iPointArray[0].history.length );
+					var c_0:ipClusterObject = cO.history[0].tSubClusterArray[index];
+					var c_1:ipClusterObject = cO.history[hist].tSubClusterArray[index];
+						
+					//trace("hist position",c_0.position, c_1.position)
+					
+							//trace("hist x",cO.finger_cO.x,cO.history[0].finger_cO.x, cO.history[6].finger_cO.x)
+							//trace("hist rot",cO.finger_cO.rotation,cO.history[0].finger_cO.rotation, cO.history[2].finger_cO.rotation)
+								
+							//////////////////////////////////////////////////////////
+							//CHANGE IN CLUSTER POSITION
+							if ((c_1.position.x!= 0) && (c_0.position.x != 0)) 	sub_cO.dx = (c_0.position.x - c_1.position.x)*hk;
+							if ((c_1.position.y != 0) && (c_0.position.y != 0)) sub_cO.dy = (c_0.position.y - c_1.position.y)*hk;
+							//if ((c_1.position.z != 0) && (c_0.position.z != 0)) 	sub_cO.dz = (c_0.position.z - c_1.position.z)*hk;
+							//trace(cO.dx,cO.dy,cO.dz);
+								
+							//NEED LIMITS FOR CLUSTER N CHANGE
+							//LIMIT TRANLATE
+							/*
+							var trans_max_delta:Number = 30;
+									
+							if (Math.abs(sub_cO.dx) > trans_max_delta) 
+							{
+								if (sub_cO.dx < 0) sub_cO.dx = -trans_max_delta;
+								if (sub_cO.dx > 0) sub_cO.dx = trans_max_delta;
+							}
+							if (Math.abs(sub_cO.dy) > trans_max_delta) 
+							{
+								if (sub_cO.dy < 0) sub_cO.dy = -trans_max_delta;
+								if (sub_cO.dy > 0) sub_cO.dy = trans_max_delta;
+							}
+							*/
+							
+							
+							//if (Math.abs(sub_cO.dz) > trans_max_delta) 
+							//{
+								//if (sub_cO.dz < 0) sub_cO.dz = -trans_max_delta;
+								//if (sub_cO.dz > 0) sub_cO.dz = trans_max_delta;
+							//}
+							//trace("get diff");	
+			}
+			//trace("touch translate kinemetric 2d",sub_cO.type, sub_cO.dx, sub_cO.dy, sub_cO.dz);
+		}
+		
+		public function find2DIPConstants(index:int):void//type:String
+		{
+			var sdipn:int = 0;
+			var sipn:int = 0;
+			var sipnk:Number = 0;
+			var sipnk0:Number = 0;
+			
+			
+			// GET SUBCLUSTER INTERACTION POINT NUMBER
+			cO.tSubClusterArray[index].ipn = cO.tSubClusterArray[index].iPointArray.length;
+			sipn = cO.tSubClusterArray[index].ipn;
+			
+			//CHANGE IN SUBCLUSTER INTERACTION POINT NUMBER
+			if (cO.history.length>3) sdipn = sipn - cO.history[1].tSubClusterArray[index].ipn;
+			else sdipn = 1;
+			
+			// GET IP BASED CONSTANTS
+			if (sipn == 0) sipnk = 0;
+			else sipnk = 1 / sipn;
+			
+			if (sipn == 1) sipnk0 = 1;
+			else if (sipn == 0) sipnk0 = 0;
+			else sipnk0 = 1 / (sipn - 1);
+			
+			cO.tSubClusterArray[index].ipn = sipn;
+			cO.tSubClusterArray[index].dipn = sdipn;
+			cO.tSubClusterArray[index].ipnk = sipnk;
+			cO.tSubClusterArray[index].ipnk0 = sipnk0;
+		
+			//trace("get touch ip consts",cO.tSubClusterArray[index].type,cO.tSubClusterArray[index].ipn,cO.tSubClusterArray[index].dipn, cO.tSubClusterArray[index].ipnk, cO.tSubClusterArray[index].ipnk0);
+		}
+		public function find2DIPDimension(index:int):void
+		{
+			// GET TYPED SUB CLUSTER from cluster matrix //////////////////////////
+			var sub_cO:ipClusterObject = cO.tSubClusterArray[index];
+
+			// GET TRANSFORMED INTERACTION POINT LIST
+			var ptArray:Vector.<InteractionPointObject> = sub_cO.iPointArray;
+			
+			var sipn:int = sub_cO.ipn
+			var sipnk:Number = sub_cO.ipnk;
+			var sipnk0:Number = sub_cO.ipnk0
+			
+			//trace("get ip dims 2d ", sipn, sipnk, sipnk0);
+
+			sub_cO.position.x = 0;
+			sub_cO.position.y = 0;
+			sub_cO.position.z = 0;
+			
+			sub_cO.radius = 0
+			sub_cO.width = 0;
+			sub_cO.height = 0;
+			sub_cO.length = 0;
+			
+			sub_cO.separationX = 1;
+			sub_cO.separationY = 1;
+			sub_cO.separationZ = 1;
+			
+			// rotation of group
+			sub_cO.rotation = 0
+			sub_cO.rotationX = 0; 
+			sub_cO.rotationY = 0; 
+			sub_cO.rotationZ = 0;
+			
+			
+			//trace("dim",sipn)
+			
+			//APPLY DIMENTIONAL ANALYSIS
+			if ((sipn!=0))
+			{
+			//trace("sub dims",sipn)
+					//if (sipn > 1)
+					//{
+						for (i = 0; i < sipn; i++) 
+								{
+									//POSITION, CLUSTER CENTER
+									var ipt:InteractionPointObject = ptArray[i];
+									var pt:InteractionPointObject = ptArray[0];
+									
+									//trace(ipt.position, pt.position)
+									
+									sub_cO.position.x += ipt.position.x;
+									sub_cO.position.y += ipt.position.y;
+									sub_cO.position.z += ipt.position.z;
+									
+									//SIZE WIDTH HIEGHT DEPTH
+									for (var q:uint = 0; q < i+1; q++) 
+									{
+									 if (i != q) 
+									 { 
+										var dx:Number = ipt.position.x - ptArray[q].position.x
+										var dy:Number = ipt.position.y - ptArray[q].position.y
+										var dz:Number = ipt.position.z - ptArray[q].position.z
+										
+										var abs_dx:Number = Math.abs(dx);
+										var abs_dy:Number = Math.abs(dy);
+										var abs_dz:Number = Math.abs(dz);
+										
+										// MAX SEPERATION BETWEEN A PAIR OF POINTS IN THE CLUSTER
+										// set size.x......
+										if (abs_dx > sub_cO.width) sub_cO.width = abs_dx;
+										if (abs_dy > sub_cO.height) sub_cO.height = abs_dy;
+										if (abs_dz > sub_cO.length) sub_cO.length = abs_dz;
+									 }
+									}
+								 
+								 /*
+								 if ((pt) && (ipt))//&&(!pointList[i].holdLock)&&(!pointList[j1].holdLock)) //edit
+									{
+										var dxs:Number = pt.position.x - ipt.position.x;
+										var dys:Number = pt.position.y - ipt.position.y;
+										var dzs:Number = pt.position.z - ipt.position.z;
+
+										// separation of group
+										sub_cO.separation.x += Math.abs(dxs);
+										sub_cO.separation.y += Math.abs(dys);
+										sub_cO.separation.z += Math.abs(dzs);
+									}
+									*/
+							}
+							// divide by subcluster pair count sipnk0 
+							//sub_cO.separation.x *= sipnk0;
+							//sub_cO.separation.y *= sipnk0;
+							//sub_cO.separation.z *= sipnk0;
+							
+							// size.x....
+							sub_cO.radius = 0.5*Math.sqrt(sub_cO.width * sub_cO.width + sub_cO.height * sub_cO.height + sub_cO.length * sub_cO.length);//
+							//divide by subcluster ip number sipnk 
+							
+							sub_cO.position.x *= sipnk;
+							sub_cO.position.y *= sipnk; 
+							sub_cO.position.z *= sipnk;
+			}
+			//trace("get 2D ip dims", sub_cO.position, sub_cO.width,sub_cO.height);//sub_cO.size //sub_cO.separation, sub_cO.rotation
+		}
+
+		
+		
+		
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		// sensor IP analysis
@@ -1568,7 +1807,7 @@ package com.gestureworks.analysis
 		public function findSensorSubClusters():void{}
 		//public function weaveSensorCluster():void{}
 		
-		////////////////////////////////////////////////////////////////////////
+		/// /////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////
 		
 		public function initFilterIPCluster():void
@@ -1662,6 +1901,9 @@ package com.gestureworks.analysis
 				//ONLY DOES HIT TEST IF MOTION POINTS EXIST
 				if ((gs))//&&(ts.mpn)
 				{
+					
+			
+					
 					//trace("hit test ip cluster",gms.cO.iPointArray.length,ts.motionClusterMode,ts)
 					
 				if ((ts.motionClusterMode == "global")||(ts.motionClusterMode == "local_weak"))
@@ -1676,7 +1918,9 @@ package com.gestureworks.analysis
 								//trace("supported", ipt.type,ts.tc.ipSupported(ipt.type));
 								//CURRENTLY ONLY IP TYPE SUPPORT IS INITIAED IN THE CORE MOTION SPRITE
 								//TODO INIT IN EACH MS
-								if (ipt)//&&(ts.tc.ipSupported(ipt.type))
+								
+								//FILTER BY MODE
+								if ((ipt)&&(ipt.mode="motion"))//&&(ts.tc.ipSupported(ipt.type))
 								{
 									//trace(ts,gms);
 									var xh:Number = normalize(ipt.position.x, minX, maxX) *sw;//1920
@@ -1714,19 +1958,35 @@ package com.gestureworks.analysis
 					}
 					
 					// FOR LOCAL STRONG SEE INTERACTION POINT MANAGER
-					if (ts.motionClusterMode == "local_strong") {
+					if (ts.motionClusterMode == "local_strong") 
+					{
 						if (ts.cO.iPointArray.length)
 						{
 						//trace("strong length", ts.cO.iPointArray.length);
 						for (i = 0; i < ts.cO.iPointArray.length; i++)
 							{
 								//trace(ts.cO.iPointArray[i].interactionPointID,ts.cO.iPointArray[i].phase);
-								if(ts.cO.iPointArray[i].phase=="end") ts.cO.iPointArray.splice(i, 1);
+								if((ts.cO.iPointArray[i].phase=="end")&&(ts.cO.iPointArray[i].mode=="motion")) ts.cO.iPointArray.splice(i, 1);
 									//trace("no exist")
 								//}
 							}
 						}
 					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					
 					
 					
@@ -1784,34 +2044,48 @@ package com.gestureworks.analysis
 							
 							if (ipt)
 							{
-								var ipt2d:InteractionPointObject = new InteractionPointObject();
-								
-								// stores root ip id
-								//trace("interaction point id",ipt.interactionPointID, ipt.type)
-								//ipt2d.id = ipt.interactionPointID;
-								
-								ipt2d.position.x = normalize(ipt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
-								ipt2d.position.y = normalize(ipt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
-								ipt2d.position.z = ipt.position.z
-								
-								//normalized vector
-								ipt2d.direction.x = -ipt.direction.x;
-								ipt2d.direction.y = ipt.direction.y;
-								ipt2d.direction.z = ipt.direction.z;
-								
-								//normalized vector
-								ipt2d.normal.x = -ipt.normal.x;
-								ipt2d.normal.y = ipt.normal.y;
-								ipt2d.normal.z = ipt.normal.z;
-								
-								ipt2d.type = ipt.type;
-								ipt2d.history = ipt.history;
-								
-								// pass ip properties
-								ipt2d.fist = ipt.fist;
-								
-								
-							cO.iPointArray2D.push(ipt2d);
+								//MOTION
+								if (ipt.mode == "motion")
+								{
+									var ipt2d:InteractionPointObject = new InteractionPointObject();
+									
+									// stores root ip id
+									//trace("interaction point id",ipt.interactionPointID, ipt.type)
+									//ipt2d.id = ipt.interactionPointID;
+									
+									ipt2d.position.x = normalize(ipt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
+									ipt2d.position.y = normalize(ipt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
+									ipt2d.position.z = ipt.position.z
+									
+									//normalized vector
+									ipt2d.direction.x = -ipt.direction.x;
+									ipt2d.direction.y = ipt.direction.y;
+									ipt2d.direction.z = ipt.direction.z;
+									
+									//normalized vector
+									ipt2d.normal.x = -ipt.normal.x;
+									ipt2d.normal.y = ipt.normal.y;
+									ipt2d.normal.z = ipt.normal.z;
+									
+									ipt2d.type = ipt.type;
+									ipt2d.history = ipt.history;
+									
+									// pass ip properties
+									ipt2d.fist = ipt.fist;
+									
+									
+								cO.iPointArray2D.push(ipt2d);
+								}
+								//TOUCH
+								else if (ipt.mode == "touch") 
+								{
+									cO.iPointArray2D.push(ipt);
+								}
+								//SENSOR
+								else if (ipt.mode == "sensor") 
+								{
+									cO.iPointArray2D.push(ipt);
+								}
 							
 							//if(ipt2d.type=="palm")trace("fist 3d to 2d", ipt.fist)
 							}
@@ -1828,14 +2102,17 @@ package com.gestureworks.analysis
 			else temp_ipointArray = cO.iPointArray;
 			
 				//zero subcluster data //////////////////////////////
+				//MOTION
 				for (j = 0; j < cO.mSubClusterArray.length; j++) 
 				{
 					cO.mSubClusterArray[j].iPointArray.length = 0;
 				}
+				//TOUCH
 				for (j = 0; j < cO.tSubClusterArray.length; j++) 
 				{
 					cO.tSubClusterArray[j].iPointArray.length = 0;
 				}
+				//SENSOR
 				for (j = 0; j < cO.sSubClusterArray.length; j++) 
 				{
 					cO.sSubClusterArray[j].iPointArray.length=0;
@@ -1848,14 +2125,19 @@ package com.gestureworks.analysis
 					
 					//SORT INTERACTION POINTS INTO SUBCLUSTERS
 					//TODO: REMOVE LOOPS
+					//MOTION
 					for (j = 0; j < cO.mSubClusterArray.length; j++) 
 					{
+						//trace("moving motion typed interation points into motion subclusters",ipt.type,cO.mSubClusterArray[j].type)
 						if (ipt.type==cO.mSubClusterArray[j].type) cO.mSubClusterArray[j].iPointArray.push(ipt);
 					}
+					//TOUCH
 					for (j = 0; j < cO.tSubClusterArray.length; j++) 
 					{
+						//trace("moving touch typed interation points into touch subclusters",ipt.type,cO.tSubClusterArray[j].type)
 						if (ipt.type==cO.tSubClusterArray[j].type) cO.tSubClusterArray[j].iPointArray.push(ipt);
 					}
+					//SENSOR
 					for (j = 0; j < cO.sSubClusterArray.length; j++) 
 					{
 						if (ipt.type==cO.sSubClusterArray[j].type) cO.sSubClusterArray[j].iPointArray.push(ipt);
@@ -1875,10 +2157,13 @@ package com.gestureworks.analysis
 			ipn = cO.iPointArray.length;
 			ts.ipn = ipn;
 			ts.cO.ipn = ipn;
-			ts.cO.mcO.ipn = ipn;
+			
+			//ts.cO.mcO.ipn = ipn; //MUST BE MODALLY COMPLIANT
 			
 			//CHANGE IN INTERACTION POINT NUMBER
-			if (cO.history.length>3) dipn = mcO.ipn - cO.history[1].ipn;
+			//if (cO.history.length > 3) dipn = mcO.ipn - cO.history[1].ipn; //MUST BE MODALLY COMPLIANT
+			if (cO.history.length > 3) dipn = cO.ipn - cO.history[1].ipn;
+			
 			else dipn = 1;
 			cO.dipn = dipn;
 
@@ -3105,7 +3390,9 @@ package com.gestureworks.analysis
 				{		
 					// GET CLUSTER ANALYSIS FROM EACH SUBCLUSTER
 					var sub_cO:ipClusterObject = cO.tSubClusterArray[i];
-
+					
+					if (sub_cO.active)
+					{
 						// each dimension / property must be merged independently
 						if (sub_cO.ipn>0)
 						{
@@ -3159,7 +3446,8 @@ package com.gestureworks.analysis
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
 							
-							//trace("sub",sub_cO.type,sub_cO.x,sub_cO.y,sub_cO.z,sub_cO.dx, sub_cO.dy,sub_cO.dz)
+						//	trace("weaving touch sub", sub_cO.type, sub_cO.position, sub_cO.dx, sub_cO.dy, sub_cO.dz)
+							}
 						}
 				}
 				
@@ -3282,7 +3570,7 @@ package com.gestureworks.analysis
 							cO.dsz += tcO.dsz;
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
-						//trace("weave touch",cO.x,cO.y,cO.z, cO.width,cO.height)
+						//trace("weave touch root into primary mmultimodal",cO.position, cO.width,cO.height)
 						}
 					//trace("touch prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
 				

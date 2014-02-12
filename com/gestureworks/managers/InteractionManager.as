@@ -63,14 +63,14 @@ package com.gestureworks.managers
 		
 	public class InteractionManager 
 	{	
-		public static var touchPoints:Dictionary = new Dictionary();
+		//public static var touchPoints:Dictionary = new Dictionary();
 		public static var ipoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
 		
-		//private static var gms:TouchSprite;
+		
 		private static var gs:TouchSprite;
-		//private static var gss:TouchSprite;
+		private static var interaction_init:Boolean = false;
 		
 		private static var sw:int;
 		private static var sh:int;
@@ -90,10 +90,12 @@ package com.gestureworks.managers
 		gw_public static function initialize():void
 
 		{
+			if (!interaction_init)
+			{
 			trace("interaction manager init");
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list
-			touchPoints = GestureGlobals.gw_public::touchPoints;
+			//touchPoints = GestureGlobals.gw_public::touchPoints;
 			ipoints = GestureGlobals.gw_public::interactionPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
@@ -126,6 +128,9 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, interactionFrameHandler); //MOVE TO INTERACTION MANAGER
+		
+			interaction_init = true;
+			}
 		}
 		
 		gw_public static function deInitialize():void
@@ -148,7 +153,7 @@ package com.gestureworks.managers
 		{			
 			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
 			
-			trace("event mode",event.value.mode )
+			//trace("event mode",event.value.mode )
 			
 			//var ref:*
 			
@@ -209,8 +214,6 @@ package com.gestureworks.managers
 					
 					if ((tO.motionClusterMode == "local_strong")&&(ipO.mode=="motion"))//&&(tO.tc.ipSupported(ipO.type)))
 					{
-						
-						
 						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
 						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
 						
@@ -218,8 +221,11 @@ package com.gestureworks.managers
 						if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
 						{
 							//trace("2d hit test");			
-							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
-									// CALL ASSIGN......
+							if (tO.hitTestPoint(xh, yh, false)) 
+							{
+								tO.cO.iPointArray.push(ipO);
+								// CALL ASSIGN......
+							}
 						}			
 						//2D HIT TEST ON 3D OBJECT
 						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
@@ -227,7 +233,8 @@ package com.gestureworks.managers
 							if (hitTest3D != null) {
 								//trace("3d hit test"));
 							//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
-								if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
+								if (hitTest3D(tO as ITouchObject3D, xh, yh) == true)
+								{
 									tO.cO.iPointArray.push(ipO);
 									// CALL ASSIGN.......
 								}
@@ -239,8 +246,6 @@ package com.gestureworks.managers
 					}
 					else if ((tO.touchClusterMode == "local_strong")&&(ipO.mode=="touch"))//&&(tO.tc.ipSupported(ipO.type)))
 					{
-						
-						
 						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
 						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
 						
@@ -248,16 +253,20 @@ package com.gestureworks.managers
 						if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
 						{
 							//trace("2d hit test");			
-							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
-									// CALL ASSIGN......
+							if (tO.hitTestPoint(xh, yh, false)) 
+							{
+								tO.cO.iPointArray.push(ipO);
+								// CALL ASSIGN......
+							}
 						}			
 						//2D HIT TEST ON 3D OBJECT
 						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
 						{
 							if (hitTest3D != null) {
 								//trace("3d hit test"));
-							//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
-								if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
+								//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
+								if (hitTest3D(tO as ITouchObject3D, xh, yh) == true) 
+								{
 									tO.cO.iPointArray.push(ipO);
 									// CALL ASSIGN.......
 								}
@@ -376,11 +385,11 @@ package com.gestureworks.managers
 		//TEMP TEST
 		
 		// registers touch point via touchSprite
-		private static function registerTouchPoint(event:GWTouchEvent):void
-		{
+		//private static function registerTouchPoint(event:GWTouchEvent):void
+		//{
 			//FIX CELAN UP REFERENCE 
-			touchPoints[event.touchPointID].history.unshift(TouchPointHistories.historyObject(event))	
-		}
+			//touchPoints[event.touchPointID].history.unshift(TouchPointHistories.historyObject(event))	
+		//}
 		
 		/**
 		 * Register a virtual transform object with the touch manager
@@ -471,8 +480,9 @@ package com.gestureworks.managers
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::points[event.touchPointID] = pointObject;
 				
-				if(target.registerPoints)
-					registerTouchPoint(event);
+				//MAY NEED TO REGISTER IP
+				//if(target.registerPoints)
+					//registerTouchPoint(event);
 
 				// add touch down to touch object gesture event timeline
 				if((target.tiO)&&(target.tiO.timelineOn)&&(target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
@@ -895,6 +905,7 @@ package com.gestureworks.managers
 			
 		}
 		
+		/*
 		public static function killZombies(tO:ITouchObject):void
 		{
 			
@@ -912,7 +923,7 @@ package com.gestureworks.managers
 						}
 					}
 				}
-		}
+		}*/
 		
 		
 		// EXTERNAL UPDATE METHOD/////////////////////////////////////////////////////////

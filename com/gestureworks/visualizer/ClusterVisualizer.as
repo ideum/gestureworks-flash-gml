@@ -126,8 +126,10 @@ package com.gestureworks.visualizer
 		if (ts.touchEnabled)	drawClusterDims();
 		
 		//if (ts.motionEnabled)	drawClusterDims();
-		if (ts.motionEnabled)	drawInteractionPoints();
-		if (ts.motionEnabled)	drawSubClusterDims();
+		//if (ts.motionEnabled)
+		drawInteractionPoints();
+		//if (ts.motionEnabled)
+		drawSubClusterDims();
 		
 		//trace("draw", tpn,ipn, ts.ipn, cO.ipn,cO.iPointArray2D.length);
 	}
@@ -344,8 +346,11 @@ package com.gestureworks.visualizer
 			{
 				for (var i:int = 0; i < ipn; i++) 
 					{
-						var ipt:InteractionPointObject = cO.iPointArray2D[i];
-			
+						
+						var ipt:InteractionPointObject = cO.iPointArray2D[i];//cO.iPointArray2D[i];
+						
+						if (ipt.mode == "motion")
+						{
 								if (_drawWeb)
 								{	
 									for (var j:int = 0; j < i+1; j++) 
@@ -446,6 +451,39 @@ package com.gestureworks.visualizer
 									graphics.lineStyle(3, 0x000000, style.stroke_alpha);
 									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
 								}
+						}
+						
+						else if (ipt.mode == "touch")
+						{
+								if (_drawWeb)
+								{	
+									for (var j:int = 0; j < i+1; j++) 
+									{
+										if (i != j)
+										{
+											var ipt2:InteractionPointObject = cO.iPointArray2D[j]//cO.iPointArray2D[j];
+											// draw line to palm point
+											graphics.lineStyle(3, 0xFF0000, style.stroke_alpha);
+											graphics.moveTo(ipt.position.x ,ipt.position.y);
+											graphics.lineTo(ipt2.position.x , ipt2.position.y);
+										}
+									}
+									
+								}	
+								// draw finger
+								if (ipt.type == "finger_dynamic")
+								{
+									graphics.lineStyle(3, 0xFF0000, style.stroke_alpha);//red
+									graphics.drawCircle(ipt.position.x , ipt.position.y, style.radius + 10);
+								}
+								if (ipt.type == "finger_static")
+								{
+									graphics.lineStyle(3, 0xFFFF00, style.stroke_alpha);//red
+									graphics.drawCircle(ipt.position.x , ipt.position.y, style.radius + 10);
+								}
+							
+						}
+
 					}
 			}
 	}

@@ -116,7 +116,7 @@ package com.gestureworks.analysis
 						var tip:InteractionPointObject = new InteractionPointObject();
 							tip.position = tp.position;
 							tip.mode = "touch";
-							tip.type = "touch_finger_dynamic";
+							tip.type = "finger_dynamic";
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
@@ -127,7 +127,7 @@ package com.gestureworks.analysis
 					/*else {
 						var tip:InteractionPointObject = new InteractionPointObject();
 							tip.position = tp.position;
-							tip.type = "touch_finger_hold";
+							tip.type = "finger_static";
 								
 						// push to interactive point list
 						InteractionPointTracker.fingerTouchPoints.push(tip);

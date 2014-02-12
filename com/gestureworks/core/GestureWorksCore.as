@@ -298,10 +298,31 @@ package com.gestureworks.core
 				
 			updateTouchObjects();				
 		}
+		private var _touch:Boolean = false;
+		/**
+		 * Turns touch input on 
+		 * @default false
+		 */
+		public function get touch():Boolean{return _touch;}
+		public function set touch(value:Boolean):void
+		{
+			if (touch == value) return;
+			_touch = value;
+			
+			GestureWorks.activeTouch = _touch;
+			if (_touch) {
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+				TouchManager.gw_public::initialize();
+				InteractionManager.gw_public::initialize();
+				trace("touch active")
+			}
+			else
+				TouchManager.gw_public::deInitialize();
+		}	
 		
 		private var _motion:Boolean = false;
 		/**
-		 * Turns motion input on.Currently only supports Leap
+		 * Turns motion input on. Currently only supports Leap
 		 * @default false
 		 */
 		public function get motion():Boolean{return _motion;}

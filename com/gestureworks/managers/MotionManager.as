@@ -92,7 +92,7 @@ package com.gestureworks.managers
 			
 			if (!motion_init)
 			{
-				trace("motion init");
+				trace("init motion manager");
 				///////////////////////////////////////////////////////////////////////////////////////
 				// ref gloabl motion point list
 				mpoints = GestureGlobals.gw_public::motionPoints;

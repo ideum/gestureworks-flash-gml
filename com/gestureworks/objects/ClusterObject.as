@@ -480,6 +480,7 @@ package com.gestureworks.objects
 			point_remove = false;
 			add = false;
 			remove = false;
+			
 			mmPointArray.length = 0;
 			pointArray.length = 0;
 			motionArray.length = 0;

@@ -23,6 +23,8 @@ package com.gestureworks.objects
 		// ID
 		public var id:int;
 	
+		public var active:Boolean = false;
+		
 		// cluster type
 		public var type:String;
 		
@@ -270,16 +272,16 @@ package com.gestureworks.objects
 	
 		
 		//inst velocity//////////////////////////////////////////////dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
+		public var velocity:Vector3D //= new Vector3D ();
 
 		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
-		public var acceleration:Vector3D = new Vector3D ();
+		public var acceleration:Vector3D //= new Vector3D ();
 
 		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
-		public var jolt:Vector3D = new Vector3D ();
+		public var jolt:Vector3D //= new Vector3D ();
 		
 		
-		public var rotationList:Vector.<Vector3D> = new Vector.<Vector3D>
+		public var rotationList:Vector.<Vector3D> //= new Vector.<Vector3D>
 		
 		
 		
@@ -375,6 +377,7 @@ package com.gestureworks.objects
 		 * Reset attributes to initial values
 		 */
 		public function reset():void {
+			active = true; // may need to be false
 			id = NaN;
 			type = null;
 			n = 0;

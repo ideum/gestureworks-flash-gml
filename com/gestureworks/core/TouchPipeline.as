@@ -322,6 +322,9 @@ package com.gestureworks.core
 						/////////////////////////////////////////////////////
 						// TOUCH CLUSTER
 						/////////////////////////////////////////////////////
+						//trace("pipeline map root cluster ",cO.position, ts.touchObjectID)
+						
+						
 						trO.position.x =	cO.position.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.position.y =	cO.position.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.position.z =	cO.position.z; // 3d--
