@@ -1154,6 +1154,13 @@ package com.gestureworks.core
 		public function get touchClusterMode():String {return _touchClusterMode;}	
 		public function set touchClusterMode(value:String):void {	_touchClusterMode = value; }
 		
+		// LOCAL TRANSFORM LOCK
+		private var _localTransformLock:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get localTransformLock():Boolean {return _localTransformLock;}	
+		public function set localTransformLock(value:Boolean):void {	_localTransformLock = value; }
 		
 		// TRANSFORM 3D
 		private var _transform3d:Boolean = false;
