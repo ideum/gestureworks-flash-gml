@@ -317,8 +317,8 @@ package com.gestureworks.core
 					
 					
 					//if (ts.touchEnabled) getKineMetrics();
-					if (ts.touchEnabled) getKineMetrics2D();
-					if (ts.motionEnabled)getKineMetrics3D();
+					if (ts.touchEnabled) getKineMetrics2D();//getTouchKineMetrics
+					if (ts.motionEnabled)getKineMetrics3D();//getMotionKineMetrics
 					//if (ts.sensorEnabled) getSensorKineMetrics();
 				}
 				
@@ -616,7 +616,7 @@ package com.gestureworks.core
 						
 						/////////////////////////////////////////////////////////
 						//if (g.cluster_input_type == "sensor")
-						
+						// 
 				}
 				
 			}
@@ -848,7 +848,9 @@ package com.gestureworks.core
 						if (c_type == "pen_dynamic") b = 2;
 						if (c_type == "pen_static") b = 3;
 						if (c_type == "tag_dynamic") b = 4;
-						if (c_type == "tag_static") b = 5;	
+						if (c_type == "tag_static") b = 5;
+						if (c_type == "shape_dynamic") b = 6;
+						if (c_type == "shape_static") b = 7;
 				
 
 						//var sub_cO_n:int =  ts.cO.subClusterArray[b].iPointArray.length;
@@ -874,7 +876,9 @@ package com.gestureworks.core
 							{
 									// BASIC 3D DRAG // ALGORITHM // type drag
 									if (g.algorithm == "drag") 	cluster_kinemetric.find2DIPTranslation(b);
-									
+									if (g.algorithm == "scale") 	cluster_kinemetric.find2DIPSeparation(b);
+									if (g.algorithm == "rotate") 	cluster_kinemetric.find2DIPRotation(b);
+									if (g.algorithm == "manipulate") 	cluster_kinemetric.find2DIPTransformation(b);
 
 									///////////////////////////////////////////////////////////////////////////////////
 									// LIMIT DELTA BY CLUSTER VALUES
@@ -1209,7 +1213,7 @@ package com.gestureworks.core
 		
 		public function findSubClusters():void 
 		{		
-			if ((!motion_core)&&(!touch_core))
+			if (!core)
 			{
 				///////////////////////////////////////////////////////////////////
 				// MUST PRECEED IP TRANSFORMATION 
@@ -1237,10 +1241,9 @@ package com.gestureworks.core
 		public function getKineMetrics3D():void 
 		{		
 			
-			if ((!motion_core)&&(!touch_core))
+			if (!core)
 			{
 			
-
 			// FOR EACH SUBCLUSTER IN MATRIX ////////////////////////////////////
 			for (var j:uint = 0; j < cO.mSubClusterArray.length; j++) 
 			{	

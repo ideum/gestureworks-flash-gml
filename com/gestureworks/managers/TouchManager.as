@@ -65,16 +65,7 @@ package com.gestureworks.managers
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
 		
 		private static var gs:TouchSprite;
-		//private static var gms:*;
-		//private static var gss:*;
-		
-		//private static var hooks:Vector.<Function>;
-		//private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();
-		
-		//private static var gms_init:Boolean = false;
-		//private static var gss_init:Boolean = false;
 		private static var touch_init:Boolean = false;
-		
 		private static var pointObject:TouchPointObject;		
 		
 		// initializes touchManager

@@ -152,15 +152,8 @@ package com.gestureworks.managers
 		public static function onInteractionBegin(event:GWInteractionEvent):void
 		{			
 			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
-			
 			//trace("event mode",event.value.mode )
-			
-			//var ref:*
-			
-			//if (event.value.mode = "touch") ref = gs;
-			//else if (event.value.mode = "motion") ref = gms;
-			//else if (event.value.mode = "sensor") ref = gss;
-			
+
 				// DUPE CORE IP LIST FOR NOW
 				// create new interaction point clone for each interactive display object 
 				var ipO:InteractionPointObject  = new InteractionPointObject();	
@@ -198,7 +191,8 @@ package com.gestureworks.managers
 				////////////////////////////////////////////
 				//ADD TO GLOBAL Interaction POINT LIST
 				gs.cO.iPointArray.push(ipO);
-				//gts.cO.iPointArray.push(ipO);
+				////////////////////////////////////////////
+				
 				
 				//trace("ip begin",ipO.type)
 				
@@ -209,10 +203,11 @@ package com.gestureworks.managers
 					//trace("test", tO.motionClusterMode,tO.tc.ipSupported(ipO.type), ipO.type);
 					//NOTE SUPPORT IP TYPES IS ONLY GLOBAL FOR NOW
 					//WILL HAVE TO INIT SUPPORTED TYPES FOR EACH VIO
-					
 					//trace(ipO.type, ipO.modal_type, ipO.input_type)
 					
-					if ((tO.motionClusterMode == "local_strong")&&(ipO.mode=="motion"))//&&(tO.tc.ipSupported(ipO.type)))
+					////////////////////////////////////////////////////////////////////////////////////////////////////////
+					// MOTION
+					if ((tO.motionEnabled)&&(tO.motionClusterMode == "local_strong")&&(ipO.mode=="motion"))//&&(tO.tc.ipSupported(ipO.type)))
 					{
 						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
 						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
@@ -228,7 +223,7 @@ package com.gestureworks.managers
 							}
 						}			
 						//2D HIT TEST ON 3D OBJECT
-						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
+						else if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
 						{
 							if (hitTest3D != null) {
 								//trace("3d hit test"));
@@ -244,38 +239,67 @@ package com.gestureworks.managers
 						}
 							
 					}
-					else if ((tO.touchClusterMode == "local_strong")&&(ipO.mode=="touch"))//&&(tO.tc.ipSupported(ipO.type)))
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////
+					// TOUCH
+					if ((tO.touchEnabled)&&(tO.touchClusterMode == "local_strong")&&(ipO.mode=="touch"))//&&(tO.tc.ipSupported(ipO.type)))
 					{
-						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
-						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
-						
 						// 2D HIT TEST FOR 2D OBJECT
 						if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
 						{
 							//trace("2d hit test");			
-							if (tO.hitTestPoint(xh, yh, false)) 
+							if (tO.hitTestPoint(ipO.position.x, ipO.position.y, false)) 
 							{
+								trace("touch 2d hit test");
 								tO.cO.iPointArray.push(ipO);
 								// CALL ASSIGN......
 							}
 						}			
 						//2D HIT TEST ON 3D OBJECT
-						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
+						else if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
 						{
-							if (hitTest3D != null) {
-								//trace("3d hit test"));
+							if (hitTest3D != null) 
+							{
 								//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
-								if (hitTest3D(tO as ITouchObject3D, xh, yh) == true) 
+								if (hitTest3D(tO as ITouchObject3D, ipO.position.x, ipO.position.y) == true) 
 								{
+									trace("touch 3d hit test");
 									tO.cO.iPointArray.push(ipO);
 									// CALL ASSIGN.......
 								}
 							}
-							
-
-						}
-							
+						}	
 					}
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//SENSOR
+					if ((tO.sensorEnabled)&&(tO.sensorClusterMode == "local_strong")&&(ipO.mode=="sensor"))//&&(tO.tc.ipSupported(ipO.type)))
+					{
+						// 2D HIT TEST FOR 2D OBJECT
+						if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
+						{
+							//trace("2d hit test");			
+							if (tO.hitTestPoint(ipO.position.x, ipO.position.y, false)) 
+							{
+								trace("SENSOR 2d hit test");
+								tO.cO.iPointArray.push(ipO);
+								// CALL ASSIGN......
+							}
+						}			
+						//2D HIT TEST ON 3D OBJECT
+						else if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
+						{
+							if (hitTest3D != null) 
+							{
+								//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
+								if (hitTest3D(tO as ITouchObject3D, ipO.position.x, ipO.position.y) == true) 
+								{
+									trace("SENSOR 3d hit test");
+									tO.cO.iPointArray.push(ipO);
+									// CALL ASSIGN.......
+								}
+							}
+						}	
+					}
+					
 				}
 				
 				
@@ -787,10 +811,12 @@ package com.gestureworks.managers
 			//trace(GestureGlobals.frameID)
 			/////////////////////////////////////////////////////////////////////////////
 			
-			if (GestureWorks.activeSensor)
+			if (GestureWorks.activeTouch)
 			{
+				//gs.tc.initGeoMetric2D()
 				// GET PREMETRICS
 				// getTouchMetrics();
+				
 			}
 			
 			if (GestureWorks.activeSensor)
@@ -803,11 +829,10 @@ package com.gestureworks.managers
 			if (GestureWorks.activeMotion)
 			{
 				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED // ON ALL OBJECTS
-				if (GestureGlobals.frameID == 200) gs.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
+				if (GestureGlobals.frameID == 200) gs.tc.initGeoMetric3D();//initi geometic gloabl ip activation
 				
 				// GET PREMETRICS
 				gs.tc.getSkeletalMetrics3D();
-				
 				//trace("FrameID");
 				
 				
@@ -830,29 +855,16 @@ package com.gestureworks.managers
 					{
 						//GLOBAL PUSH TO ALL TOUCH ENABLED VIOs
 						tO.cO.pointArray = gs.cO.pointArray; // ALWAYS GLOBAL
-						tO.cO.iPointArray = gs.cO.iPointArray; //WILL GET PUSHED USING HIT TEST
+						
+						//DONT NEED AUTOMATICALLY
+						//tO.cO.iPointArray = gs.cO.iPointArray; //WILL GET PUSHED USING HIT TEST
+						
 						//trace("push global touch to local touch object","pn",tO.tpn,tO.cO.pointArray.length, gs.cO.pointArray.length,"ipn",tO.ipn,tO.cO.iPointArray.length, gs.cO.iPointArray.length,tO.tc.core);
 					}
 					else 
 						continue;
 				}
-				
-				
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//PULL SENSOR POINT DATA INTO EACH TOUCHOBJECT
-				//GET GLOBAL SENSOR POINTS		
-				if ((GestureWorks.activeSensor) && (tO.sensorEnabled) && (!tO.tc.core))
-				{
-					if (tO.cO)
-					{
-						//trace("push global sensor to local touch object");
-						//GLOBAL PUSH TO ALL SENSOR ENABLED VIOs
-						tO.cO.sensorArray = gs.cO.sensorArray
-					}
-					else 
-						continue;
-				}
-				
+
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
 				//GET GLOBAL MOTION POINTS		
@@ -868,6 +880,21 @@ package com.gestureworks.managers
 						
 						tO.cO.motionArray = gs.cO.motionArray
 						tO.cO.handList = gs.cO.handList;
+					}
+					else 
+						continue;
+				}
+				
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//PULL SENSOR POINT DATA INTO EACH TOUCHOBJECT
+				//GET GLOBAL SENSOR POINTS		
+				if ((GestureWorks.activeSensor) && (tO.sensorEnabled) && (!tO.tc.core))
+				{
+					if (tO.cO)
+					{
+						//trace("push global sensor to local touch object");
+						//GLOBAL PUSH TO ALL SENSOR ENABLED VIOs
+						tO.cO.sensorArray = gs.cO.sensorArray
 					}
 					else 
 						continue;
