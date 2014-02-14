@@ -185,7 +185,7 @@ package com.gestureworks.managers
 			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
 			var tpO:TouchPointObject  = new TouchPointObject();
 					
-					tpO.id = gs.motionPointCount; 
+					tpO.id = gs.touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
 					tpO.position.x = event.stageX;
 					tpO.position.y = event.stageY;
@@ -229,6 +229,8 @@ package com.gestureworks.managers
 			{
 					// REMOVE POINT FROM LOCAL LIST
 					gs.cO.touchArray.splice(tpO.id, 1);
+					
+					//test gs.cO.touchArray.splice(tpO.touchPointID, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
 					
 					// REDUCE LOACAL POINT COUNT

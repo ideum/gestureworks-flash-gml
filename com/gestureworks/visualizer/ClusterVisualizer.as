@@ -586,16 +586,17 @@ package com.gestureworks.visualizer
 									//graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
 									}
 									
+									/*
 									if(_drawWeb){
 									// draw web links tyo center
 									if (style.web_shape == "fullweb") {
 											for (var k:int = 0; k < tpn; k++) {
 												
-												var pt:TouchPointObject = sub_cO.touchArray[k];
+												var pt:TouchPointObject = sub_cO.iPointArray[k]//touchArray[k];
 												
 													for (var l:int=0; l<tpn; l++){
 														if (k != l) {
-															var pt1:TouchPointObject = sub_cO.touchArray[l];
+															var pt1:TouchPointObject = sub_cO.iPointArray[l]//touchArray[l];
 															//trace(i,j)
 															graphics.moveTo(pt.position.x,pt.position.y);
 															graphics.lineTo(pt1.position.x,pt1.position.y);
@@ -603,7 +604,7 @@ package com.gestureworks.visualizer
 													}
 											}
 									}
-									}
+									}*/
 									
 									
 										
@@ -766,16 +767,17 @@ package com.gestureworks.visualizer
 									graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
 									}
 									
+									/*
 									if(_drawWeb){
 									// draw web links tyo center
 									if (style.web_shape == "fullweb") {
 											for (var k:int = 0; k < tpn; k++) {
 												
-												var pt:TouchPointObject = sub_cO.touchArray[k];
+												var pt:TouchPointObject = sub_cO.iPointArray[k]//touchArray[k];
 												
 													for (var l:int=0; l<tpn; l++){
 														if (k != l) {
-															var pt1:TouchPointObject = sub_cO.touchArray[l];
+															var pt1:TouchPointObject = sub_cO.iPointArray[l]//touchArray[l];
 															//trace(i,j)
 															graphics.moveTo(pt.position.x,pt.position.y);
 															graphics.lineTo(pt1.position.x,pt1.position.y);
@@ -783,7 +785,7 @@ package com.gestureworks.visualizer
 													}
 											}
 									}
-									}
+									}*/
 									
 									
 										

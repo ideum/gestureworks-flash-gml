@@ -196,6 +196,7 @@ package com.gestureworks.managers
 				
 				trace("ip begin",ipO.type)
 				
+				/*
 				///////////////////////////////////////////////////////////////////
 				// ADD TO LOCAL OBJECT Interaction POINT LIST
 				for each(var tO:Object in touchObjects)
@@ -300,7 +301,7 @@ package com.gestureworks.managers
 						}	
 					}
 					
-				}
+				}*/
 				
 				
 				
@@ -335,6 +336,8 @@ package com.gestureworks.managers
 				
 					// REMOVE POINT FROM GLOBAL LIST
 					//gms.cO.iPointArray.splice(ipointObject.id, 1);
+					//gs.cO.iPointArray.splice(ipointObject.id, 1);
+					
 					gs.cO.iPointArray.splice(ipointObject.id, 1);
 					
 					// REMOVE FROM LOCAL OBJECTES
@@ -921,6 +924,7 @@ package com.gestureworks.managers
 					
 					// update touch object debugger display
 					tO.updateDebugDisplay();
+					//trace("update display");
 				}
 				
 				//??

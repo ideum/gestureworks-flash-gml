@@ -316,16 +316,16 @@ package com.gestureworks.objects
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
-		public var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
+		//public var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
 
 		// motion point data list
-		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		//public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 
 		// motion point data list
-		public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		//public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		
 		// sensor point data list----------------
-		public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
+		//public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
 
 		
 		
@@ -365,7 +365,7 @@ package com.gestureworks.objects
 			
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
-		public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
+		//public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
 		
 	
 		/////////////////////////////////////////////////////////////////////////
@@ -468,10 +468,10 @@ package com.gestureworks.objects
 			add = false;
 			remove = false;
 			//mmPointArray.length = 0;
-			touchArray.length = 0;
-			motionArray.length = 0;
-			motionArray2D.length = 0;
-			sensorArray.length = 0;
+			//touchArray.length = 0;
+			//motionArray.length = 0;
+			//motionArray2D.length = 0;
+			//sensorArray.length = 0;
 			iPointArray.length = 0;
 			iPointArray2D.length = 0;
 			//tcO.reset();
@@ -480,7 +480,7 @@ package com.gestureworks.objects
 			//subClusterArray.length = 0;
 			//scO.reset();
 			//ssubClusterArray.length = 0;
-			gPointArray.length = 0;
+			//gPointArray.length = 0;
 			history.length = 0;
 		}
 

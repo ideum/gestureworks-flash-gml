@@ -109,6 +109,7 @@ package com.gestureworks.core
 				//trace("create touchsprite debug display")
 
 				debug_display = new Sprite();
+					//debug_display.mouseChildren = true;
 				//initDebugVars();
 				initDebugDisplay();
 				
@@ -206,12 +207,15 @@ package com.gestureworks.core
 			{
 			// touch points or interaction points
 			// REMOVE MPN WHEN TESTING COMPLETE
-			if ((ts.N)||(ts.mpn)||(ts.ipn)||(ts.spn))//ts.cO.sn //ts.cO.fn
+			if ((ts.N)||(ts.ipn))//||(ts.mpn)||(ts.ipn)||(ts.spn)//ts.cO.sn //ts.cO.fn
 			{
 				if ((pointDisplay)&&(point)) 		point.draw();
 				if ((clusterDisplay)&&(cluster))	cluster.draw();
 				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 				
+			}
+			if ((ts.tpn)||(ts.mpn)||(ts.spn)) {
+				if ((pointDisplay)&&(point)) 		point.draw();
 			}
 		}
 	}

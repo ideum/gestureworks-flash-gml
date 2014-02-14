@@ -165,7 +165,8 @@ package com.gestureworks.visualizer
 		{
 			// update data
 			//N = cO.pointArray.length;
-			tpn = cO.tpn;
+			
+			tpn = cO.touchArray.length//cO.tpn;
 			mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
 			spn = cO.sensorArray.length;
 			ipn =  cO.iPointArray.length;
@@ -175,7 +176,7 @@ package com.gestureworks.visualizer
 			
 			
 			// draw
-			if (ts.touchEnabled)	draw_touchPoints();
+			//if (ts.touchEnabled)	draw_touchPoints();
 			if (ts.motionEnabled)	draw_motionPoints();
 			if (ts.sensorEnabled)	draw_sensorPoints();
 			
@@ -544,6 +545,13 @@ package com.gestureworks.visualizer
 					// DRAW WII CONTROLLER POINT
 					if (sp.type == "touch_finger_dynamic")//finger
 						{
+							
+							tptext_array[i].textCont = "ID: " + String(sp.interactionPointID); //+ "    id" + String(pt.touchPointID);
+							tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
+							tptext_array[i].y = sp.position.y - 55;
+							tptext_array[i].visible = true;
+							tptext_array[i].textColor = style.touch_text_color;
+						
 							if (_drawShape)
 							{
 								// sensor center
