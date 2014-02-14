@@ -178,7 +178,7 @@ package com.gestureworks.managers
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
 		{
-			//trace("touch manager on touch down", event.touchPointID,gs.touchPointCount, gs.cO.pointArray.length)
+			trace("touch manager on touch down", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
 			
 			//////////////////////////////////////////////////////////////////////////////
 			// CREATE NEW TOUCHPOINT IN GLOBAL TOUCH OBJECT
@@ -194,9 +194,12 @@ package com.gestureworks.managers
 					tpO.size.y = event.sizeY;
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					gs.cO.pointArray.push(tpO);
+					
+					gs.cO.touchArray.push(tpO);
+					
 					gs.touchPointCount++;//touchPointCount++;
 				
+					//trace("push touch point");
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::touchPoints[event.touchPointID] = tpO;
@@ -216,7 +219,7 @@ package com.gestureworks.managers
 		public static function onTouchUp(event:GWTouchEvent):void
 		{
 			////////////////////////////////////////////////////////////////////////////////////
-			//trace("Touch point End, touchManager", event.touchPointID,gs.touchPointCount, gs.cO.pointArray.length)
+			//trace("Touch point End, touchManager", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
 			var touchPointID:int = event.touchPointID;
 			var tpO:TouchPointObject = touchPoints[touchPointID];
 			
@@ -225,16 +228,16 @@ package com.gestureworks.managers
 			if (tpO)
 			{
 					// REMOVE POINT FROM LOCAL LIST
-					gs.cO.pointArray.splice(tpO.id, 1);
+					gs.cO.touchArray.splice(tpO.id, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
 					
 					// REDUCE LOACAL POINT COUNT
 					gs.touchPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < gs.cO.pointArray.length; i++)
+					for (var i:int = 0; i < gs.cO.touchArray.length; i++)
 					{
-						gs.cO.pointArray[i].id = i;
+						gs.cO.touchArray[i].id = i;
 					}
 				
 					// DELETE FROM GLOBAL POINT LIST
@@ -254,7 +257,7 @@ package com.gestureworks.managers
 		
 		public static function onTouchMove(event:GWTouchEvent):void
 		{	
-			//trace("touch manager on touch move", event.touchPointID, gts.touchPointCount, gts.cO.pointArray.length)
+			//trace("touch manager on touch move", event.touchPointID, gts.touchPointCount, gts.cO.touchArray.length)
 			///////////////////////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////////
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS

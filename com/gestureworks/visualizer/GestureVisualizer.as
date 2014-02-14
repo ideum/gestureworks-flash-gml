@@ -228,7 +228,7 @@ package com.gestureworks.visualizer
 				//graphics.lineStyle(style.t_stroke_thickness, style.t_stroke_color, style.t_stroke_alpha);
 				graphics.lineStyle(8,style.b_stroke_color, 0.6);
 				
-				pointList = cO.pointArray;
+				pointList = cO.touchArray;
 				
 					//trace("drawing .....thumb",cO.thumbID,tpn,pointList[i].x, pointList[i].y,cO.x, cO.y,cO.orient_dx,cO.orient_dy)
 					for (var i:int = 0; i < tpn; i++) 

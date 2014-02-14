@@ -282,34 +282,36 @@ package com.gestureworks.core
 		// internal public
 		public function updateClusterAnalysis():void
 			{
-				//trace("update cluster analysis")
-				
-				// NEED TO MOVE INTO METRIC
-				updateClusterCount();
-				gn = gO.pOList.length;
-				
-				
-				cluster_kinemetric.resetRootCluster();
-				
-				
-				if (ts.touchEnabled) cluster_kinemetric.resetTouchCluster();
-				if (ts.motionEnabled)cluster_kinemetric.resetMotionCluster();
-				//if (ts.sensorEnabled)cluster_kinemetric.resetSensorCluster();
-				
-				//cluster_kinemetric.findRootInstDimention();
-				
-				//CLEARS DELTAS STORED IN GESTURE OBJECT
-				//SO THAT VALUES DO NOT PERSIST BEYOND RELEASE (NOT TRUE FOR GESTURE DELTA)
-				// CLEARS PRIME CLUSTER PRIME MODAL CLUSTERS AND ALL SUBCLUSTERS
-				clearGestureObjectClusterDeltas();
-				
+				trace("update cluster analysis")
+
 				// must preceed kinemetrics
-				if (geometricsOn)
+				if (core)
 				{	
 					//TODO: GEOMRETRIC 2D (TRIANGLE TEST)
 					if (ts.touchEnabled) getGeoMetrics2D(); 
 					if (ts.motionEnabled) getGeoMetrics3D();
 				}
+				
+				else{
+				// NEED TO MOVE INTO METRIC
+				updateClusterCount();
+				gn = gO.pOList.length;
+				
+				
+				cluster_kinemetric.resetRootClusterValues();
+				
+				if (ts.touchEnabled) cluster_kinemetric.resetTouchClusterValues();
+				if (ts.motionEnabled)cluster_kinemetric.resetMotionClusterValues();
+				//if (ts.sensorEnabled)cluster_kinemetric.resetSensorCluster();
+				
+				cluster_kinemetric.findRootInstDimention();
+				
+				//CLEARS DELTAS STORED IN GESTURE OBJECT
+				//SO THAT VALUES DO NOT PERSIST BEYOND RELEASE (NOT TRUE FOR GESTURE DELTA)
+				// CLEARS PRIME CLUSTER PRIME MODAL CLUSTERS AND ALL SUBCLUSTERS
+				clearGestureObjectClusterDeltas();
+					
+
 				if (kinemetricsOn) 
 				{	
 					
@@ -341,7 +343,7 @@ package com.gestureworks.core
 				//trace(ts.cO.motionArray.length);
 				//trace(ts.cO.iPointArray.length);
 				//trace(ts.cO.iPointArray2D.length);
-				
+			}
 		}
 		
 		////////////////////////////////////////
@@ -421,7 +423,7 @@ package com.gestureworks.core
 			// activate gloabl touch geometric 2d anlysis
 			
 			//trace("set geometric init",core);
-			if ((touch_core)&&(!core_init)){
+			if ((core)&&(!core_init)){
 			
 			var key:int;
 			// for each touchsprite/motionsprite
@@ -487,7 +489,7 @@ package com.gestureworks.core
 		public function initGeoMetric3D():void
 		{
 			//trace("set geometric init",core);
-			if ((motion_core)&&(!core_init)&&(!touch_core)){
+			if ((!core)&&(!core_init)){
 			
 			var key:int;
 			// for each touchsprite/motionsprite
@@ -552,17 +554,20 @@ package com.gestureworks.core
 		
 		public function getGeoMetrics2D():void
 		{
-			//trace("get geometric 2d");
-			//cluster_kinemetric.findTouchInstDimention();
-			//cluster_geometric.find2DTagTouchPoints();
-			cluster_geometric.findFingerTouchPoints();
-			//cluster_geometric.findPenTouchPoints
+			// can only happen once
+			if(core){
+				//trace("get geometric 2d");
+				//cluster_kinemetric.findTouchInstDimention();
+				//cluster_geometric.find2DTagTouchPoints();
+				cluster_geometric.findFingerTouchPoints();
+				//cluster_geometric.findPenTouchPoints
+			}
 		}
 		
 		// ESTABLISHES LOCAL IP SUPPORT TO ALLOW IN LOCAL IP LIST
 		public function initIPSupport():void
 		{
-			if ((!motion_core)&&(!touch_core)) 
+			if (!core) 
 			{
 			var gn:int = gO.pOList.length;
 			
@@ -649,7 +654,7 @@ package com.gestureworks.core
 		{
 			//trace("get skeletal geometric");
 			
-			if (motion_core)
+			if (core)
 			{
 				//trace("get core geometrics")
 				
@@ -690,7 +695,7 @@ package com.gestureworks.core
 			//TODO:  SET TO BE AWARE OF NUMBER OF FINGERS ASOCOCIATED WITH CONFIG
 			// SET TO BE AWARE OF REQUIRED HAND SETTINGS FLATNESS AND ORIENTATION
 			
-			if (motion_core)//
+			if (core)//
 			{
 			//trace("get core geometrics", core);
 			
@@ -758,7 +763,7 @@ package com.gestureworks.core
 		
 		public function getKineMetrics2D():void 
 		{		
-			if ((!motion_core)&&(!touch_core))
+			if (!core)
 			{
 				//trace("getting kinemetrics 2d");
 				
@@ -949,7 +954,7 @@ package com.gestureworks.core
 	
 			gn = gO.pOList.length;
 			
-			cluster_kinemetric.resetTouchCluster();
+			cluster_kinemetric.resetTouchClusterValues();
 			cluster_kinemetric.findTouchInstDimention();
 			
 			//cluster_geometric.find2DTagPoints(); 

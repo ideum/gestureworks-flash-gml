@@ -87,8 +87,8 @@ package com.gestureworks.interfaces
 		/**
 		 * @private
 		 */
-		function get pointArray():Vector.<TouchPointObject>;
-		function set pointArray(pa:Vector.<TouchPointObject>):void;
+		//function get pointArray():Vector.<TouchPointObject>;
+		//function set pointArray(pa:Vector.<TouchPointObject>):void;
 
 		/**
 		 * Number of points in the super cluster

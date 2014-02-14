@@ -195,7 +195,7 @@ package com.gestureworks.visualizer
 			
 				for (i = 0; i < n; i++) 
 				{
-					var pt:TouchPointObject = cO.pointArray[i]
+					var pt:TouchPointObject = cO.touchArray[i]
 					///////////////////////////////////////////////////////////////////
 					// Point positons and shapes
 					///////////////////////////////////////////////////////////////////

@@ -117,7 +117,7 @@ package com.gestureworks.analysis
 		{
 			//trace("hitory length",pointList[0].history.length)
 			var path:Array = new Array();
-			pointList = cO.pointArray;
+			pointList = cO.touchArray;
 			
 			var pn:int = pointList[0].history.length;
 			

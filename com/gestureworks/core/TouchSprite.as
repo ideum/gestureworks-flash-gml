@@ -187,12 +187,12 @@ package com.gestureworks.core
 		public function get touchObjectID():int { return _touchObjectID; }
 		public function set touchObjectID(id:int):void { _touchObjectID = id; }
 		
-		private var _pointArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>(); // read only
+		//private var _pointArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>(); // read only
 		/**
 		 * @inheritDoc
 		 */
-		public function get pointArray():Vector.<TouchPointObject> { return _pointArray; }
-		public function set pointArray(pa:Vector.<TouchPointObject>):void { _pointArray = pa; }
+		//public function get pointArray():Vector.<TouchPointObject> { return _pointArray; }
+		//public function set pointArray(pa:Vector.<TouchPointObject>):void { _pointArray = pa; }
 		
 		private var _N:int = 0; 
 		/**
@@ -1359,7 +1359,7 @@ package com.gestureworks.core
 			
 			gml = null;
 			gwTouchListeners = null;
-			pointArray = null;
+			
 			_cO = null;
 			_sO = null;
 			_tiO = null;

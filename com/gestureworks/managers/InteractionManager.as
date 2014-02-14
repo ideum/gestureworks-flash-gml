@@ -194,7 +194,7 @@ package com.gestureworks.managers
 				////////////////////////////////////////////
 				
 				
-				//trace("ip begin",ipO.type)
+				trace("ip begin",ipO.type)
 				
 				///////////////////////////////////////////////////////////////////
 				// ADD TO LOCAL OBJECT Interaction POINT LIST
@@ -249,7 +249,7 @@ package com.gestureworks.managers
 							//trace("2d hit test");			
 							if (tO.hitTestPoint(ipO.position.x, ipO.position.y, false)) 
 							{
-								trace("touch 2d hit test");
+								trace("touch 2d hit test", tO.touchObjectID);
 								tO.cO.iPointArray.push(ipO);
 								// CALL ASSIGN......
 							}
@@ -262,7 +262,7 @@ package com.gestureworks.managers
 								//trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as ITouchObject3D)
 								if (hitTest3D(tO as ITouchObject3D, ipO.position.x, ipO.position.y) == true) 
 								{
-									trace("touch 3d hit test");
+									//trace("touch 3d hit test");
 									tO.cO.iPointArray.push(ipO);
 									// CALL ASSIGN.......
 								}
@@ -493,10 +493,12 @@ package com.gestureworks.managers
 				target.view = event.view;
 				
 				//ADD TO LOCAL POINT LIST
-				target.pointArray.push(pointObject);
+				//target.pointArray.push(pointObject);
 				
 				//UPDATE LOCAL CLUSTER OBJECT
-				target.cO.pointArray = target.pointArray;												
+				//target.cO.pointArray = target.pointArray;	
+				
+				target.cO.touchArray.push(pointObject);
 				
 				// INCREMENT POINT COUTN ON LOCAL TOUCH OBJECT
 				target.touchPointCount++;
@@ -524,11 +526,13 @@ package com.gestureworks.managers
 				pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 
 			//ADD TO LOCAL POINT LIST
-			target.pointArray.push(pointObject);
+			//target.pointArray.push(pointObject);
 			
 			//UPDATE LOCAL CLUSTER OBJECT
 			//touch object point list and cluster point list should be consolodated
-			target.cO.pointArray = target.pointArray;
+			//target.cO.pointArray = target.pointArray;
+			
+					target.cO.touchArray.push(pointObject);
 			
 			//UPDATE POINT LOCAL COUNT
 			target.touchPointCount++;
@@ -803,7 +807,7 @@ package com.gestureworks.managers
 		
 		public static function interactionFrameHandler(event:GWEvent):void
 		{
-			//trace("touch frame process ----------------------------------------------",gs.touchPointCount, gs.cO.pointArray.length,gs.cO.iPointArray.length);	
+		//	trace("touch frame process ----------------------------------------------",gs.touchPointCount, gs.cO.touchArray.length,gs.cO.iPointArray.length);	
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
@@ -845,6 +849,8 @@ package com.gestureworks.managers
 			{
 				//trace("tm touchobject","pn",tO.tpn,tO.cO.pointArray.length, gs.cO.pointArray.length,"ipn",tO.ipn,tO.cO.iPointArray.length, gs.cO.iPointArray.length, GestureWorks.activeNativeTouch,tO.touchEnabled,tO.tc.core,tO.tc.touch_core,"id", tO.touchObjectID, gs.touchObjectID);//gms.touchObjectID)
 				
+				
+				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL TOUCH POINT DATA INTO EACH TOUCHOBJECT
 				//GET GLOBAL TOUCH POINTS		
@@ -854,7 +860,7 @@ package com.gestureworks.managers
 					if (tO.cO)
 					{
 						//GLOBAL PUSH TO ALL TOUCH ENABLED VIOs
-						tO.cO.pointArray = gs.cO.pointArray; // ALWAYS GLOBAL
+						tO.cO.touchArray = gs.cO.touchArray; // ALWAYS GLOBAL
 						
 						//DONT NEED AUTOMATICALLY
 						//tO.cO.iPointArray = gs.cO.iPointArray; //WILL GET PUSHED USING HIT TEST
@@ -868,7 +874,7 @@ package com.gestureworks.managers
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
 				//GET GLOBAL MOTION POINTS		
-				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){ //MUST ADD !CORE
+				if((GestureWorks.activeMotion)&&(tO.motionEnabled)&&(!tO.tc.core)){ //MUST ADD !CORE
 					if (tO.cO)
 					{
 						if (GestureGlobals.frameID == 200) 
@@ -908,7 +914,7 @@ package com.gestureworks.managers
 				// move to timeline visualizer
 				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
 				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-				if ((tO.visualizer)&&(tO.visualizer.debug_display))
+				if ((tO.visualizer)&&(tO.visualizer.debug_display)&& (!tO.tc.core))
 				{
 					//UPDATE TRANSFORM HISTORIES
 					TransformHistories.historyQueue(tO.touchObjectID);
@@ -916,6 +922,10 @@ package com.gestureworks.managers
 					// update touch object debugger display
 					tO.updateDebugDisplay();
 				}
+				
+				//??
+				//tO.cO.iPointArray.length = 0;
+				//tO.cO.iPointArray2D.length = 0;
 			}
 			
 			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
@@ -929,6 +939,8 @@ package com.gestureworks.managers
 			
 			//KILL POINTS THAT DONE REMOVE AUTOMATICALLY
 			//killZombies(ITouchObject(tO));
+			
+			
 			
 		}
 		

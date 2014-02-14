@@ -23,6 +23,7 @@ package com.gestureworks.managers
 	public class InteractionPointTracker
 	{				
 		public static var activePoints:Vector.<InteractionPointObject>;
+		//private static var framePoints:Vector.<InteractionPointObject>;
 		public static var framePoints:Vector.<InteractionPointObject>;
 		private static var temp_framePoints:Vector.<InteractionPointObject>;
 		
@@ -139,6 +140,7 @@ package com.gestureworks.managers
 						activePoints.push(fp);
 						InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
 						//if (debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
+						//trace("ip begin",fp.interactionPointID,temp_framePoints.length)
 					}
 					
 					/*

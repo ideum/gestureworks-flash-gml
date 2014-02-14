@@ -316,7 +316,7 @@ package com.gestureworks.objects
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
-		public var pointArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
+		public var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
 
 		// motion point data list
 		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
@@ -468,7 +468,7 @@ package com.gestureworks.objects
 			add = false;
 			remove = false;
 			//mmPointArray.length = 0;
-			pointArray.length = 0;
+			touchArray.length = 0;
 			motionArray.length = 0;
 			motionArray2D.length = 0;
 			sensorArray.length = 0;

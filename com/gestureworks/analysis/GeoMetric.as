@@ -104,12 +104,12 @@ package com.gestureworks.analysis
 		public function findFingerTouchPoints():void
 		{
 			//var sizeThreshold:Number = 0.46; // GML ADJUST
-			var fn:int = cO.pointArray.length;
+			var fn:int = cO.touchArray.length;
 			var minSize:int = 83;
 				
 				for (var i:int = 0; i < fn; i++)
 				{
-					var tp:TouchPointObject = cO.pointArray[i];
+					var tp:TouchPointObject = cO.touchArray[i];
 					//if(!locked){
 					//if ((tp.size.x >= minSize) && (tp.size.y >= minSize))
 					//{
@@ -120,6 +120,7 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
+						trace("push finger ",tp.touchPointID);
 						
 						//trace("size",tp.size.x, tp.size.y);
 					//}
@@ -137,12 +138,12 @@ package com.gestureworks.analysis
 		
 		public function findPenTouchPoints():void
 		{
-			var fn:int = cO.pointArray.length;
+			var fn:int = cO.touchArray.length;
 			var minSize:int = 83;
 			
 				for (var i:int = 0; i < fn; i++)
 				{
-					var tp:TouchPointObject = cO.pointArray[i];
+					var tp:TouchPointObject = cO.touchArray[i];
 					//if(!locked){
 					if ((tp.size.x < minSize) && (tp.size.y < minSize))
 					{
@@ -175,14 +176,14 @@ package com.gestureworks.analysis
 			
 				for (i = 0; i < ts.cO.tpn; i++) 
 				{
-				//var pt:PointObject = cO.pointArray[i]
+				//var pt:PointObject = cO.touchArray[i]
 				
-				var distx:Number = cO.tcO.position.x - cO.pointArray[i].position.x;
-				var disty:Number = cO.tcO.position.y - cO.pointArray[i].position.y;
+				var distx:Number = cO.tcO.position.x - cO.touchArray[i].position.x;
+				var disty:Number = cO.tcO.position.y - cO.touchArray[i].position.y;
 				
-				cO.pointArray[i].dist = Math.sqrt(distx * distx + disty * disty)
-				cO.pointArray[i].match = false;
-				//trace("tpoints",i,cO.pointArray[i].dist,cO.tcO.x,cO.tcO.y)
+				cO.touchArray[i].dist = Math.sqrt(distx * distx + disty * disty)
+				cO.touchArray[i].match = false;
+				//trace("tpoints",i,cO.touchArray[i].dist,cO.tcO.x,cO.tcO.y)
 				}
 				trace("--")
 				
@@ -200,22 +201,22 @@ package com.gestureworks.analysis
 							//var dry = cO.y - cO.objectArray[i][j].y;
 							//var rdist =  Math.sqrt(drx * drx + dry * dry)
 							var rdist:Number = cO.objectArray[i][j].dist;
-							var diff:Number = Math.abs(cO.objectArray[i][j].dist -cO.pointArray[k].dist)
+							var diff:Number = Math.abs(cO.objectArray[i][j].dist -cO.touchArray[k].dist)
 							//var min:Number = rdist - error; 
 							//var max:Number = rdist + error; 
 							
 							
 							
-							//if (( min < cO.pointArray[k].dist < max ) && (!cO.pointArray[k].match))
-							//trace("rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist)
+							//if (( min < cO.touchArray[k].dist < max ) && (!cO.touchArray[k].match))
+							//trace("rad diff",diff,cO.objectArray[i][j].dist,cO.touchArray[k].dist)
 							
 							//NEED DECENDING POINT MATCH TO CREATE BEST MATCH
 							// NEED ANGULAR 
-							if((!cO.pointArray[k].match)&&(diff < error))
+							if((!cO.touchArray[k].match)&&(diff < error))
 								{
-									cO.pointArray[k].match = true;
+									cO.touchArray[k].match = true;
 									count++;
-									//trace(" touch gemetric rad diff",diff,cO.objectArray[i][j].dist,cO.pointArray[k].dist,k)
+									//trace(" touch gemetric rad diff",diff,cO.objectArray[i][j].dist,cO.touchArray[k].dist,k)
 								}
 						}
 					}

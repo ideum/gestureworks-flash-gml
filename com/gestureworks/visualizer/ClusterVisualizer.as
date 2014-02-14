@@ -206,11 +206,11 @@ package com.gestureworks.visualizer
 			if (style.web_shape == "fullweb") {
 					for (var k:int = 0; k < tpn; k++) {
 						
-						var pt:TouchPointObject = cO.pointArray[k];
+						var pt:TouchPointObject = cO.touchArray[k];
 						
 							for (var l:int=0; l<tpn; l++){
 								if (k != l) {
-									var pt1:TouchPointObject = cO.pointArray[l];
+									var pt1:TouchPointObject = cO.touchArray[l];
 									//trace(i,j)
 									graphics.moveTo(pt.position.x,pt.position.y);
 									graphics.lineTo(pt1.position.x,pt1.position.y);
@@ -221,7 +221,7 @@ package com.gestureworks.visualizer
 			if (style.web_shape == "starweb") {
 				//trace("starweb");
 				for (var p:int = 0; p < tpn; p++) {
-						var pt2:TouchPointObject = cO.pointArray[p];
+						var pt2:TouchPointObject = cO.touchArray[p];
 						graphics.moveTo(_x,_y);
 						graphics.lineTo(pt2.position.x, pt2.position.y);
 					}
@@ -591,11 +591,11 @@ package com.gestureworks.visualizer
 									if (style.web_shape == "fullweb") {
 											for (var k:int = 0; k < tpn; k++) {
 												
-												var pt:TouchPointObject = sub_cO.pointArray[k];
+												var pt:TouchPointObject = sub_cO.touchArray[k];
 												
 													for (var l:int=0; l<tpn; l++){
 														if (k != l) {
-															var pt1:TouchPointObject = sub_cO.pointArray[l];
+															var pt1:TouchPointObject = sub_cO.touchArray[l];
 															//trace(i,j)
 															graphics.moveTo(pt.position.x,pt.position.y);
 															graphics.lineTo(pt1.position.x,pt1.position.y);
@@ -771,11 +771,11 @@ package com.gestureworks.visualizer
 									if (style.web_shape == "fullweb") {
 											for (var k:int = 0; k < tpn; k++) {
 												
-												var pt:TouchPointObject = sub_cO.pointArray[k];
+												var pt:TouchPointObject = sub_cO.touchArray[k];
 												
 													for (var l:int=0; l<tpn; l++){
 														if (k != l) {
-															var pt1:TouchPointObject = sub_cO.pointArray[l];
+															var pt1:TouchPointObject = sub_cO.touchArray[l];
 															//trace(i,j)
 															graphics.moveTo(pt.position.x,pt.position.y);
 															graphics.lineTo(pt1.position.x,pt1.position.y);
