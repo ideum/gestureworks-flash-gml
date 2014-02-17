@@ -2096,7 +2096,7 @@ package com.gestureworks.analysis
 							}
 					
 							
-						/*	
+							
 						//////////////////////////////////////////////////////////////////////////////////////
 						// REMOVING INTERACTION POINTS FROM LOCAL LIST
 						//////////////////////////////////////////////////////////////////////////////////////
@@ -2124,7 +2124,7 @@ package com.gestureworks.analysis
 								}
 							}
 						}
-						*/
+						
 						
 						
 					}
