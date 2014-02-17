@@ -204,6 +204,7 @@ package com.gestureworks.visualizer
 					var x:Number = pt.position.x;
 					var y:Number = pt.position.y;
 					
+					/*
 					if (_drawText)
 					{
 						///////////////////////////////////////////////////////////////////
@@ -215,7 +216,7 @@ package com.gestureworks.visualizer
 						tptext_array[i].y = y - 55;
 						tptext_array[i].visible = true;
 						tptext_array[i].textColor = style.touch_text_color;
-					}
+					}*/
 					
 					if (_drawShape)
 					{
@@ -533,9 +534,9 @@ package com.gestureworks.visualizer
 			
 		private function draw_interactionPoints():void
 			{
-		//	trace("drawing interaction points", ipn);
-				
-			for (i = 0; i < ipn; i++) 
+			trace("drawing interaction points",ts.touchObjectID, ipn);
+				//ipn
+			for (i = 0; i < cO.iPointArray.length; i++) 
 					{
 					var sp:InteractionPointObject = cO.iPointArray[i];
 
@@ -543,7 +544,7 @@ package com.gestureworks.visualizer
 					
 					///////////////////////////////////////////
 					// DRAW WII CONTROLLER POINT
-					if (sp.type == "touch_finger_dynamic")//finger
+					if (sp.type == "finger_dynamic")//finger
 						{
 							
 							tptext_array[i].textCont = "ID: " + String(sp.interactionPointID); //+ "    id" + String(pt.touchPointID);
@@ -556,7 +557,7 @@ package com.gestureworks.visualizer
 							{
 								// sensor center
 								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0x0000FF, style.fill_alpha);
+								graphics.beginFill(0xFF0000, style.fill_alpha);
 								graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
 								graphics.endFill();
 							}

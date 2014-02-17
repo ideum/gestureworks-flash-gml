@@ -1937,6 +1937,8 @@ package com.gestureworks.analysis
 				if ((gs))//&&(ts.mpn)
 				{
 				//trace("hit test ip cluster",gms.cO.iPointArray.length,ts.motionClusterMode,ts)
+				
+				/*
 				///////////////////////////////////////////////////////////////////////////////////////////////////////
 				///////////////////////////////////////////////////////////////////////////////////////////////////////
 				// motion cluster hit test
@@ -2007,7 +2009,7 @@ package com.gestureworks.analysis
 							}
 						}
 					}
-					
+					*/
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// touch cluster hit test
@@ -2094,27 +2096,27 @@ package com.gestureworks.analysis
 							}
 					
 							
-							
+						/*	
 						//////////////////////////////////////////////////////////////////////////////////////
 						// REMOVING INTERACTION POINTS FROM LOCAL LIST
 						//////////////////////////////////////////////////////////////////////////////////////
-						if (ts.cO.iPointArray.length)
+						if (cO.iPointArray.length)
 						{
 						//trace("strong length", ts.cO.iPointArray.length);
-						for (i = 0; i < ts.cO.iPointArray.length; i++)
+						for (i = 0; i < cO.iPointArray.length; i++)
 							{
-								var k_pt = ts.cO.iPointArray[i];
+								var k_pt = cO.iPointArray[i];
 								
 								if (k_pt)
 								{
 									if (k_pt.mode == "touch")
 									{
 										//trace(ts.cO.iPointArray[i].interactionPointID,ts.cO.iPointArray[i].phase);
-										if (k_pt.phase == "end") ts.cO.iPointArray.splice(i, 1);
+										if (k_pt.phase == "end") cO.iPointArray.splice(i, 1);
 										
-										else if ((k_pt.phase == "update")&&(ts.touchClusterMode == "local_weak"))
+										if ((k_pt.phase == "update")&&(ts.touchClusterMode == "local_weak"))
 										{
-											if (!ts.hitTestPoint(k_pt.position.x, k_pt.position.y, false)) ts.cO.iPointArray.splice(i, 1);
+											if (!ts.hitTestPoint(k_pt.position.x, k_pt.position.y, false)) cO.iPointArray.splice(i, 1);
 											//if (!ts.hitTest(ipt.position.x, ipt.position.y, false))ts.cO.iPointArray.splice(i, 1);
 											//trace();//
 										}
@@ -2122,6 +2124,9 @@ package com.gestureworks.analysis
 								}
 							}
 						}
+						*/
+						
+						
 					}
 	
 				}

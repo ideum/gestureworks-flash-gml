@@ -178,7 +178,7 @@ package com.gestureworks.managers
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
 		{
-			trace("touch manager on touch down", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
+			//trace("touch manager on touch down", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
 			
 			//////////////////////////////////////////////////////////////////////////////
 			// CREATE NEW TOUCHPOINT IN GLOBAL TOUCH OBJECT
