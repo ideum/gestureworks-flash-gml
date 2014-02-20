@@ -98,6 +98,13 @@ package com.gestureworks.interfaces
 		function set N(n:int):void;
 		
 		/**
+		 * index posittion of the interactive display object
+		 * @private
+		 */
+		function get index():int;
+		function set index(n:int):void;
+		
+		/**
 		 * Number of touch points in the parent cluster
 		 * @private
 		 */
@@ -217,8 +224,8 @@ package com.gestureworks.interfaces
 		 * Allows touch events to be passed down to child display object. Has the same function as MouseChildren.
 		 * @default false
 		 */
-		function get touchChildren():Boolean;
-		function set touchChildren(value:Boolean):void;
+		function get interactionPointChildren():Boolean;
+		function set interactionPointChildren(value:Boolean):void;
 		
 		/**
 		 * Allows touch points from a childclusters to copy into container touch objects in the local parent child display list stack. This allows the for the concept of parallel
@@ -226,15 +233,10 @@ package com.gestureworks.interfaces
 		 * from multiple touch objects from a set of touch points.
 		 * @default false
 		 */
-		function get clusterBubbling():Boolean;
-		function set clusterBubbling(value:Boolean):void;
+		function get interactionPointBubbling():Boolean;
+		function set interactionPointBubbling(value:Boolean):void;
 		
-		/**
-		 * Allows touch and gesture events to explicitly target the parent touch object
-		 * @default false
-		 */
-		function get targetParent():Boolean;
-		function set targetParent(value:Boolean):void;
+		
 		
 		/**
 		 * Allows touch and gesture events to explicitly target a group of defined touch objects which can be outside of the local parent child display list stack

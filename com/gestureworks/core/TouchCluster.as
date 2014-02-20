@@ -278,79 +278,6 @@ package com.gestureworks.core
 		
 		
 		
-		/**
-		 * @private
-		 */
-		// internal public
-		public function updateClusterAnalysis():void
-			{
-				//trace("update cluster analysis")
-
-				// must preceed kinemetrics
-				if (core)
-				{	
-					//TODO: GEOMRETRIC 2D (TRIANGLE TEST)
-					if (ts.touchEnabled) getGeoMetrics2D(); 
-					if (ts.motionEnabled) getGeoMetrics3D();
-				}
-				
-				else {
-					
-				
-						// NEED TO MOVE INTO METRIC
-						// GET N, IPN, TPN,MPN,SPN
-						updateClusterCount();
-						// GET GESTURE COUNT
-						gn = gO.pOList.length;
-				
-				
-						cluster_kinemetric.resetRootClusterValues();
-						
-						if (ts.touchEnabled) cluster_kinemetric.resetTouchClusterValues();
-						if (ts.motionEnabled)cluster_kinemetric.resetMotionClusterValues();
-						//if (ts.sensorEnabled)cluster_kinemetric.resetSensorCluster();
-				
-						//MAY NEED TO MOVE
-						cluster_kinemetric.findRootInstDimention();
-				
-						//CLEARS DELTAS STORED IN GESTURE OBJECT
-						//SO THAT VALUES DO NOT PERSIST BEYOND RELEASE (NOT TRUE FOR GESTURE DELTA)
-						// CLEARS PRIME CLUSTER PRIME MODAL CLUSTERS AND ALL SUBCLUSTERS
-						clearGestureObjectClusterDeltas();
-					
-						// FIND TOUCH, MOTION, SENSOR SUBCLUSTERS
-						findSubClusters();
-						
-				if (kinemetricsOn) 
-				{	
-					// GET KINEMETRICS FOR SUBCLUSTERS
-					//if (ts.touchEnabled) getKineMetrics();
-					if (ts.touchEnabled) getKineMetrics2D();//getTouchKineMetrics
-					if (ts.motionEnabled)getKineMetrics3D();//getMotionKineMetrics
-					//if (ts.sensorEnabled) getSensorKineMetrics();
-				}
-				
-				if (vectormetricsOn) 
-				{
-					if (ts.touchEnabled) getVectorMetrics();
-					//TODO: 3D VECTOR METRICS
-					//if (ts.motion_input) getVectorMetrics3D();
-				}
-				
-				//cluster_kinemetric.findRootInstDimention();
-				
-				//trace("hand pos",cO.hand.position)
-				
-				if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
-				
-				//getGesturePoints();
-				
-				
-				//trace(ts.cO.motionArray.length);
-				//trace(ts.cO.iPointArray.length);
-				//trace(ts.cO.iPointArray2D.length);
-			}
-		}
 		
 		////////////////////////////////////////
 		//1 DEFINE A SET OF INTERACTION POINTS
@@ -394,6 +321,66 @@ package com.gestureworks.core
 		//////////////////////////////////////////////////////////////////////////////
 		// WOULD ALSO ALLOW FOR (FIDUCIAL + TOUCH) OR (PEN + TOUCH) GESTURES 
 		//AS EACH WOULD BE IN DIFFERENT LOCAL SUBCLUSTER
+
+		/**
+		 * @private
+		 */
+		// internal public
+		public function updateClusterAnalysis():void
+			{
+				//trace("update cluster analysis")
+				if (!core) 
+				{
+						// NEED TO MOVE INTO METRIC
+						// GET N, IPN, TPN,MPN,SPN
+						updateClusterCount();
+						// GET GESTURE COUNT
+						gn = gO.pOList.length;
+				
+						cluster_kinemetric.resetRootClusterValues();
+						
+						if (ts.touchEnabled)  cluster_kinemetric.resetTouchClusterValues();
+						if (ts.motionEnabled) cluster_kinemetric.resetMotionClusterValues();
+						//if (ts.sensorEnabled)cluster_kinemetric.resetSensorCluster();
+				
+						//MAY NEED TO MOVE
+						cluster_kinemetric.findRootInstDimention();
+				
+						//CLEARS DELTAS STORED IN GESTURE OBJECT
+						//SO THAT VALUES DO NOT PERSIST BEYOND RELEASE (NOT TRUE FOR GESTURE DELTA)
+						// CLEARS PRIME CLUSTER PRIME MODAL CLUSTERS AND ALL SUBCLUSTERS
+						clearGestureObjectClusterDeltas();
+					
+						// FIND TOUCH, MOTION, SENSOR SUBCLUSTERS
+						findSubClusters();
+						
+				if (kinemetricsOn) 
+				{	
+					// GET KINEMETRICS FOR SUBCLUSTERS
+					//if (ts.touchEnabled) getKineMetrics();
+					if (ts.touchEnabled) getKineMetrics2D();//getTouchKineMetrics
+					if (ts.motionEnabled)getKineMetrics3D();//getMotionKineMetrics
+					//if (ts.sensorEnabled) getSensorKineMetrics();
+				}
+				
+				if (vectormetricsOn) 
+				{
+					if (ts.touchEnabled) getVectorMetrics();
+					//TODO: 3D VECTOR METRICS
+					//if (ts.motion_input) getVectorMetrics3D();
+				}
+				//cluster_kinemetric.findRootInstDimention();
+				
+				if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
+				//getGesturePoints();
+				
+				
+				//trace(ts.cO.motionArray.length);
+				//trace(ts.cO.iPointArray.length);
+				//trace(ts.cO.iPointArray2D.length);
+			}
+		}
+		
 		
 		public function ipSupported(type:String):Boolean
 		{
@@ -770,56 +757,7 @@ package com.gestureworks.core
 		public function getKineMetrics2D():void 
 		{		
 			if (!core)
-			{
-				//trace("getting kinemetrics 2d");
-				
-				/*
-				// FOR EACH TOUCH SUBCLUSTER IN MATRIX ////////////////////////////////////
-				for (var j:uint = 0; j < cO.tSubClusterArray.length; j++) 
-				{	
-					
-					if (cO.tSubClusterArray[j].active)
-					{
-					// FIND CLUSTER DIMS
-						cluster_kinemetric.find2DIPConstants(j);
-						cluster_kinemetric.find2DIPDimension(j);
-					}
-				}		
-				//////////////////////////////////////////////////////
-				*/
-				/*
-				var c_type:String = "touch_finger_dynamic";//g.cluster_type;
-				var b:int = 0;
-				
-				//TODO: CREATE SIMPLFIED DATA STRUCTURE FOR EASY REF
-				////////////////////////////////////
-					// touch ips (directly derived)	
-					if (c_type == "finger_dynamic") b = 0;
-					if (c_type == "finger_static") b = 1;
-					if (c_type == "pen_dynamic") b = 2;
-					if (c_type == "pen_static") b = 3;
-					if (c_type == "tag_dynamic") b = 4;
-					if (c_type == "tag_static") b = 5;	
-				
-				
-					cluster_kinemetric.find2DIPTranslation(b);
-					//trace("-touch cluster -----------------------------",gn);
-					*/
-					/*
-						//cO.tpn = cO.tSubClusterArray[b].pointArray.length;
-						cO.ipn = cO.tSubClusterArray[b].iPointArray.length;
-						cO.position.x = cO.tSubClusterArray[b].position.x; 		
-						cO.position.y = cO.tSubClusterArray[b].position.y; 	
-						
-						cO.dx = cO.tSubClusterArray[b].dx; 		
-						cO.dy = cO.tSubClusterArray[b].dy; 	
-						
-						cO.width = cO.tSubClusterArray[b].width; 		
-						cO.height = cO.tSubClusterArray[b].height; 	
-					*/
-						
-						
-						
+			{			
 			gn = gO.pOList.length;
 			
 			//trace("-touch cluster -----------------------------",gn);
@@ -1220,7 +1158,10 @@ package com.gestureworks.core
 		
 		
 		
-		
+		public function clusterHitTest():void 
+		{		
+			if (!core) cluster_kinemetric.hitTestCluster();
+		}
 		
 		
 		public function findSubClusters():void 
@@ -1233,7 +1174,7 @@ package com.gestureworks.core
 				
 				// PERFORM HIT TEST ON COLLECTED POINTS
 				// PULLS FROM GLOABL GMS SOURCES IN A VARIETY OF WAYS TO CREATE ROOT IP CLUSTER
-				cluster_kinemetric.hitTestCluster();
+				//cluster_kinemetric.hitTestCluster();
 				
 				// FILTER BY ROOT IP CLUSTER BY GML DEFINED IP CONDITIONS
 				//cluster_kinemetric.filterIPCluster(); //SEE TOUCCH MANAGE TO FILTER FOR LOCAL_STRONG

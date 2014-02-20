@@ -176,7 +176,7 @@ package com.gestureworks.visualizer
 			
 			
 			// draw
-			//if (ts.touchEnabled)	draw_touchPoints();
+			if (ts.touchEnabled)	draw_touchPoints();
 			if (ts.motionEnabled)	draw_motionPoints();
 			if (ts.sensorEnabled)	draw_sensorPoints();
 			
@@ -534,7 +534,7 @@ package com.gestureworks.visualizer
 			
 		private function draw_interactionPoints():void
 			{
-			trace("drawing interaction points",ts.touchObjectID, ipn);
+			//trace("drawing interaction points",ts.touchObjectID, ipn);
 				//ipn
 			for (i = 0; i < cO.iPointArray.length; i++) 
 					{

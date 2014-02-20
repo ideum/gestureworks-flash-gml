@@ -23,6 +23,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.interfaces.ITouchObject;
+	import com.gestureworks.managers.InteractionPointHistories;
 	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
@@ -1938,92 +1939,105 @@ package com.gestureworks.analysis
 				{
 				//trace("hit test ip cluster",gms.cO.iPointArray.length,ts.motionClusterMode,ts)
 				
-				/*
-				///////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 				///////////////////////////////////////////////////////////////////////////////////////////////////////
 				// motion cluster hit test
-				if ((ts.motionEnabled)&&(ts.motionClusterMode == "global")||(ts.motionClusterMode == "local_weak"))
+				///////////////////////////////////////////////////////////////////////////////////////////////////////
+				if (ts.motionEnabled)
 					{
-					//ts.cO.iPointArray = new Vector.<InteractionPointObject>();
-					trace("motion",ts.motionClusterMode, gs.cO.iPointArray.length);	
-					
 					for (i = 0; i < gs.cO.iPointArray.length; i++)
 							{
 								var ipt:InteractionPointObject = gs.cO.iPointArray[i];
 								////////////////////////////////////////////////////////////////////
-								//check exists and check if ip type supported on display object
-								//trace("supported", ipt.type,ts.tc.ipSupported(ipt.type));
-								//CURRENTLY ONLY IP TYPE SUPPORT IS INITIAED IN THE CORE MOTION SPRITE
-								//TODO INIT IN EACH MS
-								
 								//FILTER BY MODE
 								if ((ipt)&&(ipt.mode=="motion"))//&&(ts.tc.ipSupported(ipt.type))
 								{
 									//trace(ts,gms);
-									var xh:Number = normalize(ipt.position.x, minX, maxX) *sw;//1920
-									var yh:Number = normalize(ipt.position.y, minY, maxY) * sh//ts.stage.stageHeight//1080;// ;
+									//var xh:Number = normalize(ipt.position.x, minX, maxX) *sw;//1920
+									//var yh:Number = normalize(ipt.position.y, minY, maxY) * sh//ts.stage.stageHeight//1080;// ;
 									//trace("ht",ts.motionClusterMode)
 
-									if (ts.motionClusterMode == "local_weak")
+									if ((ts.motionClusterMode == "local_strong")&&(ipt.phase=="begin")) 
 									{
 										if (ts is ITouchObject)//((ts is TouchSprite)||(ts is TouchMovieClip))
 										{
-											//trace("2d hit test");
-											if (ts.hitTestPoint(xh, yh, true)) cO.iPointArray.push(ipt);
+											if (ts.hitTestPoint(ipt.position.x, ipt.position.y, true)) cO.iPointArray.push(ipt);
+											//if (ts.hitTest(ipt.position.x, ipt.position.y, true)) cO.iPointArray.push(ipt);
 										}
 										if (ts is ITouchObject3D)//TouchObject3D
+										{
+											if (hitTest3D != null) {
+												if (hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y)) cO.iPointArray.push(ipt);
+											}
+										}
+									}
+									
+									else if ((ts.motionClusterMode == "local_weak")&&((ipt.phase=="update")||(ipt.phase=="begin")))//reduced redundant hit testing
+									{
+										if (ts is ITouchObject)
+										{
+											//trace("2d hit test");
+											if (ts.hitTestPoint(ipt.position.x, ipt.position.y, true))
+											//if (ts.hitTest(ipt.position.x, ipt.position.y, true))
+											{
+												// CHECK TO SEE IF ALREADY ADDED
+												var match:Boolean = false;
+												for (var b:uint = 0; b < cO.iPointArray.length; b++)
+												{
+													if (cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
+												}
+												if (!match) cO.iPointArray.push(ipt);
+											}
+										}
+										if (ts is ITouchObject3D)
 										{
 											//trace("3d hit test", ts.vto, ts.vto.parent, ts.vto.parent.scene, ts.view, TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, xh, yh));
 											//trace("3d hit test", TouchManager3D.hitTest3D(ts as TouchObject3D, ipt.position.x, ipt.position.y));
 											
 											if (hitTest3D != null) {
-												if (hitTest3D(ts as ITouchObject3D, xh, yh)) cO.iPointArray.push(ipt);
+												if (hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y)) cO.iPointArray.push(ipt);
 											}
-											//if(TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, ipt.position.x, ipt.position.y))cO.iPointArray.push(ipt);
 										}
-									}
-									else if (ts.motionClusterMode == "global") 
+									} 
+									else if ((ts.motionClusterMode == "global")&&(ipt.phase=="begin")) 
 									{
 										cO.iPointArray.push(ipt);
 									}
-									//trace("phase",ipt.phase)
-									//cO.iPointArray.push(ipt);/////////////////////////////////////////////////
 								}
-								
-								//if(ipt.type=="palm")trace("fist hit test", ipt.fist)
-							}
 					}
 					
-					// FOR LOCAL STRONG POINT ADDITION SEE INTERACTION POINT MANAGER
-					if ((ts.motionEnabled)&&(ts.motionClusterMode == "local_strong")) 
-					{
-						if (ts.cO.iPointArray.length)
+					if (cO.iPointArray.length)
 						{
-						//trace("strong length", ts.cO.iPointArray.length);
-						for (i = 0; i < ts.cO.iPointArray.length; i++)
+						for (i = 0; i < cO.iPointArray.length; i++)
 							{
-								//trace(ts.cO.iPointArray[i].interactionPointID,ts.cO.iPointArray[i].phase);
-								if((ts.cO.iPointArray[i].phase=="end")&&(ts.cO.iPointArray[i].mode=="motion")) ts.cO.iPointArray.splice(i, 1);
-									//trace("no exist")
-								//}
+							var mk_pt:InteractionPointObject = cO.iPointArray[i];
+								
+							if (mk_pt)
+								{
+									if (mk_pt.mode == "motion")
+									{
+										//trace(ts.cO.iPointArray[i].interactionPointID,ts.cO.iPointArray[i].phase);
+										if (mk_pt.phase == "end") cO.iPointArray.splice(i, 1);
+										else if ((mk_pt.phase == "update")&&(ts.motionClusterMode == "local_weak"))
+										{
+											if (!ts.hitTestPoint(mk_pt.position.x, mk_pt.position.y, false)) cO.iPointArray.splice(i, 1);
+										}
+									}
+								}
 							}
-						}
 					}
-					*/
-					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					}
+					
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// touch cluster hit test
-					
-					if ((ts.touchEnabled))//&&(ts.touchClusterMode == "global")||(ts.touchClusterMode == "local_weak")
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					if (ts.touchEnabled)
 					{
-						
 					trace("touch ",ts.touchClusterMode, "cO ip",ts.cO.iPointArray.length, "tcO ip:",ts.cO.tcO.iPointArray.length,"gs touch", gs.cO.touchArray.length, "gs ip", gs.cO.iPointArray.length);	
-					//ts.cO.iPointArray = new Vector.<InteractionPointObject>();
-					
-					///////////////////////////////////////////////////////////////////////////////////
-					// SCAN GLOBAL SPRITE FOR INTERACTION POINTS
-					///////////////////////////////////////////////////////////////////////////////////
-					for (i = 0; i < gs.cO.iPointArray.length; i++)
+						///////////////////////////////////////////////////////////////////////////////////
+						// SCAN GLOBAL SPRITE FOR INTERACTION POINTS
+						///////////////////////////////////////////////////////////////////////////////////
+						for (i = 0; i < gs.cO.iPointArray.length; i++)
 							{
 								var ipt:InteractionPointObject = gs.cO.iPointArray[i];
 								////////////////////////////////////////////////////////////////////
@@ -2044,8 +2058,9 @@ package com.gestureworks.analysis
 									{
 										if (ts is ITouchObject)//((ts is TouchSprite)||(ts is TouchMovieClip))
 										{
-											if (ts.hitTestPoint(ipt.position.x, ipt.position.y, true)) cO.iPointArray.push(ipt);
-											//if (ts.hitTest(ipt.position.x, ipt.position.y, true)) cO.iPointArray.push(ipt);
+											if (ts.hitTestPoint(ipt.position.x, ipt.position.y, true)) {
+											if (!ts.mouseChildren) cO.iPointArray.push(ipt);
+											}
 										}
 										if (ts is ITouchObject3D)//TouchObject3D
 										{
@@ -2053,16 +2068,13 @@ package com.gestureworks.analysis
 												if (hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y)) cO.iPointArray.push(ipt);
 											}
 										}
-										//cO.iPointArray.push(ipt);
 									}
-									
 									else if ((ts.touchClusterMode == "local_weak")&&((ipt.phase=="update")||(ipt.phase=="begin")))//reduced redundant hit testing
 									{
 										if (ts is ITouchObject)//((ts is TouchSprite)||(ts is TouchMovieClip))
 										{
 											//trace("2d hit test");
 											if (ts.hitTestPoint(ipt.position.x, ipt.position.y, true))
-											//if (ts.hitTest(ipt.position.x, ipt.position.y, true))
 											{
 												// CHECK TO SEE IF ALREADY ADDED
 												var match:Boolean = false;
@@ -2070,7 +2082,7 @@ package com.gestureworks.analysis
 												{
 													if (cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
 												}
-												if (!match) cO.iPointArray.push(ipt);
+												if ((!match)&&(!ts.mouseChildren) ) cO.iPointArray.push(ipt);
 											}
 										}
 										if (ts is ITouchObject3D)//TouchObject3D
@@ -2081,22 +2093,14 @@ package com.gestureworks.analysis
 											if (hitTest3D != null) {
 												if (hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y)) cO.iPointArray.push(ipt);
 											}
-											//if(TouchManager3D.hitTest3D(ts as TouchObject3D,ts.view, ipt.position.x, ipt.position.y))cO.iPointArray.push(ipt);
 										}
 									} 
 									else if ((ts.touchClusterMode == "global")&&(ipt.phase=="begin")) 
 									{
-										cO.iPointArray.push(ipt);
+										if (!ts.mouseChildren) cO.iPointArray.push(ipt);
 									}
-									//trace("phase",ipt.phase)
-									//cO.iPointArray.push(ipt);/////////////////////////////////////////////////
 								}
-								
-								//if(ipt.type=="palm")trace("fist hit test", ipt.fist)
 							}
-					
-							
-							
 						//////////////////////////////////////////////////////////////////////////////////////
 						// REMOVING INTERACTION POINTS FROM LOCAL LIST
 						//////////////////////////////////////////////////////////////////////////////////////
@@ -2105,7 +2109,7 @@ package com.gestureworks.analysis
 						//trace("strong length", ts.cO.iPointArray.length);
 						for (i = 0; i < cO.iPointArray.length; i++)
 							{
-								var k_pt = cO.iPointArray[i];
+								var k_pt:InteractionPointObject = cO.iPointArray[i];
 								
 								if (k_pt)
 								{
@@ -2114,11 +2118,9 @@ package com.gestureworks.analysis
 										//trace(ts.cO.iPointArray[i].interactionPointID,ts.cO.iPointArray[i].phase);
 										if (k_pt.phase == "end") cO.iPointArray.splice(i, 1);
 										
-										if ((k_pt.phase == "update")&&(ts.touchClusterMode == "local_weak"))
+										else if ((k_pt.phase == "update")&&(ts.touchClusterMode == "local_weak"))
 										{
 											if (!ts.hitTestPoint(k_pt.position.x, k_pt.position.y, false)) cO.iPointArray.splice(i, 1);
-											//if (!ts.hitTest(ipt.position.x, ipt.position.y, false))ts.cO.iPointArray.splice(i, 1);
-											//trace();//
 										}
 									}
 								}

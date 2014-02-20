@@ -201,6 +201,13 @@ package com.gestureworks.core
 		public function get N():int { return _N; }
 		public function set N(n:int):void { _N = n; }
 		
+		private var _index:int = 0; 
+		/**
+		 * @inheritDoc
+		 */
+		public function get index():int { return _index; }
+		public function set index(n:int):void { _index = n; }
+		
 		private var _tpn:int = 0; 
 		/**
 		 * @inheritDoc
@@ -382,36 +389,27 @@ package com.gestureworks.core
 			dispatchEvent(new GWGestureEvent(GWGestureEvent.GESTURELIST_UPDATE, false));
 		}
 		
-		private var _touchChildren:Boolean = false;
+		private var _interactionPointChildren:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		public function get touchChildren():Boolean{return _touchChildren;}
-		public function set touchChildren(value:Boolean):void
+		public function get interactionPointChildren():Boolean{return _interactionPointChildren;}
+		public function set interactionPointChildren(value:Boolean):void
 		{
-			_touchChildren = value;
+			_interactionPointChildren = value;
 			mouseChildren = value;
 		}
 		
-		private var _clusterBubbling:Boolean = false;
+		private var _interactionPointBubbling:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
-		public function get clusterBubbling():Boolean{return _clusterBubbling;}
-		public function set clusterBubbling(value:Boolean):void
+		public function get interactionPointBubbling():Boolean{return _interactionPointBubbling;}
+		public function set interactionPointBubbling(value:Boolean):void
 		{
-			_clusterBubbling = value;
+			_interactionPointBubbling = value;
 		}
 		
-		private var _targetParent:Boolean = false;
-		/**
-		 * @inheritDoc
-		 */
-		public function get targetParent():Boolean{return _targetParent;}
-		public function set targetParent(value:Boolean):void
-		{
-			_targetParent = value;
-		}
 		
 		private var _targetList:Array = [];
 		/**
