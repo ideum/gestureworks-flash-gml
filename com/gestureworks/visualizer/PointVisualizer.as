@@ -167,6 +167,7 @@ package com.gestureworks.visualizer
 			//N = cO.pointArray.length;
 			
 			tpn = cO.touchArray.length//cO.tpn;
+			
 			mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
 			spn = cO.sensorArray.length;
 			ipn =  cO.iPointArray.length;
@@ -174,13 +175,14 @@ package com.gestureworks.visualizer
 			// clear graphics
 			graphics.clear();
 			
-			
-			// draw
-			if (ts.touchEnabled)	draw_touchPoints();
-			if (ts.motionEnabled)	draw_motionPoints();
-			if (ts.sensorEnabled)	draw_sensorPoints();
-			
-			draw_interactionPoints();
+			//DRAW
+			if (ts.tc.core)
+			{
+				if (ts.touchEnabled)	draw_touchPoints();
+				if (ts.motionEnabled)	draw_motionPoints();
+				if (ts.sensorEnabled)	draw_sensorPoints();
+			}
+			else draw_interactionPoints();
 		}
 		
 		
@@ -204,19 +206,19 @@ package com.gestureworks.visualizer
 					var x:Number = pt.position.x;
 					var y:Number = pt.position.y;
 					
-					/*
+					
 					if (_drawText)
 					{
 						///////////////////////////////////////////////////////////////////
 						//
 						///////////////////////////////////////////////////////////////////
 						
-						tptext_array[i].textCont = "ID: " + String(pt.id); //+ "    id" + String(pt.touchPointID);
+						tptext_array[i].textCont = "TP ID: " + String(pt.id); //+ "    id" + String(pt.touchPointID);
 						tptext_array[i].x = x - tptext_array[i].width / 2;
-						tptext_array[i].y = y - 55;
+						tptext_array[i].y = y- 70;
 						tptext_array[i].visible = true;
 						tptext_array[i].textColor = style.touch_text_color;
-					}*/
+					}
 					
 					if (_drawShape)
 					{
@@ -377,20 +379,33 @@ package com.gestureworks.visualizer
 					// clear text
 					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
 				
-					//trace("mpn",mpn)
+					//trace("visualixer mpn",mpn,_drawText)
 						
 					// Calculate the hand's average finger tip position
 					for (i = 0; i < mpn; i++) 
 								{
 								var mp:MotionPointObject = cO.motionArray2D[i];
-									
+								
+								
+									if (_drawText)
+									{
+										//NOTE NEED MORE TEXT FIELDS
+										if((mp)&&(tptext_array[i])){
+										tptext_array[i].textCont = "MP ID: " + String(mp.motionPointID); //+ "    id" + String(pt.touchPointID);
+										tptext_array[i].x = mp.position.x - tptext_array[i].width / 2;
+										tptext_array[i].y = mp.position.y - 40;
+										tptext_array[i].visible = true;
+										tptext_array[i].textColor = style.touch_text_color;
+									}
+									}
+								
 									if (mp.type == "finger")
 									{
 										var zm:Number = mp.position.z * 0.2;
 										var wm:Number = (mp.width) *10;
 										//trace("length", finger.length);
 										//trace("width", finger.width);
-
+											
 											if (_drawShape)
 											{
 												if (mp.fingertype == "thumb") 
@@ -542,17 +557,19 @@ package com.gestureworks.visualizer
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
+					
+					//////////////////////////////////////////////////////////////////////////////
+					// for all interaction points
+					tptext_array[i].textCont = "IP ID: " + String(sp.interactionPointID); //+ "    id" + String(pt.touchPointID);
+					tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
+					tptext_array[i].y = sp.position.y - 55;
+					tptext_array[i].visible = true;
+					tptext_array[i].textColor = style.touch_text_color;
+					
 					///////////////////////////////////////////
 					// DRAW WII CONTROLLER POINT
 					if (sp.type == "finger_dynamic")//finger
 						{
-							
-							tptext_array[i].textCont = "ID: " + String(sp.interactionPointID); //+ "    id" + String(pt.touchPointID);
-							tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
-							tptext_array[i].y = sp.position.y - 55;
-							tptext_array[i].visible = true;
-							tptext_array[i].textColor = style.touch_text_color;
-						
 							if (_drawShape)
 							{
 								// sensor center

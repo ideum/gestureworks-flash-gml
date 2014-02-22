@@ -53,7 +53,6 @@ package com.gestureworks.managers
 		public function DeviceServerManager():void
 		{
 			trace("device server manager constructor");
-			
 		}
 		
 		gw_public static function initialize():void
@@ -132,8 +131,11 @@ package com.gestureworks.managers
 			var lg:int = str.length;
 			var start:String = str.substr(0,6)//str.substr(0,6)
 			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
-			//trace(str)
+			trace(str)
 			//trace(lg,start,end);
+			
+			
+			
 			
 			// SIMPLE FRAME COMPLETENES CHECK
 			if ((start =="<Frame") && (end =="</Frame>"))
@@ -153,6 +155,7 @@ package com.gestureworks.managers
 					var message:XML;
 					var mn:int;
 				
+					
 					for (var i:int = 0; i < dfrn; i++ )
 					{
 						frame = XMLFrameList[i]

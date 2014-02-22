@@ -62,7 +62,7 @@ package com.gestureworks.managers
 
 		{	
 			//if(debug)
-				trace("init leap motion device----------------------------------------------------",leapmode)
+				trace("init leap motion device----------------------------------------------------",leapmode,leapEnabled)
 				
 			if (leapEnabled)
 			{
@@ -97,24 +97,34 @@ package com.gestureworks.managers
 				// ref gloabl motion point list
 				mpoints = GestureGlobals.gw_public::motionPoints;
 				touchObjects = GestureGlobals.gw_public::touchObjects;
+				gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
 				
-				if (!gs)
+				if (gs)
 				{
 				// CREATE GLOBAL MOTION SPRITE TO HANDLE ALL GEOMETRIC GLOBAL ANALYSIS OF MOTION POINTS
-				gs = new TouchSprite();
-					gs.active = true;
-					gs.motionEnabled = true;
-					gs.tc.motion_core = true; // fix for global core analysis
-					gs.tc.core = true;
+				//gs = new TouchSprite();
+					//gs.active = true;
+					//gs.debugDisplay = true;
+					//gs.tc.core = true;
 					
-				GestureGlobals.globalSpriteID = gs.touchObjectID;
-				}
+					//gs.motionEnabled = true;
+					//gs.tc.motion_core = true; // fix for global core analysis
+
+					//trace("motion manager calling geo init")
+					//gs.tc.initGeoMetric();
+					
+				//GestureWorks.application.addChild(gs);
+				//GestureGlobals.globalSpriteID = gs.touchObjectID;
+				//}
 				
-				else {
+				//else {
 					//ACTIVATE
 					gs.motionEnabled = true
 					gs.tc.motion_core = true;
+					//gs.debugDisplay = true;
+				//}
 				}
+			
 			}
 		}
 		
@@ -146,6 +156,8 @@ package com.gestureworks.managers
 		public static function onMotionBegin(event:GWMotionEvent):void
 		{			
 			//trace("motion point begin, motionManager",event.value.motionPointID);
+			
+			trace(gs)
 			
 			// create new point object
 			var mpointObject:MotionPointObject  = new MotionPointObject();

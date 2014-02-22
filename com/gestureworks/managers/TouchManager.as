@@ -79,21 +79,33 @@ package com.gestureworks.managers
 				touchPoints = GestureGlobals.gw_public::touchPoints;
 				touchObjects = GestureGlobals.gw_public::touchObjects;
 				
-				if (!gs){
+				gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
+				
+				if (gs){
 				// CREATE GLOBAL MOTION SPRITE TO HANDLE ALL GEOMETRIC GLOBAL ANALYSIS OF MOTION POINTS
-				gs = new TouchSprite();
-					gs.active = true;
-					gs.touchEnabled = true;
-					gs.tc.touch_core = true; // fix for global core analysis
-					gs.tc.core = true;
-
-				GestureGlobals.globalSpriteID = gs.touchObjectID;
-				}
+				//gs = new TouchSprite();
+					//gs.active = true;
+					//gs.tc.core = true;
+					//gs.debugDisplay = true;
+					
+					//gs.tc.touch_core = true; // fix for global core analysis
+					//gs.touchEnabled = true;
+				
+					//trace("touch manger calling geo init")
+					//gs.tc.initGeoMetric();
+					
+				//GestureWorks.application.addChild(gs);
+				//GestureGlobals.globalSpriteID = gs.touchObjectID;
+				//}
 				//ACTIVATE
-				else {
+				//else {
 					gs.touchEnabled = true;
 					gs.tc.touch_core = true;
+					//gs.debugDisplay = true;
 				}
+				
+				
+				
 
 				
 				if (GestureWorks.activeNativeTouch)
@@ -117,12 +129,11 @@ package com.gestureworks.managers
 		}	
 		
 	
-		public static function pointCount():int {
-			
+		public static function pointCount():int 
+		{
 			var count:int = 0;
 			for each(var point:TouchPointObject in touchPoints)
-			//for each(var ts:Object in touchObjects)
-				{
+			{
 				count++;
 				//trace("what")
 				}
@@ -138,14 +149,13 @@ package com.gestureworks.managers
 		}
 		
 		
-/**
+		/**
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
 		private static function onTouchEnd(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchUp(event);
-			//processOverlays(event);
 		}	
 		
 		/**
@@ -155,27 +165,18 @@ package com.gestureworks.managers
 		private static function onMove(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchMove(event);
-			//processOverlays(event);			
 		}	
 		
 		/**
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		
 		private static function onTouchBegin(e:TouchEvent):void 
 		{			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
-			//processOverlays(event);
 		}
 		
-		/**
-		 * Decides how to assign the captured touch point to a cluster and pass to parent, an explicit target, an explicit list of 
-		 * targets or passed to any touch object in the local display stack.
-		 * @param	event
-		 * @param	overrideRegisterPoints
-		 */
 		public static function onTouchDown(event:GWTouchEvent):void
 		{
 			//trace("touch manager on touch down", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
@@ -213,8 +214,6 @@ package com.gestureworks.managers
 			//trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
 		}
 		
-	
-		
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:GWTouchEvent):void
 		{
@@ -249,13 +248,6 @@ package com.gestureworks.managers
 			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
 			/////////////////////////////////////////////////////////////////////////////////////
 		}
-		
-		
-				
-	
-		
-		// the Stage TOUCH_MOVE event.	
-		// DRIVES POINT PATH UPDATES
 		
 		public static function onTouchMove(event:GWTouchEvent):void
 		{	

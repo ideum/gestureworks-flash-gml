@@ -707,13 +707,13 @@ package com.gestureworks.core
 				{
 					trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
 				}
-				for (var j:uint = 0; j <tn ; j++) 
+				for (var k:uint = 0; k <tn ; k++) 
 				{
-					trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
+					trace("timeline object touch event:", ts.tiO.frame.pointEventArray[k].type);
 				}
-				for (var j:uint = 0; j <cn ; j++) 
+				for (var p:uint = 0; p <cn ; p++) 
 				{
-					trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
+					trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[p].type);
 				}
 			}
 			//trace("timeline on?",tiO.timelineOn)

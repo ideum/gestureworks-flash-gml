@@ -2139,17 +2139,18 @@ package com.gestureworks.analysis
 		// 3d IP motion analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		public function mapCluster3Dto2D():void
-			{
-				//trace("map cluster data 3d to 2d",cO.motionArray.length,cO.iPointArray.length)
-				
-				
-				// CLEARS OUT LOCAL POINT ARRAYS
+		
+		/*
+		public function mapMotion3Dto2D():void 
+		{
+			trace("mapping motion points"); 
+			
+			// CLEARS OUT LOCAL POINT ARRAYS
 				cO.motionArray2D = new Vector.<MotionPointObject>();
-				cO.iPointArray2D = new Vector.<InteractionPointObject>();
-				
-				if (ts.motionEnabled)
+			
+			if (ts.motionEnabled)
 				{
+					trace("converting from 3d ip to 2d motion");
 				// NORMALIZE MOTION POINT DATA TO 2D
 				for (i = 0; i < cO.motionArray.length; i++) 
 						{
@@ -2179,6 +2180,53 @@ package com.gestureworks.analysis
 						cO.motionArray2D.push(pt2d);
 						}
 				}	
+		}*/
+		
+		
+		
+		
+		public function mapCluster3Dto2D():void
+			{
+				//trace("map cluster data 3d to 2d",cO.motionArray.length,cO.iPointArray.length)
+				
+				
+				// CLEARS OUT LOCAL POINT ARRAYS
+				//cO.motionArray2D = new Vector.<MotionPointObject>();
+				cO.iPointArray2D = new Vector.<InteractionPointObject>();
+				
+				/*
+				if (ts.motionEnabled)
+				{
+					trace("converting from 3d ip to 2d motion");
+				// NORMALIZE MOTION POINT DATA TO 2D
+				for (i = 0; i < cO.motionArray.length; i++) 
+						{
+							var pt:MotionPointObject = cO.motionArray[i];
+							var pt2d:MotionPointObject = new MotionPointObject();
+							
+							//pt2d.motionPointID = pt.motionPointID;
+							
+							pt2d.position.x = normalize(pt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
+							pt2d.position.y = normalize(pt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
+							pt2d.position.z = pt.position.z
+							
+							//normalized vector
+							pt2d.direction.x = -pt.direction.x;
+							pt2d.direction.y = pt.direction.y;
+							pt2d.direction.z = pt.direction.z;
+							
+							//normalized vector
+							pt2d.normal.x = -pt.normal.x;
+							pt2d.normal.y = pt.normal.y;
+							pt2d.normal.z = pt.normal.z;
+							
+							pt2d.type = pt.type;
+							pt2d.fingertype = pt.fingertype;
+							//pt2d.history = pt.history;
+							
+						cO.motionArray2D.push(pt2d);
+						}
+				}*/	
 						
 				// NORMALIZE INTERACTION POINT DATA TO 2D	
 				for (i = 0; i < cO.iPointArray.length; i++)
@@ -2306,7 +2354,7 @@ package com.gestureworks.analysis
 						//trace(ipt.type)
 					//if(ipt.type=="fist")trace("fist subcluster", ipt.fist)
 				}
-				trace("modal subclusters formed","touch:",cO.touchArray.length,"motion:",cO.motionArray.length,"fusion:",cO.iPointArray.length,cO.iPointArray2D.length,"touch:",cO.tSubClusterArray.length,"motion:",cO.mSubClusterArray.length,"sensor:",cO.sSubClusterArray.length );
+				//trace("modal subclusters formed","touch:",cO.touchArray.length,"motion:",cO.motionArray.length,"fusion:",cO.iPointArray.length,cO.iPointArray2D.length,"touch:",cO.tSubClusterArray.length,"motion:",cO.mSubClusterArray.length,"sensor:",cO.sSubClusterArray.length );
 	}
 	
 	
@@ -2332,7 +2380,7 @@ package com.gestureworks.analysis
 				if (cO.mSubClusterArray[k].active)
 					{
 					// FIND CLUSTER DIMS
-					find3DIPConstants(k);
+					find3DMotionIPConstants(k);
 					find3DIPDimension(k);
 					}
 			}		
@@ -2382,7 +2430,7 @@ package com.gestureworks.analysis
 		}
 		
 		// motion subcluster
-		public function find3DIPConstants(index:int):void//type:String
+		public function find3DMotionIPConstants(index:int):void//type:String
 		{
 			var sdipn:int = 0;
 			var sipn:int = 0;
@@ -3489,6 +3537,8 @@ package com.gestureworks.analysis
 			}
 		}
 		
+		
+		
 		// WEAVE MOTION SUBCLUSTERS INTO ROOT MOTION CLUSTER
 		public function WeaveMotionSubClusterData():void
 		{
@@ -3650,7 +3700,7 @@ package com.gestureworks.analysis
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
 							
-						//	trace("weaving touch sub", sub_cO.type, sub_cO.position, sub_cO.dx, sub_cO.dy, sub_cO.dz)
+							//trace("weaving touch sub", sub_cO.type, sub_cO.position, sub_cO.dx, sub_cO.dy, sub_cO.dz)
 							}
 						}
 				}
@@ -3665,9 +3715,10 @@ package com.gestureworks.analysis
 				tcO.position.y *= asck;
 				tcO.position.z *= asck;
 				
-				//trace("touch",tcO.dx,tcO.dy)
+				//trace("touch sub into touch",tcO.dx,tcO.dy)
 				//trace("motion subclusterto motion prime",mcO.x,mcO.y,mcO.z, mcO.dx,mcO.dy,mcO.dz)
 		}
+		
 		
 		//WEAVE ROOT MOTION CLUSTER INTO ROOT MULTIMODAL CLUSTER
 		public function WeaveMotionRootClusterData():void
@@ -3736,8 +3787,11 @@ package com.gestureworks.analysis
 		//WEAVE ROOT TOUCH CLUSTER INTO ROOT MULTIMODAL CLUSTER
 		public function WeaveTouchRootClusterData():void
 		{
+			
 						// each dimension / property must be merged independently
-						if (tcO.tpn>0)
+						
+						// note subcluster tpn must be known 
+						if (ts.ipn>0)
 						{
 							// recalculate cluster center
 							// average over all ip subcluster subclusters 
@@ -3774,7 +3828,7 @@ package com.gestureworks.analysis
 							cO.dsz += tcO.dsz;
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
-						//trace("weave touch root into primary mmultimodal",cO.position, cO.width,cO.height)
+						//trace("weave touch root into primary mmultimodal",cO.position, cO.dx,cO.dy,cO.dz,cO.width,cO.height)
 						}
 					//trace("touch prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
 				

@@ -77,6 +77,8 @@ package com.gestureworks.managers
 				//handOrientation = message.InputPoint.Values.Hand.@orientation; //up/down
 				//handType = message.InputPoint.Values.Hand.@type; //left/right
 				//handSplay
+				
+				trace("hand count",handCount);
 
 				// CREATE POINT LIST
 				pointList = new Vector.<MotionPointObject>//Array();
@@ -163,7 +165,7 @@ package com.gestureworks.managers
 			pids = new Vector.<int>()//new Array();
 			
 			//var f = frame;
-			var hn:int = int(message.InputPoint.Values.length());
+			var hn:int = int(message.InputPoint.Values.Hand.length());
 			var fn:int;
 			var on:int;
 			

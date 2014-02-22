@@ -55,7 +55,7 @@ package com.gestureworks.visualizer
 		private var id:Number = 0;
 		private var pointList:Vector.<TouchPointObject>
 		private var N:int = 0;
-		private var tpn:int = 0;
+		//private var tpn:int = 0;
 		private var ipn:int = 0;
 		private var path_data:Array = new Array();
 		private var gn:int = 0;
@@ -124,7 +124,8 @@ package com.gestureworks.visualizer
 	public function draw():void
 	{	
 		//N = cO.n;//pointList.length;
-		tpn = cO.tpn;//pointList.length;
+		//tpn = cO.tpn;//pointList.length;
+		ipn = cO.ipn;//pointList.length;
 		
 		path_data = sO.path_data 
 		gn = gO.pOList.length;
@@ -136,9 +137,11 @@ package com.gestureworks.visualizer
 		// FIXME:
 		
 		// draw
+		if(!ts.tc.core){
 		if (ts.touchEnabled) 	draw_touch_gesture();
 		//if (ts.motionEnabled)	draw_motion_gesture();// DONT NEED YET // TODO: CLEAN UP GESTURE POINT VIEW
 		//if (ts.sensorEnabled) draw_sensor_gesture();
+		}
 		
 	}
 	
@@ -148,12 +151,12 @@ package com.gestureworks.visualizer
 		var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>;
 		var	pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
 				
-		//trace("draw gesture", ts);
+		//trace("draw gesture", ts, tpn, ipn, ts.cO.ipn, ts.cO.iPointArray.length, ts.cO.iPointArray2D.length);
 		
 		/////////////////////////////////////////////////////////////////////////////////
 		// draw pivot gesture vector
 		/////////////////////////////////////////////////////////////////////////////////
-		if (tpn)
+		if (ipn)
 		{			
 			if ((_drawPivot)&&(ts.trO.init_center_point) && (ts.trO.transformPointsOn))
 			{
@@ -221,17 +224,17 @@ package com.gestureworks.visualizer
 		///////////////////////////////////////////////////////////////////////////////////
 		// draw orientation data
 		///////////////////////////////////////////////////////////////////////////////////
-			
-			if ((_drawOrientation)&&(tpn == 5))
+			/*
+			if ((_drawOrientation)&&(ipn == 5))//tpn == 5
 			{
 				// draw thimb ring
 				//graphics.lineStyle(style.t_stroke_thickness, style.t_stroke_color, style.t_stroke_alpha);
 				graphics.lineStyle(8,style.b_stroke_color, 0.6);
 				
-				pointList = cO.touchArray;
+				pointList = cO.iPointArray;
 				
 					//trace("drawing .....thumb",cO.thumbID,tpn,pointList[i].x, pointList[i].y,cO.x, cO.y,cO.orient_dx,cO.orient_dy)
-					for (var i:int = 0; i < tpn; i++) 
+					for (var i:int = 0; i < ipn; i++) 
 						{
 						if (pointList[i].touchPointID == cO.thumbID) 	graphics.drawCircle(pointList[i].position.x, pointList[i].position.y, 40);
 						}
@@ -240,7 +243,7 @@ package com.gestureworks.visualizer
 				graphics.moveTo(cO.position.x, cO.position.y);
 				graphics.lineTo(cO.position.x + cO.orient_dx * 3, cO.position.y + cO.orient_dy * 3);
 				//graphics.lineTo(cO.x + 50 * 3, cO.y + 50 * 3);
-			}
+			}*/
 			
 			
 			///////////////////////////////////////////////////////////////////////////////////
@@ -470,7 +473,7 @@ package com.gestureworks.visualizer
 				if (scan_time > ts.tiO.history.length) st = ts.tiO.history.length;
 				else st = scan_time
 				
-				for (i = 0; i < st; i++) 
+				for (var i:int = 0; i < st; i++) 
 					{
 					if (ts.tiO.history[i])
 						{

@@ -71,9 +71,9 @@ package com.gestureworks.core
 							var gDim:DimensionObject = g.dList[j];
 							
 							////////////////////////////////////////////////////////
-							//trace("pipeline in",gO.pOList[i].dList[j].clusterDelta);
+							//trace("pipeline inJECTION FROM CLUSTER",gDim.clusterDelta);
 							////////////////////////////////////////////////////////
-							// PULL DATA FROM CLUSTER
+							// PULL CLUSTER DATA FROM GESTURE OBJECT
 							gDim.gestureDelta = gDim.clusterDelta;
 							
 							//trace(j, gDim.gestureDelta, gDim.clusterDelta);
@@ -269,6 +269,7 @@ package com.gestureworks.core
 									//if (g.activeEvent)
 									
 									// ONLY FILL CACHE WITH GENERATED VALUES
+			//TODO: MAKE ip DEPENDANT
 									if ((ts.tpn!=0)) gDim.gestureDeltaCache = gDim.gestureDelta;//||(ts.fn!=0)
 									
 								}
@@ -280,6 +281,9 @@ package com.gestureworks.core
 								
 								// ENSURES ADDITIVE DELTAS DO NOT ACCUMILATE OUTSIDE OF EACH "FRAME"
 								// 	MUST HAPPEN BEFIORE MAPPING OTHERWISE GESTURES THAT MAP DELTAS TO SAME VAR WILL BE OVERWITTEN
+			// WILL NEED TO REMOVE
+			// CLEARS PREVIOUS DELTA TOTATLS FOR TRO
+			//trace("tro delta name",gDim.target_id)
 								if (gDim.target_id) trO[gDim.target_id] = 0;
 								
 								////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,9 +329,12 @@ package com.gestureworks.core
 						//trace("pipeline map root cluster ",cO.position, ts.touchObjectID)
 						
 						
-						trO.position.x =	cO.position.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
-						trO.position.y =	cO.position.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
-						trO.position.z =	cO.position.z; // 3d--
+						/////////////////////////////////////////////////////////////////////////
+						// WILL NEED TO BLEND SUBCLUSTER ABSOLUTE DATA
+						
+						trO.position.x = cO.position.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						trO.position.y = cO.position.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
+						trO.position.z = cO.position.z; // 3d--
 						
 						trO.width = cO.width
 						trO.height = cO.height
@@ -345,7 +352,7 @@ package com.gestureworks.core
 						trO.rotationY = cO.rotationY//3d--
 						trO.rotationZ = cO.rotationZ//3d--
 						trO.orientation = cO.orientation
-							
+						/////////////////////////////////////////////////////////////////////////////////////////////
 						
 						// TODO: Check into this, what does this mean?
 						trO.localx =100//cO.x-ts.x; 
@@ -367,6 +374,8 @@ package com.gestureworks.core
 							if (gO.pOList[i].dList[j].target_id)
 								{
 									// map transform limits
+									///////////////////////////////////////////////////////////////////////////////////
+									// ABSLUTE VALUES MAPPED TO TRO OBJECT
 									if (gO.pOList[i].dList[j].target_id == "dsx") gO.pOList[i].dList[j].gestureValue = trO.obj_scaleX;
 									if (gO.pOList[i].dList[j].target_id == "dsy") gO.pOList[i].dList[j].gestureValue = trO.obj_scaleY;
 									if (gO.pOList[i].dList[j].target_id == "dsz") gO.pOList[i].dList[j].gestureValue = trO.obj_scaleZ;//3d--
@@ -384,6 +393,11 @@ package com.gestureworks.core
 									////////////////////////////////////////////////////////////////////////////////////////////////
 									
 									// ENSURE DELTAS MAPPED TO THE SAME PROPERTY ARE ADDITIVE IN A "FRAME"
+									
+		//TODO: COUNT DELTA CONTROBUTIONS
+		// FIND AVERAGE
+		//trace("target delta property on TRO", gO.pOList[i].dList[j].target_id);
+		
 									trO[gO.pOList[i].dList[j].target_id] += gO.pOList[i].dList[j].gestureDelta;
 									//if (ts.traceDebugMode) 
 									//trace("gesture data from pipeline", i, j, gO.pOList[i].gesture_id,gO.pOList[i].dList[j].gestureDelta, trO[ts.gO.pOList[i].dList[j].target_id],ts.gO.pOList[i].dList[j].target_id);

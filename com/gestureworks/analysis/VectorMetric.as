@@ -119,24 +119,29 @@ package com.gestureworks.analysis
 			var path:Array = new Array();
 			pointList = cO.touchArray;
 			
-			var pn:int = pointList[0].history.length;
-			
-			for (i = 0; i < pn; i++)
+			if (pointList.length)
+			{
+				if (pointList[0])
 				{
-				// MAY NEED TO CONVERT TO BACK TO SIMPLE 3D POINTS
-				//trace("--",pointList[0].history[i].x, pointList[0].history[i].y)
-				//path.push(new Object(pointList[0].history[i].x, pointList[0].history[i].y, pointList[0].history[i].w, pointList[0].history[i].h));
-				var tpt:Object = new Object()
-					tpt.x = pointList[0].history[i].position.x;
-					tpt.y = pointList[0].history[i].position.y;
-					tpt.w = pointList[0].history[i].size.x;
-					tpt.h = pointList[0].history[i].size.y;
-				path.push(tpt);
+				var pn:int = pointList[0].history.length;
+				
+				for (i = 0; i < pn; i++)
+					{
+					// MAY NEED TO CONVERT TO BACK TO SIMPLE 3D POINTS
+					//trace("--",pointList[0].history[i].x, pointList[0].history[i].y)
+					//path.push(new Object(pointList[0].history[i].x, pointList[0].history[i].y, pointList[0].history[i].w, pointList[0].history[i].h));
+					var tpt:Object = new Object()
+						tpt.x = pointList[0].history[i].position.x;
+						tpt.y = pointList[0].history[i].position.y;
+						tpt.w = pointList[0].history[i].size.x;
+						tpt.h = pointList[0].history[i].size.y;
+					path.push(tpt);
+					}
+				sO.path_data = path
+				sO.path_n = path.length;
+				//trace(cO.path_data.length,sO.path_data.length)
 				}
-			sO.path_data = path
-			sO.path_n = path.length;
-			//trace(cO.path_data.length,sO.path_data.length)
-			
+			}
 		}
 		
 		public function getSamplePathPosition():void 

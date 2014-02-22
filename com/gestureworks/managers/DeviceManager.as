@@ -54,7 +54,7 @@ package com.gestureworks.managers
 		public static function configDevices():void
 		{
 			
-			//trace("config devices mode:", dp.mode);
+			trace("config devices mode:", dp.mode);
 			
 			if (dp.mode == "native")
 			{
@@ -113,7 +113,7 @@ package com.gestureworks.managers
 				// XITION ///////////////////////////////
 				
 				MotionManager.gw_public::initialize();
-				InteractionManager.gw_public::initialize();
+				//InteractionManager.gw_public::initialize();
 			}
 			
 		}
@@ -155,6 +155,7 @@ package com.gestureworks.managers
 					}
 				}
 				TouchManager.gw_public::initialize();
+				trace("touch manager init via dml")
 				//InteractionManager.gw_public::initialize(); when interaction points are created from raw touch
 				// still workin on refactor
 			}
@@ -189,14 +190,15 @@ package com.gestureworks.managers
 				// XITION ///////////////////////////////
 				
 				MotionManager.gw_public::initialize();
-				InteractionManager.gw_public::initialize();
+				trace("motion manager init via dml");
+				//InteractionManager.gw_public::initialize();
 			}
 			
 			///////////////////////////////////////////////////////////////////////////////////////////
 			//SENSORS INIT /////////////////////////////////////
 			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
 			{
-				//trace("Sensor input devices dml init");
+				trace("Sensor input devices dml init");
 				
 				// NATIVE ACCELEROMETER	INIT//////////////////
 				if (DML.Devices.devices.input_globals.sensor.android.@active == "true")

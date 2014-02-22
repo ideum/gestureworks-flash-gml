@@ -123,21 +123,24 @@ package com.gestureworks.visualizer
 		// init
 		graphics.clear();
 
-		if (ts.touchEnabled)	drawClusterDims();
+		//if (ts.touchEnabled)	drawClusterDims();
 		
-		//if (ts.motionEnabled)
-		drawClusterDims();
-		//if (ts.motionEnabled)
-		drawInteractionPoints();
-		//if (ts.motionEnabled)
-		drawSubClusterDims();
+		if (!ts.tc.core)
+		{
+			//if (ts.motionEnabled)
+			drawRootClusterDims();
+			//if (ts.motionEnabled)
+			drawInteractionPoints();
+			//if (ts.motionEnabled)
+			drawSubClusterDims();
+		}
 		
 		//trace("draw", tpn,ipn, ts.ipn, cO.ipn,cO.iPointArray2D.length);
 	}
 	
-	private function drawClusterDims():void
+	private function drawRootClusterDims():void
 	{	
-		if ((tpn)||(ipn))
+		if (ipn)
 			{
 				
 			style.stroke_color = 0xFFAE1F;

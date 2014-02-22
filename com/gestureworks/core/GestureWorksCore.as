@@ -52,6 +52,8 @@ package com.gestureworks.core
 			modeManager = new ModeManager;
 			if (stage) setApplication();
 			else addEventListener(Event.ADDED_TO_STAGE, setApplication);
+			
+			InteractionManager.gw_public::initialize(); // NEED NOW FOR 
 		}
 		
 		private function setApplication(event:Event = null):void {
@@ -182,13 +184,15 @@ package com.gestureworks.core
 			if (_nativeTouch) 
 			{
 				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
-				TouchManager.gw_public::initialize();
-				InteractionManager.gw_public::initialize(); // NEED NOW FOR 
+				
+						//	InteractionManager.gw_public::initialize(); // NEED NOW FOR 
+				
+				//TouchManager.gw_public::initialize();
 				trace("native touch is on");
 			}
 			else {
 				Multitouch.inputMode = MultitouchInputMode.NONE;
-				TouchManager.gw_public::deInitialize();				
+				//TouchManager.gw_public::deInitialize();				
 				trace("native touch is off");
 			}
 		}
@@ -312,8 +316,8 @@ package com.gestureworks.core
 			GestureWorks.activeTouch = _touch;
 			if (_touch) {
 				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
+						//InteractionManager.gw_public::initialize();
 				TouchManager.gw_public::initialize();
-				InteractionManager.gw_public::initialize();
 				trace("touch active")
 			}
 			else
@@ -333,8 +337,10 @@ package com.gestureworks.core
 			
 			GestureWorks.activeMotion = _motion;
 			if (_motion) {
+					//InteractionManager.gw_public::initialize(); // NEED NOW FOR 
+				MotionManager.leapEnabled = true;
 				MotionManager.gw_public::initialize();
-				InteractionManager.gw_public::initialize();
+				trace("motion active")
 			}
 			else
 				MotionManager.gw_public::deInitialize();
@@ -353,8 +359,9 @@ package com.gestureworks.core
 			
 			GestureWorks.activeSensor = _sensor;
 			if (_sensor) {
+						//InteractionManager.gw_public::initialize();
 				SensorManager.gw_public::initialize();
-				InteractionManager.gw_public::initialize();
+				trace("sensor active");
 			}
 			else
 				SensorManager.gw_public::deInitialize();

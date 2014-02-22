@@ -37,7 +37,7 @@ package com.gestureworks.managers
 	
 	import com.gestureworks.managers.TouchPointHistories;
 	import com.gestureworks.managers.InteractionPointTracker;
-	
+	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.FrameObject;
@@ -102,13 +102,18 @@ package com.gestureworks.managers
 			// init interaction point manager
 			InteractionPointTracker.initialize();
 			
-			//if (GestureWorks.activeMotion) 
-			//gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
-			//if (GestureWorks.activeTouch)
-			gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
-			//if (GestureWorks.activeSensor)
-			//gss = GestureGlobals.gw_public::touchObjects[GestureGlobals.sensorSpriteID];
+			// CREATE GLOBAL INTERACTION SPRITE//////////////////////
+				gs = new TouchSprite();
+					gs.active = true;
+					gs.debugDisplay = true;
+					gs.tc.core = true;
+					gs.tc.initCoreGeoMetric();
+					
+				GestureWorks.application.addChild(gs);
+				GestureGlobals.globalSpriteID = gs.touchObjectID;
 			
+			/////////////////////////////////////////////////////////
+
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			
@@ -305,7 +310,7 @@ package com.gestureworks.managers
 		///////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////
 		
-		private static var input1:GWTouchEvent;
+		//private static var input1:GWTouchEvent;
 		/**
 		 * Prioritizes native touch input over mouse input from the touch screen. Processing
 		 * both inputs from the same device produces undesired results. Assumes touch events
@@ -313,40 +318,24 @@ package com.gestureworks.managers
 		 * @param	event
 		 * @return
 		 */
+		/*
 		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
 			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
 				return true;
 			input1 = event;
 			return false;
-		}
+		}*/
+		
+		
 		
 		/**
-		 * Assign point clones to parent's with cluster bubbling enabled.
-		 * @param	target
-		 * @param	event
-		 */
-		private static function propagatePoint(event:GWTouchEvent):void {
-			if (!event.target)
-				return;
-			
-			if (validTarget(event) && event.target.clusterBubbling) {
-				assignPointClone(event);
-				
-				if (event.target.parent is ITouchObject) {
-					event.target = event.target.parent;
-					propagatePoint(event);
-				}
-			}
-		}
-		
-		/**
-		 * Assign interaction points to parent's with cluster bubbling enabled.
+		 * Assign interaction points to parent's with interaction poiont bubbling enabled.
 		 * @param	target
 		 * @param	event
 		 */
 		private static function propagateInteractionPoint(ipt:InteractionPointObject, ts:Object):void {
 			
-			trace("propgate interaction");
+			//trace("propgate interaction");
 			if ((ts.parent) && (ts.parent  is ITouchObject))
 			{
 				if (ts.parent.interactionPointBubbling)
@@ -469,43 +458,13 @@ package com.gestureworks.managers
 			}
 		}
 		
-		/**
-		 * Registers global overlays to receive point data
-		 */
-		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
-		public static function set overlays(o:Vector.<ITouchObject>):void {
-			_overlays = o;
-		}	
-		
-		/**
-		 * Sends overlays through pipeline
-		 * @param	e
-		 */
-		public static function processOverlays(e:GWTouchEvent, o:Vector.<ITouchObject> = null):void {
-			if (!o)
-				o = overlays;
-			for each(var overlay:ITouchObject in o) 	{
-					
-				var actual:Object = e.target;									
-				overlay.active = true;
-				e.target = overlay;
-				overlay.dispatchEvent(e);
-				
-				if (e.type == "gwTouchBegin") {
-					if(actual)
-						assignPointClone(e);
-					//TODO: FX ref
-					//else
-						//onTouchDown(e);
-				}
-			}			
-		}
-		
+
 		/**
 		 * Determines the event's target is valid based on activated state and local mode settings.
 		 * @param	event
 		 * @return
 		 */
+		/*
 		public static function validTarget(event:GWTouchEvent):Boolean {
 			activatedTarget(event);
 			
@@ -537,12 +496,13 @@ package com.gestureworks.managers
 				
 			}
 			return false;
-		}
+		}*/
 		
 		/**
 		 * If target is not activated, updates the target to the first activated ancestor
 		 * @param	event
 		 */
+		/*
 		private static function activatedTarget(event:GWTouchEvent):void {
 			
 			//trace("activated target",event.target)
@@ -555,16 +515,16 @@ package com.gestureworks.managers
 				event.target = event.target.parent;
 			activatedTarget(event);
 		}
-		
+		*/
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
 		
-		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
-
-                        return (value - minimum) / (maximum - minimum);
-         }
+		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number
+		{
+            return (value - minimum) / (maximum - minimum);
+        }
 		 
 		 
 		 ///////////////////////////////////////////////////////////////////
@@ -704,31 +664,46 @@ package com.gestureworks.managers
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
-			
 			//trace(GestureGlobals.frameID)
 			/////////////////////////////////////////////////////////////////////////////
 			
-			if (GestureWorks.activeTouch)
-			{
-				// GET TOUCH PREMETRICS
-				gs.tc.initGeoMetric2D();
-				gs.tc.getGeoMetrics2D(); 
-			}
+			//trace("t",GestureWorks.activeTouch, "m:",GestureWorks.activeMotion,"s:",GestureWorks.activeSensor)
 			
-			if (GestureWorks.activeSensor)
-			{
-				//GET SENSOR PREMETRICS
-				//getSensorMetrics();
-			}
-			
-			//GET MOTION POINT LIST
-			if (GestureWorks.activeMotion)
-			{
-				// GET PREMETRICS
-				if (GestureGlobals.frameID == 200) gs.tc.initGeoMetric3D();// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED // ON ALL OBJECTS
-				gs.tc.getSkeletalMetrics3D();
-				gs.tc.getGeoMetrics3D();
-			}
+			///////////////////////////////////////////////////////////////////////////////
+			// GLOBAL CORE INITS AND UPDATES
+			///////////////////////////////////////////////////////////////////////////////
+				if (GestureWorks.activeTouch)
+				{
+					// GET TOUCH PREMETRICS
+					if (GestureGlobals.frameID == 200) gs.tc.initTouchGeoMetric2D();
+					gs.tc.getTouchGeoMetrics2D();  // FINGER/PEN/TAG
+				}
+				
+				if (GestureWorks.activeSensor)
+				{
+					//GET SENSOR PREMETRICS
+					//getSensorMetrics();
+				}
+				
+				//GET MOTION POINT LIST
+				if (GestureWorks.activeMotion)
+				{
+					// GET PREMETRICS
+					if (GestureGlobals.frameID == 200) gs.tc.initPoseGeoMetric3D();// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED // ON ALL OBJECTS
+					
+					gs.tc.mapMotion3Dto2D()
+					gs.tc.getSkeletalGeoMetrics3D();
+					gs.tc.getPoseGeoMetrics3D();
+				}
+				
+				//GLOBAL VISUALIZER FOR RAW INPUT DATA
+				if ((gs.visualizer) && (gs.visualizer.debug_display)) 
+				{
+					gs.tc.updateCoreRawPointCount();
+					gs.updateDebugDisplay();
+				}
+			/////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////////
 			
 			
 			////////////////////////////////////////////////////////////////////////////
@@ -741,7 +716,7 @@ package com.gestureworks.managers
 				if (!itO.tc.core)
 				{
 				//trace("index", itO.index, itO.name);
-					if (itO.parent) 
+					if ((itO.parent) &&(itO.visible))
 					{
 						itO.index = itO.parent.getChildIndex(itO);
 						temp_tOList.push(itO);
@@ -765,26 +740,22 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////
 			
 			
-			
 			/////////////////////////////////////////////////////////////////////////////
-			// HIT SEQUENCE /////////////////////////////////////////////////////////////
+			//IP HIT TESTING /////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////
 			// LOOP THROUGH GLOABL IP LIST // THEN LOOP THROUGH TOUCH OBJECTS
 			if (gs)
 			{
-				//SELECTIVELY ADD IPOINTS TO TOUCH OBJETCS
+				//SELECTIVELY ADD IPOINTS TO TOUCH OBJETCS/////////////
 				for (var k:uint = 0; k < gs.cO.iPointArray.length; k++)
 				{
-					hitTestClusterADD(gs.cO.iPointArray[k],temp_tOList);
+					hitTestiPointsAddLocal(gs.cO.iPointArray[k], temp_tOList);
+					hitTestiPointsAddGlobal(gs.cO.iPointArray[k],temp_tOList);
 				}
-				//ADD GLOBAL POINTS
-				for (var k:uint = 0; k < gs.cO.iPointArray.length; k++)
-				{
-					hitTestClusterADDGLOBAL(gs.cO.iPointArray[k],temp_tOList);
-				}
-				//REMOVE POINTS
+				//REMOVE POINTS///////////////////////////////////////
 				for (var j:uint = 0; j < temp_tOList.length; j++) 
 				{	
-					hitTestClusterREMOVE(temp_tOList[j]);
+					hitTestiPointsRemove(temp_tOList[j]);
 				}
 			}
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -806,22 +777,24 @@ package com.gestureworks.managers
 				{
 					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					//PULL TOUCH POINT DATA INTO EACH TOUCHOBJECT //GET GLOBAL TOUCH POINTS		
-					if ((GestureWorks.activeNativeTouch) && (tO.touchEnabled) && (!tO.tc.core)) tO.cO.touchArray = gs.cO.touchArray;
+					//if ((GestureWorks.activeNativeTouch) && (tO.touchEnabled) && (!tO.tc.core)) tO.cO.touchArray = gs.cO.touchArray;
 					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT //GET GLOBAL MOTION POINTS		
 					if ((GestureWorks.activeMotion) && (tO.motionEnabled) && (!tO.tc.core))
 					{
 							if (GestureGlobals.frameID == 200) 
 							{
+								//TODO: MOVE INTO TC CLASS AND TRIGGER ON GML UPDATE IF REQUIRED
 								tO.tc.initIPSupport();
 								tO.tc.initIPFilters(); //CHECK
 							}
-							tO.cO.motionArray = gs.cO.motionArray
-							tO.cO.handList = gs.cO.handList;
+							//tO.cO.motionArray = gs.cO.motionArray
+							//tO.cO.motionArray2D = gs.cO.motionArray2D
+							//tO.cO.handList = gs.cO.handList;
 					}
 					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					//PULL SENSOR POINT DATA INTO EACH TOUCHOBJECT //GET GLOBAL SENSOR POINTS //GLOBAL PUSH TO ALL SENSOR ENABLED VIOs
-					if ((GestureWorks.activeSensor) && (tO.sensorEnabled) && (!tO.tc.core)) tO.cO.sensorArray = gs.cO.sensorArray
+					//if ((GestureWorks.activeSensor) && (tO.sensorEnabled) && (!tO.tc.core)) tO.cO.sensorArray = gs.cO.sensorArray
 				}
 				else 
 					continue;
@@ -903,7 +876,7 @@ package com.gestureworks.managers
 		}
 		
 		
-		public static function hitTestClusterADD(ipt:InteractionPointObject,temp_tOList:Array):void
+		public static function hitTestiPointsAddLocal(ipt:InteractionPointObject,temp_tOList:Array):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// touch cluster hit test
@@ -996,7 +969,7 @@ package com.gestureworks.managers
 			}
 			
 		
-		public static function hitTestClusterADDGLOBAL(ipt:InteractionPointObject,temp_tOList:Array):void
+		public static function hitTestiPointsAddGlobal(ipt:InteractionPointObject,temp_tOList:Array):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// touch cluster hit test
@@ -1024,10 +997,10 @@ package com.gestureworks.managers
 				}
 			}
 			
-			//////////////////////////////////////////////////////////////////////////////////////
-			// REMOVING INTERACTION POINTS FROM LOCAL LIST
-			//////////////////////////////////////////////////////////////////////////////////////
-			public static function hitTestClusterREMOVE(ts:Object):void
+		//////////////////////////////////////////////////////////////////////////////////////
+		// REMOVING INTERACTION POINTS FROM LOCAL LIST
+		//////////////////////////////////////////////////////////////////////////////////////
+		public static function hitTestiPointsRemove(ts:Object):void
 			{
 					if (ts.cO.iPointArray.length)
 						{
@@ -1074,7 +1047,6 @@ package com.gestureworks.managers
 							}
 						}
 			}
-		
 		
 	}
 }

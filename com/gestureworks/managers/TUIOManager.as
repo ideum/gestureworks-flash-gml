@@ -146,10 +146,10 @@ package com.gestureworks.managers
 			event.target = getTopDisplayObjectUnderPoint(new Point(event.stageX, event.stageY));			
 			TouchManager.onTouchDown(event);
 			
-			if (overlays.length) {
+			//if (overlays.length) {
 				//TouchManager.processOverlays(event, overlays);
-				InteractionManager.processOverlays(event, overlays);
-			}
+				//InteractionManager.processOverlays(event, overlays);
+			//}
 			
 		}
 		
@@ -160,10 +160,10 @@ package com.gestureworks.managers
 			event.stageY = e.tuioContainer.y * stage.stageHeight;
 			TouchManager.onTouchMove(event);
 			
-			if (overlays.length) {
+			//if (overlays.length) {
 				//TouchManager.processOverlays(event, overlays);
-				InteractionManager.processOverlays(event, overlays);
-			}			
+				//InteractionManager.processOverlays(event, overlays);
+			//}			
 		}
 		
 		
@@ -172,10 +172,10 @@ package com.gestureworks.managers
 			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, e.bubbles, e.cancelable, e.tuioContainer.sessionID);			
 			TouchManager.onTouchUp(event);				
 			
-			if (overlays.length) {
+			//if (overlays.length) {
 				//TouchManager.processOverlays(event, overlays);
-				InteractionManager.processOverlays(event, overlays);
-			}			
+				//InteractionManager.processOverlays(event, overlays);
+			//}			
 		}
 		
 		/**

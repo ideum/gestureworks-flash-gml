@@ -24,7 +24,7 @@ package com.gestureworks.analysis
 	import flash.geom.Utils3D;
 	import flash.geom.Point;
 	import org.openzoom.flash.viewport.controllers.ViewportControllerBase;
-	
+	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	
@@ -51,6 +51,16 @@ package com.gestureworks.analysis
 		private var i:uint = 0;
 		private var j:uint = 0;
 		
+		private var minX:Number //=-220//180 
+		private var maxX:Number //=220//180
+		private var minY:Number //=350//270 
+		private var maxY:Number //=120//50//-75
+		private var minZ:Number //=350//270 
+		private var maxZ:Number //=120//50//-75
+		
+		private var sw:int
+		private var sh:int
+		
 		private var std_radius:int = 30;
 		
 		
@@ -61,16 +71,29 @@ package com.gestureworks.analysis
 		public function GeoMetric(_id:int) 
 		{
 			touchObjectID = _id;
-			init();
+			//init();
 		}
 		
 		public function init():void
 		{
+			trace("init cluster geometric ");
+			
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID]; // need to find center of object for orientation and pivot
 			cO = ts.cO; // get motion data
 			tcO = ts.cO.tcO; 
 			
-			if (ts.traceDebugMode) trace("init cluster geometric");
+			sw = GestureWorks.application.stageWidth
+			sh = GestureWorks.application.stageHeight;
+			
+			minX = GestureGlobals.gw_public::leapMinX;
+			maxX = GestureGlobals.gw_public::leapMaxX;
+			minY = GestureGlobals.gw_public::leapMinY;
+			maxY = GestureGlobals.gw_public::leapMaxY;
+			minZ = GestureGlobals.gw_public::leapMinZ;
+			maxZ = GestureGlobals.gw_public::leapMaxZ;
+			
+			//if (ts.traceDebugMode) 
+			
 		}
 		
 		
@@ -120,7 +143,7 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
-						trace("push finger ",tp.touchPointID);
+						//trace("push finger ",tip.touchPointID);
 						
 						//trace("size",tp.size.x, tp.size.y);
 					//}
@@ -240,6 +263,49 @@ package com.gestureworks.analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		
+		public function mapMotionPoints3Dto2D():void 
+		{
+			//trace("geometric mapping motion points", cO.motionArray.length, cO.motionArray2D.length);
+			//if (!ts.transform3d) 
+
+			// CLEARS OUT LOCAL POINT ARRAYS
+			cO.motionArray2D = new Vector.<MotionPointObject>();
+			
+			if (ts.motionEnabled)
+				{
+				//trace("converting from 3d ip to 2d motion");
+				// NORMALIZE MOTION POINT DATA TO 2D
+				for (var i:uint = 0; i < cO.motionArray.length; i++) 
+						{
+							var pt:MotionPointObject = cO.motionArray[i];
+							var pt2d:MotionPointObject = new MotionPointObject();
+							
+							//pt2d.motionPointID = pt.motionPointID;
+							
+							pt2d.position.x =  normalize(pt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
+							pt2d.position.y = normalize(pt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
+							pt2d.position.z = pt.position.z
+							
+							//normalized vector
+							pt2d.direction.x = -pt.direction.x;
+							pt2d.direction.y = pt.direction.y;
+							pt2d.direction.z = pt.direction.z;
+							
+							//normalized vector
+							pt2d.normal.x = -pt.normal.x;
+							pt2d.normal.y = pt.normal.y;
+							pt2d.normal.z = pt.normal.z;
+							
+							pt2d.type = pt.type;
+							pt2d.fingertype = pt.fingertype;
+							//pt2d.history = pt.history;
+							
+						cO.motionArray2D.push(pt2d);
+						}
+				}	
+		}	
+		
+		
 		// clear derived point and cluster motion data
 		public function clearHandData():void
 		{
@@ -294,7 +360,9 @@ package com.gestureworks.analysis
 		// create basic hand
 		public function updateMotionPoints():void 
 		{
-			//trace(mpn,cO.motionArray.length, cO.handList.length, cO.hn)
+			trace(mpn, cO.motionArray.length, cO.handList.length, cO.hn)
+			
+			mpn = cO.motionArray.length;
 			
 				for (i = 0; i < mpn; i++)//mpn
 					{

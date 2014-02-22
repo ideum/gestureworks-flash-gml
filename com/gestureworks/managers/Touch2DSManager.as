@@ -59,7 +59,7 @@ package com.gestureworks.managers
 		private static var _maxY:Number = 270;
 		
 		private static  var _pressureThreshold:Number = 1;
-		private static  var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();
+	//	private static  var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();
 		
 		/**
 		 * The Leap3DSManager constructor allows arguments for screen and leap device calibration settings.
@@ -72,7 +72,7 @@ package com.gestureworks.managers
 		//public function Leap3DSManager()
 		public function Touch2DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
 		{
-			//trace("touch 2d server manager constructor");
+			trace("touch 2d server manager constructor");
 			activePoints = new Vector.<int>()//Array();
 			
 			if (minX) this.minX = minX;
@@ -183,10 +183,8 @@ package com.gestureworks.managers
 					{
 						var ev:GWTouchEvent;
 						//hit test
-						var obj:* = getTopDisplayObjectUnderPoint(point);
 						
-						if (obj || _overlays.length) {
-							activePoints.push(pid);	
+						activePoints.push(pid);	
 							ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
 								ev.stageX = pt.x;
 								ev.stageY = pt.y;
@@ -194,20 +192,19 @@ package com.gestureworks.managers
 								ev.source = Touch2DSManager//getDefinitionByName(getQualifiedClassName(this)) as Class; // error
 								
 								TouchManager.onTouchDown(ev);
-								trace("touch down event", ev.target, obj,_overlays.length)//ev
+								trace("touch down event")//ev
 								
 								
-								if (obj) {
-									ev.target = obj;
-									TouchManager.onTouchDown(ev);
-								}
+								//if (obj) {
+									//ev.target = obj;
+									//TouchManager.onTouchDown(ev);
+								//}
 								
 								//global overlays
-								if (_overlays.length) {
+								//if (_overlays.length) {
 									//TouchManager.processOverlays(ev, _overlays);
-									InteractionManager.processOverlays(ev, _overlays);
-								}
-						}
+									//InteractionManager.processOverlays(ev, _overlays);
+								//}
 						//trace("ADDED:", pid);		
 					}
 					
@@ -218,7 +215,7 @@ package com.gestureworks.managers
 							ev.pressure = pt.pressure;
 							
 							TouchManager.onTouchMove(ev);
-							trace("touch move event", ev.target,obj,_overlays.length)
+							trace("touch move event")
 												
 						//if (_overlays.length) {
 							//TouchManager.processOverlays(ev, _overlays);
@@ -230,59 +227,6 @@ package com.gestureworks.managers
 			}
 		}
 		
-		/**
-		 * Hit test
-		 * @param	point
-		 * @return
-		*/ 
-		private static function getTopDisplayObjectUnderPoint(point:Point):DisplayObject {
-			var targets:Array =  GestureWorks.application.stage.getObjectsUnderPoint(point);
-			var item:DisplayObject = (targets.length > 0) ? targets[targets.length - 1] : GestureWorks.application.stage;
-			item = resolveTarget(item);
-									
-			return item;
-		}	
-		
-		/**
-		 * Determines the hit target based on mouseChildren settings of the ancestors
-		 * @param	target
-		 * @return
-		 */
-		private static function resolveTarget(target:DisplayObject):DisplayObject {
-			var ancestors:Array = targetAncestors(target, new Array(target));			
-			var trueTarget:DisplayObject = target;
-			
-			for each(var t:DisplayObject in ancestors) {
-				if (t is DisplayObjectContainer && !DisplayObjectContainer(t).mouseChildren)
-				{
-					trueTarget = t;
-					break;
-				}
-			}
-			
-			return trueTarget;
-		}
-				
-		/**
-		 * Returns a list of the supplied target's ancestors sorted from highest to lowest
-		 * @param	target
-		 * @param	ancestors
-		 * @return
-		 */
-		private static function targetAncestors(target:DisplayObject, ancestors:Array = null):Array {
-			
-			if (!ancestors)
-				ancestors = new Array();
-				
-			if (!target.parent || target.parent == target.root)
-				return ancestors;
-			else {
-				ancestors.unshift(target.parent);
-				ancestors = targetAncestors(target.parent, ancestors);
-			}
-			
-			return ancestors;
-		}
 		
 		/**
 		 * The lowest x of the Leap x-coordinate range
@@ -333,10 +277,10 @@ package com.gestureworks.managers
 		/**
 		 * Registers global overlays to receive point data
 		 */
-		public function get overlays():Vector.<ITouchObject> { return _overlays; }
-		public function set overlays(o:Vector.<ITouchObject>):void {
-			_overlays = o;
-		}
+		//public function get overlays():Vector.<ITouchObject> { return _overlays; }
+		//public function set overlays(o:Vector.<ITouchObject>):void {
+		//	_overlays = o;
+		//}
 		
 		
 		

@@ -118,10 +118,10 @@ package com.gestureworks.managers
 							}
 							
 							//global overlays
-							if (overlays.length) {
+							//if (overlays.length) {
 								//TouchManager.processOverlays(ev, overlays);
-								InteractionManager.processOverlays(ev, overlays);
-							}
+								//InteractionManager.processOverlays(ev, overlays);
+							//}
 					}
 					
 					if(debug)
@@ -133,11 +133,11 @@ package com.gestureworks.managers
 						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, pid, false);
 						TouchManager.onTouchUp(ev);
 						
-						if (overlays.length) {
+						//if (overlays.length) {
 							//TouchManager.processOverlays(ev, overlays);
-							InteractionManager.processOverlays(ev, overlays);
+							//InteractionManager.processOverlays(ev, overlays);
 							
-						}						
+						//}						
 						
 						if (debug)
 							trace("REMOVED:", pid, event.frame.pointable(pid));					
@@ -149,10 +149,10 @@ package com.gestureworks.managers
 							ev.pressure = pressure;
 						TouchManager.onTouchMove(ev);
 												
-						if (overlays.length) {
+						//if (overlays.length) {
 							//TouchManager.processOverlays(ev, overlays);
-							InteractionManager.processOverlays(ev, overlays);
-						}												
+							//InteractionManager.processOverlays(ev, overlays);
+						//}												
 						
 						if(debug)
 							trace("UPDATE:", pid, event.frame.pointable(pid));							

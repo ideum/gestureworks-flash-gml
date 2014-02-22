@@ -82,20 +82,22 @@ package com.gestureworks.managers
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, mouseFrameHandler);							
 			
 			var event:GWTouchEvent = new GWTouchEvent(e);						
-			//if (TouchManager.validTarget(event)) {	
+			//if (TouchManager.validTarget(event)) {
+			/*
 			if (InteractionManager.validTarget(event)) {			
 				TouchManager.onTouchDown(event);			
 				currentMousePoint = event.touchPointID;
 				mousePointX = event.stageX;
 				mousePointY = event.stageY;		
-			}
+			}*/
+			/*
 			if (overlays.length) {
 				currentMousePoint = event.touchPointID;
 				mousePointX = event.stageX;
 				mousePointY = event.stageY;
 				//TouchManager.processOverlays(event, overlays);
 				InteractionManager.processOverlays(event, overlays);
-			}
+			}*/
 		}
 		
 		private static function onMouseUp(e:MouseEvent):void
@@ -142,10 +144,10 @@ package com.gestureworks.managers
 			event.touchPointID = currentMousePoint;
 			TouchManager.onTouchUp(event);
 			
-			if (overlays.length) {
+			//if (overlays.length) {
 				//TouchManager.processOverlays(event, overlays);
-				InteractionManager.processOverlays(event, overlays);
-			}
+				//InteractionManager.processOverlays(event, overlays);
+			//}
 		}
 		
 		private static function removeSimulatorPoint(simPoint:SimulatorGraphic):void {
@@ -180,10 +182,10 @@ package com.gestureworks.managers
 			event.stageY = mousePointY;
 			TouchManager.onTouchMove(event);
 			
-			if (overlays.length) {
+			//if (overlays.length) {
 				//TouchManager.processOverlays(event, overlays);
-				InteractionManager.processOverlays(event, overlays);
-			}
+				//InteractionManager.processOverlays(event, overlays);
+			//}
 		}
 		
 		/**
