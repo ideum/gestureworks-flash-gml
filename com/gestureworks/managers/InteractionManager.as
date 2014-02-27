@@ -284,8 +284,10 @@ package com.gestureworks.managers
 				}
 				
 
-				// UPDATE POINT HISTORY 
-				InteractionPointHistories.historyQueue(event);
+				// UPDATE POINT HISTORY
+				// NOT APPARENTLY NEEDED AS GET FROM CLUSTER HISTORY
+				// SAME WITH VECTOR ANALYSIS
+				//InteractionPointHistories.historyQueue(event);
 		}	
 	
 		///////////////////////////////////////////////////////////////////////////////////////
@@ -309,24 +311,6 @@ package com.gestureworks.managers
 
 		///////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////
-		
-		//private static var input1:GWTouchEvent;
-		/**
-		 * Prioritizes native touch input over mouse input from the touch screen. Processing
-		 * both inputs from the same device produces undesired results. Assumes touch events
-		 * will precede mouse events.
-		 * @param	event
-		 * @return
-		 */
-		/*
-		private static function duplicateDeviceInput(event:GWTouchEvent):Boolean {
-			if (input1 && input1.source != event.source && (event.time - input1.time < 200))
-				return true;
-			input1 = event;
-			return false;
-		}*/
-		
-		
 		
 		/**
 		 * Assign interaction points to parent's with interaction poiont bubbling enabled.
@@ -362,7 +346,7 @@ package com.gestureworks.managers
 				
 			// create new point object
 			var pointObject:TouchPointObject  = new TouchPointObject();	
-				pointObject.object = target; // sets primary touch object/cluster
+				//pointObject.object = target; // sets primary touch object/cluster
 				pointObject.id = target.touchPointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
 				//pointObject.position.x = event.stageX;
@@ -370,7 +354,7 @@ package com.gestureworks.managers
 				//pointObject.position.z = event.stageZ; 
 				pointObject.position = new Vector3D(event.stageX, event.stageY,event.stageZ); 
 				
-				pointObject.objectList.push(target); // seeds cluster/touch object list
+				//pointObject.objectList.push(target); // seeds cluster/touch object list
 				
 				target.view = event.view;
 				
@@ -405,7 +389,7 @@ package com.gestureworks.managers
 			var pointObject:TouchPointObject = GestureGlobals.gw_public::points[event.touchPointID]
 				// add this touch object to touchobject list on point
 				pointObject.touchPointID = event.touchPointID;//-??
-				pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
+				//pointObject.objectList.push(target);  ////////////////////////////////////////////////NEED TO COME UP WITH METHOD TO REMOVE TOUCH OBJECT THAT ARE NOT LONGER ON STAGE
 
 			//ADD TO LOCAL POINT LIST
 			//target.pointArray.push(pointObject);
@@ -677,6 +661,7 @@ package com.gestureworks.managers
 					// GET TOUCH PREMETRICS
 					if (GestureGlobals.frameID == 200) gs.tc.initTouchGeoMetric2D();
 					gs.tc.getTouchGeoMetrics2D();  // FINGER/PEN/TAG
+				//	gs.cc.getTouchGeoMetrics2D();  // FINGER/PEN/TAG
 				}
 				
 				if (GestureWorks.activeSensor)
@@ -694,6 +679,11 @@ package com.gestureworks.managers
 					gs.tc.mapMotion3Dto2D()
 					gs.tc.getSkeletalGeoMetrics3D();
 					gs.tc.getPoseGeoMetrics3D();
+					
+					//if (GestureGlobals.frameID == 200) gs.cc.initPoseGeoMetric3D();// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED // ON ALL OBJECTS
+					//gs.cc.mapMotion3Dto2D()
+					//gs.cc.getSkeletalGeoMetrics3D();
+					//gs.cc.getPoseGeoMetrics3D();
 				}
 				
 				//GLOBAL VISUALIZER FOR RAW INPUT DATA
@@ -701,6 +691,8 @@ package com.gestureworks.managers
 				{
 					gs.tc.updateCoreRawPointCount();
 					gs.updateDebugDisplay();
+					//gs.cc.updateCoreRawPointCount();
+					//gs.updateDebugDisplay();
 				}
 			/////////////////////////////////////////////////////////////////////////////////
 			/////////////////////////////////////////////////////////////////////////////////
@@ -955,15 +947,7 @@ package com.gestureworks.managers
 											}
 									}
 								} 
-								
-								
-								
-								
-								
-								
-								
-								
-									
+
 						}
 					}
 			}

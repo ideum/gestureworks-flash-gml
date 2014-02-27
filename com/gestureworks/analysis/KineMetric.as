@@ -1432,11 +1432,6 @@ package com.gestureworks.analysis
 		{
 			//trace("KineMetric::findInstPivot");			
 			
-			
-			
-			
-			
-			
 					//if (tpn == 1)
 					if(tpn)
 					{
@@ -1620,8 +1615,12 @@ package com.gestureworks.analysis
 							//trace(cO.dx,cO.dy,cO.dz);
 								
 							//NEED LIMITS FOR CLUSTER N CHANGE
-							//LIMIT TRANLATE
 							
+							/// LIMITS CAN KILL DRAG
+							// LIMITS CAN KILL TOUCH DRAG ACCURACEY///////////
+							
+							//LIMIT TRANLATE
+							/*
 							var trans_max_delta:Number = 40;
 									
 							if (Math.abs(sub_cO.dx) > trans_max_delta) 
@@ -1634,7 +1633,7 @@ package com.gestureworks.analysis
 								if (sub_cO.dy < 0) sub_cO.dy = -trans_max_delta;
 								if (sub_cO.dy > 0) sub_cO.dy = trans_max_delta;
 							}
-							
+							*/
 							
 							
 							//if (Math.abs(sub_cO.dz) > trans_max_delta) 

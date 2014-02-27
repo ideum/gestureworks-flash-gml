@@ -557,7 +557,7 @@ package com.gestureworks.visualizer
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
-					
+					if (sp){
 					//////////////////////////////////////////////////////////////////////////////
 					// for all interaction points
 					tptext_array[i].textCont = "IP ID: " + String(sp.interactionPointID); //+ "    id" + String(pt.touchPointID);
@@ -568,6 +568,9 @@ package com.gestureworks.visualizer
 					
 					///////////////////////////////////////////
 					// DRAW WII CONTROLLER POINT
+					
+					trace ("ip type",sp.type);
+					
 					if (sp.type == "finger_dynamic")//finger
 						{
 							if (_drawShape)
@@ -579,19 +582,31 @@ package com.gestureworks.visualizer
 								graphics.endFill();
 							}
 						}
-						else if (sp.type == "pen")
+						else if (sp.type == "pen_dynamic")
 						{
 							if (_drawShape)
 							{
 								// sensor center
 								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0x00FF00, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
+								graphics.beginFill(0x00FFFF, style.fill_alpha);
+								graphics.drawCircle(sp.position.x, sp.position.y, style.radius-10);
 								graphics.endFill();
 							}
 						}
 						
+						else if (sp.type == "tag_dynamic")
+						{
+							if (_drawShape)
+							{
+								// sensor center
+								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+								graphics.beginFill(0xFF0000, style.fill_alpha);
+								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10);
+								graphics.endFill();
+							}
+						}
 						
+					}
 						
 					}
 			}

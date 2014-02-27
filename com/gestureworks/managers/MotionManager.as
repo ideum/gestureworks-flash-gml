@@ -157,7 +157,7 @@ package com.gestureworks.managers
 		{			
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			
-			trace(gs)
+			//trace(gs)
 			
 			// create new point object
 			var mpointObject:MotionPointObject  = new MotionPointObject();

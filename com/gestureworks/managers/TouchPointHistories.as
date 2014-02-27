@@ -19,117 +19,58 @@ package com.gestureworks.managers
 	 * ...
 	 * @author Paul Lacey
 	 */
-	import com.gestureworks.events.GWTouchEvent;
+	//import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
-	import flash.events.TouchEvent;
-	import flash.geom.Point;
+	//import flash.events.TouchEvent;
+	//import flash.geom.Point;
 	
 	public class TouchPointHistories 
 	{
-		private static var point:TouchPointObject = new TouchPointObject();
-		private static var pt:TouchPointObject = new TouchPointObject();
-		private static var currentFrameID:int;
-		private static var FrameID:int;
+		private static var point:TouchPointObject //= new TouchPointObject();
+		private static var pt:TouchPointObject //= new TouchPointObject();
+		//private static var currentFrameID:int;
+		//private static var FrameID:int;
 		
-		public static function historyQueue(event:GWTouchEvent):void
+		public static function historyQueue(point):void//event:GWTouchEvent
 		{
-			point = GestureGlobals.gw_public::touchPoints[event.touchPointID]
+			//point = GestureGlobals.gw_public::touchPoints[event.touchPointID]
 			
-			if (point) {
-				point.history.unshift(historyObject(event));
-				
-				//trace(history[0].moveCount,GestureGlobals.gw_public::points[event.touchPointID].moveCount)
-								
-				if ((point.history.length>1)&&point.history.length-1>=GestureGlobals.pointHistoryCaptureLength)
-				{
-					point.history.pop();
-				}
+			if (point) 
+			{
+				point.history.unshift(historyObject(point));			
+				if (point.history.length-1>=GestureGlobals.pointHistoryCaptureLength) point.history.pop();
 			}
 		}
-		
-		// loads history object and returns value.
-		//public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
-	//	public static function historyObject(X:Number, Y:Number, FrameID:int, moveCount:int, event:TouchEvent, point:PointObject):Object
-		
-		///public static function historyObject(X:Number, Y:Number, event:TouchEvent, FrameID:int):Object
-		public static function historyObject(event:GWTouchEvent):TouchPointObject
+
+		public static function historyObject(point:TouchPointObject):TouchPointObject//event:GWTouchEvent
 		{
-			//var c0:Number = 1 / moveCount;
-			point = GestureGlobals.gw_public::touchPoints[event.touchPointID];
+			//trace(pt.moveCount)
+			
 			pt = new TouchPointObject;
-			
-			currentFrameID = GestureGlobals.frameID;
-			FrameID = 0;
-			
-			//trace(" --point process");
-			
-			if (point.history.length>=1)//(point.history[0]) 
-			{ 
-				//trace("history")
-				FrameID = point.history[0].frameID;
-				pt.frameID = currentFrameID;
+				pt.position = point.position;
+				pt.size = point.size;
+				pt.pressure = point.pressure;
+				pt.area = point.area;
+				pt.radius = point.radius;
+				pt.moveCount ++;
 				
-				//trace(FrameID,pt.frameID);
+				if (point.history.length >= 1) 
+				{
+					pt.dx = point.position.x - point.history[0].position.x;
+					pt.dy = point.position.y - point.history[0].position.y;
+					pt.dz = point.position.z - point.history[0].position.z;
+					// NO SUB-PIXEL RESOLUTION
+					//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
+				}
+				else {
+					pt.dx = 0;
+					pt.dy = 0;
+					pt.dz = 0;
+				}
 				
-				pt.position.x = event.stageX;
-				pt.position.y = event.stageY;
-				pt.position.z = event.stageZ;
-				pt.size.x = event.sizeX;
-				pt.size.y = event.sizeY;
-				//pt.l = event.sizeZ;
-				pt.dx = event.stageX - point.history[0].position.x;
-				pt.dy = event.stageY - point.history[0].position.y;
-				pt.dz = event.stageZ - point.history[0].position.z;
-				// NO SUB-PIXEL RESOLUTION
-				//trace(pt.x, pt.y, pt.dx, pt.dy, event.stageX, event.stageY, event.pressure);
-				
-				//var sx:Number = event.sizeX * Math.exp(90)
-				//var sy:Number = event.sizeY*Math.exp(90)
-				//trace(event.sizeX,event.sizeY, event.pressure, sx,sy);
-				//trace(pt.dx,pt.dy,event.stageY,point.history[0].y,point.history[1].y,point.history[3].y)
-			}
-			
-			
-			else {
-				// for initial values
-				//trace("zero delta")
-				pt.frameID = currentFrameID;
-				pt.dx = 0;
-				pt.dy = 0;
-				pt.dz = 0;
-				
-				pt.position.x = event.stageX;
-				pt.position.y = event.stageY;
-				pt.position.z = event.stageZ;
-				pt.size.x = event.sizeX;
-				pt.size.y = event.sizeY;
-				//pt.l = event.sizeZ;
-			}
-			
-			
-			
-			
-			
-			if (FrameID == currentFrameID) 
-			{
-				point.DX += pt.dx;
-				point.DY += pt.dy;
-				point.DZ += pt.dz;
-				//point.moveCount ++;
-			}
-			else {
-				point.DX = pt.dx;
-				point.DY = pt.dy;
-				point.DZ = pt.dz;
-				point.moveCount = 1;
-			}
-			
-			//var rad:Number = Math.max(event.sizeX, event.sizeY);
-			//trace("point augmentation data",event.sizeX,event.sizeY, rad);
-			
 			return pt;
 		}
 		

@@ -128,14 +128,55 @@ package com.gestureworks.analysis
 		{
 			//var sizeThreshold:Number = 0.46; // GML ADJUST
 			var fn:int = cO.touchArray.length;
-			var minSize:int = 83;
+			var minSize:int = 145;
+			var maxSize:int = 1000;
 				
+				//classfy tag points
+				
+				findTouchPointProperties();
+				//find2DTagPoints();
+			
 				for (var i:int = 0; i < fn; i++)
 				{
 					var tp:TouchPointObject = cO.touchArray[i];
-					//if(!locked){
-					//if ((tp.size.x >= minSize) && (tp.size.y >= minSize))
-					//{
+					var size:Number = tp.area;
+					
+					//trace("size",size);
+					trace("touch geometric",tp.tagID, tp.area, tp.size.x, tp.size.y);
+					
+					if (tp.tagID == 0)
+					{
+					if ((size >= minSize)&&(size < maxSize))
+					{
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = tp.position;
+							//tip.size.x = tp.size.x;
+							//tip.size.y = tp.size.y;
+							tip.mode = "touch";
+							tip.type = "finger_dynamic";
+								
+						// push to interactive point list
+						InteractionPointTracker.framePoints.push(tip);
+						trace("push finger ");
+						//trace("finger size",size);
+					}
+					///////////////
+					//TEST
+					else if ((size < minSize)&&(size!=0)){
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = tp.position;
+							tip.mode = "touch";
+							tip.type = "pen_dynamic";
+								
+						// push to interactive point list
+						InteractionPointTracker.framePoints.push(tip);
+						trace("push pen ");
+						//trace("pen size",size);
+					}
+					
+					///test
+					if (size == 0) {
+						
 						var tip:InteractionPointObject = new InteractionPointObject();
 							tip.position = tp.position;
 							tip.mode = "touch";
@@ -143,19 +184,41 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
-						//trace("push finger ",tip.touchPointID);
+						trace("push eye", tip.position)
 						
-						//trace("size",tp.size.x, tp.size.y);
-					//}
-					//}
-					/*else {
+					}
+					
+					
+					
+					/*
+					else if (size > maxSize){
 						var tip:InteractionPointObject = new InteractionPointObject();
 							tip.position = tp.position;
-							tip.type = "finger_static";
+							tip.mode = "touch";
+							tip.type = "shape_dynamic";
+								
+						//var radius = Math.sqrt(size)*0.5
+						// push to interactive point list
+						InteractionPointTracker.framePoints.push(tip);
+						//trace("push finger ",tip.touchPointID);
+						//trace("shape size",size, radius);
+					}*/
+					
+					else {
+						
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = tp.position;
+							tip.mode = "touch";
+							tip.type = "finger_dynamic";
 								
 						// push to interactive point list
-						InteractionPointTracker.fingerTouchPoints.push(tip);
-					}*/
+						InteractionPointTracker.framePoints.push(tip);
+						trace("push finger ");
+						//trace("finger size",size);
+					}
+					
+					
+					}
 				}
 		}
 		
@@ -170,8 +233,6 @@ package com.gestureworks.analysis
 					//if(!locked){
 					if ((tp.size.x < minSize) && (tp.size.y < minSize))
 					{
-					
-					
 						var tip:InteractionPointObject = new InteractionPointObject();
 							tip.position = tp.position;
 							tip.mode = "touch";
@@ -180,6 +241,21 @@ package com.gestureworks.analysis
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
 					}
+				}
+		}
+		
+		public function findTouchPointProperties(): void
+		{
+			var tpn =  ts.cO.touchArray.length;
+			
+			for (var i:int = 0; i < tpn; i++) 
+				{
+					//GET AREA
+					var area:Number = cO.touchArray[i].size.x * cO.touchArray[i].size.y;
+					//GET RADIUS ON TOUCH POINT
+					var radius:Number = Math.sqrt(area) * 0.5;
+					cO.touchArray[i].area = area;
+					cO.touchArray[i].radius = radius;
 				}
 		}
 		
@@ -193,64 +269,135 @@ package com.gestureworks.analysis
 		if (ts.tpn) 
 		{
 			//trace("find 2d tag points")
-			
+			var pairArray:Array = new Array();
+			var refPairArray:Array = new Array();
 			var count:int = 0;
-			var error:int = 8;
+			var error_dist_margin:int = 150;
+			var error_area_margin:int = 2500;
+			var avg_area:Number = 260;
 			
-				for (i = 0; i < ts.cO.tpn; i++) 
+			
+			// GET REF PAIR ARRAY
+			refPairArray[0] = 43;
+			refPairArray[1] = 64;
+			refPairArray[2] = 86;
+			refPairArray[3] = 93;
+			refPairArray[4] = 100;
+			refPairArray[5] = 113;
+			refPairArray[6] = 121;
+			refPairArray[7] = 123;
+			refPairArray[8] = 128;
+			refPairArray[9] = 151;
+			
+			
+			// FIND DISTANCE BETWEEN PAIR
+			// ADD TO PAIR ARRAY
+			
+			var tpn =  ts.cO.touchArray.length;
+			
+				for (var i:int = 0; i < tpn; i++) 
 				{
-				//var pt:PointObject = cO.touchArray[i]
-				
-				var distx:Number = cO.tcO.position.x - cO.touchArray[i].position.x;
-				var disty:Number = cO.tcO.position.y - cO.touchArray[i].position.y;
-				
-				cO.touchArray[i].dist = Math.sqrt(distx * distx + disty * disty)
-				cO.touchArray[i].match = false;
-				//trace("tpoints",i,cO.touchArray[i].dist,cO.tcO.x,cO.tcO.y)
-				}
-				trace("--")
-				
-				for (i = 0; i < cO.objectArray.length; i++) 
-				{
-					for (j = 0; j < cO.objectArray[i].length; j++) 
+					for (var j:int = 0; j <tpn; j++) 
 					{
-						// number of points in object tag structure
-						//cO.objectArray[i].object[j].length
-						
-						
-						for (var k:int = 0; k < ts.cO.tpn; k++) 
-						{
-							//var drx = cO.x - cO.objectArray[i][j].x;
-							//var dry = cO.y - cO.objectArray[i][j].y;
-							//var rdist =  Math.sqrt(drx * drx + dry * dry)
-							var rdist:Number = cO.objectArray[i][j].dist;
-							var diff:Number = Math.abs(cO.objectArray[i][j].dist -cO.touchArray[k].dist)
-							//var min:Number = rdist - error; 
-							//var max:Number = rdist + error; 
-							
-							
-							
-							//if (( min < cO.touchArray[k].dist < max ) && (!cO.touchArray[k].match))
-							//trace("rad diff",diff,cO.objectArray[i][j].dist,cO.touchArray[k].dist)
-							
-							//NEED DECENDING POINT MATCH TO CREATE BEST MATCH
-							// NEED ANGULAR 
-							if((!cO.touchArray[k].match)&&(diff < error))
-								{
-									cO.touchArray[k].match = true;
-									count++;
-									//trace(" touch gemetric rad diff",diff,cO.objectArray[i][j].dist,cO.touchArray[k].dist,k)
-								}
+						if ((i!=j+i)&&(i+j<tpn)){
+						var pair:Object = new Object();
+							pair.pointA = cO.touchArray[i];
+							pair.pointB = cO.touchArray[j+i];
+							pair.distance = Vector3D.distance(ts.cO.touchArray[i].position, ts.cO.touchArray[j+i].position);
+						pairArray.push(pair);
 						}
 					}
 				}
+				// SORT PAIR ARRAY BASED ON SMALLEST DISTANCES
+				pairArray.sortOn("distance", [Array.NUMERIC]);//Array.DESCENDING
+				//pairArray.reverse();
+				trace("--");
+				//for (var i:int = 0; i < pairArray.length; i++) 
+				//{
+				//trace("pair",pairArray[i].distance,pairArray[i].pointA.touchPointID, pairArray[i].pointB.touchPointID,pairArray[i].pointA.area  )
+				//}
 				
-				// note reduce accuracey
-				if (count >= 4) {
-					//trace("tag feature match")
-					tag_match = true;
+			// GET 10 SHORTEST PAIRS
+			// COMPARE TO TAG FINGERPRINT
+			var total_dist_error:Number = 0;
+			var total_area_error:Number = 0;
+			
+				for (var i:int = 0; i < refPairArray.length; i++) 
+				{
+					if (pairArray[i]){
+					var de:Number = Math.abs(refPairArray[i] - pairArray[i].distance);
+					//var de:Number = Math.abs(refPairArray[i]);
+					//trace("error", e)
+					total_dist_error += de;
+					//total_size_error += se;
+					}
 				}
-				else tag_match =false
+				//subpoint list
+				var subPointList = new Array();
+				for (var i:int = 0; i < pairArray.length; i++) 
+				{
+					var ptA = pairArray[i].pointA.touchPointID;
+					var ptB = pairArray[i].pointB.touchPointID;
+					if (subPointList.indexOf(ptA) == -1) subPointList.push(pairArray[i].pointA);
+					if (subPointList.indexOf(ptB) == -1) subPointList.push(pairArray[i].pointB);
+				}
+				
+				for (var i:int = 0; i < subPointList.length; i++) 
+				{
+					var se:Number = Math.abs(subPointList[i].area - avg_area);
+					total_area_error += se;
+					//trace("area error",subPointList[i].size.x,subPointList[i].size.y,subPointList[i].area ,se);
+				}
+				//trace("total area error", total_area_error);
+				
+				
+				//trace("total error", total_error)
+				if ((total_dist_error < error_dist_margin)&&(pairArray.length>=refPairArray.length))
+				{
+					//trace("DISTANCE MATCH");
+					
+					// WILL NEED TO DO POINT SIZE MATCH ALSO
+					if(total_area_error < error_area_margin){
+					
+					//trace("AREA MATCH")
+					
+					
+					//MODIFY TOUCH POINT IN SUBLIST
+					//ADD POSITION
+					//FIND ROTATION
+					var x:Number = 0;
+					var y:Number = 0;
+					var snum = subPointList.length
+					var sk:Number = 1 / snum;
+					if (snum == 0) sk = 0;
+					
+					for (var i:int = 0; i < snum; i++) 
+					{
+						subPointList[i].tagID = 1;
+						x +=  subPointList[i].position.x;
+						y +=  subPointList[i].position.y;
+					}
+					x *= sk;
+					y *= sk;
+					
+					// CREATE CONSOLADATED TAG POINT
+					//if (tp.tagID != null) 
+					//{
+						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.position = new Vector3D(x,y,0);
+							tip.mode = "touch";
+							tip.type = "tag_dynamic";
+							tip.tagID = 1;
+					//}
+					// PUSH TAG INTERACTION POINT
+					InteractionPointTracker.framePoints.push(tip);
+					
+					
+					// REMOVE TOUCH POINTS FROM GLOBAL LIST
+					
+
+					}
+				}
 				
 			}
 		}
@@ -360,7 +507,7 @@ package com.gestureworks.analysis
 		// create basic hand
 		public function updateMotionPoints():void 
 		{
-			trace(mpn, cO.motionArray.length, cO.handList.length, cO.hn)
+			//trace("updateMotionPoints",mpn, cO.motionArray.length, cO.handList.length, cO.hn)
 			
 			mpn = cO.motionArray.length;
 			

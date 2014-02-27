@@ -78,7 +78,7 @@ package com.gestureworks.managers
 				//handType = message.InputPoint.Values.Hand.@type; //left/right
 				//handSplay
 				
-				trace("hand count",handCount);
+				//trace("hand count",handCount);
 
 				// CREATE POINT LIST
 				pointList = new Vector.<MotionPointObject>//Array();
@@ -100,7 +100,7 @@ package com.gestureworks.managers
 						//ptf.fingerID = f.@fingerType
 						//ptf.extension
 						ptf.handID = j;
-						ptf.id = f.@Id;
+						ptf.id = f.@id;
 						ptf.position = new Vector3D(f.Position.@x, f.Position.@y, f.Position.@z * -1);
 						ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
 						//ptf.velocity = new Vector3D(f.Velocity.@x, f.Velocity.@y, f.Velocity.@z*-1);
@@ -177,13 +177,13 @@ package com.gestureworks.managers
 				on = 0//int(f.Messages.Message.InputPoint.Values.Hand[0].@ObjectCount)
 			
 				// palm point///////////////////////////////////////////////////////
-				pids.push(int(message.InputPoint.Values.Hand[i].Palm.@Id)) 
+				pids.push(int(message.InputPoint.Values.Hand[i].Palm.@id)) 
 				//trace("PALMID",f.Messages.Message.InputPoint.Values.Hand[i].Palm.@id);
 				 
 				//finger points/////////////////////////////////////////////////////
 				for (var j:int = 0; j < int(message.InputPoint.Values.Hand[i].@FingerCount); j++)
 				{
-					pids.push(int(message.InputPoint.Values.Hand[i].Finger[j].@Id)) 
+					pids.push(int(message.InputPoint.Values.Hand[i].Finger[j].@id)) 
 					//trace("FINGERID",f.Messages.Message.InputPoint.Values.Hand[i].Finger[j].@id);
 				}
 				//object points //tools points/////////////////////////////////////////////
@@ -230,7 +230,7 @@ package com.gestureworks.managers
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//POINT ADDITION AND UPDATE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			for each(var pid:Number in pids) 
+			for each(var pid:int in pids) //Number
 			{
 					var pt = getFramePoint(pid);
 					//trace("getting pid", pid);

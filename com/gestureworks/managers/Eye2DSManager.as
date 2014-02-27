@@ -29,7 +29,7 @@ package com.gestureworks.managers
 	 * @author Ideum
 	 *
 	 */
-	public class Touch2DSManager extends Sprite
+	public class Eye2DSManager extends Sprite
 	{
 		private static var frame:XML
 		private static var message:Object
@@ -37,7 +37,7 @@ package com.gestureworks.managers
 		private static var frameId:int 
 		private static var timestamp:int 
 		private static var handCount:int
-		private static var fingerCount:int
+		private static var count:int
 		private static var penCount:int
 		private static var objectCount:int
 		private static var debug:Boolean = false;
@@ -51,7 +51,9 @@ package com.gestureworks.managers
 		private static var _minY:Number;
 		private static var _maxY:Number;
 		
-		public function Touch2DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
+		public static var touchPoints:Dictionary = new Dictionary();
+		
+		public function Eye2DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
 		{
 			trace("touch 2d server manager constructor");
 			activePoints = new Vector.<int>()
@@ -62,36 +64,37 @@ package com.gestureworks.managers
 			//if (maxY) this.maxY = maxY;
 			
 			//stage = GestureWorks.application.stage;
+			
+			touchPoints = GestureGlobals.gw_public::touchPoints;
 		}
 
-		public function processTouch2DSocketData(message:XML):void 
+		public function processEye2DSocketData(message:XML, eyeList:XMLList):void 
 		{
 			//trace(message)
-			
 				// CREATE POINT LIST
 				pointList = new Vector.<TouchPointObject>();
-				//fingerCount = int(message.InputPoint.Values.Surface.Point.length());
-				fingerCount = int(message.InputPoint.Values.Finger.length());
-				//penCount = int(message.InputPoint.Values.Surface.Pen.length());
+				count = int(eyeList.length());//int(message.InputPoint.Values.Eye.length());
+				pids = new Vector.<int>();
 				
-				//trace(fingerCount)
 				
 				// CREATE Touch POINTS
-				for (var k:int = 0; k < fingerCount; k++ )
+				for (var k:int = 0; k < count; k++)
 				{
 					//var f =  message.InputPoint.Values.Surface.Point[k];
-					var f =  message.InputPoint.Values.Finger[k];
-					var ptf:TouchPointObject = new TouchPointObject();
-						ptf.id = f.@id; //TODO: change to id
-						ptf.position.x = f.@x; 
-						ptf.position.y = f.@y;
-						ptf.pressure = f.@pressure;
-						ptf.size.x = f.@width;
-						ptf.size.y = f.@height;
-					pointList.push(ptf);
+					var e =  eyeList[k];//message.InputPoint.Values.Eye[k];
+					var pte:TouchPointObject = new TouchPointObject();
+						pte.id = e.@id; 
+						pte.position.x = e.@x*1920; 
+						pte.position.y = e.@y*1080;
+						pte.size.x = 0;
+						pte.size.y = 0;
+					pointList.push(pte);
+					
+					//PUSH IDS
+					pids.push(int(e.@id));
 				}
-				// CALL LEAP PROCESSING
-				processTouch2DData(message);
+
+				addRemoveUpdatePoints();
 		}
 		
 		
@@ -99,29 +102,7 @@ package com.gestureworks.managers
 		 * Process points
 		 * @param	event
 		 */
-		private static function processTouch2DData(message:XML):void 
-		{
-			pushids(message);
-			addRemoveUpdatePoints();
-		}
-		private static function pushids(message:XML):void 
-		{
-			//store frame's point ids
-			pids = new Vector.<int>();
-			
-			//var pn:int = int(message.InputPoint.Values.Surface.Point.length());
-			var fn:int = int(message.InputPoint.Values.Finger.length());
-			
-				//push touch point ids
-				for (var j:int = 0; j < fn; j++)
-				{
-					//pids.push(int(message.InputPoint.Values.Surface.Point[j].@id));
-					pids.push(int(message.InputPoint.Values.Finger[j].@id));
-				}
-				
-			//trace("pid array length",pids.length);
-		}
-		
+
 		private static function getFramePoint(id:int):TouchPointObject//Object 
 		{
 			var obj:TouchPointObject//Object;
@@ -132,7 +113,6 @@ package com.gestureworks.managers
 			return obj
 		}
 		
-
 		private static function addRemoveUpdatePoints():void 
 		{
 			//trace("touch add remove update----------------------------------------------------", pointList.length, activePoints.length)
@@ -145,12 +125,11 @@ package com.gestureworks.managers
 					
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
-					
-						//var mp:MotionPointObject  = new MotionPointObject();
-							//mp.motionPointID = aid;
 
 					//MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END, mp, true, false));
-					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false));
+					//TouchManager.onTouchUp(new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, aid, false));
+					//TouchManager.onTouchUpPoint(touchPoints[aid]);
+					TouchManager.onTouchUpPoint(aid);
 					//trace("TOUCH POINT REMOVED:",aid);
 				}
 				
@@ -175,25 +154,30 @@ package com.gestureworks.managers
 						tp.sizeX = pt.size.x;
 						tp.sizeY = pt.size.y;
 						*/
-						
+					/*	
 					var te:GWTouchEvent = new GWTouchEvent();
-						te.touchPointID = pt.id;
+						te.touchPointID = pt.id;////////////////////////////////////????????????
 						//te.type = "touchBegin";
-						te.stageX = pt.position.x,
+						te.stageX = pt.position.x;
 						te.stageY = pt.position.y;
 						te.stageZ = pt.position.z;
-						te.sizeX = pt.size.x;
-						te.sizeY = pt.size.y;
-						te.pressure = pt.pressure;
+						te.sizeX = 0;
+						te.sizeY = 0;
+						*/
+						
+						pt.touchPointID = pt.id;////???????????????????????
+						
 						
 					if (activePoints.indexOf(pid) == -1) 
 					{
 						activePoints.push(pid);	
-						TouchManager.onTouchDown(te);
+						//TouchManager.onTouchDown(te);
+						TouchManager.onTouchDownPoint(pt);
 						//trace("TOUCH POINT ADDED:", pid);		
 					}
 					else {
-						TouchManager.onTouchMove(te)		
+						//TouchManager.onTouchMove(te)
+						TouchManager.onTouchMovePoint(pt)		
 						//trace("TOUCH POINT UPDATE:", pid);
 					}
 					//trace(pt.size.x,pt.size.y, pt.pressure)

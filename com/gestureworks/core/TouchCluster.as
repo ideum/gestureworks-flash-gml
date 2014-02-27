@@ -417,18 +417,21 @@ package com.gestureworks.core
 					{			
 						tagTouchPoints = true; 
 					
+						/*
 							// creat five point tag
-							cO.objectArray[0] = new Array()
-								cO.objectArray[0][0] = new TouchPointObject();
-								cO.objectArray[0][0].dist = 100;
-								cO.objectArray[0][1] = new TouchPointObject();
-								cO.objectArray[0][1].dist = 96;
-								cO.objectArray[0][2] = new TouchPointObject();
-								cO.objectArray[0][2].dist = 92;
-								cO.objectArray[0][3] = new TouchPointObject();
-								cO.objectArray[0][3].dist = 84;
-								cO.objectArray[0][4] = new TouchPointObject();
-								cO.objectArray[0][4].dist = 76;
+							cO.objectArray[0] = Object();
+								cO.objectArray[0].tagID = 1;
+								cO.objectArray[0][0].position = new Vector3D();
+								cO.objectArray[0][0].area = 100;
+								cO.objectArray[0][1].position = new Vector3D();
+								cO.objectArray[0][1].area = 100;
+								cO.objectArray[0][2].position = new Vector3D();
+								cO.objectArray[0][2].area = 100;
+								cO.objectArray[0][3].position = new Vector3D();
+								cO.objectArray[0][3].area = 100;
+								cO.objectArray[0][4].position = new Vector3D();
+								cO.objectArray[0][4].area = 100;
+								*/
 					}
 					if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 
 					{
@@ -1390,6 +1393,17 @@ package com.gestureworks.core
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		//sensors
+		// mouse position // left or right or both
+			// left click (left wink)
+			// right click (right wink)
+			// hold (stare/gaze lock)
+			// (flare)
+			// pupil size (presure dist??)
+			// wink/blink/flare/
+		
+		
 		
 		/**
 		 * @private

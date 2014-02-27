@@ -23,6 +23,8 @@ package com.gestureworks.objects
 		// ID
 		public var id:int;
 		
+		public var tagID:int;
+		
 		// interactionPointID
 		public var interactionPointID:int;
 		

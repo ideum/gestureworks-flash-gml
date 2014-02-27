@@ -58,25 +58,12 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(mpo:MotionPointObject):Object
 		{
-			var FrameID:int = 0;
+			//var FrameID:int = 0;
 			//var currentFrameID:int = GestureGlobals.frameID;
 			//var currentMotionFrameID:int = GestureGlobals.motionFrameID;
 			var object:MotionPointObject = new MotionPointObject();
 				object = mpo;
 				
-				
-				//mpo.frameID = currentFrameID;
-				//mpo.motionFrameID = currentMotionFrameID;
-				
-				
-				
-				if (mpo.history.length>=1)//(point.history[0]) 
-				{
-				//if ( mpo.history[0].frameID != currentFrameID) mpo.moveCount = 1;
-				}
-				
-				//trace("motion frame history push")
-
 			return object;
 		}
 		

@@ -39,6 +39,7 @@ package com.gestureworks.managers
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import org.tuio.TuioEvent;
 	
@@ -81,32 +82,11 @@ package com.gestureworks.managers
 				
 				gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
 				
-				if (gs){
-				// CREATE GLOBAL MOTION SPRITE TO HANDLE ALL GEOMETRIC GLOBAL ANALYSIS OF MOTION POINTS
-				//gs = new TouchSprite();
-					//gs.active = true;
-					//gs.tc.core = true;
-					//gs.debugDisplay = true;
-					
-					//gs.tc.touch_core = true; // fix for global core analysis
-					//gs.touchEnabled = true;
-				
-					//trace("touch manger calling geo init")
-					//gs.tc.initGeoMetric();
-					
-				//GestureWorks.application.addChild(gs);
-				//GestureGlobals.globalSpriteID = gs.touchObjectID;
-				//}
-				//ACTIVATE
-				//else {
+				if (gs)
+				{
 					gs.touchEnabled = true;
 					gs.tc.touch_core = true;
-					//gs.debugDisplay = true;
 				}
-				
-				
-				
-
 				
 				if (GestureWorks.activeNativeTouch)
 				{			
@@ -142,10 +122,10 @@ package com.gestureworks.managers
 		} 
 		
 		// registers touch point via touchSprite
-		private static function registerTouchPoint(event:GWTouchEvent):void
+		private static function registerTouchPoint(point:TouchPointObject):void//event:GWTouchEvent
 		{
 			//FIX CELAN UP REFERENCE 
-			touchPoints[event.touchPointID].history.unshift(TouchPointHistories.historyObject(event))	
+			touchPoints[point.touchPointID].history.unshift(TouchPointHistories.historyObject(point))	//event
 		}
 		
 		
@@ -174,7 +154,10 @@ package com.gestureworks.managers
 		private static function onTouchBegin(e:TouchEvent):void 
 		{			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
+			
+			//TODO:CREATE TOUCH POINT HERE AND INJECT
 			onTouchDown(event);
+			
 		}
 		
 		public static function onTouchDown(event:GWTouchEvent):void
@@ -193,27 +176,59 @@ package com.gestureworks.managers
 					tpO.position.z = event.stageZ;
 					tpO.size.x = event.sizeX;
 					tpO.size.y = event.sizeY;
+					tpO.pressure = event.pressure;
 					
-					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					
+					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
 					gs.cO.touchArray.push(tpO);
-					
 					gs.touchPointCount++;//touchPointCount++;
-				
 					//trace("push touch point");
 				
-				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::touchPoints[event.touchPointID] = tpO;
+					// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY/////////
+					GestureGlobals.gw_public::touchPoints[tpO.touchPointID] = tpO;
 				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				//TODO: REF POINT OBJECTS NOT EVENT
-				registerTouchPoint(event);//tpO
+				registerTouchPoint(tpO);
 				
 			///////////////////////////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////////////
 			//trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
 		}
 		
+		
+		public static function onTouchDownPoint(pt:TouchPointObject):void
+		{
+			//trace("touch manager on touch down", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
+			
+			//////////////////////////////////////////////////////////////////////////////
+			// CREATE NEW TOUCHPOINT IN GLOBAL TOUCH OBJECT
+			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
+			var tpO:TouchPointObject = new TouchPointObject();
+					tpO.id = gs.touchPointCount; 
+					tpO.touchPointID = pt.touchPointID;
+					tpO.position = pt.position;
+					//tpO.size = pt.size;
+					tpO.size.x = 0;
+					tpO.size.y = 0;
+					//tpO.pressure = pt.pressure;
+					
+					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
+					gs.cO.touchArray.push(tpO);
+					gs.touchPointCount++;//touchPointCount++;
+					//trace("push touch point");
+				
+					// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY/////////
+					GestureGlobals.gw_public::touchPoints[pt.touchPointID] = tpO;
+				
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER
+				registerTouchPoint(tpO);
+				
+			///////////////////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////////
+			//trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
+		}
+
+		// stag
+
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:GWTouchEvent):void
 		{
@@ -248,6 +263,31 @@ package com.gestureworks.managers
 			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
 			/////////////////////////////////////////////////////////////////////////////////////
 		}
+		public static function onTouchUpPoint(touchPointID:int):void
+		{
+			////////////////////////////////////////////////////////////////////////////////////
+			//trace("Touch point End, touchManager", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
+			
+			var tpO:TouchPointObject = touchPoints[touchPointID];
+			
+			if (tpO)
+			{
+					// REMOVE POINT FROM LOCAL LIST
+					gs.cO.touchArray.splice(tpO.id, 1);
+					
+					// REDUCE LOACAL POINT COUNT
+					gs.touchPointCount--;
+					
+					// UPDATE POINT ID 
+					for (var i:int = 0; i < gs.cO.touchArray.length; i++)
+					{
+						gs.cO.touchArray[i].id = i;
+					}
+					// DELETE FROM GLOBAL POINT LIST
+					delete touchPoints[touchPointID];
+			}
+			/////////////////////////////////////////////////////////////////////////////////////
+		}
 		
 		public static function onTouchMove(event:GWTouchEvent):void
 		{	
@@ -255,6 +295,7 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////////
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
+			
 			var tpO:TouchPointObject = touchPoints[event.touchPointID];
 			
 				if (tpO)
@@ -262,22 +303,41 @@ package com.gestureworks.managers
 					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
 					//tpO.id  = //event.id;
 					tpO.touchPointID  = event.touchPointID;
-					
 					tpO.position.x = event.stageX;
 					tpO.position.y = event.stageY;
 					tpO.position.z = event.stageZ;
-					
 					tpO.size.x = event.sizeX;
 					tpO.size.y = event.sizeY;
 					//tpO.pressure = event.pressure;
-					
-
 					tpO.moveCount ++;
 					//trace( tpO.moveCount);
 				}
 				
 				// UPDATE POINT HISTORY 
-				TouchPointHistories.historyQueue(event);
+			//	TouchPointHistories.historyQueue(tpO);
+				//////////////////////////////////////////////////////////////////////////////
+				/////////////////////////////////////////////////////////////////////////////
+		}		
+		
+		public static function onTouchMovePoint(pt:TouchPointObject):void
+		{	
+			var tpO:TouchPointObject = touchPoints[pt.touchPointID];
+			
+				if (tpO)
+				{	
+					//tpO.id  = pt.id;
+					tpO.touchPointID  = pt.touchPointID;
+					tpO.position = pt.position;
+					//tpO.size = pt.size;
+					tpO.size.x = 0;
+					tpO.size.y = 0;
+					//tpO.pressure = pt.pressure;
+					tpO.moveCount ++;
+					//trace( tpO.moveCount);
+				}
+				
+				// UPDATE POINT HISTORY 
+			//	TouchPointHistories.historyQueue(tpO);
 				//////////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////////
 		}		
