@@ -58,9 +58,6 @@ package com.gestureworks.managers
 	import flash.geom.Vector3D;
 	
  	
-	
-	
-		
 	public class InteractionManager 
 	{	
 		//public static var touchPoints:Dictionary = new Dictionary();
@@ -133,7 +130,6 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, interactionFrameHandler); //MOVE TO INTERACTION MANAGER
-		
 			interaction_init = true;
 			}
 		}
@@ -150,6 +146,7 @@ package com.gestureworks.managers
 		// registers touch point via touchSprite
 		public static function registerInteractionPoint(ipo:InteractionPointObject):void
 		{
+			//TODO:APPEARS TO HAVE NO FUNCTION
 			ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
 		}
 		
@@ -536,7 +533,7 @@ package com.gestureworks.managers
 				/////////////////////////////////////////////////////////////////////////
 				obj.cO = new ClusterObject(); // touch cluster 2d 
 					obj.cO.id = obj.touchObjectID; 
-				GestureGlobals.gw_public::clusters[obj.touchObjectID] = obj.cO;
+				//GestureGlobals.gw_public::clusters[obj.touchObjectID] = obj.cO; //ONLY REGISTAR GESTURES AND TOUCH OBJECTS
 				
 				// create new stroke object
 				obj.sO = new StrokeObject(); 
@@ -557,7 +554,7 @@ package com.gestureworks.managers
 				/////////////////////////////////////////////////////////////////////////
 				obj.trO = new TransformObject(); 
 					obj.trO.id = obj.touchObjectID;
-				GestureGlobals.gw_public::transforms[obj.touchObjectID] = obj.trO;
+				//GestureGlobals.gw_public::transforms[obj.touchObjectID] = obj.trO; //ONLY REGISTAR GESTURES AND TOUCH OBJECTS
 				
 				/////////////////////////////////////////////////////////////////////////
 				// CREATES A NEW TIMELINE OBJECT 
@@ -571,7 +568,8 @@ package com.gestureworks.managers
 					obj.tiO.clusterEvents = false; // pushes cluster events into timeline
 					obj.tiO.gestureEvents = false; // pushes gesture events into timleine
 					obj.tiO.transformEvents = false; // pushes transform events into timeline
-				GestureGlobals.gw_public::timelines[obj.touchObjectID] = obj.tiO;
+					//TODO:DONT REGISTAR
+				GestureGlobals.gw_public::timelines[obj.touchObjectID] = obj.tiO; //ONLY REGISTAR GESTURES AND TOUCH OBJECTS
 				
 			//}
 			
@@ -625,7 +623,7 @@ package com.gestureworks.managers
 					obj.tt.updateLocalProperties();
 				}
 				
-				ClusterHistories.historyQueue(obj.touchObjectID);
+				ClusterHistories.historyQueue(obj.cO);//obj.touchObjectID
 				//trace("end main processing loop", obj.tpn, obj.ipn, obj.tc.core, gts.touchPointCount, gts.cO.pointArray.length,gts.cO.iPointArray.length,"id", obj.touchObjectID, gts.touchObjectID,gms.touchObjectID);
 		}	
 		
@@ -803,7 +801,8 @@ package com.gestureworks.managers
 				if ((tO.visualizer)&&(tO.visualizer.debug_display)&& (!tO.tc.core))
 				{
 					//UPDATE TRANSFORM HISTORIES
-					TransformHistories.historyQueue(tO.touchObjectID);
+					//TransformHistories.historyQueue(tO.touchObjectID);
+					TransformHistories.historyQueue(tO.trO);
 					
 					// update touch object debugger display
 					tO.updateDebugDisplay();
@@ -877,6 +876,9 @@ package com.gestureworks.managers
 				{
 					var ts = temp_tOList[i];
 					
+					
+					///////////////////////////////////////////////////////////////////////////////////////////////////
+					// TOUCH
 					if (ts.touchEnabled)
 					{
 								if ((ipt)&&(ipt.mode=="touch"))//&&(ts.tc.ipSupported(ipt.type))
@@ -949,6 +951,97 @@ package com.gestureworks.managers
 								} 
 
 						}
+						//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//MOTION
+						if (ts.motionEnabled)
+						{
+								if ((ipt)&&(ipt.mode=="motion"))//&&(ts.tc.ipSupported(ipt.type))
+								{
+									//INDEX AND INTERACTIOPN POINT CHILDREN INDEPENDANT
+									//if ((ts.touchClusterMode == "global")&&(ipt.phase=="begin")) ts.cO.iPointArray.push(ipt);
+									
+									//INDEX AND MOUSE CHILDREN DEPENDANT
+									if (((ts.motionClusterMode == "local_strong")&&(ipt.phase=="begin"))||((ts.motionClusterMode == "local_weak")&&(ipt.phase=="begin"))) 
+									{
+										if (ts is ITouchObject)
+										{
+											var x = ipt.position.x
+											var y = ipt.position.y
+											
+											if ((ts.hitTestPoint(x, y, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+											{
+												ts.cO.iPointArray.push(ipt);
+												propagateInteractionPoint(ipt, ts);
+												return;
+											}
+										}
+										else if (ts is ITouchObject3D)
+										{
+											if (hitTest3D != null) {
+												
+												var x = ipt.position.x
+												var y = ipt.position.y
+												
+												if ((hitTest3D(ts as ITouchObject3D, x, y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+												{ 
+													ts.cO.iPointArray.push(ipt);
+													propagateInteractionPoint(ipt, ts);
+													return;
+												}
+											}
+										}
+									}
+									// DISPLAY INDEX VALUE DOES NOT DETERMIN WEAK LOCAL CLUSTERING (FFEATURE)
+									else if ((ts.motionClusterMode == "local_weak")&&(ipt.phase=="update"))
+									{
+										if (ts is ITouchObject)
+										{
+											var x =ipt.position.x
+											var y = ipt.position.y
+											
+											if ((ts.hitTestPoint(x, y, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+											{
+												// CHECK TO SEE IF ALREADY ADDED
+												var match:Boolean = false;
+												for (var b:uint = 0; b < ts.cO.iPointArray.length; b++)
+												{
+													if (ts.cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
+												}
+												if (!match)
+												{
+													ts.cO.iPointArray.push(ipt);
+													propagateInteractionPoint(ipt, ts);
+												}
+											}
+										}
+									}
+									else if (ts is ITouchObject3D)
+									{
+											if (hitTest3D != null) {
+												
+												
+												if ((hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+												{	
+													var match:Boolean = false;
+													for (var b:uint = 0; b < ts.cO.iPointArray.length; b++)
+													{
+														if (ts.cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
+													}
+													if (!match) {
+														ts.cO.iPointArray.push(ipt);
+														propagateInteractionPoint(ipt, ts);
+													}
+												}
+											}
+									}
+								} 
+
+						}
+						//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//SENSOR
+						
+						
+						
 					}
 			}
 			

@@ -37,13 +37,12 @@ package com.gestureworks.managers
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
 		
-		public static function historyQueue(ClusterID:Object):void//event:ClusterEvent
+		public static function historyQueue(tiO:TimelineObject):void//event:ClusterEvent
 		{
 			//trace("capturing timline histories");
 			
-			var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID];
+			//var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID];
 			var history:Vector.<FrameObject> = tiO.history;
-			
 			//GestureGlobals.timelineHistoryCaptureLength = 120;
 			
 			//history.unshift(tiO.frame);

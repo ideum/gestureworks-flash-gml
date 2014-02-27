@@ -1,26 +1,9 @@
 package com.gestureworks.managers 
 {
-	import flash.geom.Vector3D;
-	//import flash.geom.Matrix;
-	//import flash.geom.Point;
-	import flash.display.Sprite;
-	
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
-	//import com.gestureworks.core.TouchSprite;
-	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.core.gw_public;
-	
-	import com.gestureworks.events.GWTouchEvent;
-	import com.gestureworks.interfaces.ITouchObject;
-	
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.display.DisplayObjectContainer;
-	import flash.geom.Point;
-	import flash.utils.*;
-	import flash.geom.Vector3D;
 
 
 	/**
@@ -29,7 +12,7 @@ package com.gestureworks.managers
 	 * @author Ideum
 	 *
 	 */
-	public class Eye2DSManager extends Sprite
+	public class Eye2DSManager 
 	{
 		private static var frame:XML
 		private static var message:Object
@@ -51,7 +34,7 @@ package com.gestureworks.managers
 		private static var _minY:Number;
 		private static var _maxY:Number;
 		
-		public static var touchPoints:Dictionary = new Dictionary();
+		//public static var touchPoints:Dictionary = new Dictionary();
 		
 		public function Eye2DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
 		{
@@ -65,15 +48,15 @@ package com.gestureworks.managers
 			
 			//stage = GestureWorks.application.stage;
 			
-			touchPoints = GestureGlobals.gw_public::touchPoints;
+			//touchPoints = GestureGlobals.gw_public::touchPoints;
 		}
 
-		public function processEye2DSocketData(message:XML, eyeList:XMLList):void 
+		public function processEye2DSocketData(xmlList:XMLList):void 
 		{
 			//trace(message)
 				// CREATE POINT LIST
 				pointList = new Vector.<TouchPointObject>();
-				count = int(eyeList.length());//int(message.InputPoint.Values.Eye.length());
+				count = int(xmlList.length());//int(message.InputPoint.Values.Eye.length());
 				pids = new Vector.<int>();
 				
 				
@@ -81,11 +64,11 @@ package com.gestureworks.managers
 				for (var k:int = 0; k < count; k++)
 				{
 					//var f =  message.InputPoint.Values.Surface.Point[k];
-					var e =  eyeList[k];//message.InputPoint.Values.Eye[k];
+					var e =  xmlList[k];//message.InputPoint.Values.Eye[k];
 					var pte:TouchPointObject = new TouchPointObject();
 						pte.id = e.@id; 
-						pte.position.x = e.@x*1920; 
-						pte.position.y = e.@y*1080;
+						pte.position.x = e.@x*1920; //TODO: PUSH AS PART OF CALIBRATION VARS
+						pte.position.y = e.@y*1080; //TODO: PUSH AS PART OF CALIBRATION VARS
 						pte.size.x = 0;
 						pte.size.y = 0;
 					pointList.push(pte);

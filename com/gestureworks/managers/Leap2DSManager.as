@@ -1,11 +1,12 @@
 package com.gestureworks.managers 
 {
 
-	import com.gestureworks.events.GWTouchEvent;
+	//import com.gestureworks.events.GWTouchEvent;
 	import com.gestureworks.interfaces.ITouchObject;
+	import com.gestureworks.objects.TouchPointObject;
 	
 	import flash.display.DisplayObject;
-	import flash.display.Sprite;
+	//import flash.display.Sprite;
 	import flash.display.DisplayObjectContainer;
 	import flash.geom.Point;
 	import flash.utils.*;
@@ -20,25 +21,25 @@ package com.gestureworks.managers
 		private static var activePoints:Array;	
 		private static var pointList:Array = new Array();
 		
+		//private static var pids:Vector.<int> = new Vector.<int>();
+		//private static var pointList:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
+		//private static var activePoints:Vector.<int> = new Vector.<int>();
+		
+		
 		private static var frame:XML
 		private static var message:Object
 		private static var inputType:String 
 		private static var handCount:int
 		private static var fingerCount:int
 		
-		
-		
 		private static var _minX:Number = -180;
 		private static var _maxX:Number = 180;
-		
 		private static var _minY:Number = 75;
 		private static var _maxY:Number = 270;
-		
 		private static var _minZ:Number = -110;
 		private static var _maxZ:Number = 200;
 		
 		private static  var _pressureThreshold:Number = 1;
-		private static  var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();		
 		
 		/**
 		 * The Leap2DManager constructor allows arguments for screen and leap device calibration settings. The settings will map x and y Leap coordinate ranges to screen 
@@ -75,19 +76,33 @@ package com.gestureworks.managers
 				
 				for (var j:int = 0; j < handCount; j++ )
 				{
-				fingerCount = int(message.InputPoint.Values.Hand[j].@FingerCount);
-				
-				// CREATE FINGER TIP MOTION POINTS
-				for (var k:int = 0; k < fingerCount; k++ )
-				{
-					var f =  message.InputPoint.Values.Hand[j].Finger[k];
-					var ptf:Vector3D = new Vector3D(f.Position.@x, f.Position.@y, f.Position.@z * -1);
-					pointList.push(ptf);
-				}
+					fingerCount = int(message.InputPoint.Values.Hand[j].@FingerCount);
+					
+					// CREATE FINGER TIP MOTION POINTS
+					for (var k:int = 0; k < fingerCount; k++ )
+					{
+						var f =  message.InputPoint.Values.Hand[j].Finger[k];
+						
+						var ptf:TouchPointObject = new TouchPointObject();
+							ptf.id = f.@id; 
+							ptf.position.x = f.Position.@x; 
+							ptf.position.y = f.Positon.@y;
+							ptf.position.z = f.Position.@z*-1; 
+							//ptf.pressure = f.@pressure;
+							//ptf.size.x = f.@width;
+							//ptf.size.y = f.@height;
+						pointList.push(ptf);
+					}
+					
+					//PUSH IDS
+					pids.push(int(f.Messages.Message.InputPoint.Values.Hand[i].Finger[j].@id)) 
 				}
 			
 				// CALL LEAP PROCESSING
-				processLeap2DData(frame);
+				//processLeap2DData(frame);
+				
+				addRemoveUpdatePoints();
+				
 		}
 		
 		
@@ -95,6 +110,7 @@ package com.gestureworks.managers
 		 * Process points
 		 * @param	event
 		 */
+		/*
 		private static function processLeap2DData(frame:XML):void 
 		{
 			pushids(frame);
@@ -123,7 +139,7 @@ package com.gestureworks.managers
 			}
 			//trace("pid array length",pids.length);
 		}
-		
+		*/
 		
 		private static function addRemoveUpdatePoints():void 
 		{
@@ -134,9 +150,8 @@ package com.gestureworks.managers
 			for each(var aid:int in activePoints) {
 				if (pids.indexOf(aid) == -1) {
 					temp.splice(temp.indexOf(aid), 1);
-					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false));
-					
-						//trace("REMOVED:", aid);					
+					TouchManager.onTouchUpPoint(aid);
+					//trace("REMOVED:", aid);					
 				}
 			}
 			activePoints = temp;
@@ -147,71 +162,38 @@ package com.gestureworks.managers
 			{
 				var pt = getFramePoint(pid);
 				
+				if (pt) 
+				{
 				var point:Point = new Point();
-					point.x = map(pt.x, minX, maxX, 0, stage.stageWidth);
-					point.y = map(pt.y, minY, maxY, stage.stageHeight, 0);
-				var pressure:Number = map(pt.z, minZ, maxZ, 0, 1);
+					point.x = map(pt.position.x, minX, maxX, 0, stage.stageWidth);
+					point.y = map(pt.position.y, minY, maxY, stage.stageHeight, 0);
 				
+				pt.position.x = point.x
+				pt.position.y = point.y;
+				pt.position.z = 0
+				pt.pressure = map(pt.z, minZ, maxZ, 0, 1);
 				
-					//trace("tip z:", pt.z, pressure);
-				
+				pt.touchPointID = pt.id;
 
-				if (activePoints.indexOf(pid) == -1) {								
-					
-					var ev:GWTouchEvent;
-					//hit test
-					var obj:* = getTopDisplayObjectUnderPoint(point);
-					
-					if ((obj || overlays.length) && pressure <= pressureThreshold) {
-						activePoints.push(pid);	
-						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, pid, false, point.x, point.y);
-							ev.stageX = point.x;
-							ev.stageY = point.y;
-							ev.pressure = pressure;
-							//ev.source = getDefinitionByName(getQualifiedClassName(this)) as Class; // error
-							
-							if (obj) {
-								ev.target = obj;
-								TouchManager.onTouchDown(ev);
-							}
-							
-							//global overlays
-							if (overlays.length) {
-								TouchManager.processOverlays(ev, overlays);
-							}
-					}
-					
-					
-						//trace("ADDED:", pid);	
+
+				if (activePoints.indexOf(pid) == -1)
+				{								
+					activePoints.push(pid);		
+					TouchManager.onTouchDownPoint(pt);
+					//trace("ADDED:", pid);		
 				}
-				
 				else {
-					if (activePoints.indexOf(pid) != -1 && pressure > pressureThreshold){
+					if (activePoints.indexOf(pid) != -1 && pt.pressure > pressureThreshold)
+					{
 						activePoints.splice(activePoints.indexOf(pid), 1);
-						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, pid, false);
-						TouchManager.onTouchUp(ev);
-						
-						if (overlays.length) {
-							TouchManager.processOverlays(ev, overlays);
-						}						
-						
-						
-							//trace("REMOVED:", pid);					
+						TouchManager.onTouchUpPoint(pt);
+						//trace("REMOVED:", pid);					
 					}
 					else{
-						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, true, false, pid, false, point.x, point.y);
-							ev.stageX = point.x;
-							ev.stageY = point.y;
-							ev.pressure = pressure;
-						TouchManager.onTouchMove(ev);
-												
-						if (overlays.length) {
-							TouchManager.processOverlays(ev, overlays);
-						}												
-						
-						
-							//trace("UPDATE:", pid);							
+						TouchManager.onTouchMovePoint(pt);
+						//trace("UPDATE:", pid);							
 					}
+				}
 				}
 			}
 		}
@@ -226,61 +208,7 @@ package com.gestureworks.managers
 			}
 			return obj
 		}
-			
-
-		/**
-		 * Hit test
-		 * @param	point
-		 * @return
-		*/ 
-		private function getTopDisplayObjectUnderPoint(point:Point):DisplayObject {
-			var targets:Array =  stage.getObjectsUnderPoint(point);
-			var item:DisplayObject = (targets.length > 0) ? targets[targets.length - 1] : stage;
-			item = resolveTarget(item);
-									
-			return item;
-		}	
 		
-		/**
-		 * Determines the hit target based on mouseChildren settings of the ancestors
-		 * @param	target
-		 * @return
-		 */
-		private function resolveTarget(target:DisplayObject):DisplayObject {
-			var ancestors:Array = targetAncestors(target, new Array(target));			
-			var trueTarget:DisplayObject = target;
-			
-			for each(var t:DisplayObject in ancestors) {
-				if (t is DisplayObjectContainer && !DisplayObjectContainer(t).mouseChildren)
-				{
-					trueTarget = t;
-					break;
-				}
-			}
-			
-			return trueTarget;
-		}
-				
-		/**
-		 * Returns a list of the supplied target's ancestors sorted from highest to lowest
-		 * @param	target
-		 * @param	ancestors
-		 * @return
-		 */
-		private function targetAncestors(target:DisplayObject, ancestors:Array = null):Array {
-			
-			if (!ancestors)
-				ancestors = new Array();
-				
-			if (!target.parent || target.parent == target.root)
-				return ancestors;
-			else {
-				ancestors.unshift(target.parent);
-				ancestors = targetAncestors(target.parent, ancestors);
-			}
-			
-			return ancestors;
-		}
 		
 		/**
 		 * The lowest x of the Leap x-coordinate range
@@ -344,14 +272,6 @@ package com.gestureworks.managers
 		public function get pressureThreshold():Number { return _pressureThreshold; }
 		public function set pressureThreshold(p:Number):void {
 			_pressureThreshold = p;
-		}
-		
-		/**
-		 * Registers global overlays to receive point data
-		 */
-		public function get overlays():Vector.<ITouchObject> { return _overlays; }
-		public function set overlays(o:Vector.<ITouchObject>):void {
-			_overlays = o;
 		}
 		
 		/**

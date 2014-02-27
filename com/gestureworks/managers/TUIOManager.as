@@ -158,6 +158,7 @@ package com.gestureworks.managers
 			var event:GWTouchEvent = new GWTouchEvent(null, GWTouchEvent.TOUCH_MOVE, e.bubbles, e.cancelable, e.tuioContainer.sessionID);
 			event.stageX = e.tuioContainer.x * stage.stageWidth;
 			event.stageY = e.tuioContainer.y * stage.stageHeight;
+			
 			TouchManager.onTouchMove(event);
 			
 			//if (overlays.length) {

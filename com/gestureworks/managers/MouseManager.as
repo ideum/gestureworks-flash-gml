@@ -191,9 +191,9 @@ package com.gestureworks.managers
 		/**
 		 * Registers global overlays to receive point data for mouse input
 		 */
-		public static function get overlays():Vector.<ITouchObject> { return _overlays; }
-		public static function set overlays(o:Vector.<ITouchObject>):void {
-			_overlays = o;
-		}	
+		//public static function get overlays():Vector.<ITouchObject> { return _overlays; }
+		//public static function set overlays(o:Vector.<ITouchObject>):void {
+			//_overlays = o;
+		//}	
 	}
 }

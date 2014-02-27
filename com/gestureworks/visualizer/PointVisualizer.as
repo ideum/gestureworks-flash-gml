@@ -557,14 +557,20 @@ package com.gestureworks.visualizer
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
+					var ipid:String
+					if (sp) ipid = String(sp.interactionPointID);
+					
 					if (sp){
 					//////////////////////////////////////////////////////////////////////////////
 					// for all interaction points
-					tptext_array[i].textCont = "IP ID: " + String(sp.interactionPointID); //+ "    id" + String(pt.touchPointID);
-					tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
-					tptext_array[i].y = sp.position.y - 55;
-					tptext_array[i].visible = true;
-					tptext_array[i].textColor = style.touch_text_color;
+					if (tptext_array[i])
+					{
+						tptext_array[i].textCont = "IP ID: " + ipid //+ "    id" + String(pt.touchPointID);
+						tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
+						tptext_array[i].y = sp.position.y - 55;
+						tptext_array[i].visible = true;
+						tptext_array[i].textColor = style.touch_text_color;
+					}
 					
 					///////////////////////////////////////////
 					// DRAW WII CONTROLLER POINT

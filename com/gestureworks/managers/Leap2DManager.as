@@ -80,7 +80,8 @@ package com.gestureworks.managers
 			for each(var aid:Number in activePoints) {
 				if (pids.indexOf(aid) == -1) {
 					temp.splice(temp.indexOf(aid), 1);
-					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false));
+					TouchManager.onTouchUp(new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, aid, false));
+					//TouchManager.onTouchUpPoint(aid);
 					if(debug)
 						trace("REMOVED:", aid, event.frame.pointable(aid));					
 				}
@@ -132,12 +133,8 @@ package com.gestureworks.managers
 						activePoints.splice(activePoints.indexOf(pid), 1);
 						ev = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, pid, false);
 						TouchManager.onTouchUp(ev);
+						//TouchManager.onTouchUpPoint(pid);
 						
-						//if (overlays.length) {
-							//TouchManager.processOverlays(ev, overlays);
-							//InteractionManager.processOverlays(ev, overlays);
-							
-						//}						
 						
 						if (debug)
 							trace("REMOVED:", pid, event.frame.pointable(pid));					

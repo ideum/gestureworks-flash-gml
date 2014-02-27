@@ -1,27 +1,6 @@
 package com.gestureworks.managers 
 {
-	import flash.geom.Vector3D;
-	//import flash.geom.Matrix;
-	//import flash.geom.Point;
-	import flash.display.Sprite;
-	
-	import com.gestureworks.core.GestureGlobals;
-	import com.gestureworks.core.GestureWorks;
-	//import com.gestureworks.core.TouchSprite;
-	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.TouchPointObject;
-	import com.gestureworks.core.gw_public;
-	
-	import com.gestureworks.events.GWTouchEvent;
-	import com.gestureworks.interfaces.ITouchObject;
-	
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.display.DisplayObjectContainer;
-	import flash.geom.Point;
-	import flash.utils.*;
-	import flash.geom.Vector3D;
-
 
 	/**
 	 * The Leap3DSManager handles the parsing of leap type socket frame data from the device server.
@@ -29,17 +8,15 @@ package com.gestureworks.managers
 	 * @author Ideum
 	 *
 	 */
-	public class Touch2DSManager extends Sprite
+	public class Touch2DSManager
 	{
 		private static var frame:XML
 		private static var message:Object
 		private static var inputType:String
 		private static var frameId:int 
 		private static var timestamp:int 
-		private static var handCount:int
-		private static var fingerCount:int
-		private static var penCount:int
-		private static var objectCount:int
+		private static var count:int
+		//private static var objectCount:int
 		private static var debug:Boolean = false;
 		
 		private static var pids:Vector.<int> = new Vector.<int>();
@@ -63,7 +40,7 @@ package com.gestureworks.managers
 			
 			//stage = GestureWorks.application.stage;
 		}
-
+	/*
 		public function processTouch2DSocketData(message:XML):void 
 		{
 			//trace(message)
@@ -71,13 +48,13 @@ package com.gestureworks.managers
 				// CREATE POINT LIST
 				pointList = new Vector.<TouchPointObject>();
 				//fingerCount = int(message.InputPoint.Values.Surface.Point.length());
-				fingerCount = int(message.InputPoint.Values.Finger.length());
+				count = int(message.InputPoint.Values.Finger.length());
 				//penCount = int(message.InputPoint.Values.Surface.Pen.length());
 				
 				//trace(fingerCount)
 				
 				// CREATE Touch POINTS
-				for (var k:int = 0; k < fingerCount; k++ )
+				for (var k:int = 0; k < count; k++ )
 				{
 					//var f =  message.InputPoint.Values.Surface.Point[k];
 					var f =  message.InputPoint.Values.Finger[k];
@@ -93,17 +70,52 @@ package com.gestureworks.managers
 				// CALL LEAP PROCESSING
 				processTouch2DData(message);
 		}
+		*/
+		
+		
+		public function processTouch2DSocketData(xmlList:XMLList):void 
+		{
+			//trace(message)
+				// CREATE POINT LIST
+				pointList = new Vector.<TouchPointObject>();
+				count = int(xmlList.length());//int(message.InputPoint.Values.Eye.length());
+				pids = new Vector.<int>();
+				
+				// CREATE Touch POINTS
+				for (var k:int = 0; k < count; k++)
+				{
+					//var f =  message.InputPoint.Values.Surface.Point[k];
+					var f =  xmlList[k];//message.InputPoint.Values.Eye[k];
+					var ptf:TouchPointObject = new TouchPointObject();
+						ptf.id = f.@id; 
+						ptf.position.x = f.@x; 
+						ptf.position.y = f.@y;
+						ptf.pressure = f.@pressure;
+						ptf.size.x = f.@width;
+						ptf.size.y = f.@height;
+					pointList.push(ptf);
+					
+					//PUSH IDS
+					pids.push(int(f.@id));
+				}
+
+				addRemoveUpdatePoints();
+		}
+		
+		
 		
 		
 		/**
 		 * Process points
 		 * @param	event
 		 */
+		/*
 		private static function processTouch2DData(message:XML):void 
 		{
 			pushids(message);
 			addRemoveUpdatePoints();
 		}
+		
 		private static function pushids(message:XML):void 
 		{
 			//store frame's point ids
@@ -121,7 +133,7 @@ package com.gestureworks.managers
 				
 			//trace("pid array length",pids.length);
 		}
-		
+		*/
 		private static function getFramePoint(id:int):TouchPointObject//Object 
 		{
 			var obj:TouchPointObject//Object;
@@ -146,11 +158,8 @@ package com.gestureworks.managers
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
 					
-						//var mp:MotionPointObject  = new MotionPointObject();
-							//mp.motionPointID = aid;
-
-					//MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END, mp, true, false));
-					TouchManager.onTouchUp(new GWTouchEvent(null,GWTouchEvent.TOUCH_END, true, false, aid, false));
+					//TouchManager.onTouchUp(new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, aid, false));
+					TouchManager.onTouchUpPoint(aid);
 					//trace("TOUCH POINT REMOVED:",aid);
 				}
 				
@@ -175,7 +184,7 @@ package com.gestureworks.managers
 						tp.sizeX = pt.size.x;
 						tp.sizeY = pt.size.y;
 						*/
-						
+						/*
 					var te:GWTouchEvent = new GWTouchEvent();
 						te.touchPointID = pt.id;
 						//te.type = "touchBegin";
@@ -185,15 +194,21 @@ package com.gestureworks.managers
 						te.sizeX = pt.size.x;
 						te.sizeY = pt.size.y;
 						te.pressure = pt.pressure;
+						*/
+						
+						pt.touchPointID = pt.id;
+						
 						
 					if (activePoints.indexOf(pid) == -1) 
 					{
 						activePoints.push(pid);	
-						TouchManager.onTouchDown(te);
+						//TouchManager.onTouchDown(te);
+						TouchManager.onTouchDownPoint(pt);
 						//trace("TOUCH POINT ADDED:", pid);		
 					}
 					else {
-						TouchManager.onTouchMove(te)		
+						//TouchManager.onTouchMove(te)
+						TouchManager.onTouchMovePoint(pt)		
 						//trace("TOUCH POINT UPDATE:", pid);
 					}
 					//trace(pt.size.x,pt.size.y, pt.pressure)

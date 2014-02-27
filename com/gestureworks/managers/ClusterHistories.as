@@ -31,17 +31,17 @@ package com.gestureworks.managers
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
 		
-		public static function historyQueue(ClusterID:Object):void//event:ClusterEvent
+		public static function historyQueue(clusterObject:ClusterObject):void//ClusterID:Object//event:ClusterEvent
 		{
-			var clusterObject:ClusterObject = GestureGlobals.gw_public::clusters[ClusterID]
+			//var clusterObject:ClusterObject = GestureGlobals.gw_public::clusters[ClusterID]
 			
-			var history:Vector.<ClusterObject> = clusterObject.history;
+			//var history:Vector.<ClusterObject> = clusterObject.history;
 			
-			history.unshift(historyObject(clusterObject));
+			clusterObject.history.unshift(historyObject(clusterObject));
 			
-			if (history.length-1>=GestureGlobals.clusterHistoryCaptureLength)
+			if (clusterObject.history.length-1>=GestureGlobals.clusterHistoryCaptureLength)
 			{
-				history.pop();
+				clusterObject.history.pop();
 			}
 		}
 		

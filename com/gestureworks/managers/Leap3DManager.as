@@ -183,7 +183,8 @@ package com.gestureworks.managers
 						
 						
 						
-					MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END,mp, true,false));
+					//MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END, mp, true, false));
+					MotionManager.onMotionEndPoint(aid);
 					if(debug)
 						trace("REMOVED:",mp.id, mp.motionPointID, aid, event.frame.pointable(aid));					
 				}
@@ -275,13 +276,15 @@ package com.gestureworks.managers
 				if (activePoints.indexOf(pid) == -1) 
 				{
 					activePoints.push(pid);	
-					MotionManager.onMotionBegin(new GWMotionEvent(GWMotionEvent.MOTION_BEGIN, mp, true, false));
+					//MotionManager.onMotionBegin(new GWMotionEvent(GWMotionEvent.MOTION_BEGIN, mp, true, false));
+					MotionManager.onMotionBeginPoint(mp);
 						
 					if(debug)
 						trace("ADDED:",mp.id, mp.motionPointID, pid, event.frame.pointable(pid));	
 				}
 				else {
-					MotionManager.onMotionMove(new GWMotionEvent(GWMotionEvent.MOTION_MOVE,mp, true, false));
+					//MotionManager.onMotionMove(new GWMotionEvent(GWMotionEvent.MOTION_MOVE, mp, true, false));
+					MotionManager.onMotionMovePoint(mp);
 					if(debug)
 						trace("UPDATE:",mp.id, mp.motionPointID, pid);	
 				}

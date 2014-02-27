@@ -19,9 +19,8 @@ package com.gestureworks.managers
 	 * ...
 	 * @author Paul Lacey
 	 */
-	
 	import com.gestureworks.core.GestureGlobals;
-	import com.gestureworks.core.gw_public;
+	//import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.TransformObject;
 	
 	public class TransformHistories 
@@ -30,17 +29,15 @@ package com.gestureworks.managers
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
 		
-		public static function historyQueue(ClusterID:Object):void//event:ClusterEvent
+		public static function historyQueue(trO:TransformObject):void//event:ClusterEvent
 		{
-			var history:Array = GestureGlobals.gw_public::transforms[ClusterID].history;
-			var transformObject:TransformObject = GestureGlobals.gw_public::transforms[ClusterID]
-		
-			history.unshift(historyObject(transformObject));
+			//var history:Array = GestureGlobals.gw_public::transforms[ClusterID].history;
+			//var transformObject:TransformObject = GestureGlobals.gw_public::transforms[ClusterID]
 			
-			if (history.length-1>=GestureGlobals.transformHistoryCaptureLength)
-			{
-				history.pop();
-			}
+			var history:Array = trO.history;
+			history.unshift(historyObject(trO));
+			if (history.length-1>=GestureGlobals.transformHistoryCaptureLength) history.pop();
+			
 		}
 		
 		// loads history object and returns value.

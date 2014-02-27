@@ -112,7 +112,7 @@ package com.gestureworks.visualizer
 	public function init():void
 	{
 		//trace("init")
-		cO = GestureGlobals.gw_public::clusters[id];
+		cO = ts.cO;
 	}
 	
 	public function draw():void

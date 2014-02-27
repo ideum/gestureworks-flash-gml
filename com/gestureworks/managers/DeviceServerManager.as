@@ -184,7 +184,7 @@ package com.gestureworks.managers
 							//////////////////////////////////////////////////////////////
 							
 								//HAND/FINGER TRACKING////////////////////////////////////////
-								if ((deviceType == "LeapMotion")&&(inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message);
+								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);//motionManagerSocket.processMotion3DSocketData(message);
 								//if ((deviceType == "Creative_Senz3d") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
 								//if ((deviceType == "PMD_Nano") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
 								//if ((deviceType == "occipital_Structure") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
@@ -194,7 +194,7 @@ package com.gestureworks.managers
 								if ((deviceType == "Tobii") && (inputType == "Eyes2d"))
 								{
 									trace(deviceType, ": ", inputType);
-									eyeManagerSocket.processEye2DSocketData(message,message.InputPoint.Values.Eye);
+									//eyeManagerSocket.processEye2DSocketData(message.InputPoint.Values.Eye);
 								}
 							
 								//BODY TRACKING
@@ -209,11 +209,14 @@ package com.gestureworks.managers
 							//if (inputMode=="touch"){
 							///////////////////////////////////////////////////////////////
 							// TOUCH //////////////////////////////////////////////////////
-								if ((deviceType == "PQ") && (inputType == "Points2d")) touchManagerSocket.processTouch2DSocketData(message);
+								if ((deviceType == "PQ") && (inputType == "Points2d")) {
+									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+									//touchManagerSocket.processTouch2DSocketData(message);
+								}
 								//3M////////////////////////////////////////////////////////
 								//ZYTRONIC//////////////////////////////////////////////////
-								if ((deviceType == "LeapMotion")&&(inputType == "Points2d"))touchManagerSocket.processTouch2DSocketData(message);
-								if ((deviceType == "Android")&&(inputType == "Points2d")) touchManagerSocket.processTouch2DSocketData(message);
+								if ((deviceType == "LeapMotion")&&(inputType == "Points2d"))//touchManagerSocket.processTouch2DSocketData(message);
+								if ((deviceType == "Android")&&(inputType == "Points2d")) //touchManagerSocket.processTouch2DSocketData(message);
 								
 							
 							

@@ -142,7 +142,7 @@ package com.gestureworks.analysis
 					var size:Number = tp.area;
 					
 					//trace("size",size);
-					trace("touch geometric",tp.tagID, tp.area, tp.size.x, tp.size.y);
+					//trace("touch geometric",tp.tagID, tp.area, tp.size.x, tp.size.y);
 					
 					if (tp.tagID == 0)
 					{
@@ -157,7 +157,7 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
-						trace("push finger ");
+						//trace("push finger ");
 						//trace("finger size",size);
 					}
 					///////////////
@@ -170,7 +170,7 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
-						trace("push pen ");
+						//trace("push pen ");
 						//trace("pen size",size);
 					}
 					
@@ -184,7 +184,7 @@ package com.gestureworks.analysis
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
-						trace("push eye", tip.position)
+						//trace("push eye", tip.position)
 						
 					}
 					
@@ -2542,7 +2542,7 @@ package com.gestureworks.analysis
 															
 						//add to pinch point list
 						InteractionPointTracker.framePoints.push(pmp)
-						trace("2 pinch push", best_dist)	
+						//trace("2 pinch push", best_dist)	
 						}
 						
 						 //WEAK PINCH
@@ -2558,7 +2558,7 @@ package com.gestureworks.analysis
 															
 						//add to pinch point list
 						InteractionPointTracker.framePoints.push(pmp0)
-						trace("n pinch push", pinchThreshold)
+						//trace("n pinch push", pinchThreshold)
 						}
 					}
 					

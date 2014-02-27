@@ -1,17 +1,10 @@
 package com.gestureworks.managers 
 {
-	import flash.geom.Vector3D;
-	//import flash.geom.Matrix;
-	//import flash.geom.Point;
-	import flash.display.Sprite;
-	
 	import com.gestureworks.core.GestureGlobals;
-	import com.gestureworks.core.GestureWorks;
-	//import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
-	import com.gestureworks.core.gw_public;
-
+	
+	import flash.geom.Vector3D;
 
 	/**
 	 * The Leap3DSManager handles the parsing of leap type socket frame data from the device server.
@@ -19,10 +12,10 @@ package com.gestureworks.managers
 	 * @author Ideum
 	 *
 	 */
-	public class Motion3DSManager extends Sprite
+	public class Motion3DSManager
 	{
-		private static var frame:XML
-		private static var message:Object
+		//private static var frame:XML
+		//private static var message:Object
 		private static var inputType:String
 		private static var frameId:int 
 		private static var timestamp:int 
@@ -32,8 +25,8 @@ package com.gestureworks.managers
 		private static var debug:Boolean = false;
 		
 		private static var pids:Vector.<int> = new Vector.<int>();
-		private static var pointList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();//Array = new Array()//
-		private static var activePoints:Vector.<int> = new Vector.<int>();//Array= new Array()
+		private static var pointList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		private static var activePoints:Vector.<int> = new Vector.<int>();
 		
 		private static var _minX:Number = -180;
 		private static var _maxX:Number = 180;
@@ -52,7 +45,6 @@ package com.gestureworks.managers
 		 * @param	maxZ maximum Leap Z coordinate
 		 */
 		
-		//public function Leap3DSManager()
 		public function Motion3DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0, minZ:Number=0, maxZ:Number=0) 
 		{
 			trace("leap 3d server manager constructor");
@@ -67,13 +59,13 @@ package com.gestureworks.managers
 			//debug = true;
 		}
 
-		public function processMotion3DSocketData(message:XML):void 
+		public function processMotion3DSocketData(handList:XMLList):void 
 		{
 			//trace("prcess motion socket data")
 				//message = frame.Messages.Message;
 				//trace(message)
 				
-				handCount = int(message.InputPoint.Values.Hand.length());
+				handCount = int(handList.length());//int(message.InputPoint.Values.Hand.length());
 				//handOrientation = message.InputPoint.Values.Hand.@orientation; //up/down
 				//handType = message.InputPoint.Values.Hand.@type; //left/right
 				//handSplay
@@ -82,18 +74,20 @@ package com.gestureworks.managers
 
 				// CREATE POINT LIST
 				pointList = new Vector.<MotionPointObject>//Array();
+				pids = new Vector.<int>();
 				
 				for (var j:int = 0; j < handCount; j++ )
 				{
-				fingerCount = int(message.InputPoint.Values.Hand[j].@FingerCount);
-				objectCount = int(message.InputPoint.Values.Hand[j].@ObjectCount);
+				fingerCount = int(handList[j].@FingerCount);// int(message.InputPoint.Values.Hand[j].@FingerCount);
+				objectCount = int(handList[j].@ObjectCount);//int(message.InputPoint.Values.Hand[j].@ObjectCount)
 				//trace("3ds manager",handCount, fingerCount, objectCount);
 				
 				
 				// CREATE FINGER TIP MOTION POINTS
 				for (var k:int = 0; k < fingerCount; k++ )
 				{
-					var f:Object =  message.InputPoint.Values.Hand[j].Finger[k];
+					//var f:Object =  message.InputPoint.Values.Hand[j].Finger[k];
+					var f:Object =  handList[j].Finger[k];
 					
 					var ptf:MotionPointObject = new MotionPointObject();// new Object();
 						ptf.type = "finger";
@@ -108,12 +102,15 @@ package com.gestureworks.managers
 						ptf.length = f.@Length;
 						
 					pointList.push(ptf);
+					
+					pids.push(int(f.@id)) 
 
 					//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
 				}
 				
 				// CREATE PALM MOTION POINT
-					var p:Object =  message.InputPoint.Values.Hand[j].Palm;
+					//var p:Object =  message.InputPoint.Values.Hand[j].Palm;
+					var p:Object =  handList[j].Palm;
 					
 					var ptp:Object = new MotionPointObject()//new Object();
 						ptp.type = "palm";
@@ -125,7 +122,9 @@ package com.gestureworks.managers
 							
 					pointList.push(ptp);
 					//trace("palm", ptp.id, ptp.position, ptp.direction, ptp.normal)
-				
+					
+					//PUSH IDS
+					pids.push(int(p.@id)) 
 					
 				/*
 				// CREATE TOOL MOTION POINT
@@ -140,62 +139,19 @@ package com.gestureworks.managers
 						opt.normal = new Vector3D(o.Normal.@x, o.Normal.@y, o.Normal.@z);
 					
 					pointList.push(opt);
+					
+					pids.push(int(handList[i].Object[k].@id)) 
 					//trace("tool", opt.id, opt.position, opt.direction, opt.normal);
 					*/
 				}
 					
 					GestureGlobals.motionFrameID += 1;
 					// CALL LEAP PROCESSING
-					processMotion3DData(message);
+					//processMotion3DData(message);
+					
+					addRemoveUpdatePoints();
 		}
-		
-		
-		/**
-		 * Process points
-		 * @param	event
-		 */
-		private static function processMotion3DData(message:XML):void 
-		{
-			pushids(message);
-			addRemoveUpdatePoints();
-		}
-		private static function pushids(message:XML):void 
-		{
-			//store frame's point ids
-			pids = new Vector.<int>()//new Array();
-			
-			//var f = frame;
-			var hn:int = int(message.InputPoint.Values.Hand.length());
-			var fn:int;
-			var on:int;
-			
-			//trace("pushing pids",hn,fn,on);
-			//CREATE HANDS THEN... FINGERS AND TOOLS
-			for (var i:int = 0; i < hn; i++)
-			{
-				fn = int(message.InputPoint.Values.Hand[i].@FingerCount);
-				on = 0//int(f.Messages.Message.InputPoint.Values.Hand[0].@ObjectCount)
-			
-				// palm point///////////////////////////////////////////////////////
-				pids.push(int(message.InputPoint.Values.Hand[i].Palm.@id)) 
-				//trace("PALMID",f.Messages.Message.InputPoint.Values.Hand[i].Palm.@id);
-				 
-				//finger points/////////////////////////////////////////////////////
-				for (var j:int = 0; j < int(message.InputPoint.Values.Hand[i].@FingerCount); j++)
-				{
-					pids.push(int(message.InputPoint.Values.Hand[i].Finger[j].@id)) 
-					//trace("FINGERID",f.Messages.Message.InputPoint.Values.Hand[i].Finger[j].@id);
-				}
-				//object points //tools points/////////////////////////////////////////////
-				for (var k:int = 0; k < on; k++)
-				{
-					pids.push(int(message.InputPoint.Values.Hand[i].Object[k].@Id)) 
-				}
-			}
-			//trace("pid array length",pids.length);
-		}
-		
-		
+
 		private static function getFramePoint(id:int):MotionPointObject//Object 
 		{
 			var obj:MotionPointObject//Object;
@@ -205,27 +161,22 @@ package com.gestureworks.managers
 			}
 			return obj
 		}
-		
 
 		private static function addRemoveUpdatePoints():void 
 		{
-			//trace("----------------------------------------------", activePoints.length);
+			//trace("----------------------------------------------", activePoints.length, pointList.length);
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//POINT REMOVAL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			for each(var aid:int in activePoints) 
 			{
 				//trace("aid", aid, pids.length, pids.indexOf(aid), pids.indexOf(456))
-				if (pids.indexOf(aid) == -1) {
-					
+				if (pids.indexOf(aid) == -1) 
+				{
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
-					
-						var mp:MotionPointObject  = new MotionPointObject();
-							mp.motionPointID = aid;
-
-					MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END,mp, true,false));
+					MotionManager.onMotionEndPoint(aid);
 					if(debug)
-						trace("REMOVED:",mp.id, mp.motionPointID, aid);
+						trace("REMOVED:", aid);
 				}
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,31 +188,20 @@ package com.gestureworks.managers
 					
 					if (pt) 
 					{
-					//trace("pt", pt.type);
-					var mp:MotionPointObject = new MotionPointObject();
-						mp.motionPointID = pt.id;
-						mp.handID = pt.handID;
-						mp.type = pt.type;
-						mp.position = new Vector3D( pt.position.x, pt.position.y, pt.position.z);
-						mp.direction = new Vector3D(pt.direction.x, pt.direction.y, pt.direction.z);
-						mp.normal = new Vector3D(pt.normal.x,pt.normal.y, pt.normal.z);	
-						mp.width = pt.width;
-						mp.length = pt.length;
+					pt.motionPointID = pt.id;	
 						
 					//trace("PT",mp.type,mp.motionPointID,pid, mp.normal);
-
 					if (activePoints.indexOf(pid) == -1) 
 					{
 						activePoints.push(pid);	
-						MotionManager.onMotionBegin(new GWMotionEvent(GWMotionEvent.MOTION_BEGIN, mp, true, false));
-							
+						MotionManager.onMotionBeginPoint(pt);
 						if(debug)
-							trace("ADDED:",mp.id, mp.motionPointID, pid);	
+							trace("ADDED:",pt.id, pt.motionPointID, pid);	
 					}
 					else {
-						MotionManager.onMotionMove(new GWMotionEvent(GWMotionEvent.MOTION_MOVE,mp, true, false));
+						MotionManager.onMotionMovePoint(pt);
 						if(debug)
-							trace("UPDATE:",mp.id, mp.motionPointID, pid);
+							trace("UPDATE:",pt.id, pt.motionPointID, pid);
 					}
 				}
 			}	
