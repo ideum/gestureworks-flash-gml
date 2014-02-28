@@ -1929,7 +1929,7 @@ package com.gestureworks.analysis
 				}
 			}
 		
-		
+		/*
 		public function hitTestCluster():void
 			{
 				//ONLY DOES HIT TEST IF MOTION OR TOUCH POINTS EXIST
@@ -2063,6 +2063,8 @@ package com.gestureworks.analysis
 										}
 										if (ts is ITouchObject3D)//TouchObject3D
 										{
+									
+											
 											if (hitTest3D != null) {
 												if (hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y)) cO.iPointArray.push(ipt);
 											}
@@ -2131,7 +2133,7 @@ package com.gestureworks.analysis
 					}
 	
 				}
-			}
+			}*/
 			
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////

@@ -47,6 +47,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	
+	//import com.gestureworks.cml.elements.TouchContainer3D;
 	
 	import flash.utils.Dictionary;
 	import images.GWSplash;
@@ -336,6 +337,7 @@ package com.gestureworks.managers
 		 * @param	target
 		 * @param	event
 		 */
+		/*
 		private static function assignPoint(event:GWTouchEvent, target:ITouchObject = null):void // asigns point
 		{		
 			if (!target)
@@ -375,8 +377,8 @@ package com.gestureworks.managers
 
 				// add touch down to touch object gesture event timeline
 				if((target.tiO)&&(target.tiO.timelineOn)&&(target.tiO.pointEvents)) target.tiO.frame.pointEventArray.push(event); /// puts each touchdown event in the timeline event array	
-		}	
-		
+		}	*/
+		/*
 		private static function assignPointClone(event:GWTouchEvent, target:ITouchObject=null):void // assigns point copy
 		{
 			if (!target)
@@ -405,16 +407,19 @@ package com.gestureworks.managers
 			
 			//trace("ts clone bubble target, point array length",pointArray.length, pointObject.touchPointID, pointObject.objectList.length, this);
 		}	
-		
+		*/
 		
 		/**
 		 * Registers a function to externally modify the provided GWTouchEvent for point processing
 		 * @param  hook  The hook function with GWTouchEvent parameter
 		 */
 		public static function registerHook(hook:Function):void {
+			trace("register hooks");
 			if (!hooks)
 				hooks = new Vector.<Function>();
 			hooks.push(hook);
+			
+			trace("hooks",hooks.length)
 		}
 		
 		/**
@@ -499,15 +504,7 @@ package com.gestureworks.managers
 		*/
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		
-		
-		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number
-		{
-            return (value - minimum) / (maximum - minimum);
-        }
-		 
-		 
+
 		 ///////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////
 		// MOVE ALL TO INTERACTION MANAGER
@@ -622,7 +619,7 @@ package com.gestureworks.managers
 					obj.tt.transformManager();
 					obj.tt.updateLocalProperties();
 				}
-				
+				//NEED CLUSTER HISTORIES FOR GESTURES
 				ClusterHistories.historyQueue(obj.cO);//obj.touchObjectID
 				//trace("end main processing loop", obj.tpn, obj.ipn, obj.tc.core, gts.touchPointCount, gts.cO.pointArray.length,gts.cO.iPointArray.length,"id", obj.touchObjectID, gts.touchObjectID,gms.touchObjectID);
 		}	
@@ -703,12 +700,20 @@ package com.gestureworks.managers
 
 			for each(var itO:Object in touchObjects)
 			{
+				trace("interactive object", itO,itO.cO.iPointArray.length,itO.tc.core)
+				
+				//if (itO is TouchContainer3D) trace(itO.iPointArray.length)
+				
 				if (!itO.tc.core)
 				{
 				//trace("index", itO.index, itO.name);
 					if ((itO.parent) &&(itO.visible))
 					{
 						itO.index = itO.parent.getChildIndex(itO);
+						temp_tOList.push(itO);
+					}
+					else {//(itO is !ITouchContainer) {
+						itO.index = 1000;
 						temp_tOList.push(itO);
 					}
 				}
@@ -720,13 +725,13 @@ package com.gestureworks.managers
 			//REQUIRED//////////////////////// REVERSES ORDER OF ADDITON AND THERFOR INDEX
 			temp_tOList.reverse();
 			
-			/*
+			
 			//TEST TRACE
 			for (var i:int = 0; i < temp_tOList.length; i++) 
 			{
-				trace("TEMP INDEX", temp_tOList[i].index);
+				trace("TEMP INDEX", temp_tOList[i].index, temp_tOList[i] );
 			}
-			*/
+			
 			///////////////////////////////////////////////////////////////////////////
 			
 			
@@ -876,7 +881,7 @@ package com.gestureworks.managers
 				{
 					var ts = temp_tOList[i];
 					
-					
+					trace("ip hit test interaction manager",ts, i)
 					///////////////////////////////////////////////////////////////////////////////////////////////////
 					// TOUCH
 					if (ts.touchEnabled)
@@ -965,8 +970,8 @@ package com.gestureworks.managers
 									{
 										if (ts is ITouchObject)
 										{
-											var x = ipt.position.x
-											var y = ipt.position.y
+											var x = normalize(ipt.position.x, minX, maxX) * sw;
+											var y = normalize(ipt.position.y, minY, maxY) * sh;
 											
 											if ((ts.hitTestPoint(x, y, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 											{
@@ -977,10 +982,11 @@ package com.gestureworks.managers
 										}
 										else if (ts is ITouchObject3D)
 										{
+											trace("3D MOTION HITTEST");
 											if (hitTest3D != null) {
 												
-												var x = ipt.position.x
-												var y = ipt.position.y
+												var x = normalize(ipt.position.x, minX, maxX) * sw;
+												var y = normalize(ipt.position.y, minY, maxY) * sh;
 												
 												if ((hitTest3D(ts as ITouchObject3D, x, y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 												{ 
@@ -996,8 +1002,8 @@ package com.gestureworks.managers
 									{
 										if (ts is ITouchObject)
 										{
-											var x =ipt.position.x
-											var y = ipt.position.y
+											var x = normalize(ipt.position.x, minX, maxX) * sw;
+											var y = normalize(ipt.position.y, minY, maxY) * sh;
 											
 											if ((ts.hitTestPoint(x, y, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 											{
@@ -1017,10 +1023,14 @@ package com.gestureworks.managers
 									}
 									else if (ts is ITouchObject3D)
 									{
+										trace("3D MOTION HITTEST");
+										
 											if (hitTest3D != null) {
 												
-												
-												if ((hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+											var x = normalize(ipt.position.x, minX, maxX) * sw;
+											var y = normalize(ipt.position.y, minY, maxY) * sh;
+
+												if ((hitTest3D(ts as ITouchObject3D, x, y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 												{	
 													var match:Boolean = false;
 													for (var b:uint = 0; b < ts.cO.iPointArray.length; b++)
@@ -1124,6 +1134,14 @@ package com.gestureworks.managers
 							}
 						}
 			}
+			
+			
+			
+			
+			private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
+
+                        return (value - minimum) / (maximum - minimum);
+         }
 		
 	}
 }

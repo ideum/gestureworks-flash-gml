@@ -41,16 +41,12 @@ package com.gestureworks.managers
 		{
 			//trace("capturing timline histories");
 			
-			//var tiO:TimelineObject = GestureGlobals.gw_public::timelines[ClusterID];
-			var history:Vector.<FrameObject> = tiO.history;
-			//GestureGlobals.timelineHistoryCaptureLength = 120;
-			
 			//history.unshift(tiO.frame);
-			history.unshift(historyObject(tiO.frame));
+			tiO.history.unshift(historyObject(tiO.frame));
 			
-			if (history.length-1>=GestureGlobals.timelineHistoryCaptureLength)
+			if (tiO.history.length-1>=GestureGlobals.timelineHistoryCaptureLength)
 			{
-				history.pop();
+				tiO.history.pop();
 			}
 		}
 		

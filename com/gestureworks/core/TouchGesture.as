@@ -726,7 +726,8 @@ package com.gestureworks.core
 			if (tiO.timelineOn)
 			{
 				//if (traceDebugMode) trace("timeline frame update");
-				TimelineHistories.historyQueue(ts.clusterID);		// push histories 
+				TimelineHistories.historyQueue(tiO);		// push histories
+				
 				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
 				//tiO.frame = PoolManager.frameObject;
 			}

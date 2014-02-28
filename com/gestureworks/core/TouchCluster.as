@@ -1134,7 +1134,7 @@ package com.gestureworks.core
 		
 		public function clusterHitTest():void 
 		{		
-			if (!core) cluster_kinemetric.hitTestCluster();
+			//if (!core) cluster_kinemetric.hitTestCluster();
 		}
 		
 		
