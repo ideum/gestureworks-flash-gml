@@ -69,8 +69,16 @@ package com.gestureworks.core
 		{
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
+			
+			if (ts.reftest == 0)
+			{
+			gO = GestureGlobals.gw_public::gestures[id]
+			trO = GestureGlobals.gw_public::transforms[id]
+			}
+			else{
 			trO = ts.trO; //tra
 			gO = ts.gO; //tra
+			}
 			
 			// gets transform proeprty limits form gml
 			initTransform();
@@ -321,7 +329,7 @@ package com.gestureworks.core
 				// rotate translation vector
 					dx =  tpt.x;
 					dy =  tpt.y;
-					//dz =  tpt.z;
+					dz =  trO.dz; //VECTOR FOR NATIVE 3D MANIPULATIONS
 				}
 				
 				else {	
@@ -389,6 +397,8 @@ package com.gestureworks.core
 					// modify transform
 					if (hit)
 					{
+					trace("proper 3d transform", dx,dy,dz);
+						
 					affine_modifier3D.copyFrom(ts.transform.matrix3D);
 						affine_modifier3D.appendTranslation( -trO.position.x + dx, -trO.position.y + dy, -trO.position.z + dz);	
 						affine_modifier3D.appendRotation(dthetaX, new Vector3D(affine_modifier3D.rawData[0], affine_modifier3D.rawData[1], affine_modifier3D.rawData[2]));

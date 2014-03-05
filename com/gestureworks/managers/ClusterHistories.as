@@ -55,9 +55,11 @@ package com.gestureworks.managers
 				object.fn = clusterObject.fn;//- total motion finger number
 				object.ipn = clusterObject.ipn;
 				
+				if(object.position){
 				object.position.x = clusterObject.position.x;
 				object.position.y = clusterObject.position.y;
 				object.position.z = clusterObject.position.z; //-
+				}
 				
 				object.width = clusterObject.width;
 				object.height = clusterObject.height;
@@ -139,9 +141,14 @@ package com.gestureworks.managers
 				///////////////////////////////////////////////////////////////
 				//MOTION SUBCLUSTERS
 				/////////////////////////////////////////////////////////////////
-				var sipn:int = clusterObject.mSubClusterArray.length
-			//	trace("hist motion subclusters", sipn);
+				var sipn:int 
 				
+				if (clusterObject.mSubClusterArray) sipn = clusterObject.mSubClusterArray.length;
+				else sipn = 0;
+				
+				//	trace("hist motion subclusters", sipn);
+				if (sipn) object.mSubClusterArray = new Vector.<ipClusterObject>
+
 				for (var i:uint = 0; i < sipn; i++) 
 						{
 					if (clusterObject.mSubClusterArray[i].active)	
@@ -199,8 +206,13 @@ package com.gestureworks.managers
 				///////////////////////////////////////////////////////////////
 				//TOUCH SUBCLUSTERS
 				/////////////////////////////////////////////////////////////////
-				var tipn:int = clusterObject.tSubClusterArray.length
+				var tipn:int
+				
+				if (clusterObject.tSubClusterArray) tipn = clusterObject.tSubClusterArray.length;
+				else tipn = 0;
 				//trace("hist touch subclusters", tipn);
+				
+				if (tipn) object.tSubClusterArray = new Vector.<ipClusterObject>
 				
 				for (var i:uint = 0; i < tipn; i++) 
 						{
@@ -260,8 +272,12 @@ package com.gestureworks.managers
 				///////////////////////////////////////////////////////////////
 				//SENSOR SUBCLUSTERS
 				/////////////////////////////////////////////////////////////////
-				var sipn:int = clusterObject.sSubClusterArray.length
+				var sipn:int
+				if (clusterObject.sSubClusterArray) sipn = clusterObject.sSubClusterArray.length;
+				else sipn = 0;
 				//trace("hist sensor subcluster", sipn);
+				
+				if (sipn) object.sSubClusterArray = new Vector.<ipClusterObject>
 				
 				for (var i:uint = 0; i < sipn; i++) 
 						{
@@ -269,7 +285,7 @@ package com.gestureworks.managers
 						{
 						object.sSubClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
 					
-						object.tSubClusterArray[i].ipn = clusterObject.sSubClusterArray[i].ipn;
+						object.sSubClusterArray[i].ipn = clusterObject.sSubClusterArray[i].ipn;
 						object.sSubClusterArray[i].ipnk = clusterObject.sSubClusterArray[i].ipnk;
 						object.sSubClusterArray[i].ipnk0 = clusterObject.sSubClusterArray[i].ipnk0;
 						object.sSubClusterArray[i].dipn = clusterObject.sSubClusterArray[i].dipn;

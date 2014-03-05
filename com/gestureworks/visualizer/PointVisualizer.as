@@ -81,7 +81,12 @@ package com.gestureworks.visualizer
 			//trace("points visualizer");	
 			id = ID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			cO = ts.cO;
+			if (ts.reftest == 0)
+			{
+			cO = GestureGlobals.gw_public::clusters[id];
+			}
+			else cO = ts.cO;
+			
 			hist = 8;
 			
 			
@@ -166,11 +171,18 @@ package com.gestureworks.visualizer
 			// update data
 			//N = cO.pointArray.length;
 			
-			tpn = cO.touchArray.length//cO.tpn;
 			
-			mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
-			spn = cO.sensorArray.length;
-			ipn =  cO.iPointArray.length;
+			if (cO.touchArray) tpn = cO.touchArray.length//cO.tpn;
+			else tpn = 0;
+			
+			if (cO.motionArray2D) mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
+			else mpn = 0;
+			
+			if (cO.sensorArray) spn = cO.sensorArray.length;
+			else spn = 0;
+			
+			if (cO.iPointArray) ipn =  cO.iPointArray.length;
+			else ipn = 0;
 			
 			// clear graphics
 			graphics.clear();
@@ -379,7 +391,7 @@ package com.gestureworks.visualizer
 					// clear text
 					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
 				
-					//trace("visualixer mpn",mpn,_drawText)
+					//trace("visualixer mpn",mpn,_drawText,cO.motionArray2D.length,cO.motionArray.length)
 						
 					// Calculate the hand's average finger tip position
 					for (i = 0; i < mpn; i++) 
@@ -479,6 +491,44 @@ package com.gestureworks.visualizer
 												mptext_array[i].visible = true;
 											}*/
 									}
+									
+									
+									
+									if (mp.type == "eye")
+									{
+										if (_drawShape)
+										{
+											//trace("DRAWING EYE",mp.position);
+											//draw finger point 
+											graphics.lineStyle(4, 0x0000FF, style.stroke_alpha);
+											graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20);	
+											
+											
+											graphics.lineStyle(4, 0x000000, style.stroke_alpha);
+											graphics.beginFill(0x000000, style.fill_alpha);
+											graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+											graphics.endFill();
+										}
+									}
+									if (mp.type == "gaze")
+									{
+										if (_drawShape)
+										{
+											//trace("DRAWING GAZE",mp.position);
+											//draw finger point 
+											graphics.lineStyle(4, 0xFFFFFF, style.stroke_alpha);
+											graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20);	
+											
+											graphics.beginFill(0x000000, style.fill_alpha);
+											graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+											graphics.endFill();
+										}
+									}		
+									
+									
+									
+									
+									
 								}
 					
 		}

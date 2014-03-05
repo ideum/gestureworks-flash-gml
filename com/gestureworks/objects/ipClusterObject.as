@@ -227,7 +227,7 @@ package com.gestureworks.objects
 		
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		public var handList:Vector.<HandObject> = new Vector.<HandObject>;
+		//public var handList:Vector.<HandObject> = new Vector.<HandObject>;
 			/// INSIDE 3D HAND Object
 				//--width
 				//--length
@@ -279,8 +279,7 @@ package com.gestureworks.objects
 
 		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
 		public var jolt:Vector3D //= new Vector3D ();
-		
-		
+	
 		public var rotationList:Vector.<Vector3D> //= new Vector.<Vector3D>
 		
 		
@@ -336,9 +335,9 @@ package com.gestureworks.objects
 		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
-		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		public var iPointArray:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
 		
-		public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		public var iPointArray2D:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
 		
 			
 		
@@ -443,7 +442,7 @@ package com.gestureworks.objects
 			etm_ddx=0;
 			etm_ddy=0;
 			etm_ddz=0;
-			handList.length = 0;
+			//handList.length = 0;
 			thumbID = 0;
 			handednes = "none";
 			orientation = 0;

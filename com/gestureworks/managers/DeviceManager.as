@@ -76,46 +76,148 @@ package com.gestureworks.managers
 		
 		public static function configServerDevices():void
 		{
+			// TOUCH INIT /////////////////////////////////////////////////////////////////////////////
+			if (DML.Devices.devices.input_globals.touch.@active == "true") 
+			{
+				GestureWorks.activeTouch = true;
+				
+				//PQ SERVER/////////////////////////////////////////////////////////////
+				if (DML.Devices.devices.input_globals.touch.pq.@active == "true")
+				{
+					if (DML.Devices.devices.input_globals.touch.pq.device[0].attributes.@input_type == "Points2d")
+					{
+						trace("PQ server touch device dml activated");
+					}
+				}
+				
+				//3M SERVER/////////////////////////////////////////////////////////////
+				if (DML.Devices.devices.input_globals.touch.mmm.@active == "true")
+				{
+					if (DML.Devices.devices.input_globals.touch.mmm.device[0].attributes.@input_type == "Points2d")
+					{
+						trace("3M server touch device dml activated");
+					}
+				}
+				
+				//ZYTRONIC SERVER/////////////////////////////////////////////////////////////
+				if (DML.Devices.devices.input_globals.touch.zytronic.@active == "true")
+				{
+					if (DML.Devices.devices.input_globals.touch.zytronic.device[0].attributes.@input_type == "Points2d")
+					{
+						trace("Zytronic server touch device dml activated");
+					}
+				}
+
+				//ANDROID/////////////////////////////////////////////////////////////
+				if (DML.Devices.devices.input_globals.touch.android.@active == "true")
+				{
+					if (DML.Devices.devices.input_globals.touch.android.device[0].attributes.@input_type == "Points2d")
+					{
+						trace("Android/IOS touch device dml activated");
+					}
+				}
+
+				TouchManager.gw_public::initialize();	
+			}
 			
-			// MOTION INIT ////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// MOTION INIT /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.motion.@active == "true") 
 			{
 				//trace("Motion input devices dml init");
-				//GestureWorks.activeMotion = true;
+				GestureWorks.activeMotion = true;
 				
 				// LEAP MOTION SENSOR INIT //////////////////////////////////
 				if (DML.Devices.devices.input_globals.motion.leap.@active == "true")
 				{
-					GestureWorks.activeMotion = true;
 					MotionManager.leapEnabled = true;
-			
-					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "2d") MotionManager.leapmode = "2d_ds";
-					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") MotionManager.leapmode = "3d_ds"; 
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].attributes.@input_mode == "2d") MotionManager.leapmode = "2d_ds";
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].attributes.@input_mode == "3d") MotionManager.leapmode = "3d_ds"; 
 					trace("leapmotion device dml activated");
 				}
 				
 				// SOFTKINECTIC /////////////////////////
 				if (DML.Devices.devices.input_globals.motion.sofkinetic.@active == "true")
 				{
-					//GestureWorks.activeMotion = true;
 					//MotionManager.softkinecticEnabled = true;
-			
 					//if (DML.Devices.devices.input_globals.motion.softkinetic.device[0].@input_mode == "2d") MotionManager.sofkineticmode = "2d"; // no native option
 					//if (DML.Devices.devices.input_globals.motion.softkinetic.device[0].@input_mode == "3d") MotionManager.sofkineticmode = "3d"; // no native option
-					
 					//trace("softkinectic device  dml activated");
 				}
-				
-				
-				// PMD //////////////////////////////////
-				// STRUCTURE ////////////////////////////
+				//CREATIVE///////////////////////////////
+				if (DML.Devices.devices.input_globals.motion.creative.@active == "true")
+				{
+					//MotionManager.creativeEnabled = true;
+					//if (DML.Devices.devices.input_globals.motion.creative.device[0].@input_mode == "2d") MotionManager.creativemode = "2d"; // no native option
+					//if (DML.Devices.devices.input_globals.motion.creative.device[0].@input_mode == "3d") MotionManager.creativemode = "3d"; // no native option
+					//trace("softkinectic device  dml activated");
+				}
 				// KINECT ///////////////////////////////
 				// XITION ///////////////////////////////
+				// PMD //////////////////////////////////
+				// STRUCTURE ////////////////////////////
 				
+				//EYETRIBE
+				if (DML.Devices.devices.input_globals.motion.eyetribe.@active == "true")
+				{
+					//MotionManager.eyetribeEnabled = true;
+					//if (DML.Devices.devices.input_globals.motion.eyetribe.device[0].attributes.@input_mode == "2d") MotionManager.eyetribemode = "2d";
+					//if (DML.Devices.devices.input_globals.motion.eyetribe.device[0].attributes.@input_mode == "3d") MotionManager.eyetribemode = "3d";
+					
+					trace("Eyetribe device dml activated");
+				}
+				//TOBII
+				if (DML.Devices.devices.input_globals.motion.tobii.@active == "true")
+				{
+					//MotionManager.tobiiEnabled = true;
+					//if (DML.Devices.devices.input_globals.motion.tobii.device[0].attributes.@input_mode == "2d") MotionManager.tobiimode = "2d";
+					//if (DML.Devices.devices.input_globals.motion.tobii.device[0].attributes.@input_mode == "3d") MotionManager.tobiimode = "3d";
+					
+					trace("Eyetribe device dml activated");
+				}
 				MotionManager.gw_public::initialize();
-				//InteractionManager.gw_public::initialize();
 			}
 			
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// SENSOR INIT ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
+			{
+				trace("Sensor input devices dml init");
+				GestureWorks.activeSensor = true;
+				
+				// NATIVE ACCELEROMETER	INIT//////////////////
+				if (DML.Devices.devices.input_globals.sensor.android.@active == "true")
+				{
+					if (DML.Devices.devices.input_globals.sensor.android.device[0].attributes.@input_type == "accelerometer")
+					{
+						//SensorManager.accelEnabled = true;
+						trace("Android/IOS accel device dml activated");
+					}
+				}
+				// WIIMOTE INIT////////////////////////////
+				if (DML.Devices.devices.input_globals.sensor.wiimote.@active == "true")
+				{
+					SensorManager.wiimoteEnabled = true;
+					trace("Wiimote device dml activated");
+				}
+				// ARDUINO INIT///////////////////////////////
+				if (DML.Devices.devices.input_globals.sensor.arduino.@active == "true")
+				{
+					SensorManager.arduinoEnabled = true;
+					trace("Arduino device dml activated");
+				}
+				// VOICE INIT ////////////////////////////
+				if (DML.Devices.devices.input_globals.sensor.voice.@active == "true")
+				{
+					SensorManager.voiceEnabled = true;
+					trace("M$ voice device dml activated");
+				}
+				// INIT SENSOR MANAGER WITH SENSOR TYPES ACTIVATED
+				// NEEDS TO BE LAST
+				SensorManager.gw_public::initialize();
+			}
 		}
 		
 		
@@ -128,6 +230,7 @@ package com.gestureworks.managers
 			if (DML.Devices.devices.input_globals.touch.@active == "true") 
 			{
 				//trace("touch input devices", DML.Devices.devices.input_globals.touch.screen.@active );
+				//GestureWorks.activeTouch = true;
 				
 				if (DML.Devices.devices.input_globals.touch.screen.@active == "true")
 				{
@@ -160,9 +263,6 @@ package com.gestureworks.managers
 				// still workin on refactor
 			}
 			
-			
-			
-			
 			////////////////////////////////////////////////////////////////////////////////////////////
 			// MOTION INIT ////////////////////////////////////
 			if (DML.Devices.devices.input_globals.motion.@active == "true") 
@@ -175,69 +275,36 @@ package com.gestureworks.managers
 					GestureWorks.activeMotion = true;
 					MotionManager.leapEnabled = true;
 					
-					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "2d") MotionManager.leapmode = "2d";
-					if (DML.Devices.devices.input_globals.motion.leap.device[0].@input_mode == "3d") 
-					{
-						MotionManager.leapmode = "3d";
-					}
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].attributes.@input_mode == "2d") MotionManager.leapmode = "2d";
+					if (DML.Devices.devices.input_globals.motion.leap.device[0].attributes.@input_mode == "3d") MotionManager.leapmode = "3d";
+					
 					trace("LeapMotion device dml activated");
 				}
-				
-				// KINECT ///////////////////////////////
-				// SOFTKINECTIC /////////////////////////
-				// PMD //////////////////////////////////
-				// STRUCTURE ////////////////////////////
-				// XITION ///////////////////////////////
-				
 				MotionManager.gw_public::initialize();
 				trace("motion manager init via dml");
 				//InteractionManager.gw_public::initialize();
 			}
 			
 			///////////////////////////////////////////////////////////////////////////////////////////
-			//SENSORS INIT /////////////////////////////////////
+			//SENSORS INIT ///////////////////////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
 			{
 				trace("Sensor input devices dml init");
+				GestureWorks.activeSensor = true;
 				
 				// NATIVE ACCELEROMETER	INIT//////////////////
 				if (DML.Devices.devices.input_globals.sensor.android.@active == "true")
 				{
 					//trace("android active",DML.Devices.devices.input_globals.sensor.android.device[0].@input_type)
-					if (DML.Devices.devices.input_globals.sensor.android.device[0].@input_type == "native_accelerometer")
+					if (DML.Devices.devices.input_globals.sensor.android.device[0].attributes.@input_type == "native_accelerometer")
 					{
-						GestureWorks.activeSensor = true;
 						SensorManager.nativeAccelEnabled = true;
 						trace("Android/IOS native accel device dml activated");
 					}
 				}
-				// WIIMOTE INIT////////////////////////////
-				if (DML.Devices.devices.input_globals.sensor.wiimote.@active == "true")
-				{
-					GestureWorks.activeSensor = true;
-					SensorManager.wiimoteEnabled = true;
-					trace("Wiimote device dml activated");
-				}
-				// ARDUINO INIT///////////////////////////////
-				if (DML.Devices.devices.input_globals.sensor.arduino.@active == "true")
-				{
-					GestureWorks.activeSensor = true;
-					SensorManager.arduinoEnabled = true;
-					trace("Arduino device dml activated");
-				}
-				// VOICE INIT ////////////////////////////
-				if (DML.Devices.devices.input_globals.sensor.voice.@active == "true")
-				{
-					GestureWorks.activeSensor = true;
-					SensorManager.voiceEnabled = true;
-					trace("M$ voice device dml activated");
-				}
-				
-
 				// INIT SENSOR MANAGER WITH SENSOR TYPES ACTIVATED
 				// NEEDS TO BE LAST
 				SensorManager.gw_public::initialize();
-				//InteractionManager.gw_public::initialize(); when interaction points are created by sensor
 			}
 		}
 

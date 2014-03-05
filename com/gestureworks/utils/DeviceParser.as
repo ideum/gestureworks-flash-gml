@@ -62,7 +62,10 @@ package com.gestureworks.utils
 							"wiimote":true, 
 							"kinect":true, 
 							"accelerometer":true, 
-							"arduino":true
+							"arduino":true,
+							"tobii":true,
+							"eyetribe":true,
+							"android":true
 							};	
 							
 						deviceList = new Vector.<DeviceObject>();
@@ -85,7 +88,8 @@ package com.gestureworks.utils
 								var sensor_deviceNum:int = dml.devices.input_globals[i].sensor.length();
 								
 								//trace("device type",touch_deviceNum,motion_deviceNum, sensor_deviceNum )
-
+								
+								// SENSORS////////////////////////////////////////////////////////////////////////////////
 								for (var j:int = 0; j < sensor_deviceNum; j++) 
 								{
 									var sensor_typeNum:int = dml.devices.input_globals[i].sensor[j].wii.length;

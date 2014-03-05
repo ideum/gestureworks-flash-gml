@@ -112,7 +112,8 @@ package com.gestureworks.visualizer
 	public function init():void
 	{
 		//trace("init")
-		cO = ts.cO;
+		if (ts.reftest == 0)cO = GestureGlobals.gw_public::clusters[id];
+		else cO = ts.cO;
 	}
 	
 	public function draw():void
@@ -455,6 +456,24 @@ package com.gestureworks.visualizer
 									graphics.lineStyle(3, 0x000000, style.stroke_alpha);
 									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
 								}
+								
+								////////////////////////////////////////////////////////
+								//FACE
+								if (ipt.type == "gaze") //0x000000; //black
+								{
+									graphics.lineStyle(3, 0x000000, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+								}
+								if (ipt.type == "eye") //0x000000; //black and blue
+								{
+									trace("drawing eye interaciton point");
+									graphics.lineStyle(20, 0x000000, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius);
+									graphics.lineStyle(10, 0x000066, style.stroke_alpha);
+									graphics.drawCircle(ipt.position.x, ipt.position.y, style.radius+20);
+								}
+								
+								
 						}
 						
 						else if (ipt.mode == "touch")

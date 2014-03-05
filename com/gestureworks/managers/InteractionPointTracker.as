@@ -31,7 +31,7 @@ package com.gestureworks.managers
 		private static var fp:InteractionPointObject;
 		private static var _ID:uint = 0;
 		
-		private static var d2:Number = 30;//40
+		private static var d2:Number = 40//200//200;//40 //DEFINES TOLERENCE TRACK POINT
 		private static var d1:Number = 0;
 		private static var debug:Boolean = false;
 		
@@ -61,6 +61,7 @@ package com.gestureworks.managers
 		 */
 		public static function getActivePoints():void 
 		{
+			//trace("get active ip points",activePoints.length,framePoints.length,temp_framePoints.length);
 			// copy active list
 			getFramePoints();
 			
@@ -80,13 +81,18 @@ package com.gestureworks.managers
 						for each(fp in temp_framePoints)
 						{
 							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
-							if ((ap.type == fp.type)&&(dist < d2)) found = true;
+							if ((ap.type == fp.type) && (dist < d2)) found = true;
+							
+							//trace(ap.id, fp.id, ap.interactionPointID, fp.interactionPointID,ap.type,fp.type,dist)
 						}
+						
+						//trace(activePoints.length,temp_framePoints.length)
 						
 						if (!found) 
 						{
 							activePoints.splice(activePoints.indexOf(ap), 1);
 							InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
+							//InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
 							if(debug) trace("an!=0 REMOVED:", ap.id, ap.interactionPointID, ap.type, ap.position);
 						}
 				}
@@ -116,14 +122,20 @@ package com.gestureworks.managers
 									ap.flatness = fp.flatness;
 									ap.fn = fp.fn;
 									
+									//sensors
+									ap.acceleration = fp.acceleration;
+									
+									
 									ap.handID = fp.handID;
 									ap.type = fp.type;
 									ap.mode = fp.mode;
 									
+									
 									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
 										
 									InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
-									if(debug) trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, dist0);	
+									//InteractionManager.onInteractionUpdatePoint(ap);
+									//if (debug)trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, dist0);	
 								}
 							}
 						}	
@@ -139,6 +151,7 @@ package com.gestureworks.managers
 						//trace(activePoints);
 						activePoints.push(fp);
 						InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
+						//InteractionManager.onInteractionBeginPoint(fp);
 						//if (debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
 						//trace("ip begin",fp.interactionPointID,temp_framePoints.length)
 					}
@@ -158,65 +171,7 @@ package com.gestureworks.managers
 					*/
 					
 		}
-
-			
-		/**
-		 * Hit test
-		 * @param	point
-		 * @return
-		*/ 
-		private function getTopDisplayObjectUnderPoint(point:Point):DisplayObject 
-		{
-			var targets:Array = new Array() //=  stage.getObjectsUnderPoint(point);
-			var item:DisplayObject //= (targets.length > 0) ? targets[targets.length - 1] : stage;
-			item = resolveTarget(item);
-									
-			return item;
-		}	
 		
-		/**
-		 * Determines the hit target based on mouseChildren settings of the ancestors
-		 * @param	target
-		 * @return
-		 */
-		private function resolveTarget(target:DisplayObject):DisplayObject {
-			var ancestors:Array = targetAncestors(target, new Array(target));			
-			var trueTarget:DisplayObject = target;
-			
-			for each(var t:DisplayObject in ancestors) {
-				if (t is DisplayObjectContainer && !DisplayObjectContainer(t).mouseChildren)
-				{
-					trueTarget = t;
-					break;
-				}
-			}
-			return trueTarget;
-		}
-				
-		/**
-		 * Returns a list of the supplied target's ancestors sorted from highest to lowest
-		 * @param	target
-		 * @param	ancestors
-		 * @return
-		 */
-		private function targetAncestors(target:DisplayObject, ancestors:Array = null):Array {
-			
-			if (!ancestors)
-				ancestors = new Array();
-				
-			if (!target.parent || target.parent == target.root)
-				return ancestors;
-			else {
-				ancestors.unshift(target.parent);
-				ancestors = targetAncestors(target.parent, ancestors);
-			}
-			
-			return ancestors;
-		}
-			
-			
-			
-					
 			
 	}
 }

@@ -78,10 +78,18 @@ package com.gestureworks.core
 		public var hookPoints:Boolean = false; 
 		public var framePoints:Boolean = false; 
 		public var fistPoints:Boolean = false; 
+		
+		public var eyePoints:Boolean = false; 
+		public var gazePoints:Boolean = false; 
+		
 		//touch
 		public var penTouchPoints:Boolean = false; 
 		public var tagTouchPoints:Boolean = false; 
 		public var fingerTouchPoints:Boolean = false; 
+		public var shapeTouchPoints:Boolean = false; 
+		
+		//sensor
+		public var accelerometerPoints:Boolean = false;
 		
 		public static var touchObjects:Dictionary = new Dictionary();
 		
@@ -91,13 +99,27 @@ package com.gestureworks.core
 			ts = GestureGlobals.gw_public::touchObjects[id];
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
-			gO = ts.gO;
+			if (ts.reftest == 0)
+			{
+			cO = GestureGlobals.gw_public::clusters[id];//ts.cO;
+				//tcO = cO.tcO;
+				//mcO = cO.mcO;
+				//scO = cO.scO;
+				
+			gO = GestureGlobals.gw_public::gestures[id];//ts.gO;
+			tiO = GestureGlobals.gw_public::timelines[id]// ts.tiO;
+			}
+			else {
 			cO = ts.cO;
-				tcO = cO.tcO;
-				mcO = cO.mcO;
-				scO = cO.scO;
-			
+				//tcO = cO.tcO;
+				//mcO = cO.mcO;
+				//scO = cO.scO;
+				
+			gO = ts.gO;
 			tiO = ts.tiO;
+				
+				}
+			
 			
 			initCluster();
           }
@@ -202,10 +224,10 @@ package com.gestureworks.core
 					}
 				}
 			
-			if (ts.dN != 0)
-			{
-				if (ts.clusterEvents) manageClusterEventDispatch();
-			}
+			//if (ts.dN != 0)
+			//{
+				//if (ts.clusterEvents) manageClusterEventDispatch();
+			//}
 			//trace(_dN, _N, cO.point_remove,cO.point_add,cO.remove,cO.add)
 			
 			
@@ -301,7 +323,7 @@ package com.gestureworks.core
 						
 						if (ts.touchEnabled)  cluster_kinemetric.resetTouchClusterValues();
 						if (ts.motionEnabled) cluster_kinemetric.resetMotionClusterValues();
-						//if (ts.sensorEnabled)cluster_kinemetric.resetSensorCluster();
+						if (ts.sensorEnabled)cluster_kinemetric.resetSensorCluster();
 				
 						//MAY NEED TO MOVE
 						cluster_kinemetric.findRootInstDimention();
@@ -331,7 +353,7 @@ package com.gestureworks.core
 				//}
 				//cluster_kinemetric.findRootInstDimention();
 				
-				if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
+				//if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
 				//getGesturePoints();
 				
 				
@@ -346,26 +368,33 @@ package com.gestureworks.core
 		{
 			var result:Boolean = false;
 							
-							//motion
-							if ((type == "finger")&&(fingerPoints)) 						result = true; 
-							if ((type == "thumb")&&(thumbPoints))							result = true; 
-							if ((type == "palm")&&(palmPoints)) 							result = true; 
-							if ((type == "finger_average") && (fingerAveragePoints)) 	 	result = true; 
-							if ((type == "digit") &&(fingerAndThumbPoints))					result = true; 										 
-							if ((type == "pinch")&&(pinchPoints)) 							result = true; 			 
-							if ((type == "trigger")&&(triggerPoints ))						result = true; 		
-							if ((type == "push")&&(pushPoints)) 							result = true; 			 
-							if ((type == "hook")&&(hookPoints)) 							result = true; 			 
-							if ((type == "frame") && (framePoints)) 						result = true; 
-							if ((type == "fist") && (fistPoints)) 							result = true; 
+							//MOTION ////////////////////////////////////////////////////////////////////////
+								//HAND
+								if ((type == "finger")&&(fingerPoints)) 						result = true; 
+								if ((type == "thumb")&&(thumbPoints))							result = true; 
+								if ((type == "palm")&&(palmPoints)) 							result = true; 
+								if ((type == "finger_average") && (fingerAveragePoints)) 	 	result = true; 
+								if ((type == "digit") &&(fingerAndThumbPoints))					result = true; 										 
+								if ((type == "pinch")&&(pinchPoints)) 							result = true; 			 
+								if ((type == "trigger")&&(triggerPoints ))						result = true; 		
+								if ((type == "push")&&(pushPoints)) 							result = true; 			 
+								if ((type == "hook")&&(hookPoints)) 							result = true; 			 
+								if ((type == "frame") && (framePoints)) 						result = true; 
+								if ((type == "fist") && (fistPoints)) 							result = true; 
+							
+								//FACE
+								if ((type == "eye") && (eyePoints)) 							result = true;
+								if ((type == "gaze") && (gazePoints)) 							result = true; 
 							
 							
-							//touch 
-							if ((type == "pen") && (penTouchPoints)) 						result = true; 
-							if ((type == "tag") && (tagTouchPoints)) 						result = true; 
-							if ((type == "finger") && (fingerTouchPoints)) 						result = true; 
+							//TOUCH///////////////////////////////////////////////////////////////////////////
+								if ((type == "pen") && (penTouchPoints)) 							result = true; 
+								if ((type == "tag") && (tagTouchPoints)) 							result = true; 
+								if ((type == "finger") && (fingerTouchPoints)) 					result = true;
+								if ((type == "shape") && (shapeTouchPoints)) 						result = true; 
 							
-							//add sensor
+							//SENSOR/////////////////////////////////////////////////////////////////////////
+							if ((type == "accelerometer") && (accelerometerPoints)) 							result = true;
 							
 			return result		
 		} 
@@ -499,6 +528,9 @@ package com.gestureworks.core
 							//---cluster_geometric.find3DToolPoints();
 							//---cluster_geometric.find3DRegionPoints();
 							//---cluster_geometric.find3dTipTapPoints();
+							
+							if ((g.cluster_type == "gaze") || (g.cluster_type == "all")) 			gazePoints = true; 
+							if ((g.cluster_type == "eye") || (g.cluster_type == "all")) 			eyePoints = true; 
 						}
 					//}
 				
@@ -559,6 +591,11 @@ package com.gestureworks.core
 							//---cluster_geometric.find3DToolPoints();
 							//---cluster_geometric.find3DRegionPoints();
 							//---cluster_geometric.find3dTipTapPoints();
+							
+							
+							if ((g.cluster_type == "gaze") || (g.cluster_type == "all")) 			gazePoints = true; 
+							if ((g.cluster_type == "eye") || (g.cluster_type == "all")) 			eyePoints = true; 
+							
 						}
 						/////////////////////////////////////////////////////////
 						if (g.cluster_input_type == "touch")
@@ -569,8 +606,10 @@ package com.gestureworks.core
 						}
 						
 						/////////////////////////////////////////////////////////
-						//if (g.cluster_input_type == "sensor")
-						// 
+						if (g.cluster_input_type == "sensor")
+						{
+							if ((g.cluster_type == "accelerometer") || (g.cluster_type == "all")) 			accelerometerPoints = true;
+						}
 				}
 				
 			}
@@ -646,6 +685,12 @@ package com.gestureworks.core
 				
 				// ADVANCED SKELETON
 					cluster_geometric.dynamicSkeletonUpdate();
+					
+					
+					
+				//FACE/////////////////////////////////////////////////////
+					
+					
 			}
 		}
 		
@@ -695,6 +740,11 @@ package com.gestureworks.core
 							//---cluster_geometric.find3DRegionPoints();
 							//---cluster_geometric.find3dTipTapPoints();
 						//}
+						
+						//if (gazePoints)			cluster_geometric.find3DGazePoints();
+						//if (eyePoints)
+						cluster_geometric.find3DEyePoints(); 
+						
 					//}
 				//}
 			//}
@@ -719,6 +769,21 @@ package com.gestureworks.core
 			}
 		}
 		
+		
+		public function getSensorMetrics():void 
+		{		
+			if (!core)
+			{
+				//cluster_kinemetric.find3DIPAcceleration();
+			}
+		}
+		public function getSensorCoreMetrics():void 
+		{		
+			if (core)
+			{
+				cluster_geometric.findSensorAccelerometerPoints(); 
+			}
+		}
 		
 		public function getKineMetrics2D():void 
 		{		
@@ -1256,11 +1321,15 @@ package com.gestureworks.core
 						if (c_type == "hook") b = 7;
 						if (c_type == "frame") b = 8;
 						if (c_type == "fist") b = 9;
-						//if (c_type == "push") b = 10;
-						//if (c_type == "region") b = 11;
+						if (c_type == "push") b = 10;
+						if (c_type == "region") b = 11;
 						/////////////////////////////////////
 						// OBJECTS IPS
-						//if (c_type == "tool") b = 12;
+						if (c_type == "tool") b = 12;
+						
+						//FACE
+						if (c_type == "gaze") b = 13;
+						if (c_type == "eye") b = 14;
 						
 						//trace(c_type)
 					
@@ -1408,6 +1477,7 @@ package com.gestureworks.core
 		/**
 		 * @private
 		 */
+		/*
 		private function manageClusterEventDispatch():void 
 		{	
 				// point added to cluster
@@ -1438,11 +1508,12 @@ package com.gestureworks.core
 						if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ADD,  {id:cO.id}));
 						cO.add = false;
 				}	
-		}
+		}*/
 		
 		/**
 		 * @private
 		 */
+		/*
 		private function manageClusterPropertyEventDispatch():void 
 		{
 				// cluster translate
@@ -1476,6 +1547,6 @@ package com.gestureworks.core
 					ts.dispatchEvent(new GWClusterEvent(GWClusterEvent.C_ACCELERATE, { ddx:cO.ddx, ddy:cO.ddy, n:cO.n }));
 					if((tiO.timelineOn)&&(tiO.clusterEvents)) tiO.frame.clusterEventArray.push(new GWClusterEvent(GWClusterEvent.C_ACCELERATE, { ddx:cO.ddx, ddy:cO.ddy, n:cO.n }));
 				}
-		}	
+		}	*/
 	}
 }

@@ -112,11 +112,22 @@ package com.gestureworks.visualizer
 		{
 			//trace("init")
 			ts = GestureGlobals.gw_public::touchObjects[id]; // CHANGE TO TRANSFORMATION OBJECT CENTER POINT
-			trO = ts.trO;// points to sprite
-			sO = ts.sO
+			
+			
+			
+			if (ts.reftest == 0)
+			{
+			//sO = GestureGlobals.gw_public::clusters[id];
+			cO = GestureGlobals.gw_public::clusters[id];
+			gO = GestureGlobals.gw_public::gestures[id];
+			trO = GestureGlobals.gw_public::transforms[id]
+			}
+			else {
+			//sO = ts.sO
 			cO = ts.cO;
 			gO = ts.gO;
-			
+			trO = ts.trO;// points to sprite
+			}
 			orientation = cO.orientation;
 			
 		}
@@ -127,7 +138,7 @@ package com.gestureworks.visualizer
 		//tpn = cO.tpn;//pointList.length;
 		ipn = cO.ipn;//pointList.length;
 		
-		path_data = sO.path_data 
+		//path_data = sO.path_data //TODO:REINABLE
 		gn = gO.pOList.length;
 		
 		// clear

@@ -201,6 +201,8 @@ package com.gestureworks.core
 		public function get N():int { return _N; }
 		public function set N(n:int):void { _N = n; }
 		
+		public var reftest:int = 1; 
+		
 		private var _index:int = 0; 
 		/**
 		 * @inheritDoc

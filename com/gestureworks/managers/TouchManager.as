@@ -233,6 +233,8 @@ package com.gestureworks.managers
 			// CREATE NEW TOUCHPOINT IN GLOBAL TOUCH OBJECT
 			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
 			
+			if (!gs.cO.touchArray) gs.cO.touchArray = new Vector.<TouchPointObject> 
+			
 			/*
 			var tpO:TouchPointObject = new TouchPointObject();
 					tpO.id = gs.touchPointCount; 
@@ -318,6 +320,7 @@ package com.gestureworks.managers
 					delete touchPoints[touchPointID];
 			}
 			/////////////////////////////////////////////////////////////////////////////////////
+			trace("touch manger point up");
 		}
 		
 		public static function onTouchMove(event:GWTouchEvent):void

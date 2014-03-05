@@ -70,10 +70,19 @@ package com.gestureworks.core
 			//super();
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
+			
+			if (ts.reftest == 0)
+			{
+			cO = GestureGlobals.gw_public::clusters[id]//ts.cO;
+			//sO = GestureGlobals.gw_public::clusters[id]//ts.sO;
+			gO = GestureGlobals.gw_public::gestures[id]//ts.gO;
+			tiO = GestureGlobals.gw_public::timelines[id]//ts.tiO;
+			}
+			else{
 			cO = ts.cO;
-			sO = ts.sO;
 			gO = ts.gO;
 			tiO = ts.tiO;
+			}
 			
 			initGesture();
          }

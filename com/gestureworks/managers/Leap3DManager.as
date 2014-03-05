@@ -170,7 +170,7 @@ package com.gestureworks.managers
 							//var y0:Number = map(event.frame.pointable(aid).tipPosition.y, lminY, lmaxY, minY, maxY);
 							//var z0:Number = map(-1*event.frame.pointable(aid).tipPosition.z, lminZ, lmaxZ, minZ, maxZ);
 
-							mp.position = new Vector3D(event.frame.pointable(aid).tipPosition.x, mp.position.y = event.frame.pointable(aid).tipPosition.y, mp.position.z = event.frame.pointable(aid).tipPosition.z*-1);
+							mp.position = new Vector3D(event.frame.pointable(aid).tipPosition.x, event.frame.pointable(aid).tipPosition.y, event.frame.pointable(aid).tipPosition.z*-1);
 							//mp.position = new Vector3D(x0,y0,z0);
 							mp.direction = new Vector3D(event.frame.pointable(aid).direction.x, event.frame.pointable(aid).direction.y, event.frame.pointable(aid).direction.z*-1);
 							mp.velocity = new Vector3D(event.frame.pointable(aid).tipVelocity.x, event.frame.pointable(aid).tipVelocity.y, event.frame.pointable(aid).tipVelocity.z*-1);

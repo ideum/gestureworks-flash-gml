@@ -211,7 +211,7 @@ package com.gestureworks.objects
 		
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		public var handList:Vector.<HandObject> = new Vector.<HandObject>;
+		public var handList:Vector.<HandObject> //= new Vector.<HandObject>;
 
 			/// INSIDE 3D HAND Object
 				//--width
@@ -264,26 +264,26 @@ package com.gestureworks.objects
 		////////////////////////////////////////////////////////////////////
 		//ABSOLUTE PROPS
 		//inst position//////////////////////////////////////////////x,y,z
-		public var position:Vector3D = new Vector3D ();
+		public var position:Vector3D //= new Vector3D ();
 		//inst direction/orientation //////////////////////////////////////////////x,y,z
-		public var direction:Vector3D = new Vector3D ();
+		public var direction:Vector3D //= new Vector3D ();
 		//inst scale //////////////////////////////////////////////scaleX,scaleY,scaleZ
-		public var scale :Vector3D = new Vector3D ();
+		public var scale:Vector3D //= new Vector3D ();
 		//inst scale change //////////////////////////////////////////////rotationX,rotationY,rotationZ
 		//public var rotation:Vector3D = new Vector3D ();
 		
 		/////////////////////////////////////////////////////////////////////////////
 		// DELTA PROPS
 		//inst scale change//////////////////////////////////////////////dsx,dsy,dsz
-		public var scaleDelta :Vector3D = new Vector3D ();
+		public var scaleDelta:Vector3D //= new Vector3D ();
 		//inst scale change //////////////////////////////////////////////dthetax,dthetay,dthetaz
-		public var rotationDelta:Vector3D = new Vector3D ();
+		public var rotationDelta:Vector3D //= new Vector3D ();
 		//inst velocity//////////////////////////////////////////////dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
+		public var velocity:Vector3D //= new Vector3D ();
 		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
-		public var acceleration:Vector3D = new Vector3D ();
+		public var acceleration:Vector3D //= new Vector3D ();
 		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
-		public var jolt:Vector3D = new Vector3D ();
+		public var jolt:Vector3D //= new Vector3D ();
 		
 		
 		
@@ -326,13 +326,13 @@ package com.gestureworks.objects
 		//default cluster level RAW data structures
 		/////////////////////////////////////////////////////////////////////////
 		// surface point data list----------------
-		public var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
+		public var touchArray:Vector.<TouchPointObject> //= new Vector.<TouchPointObject>();
 		// motion point data list
-		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var motionArray:Vector.<MotionPointObject> //= new Vector.<MotionPointObject>();
 		// motion point data list
-		public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		public var motionArray2D:Vector.<MotionPointObject> //= new Vector.<MotionPointObject>();
 		// sensor point data list----------------
-		public var sensorArray:Vector.<SensorPointObject> = new Vector.<SensorPointObject>();
+		public var sensorArray:Vector.<SensorPointObject> //= new Vector.<SensorPointObject>();
 		
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,24 +359,24 @@ package com.gestureworks.objects
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		//TOUCH PARENT CLUSTER ///////////////////////////////////////
-		public var tcO:ipClusterObject = new ipClusterObject ();
+		//public var tcO:ipClusterObject //= new ipClusterObject ();
 		//TOUCH SUBCLUSTER ARRAY
-		public var tSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public var tSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
 		//MOVE INTO TOUCH A OBJECT TYPED SUBCLUSTER
 		//TOUCH OBJECT ARRAY A LIST OF TAGGING STRCTURES FOR 2D
-		public var objectArray:Vector.<Object> = new Vector.<Object>();
+		public var objectArray:Vector.<Object> //= new Vector.<Object>();
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		//MOTION PARENT CLUSTER///////////////////////////////////////
-		public var mcO:ipClusterObject = new ipClusterObject ();
+		//public var mcO:ipClusterObject //= new ipClusterObject ();
 		//MOTION SUBCLUSTER ARRAY
-		public var mSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public var mSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		// SENSOR PARENT CLUSTER//////////////////////////////////////
-		public var scO:ipClusterObject = new ipClusterObject ();
+		//public var scO:ipClusterObject = new ipClusterObject ();
 		//SENSOR SUBCLUSTER ARRAY
-		public var sSubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		public var sSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
@@ -488,11 +488,11 @@ package com.gestureworks.objects
 			sensorArray.length = 0;
 			iPointArray.length = 0;
 			iPointArray2D.length = 0;
-			tcO.reset();
+			//tcO.reset();
 			tSubClusterArray.length = 0;
-			mcO.reset();
+			//mcO.reset();
 			mSubClusterArray.length = 0;
-			scO.reset();
+			//scO.reset();
 			sSubClusterArray.length = 0;
 			gPointArray.length = 0;
 			history.length = 0;

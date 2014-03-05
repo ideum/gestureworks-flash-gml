@@ -32,7 +32,7 @@ package com.gestureworks.objects
 		public var pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
 
 		//clusterEventArray
-		public var clusterEventArray:Vector.<GWClusterEvent> = new Vector.<GWClusterEvent>();
+		//public var clusterEventArray:Vector.<GWClusterEvent> = new Vector.<GWClusterEvent>();
 
 		//gestureEventArray
 		public var gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>();
@@ -47,7 +47,7 @@ package com.gestureworks.objects
 		public function reset():void {
 			id = NaN;
 			pointEventArray.length = 0;			
-			clusterEventArray.length = 0;			
+			//clusterEventArray.length = 0;			
 			gestureEventArray.length = 0;			
 			transformEventArray.length = 0;			
 		}

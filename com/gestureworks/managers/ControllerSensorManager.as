@@ -1,8 +1,9 @@
 package com.gestureworks.managers 
 {
+	import away3d.core.math.Vector3DUtils;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.objects.MotionPointObject;
+	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.core.gw_public;
 	
 	import flash.geom.Vector3D;
@@ -14,21 +15,19 @@ package com.gestureworks.managers
 	 * @author Ideum
 	 *
 	 */
-	public class Eye2DSManager 
+	public class ControllerSensorManager 
 	{
 		private static var frame:XML
 		private static var message:Object
 		private static var inputType:String
 		private static var frameId:int 
 		private static var timestamp:int 
-		private static var handCount:int
 		private static var count:int
-		private static var penCount:int
 		private static var objectCount:int
 		private static var debug:Boolean = false;
 		
 		private static var pids:Vector.<int> = new Vector.<int>();
-		private static var pointList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		private static var pointList:Vector.<SensorPointObject> = new Vector.<SensorPointObject>();
 		private static var activePoints:Vector.<int> = new Vector.<int>();
 		
 		private static var _minX:Number;
@@ -38,9 +37,9 @@ package com.gestureworks.managers
 		
 		//public static var touchPoints:Dictionary = new Dictionary();
 		
-		public function Eye2DSManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
+		public function ControllerSensorManager(minX:Number=0, maxX:Number=0, minY:Number=0, maxY:Number=0) 
 		{
-			trace("touch 2d server manager constructor");
+			trace("sensor 6d server manager constructor");
 			activePoints = new Vector.<int>()
 			
 			//if (minX) this.minX = minX;
@@ -53,84 +52,55 @@ package com.gestureworks.managers
 			//touchPoints = GestureGlobals.gw_public::touchPoints;
 		}
 
-		public function processEye2DSocketData(xmlList:XMLList):void 
+		public function processControllerSensorSocketData(xmlList:XMLList):void 
 		{
-			//trace(message)
 				// CREATE POINT LIST
-				pointList = new Vector.<MotionPointObject>();
-				count = int(xmlList.Eye.length());//int(message.InputPoint.Values.Eye.length());
 				pids = new Vector.<int>();
-				
 				
 				//trace(xmlList);
 				
-				var pv:Vector3D = new Vector3D();
-				
-				// CREATE Touch POINTS
-				for (var k:int = 0; k < count; k++)
-				{
-					//var f =  message.InputPoint.Values.Surface.Point[k];
-					var e =  xmlList.Eye[k];//message.InputPoint.Values.Eye[k];
-					var p = e.Point[0];
-					var pte:MotionPointObject = new MotionPointObject();
+					var p = xmlList;
+					var pte:SensorPointObject = new SensorPointObject();
 						pte.id = p.@id;
-						pte.position = new Vector3D (p.@pcenter_x*1920, p.@pcenter_y*1080, 0); //TODO: PUSH AS PART OF CALIBRATION VARS
-						//pte.position = new Vector3D (p.@x, p.@y,0); //TODO: PUSH AS PART OF CALIBRATION VARS
-						pte.type = "eye";
+						pte.type = "controller";
+						pte.acceleration = new Vector3D (p.Controller.Acceleration.@x, p.Controller.Acceleration.@y, p.Controller.Acceleration.@z);
+						//pte.orientation = new Vector3D (p.Controller.Orientation.@roll, p.Controller.Orientation.@pitch, p.Controller.Orientation.@yaw);
+						
+						if (p.buttons.length())
+						{
+						pte.buttons = new Vector.<Object>
+						var btn:int = p.buttons.length();
+						for (var i:int = 0; i <btn; i++)
+						{
+							var button = new Object();
+								button.id = p.buttons.button[i].@id;
+								button.state = p.buttons.button[i].@state;
+							pte.buttons.push(button);
+						}
+						}
+						
+						//var nunchuck =  new Object();
+							// nunchuck.acceleration = new Vector3D();
+							//nunchuck.orientation = new Vector3D();
+						//pte.nunchuck = nunchuck;
+						
+						//var balanceboard =  new Object();
+							//balanceboard.acceleration = new Vector3D();
+							//balanceboard.orientation = new Vector3D();
+						//pte.balanceboard = balanceboard;
+								
+						//var classic_controller =  new Object();
+							//classic_controller.acceleration = new Vector3D();
+							//classic_controller.orientation = new Vector3D();
+						//pte.classic_controller = classic_controller;
+						
 					pointList.push(pte);
 					
 					//PUSH IDS
 					pids.push(int(p.@id));
-					
-					//pv.x += pte.position.x; 
-					//pv.y += pte.position.y; 
-					//pv.z += pte.position.z; 
-				}
 				
-				//pv.x *= 0.5;
-				//pv.y *= 0.5;
-				//pv.z *= 0.5;
-				
-				/*
-				var pte:MotionPointObject = new MotionPointObject();
-						pte.id = 0//p.@id;
-						pte.position = pv; //TODO: PUSH AS PART OF CALIBRATION VARS
-						//pte.position = new Vector3D (p.@x, p.@y,0); //TODO: PUSH AS PART OF CALIBRATION VARS
-						pte.type = "eye";
-					pointList.push(pte);
-					
-					//PUSH IDS
-					pids.push(int(p.@id));
-				*/
-				
-				
-				
-				
-				/*
-					var g =  xmlList.Gaze[0].Point[0];
-					var pte:MotionPointObject = new MotionPointObject();
-						pte.id = g.@id;
-						
-						
-						
-						pte.position = new Vector3D (g.@x , g.@y,0); //TODO: PUSH AS PART OF CALIBRATION VARS
-						//pte.position.x = e.@x*1920 //TODO: PUSH AS PART OF CALIBRATION VARS
-						//pte.position.y = e.@y * 1080; //TODO: PUSH AS PART OF CALIBRATION VARS
-						pte.type = "gaze" //e.type; gaze point or eye point
-						//pte.size.x = 0;
-						//pte.size.y = 0;
-					pointList.push(pte);
-					
-					trace("gaze-------------------",pte.position);
-					
-					//PUSH IDS
-					pids.push(int(g.@id));
-				
-				*/
-
-				addRemoveUpdatePoints();
-				//trace(xmlList.Gaze.length(),xmlList.Eye.length(), xmlList)
-				//trace(pte.position, e.@x, e.@id)
+					addRemoveUpdatePoints();
+					//trace(pte.position, e.@x, e.@id)
 		}
 		
 		
@@ -139,9 +109,9 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 
-		private static function getFramePoint(id:int):MotionPointObject//Object 
+		private static function getFramePoint(id:int):SensorPointObject//Object 
 		{
-			var obj:MotionPointObject//Object;
+			var obj:SensorPointObject//Object;
 			for (var i:int = 0; i < pointList.length; i++)
 			{
 				if (id == pointList[i].id) obj = pointList[i];
@@ -166,7 +136,7 @@ package com.gestureworks.managers
 					//TouchManager.onTouchUp(new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, aid, false));
 					//TouchManager.onTouchUpPoint(touchPoints[aid]);
 					//TouchManager.onTouchUpPoint(aid);
-					MotionManager.onMotionEndPoint(aid);
+					SensorManager.onSensorEndPoint(aid);
 					//trace("TOUCH POINT REMOVED:",aid);
 				}
 				
@@ -177,7 +147,7 @@ package com.gestureworks.managers
 			//POINT ADDITION AND UPDATE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			for each(var pid:int in pids) //number
 			{
-				var pt:MotionPointObject = getFramePoint(pid);
+				var pt:SensorPointObject = getFramePoint(pid);
 				
 				//trace("retrived point",pt);
 				
@@ -202,21 +172,17 @@ package com.gestureworks.managers
 						te.sizeY = 0;
 						*/
 						
-						pt.motionPointID = pt.id;////???????????????????????
+						pt.sensorPointID = pt.id;////???????????????????????
 						
 						
 					if (activePoints.indexOf(pid) == -1) 
 					{
 						activePoints.push(pid);	
-						//TouchManager.onTouchDown(te);
-						//TouchManager.onTouchDownPoint(pt);
-						MotionManager.onMotionBeginPoint(pt);
+						SensorManager.onSensorBeginPoint(pt);
 						//trace("TOUCH POINT ADDED:", pid);		
 					}
 					else {
-						//TouchManager.onTouchMove(te)
-						//TouchManager.onTouchMovePoint(pt)	
-						MotionManager.onMotionMovePoint(pt)	
+						SensorManager.onSensorUpdatePoint(pt)	
 						//trace("TOUCH POINT UPDATE:", pid);
 					}
 					//trace(pt.size.x,pt.size.y, pt.pressure)

@@ -47,17 +47,12 @@ package com.gestureworks.managers
 	
 	//myo
 	//arduino
-	
-	
-	
-	
-	
-	
+
 	public class SensorManager
 	{	
 		//public static var ms:TouchSprite;
 		
-		public static var spoints:Dictionary = new Dictionary();
+		public static var sensorPoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		public static var gs:TouchSprite
 		
@@ -97,23 +92,12 @@ package com.gestureworks.managers
 			{
 			////////////////////////////////////////////////////////////////////////////////////////
 			// ref global motion point list
-			spoints = GestureGlobals.gw_public::sensorPoints;
+			sensorPoints = GestureGlobals.gw_public::sensorPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
-			//sw = GestureWorks.application.stageWidth;
-			//sh = GestureWorks.application.stageHeight;
+			gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
 			
-			if (!gs)
+			if (gs)
 			{
-			// CREATE GLOBAL SENSOR SPRITE TO HANDLE ALL GLOBAL ANALYSIS OF SENSOR POINTS
-			gs = new TouchSprite();
-				gs.active = true;
-				gs.sensorEnabled = true;
-				gs.tc.core = true; // fix for global core analysis
-				
-			GestureGlobals.globalSpriteID = gs.touchObjectID;
-			}
-			//activate 
-			else {
 				gs.sensorEnabled = true;
 				gs.tc.sensor_core = true;
 			}
@@ -148,16 +132,25 @@ package com.gestureworks.managers
 				onNativeAccelConnect();
 			}
 			
+			
+			
+			
+			
+			
+			
 			//INIT WIIMOTE CONSTRUCTOR ////////////////////////////////////////////////////////////
+			//if (controllerEnabled) 
 			if (wiimoteEnabled) 
 			{	
-				// create wii manager
-				// will need more than one
-				wiimote = new Wiimote();
-				wiimote.addEventListener( Event.CONNECT, onWiimoteConnect );
-				wiimote.connect();
-				if (wiimote) trace("wiimote init", wiimote.id, wiimote.batteryLevel, wiimote.hasBalanceBoard, wiimote.hasClassicController,wiimote.hasNunchuk)
+				trace("controller constructor type:");
 			}
+			
+			/*
+			//INIT WIIMOTE CONSTRUCTOR ////////////////////////////////////////////////////////////
+			if (xboxEnabled) 
+			{	
+				trace("xbox controller constructor");
+			}*/
 			
 			//INIT ARDUINO CONSTRUCTOR /////////////////////////////////////////////////////////////
 			if (arduinoEnabled) 
@@ -183,7 +176,54 @@ package com.gestureworks.managers
 			//spo.history.unshift(SensorPointHistories.historyObject(spo))
 		}
 		
-		
+		public static function onSensorBeginPoint(pt:SensorPointObject):void
+		{			
+			//trace("motion point begin, motionManager",event.value.motionPointID);
+			// create new point object
+			var spO:SensorPointObject  = new SensorPointObject();
+					
+						spO.id = gs.sensorPointCount; 
+						spO.sensorPointID = pt.sensorPointID;
+					 
+						spO.type = pt.type;
+						spO.devicetype = pt.devicetype;
+						
+						spO.position = pt.position;
+						spO.direction = pt.direction;
+						
+						spO.normal = pt.normal;
+						spO.length = pt.length;
+						spO.width = pt.width;
+						
+						spO.orientation = pt.orientation;
+						//spO.yaw = pt.yaw;
+						//spO.roll = pt.roll;
+						//spO.pitch = pt.pitch;
+						
+						//spO.velocity = pt.velocity;
+						spO.acceleration = pt.acceleration;
+						//spO.jolt = pt.jolt;
+						//spO.snap = pt.snap;
+						//spO.crackle = pt.crackle;
+						//spO.pop = pt.pop;
+						
+						spO.phase = "begin";
+					
+					//ADD TO GLOBAL MOTION SPRITE POINT LIST
+					if (!gs.cO.sensorArray) gs.cO.sensorArray = new Vector.<SensorPointObject>
+					gs.cO.sensorArray.push(spO);
+					gs.sensorPointCount++;
+				
+				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
+				GestureGlobals.gw_public::sensorPoints[pt.sensorPointID] = spO;
+				
+				//trace("SENSOR POINT BEGIN")
+				
+				// REGISTER TOUCH POINT WITH TOUCH MANAGER
+				//registerMotionPoint(spO);
+			
+		}
+		/*
 		public static function onSensorBegin(event:GWSensorEvent):void
 		{
 			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
@@ -281,8 +321,8 @@ package com.gestureworks.managers
 			
 			//trace("gss sensorpointArray length",gss.cO.sensorPointArray.length,spO.position )
 		}
-		
-		
+		*/
+		/*
 		public static function onSensorEnd(event:GWSensorEvent):void
 		{
 			//trace("sensor point end");
@@ -320,7 +360,95 @@ package com.gestureworks.managers
 			
 			//trace("sensor point end",gss.sensorPointCount)
 		}
+		*/
+		public static function onSensorEndPoint(sensorPointID:int):void
+		{
+			//trace("Motion point End, motionManager", event.value.motionPointID)
+			var spointObject:SensorPointObject = sensorPoints[sensorPointID];
+			//trace("ready to remove", pointObject);
+			
+			if (spointObject)
+			{
+				spointObject.phase = "end";
+				
+					// REMOVE POINT FROM LOCAL LIST
+					gs.cO.sensorArray.splice(spointObject.id, 1);
+					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
+					
+					// REDUCE LOACAL POINT COUNT
+					gs.sensorPointCount--;
+					
+					// UPDATE POINT ID 
+					for (var i:int = 0; i < gs.cO.sensorArray.length; i++)
+					{
+						gs.cO.sensorArray[i].id = i;
+					}
+					// DELETE FROM GLOBAL POINT LIST
+					delete sensorPoints[sensorPointID];
+			}
+			
+			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
+			//trace("motion point tot",motionSprite.motionPointCount)
+			
+			//trace("SENSOR POINT END")
+		}
 		
+		
+		public static function onSensorUpdatePoint(pt:SensorPointObject):void
+		{			
+			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
+			//trace("motion move/Update event, motionManager", event.value.motionPointID);
+			
+			var spO:SensorPointObject = sensorPoints[pt.sensorPointID];
+			
+				if (spO)
+				{	
+					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
+					//mpO.id  = event.value.id;
+					//mpO.motionPointID  = event.value.motionPointID;
+					//mpO.handID = pt.handID;
+					
+					spO.position = pt.position;
+					spO.direction = pt.direction;
+					spO.normal = pt.normal;
+					spO.velocity = pt.velocity;
+					spO.length = pt.length;
+					spO.width = pt.width;
+					
+					//spO.yaw = pt.yaw;
+					//spO.roll = pt.roll;
+					//spO.pitch = pt.pitch;
+					
+					spO.orientation = pt.orientation;
+					spO.acceleration = pt.acceleration;
+					spO.jolt = pt.jolt;
+					spO.snap = pt.snap;
+					spO.crackle = pt.crackle;
+					spO.pop = pt.pop;
+					
+					spO.buttons = pt.buttons;
+					//nunchcuck
+					
+					spO.phase = "update"
+					
+					/*
+					if (spO.history.length>1)
+					{
+						//trace("historyObject",spo.acceleration.x,spo.history[0].acceleration.x,spo.history[1].acceleration.x,spo.history[2].acceleration.x)
+						spO.jolt = new Vector3D(spO.acceleration.x - spO.history[1].acceleration.x, spO.acceleration.y - spO.history[1].acceleration.y, spO.acceleration.z - spO.history[1].acceleration.z);
+						spO.snap = new Vector3D(spO.jolt.x - spO.history[1].jolt.x, spO.jolt.y - spO.history[1].jolt.y, spO.jolt.z - spO.history[1].jolt.z);
+						spO.crackle = new Vector3D(spO.snap.x - spO.history[1].snap.x, spO.snap.y - spO.history[1].snap.y, spO.snap.z- spO.history[1].snap.z);
+						spO.pop = new Vector3D(spO.crackle.x - spO.history[1].crackle.x, spO.crackle.y - spO.history[1].crackle.y,spO.crackle.z - spO.history[1].crackle.z);
+					}
+					*/
+					
+				}
+				
+				// UPDATE POINT HISTORY 
+				//SensorPointHistories.historyQueue(event);
+				//trace("SENSOR POINT UPDATE")
+		}	
+		/*
 		public static function onSensorUpdate(event:GWSensorEvent):void
 		{
 			
@@ -380,6 +508,18 @@ package com.gestureworks.managers
 			// UPDATE POINT HISTORY 
 			SensorPointHistories.historyQueue(event);
 		}
+		*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		//////////////////////////////////////////////////////////////////////////////
 		//NATIVE ACCELEROMETER HANDLERS
@@ -392,7 +532,7 @@ package com.gestureworks.managers
 					na_pt.position.y = 500;
 			
 			//dispatch SENSOR POINT ADD
-			onSensorBegin(new GWSensorEvent(GWSensorEvent.SENSOR_BEGIN, na_pt, true, false)); // push begin event
+			//onSensorBegin(new GWSensorEvent(GWSensorEvent.SENSOR_BEGIN, na_pt, true, false)); // push begin event
         }
 		
 		public static function accUpdateHandler(event:AccelerometerEvent):void
@@ -426,7 +566,7 @@ package com.gestureworks.managers
 
 			//gss.cO.sensorArray.push(na_pt);
 			
-			onSensorUpdate(new GWSensorEvent(GWSensorEvent.SENSOR_UPDATE, na_pt, true, false)); //push update event
+			//onSensorUpdate(new GWSensorEvent(GWSensorEvent.SENSOR_UPDATE, na_pt, true, false)); //push update event
 		}
 		
 		//////////////////////////////////////////////////////////////////////////////
@@ -450,7 +590,7 @@ package com.gestureworks.managers
 				//wiideviceList.push(wii_pt);
 			
 			//dispatch SENSOR POINT ADD
-			onSensorBegin(new GWSensorEvent(GWSensorEvent.SENSOR_BEGIN, wii_pt, true, false)); // push begin event
+			//onSensorBegin(new GWSensorEvent(GWSensorEvent.SENSOR_BEGIN, wii_pt, true, false)); // push begin event
         }
 		
 		public static function wiimoteDisconnect( pEvent:Event ):void
@@ -485,9 +625,13 @@ package com.gestureworks.managers
 				wii_pt.position.x += 1 * wiimote.roll;
 				wii_pt.position.y += 1 * wiimote.pitch;
 			
-				wii_pt.roll =  wiimote.roll;
-				wii_pt.pitch =  wiimote.pitch;
-				wii_pt.yaw =  wiimote.yaw;
+				wii_pt.orientation.x =  wiimote.roll;
+				wii_pt.orientation.y =  wiimote.pitch;
+				wii_pt.orientation.z =  wiimote.yaw;
+				
+				//wii_pt.roll =  wiimote.roll;
+				//wii_pt.pitch =  wiimote.pitch;
+				//wii_pt.yaw =  wiimote.yaw;
 				
 				wii_pt.rotation.x =  wiimote.roll;
 				wii_pt.rotation.y =  wiimote.pitch;
@@ -530,7 +674,7 @@ package com.gestureworks.managers
 			//gss.cO.sensorArray.push(wii_pt); // now pushed by sensor update event dispatch
 			//trace(wii_pt.acceleration.x, gss.cO.sensorArray[0].acceleration.x )
 			//DISPATCH SENSOR POINT UPDATE//////////////////////////////////////////////////////////////////////
-			onSensorUpdate(new GWSensorEvent(GWSensorEvent.SENSOR_UPDATE, wii_pt, true, false)); //push update event
+			//onSensorUpdate(new GWSensorEvent(GWSensorEvent.SENSOR_UPDATE, wii_pt, true, false)); //push update event
 			
         }
 		/////////////////////////////////////////////////////////////////////////////////

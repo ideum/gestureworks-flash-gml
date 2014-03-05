@@ -108,7 +108,7 @@ package com.gestureworks.managers
 		// registers touch point via touchSprite
 		public static function registerMotionPoint(mpo:MotionPointObject):void
 		{
-			mpo.history.unshift(MotionPointHistories.historyObject(mpo))
+			//mpo.history.unshift(MotionPointHistories.historyObject(mpo))
 		}
 		
 		/*
@@ -172,6 +172,7 @@ package com.gestureworks.managers
 					
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST
+					if (!gs.cO.motionArray) gs.cO.motionArray = new Vector.<MotionPointObject>
 					gs.cO.motionArray.push(mpO);
 					gs.motionPointCount++;
 				
@@ -225,6 +226,8 @@ package com.gestureworks.managers
 			
 			if (pointObject)
 			{
+				pointObject.phase = "end";
+				
 					// REMOVE POINT FROM LOCAL LIST
 					gs.cO.motionArray.splice(pointObject.id, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
@@ -292,6 +295,7 @@ package com.gestureworks.managers
 			
 				if (mpO)
 				{	
+					mpO.phase = "end";
 					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
 					//mpO.id  = event.value.id;
 					//mpO.motionPointID  = event.value.motionPointID;

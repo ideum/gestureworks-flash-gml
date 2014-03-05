@@ -30,16 +30,17 @@ package com.gestureworks.objects
 		
 		// motionPointID
 		public var motionPointID:int;
-		
 		// motion point type // finger, tool, palm
 		public var type:String = new String();
-		
 		//fingertype thumb, index, middle,....
 		public var fingertype:String = new String();
 		
+		// event phase
+		public var phase:String="";
+		
+		
 		// frameID
 		public var frameID:int;
-		
 		// motionID
 		public var motionFrameID:int;
 		
@@ -48,7 +49,7 @@ package com.gestureworks.objects
 		
 		// move count 
 		// number move updates for point in frame
-		public var moveCount:int =0;
+		public var moveCount:int = 0;
 		
 		// handID // parent hand ID (if type finger)
 		public var handID:int = 0;
@@ -81,33 +82,33 @@ package com.gestureworks.objects
 		
 		
 		//position/////////////////////////////////////////////x,y,x
-		public var position:Vector3D = new Vector3D ();
-		public var positionCached:Vector3D = new Vector3D ();
-		public var planePositionCached:Vector3D = new Vector3D ();
-		public var relativePositionCached:Vector3D = new Vector3D ();
+		public var position:Vector3D //= new Vector3D ();
+		public var positionCached:Vector3D //= new Vector3D ();
+		public var planePositionCached:Vector3D //= new Vector3D ();
+		public var relativePositionCached:Vector3D //= new Vector3D ();
 		
 		//direction////////////////////////
-		public var direction:Vector3D = new Vector3D ();
-		public var directionCached:Vector3D = new Vector3D ();
-		public var projected_finger_direction:Vector3D = new Vector3D ();
+		public var direction:Vector3D //= new Vector3D ();
+		public var directionCached:Vector3D //= new Vector3D ();
+		public var projected_finger_direction:Vector3D //= new Vector3D ();
 		
 		//
-		public var palmplane_finger_knuckle_direction:Vector3D = new Vector3D ();
+		public var palmplane_finger_knuckle_direction:Vector3D //= new Vector3D ();
 		
 		//normal/////////////////////////
-		public var normal:Vector3D = new Vector3D ();
+		public var normal:Vector3D //= new Vector3D ();
 		
 		//rotation/////////////////////////////////////////////x,y,x
-		public var rotation:Matrix = new Matrix ();
+		public var rotation:Matrix //= new Matrix ();
 		
 		//palm plane position/////////////////////////////////////////////x,y,x
-		public var palmplane_position:Vector3D = new Vector3D ();
+		public var palmplane_position:Vector3D //= new Vector3D ();
 		// palm plane line position
-		public var palmplaneline_position:Vector3D = new Vector3D ();
+		public var palmplaneline_position:Vector3D //= new Vector3D ();
 		
 		//palm finger direction vectors
-		public var palm_finger_direction:Vector3D = new Vector3D ();
-		public var projected_palm_finger_direction:Vector3D = new Vector3D ();
+		public var palm_finger_direction:Vector3D //= new Vector3D ();
+		public var projected_palm_finger_direction:Vector3D //= new Vector3D ();
 		
 		/*
 		//size///////////////////////////////////////////w,h,l
@@ -139,11 +140,8 @@ package com.gestureworks.objects
 		//extension percentage based on max and min length for session
 		public var extension:Number = 0;
 		
-		
 		//favdist
 		public var favdist:Number = 0;
-
-		
 		//normalized_favdist
 		public var normalized_favdist:Number = 0;
 
@@ -154,23 +152,20 @@ package com.gestureworks.objects
 		
 		//normalized_width based on other fingers in local hand
 		public var normalized_width:Number = 0;
-
 		//normalized_length based on other fingers in local hand
 		public var normalized_length:Number = 0;
 		
 		public var normalized_max_length:Number = 0;
 		public var normalized_max_width:Number = 0;
-
+		
 		//normalized_dAngle based on other fingers in local hand
 		public var normalized_palmAngle:Number = 0;
-		
 		// normalized max width to length ratio
 		public var normalized_mwlr:Number = 0;
 		
 		
 		// hand structure probs
 		public var thumb_prob:Number = 0;
-
 		// hand structure probs
 		public var mean_thumb_prob:Number = 0;
 
@@ -178,20 +173,18 @@ package com.gestureworks.objects
 		// could move in size??
 		//palm radius
 		public var sphereRadius:Number = 0;
-		
 		// sphere center
-		public var sphereCenter:Vector3D = new Vector3D ();
+		public var sphereCenter:Vector3D //= new Vector3D ();
 		
-		
+	
 		//velocity//////////////////////////////////////////// //dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
-		
+		public var velocity:Vector3D //= new Vector3D ();
 		//frameVelocity//////////////////////////////////////////// //DX,DX,DY
-		public var frameVelocity:Vector3D = new Vector3D ();
+		public var frameVelocity:Vector3D //= new Vector3D ();
 		
 
 		///////////////////////////////////////////////////////////////////
 		// history/////////////////////////////////////////////////////////
-		public var history:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		//public var history:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 	}
 }

@@ -89,9 +89,12 @@ package com.gestureworks.managers
 				object.pop.y = spo.pop.y//spo.acceleration;
 				object.pop.z = spo.pop.z//spo.acceleration;
 				
-				object.roll = spo.roll;
-				object.yaw = spo.yaw;
-				object.roll = spo.roll;
+				object.orientation.x = spo.orientation.x//roll;
+				object.orientation.y = spo.orientation.y//pitch;
+				object.orientation.z = spo.orientation.z//yaw;
+				
+				//object.roll = spo.roll;
+				//object.yaw = spo.yaw;
 				
 				object.phase = "history"
 				

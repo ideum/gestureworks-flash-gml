@@ -37,18 +37,20 @@ package com.gestureworks.objects
 		
 
 		//position/////////////////////////////////////////////x,y,x
-		public var position:Vector3D = new Vector3D ();
+		public var position:Vector3D //= new Vector3D ();
 		//direction////////////////////////
-		public var direction:Vector3D = new Vector3D ();
+		public var direction:Vector3D //= new Vector3D ();
 		//normal/////////////////////////
-		public var normal:Vector3D = new Vector3D ();
+		public var normal:Vector3D //= new Vector3D ();
 		
 		//rotation/////////////////////////////////////////////x,y,x
 		//public var rotation:Matrix = new Matrix ();
-		public var rotation:Vector3D = new Vector3D ();
-		public var pitch:Number = 0;
-		public var yaw:Number = 0;
-		public var roll:Number = 0;
+		public var rotation:Vector3D //= new Vector3D ();
+		public var orientation:Vector3D //= new Vector3D ();
+		
+		//public var pitch:Number = 0;
+		//public var yaw:Number = 0;
+		//public var roll:Number = 0;
 		
 		//width
 		public var width:Number = 0;
@@ -57,18 +59,18 @@ package com.gestureworks.objects
 		//palm radius
 		public var sphereRadius:Number = 0;
 		// sphere center
-		public var sphereCenter:Vector3D = new Vector3D ();
+		public var sphereCenter:Vector3D// = new Vector3D ();
 		
 		//velocity//////////////////////////////////////////// //dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
+		public var velocity:Vector3D //= new Vector3D ();
 		//frameVelocity//////////////////////////////////////////// //DX,DX,DY
-		public var frameVelocity:Vector3D = new Vector3D ();
+		public var frameVelocity:Vector3D //= new Vector3D ();
 		
 		public var acceleration:Vector3D = new Vector3D ();
-		public var jolt:Vector3D = new Vector3D ();
-		public var snap:Vector3D = new Vector3D ();
-		public var crackle:Vector3D = new Vector3D ();
-		public var pop:Vector3D = new Vector3D ();
+		public var jolt:Vector3D //= new Vector3D ();
+		public var snap:Vector3D //= new Vector3D ();
+		public var crackle:Vector3D //= new Vector3D ();
+		public var pop:Vector3D //= new Vector3D ();
 		
 		
 		

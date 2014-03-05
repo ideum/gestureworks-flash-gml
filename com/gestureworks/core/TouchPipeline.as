@@ -46,9 +46,17 @@ package com.gestureworks.core
 		public function init():void
 		{	
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
+			
+			if (ts.reftest==0) {
+				cO = GestureGlobals.gw_public::clusters[touchObjectID];;
+				gO = GestureGlobals.gw_public::gestures[touchObjectID];
+				trO = GestureGlobals.gw_public::tranforms[touchObjectID];;
+			}
+			else{
 			cO = ts.cO;
 			gO = ts.gO;
 			trO = ts.trO;
+			}
 		}
 		
 		public function processPipeline():void
