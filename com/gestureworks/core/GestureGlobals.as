@@ -20,6 +20,13 @@ package com.gestureworks.core
 	import com.gestureworks.utils.TouchPointID;
 	import com.gestureworks.core.gw_public;
 	
+	import com.gestureworks.objects.TouchPointObject;
+	import com.gestureworks.objects.MotionPointObject;
+	import com.gestureworks.objects.SensorPointObject;
+	import com.gestureworks.objects.InteractionPointObject;
+	import com.gestureworks.objects.HandObject;
+	import com.gestureworks.objects.TimelineObject;
+	
 	/**
 	 * The GestureGlobals class is the global variables class that can be accessed from all classes within.
 	 * You can acess a number of hooks for development.
@@ -43,6 +50,17 @@ package com.gestureworks.core
 		 */			
 		gw_public static var interactionPoints:Dictionary = new Dictionary();
 		
+		/**
+		 * Contains a dictionary of all touchObjects available to the framework.
+		 */
+		gw_public static var core:CoreSprite = new CoreSprite();
+		gw_public static var timeline:TimelineObject = new TimelineObject;
+		gw_public static var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>;
+		gw_public static var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>;
+		//gw_public static var motionArray2d:Vector.<MotionPointObject> = new Vector.<MotionPointObject>;
+		gw_public static var sensorArray:Vector.<SensorPointObject> = new Vector.<SensorPointObject>;
+		gw_public static var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>;
+		gw_public static var handList:Vector.<HandObject> = new Vector.<HandObject>;
 		
 		
 		/**
@@ -67,7 +85,11 @@ package com.gestureworks.core
 		gw_public static var timelines:Dictionary = new Dictionary();
 		
 		
-		//gw_public static var pointHistory:Dictionary = new Dictionary();		
+		
+		gw_public static var touchPointCount:int;
+		gw_public static var sensorPointCount:int;
+		gw_public static var motionPointCount:int;
+		gw_public static var interactionPointCount:int;
 		
 		
 		/**
@@ -80,10 +102,6 @@ package com.gestureworks.core
 		gw_public static var leapMinZ:Number = -220;
 		gw_public static var leapMaxZ:Number = 220;
 		
-		
-		public static var globalSpriteID:int = 0;//
-		//public static var touchSpriteID:int = 0;//
-		//public static var sensorSpriteID:int = 0;//
 		
 		/**
 		 * frameID frame stamp relative to start of application.
@@ -143,13 +161,10 @@ package com.gestureworks.core
 		 */
 		public static var timelineHistoryCaptureLength:int = 20;//int.MAX_VALUE
 		
-		
 		/**
 		 * current GestureWorks object count
 		 */
 		public static var objectCount:int;
-
-
 
 		//  gwPointID -----------------------------------------------
 		/**

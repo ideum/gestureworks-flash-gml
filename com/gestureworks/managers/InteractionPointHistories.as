@@ -64,6 +64,11 @@ package com.gestureworks.managers
 				object.position = ipo.position;
 				object.direction = ipo.direction;
 				object.normal = ipo.normal;
+				
+				object.screen_position = ipo.screen_position;
+				object.screen_direction = ipo.screen_direction;
+				object.screen_normal = ipo.screen_normal;
+				
 				object.rotation = ipo.rotation;
 				object.handID =  ipo.handID;
 				object.type = ipo.type;

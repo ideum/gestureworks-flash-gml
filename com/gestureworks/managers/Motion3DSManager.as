@@ -105,7 +105,7 @@ package com.gestureworks.managers
 					
 					pids.push(int(f.@id)) 
 
-					//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
+					trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
 				}
 				
 				// CREATE PALM MOTION POINT

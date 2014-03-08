@@ -33,37 +33,38 @@ package com.gestureworks.visualizer
 	import com.gestureworks.managers.MotionPointHistories;
 	import com.gestureworks.core.CML;
 	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.CoreSprite;
 	import com.gestureworks.core.gw_public;
 	
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.TouchPointObject;
-	import com.gestureworks.objects.ClusterObject;
+	//import com.gestureworks.objects.ClusterObject;
 	
 	import com.gestureworks.utils.AddSimpleText;
 	
 
 
-	public class PointVisualizer extends Sprite//Shape//Container
+	public class CorePointVisualizer extends Sprite//Shape//Container
 	{
 		private static var cml:XMLList;
 		public var style:Object; // public allows override of cml values
-		private var id:Number = 0;
-		
-		private var cO:ClusterObject;
-		private var touchArray;
-		private var motionArray;
-		private var motionArray2D;
-		private var sensorArray;
-		private var iPointArray;
+	
+		private var touchArray:Vector.<TouchPointObject>;
+		private var motionArray:Vector.<MotionPointObject>;
+		//private var motionArray2D:Vector.<MotionPointObject>;
+		private var sensorArray:Vector.<SensorPointObject>;
+		private var iPointArray:Vector.<InteractionPointObject>;
 		
 		
-		private var ts:Object;
+		private var gs:CoreSprite;
 		private var tpn:uint = 0;
 		private var mpn:uint = 0;
 		private var spn:uint = 0;
 		private var ipn:uint = 0;
+		
+		
 		private var mptext_array:Array = new Array();
 		private var tptext_array:Array = new Array();
 		private var i:int
@@ -83,20 +84,17 @@ package com.gestureworks.visualizer
 		public var maxPoints:int = 10;
 	
 		
-		public function PointVisualizer(ID:Number)
+		public function CorePointVisualizer():void
 		{			
 			//trace("points visualizer");	
-			id = ID;
-			ts = GestureGlobals.gw_public::touchObjects[id];
-			cO = GestureGlobals.gw_public::clusters[id];
-			
+
+			gs = GestureGlobals.gw_public::core;
+
 			touchArray = GestureGlobals.gw_public::touchArray;
 			motionArray = GestureGlobals.gw_public::motionArray;
 			//motionArray2D = GestureGlobals.gw_public::motionArray2d;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
 			iPointArray = GestureGlobals.gw_public::iPointArray;
-			
-			
 			
 			hist = 8;
 			
@@ -144,38 +142,8 @@ package com.gestureworks.visualizer
 				addChild(tptext_array[i]);
 				addChild(mptext_array[i]);
 			}
-			
-			
-			// FIXME: lazy instantiate trails
-			for (i = 0; i < maxPoints; i++) { 
-				
-				trails.push(new Array());
-				
-				for (var j:int = 0; j < maxTrails; j++) {
-					var s:Sprite = new Sprite;
-					s.graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);							
-					s.graphics.beginFill(style.fill_color, style.fill_alpha);
-					s.graphics.drawCircle(style.radius+7, style.radius+7, style.radius);
-					s.graphics.endFill();		
-					//var b:Bitmap = toBitmap(s);
-					trails[i].push(s);					
-				}
-			}
-			GestureWorks.application.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
-		private function toBitmap(obj:DisplayObject, smoothing:Boolean=true):Bitmap 
-		{
-			var m:Matrix = new Matrix();
-			
-			var bmd:BitmapData = new BitmapData(obj.width, obj.height, true, 0x00000000);
-			bmd.draw(DisplayObject(obj), m);
-			
-			var bitmap:Bitmap = new Bitmap(bmd);
-			bitmap.smoothing = smoothing;
-			
-			return bitmap;
-		}
 		
 		public function draw():void
 		{
@@ -185,7 +153,7 @@ package com.gestureworks.visualizer
 			if (touchArray) tpn = touchArray.length//cO.tpn;
 			else tpn = 0;
 			
-			if (motionArray2D) mpn = motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
+			if (motionArray) mpn = motionArray.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
 			else mpn = 0;
 			
 			if (sensorArray) spn = sensorArray.length;
@@ -197,17 +165,18 @@ package com.gestureworks.visualizer
 			// clear graphics
 			graphics.clear();
 			
-			//DRAW
-			if (ts.tc.core)
-			{
+				//DRAW
 				//if (ts.touchEnabled)	
 				draw_touchPoints();
 				//if (ts.motionEnabled)	
 				draw_motionPoints();
 				//if (ts.sensorEnabled)	
 				draw_sensorPoints();
-			}
-			else draw_interactionPoints();
+				
+				//GLOBAL INTERACTION POINT LIST
+				//draw_interactionPoints()
+				
+			trace("drawing", tpn, mpn, spn,ipn);
 		}
 		
 		
@@ -379,27 +348,10 @@ package com.gestureworks.visualizer
 					}
 		}		
 			
-		private function onEnterFrame(e:Event):void
-		{
-			for (var i:int = 0; i < trails.length; i++) {
-				for (var j:int = 0; j < trails[i].length; j++) {
-					trails[i][j].alpha -=  0.8;
-
-					if (trails[i][j].alpha <= 0) {
-						if (trails[i][j].parent)
-							trails[i][j].parent.removeChild(trails[i][j]);
-					}
-				}	
-			}
-		}
-				
-		
-		
 		/////////////////////////////////////////////////////////////////////
 		// motion points
 		///////////////////////////////////////////////////////////////////
-		
-		private function draw_motionPoints():void
+		public function draw_motionPoints():void
 		{
 					// clear text
 					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
@@ -409,7 +361,7 @@ package com.gestureworks.visualizer
 					// Calculate the hand's average finger tip position
 					for (i = 0; i < mpn; i++) 
 								{
-								var mp:MotionPointObject = cO.motionArray2D[i];
+								var mp:MotionPointObject = motionArray[i];
 								
 								
 									if (_drawText)
@@ -417,8 +369,8 @@ package com.gestureworks.visualizer
 										//NOTE NEED MORE TEXT FIELDS
 										if((mp)&&(tptext_array[i])){
 										tptext_array[i].textCont = "MP ID: " + String(mp.motionPointID); //+ "    id" + String(pt.touchPointID);
-										tptext_array[i].x = mp.position.x - tptext_array[i].width / 2;
-										tptext_array[i].y = mp.position.y - 40;
+										tptext_array[i].x = mp.screen_position.x - tptext_array[i].width / 2;
+										tptext_array[i].y = mp.screen_position.y - 40;
 										tptext_array[i].visible = true;
 										tptext_array[i].textColor = style.touch_text_color;
 									}
@@ -437,10 +389,10 @@ package com.gestureworks.visualizer
 												{
 													//  draw finger point 
 													graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
-													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
+													graphics.drawCircle(mp.screen_position.x ,mp.screen_position.y, style.radius + 20 + zm);	
 													
 													graphics.beginFill(0xFF0000, style.fill_alpha);
-													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+													graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius);
 													graphics.endFill();
 												}
 												
@@ -448,9 +400,9 @@ package com.gestureworks.visualizer
 												{
 													//  draw finger point 
 													graphics.lineStyle(4, 0x6AE370, style.stroke_alpha);
-													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
+													graphics.drawCircle(mp.screen_position.x ,mp.screen_position.y, style.radius + 20 + zm);	
 													graphics.beginFill(0x6AE370, style.fill_alpha);
-													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+													graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius);
 													graphics.endFill();
 												}
 											}
@@ -481,15 +433,15 @@ package com.gestureworks.visualizer
 											{
 												// palm center
 												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius+10+ mp.position.z * 0.2);
+												graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius+10+ mp.screen_position.z * 0.2);
 												graphics.beginFill(0xFFFFFF, style.fill_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius-10);
+												graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius-10);
 												graphics.endFill();
 												
 												//normal
 												graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
-												graphics.moveTo(mp.position.x,mp.position.y);
-												graphics.lineTo(mp.position.x + 50 * mp.normal.x, mp.position.y + 50 * mp.normal.y);
+												graphics.moveTo(mp.screen_position.x,mp.screen_position.y);
+												graphics.lineTo(mp.screen_position.x + 50 * mp.screen_normal.x, mp.screen_position.y + 50 * mp.screen_normal.y);
 												
 												//trace(mp.normal.x,mp.position.x,mp.direction.x)
 											}
@@ -514,12 +466,12 @@ package com.gestureworks.visualizer
 											//trace("DRAWING EYE",mp.position);
 											//draw finger point 
 											graphics.lineStyle(4, 0x0000FF, style.stroke_alpha);
-											graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20);	
+											graphics.drawCircle(mp.screen_position.x ,mp.screen_position.y, style.radius + 20);	
 											
 											
 											graphics.lineStyle(4, 0x000000, style.stroke_alpha);
 											graphics.beginFill(0x000000, style.fill_alpha);
-											graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+											graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius);
 											graphics.endFill();
 										}
 									}
@@ -530,10 +482,10 @@ package com.gestureworks.visualizer
 											//trace("DRAWING GAZE",mp.position);
 											//draw finger point 
 											graphics.lineStyle(4, 0xFFFFFF, style.stroke_alpha);
-											graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20);	
+											graphics.drawCircle(mp.screen_position.x ,mp.screen_position.y, style.radius + 20);	
 											
 											graphics.beginFill(0x000000, style.fill_alpha);
-											graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+											graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius);
 											graphics.endFill();
 										}
 									}		
@@ -551,13 +503,13 @@ package com.gestureworks.visualizer
 		////////////////////////////////////////////////////////////////
 		// sensor points // eye tracking / accelerometer / myo
 		////////////////////////////////////////////////////////////////
-		private function draw_sensorPoints():void
+		public function draw_sensorPoints():void
 			{
 			//trace("drawing sensor points", spn);
 				
 			for (i = 0; i < spn; i++) 
 					{
-					var sp:SensorPointObject = cO.sensorArray[i];
+					var sp:SensorPointObject = sensorArray[i];
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
@@ -614,9 +566,9 @@ package com.gestureworks.visualizer
 			{
 			//trace("drawing interaction points",ts.touchObjectID, ipn);
 				//ipn
-			for (i = 0; i < cO.iPointArray.length; i++) 
+			for (i = 0; i < iPointArray.length; i++) 
 					{
-					var sp:InteractionPointObject = cO.iPointArray[i];
+					var sp:InteractionPointObject = iPointArray[i];
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					

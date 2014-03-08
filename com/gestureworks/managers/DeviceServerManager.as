@@ -37,7 +37,7 @@ package com.gestureworks.managers
 	 * @author Ideum
 	 *
 	 */
-	public class DeviceServerManager extends Sprite
+	public class DeviceServerManager //extends //Sprite
 	{
 		private static var socket:Socket;
 		private static var currentState:int;
@@ -48,20 +48,21 @@ package com.gestureworks.managers
 		
 		private static var XMLFrameList:XMLList;
 		
+		private static var touchManagerSocket:Touch2DSManager;
 		
 		private static var motionManagerSocket:Motion3DSManager;
-		private static var touchManagerSocket:Touch2DSManager;
 		private static var eyeManagerSocket:Eye2DSManager;
 		
 		private static var androidSensorManagerSocket:AndroidSensorManager;
 		private static var controllerSensorManagerSocket:ControllerSensorManager;
 		
 		
+		
 		public function DeviceServerManager():void
 		{
 			trace("device server manager constructor");
 		}
-		
+		/*
 		gw_public static function initialize():void
 		{
 			trace("device server manager init");
@@ -79,21 +80,28 @@ package com.gestureworks.managers
 			
 
 			initXMLSocket();
-		}
+		}*/
 		
 		public function init():void
 		{
-			trace("device server manager init");
+			trace("device server manager init",GestureWorks.activeTouch,GestureWorks.activeMotion,GestureWorks.activeSensor );
 			
 			//////////////////////////////////////////////////
-			motionManagerSocket = new Motion3DSManager();
-			
-			touchManagerSocket = new Touch2DSManager(); 
-			
-			eyeManagerSocket = new Eye2DSManager();
-			
-			androidSensorManagerSocket = new AndroidSensorManager();
-			controllerSensorManagerSocket = new ControllerSensorManager();
+			if (GestureWorks.activeTouch) 
+			{
+				touchManagerSocket = new Touch2DSManager(); 
+			}
+			//if (GestureWorks.activeMotion)
+			//{
+				motionManagerSocket = new Motion3DSManager();
+				eyeManagerSocket = new Eye2DSManager();
+			//}
+			//if (GestureWorks.activeSensor)
+			//{
+				trace("Sensor classes init");
+				androidSensorManagerSocket = new AndroidSensorManager();
+				controllerSensorManagerSocket = new ControllerSensorManager();
+			//}
 			
 			initXMLSocket();
 		}
@@ -166,7 +174,7 @@ package com.gestureworks.managers
 					var message:XML;
 					var mn:int;
 				
-					
+					if (dfrn!=0){
 					for (var i:int = 0; i < dfrn; i++ )
 					{
 						frame = XMLFrameList[i]
@@ -184,12 +192,37 @@ package com.gestureworks.managers
 							
 							if (message.InputPoint.InputTypes.InputType.length()>0) inputType = message.InputPoint.InputTypes.InputType[0].@input;// simplify as likely use different output in seperate message
 							else inputType = "unknown"
-							 //trace("data types",deviceType,inputType)
 							
+							//trace("data types",deviceType,inputType, inputMode)
+							
+
+							if (GestureWorks.activeTouch)
+							{
+							//if (inputMode=="touch"){
+							///////////////////////////////////////////////////////////////
+							// TOUCH //////////////////////////////////////////////////////
+								if ((deviceType == "PQ") && (inputType == "Points2d")) {
+									//trace(message.InputPoint.Values.Finger);
+									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+								}
+								//3M////////////////////////////////////////////////////////
+								//ZYTRONIC//////////////////////////////////////////////////
+								//if (deviceType == "LeapMotion" && inputType == "Points2d"){}//touchManagerSocket.processTouch2DSocketData(message);
+
+								
+								if (deviceType == "Android" && inputType == "Points2d"){//WORKS
+									//trace("Android touch", message.InputPoint.Values.Finger);
+									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+								}
+							}
+							
+							if (GestureWorks.activeMotion){//
 							//if (inputMode=="motion"){
 							//////////////////////////////////////////////////////////////
 							//MOTION//////////////////////////////////////////////////////
 							//////////////////////////////////////////////////////////////
+							
+							//trace("motion",deviceType,inputType);
 							
 								//HAND/FINGER TRACKING////////////////////////////////////////
 								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);//motionManagerSocket.processMotion3DSocketData(message);
@@ -214,28 +247,12 @@ package com.gestureworks.managers
 											trace(deviceType, ": ", inputType);
 											eyeManagerSocket.processEye2DSocketData(message.InputPoint.Values.Eye);
 										}
+							}
 							
-							
-							//if (inputMode=="touch"){
-							///////////////////////////////////////////////////////////////
-							// TOUCH //////////////////////////////////////////////////////
-								if ((deviceType == "PQ") && (inputType == "Points2d")) {
-									//trace(message.InputPoint.Values.Finger);
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
-								}
-								//3M////////////////////////////////////////////////////////
-								//ZYTRONIC//////////////////////////////////////////////////
-								//if (deviceType == "LeapMotion" && inputType == "Points2d"){}//touchManagerSocket.processTouch2DSocketData(message);
-
-								
-								if (deviceType == "Android" && inputType == "Points2d"){//WORKS
-									//trace("Android touch", message.InputPoint.Values.Finger);
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
-								}
-								
-							
-							
-							//if (inputMode=="touch"){
+							if (GestureWorks.activeSensor)
+							{
+							//trace("active sensor in device socket parser");
+							//if (inputMode=="sensor"){
 							///////////////////////////////////////////////////////////////
 							// SENSOR //////////////////////////////////////////////////////
 							
@@ -258,9 +275,10 @@ package com.gestureworks.managers
 								//IR SENSOR
 							
 								// CONTROLLERS////////////////////////////////////////////
-								if ((deviceType == "Wiimote") && (inputType == "Controller"))
+								if ((deviceType == "WiiMote") && (inputType == "Sensor6d"))//Controller
 								{
-									trace(deviceType,": ", inputType);
+									//trace(deviceType, ": ", inputType);
+									//trace(message.InputPoint.Values)
 									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values);
 								}
 								if ((deviceType == "SNES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
@@ -275,8 +293,19 @@ package com.gestureworks.managers
 								if ((deviceType == "MYO") && (inputType == "EMG")) trace(deviceType, ": ", inputType);
 								//VOICE/////////////////////////////////////////////////
 							//}
+							}
 					}
 				}
+				}
+				else{
+					
+					trace("null frame");
+					
+				}
+				
+				
+				
+				
 			}
 			}
 			else trace("xml frame parsing error");

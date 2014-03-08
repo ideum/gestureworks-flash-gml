@@ -51,7 +51,7 @@ package com.gestureworks.managers
 			
 			//touchPoints = GestureGlobals.gw_public::touchPoints;
 		}
-
+		
 		public function processControllerSensorSocketData(xmlList:XMLList):void 
 		{
 				// CREATE POINT LIST
@@ -63,38 +63,51 @@ package com.gestureworks.managers
 					var pte:SensorPointObject = new SensorPointObject();
 						pte.id = p.@id;
 						pte.type = "controller";
-						pte.acceleration = new Vector3D (p.Controller.Acceleration.@x, p.Controller.Acceleration.@y, p.Controller.Acceleration.@z);
-						//pte.orientation = new Vector3D (p.Controller.Orientation.@roll, p.Controller.Orientation.@pitch, p.Controller.Orientation.@yaw);
+						pte.acceleration = new Vector3D (p.Controller.accelerometer.@x, p.Controller.accelerometer.@y, p.Controller.accelerometer.@z);
+						pte.orientation = new Vector3D (p.Controller.orientation.@roll, p.Controller.orientation.@pitch, p.Controller.orientation.@yaw);
 						
-						if (p.buttons.length())
+						if (p.Controller.buttons.button.length())
 						{
-						pte.buttons = new Vector.<Object>
-						var btn:int = p.buttons.length();
+						pte.buttons = new Object()//new Vector.<Object>
+						var btn:int = p.Controller.buttons.button.length();
+						
 						for (var i:int = 0; i <btn; i++)
 						{
-							var button = new Object();
-								button.id = p.buttons.button[i].@id;
-								button.state = p.buttons.button[i].@state;
-							pte.buttons.push(button);
+							var name:String = p.Controller.buttons.button[i].@id
+							pte.buttons[name] = new Object();
+							pte.buttons[name].state = p.Controller.buttons.button[i].@state;
+							//pte.buttons (button);
 						}
 						}
 						
+						//NUNCHICK///////////////////////////////////
 						//var nunchuck =  new Object();
-							// nunchuck.acceleration = new Vector3D();
-							//nunchuck.orientation = new Vector3D();
+							// nunchuck.c =
+							//nunchuck.z = 
+							//nunchuck.stickX;
+							//nunchuck.stickY;
 						//pte.nunchuck = nunchuck;
 						
+						//BALANCE BAORD//////////////////////////////
 						//var balanceboard =  new Object();
-							//balanceboard.acceleration = new Vector3D();
-							//balanceboard.orientation = new Vector3D();
+							//balanceboard.centerOfGravity = 
+							//balanceboard.bottomRightKg = 
+							//balanceboard.bottomLeftKg = 
+							//balanceboard.topLeftKg
+							//balanceboard.topRightKg
+							//balanceboard.totalKg
 						//pte.balanceboard = balanceboard;
-								
+						
+						//CLSSSIC CONTROLLER
 						//var classic_controller =  new Object();
 							//classic_controller.acceleration = new Vector3D();
 							//classic_controller.orientation = new Vector3D();
 						//pte.classic_controller = classic_controller;
+						//GUITAR////////////////////////////////////////
 						
 					pointList.push(pte);
+					
+					//trace("data ",btn,pte.buttons[0].id,pte.buttons[0].state, pte.acceleration.x,pte.acceleration.y,pte.acceleration.z);//pte.buttons["a"].id, pte.buttons["a"].state 
 					
 					//PUSH IDS
 					pids.push(int(p.@id));

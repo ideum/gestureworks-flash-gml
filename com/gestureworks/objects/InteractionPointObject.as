@@ -54,12 +54,15 @@ package com.gestureworks.objects
 		
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();
+		public var screen_position:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();
+		public var screen_direction:Vector3D = new Vector3D ();
 		
 		//normal/////////////////////////
 		public var normal:Vector3D = new Vector3D ();
+		public var screen_normal:Vector3D = new Vector3D ();
 		
 		//velocity//////////////////////////////////////////////dx,dy,dz
 		public var velocity:Vector3D = new Vector3D ();
@@ -96,6 +99,9 @@ package com.gestureworks.objects
 
 		//extension percentage based on max and min length for session
 		public var extension:Number = 0;
+		
+		//public var buttons:Vector.<Object> 
+		public var buttons:Object
 		
 		///////////////////////////////////////////////////////////////////
 		// history/////////////////////////////////////////////////////////

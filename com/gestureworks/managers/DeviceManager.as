@@ -79,8 +79,9 @@ package com.gestureworks.managers
 			// TOUCH INIT /////////////////////////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.touch.@active == "true") 
 			{
+				trace("dml activated touch")
 				GestureWorks.activeTouch = true;
-				
+
 				//PQ SERVER/////////////////////////////////////////////////////////////
 				if (DML.Devices.devices.input_globals.touch.pq.@active == "true")
 				{
@@ -125,7 +126,7 @@ package com.gestureworks.managers
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.motion.@active == "true") 
 			{
-				//trace("Motion input devices dml init");
+				trace("Motion input devices dml init");
 				GestureWorks.activeMotion = true;
 				
 				// LEAP MOTION SENSOR INIT //////////////////////////////////
@@ -197,10 +198,10 @@ package com.gestureworks.managers
 					}
 				}
 				// WIIMOTE INIT////////////////////////////
-				if (DML.Devices.devices.input_globals.sensor.wiimote.@active == "true")
+				if (DML.Devices.devices.input_globals.sensor.controller.@active == "true")
 				{
-					SensorManager.wiimoteEnabled = true;
-					trace("Wiimote device dml activated");
+					SensorManager.controllerEnabled = true;
+					trace("Wiimote controller device dml activated");
 				}
 				// ARDUINO INIT///////////////////////////////
 				if (DML.Devices.devices.input_globals.sensor.arduino.@active == "true")
@@ -229,7 +230,7 @@ package com.gestureworks.managers
 			//TOUCH INIT //////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.touch.@active == "true") 
 			{
-				//trace("touch input devices", DML.Devices.devices.input_globals.touch.screen.@active );
+				trace("dml init native touch input devices ()");
 				//GestureWorks.activeTouch = true;
 				
 				if (DML.Devices.devices.input_globals.touch.screen.@active == "true")
@@ -267,7 +268,7 @@ package com.gestureworks.managers
 			// MOTION INIT ////////////////////////////////////
 			if (DML.Devices.devices.input_globals.motion.@active == "true") 
 			{
-				//trace("Motion input devices dml init");
+				trace("dml init native Motion input devices (leap)");
 				
 				// LEAP MOTION SENSOR INIT //////////////////////////////////
 				if (DML.Devices.devices.input_globals.motion.leap.@active == "true")
@@ -289,7 +290,7 @@ package com.gestureworks.managers
 			//SENSORS INIT ///////////////////////////////////////////////////////////////////////////
 			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
 			{
-				trace("Sensor input devices dml init");
+				trace("dml init native Sensor input devices (accelerometer)");
 				GestureWorks.activeSensor = true;
 				
 				// NATIVE ACCELEROMETER	INIT//////////////////

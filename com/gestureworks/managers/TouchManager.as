@@ -36,6 +36,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
+	
 	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
@@ -47,26 +48,20 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.InteractionPointObject;
 	
 	import com.gestureworks.core.TouchSprite; 
-	//import com.gestureworks.core.TouchMovieClip; 	
-	
-	
-	/* 
-	IMPORTANT NOTE TO DEVELOPER ********************************
-	PlEASE DO NOT ERASE OR DEVALUE ANYTHING WHITHIN THIS CLASS
-	IF YOU HAVE ANY QUESTIONS, ANY AT ALL. PLEASE ASK PAUL LACEY
-	DO NOT TAKE CODE OUT UNLESS YOUR CHANGES ARE VERIEFIED, 
-	TESTED AND CONTINUE TO WORK WITH LEGACY BUILDS !
-	************************************************************
-	*/
+	import com.gestureworks.core.CoreSprite; 
+ 	
+
 	
 	public class TouchManager
 	{
-		public static var touchPoints:Dictionary = new Dictionary();
-		public static var touchObjects:Dictionary = new Dictionary();
-		private static var virtualTransformObjects:Dictionary = new Dictionary();
-		
-		private static var gs:TouchSprite;
+		public static var touchPoints:Dictionary;
+		public static var touchObjects:Dictionary;
+		private static var virtualTransformObjects:Dictionary;
+		private static var touchArray:Vector.<TouchPointObject>
+		private static var gs:CoreSprite;
+		private static var touchPointCount:int
 		private static var touch_init:Boolean = false;
+		
 		private static var pointObject:TouchPointObject;		
 		
 		//TODO: UPDATE MOUSE EVENT TOUCH SIMULATOR FOR NEW TOUCHPOINT EVENTLESS
@@ -77,21 +72,19 @@ package com.gestureworks.managers
 		// initializes touchManager
 		gw_public static function initialize():void
 		{	
-			if (!touch_init)
+			if ((!touch_init)&&(GestureWorks.activeTouch))
 			{
 				trace("init touchmanager");
 				//trace("touch frame processing rate:",GestureGlobals.touchFrameInterval);
-				
+				touchPointCount = GestureGlobals.gw_public::touchPointCount
 				touchPoints = GestureGlobals.gw_public::touchPoints;
 				touchObjects = GestureGlobals.gw_public::touchObjects;
+				touchPointCount = GestureGlobals.gw_public::touchPointCount;
 				
-				gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
+				gs = GestureGlobals.gw_public::core;
+				//if (gs)gs.touchEnabled = true;
+				touchArray = GestureGlobals.gw_public::touchArray;
 				
-				if (gs)
-				{
-					gs.touchEnabled = true;
-					gs.tc.touch_core = true;
-				}
 				
 				if (GestureWorks.activeNativeTouch)
 				{			
@@ -155,7 +148,7 @@ package com.gestureworks.managers
 			//onTouchMove(event);
 			
 			var tpO:TouchPointObject  = new TouchPointObject();
-					tpO.id = gs.touchPointCount; 
+					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
 					tpO.position.x = event.stageX;
 					tpO.position.y = event.stageY;
@@ -178,7 +171,7 @@ package com.gestureworks.managers
 			//onTouchDown(event);
 			
 			var tpO:TouchPointObject  = new TouchPointObject();
-					tpO.id = gs.touchPointCount; 
+					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
 					tpO.position.x = event.stageX;
 					tpO.position.y = event.stageY;
@@ -199,7 +192,7 @@ package com.gestureworks.managers
 			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
 			var tpO:TouchPointObject  = new TouchPointObject();
 					
-					tpO.id = gs.touchPointCount; 
+					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
 					tpO.position.x = event.stageX;
 					tpO.position.y = event.stageY;
@@ -209,8 +202,8 @@ package com.gestureworks.managers
 					tpO.pressure = event.pressure;
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
-					gs.cO.touchArray.push(tpO);
-					gs.touchPointCount++;//touchPointCount++;
+					touchArray.push(tpO);
+					touchPointCount++;//touchPointCount++;
 					//trace("push touch point");
 				
 					// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY/////////
@@ -233,7 +226,7 @@ package com.gestureworks.managers
 			// CREATE NEW TOUCHPOINT IN GLOBAL TOUCH OBJECT
 			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
 			
-			if (!gs.cO.touchArray) gs.cO.touchArray = new Vector.<TouchPointObject> 
+			if (!touchArray) touchArray = new Vector.<TouchPointObject> 
 			
 			/*
 			var tpO:TouchPointObject = new TouchPointObject();
@@ -246,8 +239,8 @@ package com.gestureworks.managers
 					//tpO.pressure = pt.pressure;
 					*/
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
-					gs.cO.touchArray.push(pt);//tpO
-					gs.touchPointCount++;//touchPointCount++;
+					touchArray.push(pt);//tpO
+					touchPointCount++;//touchPointCount++;
 					//trace("push touch point");
 				
 					// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY/////////
@@ -275,18 +268,18 @@ package com.gestureworks.managers
 			if (tpO)
 			{
 					// REMOVE POINT FROM LOCAL LIST
-					gs.cO.touchArray.splice(tpO.id, 1);
+					touchArray.splice(tpO.id, 1);
 					
 					//test gs.cO.touchArray.splice(tpO.touchPointID, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
 					
 					// REDUCE LOACAL POINT COUNT
-					gs.touchPointCount--;
+					touchPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < gs.cO.touchArray.length; i++)
+					for (var i:int = 0; i < touchArray.length; i++)
 					{
-						gs.cO.touchArray[i].id = i;
+						touchArray[i].id = i;
 					}
 				
 					// DELETE FROM GLOBAL POINT LIST
@@ -306,15 +299,15 @@ package com.gestureworks.managers
 			if (tpO)
 			{
 					// REMOVE POINT FROM LOCAL LIST
-					gs.cO.touchArray.splice(tpO.id, 1);
+					touchArray.splice(tpO.id, 1);
 					
 					// REDUCE LOACAL POINT COUNT
-					gs.touchPointCount--;
+					touchPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < gs.cO.touchArray.length; i++)
+					for (var i:int = 0; i < touchArray.length; i++)
 					{
-						gs.cO.touchArray[i].id = i;
+						touchArray[i].id = i;
 					}
 					// DELETE FROM GLOBAL POINT LIST
 					delete touchPoints[touchPointID];

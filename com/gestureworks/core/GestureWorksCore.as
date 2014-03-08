@@ -316,7 +316,6 @@ package com.gestureworks.core
 			GestureWorks.activeTouch = _touch;
 			if (_touch) {
 				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;	
-						//InteractionManager.gw_public::initialize();
 				TouchManager.gw_public::initialize();
 				trace("touch active")
 			}
@@ -337,7 +336,6 @@ package com.gestureworks.core
 			
 			GestureWorks.activeMotion = _motion;
 			if (_motion) {
-					//InteractionManager.gw_public::initialize(); // NEED NOW FOR 
 				MotionManager.leapEnabled = true;
 				MotionManager.gw_public::initialize();
 				trace("motion active")
@@ -359,7 +357,7 @@ package com.gestureworks.core
 			
 			GestureWorks.activeSensor = _sensor;
 			if (_sensor) {
-						//InteractionManager.gw_public::initialize();
+						
 				SensorManager.gw_public::initialize();
 				trace("sensor active");
 			}
@@ -368,20 +366,20 @@ package com.gestureworks.core
 		}
 		
 		
-		private var _wiimote:Boolean = false;
+		private var _controller:Boolean = false;
 		/**
-		 * Turns wiimote sensor input on.
+		 * Turns controller sensor input on.
 		 * @default false
 		 */
-		public function get wiimote():Boolean{return _wiimote;}
-		public function set wiimote(value:Boolean):void
+		public function get controller():Boolean{return _controller;}
+		public function set controller(value:Boolean):void
 		{
-			if (wiimote == value) return;
-			_wiimote = value;
+			if (controller == value) return;
+			_controller = value;
 			
-			GestureWorks.activeSensor = _wiimote;
-			if (_wiimote){
-				SensorManager.wiimoteEnabled = true;
+			GestureWorks.activeSensor = _controller;
+			if (_controller){
+				SensorManager.controllerEnabled = true;
 				sensor = true;
 			}
 			else
@@ -419,7 +417,7 @@ package com.gestureworks.core
 			_arduino = value;
 			
 			GestureWorks.activeSensor = _arduino;
-			if (_wiimote){
+			if (_arduino){
 				SensorManager.arduinoEnabled = true;
 				sensor = true;
 			}

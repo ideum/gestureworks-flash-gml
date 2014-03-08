@@ -515,8 +515,12 @@ package com.gestureworks.visualizer
 	private function drawSubClusterDims():void
 	{	
 		//FIND NUMBER OF SUBCLUSTERS
-		var mscn:uint = cO.mSubClusterArray.length;
-		var tscn:uint = cO.tSubClusterArray.length;
+		var mscn:uint
+		if (cO.mSubClusterArray) mscn = cO.mSubClusterArray.length;
+		else mscn = 0;
+		var tscn:uint
+		if (cO.tSubClusterArray) tscn = cO.tSubClusterArray.length;
+		else tscn = 0;
 		
 		//trace("draw",ipn,scn)
 		

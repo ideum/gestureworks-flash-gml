@@ -35,7 +35,7 @@ package com.gestureworks.analysis
 	
 	//import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
-	
+	import com.gestureworks.core.CoreSprite; 
 	import com.gestureworks.core.TouchSprite; 
 	import com.gestureworks.core.TouchMovieClip; 
 	
@@ -102,7 +102,7 @@ package com.gestureworks.analysis
 		
 		private var mHoldID:uint = 0;
 		
-		private var gs:TouchSprite;
+		private var gs:CoreSprite;
 		
 		private var sw:int
 		private var sh:int
@@ -133,17 +133,9 @@ package com.gestureworks.analysis
 		public function init():void
 		{
 			//trace("KineMetric::init");
-			gs = GestureGlobals.gw_public::touchObjects[GestureGlobals.globalSpriteID];
+			gs = GestureGlobals.gw_public::core;
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID]; // need to find center of object for orientation and pivot
-			
-			if (ts.reftest == 0) cO = GestureGlobals.gw_public::clusters[touchObjectID];//s.cO; // super cluster
-			else cO = ts.cO;
-			
-			//if (ts.touchEnabled)tcO = cO.tcO; //parent touch cluster
-			//if (ts.motionEnabled)mcO = cO.mcO; // parent motion cluster
-			//if (ts.sensorEnabled)scO = cO.scO; // parent sensor cluster
-			
-			
+			cO = GestureGlobals.gw_public::clusters[touchObjectID];
 			
 			
 			sw = GestureWorks.application.stageWidth
@@ -305,6 +297,10 @@ package com.gestureworks.analysis
 			cO.sSubClusterArray[1] = new ipClusterObject();
 			cO.sSubClusterArray[1].active = true;
 			cO.sSubClusterArray[1].type = "native_accelerometer";
+			
+			cO.sSubClusterArray[2] = new ipClusterObject();
+			cO.sSubClusterArray[2].active = true;
+			cO.sSubClusterArray[2].type = "remote_accelerometer";
 			
 			// accelerometer
 			// myo
@@ -607,7 +603,7 @@ package com.gestureworks.analysis
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
-		
+		/*
 		public function findTouchClusterConstants():void
 		{
 			//trace("KineMetric::findTouchClusterConstants");
@@ -639,7 +635,7 @@ package com.gestureworks.analysis
 				}
 				if (tpn == 0) tpnk1 = 0;
 		}
-		
+		*/
 		
 		
 		public function resetTouchClusterValues():void 
@@ -1844,7 +1840,7 @@ package com.gestureworks.analysis
 		// sensor IP analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		
+		/*
 		public function findSensorClusterConstants():void
 		{
 				if (ts.cO.sensorArray) spn = ts.cO.sensorArray.length;
@@ -1854,7 +1850,7 @@ package com.gestureworks.analysis
 				ts.cO.spn = spn;
 				//ts.cO.scO.spn = spn;
 		}
-		
+		*/
 		
 		public function resetSensorCluster():void { }
 		public function resetSensorClusterConsts():void{}
@@ -2103,6 +2099,7 @@ package com.gestureworks.analysis
 										
 										
 									cO.iPointArray2D.push(ipt2d);
+									//cO.iPointArray2D.push(ipt);
 									}
 								}
 								//TOUCH
@@ -2147,7 +2144,7 @@ package com.gestureworks.analysis
 				if(ts.sensorEnabled){
 				for (j = 0; j < cO.sSubClusterArray.length; j++) 
 				{
-					if(cO.sSubClusterArray[j].iPointArray) cO.sSubClusterArray[j].iPointArray.length=0;
+					if(cO.sSubClusterArray[j].iPointArray) cO.sSubClusterArray[j].iPointArray.length = 0;
 				}
 				}
 			
@@ -2186,7 +2183,7 @@ package com.gestureworks.analysis
 					for (j = 0; j < cO.sSubClusterArray.length; j++) 
 					{
 						if (!cO.sSubClusterArray[j].iPointArray) cO.sSubClusterArray[j].iPointArray = new Vector.<InteractionPointObject>()
-						//trace("creating sensor subclusters",ipt.type,cO.sSubClusterArray[j].type );
+						//trace("creating sensor subclusters",ipt.type,cO.sSubClusterArray[j].type);
 						if (ipt.type==cO.sSubClusterArray[j].type) cO.sSubClusterArray[j].iPointArray.push(ipt);
 					}
 					}

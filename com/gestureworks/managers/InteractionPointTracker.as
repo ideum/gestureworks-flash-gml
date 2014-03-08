@@ -114,6 +114,10 @@ package com.gestureworks.managers
 									ap.direction = fp.direction;
 									ap.normal = fp.normal;
 									
+									ap.screen_position = fp.screen_position;
+									ap.screen_direction = fp.screen_direction;
+									ap.screen_normal = fp.screen_normal;
+									
 									// advanced ip features
 									ap.fist = fp.fist;
 									ap.splay = fp.splay;
@@ -124,7 +128,7 @@ package com.gestureworks.managers
 									
 									//sensors
 									ap.acceleration = fp.acceleration;
-									
+									ap.buttons = fp.buttons;
 									
 									ap.handID = fp.handID;
 									ap.type = fp.type;

@@ -88,7 +88,7 @@ package com.gestureworks.core
 		/**
 		 * Returns whether the motion framework is activated
 		 */
-		public static var activeMotion:Boolean;		
+		public static var activeMotion:Boolean = false;		
 		
 		/**
 		 * Returns whether the motion framework is activated
@@ -97,7 +97,7 @@ package com.gestureworks.core
 		/**
 		 * Returns whether the sensor framework is activated
 		 */
-		public static var activeSensor:Boolean;		
+		public static var activeSensor:Boolean = false;		
 		/**
 		 * Returns whether native touch is activated
 		 */
