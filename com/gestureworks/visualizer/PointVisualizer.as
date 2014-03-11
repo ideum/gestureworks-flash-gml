@@ -50,12 +50,6 @@ package com.gestureworks.visualizer
 		private static var cml:XMLList;
 		public var style:Object; // public allows override of cml values
 		private var id:Number = 0;
-		
-		private var cO:ClusterObject;
-		private var touchArray;
-		private var motionArray;
-		private var motionArray2D;
-		private var sensorArray;
 		private var iPointArray;
 		
 		
@@ -88,14 +82,7 @@ package com.gestureworks.visualizer
 			//trace("points visualizer");	
 			id = ID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			cO = GestureGlobals.gw_public::clusters[id];
-			
-			touchArray = GestureGlobals.gw_public::touchArray;
-			motionArray = GestureGlobals.gw_public::motionArray;
-			//motionArray2D = GestureGlobals.gw_public::motionArray2d;
-			sensorArray = GestureGlobals.gw_public::sensorArray;
 			iPointArray = GestureGlobals.gw_public::iPointArray;
-			
 			
 			
 			hist = 8;
@@ -161,7 +148,7 @@ package com.gestureworks.visualizer
 					trails[i].push(s);					
 				}
 			}
-			GestureWorks.application.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			//GestureWorks.application.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		private function toBitmap(obj:DisplayObject, smoothing:Boolean=true):Bitmap 
@@ -179,510 +166,83 @@ package com.gestureworks.visualizer
 		
 		public function draw():void
 		{
-			// update data
-			//N = cO.pointArray.length;
-			
-			if (touchArray) tpn = touchArray.length//cO.tpn;
-			else tpn = 0;
-			
-			if (motionArray2D) mpn = motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
-			else mpn = 0;
-			
-			if (sensorArray) spn = sensorArray.length;
-			else spn = 0;
-			
 			if (iPointArray) ipn =  iPointArray.length;
 			else ipn = 0;
 			
 			// clear graphics
 			graphics.clear();
-			
-			//DRAW
-			if (ts.tc.core)
-			{
-				//if (ts.touchEnabled)	
-				draw_touchPoints();
-				//if (ts.motionEnabled)	
-				draw_motionPoints();
-				//if (ts.sensorEnabled)	
-				draw_sensorPoints();
-			}
-			else draw_interactionPoints();
+			if(ipn) draw_interactionPoints();
 		}
 		
 		
-		////////////////////////////////////////////////////////////
-		// touch points
-		////////////////////////////////////////////////////////////
-		public function draw_touchPoints():void
-		{
-			// clear text
-			for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
-			
-				var n:int = (tpn <= maxPoints) ? tpn : maxPoints;
-			
-				for (i = 0; i < n; i++) 
-				{
-					var pt:TouchPointObject = touchArray[i]
-					///////////////////////////////////////////////////////////////////
-					// Point positons and shapes
-					///////////////////////////////////////////////////////////////////
-					
-					var x:Number = pt.position.x;
-					var y:Number = pt.position.y;
-					
-					
-					if (_drawText)
-					{
-						///////////////////////////////////////////////////////////////////
-						//
-						///////////////////////////////////////////////////////////////////
-						
-						tptext_array[i].textCont = "TP ID: " + String(pt.id); //+ "    id" + String(pt.touchPointID);
-						tptext_array[i].x = x - tptext_array[i].width / 2;
-						tptext_array[i].y = y- 70;
-						tptext_array[i].visible = true;
-						tptext_array[i].textColor = style.touch_text_color;
-					}
-					
-					if (_drawShape)
-					{
-						//////////////////////////////////////////////////////////////////////
-						// shape outlines
-						//////////////////////////////////////////////////////////////////////
-						
-						if (style.shape == "square") {
-							//trace("square");
-								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-								graphics.drawRect(x-style.width,y-style.width,2*style.width, 2*style.width);
-						}
-						else if (style.shape == "ring") {
-							//trace("ring");
-								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-								graphics.drawCircle(x, y, style.radius);
-						}
-						else if (style.shape == "cross") {
-							//trace("cross");
-								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-								graphics.moveTo (x - style.radius, y);
-								graphics.lineTo (x + style.radius , y);
-								graphics.moveTo (x, y - style.radius);
-								graphics.lineTo (x, y + style.radius);
-						}
-						else if (style.shape == "triangle") {
-							//trace("triangle");
-								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);
-								graphics.moveTo (x - style.radius, y -style.radius);
-								graphics.lineTo (x, style.pointList[i].y + style.radius);
-								graphics.lineTo (x + style.radius, y - style.radius);
-								graphics.lineTo (x - style.radius, y -style.radius);
-							
-						}
-						//////////////////////////////////////////////////////////////////
-						// filled shapes
-						//////////////////////////////////////////////////////////////////
-						
-						else if (style.shape == "circle-fill") {
-							//trace("circle draw");
-								graphics.lineStyle(style.stroke_thickness, style.stroke_color, style.stroke_alpha);							
-								graphics.beginFill(style.fill_color, style.fill_alpha);
-								graphics.drawCircle(x, y, style.radius);
-								graphics.endFill();
-						}
-						else if (style.shape == "triangle-fill") {
-							//trace("triangle fill");
-								graphics.beginFill(style.fill_color, style.fill_alpha);
-								graphics.moveTo (x - style.width, y -style.width);
-								graphics.lineTo (x, y + style.width);
-								graphics.lineTo (x + style.width, y - style.width);
-								graphics.lineTo (x - style.width, y -style.width);
-								graphics.endFill();
-						
-						}
-						else if (style.shape == "square-fill") {
-							//trace("square");
-								graphics.beginFill(style.color, style.fill_alpha);
-								graphics.drawRect(x - style.width, y - style.width, 2 * style.width, 2 * style.width);
-								graphics.endFill();
-						}
-					
-					}
-					/////////////////////////////////////////////////////////////////
-					// point vectors
-					/////////////////////////////////////////////////////////////////
-					
-					if (_drawVector)
-					{
-						//define vector point style
-						//graphics.lineStyle(style.v_stroke,style.color,style.alpha);
-						hist  = pt.history.length - 1;
-						if (hist < 0) hist = 0;
-						var alpha:Number = 0;
-						var k:int = 0;
-						
-							if (style.trail_shape == "line") {
-								
-										alpha = 0.08*(hist-j)
-										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-										graphics.moveTo(pt.history[0].position.x, pt.history[0].position.y);
-										graphics.lineTo(pt.history[hist].position.x,pt.history[hist].position.y);
-									
-							}
-							else if (style.trail_shape == "curve") {
-								
-								for (var j:int = 0; j < hist; j++) 
-								{
-									if (j + 1 <= hist) {
-										alpha = 0.08 * (hist - j)
-										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-										graphics.moveTo(pt.history[j].position.x, pt.history[j].position.y);
-										graphics.lineTo(pt.history[j + 1].position.x, pt.history[j + 1].position.y);
-									}
-								}
-							}
-							else if (style.trail_shape == "ring") {
-									
-								for (k=0; k < hist; k++) 
-								{
-									alpha = 0.08 * (hist - j)
-									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-									graphics.drawCircle(pt.history[j].position.x, pt.history[j].position.y, style.radius);									
-								}
-							}
-							else if (style.trail_shape == "curve") {
-									
-								for (k=0; k < hist; k++) 
-								{
-									alpha = 0.08 * (hist - j)
-									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-									graphics.drawCircle(pt.history[j].position.x, pt.history[j].position.y, style.radius);									
-								}
-							}	
-							else if (style.trail_shape == "circle-fill") {
-									
-								var num:int = (hist <= maxTrails) ? hist : maxTrails;
-								
-								for (k=0; k < num; k++) 
-								{										
-									trails[i][k].x = pt.history[k].position.x - style.radius+3; 
-									trails[i][k].y = pt.history[k].position.y - style.radius+3;
-									trails[i][k].alpha = 1;
-									if (parent) {
-										parent.addChild(trails[i][k]);	
-										parent.addChildAt(this, parent.numChildren - 1);		
-									}
-								}
-							}								
-						}
-						///////////////////////////////////////////////////////////////////////
-						
-					}
-		}		
-			
-		private function onEnterFrame(e:Event):void
-		{
-			for (var i:int = 0; i < trails.length; i++) {
-				for (var j:int = 0; j < trails[i].length; j++) {
-					trails[i][j].alpha -=  0.8;
-
-					if (trails[i][j].alpha <= 0) {
-						if (trails[i][j].parent)
-							trails[i][j].parent.removeChild(trails[i][j]);
-					}
-				}	
-			}
-		}
-				
-		
-		
-		/////////////////////////////////////////////////////////////////////
-		// motion points
-		///////////////////////////////////////////////////////////////////
-		
-		private function draw_motionPoints():void
-		{
-					// clear text
-					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
-				
-					//trace("visualixer mpn",mpn,_drawText,cO.motionArray2D.length,cO.motionArray.length)
-						
-					// Calculate the hand's average finger tip position
-					for (i = 0; i < mpn; i++) 
-								{
-								var mp:MotionPointObject = cO.motionArray2D[i];
-								
-								
-									if (_drawText)
-									{
-										//NOTE NEED MORE TEXT FIELDS
-										if((mp)&&(tptext_array[i])){
-										tptext_array[i].textCont = "MP ID: " + String(mp.motionPointID); //+ "    id" + String(pt.touchPointID);
-										tptext_array[i].x = mp.position.x - tptext_array[i].width / 2;
-										tptext_array[i].y = mp.position.y - 40;
-										tptext_array[i].visible = true;
-										tptext_array[i].textColor = style.touch_text_color;
-									}
-									}
-								
-									if (mp.type == "finger")
-									{
-										var zm:Number = mp.position.z * 0.2;
-										var wm:Number = (mp.width) *10;
-										//trace("length", finger.length);
-										//trace("width", finger.width);
-											
-											if (_drawShape)
-											{
-												if (mp.fingertype == "thumb") 
-												{
-													//  draw finger point 
-													graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
-													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
-													
-													graphics.beginFill(0xFF0000, style.fill_alpha);
-													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-													graphics.endFill();
-												}
-												
-												else
-												{
-													//  draw finger point 
-													graphics.lineStyle(4, 0x6AE370, style.stroke_alpha);
-													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
-													graphics.beginFill(0x6AE370, style.fill_alpha);
-													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-													graphics.endFill();
-												}
-											}
-											
-											/*
-											if (_drawText)
-											{
-												//drawPoints ID of point
-												mptext_array[i].x = mp.position.x + 50;
-												mptext_array[i].y = mp.position.y - 50;
-												mptext_array[i].visible = true;
-												mptext_array[i].textCont = String(mp.fingertype) + ": ID:" + String(mp.motionPointID) + "\n"
-																		+ "Thumb prob: " + (Math.round(1 * mp.thumb_prob)) +  "\n" 
-																		+ "N length: " + (Math.round(100 * mp.normalized_length)) * 0.01 + " length: " + (Math.round(mp.length)) + "\n"
-																		+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01 +"\n"
-																		+ "max_length: " + Math.round(mp.max_length) + " min_length: "+ Math.round(mp.min_length) + " length: "+ Math.round(mp.length) + " Extension: " + mp.extension + "%"; 
-																		//" width: "+ Math.round(100*mp.width)*0.01 +
-											}	*/
-									}
-									
-									
-									if (mp.type == "palm")
-									{
-										////////////////////////////////////////////////////
-										//// draw hand data
-										////////////////////////////////////////////////////
-										if (_drawShape)
-											{
-												// palm center
-												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius+10+ mp.position.z * 0.2);
-												graphics.beginFill(0xFFFFFF, style.fill_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius-10);
-												graphics.endFill();
-												
-												//normal
-												graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
-												graphics.moveTo(mp.position.x,mp.position.y);
-												graphics.lineTo(mp.position.x + 50 * mp.normal.x, mp.position.y + 50 * mp.normal.y);
-												
-												//trace(mp.normal.x,mp.position.x,mp.direction.x)
-											}
-											
-											/*
-											if (_drawText)
-											{
-												//drawPoints ID of point
-												mptext_array[i].textCont = "Palm: " + "ID" + String(mp.motionPointID) + "    id" + String(mp.id);
-												mptext_array[i].x = mp.position.x;
-												mptext_array[i].y = mp.position.y - 50;
-												mptext_array[i].visible = true;
-											}*/
-									}
-									
-									
-									
-									if (mp.type == "eye")
-									{
-										if (_drawShape)
-										{
-											//trace("DRAWING EYE",mp.position);
-											//draw finger point 
-											graphics.lineStyle(4, 0x0000FF, style.stroke_alpha);
-											graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20);	
-											
-											
-											graphics.lineStyle(4, 0x000000, style.stroke_alpha);
-											graphics.beginFill(0x000000, style.fill_alpha);
-											graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-											graphics.endFill();
-										}
-									}
-									if (mp.type == "gaze")
-									{
-										if (_drawShape)
-										{
-											//trace("DRAWING GAZE",mp.position);
-											//draw finger point 
-											graphics.lineStyle(4, 0xFFFFFF, style.stroke_alpha);
-											graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20);	
-											
-											graphics.beginFill(0x000000, style.fill_alpha);
-											graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-											graphics.endFill();
-										}
-									}		
-									
-									
-									
-									
-									
-								}
-					
-		}
-
-		
-		
-		////////////////////////////////////////////////////////////////
-		// sensor points // eye tracking / accelerometer / myo
-		////////////////////////////////////////////////////////////////
-		private function draw_sensorPoints():void
-			{
-			//trace("drawing sensor points", spn);
-				
-			for (i = 0; i < spn; i++) 
-					{
-					var sp:SensorPointObject = cO.sensorArray[i];
-
-					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
-					
-					///////////////////////////////////////////
-					// DRAW WII CONTROLLER POINT
-					if (sp.type == "wiimote")
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
-								graphics.beginFill(0xFFFFFF, style.fill_alpha);
-								graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
-								graphics.endFill();
-							}
-						}
-					
-					//////////////////////////////////////////
-					// DRAW NATIVE ACCELEROMETER
-					if (sp.type == "nativeAccel")
-					{	
-						// draw virtual accelerometer point
-						if (_drawShape)
-						{
-							// sensor center
-							graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-							graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
-							graphics.beginFill(0xFFFF00, style.fill_alpha);
-							graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
-							graphics.endFill();
-						}
-					}
-						
-					///////////////////////////////////////////
-					// DRAW MYO CONTROLLER POINT
-					if (sp.type == "myo")
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10+ sp.position.z * 0.2);
-								graphics.beginFill(0x00FFFF, style.fill_alpha);
-								graphics.drawRect(sp.position.x-style.radius+4,sp.position.y-style.radius+4,2*style.radius-8, 2*style.radius-8);
-								graphics.endFill();
-							}
-						}
-						
-					}
-			}
-			
 		private function draw_interactionPoints():void
 			{
 			//trace("drawing interaction points",ts.touchObjectID, ipn);
-				//ipn
-			for (i = 0; i < cO.iPointArray.length; i++) 
+			for (i = 0; i < iPointArray.length; i++) 
 					{
-					var sp:InteractionPointObject = cO.iPointArray[i];
-
+					var sp:InteractionPointObject = iPointArray[i];
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
-					var ipid:String
-					if (sp) ipid = String(sp.interactionPointID);
-					
-					if (sp){
-					//////////////////////////////////////////////////////////////////////////////
-					// for all interaction points
-					if (tptext_array[i])
+					if (sp)
 					{
-						tptext_array[i].textCont = "IP ID: " + ipid //+ "    id" + String(pt.touchPointID);
-						tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
-						tptext_array[i].y = sp.position.y - 55;
-						tptext_array[i].visible = true;
-						tptext_array[i].textColor = style.touch_text_color;
-					}
-					
-					///////////////////////////////////////////
-					// DRAW WII CONTROLLER POINT
-					
-					trace ("ip type",sp.type);
-					
-					if (sp.type == "finger_dynamic")//finger
-						{
-							if (_drawShape)
+							//////////////////////////////////////////////////////////////////////////////
+							// for all interaction points
+							if (tptext_array[i])
 							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0xFF0000, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
-								graphics.endFill();
+								tptext_array[i].textCont = "IP ID: " + sp.interactionPointID //+ "    id" + String(pt.touchPointID);
+								tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
+								tptext_array[i].y = sp.position.y - 55;
+								tptext_array[i].visible = true;
+								tptext_array[i].textColor = style.touch_text_color;
 							}
-						}
-						else if (sp.type == "pen_dynamic")
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0x00FFFF, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius-10);
-								graphics.endFill();
-							}
-						}
-						
-						else if (sp.type == "tag_dynamic")
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0xFF0000, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10);
-								graphics.endFill();
-							}
-						}
+							
+							///////////////////////////////////////////
+							// DRAW WII CONTROLLER POINT
+							trace ("ip type",sp.type);
+							
+								if (sp.type == "finger_dynamic")//finger
+								{
+									if (_drawShape)
+									{
+										// sensor center
+										graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+										graphics.beginFill(0xFF0000, style.fill_alpha);
+										graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
+										graphics.endFill();
+									}
+								}
+								else if (sp.type == "pen_dynamic")
+								{
+									if (_drawShape)
+									{
+										// sensor center
+										graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+										graphics.beginFill(0x00FFFF, style.fill_alpha);
+										graphics.drawCircle(sp.position.x, sp.position.y, style.radius-10);
+										graphics.endFill();
+									}
+								}
+								
+								else if (sp.type == "tag_dynamic")
+								{
+									if (_drawShape)
+									{
+										// sensor center
+										graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+										graphics.beginFill(0xFF0000, style.fill_alpha);
+										graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10);
+										graphics.endFill();
+									}
+								}
 						
 					}
 						
-					}
-			}
+				}
+	}
 
 	
-		public function clear():void
-		{
+	public function clear():void
+	{
 			//trace("trying to clear");
 			graphics.clear();
 		
@@ -693,26 +253,7 @@ package com.gestureworks.visualizer
 			for (i = 0; i < mptext_array.length; i++){
 				mptext_array[i].visible = false;
 			}			
-		}
-	
-	
-		public static function map(num:Number, min1:Number, max1:Number, min2:Number, max2:Number, round:Boolean = false, constrainMin:Boolean = true, constrainMax:Boolean = true):Number
-		{
-			if (constrainMin && num < min1) return min2;
-			if (constrainMax && num > max1) return max2;
-		 
-			var num1:Number = (num - min1) / (max1 - min1);
-			var num2:Number = (num1 * (max2 - min2)) + min2;
-			if (round) return Math.round(num2);
-			return num2;
-		}	
-		
-		private function normalize(value : Number, minimum : Number, maximum : Number) : Number 
-		{
-            return (value - minimum) / (maximum - minimum);
-        }
-		
-	
+	}
 
 	private var _drawShape:Boolean = true;
 	/**

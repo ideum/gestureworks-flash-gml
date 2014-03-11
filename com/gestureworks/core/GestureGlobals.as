@@ -72,6 +72,10 @@ package com.gestureworks.core
 		 */
 		gw_public static var clusters:Dictionary = new Dictionary();
 		/**
+		 * Contains a dictionary of all interaction point clusters present to the framework.
+		 */
+		gw_public static var iPointClusterLists:Dictionary = new Dictionary();
+		/**
 		 * Contains a dictionary of all gestures present to the framework.
 		 */
 		gw_public static var gestures:Dictionary = new Dictionary();
@@ -91,6 +95,8 @@ package com.gestureworks.core
 		gw_public static var motionPointCount:int;
 		gw_public static var interactionPointCount:int;
 		
+		
+		gw_public static var iPointClusterListCount:int;
 		
 		/**
 		 * min leap x value

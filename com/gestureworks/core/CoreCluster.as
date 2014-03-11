@@ -67,8 +67,9 @@ package com.gestureworks.core
 		private var gs:CoreSprite;
 		private var touchArray:Vector.<TouchPointObject>
 		private var motionArray:Vector.<MotionPointObject>
-		private var motionArray2D:Vector.<MotionPointObject>
+		//private var motionArray2D:Vector.<MotionPointObject>
 		private var sensorArray:Vector.<SensorPointObject>
+		private var iPointClusterLists:Object;
 		
 		public var core_init:Boolean= false;
 		
@@ -101,10 +102,11 @@ package com.gestureworks.core
 		{
 			gs = GestureGlobals.gw_public::core;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
+			iPointClusterLists = GestureGlobals.gw_public::iPointClusterLists;
+			
 			
 			touchArray = GestureGlobals.gw_public::touchArray;
 			motionArray = GestureGlobals.gw_public::motionArray;
-			//motionArray2D = GestureGlobals.gw_public::motionArray2d;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
 			
 			initCoreGeoMetric();
@@ -256,12 +258,13 @@ package com.gestureworks.core
 						{
 							if ((g.cluster_type == "finger") || (g.cluster_type == "all")) 
 							{
-								fingerTouchPoints = true; 
+								fingerTouchPoints = true;
+								//tO.tc.fingerTouchPoints = true;
 							}
 							if ((g.cluster_type == "tag") || (g.cluster_type == "all")) 
 							{			
 								tagTouchPoints = true; 
-							
+								//tO.tc.tagTouchPoints = true; 
 								/*
 									// creat five point tag
 									cO.objectArray[0] = new Array()

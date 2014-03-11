@@ -24,6 +24,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
+	import flash.utils.Dictionary;
 	
 	public class ClusterHistories 
 	{
@@ -55,7 +56,8 @@ package com.gestureworks.managers
 				object.fn = clusterObject.fn;//- total motion finger number
 				object.ipn = clusterObject.ipn;
 				
-				if(object.position){
+				if (object.position)
+				{
 				object.position.x = clusterObject.position.x;
 				object.position.y = clusterObject.position.y;
 				object.position.z = clusterObject.position.z; //-
@@ -127,7 +129,7 @@ package com.gestureworks.managers
 				
 				//interaction DATA///////////////////////////////////////////
 				object.iPointArray = clusterObject.iPointArray;
-				object.iPointArray2D = clusterObject.iPointArray2D;
+				//object.iPointArray2D = clusterObject.iPointArray2D;
 				
 				// aggregate values
 				//objec.velocity = clusterObject.velocity;
@@ -137,203 +139,70 @@ package com.gestureworks.managers
 				object.handList = clusterObject.handList;
 				
 				
+				//object.iPointClusterList = new Dictionary ();//clusterObject.iPointClusterList
+				clusterObject.iPointClusterList = GestureGlobals.gw_public::iPointClusterLists[clusterObject.id]
 				
-				///////////////////////////////////////////////////////////////
-				//MOTION SUBCLUSTERS
-				/////////////////////////////////////////////////////////////////
-				var sipn:int 
-				
-				if (clusterObject.mSubClusterArray) sipn = clusterObject.mSubClusterArray.length;
-				else sipn = 0;
-				
-				//	trace("hist motion subclusters", sipn);
-				if (sipn) object.mSubClusterArray = new Vector.<ipClusterObject>
+				//trace("calling hist",clusterObject.iPointClusterList,clusterObject.iPointClusterList["pinch"] );
 
-				for (var i:uint = 0; i < sipn; i++) 
-						{
-					if (clusterObject.mSubClusterArray[i].active)	
-						{
-						object.mSubClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
+				for each (var iPointCluster in clusterObject.iPointClusterList) 
+				{
 					
-						object.mSubClusterArray[i].ipn = clusterObject.mSubClusterArray[i].ipn;
-						object.mSubClusterArray[i].ipnk = clusterObject.mSubClusterArray[i].ipnk;
-						object.mSubClusterArray[i].ipnk0 = clusterObject.mSubClusterArray[i].ipnk0;
-						object.mSubClusterArray[i].dipn = clusterObject.mSubClusterArray[i].dipn;
-						
-						object.mSubClusterArray[i].position.x = clusterObject.mSubClusterArray[i].position.x;
-						object.mSubClusterArray[i].position.y = clusterObject.mSubClusterArray[i].position.y;
-						object.mSubClusterArray[i].position.z = clusterObject.mSubClusterArray[i].position.z;
-						
-						object.mSubClusterArray[i].radius = clusterObject.mSubClusterArray[i].radius;
-						object.mSubClusterArray[i].width = clusterObject.mSubClusterArray[i].width;
-						object.mSubClusterArray[i].height = clusterObject.mSubClusterArray[i].height;
-						object.mSubClusterArray[i].length = clusterObject.mSubClusterArray[i].length;
-						
-						object.mSubClusterArray[i].rotation = clusterObject.mSubClusterArray[i].rotation;
-						object.mSubClusterArray[i].rotationX = clusterObject.mSubClusterArray[i].rotationX;
-						object.mSubClusterArray[i].rotationY = clusterObject.mSubClusterArray[i].rotationY;
-						object.mSubClusterArray[i].rotationZ = clusterObject.mSubClusterArray[i].rotationZ;
-						
-						object.mSubClusterArray[i].separation = clusterObject.mSubClusterArray[i].separation;
-						object.mSubClusterArray[i].separationX = clusterObject.mSubClusterArray[i].separationX;
-						object.mSubClusterArray[i].separationY = clusterObject.mSubClusterArray[i].separationY;
-						object.mSubClusterArray[i].separationZ = clusterObject.mSubClusterArray[i].separationZ;
-						
-						
-						object.mSubClusterArray[i].dx = clusterObject.mSubClusterArray[i].dx;
-						object.mSubClusterArray[i].dy = clusterObject.mSubClusterArray[i].dy;
-						object.mSubClusterArray[i].dz = clusterObject.mSubClusterArray[i].dz;
-						
-						object.mSubClusterArray[i].ds = clusterObject.mSubClusterArray[i].ds;
-						object.mSubClusterArray[i].dsx = clusterObject.mSubClusterArray[i].dsx;
-						object.mSubClusterArray[i].dsy = clusterObject.mSubClusterArray[i].dsy;
-						object.mSubClusterArray[i].dsz = clusterObject.mSubClusterArray[i].dsz;
-						
-						object.mSubClusterArray[i].dtheta = clusterObject.mSubClusterArray[i].dtheta;
-						object.mSubClusterArray[i].dthetaX = clusterObject.mSubClusterArray[i].dthetaX;
-						object.mSubClusterArray[i].dthetaY = clusterObject.mSubClusterArray[i].dthetaY;
-						object.mSubClusterArray[i].dthetaZ = clusterObject.mSubClusterArray[i].dthetaZ;
-						
-						// aggregate values
-						object.mSubClusterArray[i].velocity = clusterObject.mSubClusterArray[i].velocity;
-						object.mSubClusterArray[i].acceleration = clusterObject.mSubClusterArray[i].acceleration;
-						object.mSubClusterArray[i].jolt = clusterObject.mSubClusterArray[i].jolt;
-						
-						object.mSubClusterArray[i].rotationList = clusterObject.mSubClusterArray[i].rotationList;
-						}
-				}
-				
-				///////////////////////////////////////////////////////////////
-				//TOUCH SUBCLUSTERS
-				/////////////////////////////////////////////////////////////////
-				var tipn:int
-				
-				if (clusterObject.tSubClusterArray) tipn = clusterObject.tSubClusterArray.length;
-				else tipn = 0;
-				//trace("hist touch subclusters", tipn);
-				
-				if (tipn) object.tSubClusterArray = new Vector.<ipClusterObject>
-				
-				for (var i:uint = 0; i < tipn; i++) 
-						{
-					//trace("touch history active",clusterObject.tSubClusterArray[i].active);
-					if (clusterObject.tSubClusterArray[i].active)	
-						{	
-						object.tSubClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
-						
-						object.tSubClusterArray[i].ipn = clusterObject.tSubClusterArray[i].ipn;
-						object.tSubClusterArray[i].ipnk = clusterObject.tSubClusterArray[i].ipnk;
-						object.tSubClusterArray[i].ipnk0 = clusterObject.tSubClusterArray[i].ipnk0;
-						object.tSubClusterArray[i].dipn = clusterObject.tSubClusterArray[i].dipn;
-						
-						object.tSubClusterArray[i].position.x = clusterObject.tSubClusterArray[i].position.x;
-						object.tSubClusterArray[i].position.y = clusterObject.tSubClusterArray[i].position.y;
-						object.tSubClusterArray[i].position.z = clusterObject.tSubClusterArray[i].position.z;
-						
-						object.tSubClusterArray[i].radius = clusterObject.tSubClusterArray[i].radius;
-						object.tSubClusterArray[i].width = clusterObject.tSubClusterArray[i].width;
-						object.tSubClusterArray[i].height = clusterObject.tSubClusterArray[i].height;
-						object.tSubClusterArray[i].length = clusterObject.tSubClusterArray[i].length;
-						
-						object.tSubClusterArray[i].rotation = clusterObject.tSubClusterArray[i].rotation;
-						object.tSubClusterArray[i].rotationX = clusterObject.tSubClusterArray[i].rotationX;
-						object.tSubClusterArray[i].rotationY = clusterObject.tSubClusterArray[i].rotationY;
-						object.tSubClusterArray[i].rotationZ = clusterObject.tSubClusterArray[i].rotationZ;
-						
-						object.tSubClusterArray[i].separation = clusterObject.tSubClusterArray[i].separation;
-						object.tSubClusterArray[i].separationX = clusterObject.tSubClusterArray[i].separationX;
-						object.tSubClusterArray[i].separationY = clusterObject.tSubClusterArray[i].separationY;
-						object.tSubClusterArray[i].separationZ = clusterObject.tSubClusterArray[i].separationZ;
-						
-						
-						object.tSubClusterArray[i].dx = clusterObject.tSubClusterArray[i].dx;
-						object.tSubClusterArray[i].dy = clusterObject.tSubClusterArray[i].dy;
-						object.tSubClusterArray[i].dz = clusterObject.tSubClusterArray[i].dz;
-						
-						object.tSubClusterArray[i].ds = clusterObject.tSubClusterArray[i].ds;
-						object.tSubClusterArray[i].dsx = clusterObject.tSubClusterArray[i].dsx;
-						object.tSubClusterArray[i].dsy = clusterObject.tSubClusterArray[i].dsy;
-						object.tSubClusterArray[i].dsz = clusterObject.tSubClusterArray[i].dsz;
-						
-						object.tSubClusterArray[i].dtheta = clusterObject.tSubClusterArray[i].dtheta;
-						object.tSubClusterArray[i].dthetaX = clusterObject.tSubClusterArray[i].dthetaX;
-						object.tSubClusterArray[i].dthetaY = clusterObject.tSubClusterArray[i].dthetaY;
-						object.tSubClusterArray[i].dthetaZ = clusterObject.tSubClusterArray[i].dthetaZ;
-						
-						// aggregate values
-						object.tSubClusterArray[i].velocity = clusterObject.tSubClusterArray[i].velocity;
-						object.tSubClusterArray[i].acceleration = clusterObject.tSubClusterArray[i].acceleration;
-						object.tSubClusterArray[i].jolt = clusterObject.tSubClusterArray[i].jolt;
-						
-						object.tSubClusterArray[i].rotationList = clusterObject.tSubClusterArray[i].rotationList;
-						}
-				}
-				
-				///////////////////////////////////////////////////////////////
-				//SENSOR SUBCLUSTERS
-				/////////////////////////////////////////////////////////////////
-				var sipn:int
-				if (clusterObject.sSubClusterArray) sipn = clusterObject.sSubClusterArray.length;
-				else sipn = 0;
-				//trace("hist sensor subcluster", sipn);
-				
-				if (sipn) object.sSubClusterArray = new Vector.<ipClusterObject>
-				
-				for (var i:uint = 0; i < sipn; i++) 
-						{
-					if (clusterObject.sSubClusterArray[i].active) 
-						{
-						object.sSubClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
+					var index:String = iPointCluster.type; 
+					//trace("history",index);
 					
-						object.sSubClusterArray[i].ipn = clusterObject.sSubClusterArray[i].ipn;
-						object.sSubClusterArray[i].ipnk = clusterObject.sSubClusterArray[i].ipnk;
-						object.sSubClusterArray[i].ipnk0 = clusterObject.sSubClusterArray[i].ipnk0;
-						object.sSubClusterArray[i].dipn = clusterObject.sSubClusterArray[i].dipn;
+					//object.iPointClusterList.index = iPointCluster;
+					
+					if (iPointCluster.active)
+					{
+						object.iPointClusterList.index = new ipClusterObject()//clusterObject.finger_cO;
+					
+						object.iPointClusterList.index.ipn = iPointCluster.ipn;
+						object.iPointClusterList.index.ipnk = iPointCluster.ipnk;
+						object.iPointClusterList.index.ipnk0 = iPointCluster.ipnk0;
+						object.iPointClusterList.index.dipn = iPointCluster.dipn;
+
+						object.iPointClusterList.index.position.x = iPointCluster.position.x;
+						object.iPointClusterList.index.position.y = iPointCluster.position.y;
+						object.iPointClusterList.index.position.z = iPointCluster.position.z;
 						
-						object.sSubClusterArray[i].position.x = clusterObject.sSubClusterArray[i].position.x;
-						object.sSubClusterArray[i].position.y = clusterObject.sSubClusterArray[i].position.y;
-						object.sSubClusterArray[i].position.z = clusterObject.sSubClusterArray[i].position.z;
+						object.iPointClusterList.index.radius = iPointCluster.radius;
+						object.iPointClusterList.index.width = iPointCluster.width;
+						object.iPointClusterList.index.height = iPointCluster.height;
+						object.iPointClusterList.index.length = iPointCluster.length;
 						
-						object.sSubClusterArray[i].radius = clusterObject.sSubClusterArray[i].radius;
-						object.sSubClusterArray[i].width = clusterObject.sSubClusterArray[i].width;
-						object.sSubClusterArray[i].height = clusterObject.sSubClusterArray[i].height;
-						object.sSubClusterArray[i].length = clusterObject.sSubClusterArray[i].length;
+						object.iPointClusterList.index.rotation = iPointCluster.rotation;
+						object.iPointClusterList.index.rotationX = iPointCluster.rotationX;
+						object.iPointClusterList.index.rotationY = iPointCluster.rotationY;
+						object.iPointClusterList.index.rotationZ = iPointCluster.rotationZ;
 						
-						object.sSubClusterArray[i].rotation = clusterObject.sSubClusterArray[i].rotation;
-						object.sSubClusterArray[i].rotationX = clusterObject.sSubClusterArray[i].rotationX;
-						object.sSubClusterArray[i].rotationY = clusterObject.sSubClusterArray[i].rotationY;
-						object.sSubClusterArray[i].rotationZ = clusterObject.sSubClusterArray[i].rotationZ;
-						
-						object.sSubClusterArray[i].separation = clusterObject.sSubClusterArray[i].separation;
-						object.sSubClusterArray[i].separationX = clusterObject.sSubClusterArray[i].separationX;
-						object.sSubClusterArray[i].separationY = clusterObject.sSubClusterArray[i].separationY;
-						object.sSubClusterArray[i].separationZ = clusterObject.sSubClusterArray[i].separationZ;
+						object.iPointClusterList.index.separation = iPointCluster.separation;
+						object.iPointClusterList.index.separationX = iPointCluster.separationX;
+						object.iPointClusterList.index.separationY = iPointCluster.separationY;
+						object.iPointClusterList.index.separationZ =iPointCluster.separationZ;
 						
 						
-						object.sSubClusterArray[i].dx = clusterObject.sSubClusterArray[i].dx;
-						object.sSubClusterArray[i].dy = clusterObject.sSubClusterArray[i].dy;
-						object.sSubClusterArray[i].dz = clusterObject.sSubClusterArray[i].dz;
+						object.iPointClusterList.index.dx = iPointCluster.dx;
+						object.iPointClusterList.index.dy =iPointCluster.dy;
+						object.iPointClusterList.index.dz = iPointCluster.dz;
 						
-						object.sSubClusterArray[i].ds = clusterObject.sSubClusterArray[i].ds;
-						object.sSubClusterArray[i].dsx = clusterObject.sSubClusterArray[i].dsx;
-						object.sSubClusterArray[i].dsy = clusterObject.sSubClusterArray[i].dsy;
-						object.sSubClusterArray[i].dsz = clusterObject.sSubClusterArray[i].dsz;
+						object.iPointClusterList.index.ds = iPointCluster.ds;
+						object.iPointClusterList.index.dsx = iPointCluster.dsx;
+						object.iPointClusterList.index.dsy = iPointCluster.dsy;
+						object.iPointClusterList.index.dsz = iPointCluster.dsz;
 						
-						object.sSubClusterArray[i].dtheta = clusterObject.sSubClusterArray[i].dtheta;
-						object.sSubClusterArray[i].dthetaX = clusterObject.sSubClusterArray[i].dthetaX;
-						object.sSubClusterArray[i].dthetaY = clusterObject.sSubClusterArray[i].dthetaY;
-						object.sSubClusterArray[i].dthetaZ = clusterObject.sSubClusterArray[i].dthetaZ;
+						object.iPointClusterList.index.dtheta = iPointCluster.dtheta;
+						object.iPointClusterList.index.dthetaX = iPointCluster.dthetaX;
+						object.iPointClusterList.index.dthetaY = iPointCluster.dthetaY;
+						object.iPointClusterList.index.dthetaZ = iPointCluster.dthetaZ;
 						
 						// aggregate values
-						object.sSubClusterArray[i].velocity = clusterObject.sSubClusterArray[i].velocity;
-						object.sSubClusterArray[i].acceleration = clusterObject.sSubClusterArray[i].acceleration;
-						object.sSubClusterArray[i].jolt = clusterObject.sSubClusterArray[i].jolt;
+						object.iPointClusterList.index.velocity = iPointCluster.velocity;
+						object.iPointClusterList.index.acceleration = iPointCluster.acceleration;
+						object.iPointClusterList.index.jolt = iPointCluster.jolt;
 						
-						object.sSubClusterArray[i].rotationList = clusterObject.sSubClusterArray[i].rotationList;
-						}
-				}
-				
-				
+						object.iPointClusterList.index.rotationList = iPointCluster.rotationList;
+					}
+				}	
 				
 				//Gesture Points DATA simple timeline
 				object.gPointArray = clusterObject.gPointArray;

@@ -92,7 +92,6 @@ package com.gestureworks.visualizer
 
 			touchArray = GestureGlobals.gw_public::touchArray;
 			motionArray = GestureGlobals.gw_public::motionArray;
-			//motionArray2D = GestureGlobals.gw_public::motionArray2d;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
 			iPointArray = GestureGlobals.gw_public::iPointArray;
 			
@@ -176,7 +175,7 @@ package com.gestureworks.visualizer
 				//GLOBAL INTERACTION POINT LIST
 				//draw_interactionPoints()
 				
-			trace("drawing", tpn, mpn, spn,ipn);
+			//trace("drawing", tpn, mpn, spn,ipn);
 		}
 		
 		

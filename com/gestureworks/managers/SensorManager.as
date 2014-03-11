@@ -18,6 +18,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.events.GWSensorEvent;
 	import com.gestureworks.core.TouchSprite;
+	import com.gestureworks.core.CoreSprite;
 	import com.gestureworks.core.TouchMovieClip;
 	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.core.GestureWorks;
@@ -50,13 +51,13 @@ package com.gestureworks.managers
 
 	public class SensorManager
 	{	
-		//public static var ms:TouchSprite;
-		
 		public static var sensorPoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
-		public static var gs:TouchSprite
-		
+		public static var gs:CoreSprite
+		public static var sensorArray:Vector.<SensorPointObject>;
+		public static var sensorPointCount:int;
 		private static var sensor_init:Boolean = false;
+		
 		
 		public static var nativeAccelEnabled:Boolean = false;
 		public static var accelEnabled:Boolean = false;
@@ -79,12 +80,9 @@ package com.gestureworks.managers
 			sensorPoints = GestureGlobals.gw_public::sensorPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			gs = GestureGlobals.gw_public::core;
+			sensorPointCount = GestureGlobals.gw_public::sensorPointCount;
+			sensorArray = GestureGlobals.gw_public::sensorArray;
 			
-			if (gs)
-			{
-				gs.sensorEnabled = true;
-				gs.tc.sensor_core = true;
-			}
 			trace("init sensor manager");
 			//////////////////////////////////////////////////////////////////////////////////////
 			
@@ -107,12 +105,11 @@ package com.gestureworks.managers
 					// else set interval to framerate
 					act.setRequestedUpdateInterval((1 / 60) * 1000);// miliseconds
 				
-				act.addEventListener(AccelerometerEvent.UPDATE, accUpdateHandler);
+				act.addEventListener(AccelerometerEvent.UPDATE, onNativeAccelerometerUpdate);
+				// create new sensor point and call sensor point begin
+				onNativeAccelerometerConnect();
 				
 				if (act) trace("native accel init")
-				
-				// create new sensor point and call sensor point begin
-				onNativeAccelConnect();
 			}
 			
 
@@ -144,7 +141,7 @@ package com.gestureworks.managers
 			// create new point object
 			var spO:SensorPointObject  = new SensorPointObject();
 					trace(gs);
-						spO.id = gs.sensorPointCount; 
+						spO.id = sensorPointCount; 
 						spO.sensorPointID = pt.sensorPointID;
 					 
 						spO.type = pt.type;
@@ -173,9 +170,9 @@ package com.gestureworks.managers
 						spO.phase = "begin";
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					if (!gs.cO.sensorArray) gs.cO.sensorArray = new Vector.<SensorPointObject>
-					gs.cO.sensorArray.push(spO);
-					gs.sensorPointCount++;
+					if (!sensorArray) sensorArray = new Vector.<SensorPointObject>
+					sensorArray.push(spO);
+					sensorPointCount++;
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::sensorPoints[pt.sensorPointID] = spO;
@@ -198,16 +195,16 @@ package com.gestureworks.managers
 				spointObject.phase = "end";
 				
 					// REMOVE POINT FROM LOCAL LIST
-					gs.cO.sensorArray.splice(spointObject.id, 1);
+					sensorArray.splice(spointObject.id, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
 					
 					// REDUCE LOACAL POINT COUNT
-					gs.sensorPointCount--;
+					sensorPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < gs.cO.sensorArray.length; i++)
+					for (var i:int = 0; i < sensorArray.length; i++)
 					{
-						gs.cO.sensorArray[i].id = i;
+						sensorArray[i].id = i;
 					}
 					// DELETE FROM GLOBAL POINT LIST
 					delete sensorPoints[sensorPointID];
@@ -279,7 +276,7 @@ package com.gestureworks.managers
 		//////////////////////////////////////////////////////////////////////////////
 		//NATIVE ACCELEROMETER HANDLERS
 		//////////////////////////////////////////////////////////////////////////////
-		public static function onNativeAccelConnect():void
+		public static function onNativeAccelerometerConnect():void
         {
 			//CREATE PAIRED SENSOR POINT ONE PER DEVICE FOR SIMPLE DEVICES
 				var spt:SensorPointObject = new SensorPointObject();
@@ -287,9 +284,9 @@ package com.gestureworks.managers
 					spt.position.x = 500;
 					spt.position.y = 500;
 					
-					if (!gs.cO.sensorArray) gs.cO.sensorArray = new Vector.<SensorPointObject>
-					gs.cO.sensorArray.push(spt);
-					gs.sensorPointCount++;
+					if (!sensorArray) sensorArray = new Vector.<SensorPointObject>
+					sensorArray.push(spt);
+					sensorPointCount++;
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				GestureGlobals.gw_public::sensorPoints[spt.sensorPointID] = spt;
@@ -299,7 +296,7 @@ package com.gestureworks.managers
 			//onSensorBegin(new GWSensorEvent(GWSensorEvent.SENSOR_BEGIN, na_pt, true, false)); // push begin event
         }
 		
-		public static function accUpdateHandler(event:AccelerometerEvent):void
+		public static function onNativeAccelerometerUpdate(event:AccelerometerEvent):void
         {
 			//NOTE NEED TO CREATE GLOBAL POINT REFERNCE FOR NAPT
 			

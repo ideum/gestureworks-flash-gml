@@ -28,10 +28,11 @@ package com.gestureworks.objects
 		// cluster type
 		public var type:String;
 		
-		// cluster motion type
-		public var motion_type:String;
-		public var touch_type:String;
-		public var sensor_type:String;
+		// cluster ip point mode type
+		public var mode:String;
+		//public var motion_type:String;
+		//public var touch_type:String;
+		//public var sensor_type:String;
 		
 		
 		///////////////////////////////////////
@@ -280,7 +281,7 @@ package com.gestureworks.objects
 		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
 		public var jolt:Vector3D //= new Vector3D ();
 	
-		public var rotationList:Vector.<Vector3D> //= new Vector.<Vector3D>
+		public var rotationList:Vector.<Vector3D> = new Vector.<Vector3D>
 		
 		
 		
@@ -335,9 +336,9 @@ package com.gestureworks.objects
 		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
-		public var iPointArray:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
+		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
-		public var iPointArray2D:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
+		//public var iPointArray2D:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
 		
 			
 		
@@ -472,7 +473,7 @@ package com.gestureworks.objects
 			//motionArray2D.length = 0;
 			//sensorArray.length = 0;
 			iPointArray.length = 0;
-			iPointArray2D.length = 0;
+			//iPointArray2D.length = 0;
 			//tcO.reset();
 			//tsubClusterArray.length = 0;
 			//mcO.reset();

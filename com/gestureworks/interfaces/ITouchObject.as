@@ -7,9 +7,12 @@ package com.gestureworks.interfaces
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.objects.ipClusterObject;
+	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.IEventDispatcher;
+	import flash.utils.Dictionary;
 	/**
 	 * Implements touch object base classes (TouchSprite and TouchMovieClip)
 	 * @author 
@@ -176,6 +179,13 @@ package com.gestureworks.interfaces
 		 */
 		function get tt():TouchTransform;
 		function set tt(obj:TouchTransform):void;		
+		
+		
+		/**
+		 * @private
+		 */
+		function get ipcOList():Dictionary;
+		function set ipcOList(obj:Dictionary):void;		
 		
 		/**
 		 * @private

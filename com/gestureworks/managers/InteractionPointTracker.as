@@ -31,7 +31,7 @@ package com.gestureworks.managers
 		private static var fp:InteractionPointObject;
 		private static var _ID:uint = 0;
 		
-		private static var d2:Number = 40//200//200;//40 //DEFINES TOLERENCE TRACK POINT
+		private static var d2:Number = 40//200//40//200//200;//40 //DEFINES TOLERENCE TRACK POINT
 		private static var d1:Number = 0;
 		private static var debug:Boolean = false;
 		

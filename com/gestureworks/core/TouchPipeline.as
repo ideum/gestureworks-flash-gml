@@ -339,7 +339,7 @@ package com.gestureworks.core
 						
 						/////////////////////////////////////////////////////////////////////////
 						// WILL NEED TO BLEND SUBCLUSTER ABSOLUTE DATA
-						
+						/*
 						trO.position.x = cO.position.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.position.y = cO.position.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
 						trO.position.z = cO.position.z; // 3d--
@@ -360,6 +360,7 @@ package com.gestureworks.core
 						trO.rotationY = cO.rotationY//3d--
 						trO.rotationZ = cO.rotationZ//3d--
 						trO.orientation = cO.orientation
+						*/
 						/////////////////////////////////////////////////////////////////////////////////////////////
 						
 						// TODO: Check into this, what does this mean?

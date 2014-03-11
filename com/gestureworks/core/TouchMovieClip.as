@@ -35,6 +35,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	import com.gestureworks.objects.ipClusterObject;
 	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -410,20 +411,22 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get interactionPointBubbling():Boolean{return _interactionPointBubbling;}
-		public function set interactionPointBubbling(value:Boolean):void
-		{
-			_interactionPointBubbling = value;
-		}
+		public function set interactionPointBubbling(value:Boolean):void{_interactionPointBubbling = value;}
 		
 		private var _targetList:Array = [];
 		/**
 		 * @inheritDoc
 		 */
 		public function get targetList():*{return _targetList;}
-		public function set targetList(value:*):void
-		{	
-			_targetList = value;
-		}
+		public function set targetList(value:*):void {_targetList = value;}
+		
+		private var _ipcOList:Dictionary = new Dictionary();
+		/**
+		 * @inheritDoc
+		 */
+		public function get ipcOList():Dictionary{return _ipcOList;}
+		public function set ipcOList(value:Dictionary):void{	_ipcOList = value;}
+		
 
 		private var _vto:Object;
 		/**

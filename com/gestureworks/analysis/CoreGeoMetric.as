@@ -54,7 +54,9 @@ package com.gestureworks.analysis
 		//private var motionArray2D:Vector.<MotionPointObject>; 
 		private var sensorArray:Vector.<SensorPointObject>; 
 		private var handList:Vector.<HandObject>;
-		private var iPointArray:Vector.<InteractionPointObject>; 
+		private var iPointArray:Vector.<InteractionPointObject>;
+		
+		private var iPointClusterLists:Object//Vector.<ipClusterObject>;
 		
 		private var i:uint = 0;
 		private var j:uint = 0;
@@ -93,18 +95,12 @@ package com.gestureworks.analysis
 			gs = GestureGlobals.gw_public::core; // need to find center of object for orientation and pivot
 			touchArray = GestureGlobals.gw_public::touchArray;
 			motionArray = GestureGlobals.gw_public::motionArray;
-			//motionArray2D = GestureGlobals.gw_public::motionArray2d;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
 			handList = GestureGlobals.gw_public::handList;
 			
-			//hn = gs.hn;
-			//fn = gs.fn;
-			//tpn = gs.tpn;
-			//mpn = gs.mpn;
-			//spn = gs.spn;
-			//ipn = gs.ipn;
+			iPointClusterLists = GestureGlobals.gw_public::iPointClusterLists;
 			
-			
+
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			

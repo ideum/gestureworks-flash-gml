@@ -49,7 +49,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
-	
+	import com.gestureworks.objects.ipClusterObject;
 	//import com.gestureworks.cml.elements.TouchContainer3D;
 	
 	import flash.utils.Dictionary;
@@ -64,12 +64,11 @@ package com.gestureworks.managers
  	
 	public class InteractionManager 
 	{	
-		//public static var touchPoints:Dictionary = new Dictionary();
 		public static var ipoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
-		
-		
+		public static var interactionPointCount:int;
+		private static var iPointArray:Vector.<InteractionPointObject>
 		private static var gs:CoreSprite;
 		private static var interaction_init:Boolean = false;
 		
@@ -78,17 +77,8 @@ package com.gestureworks.managers
 		
 		private static var hooks:Vector.<Function>;
 		private static var _overlays:Vector.<ITouchObject> = new Vector.<ITouchObject>();
-		
-		//private static var minX:Number
-		//private static var maxX:Number
-		//private static var minY:Number
-		//private static var maxY:Number
-		//private static var minZ:Number
-		//private static var maxZ:Number
-		
 		public static var hitTest3D:Function;
 		
-		private static var iPointArray:Vector.<InteractionPointObject>
 		
 		gw_public static function initialize():void
 
@@ -98,19 +88,21 @@ package com.gestureworks.managers
 			trace("interaction manager init");
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list
-			//touchPoints = GestureGlobals.gw_public::touchPoints;
 			ipoints = GestureGlobals.gw_public::interactionPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
+			interactionPointCount =  GestureGlobals.gw_public::interactionPointCount;
 			
 			// init interaction point manager
 			InteractionPointTracker.initialize();
 			
+			
 			// CREATE GLOBAL INTERACTION SPRITE//////////////////////
 				gs = new CoreSprite();
-					
 					/////////////////////////////////////////////////////////
 					// CREATE CORE CLUSTER MANAGER
 					gs.cc = new CoreCluster();
+					//gs.cc.initPreMetrics(); //TOO SOON
+					
 					gs.cv = new CoreVisualizer();
 				
 				/////////////////////////////////////////////////////////
@@ -126,7 +118,6 @@ package com.gestureworks.managers
 				
 				// assign arrays
 				iPointArray = GestureGlobals.gw_public::iPointArray;
-				
 					
 				GestureWorks.application.addChild(gs);
 				GestureGlobals.gw_public::core = gs;
@@ -136,16 +127,6 @@ package com.gestureworks.managers
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			
-			
-			// FOR HITTESTING 
-			//TODO: MUST USE MOTION2D INSTEAD AND REMOVE LIMITS FROM INTERACTION MANAGER
-		//	minX = GestureGlobals.gw_public::leapMinX;
-		//	maxX = GestureGlobals.gw_public::leapMaxX;
-		//	minY = GestureGlobals.gw_public::leapMinY;
-	//		maxY = GestureGlobals.gw_public::leapMaxY;
-		//	minZ = GestureGlobals.gw_public::leapMinZ;
-		//	maxZ = GestureGlobals.gw_public::leapMaxZ;
-
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, interactionFrameHandler); //MOVE TO INTERACTION MANAGER
@@ -215,7 +196,7 @@ package com.gestureworks.managers
 				
 				//trace("ip begin",ipO.type)
 				// update local touch object point count
-				gs.interactionPointCount++;
+				interactionPointCount++;
 				//gms.interactionPointCount++;
 
 				///////////////////////////////////////////////////////////////////////////
@@ -280,7 +261,7 @@ package com.gestureworks.managers
 				
 				//trace("ip begin",ipO.type)
 				// update local touch object point count
-				gs.interactionPointCount++;
+				interactionPointCount++;
 				//gms.interactionPointCount++;
 
 				///////////////////////////////////////////////////////////////////////////
@@ -315,7 +296,7 @@ package com.gestureworks.managers
 					
 					// REDUCE GLOBAL INTERACTION POINT COUNT
 					//gms.interactionPointCount--;
-					gs.interactionPointCount--;
+					interactionPointCount--;
 					
 					// UPDATE INTERACTION POINT ID 
 					for (var i:int = 0; i < iPointArray.length; i++)//gms.cO.iPointArray.length
@@ -327,7 +308,7 @@ package com.gestureworks.managers
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
 					delete ipoints[event.value.interactionPointID];
 			}
-			trace("interaction point end",gs.interactionPointCount)
+			trace("interaction point end",interactionPointCount)
 		}
 		
 		public static function onInteractionEndPoint(id:int):void
@@ -347,7 +328,7 @@ package com.gestureworks.managers
 					
 					// REDUCE GLOBAL INTERACTION POINT COUNT
 					//gms.interactionPointCount--;
-					gs.interactionPointCount--;
+					interactionPointCount--;
 					
 					// UPDATE INTERACTION POINT ID 
 					for (var i:int = 0; i < iPointArray.length; i++)//gms.cO.iPointArray.length
@@ -359,7 +340,7 @@ package com.gestureworks.managers
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
 					delete ipoints[id];
 			}
-			trace("interaction point end",gs.interactionPointCount)
+			trace("interaction point end",interactionPointCount)
 		}
 		
 		
@@ -498,7 +479,7 @@ package com.gestureworks.managers
 				if (ts.parent.interactionPointBubbling)
 				{
 					//PUSH INTERACTION POINT TO PARENT
-					ts.parent.cO.iPointArray.push(ipt);
+					ts.parent.cO.iPointArray.push(ipt); //TODO: REFERENCE IPOINTARRAY DREICTLY IN TOUCHSPRITE
 						
 					//INIT PUSH OF INTERACTION POINT TO GRANDPARENT
 					if  (ts.parent.parent is ITouchObject)propagateInteractionPoint(ipt,ts.parent);
@@ -619,6 +600,12 @@ package com.gestureworks.managers
 			obj.touchObjectID = ObjectManager.registerTouchObject(obj);
 			GestureGlobals.gw_public::touchObjects[obj.touchObjectID] = obj;
 			
+			// A VEHICLE TO CONTAIN CORE GESTURE VALUES
+			/////////////////////////////////////////////////////////////////////////
+			obj.ipcOList = new Dictionary();//iPointClusterListObject(); 
+				//obj.ipcOList.id = obj.touchObjectID;
+			GestureGlobals.gw_public::iPointClusterLists[obj.touchObjectID] = obj.ipcOList;
+			
 			// create generic analysis engine
 			//if (GestureGlobals.analyzeCluster)
 				//{
@@ -652,22 +639,24 @@ package com.gestureworks.managers
 					obj.trO.id = obj.touchObjectID;
 				GestureGlobals.gw_public::transforms[obj.touchObjectID] = obj.trO; 
 				
-				/////////////////////////////////////////////////////////////////////////
-				// CREATES A NEW TIMELINE OBJECT 
-				// CONTAINS A HISTORY OF ALL TOUCH EVENTS, CLUSTER EVENTS, GESTURE EVENTS 
-				// AND TRANSFORM EVENTS THAT OCCUR ON THE TOUCHSPRITE
-				/////////////////////////////////////////////////////////////////////////
-				obj.tiO = new TimelineObject();  
-					obj.tiO.id = obj.touchObjectID;
-					obj.tiO.timelineOn = false; // activates timline manager
-					obj.tiO.pointEvents = false; // pushes point events into timline
-					obj.tiO.clusterEvents = false; // pushes cluster events into timeline
-					obj.tiO.gestureEvents = false; // pushes gesture events into timleine
-					obj.tiO.transformEvents = false; // pushes transform events into timeline
-					//TODO:DONT REGISTAR
-				GestureGlobals.gw_public::timelines[obj.touchObjectID] = obj.tiO;
+									//TODO: KILL AND INTERGRATE FUNCTIONALITY INTO GLOBAL TIMELINE OBJECT
+												/////////////////////////////////////////////////////////////////////////
+												// CREATES A NEW TIMELINE OBJECT 
+												// CONTAINS A HISTORY OF ALL TOUCH EVENTS, CLUSTER EVENTS, GESTURE EVENTS 
+												// AND TRANSFORM EVENTS THAT OCCUR ON THE TOUCHSPRITE
+												/////////////////////////////////////////////////////////////////////////
+												obj.tiO = new TimelineObject();  
+													obj.tiO.id = obj.touchObjectID;
+													obj.tiO.timelineOn = false; // activates timline manager
+													obj.tiO.pointEvents = false; // pushes point events into timline
+													obj.tiO.clusterEvents = false; // pushes cluster events into timeline
+													obj.tiO.gestureEvents = false; // pushes gesture events into timleine
+													obj.tiO.transformEvents = false; // pushes transform events into timeline
+													//TODO:DONT REGISTAR
+												GestureGlobals.gw_public::timelines[obj.touchObjectID] = obj.tiO;
 				
 			//}
+			
 			
 			// bypass gml requirement for testing
 			initBase(obj);
@@ -679,6 +668,12 @@ package com.gestureworks.managers
 		{
 			//trace("init base", obj)
 							obj.tc = new TouchCluster(obj.touchObjectID); 
+								
+							//TOO SOON
+								//obj.tc.initIPSupport();
+								//obj.tc.initIPFilters(); //CHECK
+								//obj.tc.initSubClusters();
+							
 							obj.tp = new TouchPipeline(obj.touchObjectID);
 		if (obj.gestureEvents)	obj.tg = new TouchGesture(obj.touchObjectID);
 							obj.tt = new TouchTransform(obj.touchObjectID);
@@ -729,9 +724,7 @@ package com.gestureworks.managers
 			
 			//trace("t",GestureWorks.activeTouch, "m:",GestureWorks.activeMotion,"s:",GestureWorks.activeSensor)
 			//INIT PREMETRICS (TURN ON RELVANT IP SUBCLUSTER GENERATORS)
-			if (GestureGlobals.frameID == 200) gs.cc.initPreMetrics();
-			
-			
+			if (GestureGlobals.frameID == 1) gs.cc.initPreMetrics();
 			
 			///////////////////////////////////////////////////////////////////////////////
 			// GLOBAL CORE INITS AND UPDATES
@@ -834,10 +827,12 @@ package com.gestureworks.managers
 				var tO:Object = temp_tOList[i];
 				//trace("index", tO.getChildIndex());
 		
+				
 				///////////////////////////////////////////////////////////////////////
 				// update touch,cluster and gesture processing
 				///////////////////////////////////////////////////////////////////////
 				if (tO.tc) tO.tc.updateClusterAnalysis();
+				
 				if (tO.tp) tO.tp.processPipeline();
 				if (tO.tg) tO.tg.manageGestureEventDispatch();
 				if (tO.tt)

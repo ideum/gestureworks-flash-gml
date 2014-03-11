@@ -18,6 +18,7 @@ package com.gestureworks.objects
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.SensorPointObject;
 	import flash.geom.Vector3D;
+	import flash.utils.Dictionary;
 	
 	public class ClusterObject extends Object 
 	{		
@@ -330,7 +331,7 @@ package com.gestureworks.objects
 		// motion point data list
 		public var motionArray:Vector.<MotionPointObject> //= new Vector.<MotionPointObject>();
 		// motion point data list
-		public var motionArray2D:Vector.<MotionPointObject> //= new Vector.<MotionPointObject>();
+		//public var motionArray2D:Vector.<MotionPointObject> //= new Vector.<MotionPointObject>();
 		// sensor point data list----------------
 		public var sensorArray:Vector.<SensorPointObject> //= new Vector.<SensorPointObject>();
 		
@@ -345,7 +346,7 @@ package com.gestureworks.objects
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
 		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		//public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
 		// MUST ADD 
 		//TOUCH_FINGER
@@ -361,7 +362,7 @@ package com.gestureworks.objects
 		//TOUCH PARENT CLUSTER ///////////////////////////////////////
 		//public var tcO:ipClusterObject //= new ipClusterObject ();
 		//TOUCH SUBCLUSTER ARRAY
-		public var tSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
+		//public var tSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
 		//MOVE INTO TOUCH A OBJECT TYPED SUBCLUSTER
 		//TOUCH OBJECT ARRAY A LIST OF TAGGING STRCTURES FOR 2D
 		public var objectArray:Vector.<Object> //= new Vector.<Object>();
@@ -370,19 +371,19 @@ package com.gestureworks.objects
 		//MOTION PARENT CLUSTER///////////////////////////////////////
 		//public var mcO:ipClusterObject //= new ipClusterObject ();
 		//MOTION SUBCLUSTER ARRAY
-		public var mSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
+		//public var mSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		// SENSOR PARENT CLUSTER//////////////////////////////////////
 		//public var scO:ipClusterObject = new ipClusterObject ();
 		//SENSOR SUBCLUSTER ARRAY
-		public var sSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
+		//public var sSubClusterArray:Vector.<ipClusterObject> //= new Vector.<ipClusterObject>();
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
 		public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
 		
-	
+		public var iPointClusterList:Dictionary = new Dictionary();
 		/////////////////////////////////////////////////////////////////////////
 		// cluster history
 		/////////////////////////////////////////////////////////////////////////
@@ -481,19 +482,19 @@ package com.gestureworks.objects
 			add = false;
 			remove = false;
 			
-			mmPointArray.length = 0;
-			touchArray.length = 0;
-			motionArray.length = 0;
-			motionArray2D.length = 0;
-			sensorArray.length = 0;
-			iPointArray.length = 0;
-			iPointArray2D.length = 0;
+			//mmPointArray.length = 0;
+			//touchArray.length = 0;
+			//motionArray.length = 0;
+			//motionArray2D.length = 0;
+			//sensorArray.length = 0;
+			//iPointArray.length = 0;
+			//iPointArray2D.length = 0;
 			//tcO.reset();
-			tSubClusterArray.length = 0;
+			//tSubClusterArray.length = 0;
 			//mcO.reset();
-			mSubClusterArray.length = 0;
+			//mSubClusterArray.length = 0;
 			//scO.reset();
-			sSubClusterArray.length = 0;
+			//sSubClusterArray.length = 0;
 			gPointArray.length = 0;
 			history.length = 0;
 		}

@@ -166,12 +166,12 @@ package com.gestureworks.core
 					/////////////////////////////////////////////////////////////////
 					// point display
 					/////////////////////////////////////////////////////////////////
-					if (pointDisplay) 
-					{
-						point = new PointVisualizer(id);
-							point.init();
-						debug_display.addChild(point);
-					}
+					//if (pointDisplay) 
+					//{
+						//point = new PointVisualizer(id);
+							//point.init();
+						//debug_display.addChild(point);
+					//}
 					
 					////////////////////////////////////////////////////////////////////
 					// cluster display
@@ -179,7 +179,7 @@ package com.gestureworks.core
 					if (clusterDisplay) 
 					{	
 						cluster = new ClusterVisualizer(id);
-							cluster.init();
+							//cluster.init();
 						debug_display.addChild(cluster);
 						
 						// NOTE ADD CLUSTER VECTORS
@@ -205,20 +205,17 @@ package com.gestureworks.core
 		//trace("trying to draw display",ts.debugDisplay,debug_display);
 		if ((ts.debugDisplay)&&(debug_display))
 			{
-				
-				
-			
 			// touch points or interaction points
 			// REMOVE N WHEN TESTING COMPLETE
 			if ((ts.N)||(ts.ipn))//||(ts.mpn)||(ts.ipn)||(ts.spn)//ts.cO.sn //ts.cO.fn
 			{
-				if ((pointDisplay)&&(point)) 		point.draw();
+				//if ((pointDisplay)&&(point)) 		point.draw();
 				if ((clusterDisplay)&&(cluster))	cluster.draw();
 				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 			}
-			if ((ts.tpn)||(ts.mpn)||(ts.spn)) {
-				if ((pointDisplay)&&(point)) 		point.draw();
-			}
+			//if ((ts.tpn)||(ts.mpn)||(ts.spn)) {
+				//if ((pointDisplay)&&(point)) 		point.draw();
+			//}
 		}
 	}
 	/**
@@ -229,7 +226,7 @@ package com.gestureworks.core
 		//if(traceDebugMode) trace("trying to clear debug display",touchObjectID)
 		if ((ts.debugDisplay)&&(debug_display))
 		{
-			if (point) point.clear();
+			//if (point) point.clear();
 			if (cluster) cluster.clear();
 			if (gesture) gesture.clear();
 		}

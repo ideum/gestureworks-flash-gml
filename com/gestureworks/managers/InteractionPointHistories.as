@@ -65,6 +65,7 @@ package com.gestureworks.managers
 				object.direction = ipo.direction;
 				object.normal = ipo.normal;
 				
+				
 				object.screen_position = ipo.screen_position;
 				object.screen_direction = ipo.screen_direction;
 				object.screen_normal = ipo.screen_normal;
@@ -82,14 +83,21 @@ package com.gestureworks.managers
 				
 			//	trace(ipo.history.length)
 				
+			
+				//TODO WILL NEED TO MAKE EXCEPTION FOR ACCELEROMETER VALUES BASED ON SENSOR TYPE....
 				// ADVANCED MOTION PROEPRTIES
-				if (ipo.history.length>1)
+				if ((ipo.history.length>1)&&(ipo.mode!="sensor"))
 				{
 					//trace(ipo.position.x,ipo.history[1].position.x,ipo.history[2].position.x)
 					object.velocity = new Vector3D(ipo.position.x - ipo.history[1].position.x,ipo.position.y - ipo.history[1].position.y,ipo.position.z - ipo.history[1].position.z);
 					object.acceleration = new Vector3D(ipo.velocity.x - ipo.history[1].velocity.x, ipo.velocity.y - ipo.history[1].velocity.y, ipo.velocity.z - ipo.history[1].velocity.z);
 					object.jolt = new Vector3D(ipo.acceleration.x - ipo.history[1].acceleration.x,ipo.acceleration.y - ipo.history[1].acceleration.y,ipo.acceleration.z - ipo.history[1].acceleration.z);
 				}
+				else {
+					object.acceleration = ipo.acceleration;
+				}
+				
+				
 				//trace("interaction point history push")
 
 			return object;
