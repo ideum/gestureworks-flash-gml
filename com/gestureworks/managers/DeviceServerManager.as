@@ -150,7 +150,7 @@ package com.gestureworks.managers
 			var lg:int = str.length;
 			var start:String = str.substr(0,6)//str.substr(0,6)
 			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
-			//trace(str)
+			trace(str)
 			//trace(lg,start,end);
 			
 			
@@ -281,6 +281,13 @@ package com.gestureworks.managers
 									//trace(message.InputPoint.Values)
 									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values);
 								}
+								
+								//if (deviceType == "Other") {
+									//trace(message.InputPoint.Values)
+									//controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values);
+								//}
+								
+								
 								if ((deviceType == "SNES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
 								if ((deviceType == "NES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
 								if ((deviceType == "PS3") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
