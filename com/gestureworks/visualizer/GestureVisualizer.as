@@ -112,30 +112,18 @@ package com.gestureworks.visualizer
 		{
 			//trace("init")
 			ts = GestureGlobals.gw_public::touchObjects[id]; // CHANGE TO TRANSFORMATION OBJECT CENTER POINT
-			
-			
-			
-			if (ts.reftest == 0)
-			{
+
 			//sO = GestureGlobals.gw_public::clusters[id];
 			cO = GestureGlobals.gw_public::clusters[id];
 			gO = GestureGlobals.gw_public::gestures[id];
 			trO = GestureGlobals.gw_public::transforms[id]
-			}
-			else {
-			//sO = ts.sO
-			cO = ts.cO;
-			gO = ts.gO;
-			trO = ts.trO;// points to sprite
-			}
+			
 			orientation = cO.orientation;
 			
 		}
 			
 	public function draw():void
 	{	
-		//N = cO.n;//pointList.length;
-		//tpn = cO.tpn;//pointList.length;
 		ipn = cO.ipn;//pointList.length;
 		
 		//path_data = sO.path_data //TODO:REINABLE
@@ -148,11 +136,9 @@ package com.gestureworks.visualizer
 		// FIXME:
 		
 		// draw
-		if(!ts.tc.core){
 		if (ts.touchEnabled) 	draw_touch_gesture();
 		//if (ts.motionEnabled)	draw_motion_gesture();// DONT NEED YET // TODO: CLEAN UP GESTURE POINT VIEW
 		//if (ts.sensorEnabled) draw_sensor_gesture();
-		}
 		
 	}
 	
@@ -161,7 +147,6 @@ package com.gestureworks.visualizer
 		
 		var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>;
 		var	pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
-				
 		//trace("draw gesture", ts, tpn, ipn, ts.cO.ipn, ts.cO.iPointArray.length, ts.cO.iPointArray2D.length);
 		
 		/////////////////////////////////////////////////////////////////////////////////

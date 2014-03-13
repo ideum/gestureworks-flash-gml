@@ -2819,11 +2819,11 @@ package com.gestureworks.analysis
 			//trace("km", sipn,cO.history[hist].iPointClusterList.index, sdipn);
 			
 			// dipn ==0 when no changes in inpn between frames
-			if ((sipn!= 0)&&(cO.history[hist].iPointClusterList.index)&&(cO.dipn==0))//
+			if ((sipn!= 0)&&(cO.history[0].iPointClusterList.index)&&(cO.dipn==0))//cO.history[hist].iPointClusterList.index
 				{
 					//trace("t",ptArray[0].position.x,ptArray[0].history.length, cO.iPointArray2D[0].history.length,cO.iPointArray[0].history.length );
-					var c_0:ipClusterObject = cO.history[0].iPointClusterList.index;
-					var c_1:ipClusterObject = cO.history[hist].iPointClusterList.index;
+					var c_0:ipClusterObject = iPointCluster;//cO.history[0].iPointClusterList.index;
+					var c_1:ipClusterObject = cO.history[0].iPointClusterList.index//cO.history[hist].iPointClusterList.index;
 						
 							//trace("hist x",cO.finger_cO.x,cO.history[0].finger_cO.x, cO.history[6].finger_cO.x)
 							//trace("hist rot",cO.finger_cO.rotation,cO.history[0].finger_cO.rotation, cO.history[2].finger_cO.rotation)
@@ -2833,11 +2833,13 @@ package com.gestureworks.analysis
 							if ((c_1.position.x!= 0) && (c_0.position.x != 0)) 	sub_cO.dx = (c_0.position.x - c_1.position.x)*hk;
 							if ((c_1.position.y != 0) && (c_0.position.y != 0)) 	sub_cO.dy = (c_0.position.y - c_1.position.y)*hk;
 							if ((c_1.position.z != 0) && (c_0.position.z != 0)) 	sub_cO.dz = (c_0.position.z - c_1.position.z)*hk;
+							
+							trace("ipcluster",c_0.type,iPointCluster.position, c_0.position, c_1.position);
 							//trace(cO.dx,cO.dy,cO.dz);
 								
 							//NEED LIMITS FOR CLUSTER N CHANGE
 							//LIMIT TRANLATE
-							var trans_max_delta:Number = 30;
+							var trans_max_delta:Number = 200;//please remove before i drive myself crazy!!!!!!!
 									
 							if (Math.abs(sub_cO.dx) > trans_max_delta) 
 							{

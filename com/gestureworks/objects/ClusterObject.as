@@ -212,7 +212,7 @@ package com.gestureworks.objects
 		
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		public var handList:Vector.<HandObject> //= new Vector.<HandObject>;
+		//public var handList:Vector.<HandObject> //= new Vector.<HandObject>;
 
 			/// INSIDE 3D HAND Object
 				//--width
@@ -458,7 +458,7 @@ package com.gestureworks.objects
 			etm_ddx=0;
 			etm_ddy=0;
 			etm_ddz=0;
-			handList.length = 0;
+			//handList.length = 0;
 			thumbID = 0;
 			handednes = "none";
 			orientation = 0;

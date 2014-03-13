@@ -1,4 +1,4 @@
-package com.gestureworks.managers 
+package com.gestureworks.server 
 {
 
 	//import com.gestureworks.events.GWTouchEvent;

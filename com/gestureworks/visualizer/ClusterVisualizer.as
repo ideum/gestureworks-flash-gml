@@ -20,28 +20,18 @@ package com.gestureworks.visualizer
 	import flash.geom.Vector3D;
 	import flash.display.Sprite;
 	import flash.utils.Dictionary;
-		
-	import com.gestureworks.core.CML;
+
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
-
-
-	
-	import com.gestureworks.objects.TouchPointObject;
-	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.utils.AddSimpleText;
 	
-	public class ClusterVisualizer extends Sprite//Shape
+	public class ClusterVisualizer extends Shape//Sprite
 	{
 		private static const RAD_DEG:Number = 180 / Math.PI;
-		
-		private static var cml:XMLList;
 		public var style:Object;
-		private var cO:ClusterObject;
 		private var id:Number = 0;
-		private var ts:Object;
 		
 		private var _x:Number = 0;
 		private var _y:Number = 0;
@@ -71,12 +61,12 @@ package com.gestureworks.visualizer
 		
 		private var iptext_array:Array = new Array();
 		private var iPointClusterList:Dictionary = new Dictionary();
+		private var cO:ClusterObject
 			
 		public function ClusterVisualizer(ID:Number)
 		{
 			//trace("init cluster visualizer");
 			id = ID;
-			ts = GestureGlobals.gw_public::touchObjects[id];
 			cO = GestureGlobals.gw_public::clusters[id];
 			iPointClusterList = GestureGlobals.gw_public::iPointClusterLists[id];
 			
@@ -120,7 +110,7 @@ package com.gestureworks.visualizer
 				style.percent = 0.7
 				
 				
-				
+				/*
 			// create text fields
 			for (var i:uint = 0; i < maxPoints; i++) 
 			{
@@ -128,38 +118,37 @@ package com.gestureworks.visualizer
 					iptext_array[i].visible = false;
 					iptext_array[i].mouseEnabled = false;
 				addChild(iptext_array[i]);
-			}
+			}*/
 				
 		}
 	
 	public function clear():void
 	{
 		graphics.clear();
-		for (var i:uint = 0; i < iptext_array.length; i++) iptext_array[i].visible = false;
+		//for (var i:uint = 0; i < iptext_array.length; i++) iptext_array[i].visible = false;
 	}
 	
 	public function draw():void
 	{
-		ipn = cO.iPointArray.length;
+		//ipn = cO.iPointArray.length;
 		graphics.clear();
 		drawRootClusterDims(); // for center trans viz
 		drawInteractionPoints();
 		drawSubClusterDims();
-		
 		//trace("draw", tpn,ipn, ts.ipn, cO.ipn,cO.iPointArray2D.length);
 	}
 	
 	
 	private function drawRootClusterDims():void
 	{	
-		if (ipn)
+		if (cO.ipn)
 			{
 			style.stroke_color = 0xFFAE1F;
 			_x = cO.position.x;
 			_y = cO.position.y;
-			_width = cO.width;
-			_height = cO.height;
-			_radius = cO.radius;
+			_width = cO.width-2;
+			_height = cO.height-2;
+			_radius = cO.radius+5;
 			
 			if(_drawRadius){
 				// draw bounding circle
@@ -172,7 +161,7 @@ package com.gestureworks.visualizer
 			
 			if(_drawCenter){
 				// draw cluster center position
-				graphics.drawCircle(_x, _y, style.radius-5);
+				graphics.drawCircle(_x, _y, style.radius);
 			}
 			
 			if(_drawBisector){
@@ -186,20 +175,40 @@ package com.gestureworks.visualizer
 			if(_drawBox){
 			// draw bunding box
 			graphics.drawRect(_x - _width / 2, _y - _height / 2, _width, _height);
-			}	
+			}
+			
+			if(_drawWeb){
+					// draw web links tyo center
+					for (var k:int = 0; k < tpn; k++) {
+						for (var l:int=0; l<tpn; l++){
+							if (k != l) {
+								graphics.lineStyle(3, style.stroke_color, style.stroke_alpha);
+								graphics.moveTo(cO.iPointArray[k].position.x,cO.iPointArray[k].position.y);
+								graphics.lineTo(cO.iPointArray[l].position.x,cO.iPointArray[l].position.y);
+							}
+						}
+					}
+			}
+			
+			
 			}
 	}
 	
 	private function drawInteractionPoints():void
 	{
 		//trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
-		if (ipn)
+		//if (ipn)
+		for each (var iPointCluster in iPointClusterList) 
+		
+			var ipn:int = iPointCluster.ipn;
 			{
-				for (var i:int = 0; i < ipn; i++) 
+				for (var i:uint = 0; i < ipn; i++) 
 					{
-						var ipt:InteractionPointObject = cO.iPointArray[i];
+						var ipt:InteractionPointObject = iPointCluster.iPointArray[i] as InteractionPointObject;
 						
 						//INTERACTIONPOINT TEXT DATA
+						
+						/*
 						if (iptext_array[i])
 						{
 							iptext_array[i].textCont = "IP ID: " + ipt.interactionPointID;
@@ -213,18 +222,18 @@ package com.gestureworks.visualizer
 							}
 							iptext_array[i].visible = true;
 							iptext_array[i].textColor = style.touch_text_color;
-						}
+						}*/
 						
 
 						if (ipt.mode == "motion")
 						{
 								if (_drawWeb)
 								{	
-									for (var j:int = 0; j < i+1; j++) 
+									for (var j:uint = 0; j < i+1; j++) 
 									{
 										if (i != j)
 										{
-											var ipt2:InteractionPointObject = cO.iPointArray[j];
+											var ipt2:InteractionPointObject = iPointCluster.iPointArray[j] as InteractionPointObject;
 											// draw line to palm point
 											graphics.lineStyle(3, style.stroke_color, style.stroke_alpha);
 											graphics.moveTo(ipt.screen_position.x ,ipt.screen_position.y);
@@ -342,11 +351,11 @@ package com.gestureworks.visualizer
 						{
 								if (_drawWeb)
 								{	
-									for (var j:int = 0; j < i+1; j++) 
+									for (var j:uint = 0; j < i+1; j++) 
 									{
 										if (i != j)
 										{
-											var ipt2:InteractionPointObject = cO.iPointArray[j]//cO.iPointArray2D[j];
+											var ipt2:InteractionPointObject = iPointCluster.iPointArray[j] as InteractionPointObject//cO.iPointArray2D[j];
 											// draw line to palm point
 											graphics.lineStyle(3, 0xFF0000, style.stroke_alpha);
 											graphics.moveTo(ipt.position.x ,ipt.position.y);

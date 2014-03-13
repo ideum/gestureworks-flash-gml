@@ -112,7 +112,7 @@ package com.gestureworks.analysis
 		////////////////////////////////////////////////////////////
 		// Methods: Private
 		////////////////////////////////////////////////////////////
-		
+		/*
 		public function getSamplePath():void 
 		{
 			//trace("hitory length",pointList[0].history.length)
@@ -142,7 +142,7 @@ package com.gestureworks.analysis
 				//trace(cO.path_data.length,sO.path_data.length)
 				}
 			}
-		}
+		}*/
 		
 		public function getSamplePathPosition():void 
 		{

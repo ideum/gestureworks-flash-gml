@@ -99,7 +99,7 @@ package com.gestureworks.managers
 			
 			
 			
-			//trace("pids",pids.length,"active points", activePoints.length)
+			trace("pids",pids.length,"active points", activePoints.length)
 			
 			//point removal
 			var temp:Array = activePoints;  //prevent concurrent mods

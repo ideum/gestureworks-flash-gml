@@ -1,8 +1,9 @@
-package com.gestureworks.managers 
+package com.gestureworks.server 
 {
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.MotionPointObject;
+	import com.gestureworks.managers.MotionManager;
 	
 	import flash.geom.Vector3D;
 
@@ -74,9 +75,9 @@ package com.gestureworks.managers
 
 				// CREATE POINT LIST
 				pointList = new Vector.<MotionPointObject>//Array();
-				pids = new Vector.<int>();
+				pids = new Vector.<int>;
 				
-				for (var j:int = 0; j < handCount; j++ )
+				for (var j:uint = 0; j < handCount; j++ )
 				{
 				fingerCount = int(handList[j].@FingerCount);// int(message.InputPoint.Values.Hand[j].@FingerCount);
 				objectCount = int(handList[j].@ObjectCount);//int(message.InputPoint.Values.Hand[j].@ObjectCount)
@@ -84,7 +85,7 @@ package com.gestureworks.managers
 				
 				
 				// CREATE FINGER TIP MOTION POINTS
-				for (var k:int = 0; k < fingerCount; k++ )
+				for (var k:uint = 0; k < fingerCount; k++ )
 				{
 					//var f:Object =  message.InputPoint.Values.Hand[j].Finger[k];
 					var f:Object =  handList[j].Finger[k];
@@ -105,14 +106,14 @@ package com.gestureworks.managers
 					
 					pids.push(int(f.@id)) 
 
-					trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
+					//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
 				}
 				
 				// CREATE PALM MOTION POINT
 					//var p:Object =  message.InputPoint.Values.Hand[j].Palm;
 					var p:Object =  handList[j].Palm;
 					
-					var ptp:Object = new MotionPointObject()//new Object();
+					var ptp:Object = new MotionPointObject();//new Object();
 						ptp.type = "palm";
 						ptp.handID = j;
 						ptp.id = j//p.@Id;
@@ -152,10 +153,10 @@ package com.gestureworks.managers
 					addRemoveUpdatePoints();
 		}
 
-		private static function getFramePoint(id:int):MotionPointObject//Object 
+		private static function getFramePoint(id:int):MotionPointObject
 		{
-			var obj:MotionPointObject//Object;
-			for (var i:int = 0; i < pointList.length; i++)
+			var obj:MotionPointObject;
+			for (var i:uint = 0; i < pointList.length; i++)
 			{
 				if (id == pointList[i].id) obj = pointList[i];
 			}
@@ -164,7 +165,7 @@ package com.gestureworks.managers
 
 		private static function addRemoveUpdatePoints():void 
 		{
-			//trace("----------------------------------------------", activePoints.length, pointList.length);
+			//trace("motion----------------------------------------------", activePoints.length, pointList.length);
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//POINT REMOVAL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			for each(var aid:int in activePoints) 

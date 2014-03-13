@@ -161,6 +161,7 @@ package com.gestureworks.analysis
 					if ((size >= minSize)&&(size < maxSize))
 					{
 						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.rootPointID = tp.touchPointID;
 							tip.position = tp.position;
 							//tip.size.x = tp.size.x;
 							//tip.size.y = tp.size.y;
@@ -190,6 +191,7 @@ package com.gestureworks.analysis
 					if (size == 0) {
 						
 						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.rootPointID = tp.touchPointID;
 							tip.position = tp.position;
 							tip.mode = "touch";
 							tip.type = "finger_dynamic";
@@ -219,6 +221,7 @@ package com.gestureworks.analysis
 					else {
 						
 						var tip:InteractionPointObject = new InteractionPointObject();
+							tip.rootPointID = tp.touchPointID;
 							tip.position = tp.position;
 							tip.mode = "touch";
 							tip.type = "finger_dynamic";

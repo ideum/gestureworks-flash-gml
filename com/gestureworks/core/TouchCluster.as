@@ -789,8 +789,8 @@ package com.gestureworks.core
 			// for unistroke only
 			if (cO.ipn == 1) // CHNAGE TO ipn
 			{
-				cluster_vectormetric.resetPathProperties(); // reset stroke data object
-				cluster_vectormetric.getSamplePath(); // collect sample path
+				//cluster_vectormetric.resetPathProperties(); // reset stroke data object
+				//cluster_vectormetric.getSamplePath(); // collect sample path
 			}
 			
 			// multistroke next

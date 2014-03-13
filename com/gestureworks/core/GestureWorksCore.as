@@ -479,16 +479,7 @@ package com.gestureworks.core
 			if (_deviceServer == value) return;
 			_deviceServer = value;
 			
-			if (_deviceServer) {
-				
-				DeviceServerManager.gw_public::initialize();
-				
-				MotionManager.leapEnabled = true;
-				MotionManager.leapmode = "3d_ds";
-				motion = true;
-			}
-			else
-				motion = false;
+			if (_deviceServer) DeviceServerManager.gw_public::initialize();
 		}
 		
 			
@@ -551,7 +542,6 @@ package com.gestureworks.core
 		{			
 			GMLParser.settingsPath = gml;
 			GMLParser.addEventListener(GMLParser.settingsPath, gmlParserComplete);
-			
 			//trace("start gml parse",gml,GMLParser.settingsPath)
 		}
 		
@@ -560,8 +550,7 @@ package com.gestureworks.core
 		{			
 			DMLParser.settingsPath = dml;
 			DMLParser.addEventListener(DMLParser.settingsPath, dmlParserComplete);
-			
-			//trace("start gml parse",gml,GMLParser.settingsPath)
+			//trace("start dml parse",gml,GMLParser.settingsPath)
 		}
 		
 		/**
@@ -663,7 +652,6 @@ package com.gestureworks.core
 		private function dmlParserComplete(event:Event):void
 		{
 			DML.Devices = DMLParser.settings;
-			
 			DeviceManager.callDeviceParser();
 		}
 		

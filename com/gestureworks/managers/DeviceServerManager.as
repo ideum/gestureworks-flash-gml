@@ -25,11 +25,11 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.core.gw_public;
 	
-	import com.gestureworks.managers.Motion3DSManager;
-	import com.gestureworks.managers.Touch2DSManager;
-	import com.gestureworks.managers.Eye2DSManager;
-	import com.gestureworks.managers.AndroidSensorManager;
-	import com.gestureworks.managers.ControllerSensorManager;
+	import com.gestureworks.server.Motion3DSManager;
+	import com.gestureworks.server.Touch2DSManager;
+	import com.gestureworks.server.Eye2DSManager;
+	import com.gestureworks.server.AndroidSensorManager;
+	import com.gestureworks.server.ControllerSensorManager;
 
 	/**
 	 * The DeviceServerManager class handles the communication via an XML Socket.
@@ -62,11 +62,14 @@ package com.gestureworks.managers
 		{
 			trace("device server manager constructor");
 		}
-		/*
+		
 		gw_public static function initialize():void
 		{
 			trace("device server manager init");
 			
+			//init();
+			
+			/*
 			//////////////////////////////////////////////////
 			motionManagerSocket = new Motion3DSManager(); //HAND
 			//leapsocket2DMgr = new Leap2DSManager();
@@ -79,8 +82,8 @@ package com.gestureworks.managers
 			controllerSensorManagerSocket = new ControllerSensorManager();
 			
 
-			initXMLSocket();
-		}*/
+			initXMLSocket();*/
+		}
 		
 		public function init():void
 		{
@@ -89,18 +92,18 @@ package com.gestureworks.managers
 			//////////////////////////////////////////////////
 			if (GestureWorks.activeTouch) 
 			{
-				touchManagerSocket = new Touch2DSManager(); 
+				//touchManagerSocket = new Touch2DSManager(); 
 			}
-			//if (GestureWorks.activeMotion)
-			//{
+			if (GestureWorks.activeMotion)
+			{
 				motionManagerSocket = new Motion3DSManager();
-				eyeManagerSocket = new Eye2DSManager();
-			//}
+				//eyeManagerSocket = new Eye2DSManager();
+			}
 			//if (GestureWorks.activeSensor)
 			//{
 				trace("Sensor classes init");
-				androidSensorManagerSocket = new AndroidSensorManager();
-				controllerSensorManagerSocket = new ControllerSensorManager();
+				//androidSensorManagerSocket = new AndroidSensorManager();
+				//controllerSensorManagerSocket = new ControllerSensorManager();
 			//}
 			
 			initXMLSocket();
@@ -150,10 +153,8 @@ package com.gestureworks.managers
 			var lg:int = str.length;
 			var start:String = str.substr(0,6)//str.substr(0,6)
 			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
-			trace(str)
+			//trace(str)
 			//trace(lg,start,end);
-			
-			
 			
 			
 			// SIMPLE FRAME COMPLETENES CHECK
@@ -279,13 +280,13 @@ package com.gestureworks.managers
 								{
 									//trace(deviceType, ": ", inputType);
 									//trace(message.InputPoint.Values)
-									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values);
+									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values,deviceType);
 								}
 								
-								//if (deviceType == "Other") {
+								if (deviceType == "Other") {
 									//trace(message.InputPoint.Values)
-									//controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values);
-								//}
+									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values,deviceType);
+								}
 								
 								
 								if ((deviceType == "SNES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
@@ -309,13 +310,10 @@ package com.gestureworks.managers
 					trace("null frame");
 					
 				}
-				
-				
-				
-				
 			}
 			}
-			else trace("xml frame parsing error");
+			else trace("xml frame parsing error",lg,start,end);
+
 		}	
 		
 		public static function get host():String{return _host;}

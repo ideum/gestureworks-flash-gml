@@ -26,8 +26,6 @@ package com.gestureworks.managers
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	
-
-	
 	
 	public class DeviceManager
 	{
@@ -59,11 +57,10 @@ package com.gestureworks.managers
 			if (dp.mode == "native")
 			{
 				trace("configuring natively connected devices using dml specs");
-				configNativeDevices();
+				//configNativeDevices();
 			}
 			else if (dp.mode == "server") 
 			{
-				
 				ds = new DeviceServerManager();
 					//ds.host = dp.host;
 					//ds.port = dp.port;
@@ -80,7 +77,7 @@ package com.gestureworks.managers
 			if (DML.Devices.devices.input_globals.touch.@active == "true") 
 			{
 				trace("dml activated touch")
-				GestureWorks.activeTouch = true;
+				//GestureWorks.activeTouch = true;
 
 				//PQ SERVER/////////////////////////////////////////////////////////////
 				if (DML.Devices.devices.input_globals.touch.pq.@active == "true")
@@ -117,8 +114,7 @@ package com.gestureworks.managers
 						trace("Android/IOS touch device dml activated");
 					}
 				}
-
-				TouchManager.gw_public::initialize();	
+				//TouchManager.gw_public::initialize();	
 			}
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +123,7 @@ package com.gestureworks.managers
 			if (DML.Devices.devices.input_globals.motion.@active == "true") 
 			{
 				trace("Motion input devices dml init");
-				GestureWorks.activeMotion = true;
+				//GestureWorks.activeMotion = true;
 				
 				// LEAP MOTION SENSOR INIT //////////////////////////////////
 				if (DML.Devices.devices.input_globals.motion.leap.@active == "true")
@@ -177,7 +173,7 @@ package com.gestureworks.managers
 					
 					trace("Eyetribe device dml activated");
 				}
-				MotionManager.gw_public::initialize();
+				//MotionManager.gw_public::initialize();
 			}
 			
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +182,7 @@ package com.gestureworks.managers
 			if (DML.Devices.devices.input_globals.sensor.@active == "true") 
 			{
 				trace("Sensor input devices dml init");
-				GestureWorks.activeSensor = true;
+				//GestureWorks.activeSensor = true;
 				
 				// NATIVE ACCELEROMETER	INIT//////////////////
 				if (DML.Devices.devices.input_globals.sensor.android.@active == "true")
@@ -217,7 +213,7 @@ package com.gestureworks.managers
 				}
 				// INIT SENSOR MANAGER WITH SENSOR TYPES ACTIVATED
 				// NEEDS TO BE LAST
-				SensorManager.gw_public::initialize();
+				//SensorManager.gw_public::initialize();
 			}
 		}
 		

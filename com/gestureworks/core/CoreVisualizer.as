@@ -68,10 +68,10 @@ package com.gestureworks.core
 		public function CoreVisualizer():void
 		{
 			//trace("preinit core vizualizer");
-			gs = GestureGlobals.gw_public::core;
-			touchArray = GestureGlobals.gw_public::touchArray;
-			motionArray = GestureGlobals.gw_public::motionArray;
-			sensorArray = GestureGlobals.gw_public::sensorArray;
+			//gs = GestureGlobals.gw_public::core;
+			//touchArray = GestureGlobals.gw_public::touchArray;
+			//motionArray = GestureGlobals.gw_public::motionArray;
+			//sensorArray = GestureGlobals.gw_public::sensorArray;
 			
 			
 			//ADD POINT DISPLAY TO STAGE
@@ -89,7 +89,6 @@ package com.gestureworks.core
 		//trace("updating core viz display", point);
 		if (point)
 		{
-			
 			point.clear();
 			point.draw();
 		}

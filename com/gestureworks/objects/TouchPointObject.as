@@ -33,8 +33,8 @@ package com.gestureworks.objects
 		// move count // number move updates for point in frame
 		public var moveCount:int=0;
 		
-		public var position:Vector3D = new Vector3D();
-		public var size:Vector3D = new Vector3D();
+		public var position:Vector3D //= new Vector3D();
+		public var size:Vector3D //= new Vector3D();
 		public var pressure:Number = 0;
 		public var area:Number = 0;
 		public var radius:Number = 0;
@@ -70,6 +70,6 @@ package com.gestureworks.objects
 		
 		//////////////////////////////////////////////////////////////////////////////
 		// history
-		public var history:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
+		public var history:Vector.<TouchPointObject> //= new Vector.<TouchPointObject>();
 	}
 }

@@ -136,7 +136,7 @@ package com.gestureworks.managers
 				//objec.acceleration = clusterObject.acceleration;
 				//object.jolt = clusterObject.jolt;
 				
-				object.handList = clusterObject.handList;
+				//object.handList = clusterObject.handList;
 				
 				
 				//object.iPointClusterList = new Dictionary ();//clusterObject.iPointClusterList

@@ -17,8 +17,7 @@ package com.gestureworks.core
 {
 	import flash.events.Event;
 	import flash.display.Sprite;
-	
-	import com.gestureworks.visualizer.PointVisualizer;
+
 	import com.gestureworks.visualizer.ClusterVisualizer;
 	import com.gestureworks.visualizer.GestureVisualizer;
 	
@@ -38,11 +37,7 @@ package com.gestureworks.core
 		/**
 		* displays touch cluster and gesture visulizations on the touchSprite.
 		*/
-		public var debug_display:Sprite;
-		/**
-		* @private
-		*/
-		public var point:PointVisualizer;
+		public var debug_display:Sprite
 		/**
 		* @private
 		*/

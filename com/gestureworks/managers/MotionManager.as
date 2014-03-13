@@ -38,8 +38,8 @@ package com.gestureworks.managers
 		
 		public static var motionArray:Vector.<MotionPointObject>
 		public static var motionPointCount:int;
-		public static var motionPoints:Dictionary = new Dictionary();
-		public static var touchObjects:Dictionary = new Dictionary();
+		public static var motionPoints:Dictionary;// = new Dictionary();
+		//public static var touchObjects:Dictionary = new Dictionary();
 		
 		gw_public static function initialize():void
 
@@ -51,6 +51,9 @@ package com.gestureworks.managers
 				
 			if (leapEnabled)
 			{
+				trace("leapmode",leapmode);
+				/*
+				// NATIVE LEAP MANAGERS
 				if(leapmode == "2d"){
 					lmManager = new Leap2DManager();
 					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
@@ -58,12 +61,12 @@ package com.gestureworks.managers
 				if (leapmode == "3d"){
 					lmManager = new Leap3DManager();
 					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
-				}
+				}*/
 				
+				//SERVER LEAP MANAGERS
 				if (leapmode == "2d_ds") {
 					trace(leapmode)
 				}
-				
 				if (leapmode == "3d_ds") {
 					trace(leapmode)
 					
@@ -81,14 +84,8 @@ package com.gestureworks.managers
 				///////////////////////////////////////////////////////////////////////////////////////
 				// ref gloabl motion point list
 				motionPoints = GestureGlobals.gw_public::motionPoints;
-				touchObjects = GestureGlobals.gw_public::touchObjects;
-				gs = GestureGlobals.gw_public::core;
-				
-				motionPointCount = GestureGlobals.gw_public::motionPointCount
-				motionArray =  GestureGlobals.gw_public::motionArray
-				
-				//if (gs) gs.motionEnabled = true
-				
+				motionPointCount = GestureGlobals.gw_public::motionPointCount;
+				motionArray =  GestureGlobals.gw_public::motionArray;
 			}
 			}
 		}
@@ -100,10 +97,13 @@ package com.gestureworks.managers
 				Leap2DManager(lmManager).dispose();
 				lmManager = null;
 			}
+			if (leapmode == "3d" && lmManager) {
+				lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				Leap3DManager(lmManager).dispose();
+				lmManager = null;
+			}
 		}
 
-		
-		
 		public static function onFrame(event:LeapEvent):void 
 		{
 			//trace("motion frame------------------------------------", event.frame)
@@ -117,65 +117,26 @@ package com.gestureworks.managers
 			//mpo.history.unshift(MotionPointHistories.historyObject(mpo))
 		}
 		
-		/*
-		public static function onMotionBegin(event:GWMotionEvent):void
-		{			
-			//trace("motion point begin, motionManager",event.value.motionPointID);
-			
-			//trace(gs)
-			
-			// create new point object
-			var mpointObject:MotionPointObject  = new MotionPointObject();
-					
-					mpointObject.id = gs.motionPointCount; 
-					mpointObject.motionPointID = event.value.motionPointID;
-					mpointObject.type = event.value.type;
-					mpointObject.handID = event.value.handID;
-					
-					mpointObject.position = event.value.position;
-					mpointObject.direction = event.value.direction;
-					mpointObject.normal = event.value.normal;
-					mpointObject.velocity = event.value.velocity;
-
-					mpointObject.sphereCenter = event.value.sphereCenter;
-					mpointObject.sphereRadius = event.value.sphereRadius;
-					
-					mpointObject.length = event.value.length;
-					mpointObject.width = event.value.width;
-					
-					
-					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					gs.cO.motionArray.push(mpointObject);
-					gs.motionPointCount++;
-				
-				
-				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::motionPoints[event.value.motionPointID] = mpointObject;
-				
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerMotionPoint(mpointObject);
-			
-		}*/
-		
 		public static function onMotionBeginPoint(pt:MotionPointObject):void
 		{			
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			// create new point object
-			var mpO:MotionPointObject  = new MotionPointObject();
+			var mpO:MotionPointObject  = pt;//new MotionPointObject();
 					
-					 mpO.id = motionPointCount; 
-					 mpO.motionPointID = pt.motionPointID;
-					 mpO.type = pt.type;
-					 mpO.handID = pt.handID;
-					 mpO.position = pt.position;
-					 mpO.direction = pt.direction;
-					 mpO.normal = pt.normal;
-					 mpO.velocity = pt.velocity;
-					 mpO.sphereCenter = pt.sphereCenter;
-					 mpO.sphereRadius = pt.sphereRadius;
-					 mpO.length = pt.length;
-					 mpO.width = pt.width;
-					
+					mpO.id = motionPointCount; 
+					//mpO.motionPointID = motionPointCount; 
+					//mpO.motionPointID = pt.motionPointID;
+					//mpO.type = pt.type;
+					//mpO.handID = pt.handID;
+					//mpO.position = pt.position;
+					//mpO.direction = pt.direction;
+					//mpO.normal = pt.normal;
+					//mpO.velocity = pt.velocity;
+					//mpO.sphereCenter = pt.sphereCenter;
+					//mpO.sphereRadius = pt.sphereRadius;
+					//mpO.length = pt.length;
+					//mpO.width = pt.width;
+					mpO.phase = "begin";
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST
 					if (!motionArray) motionArray = new Vector.<MotionPointObject>
@@ -183,125 +144,54 @@ package com.gestureworks.managers
 					motionPointCount++;
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::motionPoints[pt.motionPointID] = mpO;
+				GestureGlobals.gw_public::motionPoints[pt.motionPointID]  = mpO;//as MotionPointObject
 				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerMotionPoint(mpO);
+				//registerMotionPoint(mpO);
 			
 		}
 		
-		/*
-		// stage motion end
-		public static function onMotionEnd(event:GWMotionEvent):void
-		{
-			//trace("Motion point End, motionManager", event.value.motionPointID)
-			var motionPointID:int = event.value.motionPointID;
-			var pointObject:MotionPointObject = mpoints[motionPointID];
-			
-			//trace("ready to remove", pointObject);
-			
-			if (pointObject)
-			{
-					// REMOVE POINT FROM LOCAL LIST
-					gs.cO.motionArray.splice(pointObject.id, 1);
-					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
-					
-					// REDUCE LOACAL POINT COUNT
-					gs.motionPointCount--;
-					
-					// UPDATE POINT ID 
-					for (var i:int = 0; i < gs.cO.motionArray.length; i++)
-					{
-						gs.cO.motionArray[i].id = i;
-					}
-				
-					// DELETE FROM GLOBAL POINT LIST
-					delete mpoints[event.value.motionPointID];
-			}
-			
-			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
-			
-			//trace("motion point tot",motionSprite.motionPointCount)
-		}*/
-		
+
 		public static function onMotionEndPoint(motionPointID:int):void
 		{
 			//trace("Motion point End, motionManager", event.value.motionPointID)
-			var pointObject:MotionPointObject = motionPoints[motionPointID];
+			var mpO:MotionPointObject = motionPoints[motionPointID] as MotionPointObject;
 			//trace("ready to remove", pointObject);
 			
-			if (pointObject)
+			if (mpO)
 			{
-				pointObject.phase = "end";
-				
+					mpO.phase = "end";
+					
+					
 					// REMOVE POINT FROM LOCAL LIST
-					motionArray.splice(pointObject.id, 1);
-					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
+					motionArray.splice(mpO.id, 1);
 					
 					// REDUCE LOACAL POINT COUNT
 					motionPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < motionArray.length; i++)
+					for (var i:uint = 0; i < motionArray.length; i++)
 					{
 						motionArray[i].id = i;
 					}
+					
 					// DELETE FROM GLOBAL POINT LIST
-					delete motionPoints[motionPointID];
+					delete motionPoints[motionPointID] as MotionPointObject;
 			}
 			
 			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
 			//trace("motion point tot",motionSprite.motionPointCount)
 		}
-		
-		/*
-		// the Stage TOUCH_MOVE event.	// DRIVES POINT PATH UPDATES
-		public static function onMotionMove(event:GWMotionEvent):void
-		{			
-			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
-			var mpO:MotionPointObject = mpoints[event.value.motionPointID];
-			
-			//trace("motion move/Update event, motionManager", event.value.motionPointID);
-			
-				if (mpO)
-				{	
-					
-					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
-					//mpO = event.value;
-					
-					//mpO.id  = event.value.id;
-					//mpO.motionPointID  = event.value.motionPointID;
-					mpO.position = event.value.position;
-					mpO.direction = event.value.direction;
-					mpO.normal = event.value.normal;
-					mpO.velocity = event.value.velocity;
-					
-					mpO.sphereRadius = event.value.sphereRadius;
-					mpO.sphereCenter = event.value.sphereCenter;
-					
-					mpO.length = event.value.length;
-					mpO.width = event.value.width;
-					//mpO.handID = event.value.handID;
-					
-				
-					mpO.moveCount ++;
-					//trace( mpO.moveCount);
-				}
-				
-				// UPDATE POINT HISTORY 
-				MotionPointHistories.historyQueue(event);
-		}	*/
 		
 		public static function onMotionMovePoint(pt:MotionPointObject):void
 		{			
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			//trace("motion move/Update event, motionManager", event.value.motionPointID);
 			
-			var mpO:MotionPointObject = motionPoints[pt.motionPointID];
+			var mpO:MotionPointObject = motionPoints[pt.motionPointID] as MotionPointObject;
 			
 				if (mpO)
 				{	
-					mpO.phase = "end";
 					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
 					//mpO.id  = event.value.id;
 					//mpO.motionPointID  = event.value.motionPointID;
@@ -316,6 +206,7 @@ package com.gestureworks.managers
 					mpO.length = pt.length;
 					mpO.width = pt.width;
 					mpO.moveCount ++;
+					mpO.phase = "update";
 					//trace( mpO.moveCount);
 				}
 				

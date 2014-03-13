@@ -26,43 +26,38 @@ package com.gestureworks.visualizer
 	import flash.display.Graphics;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.utils.Dictionary;
 	
 	import flash.geom.Vector3D;
 	import flash.text.*;
 	
-	import com.gestureworks.managers.MotionPointHistories;
-	import com.gestureworks.core.CML;
+
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.CoreSprite;
 	import com.gestureworks.core.gw_public;
 	
-	import com.gestureworks.objects.InteractionPointObject;
+	
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.TouchPointObject;
-	//import com.gestureworks.objects.ClusterObject;
+	
 	
 	import com.gestureworks.utils.AddSimpleText;
 	
 
 
-	public class CorePointVisualizer extends Sprite//Shape//Container
+	public class CorePointVisualizer extends Shape//Container//Sprite
 	{
-		private static var cml:XMLList;
 		public var style:Object; // public allows override of cml values
-	
 		private var touchArray:Vector.<TouchPointObject>;
 		private var motionArray:Vector.<MotionPointObject>;
-		//private var motionArray2D:Vector.<MotionPointObject>;
 		private var sensorArray:Vector.<SensorPointObject>;
-		private var iPointArray:Vector.<InteractionPointObject>;
-		
 		
 		private var gs:CoreSprite;
 		private var tpn:uint = 0;
 		private var mpn:uint = 0;
 		private var spn:uint = 0;
-		private var ipn:uint = 0;
+		//private var ipn:uint = 0;
 		
 		
 		private var mptext_array:Array = new Array();
@@ -70,32 +65,31 @@ package com.gestureworks.visualizer
 		private var i:int
 		private var hist:int = 0;
 		
-		private var _minX:Number = -180;
-		private var _maxX:Number = 180;
+		//private var _minX:Number = -180;
+		//private var _maxX:Number = 180;
 		
-		private var _minY:Number = 75;
-		private var _maxY:Number = 270;
+		//private var _minY:Number = 75;
+		//private var _maxY:Number = 270;
 		
-		private var _minZ:Number = -110;
-		private var _maxZ:Number = 200;
+		//private var _minZ:Number = -110;
+		//private var _maxZ:Number = 200;
 		private var trails:Array = [];
 		
 		public var maxTrails:int = 50;
 		public var maxPoints:int = 10;
+		
+		private var motionPoints:Dictionary = new Dictionary();
 	
 		
 		public function CorePointVisualizer():void
 		{			
 			//trace("points visualizer");	
-
-			gs = GestureGlobals.gw_public::core;
-
 			touchArray = GestureGlobals.gw_public::touchArray;
 			motionArray = GestureGlobals.gw_public::motionArray;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
-			iPointArray = GestureGlobals.gw_public::iPointArray;
 			
-			hist = 8;
+			motionPoints = GestureGlobals.gw_public::motionPoints;
+			//hist = 8;
 			
 			
 			// set default style 
@@ -124,6 +118,7 @@ package com.gestureworks.visualizer
 		
 		public function init():void
 		{
+			/*
 			var i:int = 0;
 			mptext_array[i];		
 			tptext_array = [];
@@ -140,42 +135,29 @@ package com.gestureworks.visualizer
 					tptext_array[i].mouseEnabled = false;
 				addChild(tptext_array[i]);
 				addChild(mptext_array[i]);
-			}
+			}*/
 		}
 		
 		
 		public function draw():void
 		{
-			// update data
-			//N = cO.pointArray.length;
-			
-			if (touchArray) tpn = touchArray.length//cO.tpn;
+			if (touchArray) tpn = touchArray.length;
 			else tpn = 0;
 			
-			if (motionArray) mpn = motionArray.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
+			if (motionArray) mpn = motionArray.length;
 			else mpn = 0;
 			
 			if (sensorArray) spn = sensorArray.length;
 			else spn = 0;
 			
-			if (iPointArray) ipn =  iPointArray.length;
-			else ipn = 0;
-			
 			// clear graphics
 			graphics.clear();
 			
-				//DRAW
-				//if (ts.touchEnabled)	
-				draw_touchPoints();
-				//if (ts.motionEnabled)	
-				draw_motionPoints();
-				//if (ts.sensorEnabled)	
-				draw_sensorPoints();
-				
-				//GLOBAL INTERACTION POINT LIST
-				//draw_interactionPoints()
-				
-			//trace("drawing", tpn, mpn, spn,ipn);
+			//DRAW
+			if (GestureWorks.activeTouch && tpn)		draw_touchPoints();
+			if (GestureWorks.activeMotion && mpn)		draw_motionPoints();
+			if (GestureWorks.activeSensor && spn)		draw_sensorPoints();
+
 		}
 		
 		
@@ -185,13 +167,13 @@ package com.gestureworks.visualizer
 		public function draw_touchPoints():void
 		{
 			// clear text
-			for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
+			//for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
 			
 				var n:int = (tpn <= maxPoints) ? tpn : maxPoints;
 			
-				for (i = 0; i < n; i++) 
+				for (var i:uint = 0; i < n; i++) 
 				{
-					var pt:TouchPointObject = touchArray[i]
+					var pt:TouchPointObject = touchArray[i] as TouchPointObject;
 					///////////////////////////////////////////////////////////////////
 					// Point positons and shapes
 					///////////////////////////////////////////////////////////////////
@@ -199,7 +181,7 @@ package com.gestureworks.visualizer
 					var x:Number = pt.position.x;
 					var y:Number = pt.position.y;
 					
-					
+					/*
 					if (_drawText)
 					{
 						///////////////////////////////////////////////////////////////////
@@ -211,7 +193,7 @@ package com.gestureworks.visualizer
 						tptext_array[i].y = y- 70;
 						tptext_array[i].visible = true;
 						tptext_array[i].textColor = style.touch_text_color;
-					}
+					}*/
 					
 					if (_drawShape)
 					{
@@ -353,16 +335,22 @@ package com.gestureworks.visualizer
 		public function draw_motionPoints():void
 		{
 					// clear text
-					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
+					//if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
 				
 					//trace("visualixer mpn",mpn,_drawText,cO.motionArray2D.length,cO.motionArray.length)
 						
 					// Calculate the hand's average finger tip position
-					for (i = 0; i < mpn; i++) 
+					for (var i:uint = 0; i < mpn; i++) 
+					//for (var key in motionPoints) 
 								{
-								var mp:MotionPointObject = motionArray[i];
+								var mp:MotionPointObject = motionArray[i] as MotionPointObject;
+								//var mp:MotionPointObject = motionPoints[key];
 								
+								//trace(mp);
 								
+								if (mp)//&& mp.screen_position
+								{
+									/*
 									if (_drawText)
 									{
 										//NOTE NEED MORE TEXT FIELDS
@@ -373,7 +361,7 @@ package com.gestureworks.visualizer
 										tptext_array[i].visible = true;
 										tptext_array[i].textColor = style.touch_text_color;
 									}
-									}
+									}*/
 								
 									if (mp.type == "finger")
 									{
@@ -490,25 +478,25 @@ package com.gestureworks.visualizer
 									}		
 									
 									
-									
+								}
 									
 									
 								}
 					
-		}
+	}
 
 		
 		
 		////////////////////////////////////////////////////////////////
 		// sensor points // eye tracking / accelerometer / myo
 		////////////////////////////////////////////////////////////////
-		public function draw_sensorPoints():void
-			{
+	public function draw_sensorPoints():void
+		{
 			//trace("drawing sensor points", spn);
 				
-			for (i = 0; i < spn; i++) 
+			for (var i:uint = 0; i < spn; i++) 
 					{
-					var sp:SensorPointObject = sensorArray[i];
+					var sp:SensorPointObject = sensorArray[i] as SensorPointObject;
 
 					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
 					
@@ -559,110 +547,22 @@ package com.gestureworks.visualizer
 						}
 						
 					}
-			}
+	}
 			
-		private function draw_interactionPoints():void
-			{
-			//trace("drawing interaction points",ts.touchObjectID, ipn);
-				//ipn
-			for (i = 0; i < iPointArray.length; i++) 
-					{
-					var sp:InteractionPointObject = iPointArray[i];
-
-					//trace("sensor type",sp.type, sp.devicetype, sp.acceleration.x);
-					
-					var ipid:String
-					if (sp) ipid = String(sp.interactionPointID);
-					
-					if (sp){
-					//////////////////////////////////////////////////////////////////////////////
-					// for all interaction points
-					if (tptext_array[i])
-					{
-						tptext_array[i].textCont = "IP ID: " + ipid //+ "    id" + String(pt.touchPointID);
-						tptext_array[i].x = sp.position.x - tptext_array[i].width / 2;
-						tptext_array[i].y = sp.position.y - 55;
-						tptext_array[i].visible = true;
-						tptext_array[i].textColor = style.touch_text_color;
-					}
-					
-					///////////////////////////////////////////
-					// DRAW WII CONTROLLER POINT
-					
-					trace ("ip type",sp.type);
-					
-					if (sp.type == "finger_dynamic")//finger
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0xFF0000, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius);
-								graphics.endFill();
-							}
-						}
-						else if (sp.type == "pen_dynamic")
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0x00FFFF, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius-10);
-								graphics.endFill();
-							}
-						}
-						
-						else if (sp.type == "tag_dynamic")
-						{
-							if (_drawShape)
-							{
-								// sensor center
-								graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-								graphics.beginFill(0xFF0000, style.fill_alpha);
-								graphics.drawCircle(sp.position.x, sp.position.y, style.radius+10);
-								graphics.endFill();
-							}
-						}
-						
-					}
-						
-					}
-			}
-
-	
-		public function clear():void
-		{
+	public function clear():void
+	{
 			//trace("trying to clear");
 			graphics.clear();
 		
+			/*
 			//text clear
 			for (i = 0; i < tptext_array.length; i++){
 				tptext_array[i].visible = false;
 			}
 			for (i = 0; i < mptext_array.length; i++){
 				mptext_array[i].visible = false;
-			}			
-		}
-	
-	
-		public static function map(num:Number, min1:Number, max1:Number, min2:Number, max2:Number, round:Boolean = false, constrainMin:Boolean = true, constrainMax:Boolean = true):Number
-		{
-			if (constrainMin && num < min1) return min2;
-			if (constrainMax && num > max1) return max2;
-		 
-			var num1:Number = (num - min1) / (max1 - min1);
-			var num2:Number = (num1 * (max2 - min2)) + min2;
-			if (round) return Math.round(num2);
-			return num2;
-		}	
-		
-		private function normalize(value : Number, minimum : Number, maximum : Number) : Number 
-		{
-            return (value - minimum) / (maximum - minimum);
-        }
-		
+			}	*/		
+	}
 	
 
 	private var _drawShape:Boolean = true;

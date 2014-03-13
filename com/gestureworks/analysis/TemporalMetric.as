@@ -127,7 +127,7 @@ package com.gestureworks.analysis
 				
 							for (var i:int = 0; i < N; i++)
 								{
-								var pt:TouchPointObject = cO.touchArray[i]
+								var pt:TouchPointObject  //TODO MUST UPDATE TO FINGER TOUCH IPARRYA cO.touchArray[i]
 								
 								//trace("hold count",i,pointList[i].holdCount, hold_time,hold_dist,hold_number);
 								if ((Math.abs(pt.dx) < hold_dist) && (Math.abs(pt.dy) < hold_dist))

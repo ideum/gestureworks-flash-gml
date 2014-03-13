@@ -23,7 +23,6 @@ package com.gestureworks.managers
 	public class InteractionPointTracker
 	{				
 		public static var activePoints:Vector.<InteractionPointObject>;
-		//private static var framePoints:Vector.<InteractionPointObject>;
 		public static var framePoints:Vector.<InteractionPointObject>;
 		private static var temp_framePoints:Vector.<InteractionPointObject>;
 		
@@ -31,7 +30,7 @@ package com.gestureworks.managers
 		private static var fp:InteractionPointObject;
 		private static var _ID:uint = 0;
 		
-		private static var d2:Number = 40//200//40//200//200;//40 //DEFINES TOLERENCE TRACK POINT
+		private static var d2:Number = 100//40//200//40//200//200;//40 //DEFINES TOLERENCE TRACK POINT
 		private static var d1:Number = 0;
 		private static var debug:Boolean = false;
 		
@@ -69,7 +68,7 @@ package com.gestureworks.managers
 			clearFrame();
 
 			
-				//trace("active points",activePoints.length,temp_framePoints.length, framePoints.length, activePoints.length);
+				//trace("interaction active points",activePoints.length,temp_framePoints.length, framePoints.length, activePoints.length);
 
 				//////////////////////////////////////////////////////////////////////
 				// REMOVE from ap if not in fp
@@ -81,7 +80,8 @@ package com.gestureworks.managers
 						for each(fp in temp_framePoints)
 						{
 							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
-							if ((ap.type == fp.type) && (dist < d2)) found = true;
+							if (ap.type == fp.type && ap.rootPointID == fp.rootPointID) found = true;
+							else if ((ap.type == fp.type) && (dist < d2)) found = true;
 							
 							//trace(ap.id, fp.id, ap.interactionPointID, fp.interactionPointID,ap.type,fp.type,dist)
 						}
@@ -91,8 +91,9 @@ package com.gestureworks.managers
 						if (!found) 
 						{
 							activePoints.splice(activePoints.indexOf(ap), 1);
-							InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
-							//InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
+							//InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
+							InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
+							//trace("ended with this:",dist)
 							if(debug) trace("an!=0 REMOVED:", ap.id, ap.interactionPointID, ap.type, ap.position);
 						}
 				}
@@ -104,12 +105,16 @@ package com.gestureworks.managers
 							{
 							if (ap.type == fp.type)
 							{
-							var dist0:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
-							//trace("dist",dist,ap.type,fp.type)
+								
+							//var dist0:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 							
-							if (dist0 < d2)  ////update
-								{
-									
+							//trace(ap.position.z,fp.position.z)
+							//trace("dist",dist,dist0,ap.type,fp.type, ap.interactionPointID, fp.interactionPointID,_ID, ap.rootPointID, fp.rootPointID)
+							
+							
+							if(ap.rootPointID == fp.rootPointID) 
+							{
+								ap.rootPointID = fp.rootPointID;
 									ap.position = fp.position;
 									ap.direction = fp.direction;
 									ap.normal = fp.normal;
@@ -137,10 +142,46 @@ package com.gestureworks.managers
 									
 									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
 										
-									InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
-									//InteractionManager.onInteractionUpdatePoint(ap);
+									//InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
+									InteractionManager.onInteractionUpdatePoint(ap);
+									//if (debug)
+									trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, ap.position);	
+							
+							}
+							//else if (dist0 < d2)  ////update
+							/*	{
+									ap.rootPointID = fp.rootPointID;
+									ap.position = fp.position;
+									ap.direction = fp.direction;
+									ap.normal = fp.normal;
+									
+									ap.screen_position = fp.screen_position;
+									ap.screen_direction = fp.screen_direction;
+									ap.screen_normal = fp.screen_normal;
+									
+									// advanced ip features
+									ap.fist = fp.fist;
+									ap.splay = fp.splay;
+									ap.orientation = fp.orientation;
+									ap.radius = fp.radius;
+									ap.flatness = fp.flatness;
+									ap.fn = fp.fn;
+									
+									//sensors
+									ap.acceleration = fp.acceleration;
+									ap.buttons = fp.buttons;
+									
+									ap.handID = fp.handID;
+									ap.type = fp.type;
+									ap.mode = fp.mode;
+									
+									
+									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
+										
+									//InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
+									InteractionManager.onInteractionUpdatePoint(ap);
 									//if (debug)trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, dist0);	
-								}
+								}*/
 							}
 						}	
 					}
@@ -151,11 +192,12 @@ package com.gestureworks.managers
 					{
 						_ID++;
 						fp.interactionPointID = _ID;
+						//fp.rootPointID = fp.rootPointID;
 						//trace(fp)
 						//trace(activePoints);
 						activePoints.push(fp);
-						InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
-						//InteractionManager.onInteractionBeginPoint(fp);
+						//InteractionManager.onInteractionBegin(new GWInteractionEvent(GWInteractionEvent.INTERACTION_BEGIN, fp, true, false)); // push begin event
+						InteractionManager.onInteractionBeginPoint(fp);
 						//if (debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
 						//trace("ip begin",fp.interactionPointID,temp_framePoints.length)
 					}

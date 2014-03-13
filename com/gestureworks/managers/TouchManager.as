@@ -76,13 +76,11 @@ package com.gestureworks.managers
 			{
 				trace("init touchmanager");
 				//trace("touch frame processing rate:",GestureGlobals.touchFrameInterval);
+				
+				//gs = GestureGlobals.gw_public::core;
 				touchPointCount = GestureGlobals.gw_public::touchPointCount
 				touchPoints = GestureGlobals.gw_public::touchPoints;
 				touchObjects = GestureGlobals.gw_public::touchObjects;
-				touchPointCount = GestureGlobals.gw_public::touchPointCount;
-				
-				gs = GestureGlobals.gw_public::core;
-				//if (gs)gs.touchEnabled = true;
 				touchArray = GestureGlobals.gw_public::touchArray;
 				
 				
@@ -105,19 +103,6 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);
 		}	
-		
-	
-		public static function pointCount():int 
-		{
-			var count:int = 0;
-			for each(var point:TouchPointObject in touchPoints)
-			{
-				count++;
-				//trace("what")
-				}
-			//trace(count);
-			return count;
-		} 
 		
 		// registers touch point via touchSprite
 		private static function registerTouchPoint(point:TouchPointObject):void//event:GWTouchEvent
@@ -148,13 +133,11 @@ package com.gestureworks.managers
 			//onTouchMove(event);
 			
 			var tpO:TouchPointObject  = new TouchPointObject();
+			
 					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
-					tpO.position.x = event.stageX;
-					tpO.position.y = event.stageY;
-					tpO.position.z = event.stageZ;
-					tpO.size.x = event.sizeX;
-					tpO.size.y = event.sizeY;
+					tpO.position = new Vector3D (event.stageX, event.stageY, event.stageZ);
+					tpO.size = new Vector3D (event.sizeX, event.sizeY);
 					tpO.pressure = event.pressure;
 			
 			onTouchMovePoint(tpO);
@@ -166,22 +149,21 @@ package com.gestureworks.managers
 		 */
 		private static function onTouchBegin(e:TouchEvent):void 
 		{			
-			var event:GWTouchEvent = new GWTouchEvent(e);					
+			var event:GWTouchEvent = new GWTouchEvent(e);			
+			
 			//TODO:CREATE TOUCH POINT HERE AND INJECT
 			//onTouchDown(event);
 			
 			var tpO:TouchPointObject  = new TouchPointObject();
 					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
-					tpO.position.x = event.stageX;
-					tpO.position.y = event.stageY;
-					tpO.position.z = event.stageZ;
-					tpO.size.x = event.sizeX;
-					tpO.size.y = event.sizeY;
+					tpO.position = new Vector3D (event.stageX, event.stageY, event.stageZ);
+					tpO.size = new Vector3D (event.sizeX, event.sizeY);
 					tpO.pressure = event.pressure;
 			
 			onTouchDownPoint(tpO);
 		}
+		
 		
 		public static function onTouchDown(event:GWTouchEvent):void
 		{
@@ -192,6 +174,9 @@ package com.gestureworks.managers
 			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
 			var tpO:TouchPointObject  = new TouchPointObject();
 					
+					if (!tpO.size) tpO.size = new Vector3D();
+					if (!tpO.position) tpO.position = new Vector3D();
+			
 					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
 					tpO.position.x = event.stageX;
@@ -200,6 +185,7 @@ package com.gestureworks.managers
 					tpO.size.x = event.sizeX;
 					tpO.size.y = event.sizeY;
 					tpO.pressure = event.pressure;
+					//tpO.phase = "begin";
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
 					touchArray.push(tpO);
@@ -210,12 +196,13 @@ package com.gestureworks.managers
 					GestureGlobals.gw_public::touchPoints[tpO.touchPointID] = tpO;
 				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerTouchPoint(tpO);
+				//registerTouchPoint(tpO);
 				
 			///////////////////////////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////////////
 			//trace("TM DOWN",event.stageX,event.stageY,event.stageZ,validTarget(event));
 		}
+		
 		
 		
 		public static function onTouchDownPoint(pt:TouchPointObject):void
@@ -247,7 +234,7 @@ package com.gestureworks.managers
 					GestureGlobals.gw_public::touchPoints[pt.touchPointID] = pt//tpO;
 				
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerTouchPoint(pt);//tpO
+				//registerTouchPoint(pt);//tpO
 				
 			///////////////////////////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////////////
@@ -261,12 +248,13 @@ package com.gestureworks.managers
 			////////////////////////////////////////////////////////////////////////////////////
 			//trace("Touch point End, touchManager", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
 			var touchPointID:int = event.touchPointID;
-			var tpO:TouchPointObject = touchPoints[touchPointID];
+			var tpO:TouchPointObject = touchPoints[touchPointID] as TouchPointObject;
 			
 			//trace("ready to remove", pointObject);
 			
 			if (tpO)
 			{
+				
 					// REMOVE POINT FROM LOCAL LIST
 					touchArray.splice(tpO.id, 1);
 					
@@ -277,13 +265,13 @@ package com.gestureworks.managers
 					touchPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < touchArray.length; i++)
+					for (var i:uint = 0; i < touchArray.length; i++)
 					{
 						touchArray[i].id = i;
 					}
 				
 					// DELETE FROM GLOBAL POINT LIST
-					delete touchPoints[event.touchPointID];
+					delete touchPoints[event.touchPointID]as TouchPointObject;
 			}
 			
 			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
@@ -294,7 +282,7 @@ package com.gestureworks.managers
 			////////////////////////////////////////////////////////////////////////////////////
 			//trace("Touch point End, touchManager", event.touchPointID,gs.touchPointCount, gs.cO.touchArray.length)
 			
-			var tpO:TouchPointObject = touchPoints[touchPointID];
+			var tpO:TouchPointObject = touchPoints[touchPointID] as TouchPointObject;
 			
 			if (tpO)
 			{
@@ -305,15 +293,15 @@ package com.gestureworks.managers
 					touchPointCount--;
 					
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < touchArray.length; i++)
+					for (var i:uint = 0; i < touchArray.length; i++)
 					{
 						touchArray[i].id = i;
 					}
 					// DELETE FROM GLOBAL POINT LIST
-					delete touchPoints[touchPointID];
+					delete touchPoints[touchPointID]as TouchPointObject;
 			}
 			/////////////////////////////////////////////////////////////////////////////////////
-			trace("touch manger point up");
+			//trace("touch manger point up");
 		}
 		
 		public static function onTouchMove(event:GWTouchEvent):void
@@ -323,10 +311,13 @@ package com.gestureworks.managers
 			///////////////////////////////////////////////////////////////////////////////
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
 			
-			var tpO:TouchPointObject = touchPoints[event.touchPointID];
+			var tpO:TouchPointObject = touchPoints[event.touchPointID]as TouchPointObject;
 			
 				if (tpO)
 				{	
+					if (!tpO.size) tpO.size = new Vector3D();
+					if (!tpO.position) tpO.position = new Vector3D();
+					
 					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
 					//tpO.id  = //event.id;
 					tpO.touchPointID  = event.touchPointID;
@@ -348,12 +339,13 @@ package com.gestureworks.managers
 		
 		public static function onTouchMovePoint(pt:TouchPointObject):void
 		{	
-			var tpO:TouchPointObject = touchPoints[pt.touchPointID];
+			
+			var tpO:TouchPointObject = touchPoints[pt.touchPointID] as TouchPointObject;
 			
 				if (tpO)
 				{	
 					//tpO.id  = pt.id;
-					//tpO.touchPointID  = pt.touchPointID;
+					tpO.touchPointID  = pt.touchPointID;
 					tpO.position = pt.position;
 					tpO.size = pt.size;
 					tpO.pressure = pt.pressure;
@@ -361,10 +353,13 @@ package com.gestureworks.managers
 					//trace( tpO.moveCount);
 				}
 				
+				
+				
 				// UPDATE POINT HISTORY 
 			//	TouchPointHistories.historyQueue(tpO);
 				//////////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////////
+				trace("touchmove-------------------------",tpO.moveCount,pt.position);
 		}		
 		
 		

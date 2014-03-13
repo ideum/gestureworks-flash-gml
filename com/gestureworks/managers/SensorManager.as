@@ -77,9 +77,9 @@ package com.gestureworks.managers
 			{
 			////////////////////////////////////////////////////////////////////////////////////////
 			// ref global motion point list
+			gs = GestureGlobals.gw_public::core;
 			sensorPoints = GestureGlobals.gw_public::sensorPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
-			gs = GestureGlobals.gw_public::core;
 			sensorPointCount = GestureGlobals.gw_public::sensorPointCount;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
 			
@@ -140,7 +140,7 @@ package com.gestureworks.managers
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			// create new point object
 			var spO:SensorPointObject  = new SensorPointObject();
-					trace(gs);
+					//trace(gs);
 						spO.id = sensorPointCount; 
 						spO.sensorPointID = pt.sensorPointID;
 					 

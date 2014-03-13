@@ -140,10 +140,10 @@ package com.gestureworks.managers
 		public static function registerInteractionPoint(ipo:InteractionPointObject):void
 		{
 			//TODO:APPEARS TO HAVE NO FUNCTION
-			ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
+			//ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
 		}
 		
-		
+		/*
 		public static function onInteractionBegin(event:GWInteractionEvent):void
 		{			
 			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
@@ -209,7 +209,7 @@ package com.gestureworks.managers
 			//}
 			
 			//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
-		}
+		}*/
 		
 		public static function onInteractionBeginPoint(pt:InteractionPointObject):void
 		{			
@@ -251,7 +251,7 @@ package com.gestureworks.managers
 						*/
 						
 						
-					pt.id = gs.interactionPointCount;		
+					pt.id = interactionPointCount;		
 					pt.phase = "begin";
 					
 				////////////////////////////////////////////
@@ -276,7 +276,7 @@ package com.gestureworks.managers
 			//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
 		}
 		
-		
+		/*
 		// stage motion end
 		public static function onInteractionEnd(event:GWInteractionEvent):void
 		{
@@ -310,7 +310,7 @@ package com.gestureworks.managers
 			}
 			trace("interaction point end",interactionPointCount)
 		}
-		
+		*/
 		public static function onInteractionEndPoint(id:int):void
 		{
 			var ipointObject:InteractionPointObject = ipoints[id];
@@ -318,7 +318,7 @@ package com.gestureworks.managers
 			
 			if (ipointObject)
 			{
-				ipointObject.phase="end"
+				ipointObject.phase= "end"
 				
 					// REMOVE POINT FROM GLOBAL LIST
 					iPointArray.splice(id, 1);
@@ -343,7 +343,7 @@ package com.gestureworks.managers
 			trace("interaction point end",interactionPointCount)
 		}
 		
-		
+		/*
 		// the Stage TOUCH_MOVE event.	// DRIVES POINT PATH UPDATES
 		public static function onInteractionUpdate(event:GWInteractionEvent):void
 		{			
@@ -393,7 +393,7 @@ package com.gestureworks.managers
 				// SAME WITH VECTOR ANALYSIS
 				//InteractionPointHistories.historyQueue(event);
 		}	
-		
+		*/
 		public static function onInteractionUpdatePoint(pt:InteractionPointObject):void
 		{			
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
