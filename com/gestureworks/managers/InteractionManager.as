@@ -64,11 +64,12 @@ package com.gestureworks.managers
  	
 	public class InteractionManager 
 	{	
-		public static var ipoints:Dictionary = new Dictionary();
+		public static var interactionPoints:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
 		public static var interactionPointCount:int;
 		private static var iPointArray:Vector.<InteractionPointObject>
+		
 		private static var gs:CoreSprite;
 		private static var interaction_init:Boolean = false;
 		
@@ -81,14 +82,13 @@ package com.gestureworks.managers
 		
 		
 		gw_public static function initialize():void
-
 		{
 			if (!interaction_init)
 			{
 			trace("interaction manager init");
 			///////////////////////////////////////////////////////////////////////////////////////
 			// ref gloabl motion point list
-			ipoints = GestureGlobals.gw_public::interactionPoints;
+			interactionPoints = GestureGlobals.gw_public::interactionPoints;
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			interactionPointCount =  GestureGlobals.gw_public::interactionPointCount;
 			
@@ -134,82 +134,13 @@ package com.gestureworks.managers
 			}
 		}
 		
-		gw_public static function deInitialize():void{}
-		
-		// registers touch point via touchSprite
-		public static function registerInteractionPoint(ipo:InteractionPointObject):void
+		gw_public static function deInitialize():void 
 		{
-			//TODO:APPEARS TO HAVE NO FUNCTION
-			//ipo.history.unshift(InteractionPointHistories.historyObject(ipo))
+			
+			
 		}
 		
-		/*
-		public static function onInteractionBegin(event:GWInteractionEvent):void
-		{			
-			//trace("interaction point begin, interactionManager",event.value.interactionPointID);
-			//trace("event mode",event.value.mode )
 
-				// DUPE CORE IP LIST FOR NOW
-				// create new interaction point clone for each interactive display object 
-				var ipO:InteractionPointObject  = new InteractionPointObject();	
-				
-						// need to make it modaly invariant
-						ipO.id = gs.interactionPointCount; // NEEDED FOR THUMBID
-						ipO.interactionPointID = event.value.interactionPointID;
-						ipO.handID = event.value.handID;
-						ipO.type = event.value.type;
-						ipO.mode = event.value.mode;
-						
-						ipO.position = event.value.position;
-						ipO.direction = event.value.direction;
-						ipO.normal = event.value.normal;
-						
-						ipO.screen_position = event.value.screen_position;
-						ipO.screen_direction = event.value.screen_direction;
-						ipO.screen_normal = event.value.screen_normal;
-						
-						ipO.screen_position = event.value.screen_position;
-						ipO.screen_direction = event.value.screen_direction;
-						ipO.screen_normal = event.value.screen_normal;
-						
-						ipO.velocity = event.value.velocity;
-						ipO.acceleration = event.value.acceleration;
-						
-						ipO.radius = event.value.radius;
-						ipO.length = event.value.length;
-						ipO.width = event.value.width;
-						
-						//ADVANCED IP PROEPRTIES
-						ipO.flatness = event.value.flatness;
-						ipO.orientation = event.value.orientation;
-						ipO.fn = event.value.fn;
-						ipO.splay = event.value.splay;
-						ipO.fist = event.value.fist;
-						
-						ipO.phase = "begin"
-						//trace(ipO.interactionPointID)
-						
-				////////////////////////////////////////////
-				//ADD TO GLOBAL Interaction POINT LIST
-				iPointArray.push(ipO);
-				////////////////////////////////////////////
-				
-				//trace("ip begin",ipO.type)
-				// update local touch object point count
-				interactionPointCount++;
-				//gms.interactionPointCount++;
-
-				///////////////////////////////////////////////////////////////////////////
-				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::interactionPoints[event.value.interactionPointID] = ipO;
-					
-				////////////////////////////////////////////////////////////////////////////
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerInteractionPoint(ipO);
-			//}
-			
-			//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
-		}*/
 		
 		public static function onInteractionBeginPoint(pt:InteractionPointObject):void
 		{			
@@ -252,6 +183,10 @@ package com.gestureworks.managers
 						
 						
 					pt.id = interactionPointCount;		
+					pt.interactionPointID = pt.interactionPointID;
+					//ipO.handID = pt.handID;
+						//ipO.type = pt.type;
+					//ipO.mode = pt.mode;
 					pt.phase = "begin";
 					
 				////////////////////////////////////////////
@@ -266,11 +201,11 @@ package com.gestureworks.managers
 
 				///////////////////////////////////////////////////////////////////////////
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::interactionPoints[pt.interactionPointID] = pt//ipO;
+				interactionPoints[pt.interactionPointID]  = pt//ipO;
 					
 				////////////////////////////////////////////////////////////////////////////
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerInteractionPoint(pt);//ipO
+				//registerInteractionPoint(pt);//ipO
 			//}
 			
 			//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
@@ -280,8 +215,7 @@ package com.gestureworks.managers
 		// stage motion end
 		public static function onInteractionEnd(event:GWInteractionEvent):void
 		{
-			var iPID:int = event.value.interactionPointID;
-			var ipointObject:InteractionPointObject = ipoints[iPID];
+			var ipointObject:InteractionPointObject = interactionPoints[event.value.interactionPointID];
 			//trace("Motion point End, motionManager", iPID)
 			
 			if (ipointObject)
@@ -291,43 +225,35 @@ package com.gestureworks.managers
 					// REMOVE POINT FROM GLOBAL LIST
 					iPointArray.splice(ipointObject.id, 1);
 					
-						//LOCAL OBJECTES REMOVE POINTS BASED ON ClUSTERING METHODS
-						//SEE KINEMETRIC
-					
 					// REDUCE GLOBAL INTERACTION POINT COUNT
-					//gms.interactionPointCount--;
 					interactionPointCount--;
 					
 					// UPDATE INTERACTION POINT ID 
-					for (var i:int = 0; i < iPointArray.length; i++)//gms.cO.iPointArray.length
+					for (var i:uint = 0; i < iPointArray.length; i++)//gms.cO.iPointArray.length
 					{
 						//gms.cO.iPointArray[i].id = i;
 						iPointArray[i].id = i;
 					}
 				
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
-					delete ipoints[event.value.interactionPointID];
+					delete interactionPoints[event.value.interactionPointID];
 			}
-			trace("interaction point end",interactionPointCount)
-		}
-		*/
-		public static function onInteractionEndPoint(id:int):void
+			trace("interaction point end EVENT",interactionPointCount)
+		}*/
+		
+		public static function onInteractionEndPoint(interactionPointID:int):void
 		{
-			var ipointObject:InteractionPointObject = ipoints[id];
+			var ipO:InteractionPointObject = interactionPoints[interactionPointID] as InteractionPointObject;
 			//trace("Motion point End, motionManager", iPID)
 			
-			if (ipointObject)
+			if (ipO)
 			{
-				ipointObject.phase= "end"
+					ipO.phase= "end"
 				
 					// REMOVE POINT FROM GLOBAL LIST
-					iPointArray.splice(id, 1);
-					
-						//LOCAL OBJECTES REMOVE POINTS BASED ON ClUSTERING METHODS
-						//SEE KINEMETRIC
-					
+					iPointArray.splice(ipO.id, 1);
+	
 					// REDUCE GLOBAL INTERACTION POINT COUNT
-					//gms.interactionPointCount--;
 					interactionPointCount--;
 					
 					// UPDATE INTERACTION POINT ID 
@@ -336,68 +262,16 @@ package com.gestureworks.managers
 						//gms.cO.iPointArray[i].id = i;
 						iPointArray[i].id = i;
 					}
-				
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
-					delete ipoints[id];
+					delete interactionPoints[interactionPointID] as InteractionPointObject;
 			}
-			trace("interaction point end",interactionPointCount)
+			//trace("interaction point end POINT",interactionPointCount)
 		}
 		
-		/*
-		// the Stage TOUCH_MOVE event.	// DRIVES POINT PATH UPDATES
-		public static function onInteractionUpdate(event:GWInteractionEvent):void
-		{			
-			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
-			var ipO:InteractionPointObject = ipoints[event.value.interactionPointID];
-			
-			//trace("interaction move event, interactionsManager", event.value.interactionPointID);
-			
-				if (ipO)
-				{	
-					//mpO = event.value;
-					ipO.interactionPointID  = event.value.interactionPointID;
-					ipO.mode = event.value.mode;
-					ipO.position = event.value.position;
-					ipO.direction = event.value.direction;
-					ipO.normal = event.value.normal;
-					
-					ipO.screen_position = event.value.screen_position;
-					ipO.screen_direction = event.value.screen_direction;
-					ipO.screen_normal = event.value.screen_normal;
-					
-					ipO.velocity = event.value.velocity;
-					
-					ipO.acceleration = event.value.acceleration;
-					ipO.buttons = event.value.buttons;
-					
-					ipO.radius = event.value.radius
-					ipO.length = event.value.length;
-					ipO.width = event.value.width;
-					
-					ipO.flatness = event.value.flatness;
-					ipO.orientation = event.value.orientation;
-					ipO.fn = event.value.fn;
-					ipO.splay = event.value.splay;
-					ipO.fist = event.value.fist;
-					
-					ipO.phase = "update"
-					//mpO.handID = event.value.handID;
-					//ipO.moveCount ++;
-					
-					//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
-				}
-				
-
-				// UPDATE POINT HISTORY
-				// NOT APPARENTLY NEEDED AS GET FROM CLUSTER HISTORY
-				// SAME WITH VECTOR ANALYSIS
-				//InteractionPointHistories.historyQueue(event);
-		}	
-		*/
 		public static function onInteractionUpdatePoint(pt:InteractionPointObject):void
 		{			
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
-			var ipO:InteractionPointObject = ipoints[pt.interactionPointID];
+			var ipO:InteractionPointObject = interactionPoints[pt.interactionPointID] as InteractionPointObject;
 			
 			//trace("interaction move point, interactionsManager", pt.interactionPointID);
 			
@@ -441,7 +315,8 @@ package com.gestureworks.managers
 				// UPDATE POINT HISTORY
 				// NOT APPARENTLY NEEDED AS GET FROM CLUSTER HISTORY
 				// SAME WITH VECTOR ANALYSIS
-				//InteractionPointHistories.historyQueue(event);
+				//InteractionPointHistories.historyQueue(ipO);
+				//ipO.history.unshift(InteractionPointHistories.historyObject(ipO))
 		}	
 	
 		///////////////////////////////////////////////////////////////////////////////////////
@@ -741,7 +616,7 @@ package com.gestureworks.managers
 				//GET SENSOR PREMETRICS
 				if (GestureWorks.activeSensor) gs.cc.getSensorGeoMetrics();
 				
-				gs.cc.updateCoreRawPointCount();
+				//gs.cc.updateCoreRawPointCount();
 				
 				//GLOBAL VISUALIZER FOR RAW INPUT DATA
 				gs.cv.updateDebugDisplay();

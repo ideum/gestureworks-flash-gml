@@ -78,6 +78,6 @@ package com.gestureworks.objects
 		
 		///////////////////////////////////////////////////////////////////
 		// history/////////////////////////////////////////////////////////
-		public var history:Vector.<SensorPointObject> = new Vector.<SensorPointObject>();
+		//public var history:Vector.<SensorPointObject> = new Vector.<SensorPointObject>();
 	}
 }

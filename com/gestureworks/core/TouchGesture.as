@@ -29,7 +29,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.FrameObject; 
 	import com.gestureworks.objects.DimensionObject;
 	
-	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TimelineObject;
@@ -59,7 +59,7 @@ package com.gestureworks.core
 		private var ts:Object;
 		private var id:uint;
 		
-		private var cO:ClusterObject
+		private var cO:ipClusterObject
 		private var sO:StrokeObject
 		private var gO:GestureListObject;
 		private var tiO:TimelineObject;
@@ -71,18 +71,10 @@ package com.gestureworks.core
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
 			
-			if (ts.reftest == 0)
-			{
-			cO = GestureGlobals.gw_public::clusters[id]//ts.cO;
+			//TODO: POINT TO RELEVANT SUBCLUSTER //cO = GestureGlobals.gw_public::clusters[id]//ts.cO;
 			//sO = GestureGlobals.gw_public::clusters[id]//ts.sO;
 			gO = GestureGlobals.gw_public::gestures[id]//ts.gO;
 			tiO = GestureGlobals.gw_public::timelines[id]//ts.tiO;
-			}
-			else{
-			cO = ts.cO;
-			gO = ts.gO;
-			tiO = ts.tiO;
-			}
 			
 			initGesture();
          }
@@ -872,7 +864,7 @@ package com.gestureworks.core
 								ts.dispatchEvent(GWEVENT);
 								//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
 								//if ((tiO.timelineOn) && (tiO.gestureEvents))	
-								ts.tiO.frame.gestureEventArray.push(GWEVENT);
+								if (ts.tiO.frame.gestureEventArray) ts.tiO.frame.gestureEventArray.push(GWEVENT);
 								//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							}
 							

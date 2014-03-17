@@ -103,7 +103,6 @@ package com.gestureworks.server
 						ptf.length = f.@Length;
 						
 					pointList.push(ptf);
-					
 					pids.push(int(f.@id)) 
 
 					//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
@@ -116,7 +115,7 @@ package com.gestureworks.server
 					var ptp:Object = new MotionPointObject();//new Object();
 						ptp.type = "palm";
 						ptp.handID = j;
-						ptp.id = j//p.@Id;
+						ptp.id = 5000+j//p.@id;
 						ptp.position = new Vector3D(p.Position.@x, p.Position.@y, p.Position.@z * -1);
 						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z*-1);
 						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z*-1);
@@ -125,7 +124,7 @@ package com.gestureworks.server
 					//trace("palm", ptp.id, ptp.position, ptp.direction, ptp.normal)
 					
 					//PUSH IDS
-					pids.push(int(p.@id)) 
+					pids.push(int(5000+j)) ////p.@id
 					
 				/*
 				// CREATE TOOL MOTION POINT

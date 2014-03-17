@@ -25,7 +25,7 @@ package com.gestureworks.analysis
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.core.GML;
 	import com.gestureworks.objects.FrameObject;
-	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.objects.TouchPointObject;
 	
 	import com.gestureworks.events.GWEvent;
@@ -41,7 +41,7 @@ package com.gestureworks.analysis
 	{
 		private var touchObjectID:int;
 		private var ts:Object;//	private var ts:TouchSprite;
-		private var cO:ClusterObject;
+		private var cO:ipClusterObject;
 		
 		// pause time between gesture event counting cycles
 		private var tap_pauseTime:int = 0;
@@ -75,7 +75,7 @@ package com.gestureworks.analysis
 		public function init():void
 		{
 			ts = GestureGlobals.gw_public::touchObjects[touchObjectID];
-			cO = ts.cO;
+			//TODO: POINT TO RELVANT SUBCLUSTER //cO = ts.cO;
 			
 			if (ts.traceDebugMode) trace("init gesture discrete analysis");
 			//trace(GestureGlobals.touchFrameInterval)
@@ -108,8 +108,8 @@ package com.gestureworks.analysis
 			var LN:uint = cO.hold_n;
 			
 			//clear hold position
-			cO.hold_x = 0;
-			cO.hold_y = 0;
+			//cO.hold_x = 0;
+			//cO.hold_y = 0;
 			
 			// NOTE SHOULD PULL HOLD X AND Y AND N FROM CLUSTER AND MAKE LOCAL TO TEMPORALMETRIC
 			// WILL CLEAN OUT KINEMETRIC AND MOVE TEMPORAL DATA STRUCTS TO TEMPORAL METRIC ASSOCIATED WITH CLUSTER

@@ -70,6 +70,6 @@ package com.gestureworks.objects
 		
 		//////////////////////////////////////////////////////////////////////////////
 		// history
-		public var history:Vector.<TouchPointObject> //= new Vector.<TouchPointObject>();
+		//public var history:Vector.<TouchPointObject> //= new Vector.<TouchPointObject>();
 	}
 }

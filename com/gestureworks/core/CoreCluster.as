@@ -24,6 +24,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.SensorPointObject;
+	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.ipClusterObject;
 	import com.gestureworks.objects.GestureListObject;
@@ -69,6 +70,7 @@ package com.gestureworks.core
 		private var motionArray:Vector.<MotionPointObject>
 		//private var motionArray2D:Vector.<MotionPointObject>
 		private var sensorArray:Vector.<SensorPointObject>
+		private var iPointArray:Vector.<InteractionPointObject>
 		private var iPointClusterLists:Object;
 		
 		public var core_init:Boolean= false;
@@ -108,6 +110,7 @@ package com.gestureworks.core
 			touchArray = GestureGlobals.gw_public::touchArray;
 			motionArray = GestureGlobals.gw_public::motionArray;
 			sensorArray = GestureGlobals.gw_public::sensorArray;
+			iPointArray = GestureGlobals.gw_public::iPointArray;
 			
 			initCoreGeoMetric();
           }
@@ -128,6 +131,9 @@ package com.gestureworks.core
 		
 		public function updateCoreRawPointCount():void 
 		{
+			
+			//trace("array lengths",touchArray.length, motionArray.length, sensorArray.length,iPointArray.length);
+			
 			//	trace("update raw cluster count");
 				// get motion point counts
 				//if (gs.motionEnabled) cluster_geometric.findMotionClusterConstants();  // get mpn

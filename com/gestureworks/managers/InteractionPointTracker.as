@@ -83,10 +83,12 @@ package com.gestureworks.managers
 							if (ap.type == fp.type && ap.rootPointID == fp.rootPointID) found = true;
 							else if ((ap.type == fp.type) && (dist < d2)) found = true;
 							
-							//trace(ap.id, fp.id, ap.interactionPointID, fp.interactionPointID,ap.type,fp.type,dist)
+							//trace(ap.id, fp.id, ap.interactionPointID, fp.interactionPointID,ap.type,fp.type,dist);
+							//trace("roooooot",ap.rootPointID, fp.rootPointID);
 						}
 						
-						//trace(activePoints.length,temp_framePoints.length)
+						
+						//trace("-------------------------------------------",found,activePoints.length,temp_framePoints.length)
 						
 						if (!found) 
 						{
@@ -94,7 +96,8 @@ package com.gestureworks.managers
 							//InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
 							InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
 							//trace("ended with this:",dist)
-							if(debug) trace("an!=0 REMOVED:", ap.id, ap.interactionPointID, ap.type, ap.position);
+							//if (debug) 
+							//trace("an!=0 REMOVED:-------------------------------------------", ap.id, ap.interactionPointID, ap.type, ap.position);
 						}
 				}
 					//////////////////////////////////////////////////////////////////
@@ -145,7 +148,7 @@ package com.gestureworks.managers
 									//InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
 									InteractionManager.onInteractionUpdatePoint(ap);
 									//if (debug)
-									trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, ap.position);	
+									//trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, ap.position);	
 							
 							}
 							//else if (dist0 < d2)  ////update

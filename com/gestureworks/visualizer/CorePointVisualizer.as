@@ -256,77 +256,8 @@ package com.gestureworks.visualizer
 								graphics.endFill();
 						}
 					
-					}
-					/////////////////////////////////////////////////////////////////
-					// point vectors
-					/////////////////////////////////////////////////////////////////
-					
-					if (_drawVector)
-					{
-						//define vector point style
-						//graphics.lineStyle(style.v_stroke,style.color,style.alpha);
-						hist  = pt.history.length - 1;
-						if (hist < 0) hist = 0;
-						var alpha:Number = 0;
-						var k:int = 0;
-						
-							if (style.trail_shape == "line") {
-								
-										alpha = 0.08*(hist-j)
-										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-										graphics.moveTo(pt.history[0].position.x, pt.history[0].position.y);
-										graphics.lineTo(pt.history[hist].position.x,pt.history[hist].position.y);
-									
-							}
-							else if (style.trail_shape == "curve") {
-								
-								for (var j:int = 0; j < hist; j++) 
-								{
-									if (j + 1 <= hist) {
-										alpha = 0.08 * (hist - j)
-										graphics.lineStyle(style.stroke_thickness, style.stroke_color, alpha);
-										graphics.moveTo(pt.history[j].position.x, pt.history[j].position.y);
-										graphics.lineTo(pt.history[j + 1].position.x, pt.history[j + 1].position.y);
-									}
-								}
-							}
-							else if (style.trail_shape == "ring") {
-									
-								for (k=0; k < hist; k++) 
-								{
-									alpha = 0.08 * (hist - j)
-									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-									graphics.drawCircle(pt.history[j].position.x, pt.history[j].position.y, style.radius);									
-								}
-							}
-							else if (style.trail_shape == "curve") {
-									
-								for (k=0; k < hist; k++) 
-								{
-									alpha = 0.08 * (hist - j)
-									graphics.lineStyle(style.stroke_thickness, style.stroke_color,alpha);
-									graphics.drawCircle(pt.history[j].position.x, pt.history[j].position.y, style.radius);									
-								}
-							}	
-							else if (style.trail_shape == "circle-fill") {
-									
-								var num:int = (hist <= maxTrails) ? hist : maxTrails;
-								
-								for (k=0; k < num; k++) 
-								{										
-									trails[i][k].x = pt.history[k].position.x - style.radius+3; 
-									trails[i][k].y = pt.history[k].position.y - style.radius+3;
-									trails[i][k].alpha = 1;
-									if (parent) {
-										parent.addChild(trails[i][k]);	
-										parent.addChildAt(this, parent.numChildren - 1);		
-									}
-								}
-							}								
-						}
-						///////////////////////////////////////////////////////////////////////
-						
-					}
+					}	
+				}
 		}		
 			
 		/////////////////////////////////////////////////////////////////////

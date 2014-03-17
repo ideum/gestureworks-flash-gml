@@ -81,25 +81,19 @@ package com.gestureworks.managers
 			//store frame's point ids
 			var pids:Array = new Array();
 			
-			//CREATE HANDS THEN... FINGERS AND TOOLS
-			
 			//store hand ids
 			for each(var hand:Hand in event.frame.hands){
 				if(hand) pids.push(hand.id);//if(hand.isValid)
-				//trace("handid", hand.id);
+				trace("handid", hand.id);
 			}
 			// store poitnables ids
-			// is valid does not seem to be effective here
 			for each(var pointable:Pointable in event.frame.pointables){
 				if (pointable){
 					if (pointable.hand) pids.push(pointable.id);
-					//trace("pointid", pointable.id);
+					trace("pointid", pointable.id);
 				}
 			}
-			
-			
-			
-			trace("pids",pids.length,"active points", activePoints.length)
+			//trace("pids",pids.length,"active points", activePoints.length)
 			
 			//point removal
 			var temp:Array = activePoints;  //prevent concurrent mods
@@ -110,17 +104,13 @@ package com.gestureworks.managers
 					temp.splice(temp.indexOf(aid), 1);
 					
 					var mp:MotionPointObject = new MotionPointObject();
-						//mp.type = "motion";
 						mp.motionPointID = aid;
 						
 						//determin type
 						if (event.frame.pointable(aid).isTool) mp.type = "tool";
 						if (event.frame.pointable(aid).isFinger) mp.type = "finger";
 						else mp.type = "palm";
-						//else (mp.type = "unknown")
-						
-						//trace("mp type",mp.type);
-						
+
 						/////////////////////////////////////////
 						//create palm point
 						if (mp.type == "palm") 
@@ -130,26 +120,12 @@ package com.gestureworks.managers
 								if (aid == event.frame.hands[i].id) 
 								{
 									mp.handID = event.frame.hand[i].id;
-									
-									//var xp0:Number = normalize( event.frame.hands[i].palmPosition.x, minX, maxX)*1000;
-									//var yp0:Number = normalize(event.frame.hands[i].palmPosition.y, minY, maxY)*1000;
-									//var zp0:Number = normalize( -1*event.frame.hands[i].palmPosition.z, minZ, maxZ)*1000;
-
-									//var xp0:Number = map(event.frame.hands[i].palmPosition.x, lminX, lmaxX, minX, maxX);
-									//var yp0:Number = map(event.frame.hands[i].palmPosition.y, lminY, lmaxY, minY, maxY);
-									//var zp0:Number = map(-1*event.frame.hands[i].palmPosition.z, lminZ, lmaxZ, minZ, maxZ);
-									
 									mp.position = new Vector3D( event.frame.hands[i].palmPosition.x, event.frame.hands[i].palmPosition.y, event.frame.hands[i].palmPosition.z * -1);
-									//mp.position = new Vector3D(xp0,yp0,zp0);
 									mp.direction = new Vector3D(event.frame.hands[i].direction.x, event.frame.hands[i].direction.y, event.frame.hands[i].direction.z*-1);
 									mp.normal = new Vector3D(event.frame.hands[i].palmNormal.x, event.frame.hands[i].palmNormal.y, event.frame.hands[i].palmNormal.z*-1);
 									mp.velocity = new Vector3D(event.frame.hands[i].palmVelocity.x, event.frame.hands[i].palmVelocity.y, event.frame.hands[i].palmVelocity.z*-1);
-									
 									mp.sphereCenter = new Vector3D(event.frame.hands[i].sphereCenter.x, event.frame.hands[i].sphereCenter.y, event.frame.hands[i].sphereCenter.z*-1);
 									mp.sphereRadius = event.frame.hands[i].sphereRadius
-									
-									// cutom leap matrix
-									//mp.rotation = event.frame.hands[i].rotation;
 								}
 							}
 						}
@@ -157,32 +133,13 @@ package com.gestureworks.managers
 						//create finger or tool type
 						if ((mp.type == "finger") || (mp.type == "tool"))
 						{
-							if (event.frame.pointable(aid).hand) {
-								mp.handID = event.frame.pointable(aid).hand.id
-								//trace("point hand id",mp.handID);
-							}
+							if (event.frame.pointable(aid).hand) mp.handID = event.frame.pointable(aid).hand.id
 							
-							//var x0:Number = normalize( event.frame.pointable(aid).tipPosition.x, minX, maxX)*1000;
-							//var y0:Number = normalize( event.frame.pointable(aid).tipPosition.y, minY, maxY)*1000;
-							//var z0:Number = normalize( -1*event.frame.pointable(aid).tipPosition.z, minZ, maxZ)*1000;
-							
-							//var x0:Number = map( event.frame.pointable(aid).tipPosition.x, lminX, lmaxX, minX, maxX);
-							//var y0:Number = map(event.frame.pointable(aid).tipPosition.y, lminY, lmaxY, minY, maxY);
-							//var z0:Number = map(-1*event.frame.pointable(aid).tipPosition.z, lminZ, lmaxZ, minZ, maxZ);
-
 							mp.position = new Vector3D(event.frame.pointable(aid).tipPosition.x, event.frame.pointable(aid).tipPosition.y, event.frame.pointable(aid).tipPosition.z*-1);
-							//mp.position = new Vector3D(x0,y0,z0);
 							mp.direction = new Vector3D(event.frame.pointable(aid).direction.x, event.frame.pointable(aid).direction.y, event.frame.pointable(aid).direction.z*-1);
 							mp.velocity = new Vector3D(event.frame.pointable(aid).tipVelocity.x, event.frame.pointable(aid).tipVelocity.y, event.frame.pointable(aid).tipVelocity.z*-1);
-							
-							//size
-							//mp.width = event.frame.pointable(aid).width;
-							//mp.length = event.frame.pointable(aid).length;
 						}
-						
-						
-						
-						
+
 					//MotionManager.onMotionEnd(new GWMotionEvent(GWMotionEvent.MOTION_END, mp, true, false));
 					MotionManager.onMotionEndPoint(aid);
 					if(debug)
@@ -199,10 +156,7 @@ package com.gestureworks.managers
 				mp = new MotionPointObject();
 					mp.motionPointID = pid;
 					
-					if (event.frame.pointable(pid).isTool) {
-						mp.type = "tool";
-						//trace("leap 3d tracker mp type",mp.type);
-					}
+					if (event.frame.pointable(pid).isTool) mp.type = "tool";
 					if (event.frame.pointable(pid).isFinger) mp.type = "finger";
 					else mp.type = "palm";
 					
@@ -215,27 +169,12 @@ package com.gestureworks.managers
 								if (pid == event.frame.hands[k].id) 
 								{
 								mp.handID = event.frame.hands[k].id;
-								
-								//var xp:Number = normalize( event.frame.hands[k].palmPosition.x, minX, maxX)*1000;
-								//var yp:Number = normalize(event.frame.hands[k].palmPosition.y, minY, maxY)*1000;
-								//var zp:Number = normalize( -1*event.frame.hands[k].palmPosition.z, minZ, maxZ)*1000;
-								
-								//var xp:Number = map(event.frame.hands[k].palmPosition.x, lminX, lmaxX, minX, maxX);
-								//var yp:Number = map(event.frame.hands[k].palmPosition.y, lminY, lmaxY, minY, maxY);
-								//var zp:Number = map(-1*event.frame.hands[k].palmPosition.z, lminZ, lmaxZ, minZ, maxZ);
-
-								
 								mp.position = new Vector3D( event.frame.hands[k].palmPosition.x, event.frame.hands[k].palmPosition.y, event.frame.hands[k].palmPosition.z * -1);
-								//mp.position = new Vector3D( xp,yp,xp);
 								mp.direction = new Vector3D(event.frame.hands[k].direction.x, event.frame.hands[k].direction.y, event.frame.hands[k].direction.z*-1);
 								mp.normal = new Vector3D(event.frame.hands[k].palmNormal.x, event.frame.hands[k].palmNormal.y, event.frame.hands[k].palmNormal.z*-1);
 								mp.velocity = new Vector3D(event.frame.hands[k].palmVelocity.x, event.frame.hands[k].palmVelocity.y, event.frame.hands[k].palmVelocity.z*-1);
-			
 								mp.sphereCenter = new Vector3D(event.frame.hands[k].sphereCenter.x, event.frame.hands[k].sphereCenter.y, event.frame.hands[k].sphereCenter.z*-1);
 								mp.sphereRadius = event.frame.hands[k].sphereRadius;
-								
-								// custom leap matrix
-								//mp.rotation = event.frame.hands[k].rotation;
 								}
 							}
 					}
@@ -244,32 +183,11 @@ package com.gestureworks.managers
 					// create finger or tool point
 					if ((mp.type == "finger") || (mp.type == "tool"))
 					{
-						if (event.frame.pointable(pid).hand) {
-							mp.handID = event.frame.pointable(pid).hand.id
-							//trace("point hand id",mp.handID);
-						}
-						//trace(event.frame.pointable(pid).tipPosition.z)
-						//var x:Number = normalize( event.frame.pointable(pid).tipPosition.x, minX, maxX)*1000;
-						//var y:Number = normalize( event.frame.pointable(pid).tipPosition.y, minY, maxY)*1000;
-						//var z:Number = normalize( -1*event.frame.pointable(pid).tipPosition.z, minZ, maxZ)*1000;
-						
-						//var x:Number = map(event.frame.pointable(pid).tipPosition.x, lminX, lmaxX, minX, maxX);
-						//var y:Number = map(event.frame.pointable(pid).tipPosition.y, lminY, lmaxY, minY, maxY);
-						//var z:Number = map(-1*event.frame.pointable(pid).tipPosition.z, lminZ, lmaxZ, minZ, maxZ);
-
-						
+						if (event.frame.pointable(pid).hand) mp.handID = event.frame.pointable(pid).hand.id
 						mp.position = new Vector3D( event.frame.pointable(pid).tipPosition.x, event.frame.pointable(pid).tipPosition.y, event.frame.pointable(pid).tipPosition.z*-1);
-						//mp.position = new Vector3D(x,y,z);
 						mp.direction = new Vector3D(event.frame.pointable(pid).direction.x, event.frame.pointable(pid).direction.y, event.frame.pointable(pid).direction.z*-1);
 						mp.velocity = new Vector3D(event.frame.pointable(pid).tipVelocity.x, event.frame.pointable(pid).tipVelocity.y, event.frame.pointable(pid).tipVelocity.z*-1);
-
-						//mp.width = event.frame.pointable(pid).width;
-						//mp.length = event.frame.pointable(pid).length;
-						
-						//trace("width",mp.width,mp.length);
 					}
-					
-
 					//trace("type manager", mp.type);
 					
 

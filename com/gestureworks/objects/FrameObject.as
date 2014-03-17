@@ -16,7 +16,6 @@
 package com.gestureworks.objects 
 {
 	import com.gestureworks.events.GWTouchEvent;
-	import com.gestureworks.events.GWClusterEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTransformEvent;
 	
@@ -25,31 +24,23 @@ package com.gestureworks.objects
 		// ID
 		public var id:int;
 		
-		///////////////////////////////////////////////
-		// UPDATE TO VECTORS
 		//pointEventArray
-		//public var pointEventArray:Array = new Array();
-		public var pointEventArray:Vector.<GWTouchEvent> = new Vector.<GWTouchEvent>;
-
-		//clusterEventArray
-		//public var clusterEventArray:Vector.<GWClusterEvent> = new Vector.<GWClusterEvent>();
+		public var pointEventArray:Vector.<GWTouchEvent> //= new Vector.<GWTouchEvent>;
 
 		//gestureEventArray
-		public var gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>();
+		public var gestureEventArray:Vector.<GWGestureEvent> //= new Vector.<GWGestureEvent>();
 
 		//transformEventArray
-		public var transformEventArray:Vector.<GWTransformEvent> = new Vector.<GWTransformEvent>();
-		//public var transformEventArray:Array = new Array();
+		public var transformEventArray:Vector.<GWTransformEvent> //= new Vector.<GWTransformEvent>();
 		
 		/**
 		 * Resets attributes to initial values
 		 */
 		public function reset():void {
 			id = NaN;
-			pointEventArray.length = 0;			
-			//clusterEventArray.length = 0;			
-			gestureEventArray.length = 0;			
-			transformEventArray.length = 0;			
+			if(pointEventArray) 	pointEventArray.length = 0;					
+			if(gestureEventArray) 	gestureEventArray.length = 0;			
+			if(transformEventArray) transformEventArray.length = 0;			
 		}
 	}
 }

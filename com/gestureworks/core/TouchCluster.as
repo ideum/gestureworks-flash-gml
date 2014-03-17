@@ -1372,7 +1372,7 @@ package com.gestureworks.core
 						// check point number requirements
 						if((sub_cO_n >= g.nMin)&&(sub_cO_n<= g.nMax)||(sub_cO_n == g.n))
 						{
-							trace("call motion cluster calc",ts.cO.fn,g.algorithm_class,g.algorithm);
+							//trace("call motion cluster calc",ts.cO.fn,g.algorithm_class,g.algorithm);
 							///////////////////////////////////////////////
 							// MOTION MATCH
 							///////////////////////////////////////////////

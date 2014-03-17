@@ -68,35 +68,35 @@ package com.gestureworks.managers
 				object.length = clusterObject.length;//-
 				
 				object.radius = clusterObject.radius;
-				object.orientation = clusterObject.orientation;
+				//object.orientation = clusterObject.orientation;
 				
-				object.rotation = clusterObject.rotation;
-				object.separation = clusterObject.separation;
+				//object.rotation = clusterObject.rotation;
+				///object.separation = clusterObject.separation;
 				
-				object.thumbID = clusterObject.thumbID; //for 2D HAND
+				//object.thumbID = clusterObject.thumbID; //for 2D HAND
 				//object.handednes = clusterObject.handednes; //for 2D HAND
 				//object.pivot_dtheta = clusterObject.pivot_dtheta; 
 		
 				// first order primary deltas
-				object.dx = clusterObject.dx;
-				object.dy = clusterObject.dy;
-				object.dz = clusterObject.dz; //3d
+				//object.dx = clusterObject.dx;
+				//object.dy = clusterObject.dy;
+				//object.dz = clusterObject.dz; //3d
 				
-				object.ds = clusterObject.ds;
+				//object.ds = clusterObject.ds;
 				//object.d3ds = clusterObject.d3ds; //3d chang in sep
-				object.dsx = clusterObject.dsx;
-				object.dsy = clusterObject.dsy;
-				object.dsz = clusterObject.dsz; //-3d
+				//object.dsx = clusterObject.dsx;
+				//object.dsy = clusterObject.dsy;
+				//object.dsz = clusterObject.dsz; //-3d
 				
-				object.dtheta = clusterObject.dtheta;
-				object.dthetaX = clusterObject.dthetaX;
-				object.dthetaY = clusterObject.dthetaY;
-				object.dthetaZ = clusterObject.dthetaZ;
+				//object.dtheta = clusterObject.dtheta;
+				//object.dthetaX = clusterObject.dthetaX;
+				//object.dthetaY = clusterObject.dthetaY;
+				//object.dthetaZ = clusterObject.dthetaZ;
 				
 				// second order primary deltas
-				object.ddx = clusterObject.ddx;
-				object.ddy = clusterObject.ddy;
-				object.ddz = clusterObject.ddz;//-3d
+				//object.ddx = clusterObject.ddx;
+				//object.ddy = clusterObject.ddy;
+				//object.ddz = clusterObject.ddz;//-3d
 				
 				// core cluster events
 				//object.add = clusterObject.add;
@@ -113,8 +113,8 @@ package com.gestureworks.managers
 				//object.merge = clusterObject.merge;
 				
 				// STANDARD CLUSTER CALCS
-				object.orient_dx = clusterObject.orient_dx;
-				object.orient_dy = clusterObject.orient_dy;
+				//object.orient_dx = clusterObject.orient_dx;
+				//object.orient_dy = clusterObject.orient_dy;
 				//object.orient_dz = clusterObject.orient_dz; // 
 				
 				// STROKE DATA
@@ -161,10 +161,12 @@ package com.gestureworks.managers
 						object.iPointClusterList.index.ipnk0 = iPointCluster.ipnk0;
 						object.iPointClusterList.index.dipn = iPointCluster.dipn;
 
+						if (object.iPointClusterList.index.position)
+						{
 						object.iPointClusterList.index.position.x = iPointCluster.position.x;
 						object.iPointClusterList.index.position.y = iPointCluster.position.y;
 						object.iPointClusterList.index.position.z = iPointCluster.position.z;
-						
+						}
 						object.iPointClusterList.index.radius = iPointCluster.radius;
 						object.iPointClusterList.index.width = iPointCluster.width;
 						object.iPointClusterList.index.height = iPointCluster.height;

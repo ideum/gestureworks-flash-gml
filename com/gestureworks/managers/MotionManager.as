@@ -20,6 +20,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
+	import com.gestureworks.core.GestureWorksCore;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.MotionPointObject;
 	
@@ -38,30 +39,31 @@ package com.gestureworks.managers
 		
 		public static var motionArray:Vector.<MotionPointObject>
 		public static var motionPointCount:int;
-		public static var motionPoints:Dictionary;// = new Dictionary();
-		//public static var touchObjects:Dictionary = new Dictionary();
+		public static var motionPoints:Dictionary;
 		
 		gw_public static function initialize():void
 
 		{	
 			//if(debug)
-				trace("init leap motion device----------------------------------------------------",leapmode,leapEnabled)
+			//	trace("init leap motion device----------------------------------------------------",leapmode,leapEnabled,GestureWorksCore.deviceServer)
 			
 			if (GestureWorks.activeMotion){	
 				
 			if (leapEnabled)
 			{
 				trace("leapmode",leapmode);
-				/*
-				// NATIVE LEAP MANAGERS
-				if(leapmode == "2d"){
-					lmManager = new Leap2DManager();
-					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
-				}
-				if (leapmode == "3d"){
-					lmManager = new Leap3DManager();
-					lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
-				}*/
+				//if (!GestureWorksCore.deviceServer)
+				//{
+					// NATIVE LEAP MANAGERS
+					if(leapmode == "2d"){
+						lmManager = new Leap2DManager();
+						lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+					}
+					if (leapmode == "3d"){
+						lmManager = new Leap3DManager();
+						lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+					}
+				//}
 				
 				//SERVER LEAP MANAGERS
 				if (leapmode == "2d_ds") {
@@ -110,45 +112,22 @@ package com.gestureworks.managers
 			GestureGlobals.motionFrameID += 1;
 		}
 		
-		
-		// registers touch point via touchSprite
-		public static function registerMotionPoint(mpo:MotionPointObject):void
-		{
-			//mpo.history.unshift(MotionPointHistories.historyObject(mpo))
-		}
-		
 		public static function onMotionBeginPoint(pt:MotionPointObject):void
 		{			
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			// create new point object
-			var mpO:MotionPointObject  = pt;//new MotionPointObject();
+			var mpO:MotionPointObject = pt;
+				mpO.id = motionPointCount; 
+				mpO.phase = "begin";
+				mpO.handID = pt.handID;
 					
-					mpO.id = motionPointCount; 
-					//mpO.motionPointID = motionPointCount; 
-					//mpO.motionPointID = pt.motionPointID;
-					//mpO.type = pt.type;
-					//mpO.handID = pt.handID;
-					//mpO.position = pt.position;
-					//mpO.direction = pt.direction;
-					//mpO.normal = pt.normal;
-					//mpO.velocity = pt.velocity;
-					//mpO.sphereCenter = pt.sphereCenter;
-					//mpO.sphereRadius = pt.sphereRadius;
-					//mpO.length = pt.length;
-					//mpO.width = pt.width;
-					mpO.phase = "begin";
-					
-					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					if (!motionArray) motionArray = new Vector.<MotionPointObject>
-					motionArray.push(mpO);
-					motionPointCount++;
+				//ADD TO GLOBAL MOTION SPRITE POINT LIST
+				if (!motionArray) motionArray = new Vector.<MotionPointObject>
+				motionArray.push(mpO);
+				motionPointCount++;
 				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::motionPoints[pt.motionPointID]  = mpO;//as MotionPointObject
-				
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				//registerMotionPoint(mpO);
-			
+				motionPoints[pt.motionPointID] = mpO;//as MotionPointObject
 		}
 		
 
@@ -156,16 +135,13 @@ package com.gestureworks.managers
 		{
 			//trace("Motion point End, motionManager", event.value.motionPointID)
 			var mpO:MotionPointObject = motionPoints[motionPointID] as MotionPointObject;
-			//trace("ready to remove", pointObject);
 			
 			if (mpO)
 			{
 					mpO.phase = "end";
-					
-					
+
 					// REMOVE POINT FROM LOCAL LIST
 					motionArray.splice(mpO.id, 1);
-					
 					// REDUCE LOACAL POINT COUNT
 					motionPointCount--;
 					
@@ -207,11 +183,11 @@ package com.gestureworks.managers
 					mpO.width = pt.width;
 					mpO.moveCount ++;
 					mpO.phase = "update";
+					mpO.handID = pt.handID;
 					//trace( mpO.moveCount);
 				}
-				
-				// UPDATE POINT HISTORY 
-				//MotionPointHistories.historyQueue(event);
-		}	
+		}
+		
+		
 	}
 }

@@ -49,7 +49,6 @@ package com.gestureworks.core
 		 * Contains a dictionary of all interaction points present to the framework.
 		 */			
 		gw_public static var interactionPoints:Dictionary = new Dictionary();
-		
 		/**
 		 * Contains a dictionary of all touchObjects available to the framework.
 		 */
@@ -57,11 +56,9 @@ package com.gestureworks.core
 		gw_public static var timeline:TimelineObject = new TimelineObject;
 		gw_public static var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>;
 		gw_public static var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>;
-		//gw_public static var motionArray2d:Vector.<MotionPointObject> = new Vector.<MotionPointObject>;
 		gw_public static var sensorArray:Vector.<SensorPointObject> = new Vector.<SensorPointObject>;
 		gw_public static var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>;
 		gw_public static var handList:Vector.<HandObject> = new Vector.<HandObject>;
-		
 		
 		/**
 		 * Contains a dictionary of all touchObjects available to the framework.
@@ -88,14 +85,10 @@ package com.gestureworks.core
 		 */
 		gw_public static var timelines:Dictionary = new Dictionary();
 		
-		
-		
 		gw_public static var touchPointCount:int;
 		gw_public static var sensorPointCount:int;
 		gw_public static var motionPointCount:int;
 		gw_public static var interactionPointCount:int;
-		
-		
 		gw_public static var iPointClusterListCount:int;
 		
 		/**
@@ -107,7 +100,6 @@ package com.gestureworks.core
 		gw_public static var leapMaxY:Number = 120;
 		gw_public static var leapMinZ:Number = -220;
 		gw_public static var leapMaxZ:Number = 220;
-		
 		
 		/**
 		 * frameID frame stamp relative to start of application.
@@ -134,7 +126,6 @@ package com.gestureworks.core
 		 */		
 		public static var max_point_count:int = 1000;
 		
-		
 		/**
 		 * point history capture length
 		 */		
@@ -145,7 +136,6 @@ package com.gestureworks.core
 		 */		
 		public static var clusterHistoryCaptureLength:int = 60;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
 		
-		
 		/**
 		 * motion history capture length
 		 */
@@ -155,7 +145,6 @@ package com.gestureworks.core
 		 * motion history capture length
 		 */
 		public static var sensorHistoryCaptureLength:int = 240;//int.MAX_VALUE
-
 		
 		/**
 		 * transform history capture length

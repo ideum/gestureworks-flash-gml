@@ -67,13 +67,12 @@ package com.gestureworks.objects
 		// frame count
 		public var count:int;
 		
-		// x---------------------
-		//public var x:Number = 0;
-		// y---------------------
-		//public var y:Number = 0;
-		// z---------------------
-		//public var z:Number = 0;
+		public var point_add:Boolean = false;
+		public var point_remove:Boolean = false;
+		public var add:Boolean = false;
+		public var remove:Boolean = false;
 		
+		// position---------------------
 		public var position:Vector3D = new Vector3D();
 		
 		// width----------------------
@@ -105,7 +104,6 @@ package com.gestureworks.objects
 		// rotationZ---------------------
 		public var rotationZ:Number = 0;
 		
-		
 		// mean position
 		// mx---------------------
 		public var mx:Number = 0;
@@ -124,7 +122,6 @@ package com.gestureworks.objects
 		public var dy:Number = 0;
 		// dz---------------------
 		public var dz:Number = 0;
-		
 		
 		// size veloctiy
 		// dw---------------------
@@ -172,7 +169,6 @@ package com.gestureworks.objects
 		// mdz---------------------
 		public var mdz:Number = 0;
 		
-		
 		//////////////////////////////////////////////
 		// accelerations
 		//////////////////////////////////////////////
@@ -189,7 +185,6 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// ddtheta ------------------
 		public var ddtheta:Number = 0;
-		
 		
 		////////////////////////////////////////////////////////////////////////////////
 		// separation acceleration
@@ -225,28 +220,6 @@ package com.gestureworks.objects
 		///////////////////////////////////////////////////////////////////////////////
 		// 2d/3d hand surface profile / data structure
 		///////////////////////////////////////////////////////////////////////////////
-		
-		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
-		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		//public var handList:Vector.<HandObject> = new Vector.<HandObject>;
-			/// INSIDE 3D HAND Object
-				//--width
-				//--length
-				//--thumb
-				//--fingerlist
-				//-- handednes / left /right :uint 0-left 1-right 2-bimanual
-				//-- orientation vector :Vector3D
-				//-- orintationAngle 
-				//-- thumb id/x/yz
-				//-- hand finger list id/x/y/z
-				//-- fingers id :int
-				//-- mean finger velocity :Vector3D
-				//-- mean finger acceleration :Vector3D
-				//-- palm radius :Number
-				//-- palm center :Vector3D
-				//-- palm velocity :Vector3D
-		
-		/// 
 		// thumbID ------------------ FOR 2D STUFF (NEEDS TO MOVE TO 2D HAND OBJECT)
 		public var thumbID:int = 0;
 		//handednes-------------------- //left//right
@@ -271,62 +244,14 @@ package com.gestureworks.objects
 		public var hold_n:int = 0;
 		
 	
-		
 		//inst velocity//////////////////////////////////////////////dx,dy,dz
 		public var velocity:Vector3D //= new Vector3D ();
-
 		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
 		public var acceleration:Vector3D //= new Vector3D ();
-
 		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
 		public var jolt:Vector3D //= new Vector3D ();
 	
-		public var rotationList:Vector.<Vector3D> = new Vector.<Vector3D>
-		
-		
-		
-		
-		
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// refactor out ----------------------------------------------------------------------------------------------
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		
-		///////////////////////////////////////////////
-		// CLUSTER EVENT LOGIC
-		///////////////////////////////////////////////
-		
-		// add point
-		public var point_add:Boolean = false;
-
-		// remove point
-		public var point_remove:Boolean = false;
-
-		// add cluster
-		public var add:Boolean = false;
-
-		// remove cluster
-		public var remove:Boolean = false;
-
-		
-
-		/////////////////////////////////////////////////////////////////////////
-		//default cluster level RAW data structures
-		/////////////////////////////////////////////////////////////////////////
-		// surface point data list----------------
-		//public var touchArray:Vector.<TouchPointObject> = new Vector.<TouchPointObject>();
-
-		// motion point data list
-		//public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-
-		// motion point data list
-		//public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
-		
-		// sensor point data list----------------
-		//public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
-
+		public var rotationList:Vector.<Vector3D> //= new Vector.<Vector3D>
 		
 		
 		/////////////////////////////////////////////////////////////////////////////
@@ -337,41 +262,7 @@ package com.gestureworks.objects
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
 		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		
-		//public var iPointArray2D:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
-		
-			
-		
-		////////////////////////////////////////
-		//1 DEFINE A SET OF INTERACTION POINTS
-		//2 MATCH TO INTERACTION POINT HAND CONFIG (GEOMETRIC)
-		//3 HIT TEST QUALIFIED TO TARGET
-		//4 ANALYZE RELATIVE INTERACTION POINT CHANGES AND PROPERTIES 
-		//5 MATCH MOTION (KINEMETRIC)
-		//6 PUSH GESTURE POINT
-		//7 PROCESS GESTURE POINT FILTERS
-		//8 APPLY INTERNAL NATIVE TRANSFORMS
-		//9 ADD TO TIMELINE
-		//10 DISPTACH GESTURE EVENT
-		////////////////////////////////////////
-			
-		//E.G BIMANUAL HOLD & MANIPULATE
-			//FIND HOLD POINT LIST
-			//FIND MANIP POINT LIST 
-			// FIND AVERAGE HOLD POINT XY FIND HOLD TIME
-			// FIND DRAG,SCALE,ROTATE
-			// UPDATE PARENT CLUSTER WITH DELTAS
-			// UPDATE GESTURE PIPELINE
-			
-		///////////////////////////////////////////////////////////////////////////////////
-		// GESTURE POINTS
-		//public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
-		
-	
-		/////////////////////////////////////////////////////////////////////////
-		// cluster history
-		/////////////////////////////////////////////////////////////////////////
-		public var history:Vector.<ClusterObject> = new Vector.<ClusterObject>();
+
 		
 		/**
 		 * Reset attributes to initial values
@@ -443,7 +334,6 @@ package com.gestureworks.objects
 			etm_ddx=0;
 			etm_ddy=0;
 			etm_ddz=0;
-			//handList.length = 0;
 			thumbID = 0;
 			handednes = "none";
 			orientation = 0;
@@ -455,7 +345,6 @@ package com.gestureworks.objects
 			hold_z = 0;
 			hold_n = 0;		
 			position.setTo(0, 0, 0);
-			
 			//direction.setTo(0,0,0);
 			//scale.setTo(0,0,0);
 			//scaleDelta.setTo(0,0,0);
@@ -463,25 +352,7 @@ package com.gestureworks.objects
 			velocity.setTo(0,0,0);
 			acceleration.setTo(0,0,0);
 			jolt.setTo(0,0,0);
-			point_add = false;
-			point_remove = false;
-			add = false;
-			remove = false;
-			//mmPointArray.length = 0;
-			//touchArray.length = 0;
-			//motionArray.length = 0;
-			//motionArray2D.length = 0;
-			//sensorArray.length = 0;
 			iPointArray.length = 0;
-			//iPointArray2D.length = 0;
-			//tcO.reset();
-			//tsubClusterArray.length = 0;
-			//mcO.reset();
-			//subClusterArray.length = 0;
-			//scO.reset();
-			//ssubClusterArray.length = 0;
-			//gPointArray.length = 0;
-			history.length = 0;
 		}
 
 	}

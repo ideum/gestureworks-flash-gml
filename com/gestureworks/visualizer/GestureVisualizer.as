@@ -118,7 +118,7 @@ package com.gestureworks.visualizer
 			gO = GestureGlobals.gw_public::gestures[id];
 			trO = GestureGlobals.gw_public::transforms[id]
 			
-			orientation = cO.orientation;
+			//orientation = cO.orientation;
 			
 		}
 			
@@ -311,11 +311,14 @@ package com.gestureworks.visualizer
 				
 				// based on timeline gesture events
 				
+				if(ts.tiO.frame.gestureEventArray){
+				
 					// gest current gesture event array from frame
 					gestureEventArray = ts.tiO.frame.gestureEventArray;
 
 					//trace("gesture event array--------------------------------------------",gestureEventArray.length);
-							
+						
+					
 						
 								for (var j:uint = 0; j < gestureEventArray.length; j++) 
 									{
@@ -436,6 +439,7 @@ package com.gestureworks.visualizer
 									}
 									
 									}
+							}
 						}
 		
 		////////////////////////////////////////////////////////////////////////////////////////////

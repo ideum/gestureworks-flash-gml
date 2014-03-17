@@ -112,7 +112,6 @@ package com.gestureworks.analysis
 			maxZ = GestureGlobals.gw_public::leapMaxZ;
 			
 			//if (ts.traceDebugMode) 
-			
 		}
 		
 		
@@ -530,8 +529,8 @@ package com.gestureworks.analysis
 				//handList.length = 0;
 			
 				// reset hands
-				//hn = 0;
-				//fn = 0;
+				gs.hn = 0;
+				gs.fn = 0;
 			}
 		}
 		
@@ -558,6 +557,9 @@ package com.gestureworks.analysis
 										{
 										for (j = 0; j < gs.hn; j++)//handList.length
 										{
+											//trace("////////////////////////////////",handList[j].handID, motionArray[i].handID)
+											
+											
 											if ((handList[j].handID != motionArray[i].handID)&&(handList.length < 2))
 											{
 												//trace("create another hand");
@@ -585,7 +587,7 @@ package com.gestureworks.analysis
 											}
 										}
 										else {
-											//trace("zero create hand");
+											//trace("--------------------------------------------------------zero create hand");
 											//create hand
 											var hand:HandObject = new HandObject();	
 													hand.motionPointID = motionArray[i].motionPointID //palmID
@@ -606,10 +608,11 @@ package com.gestureworks.analysis
 					//MOTION POINTS NOT KILLED FROM SERVER PROPERLY
 					var mpo:MotionPointObject
 					
-					if (handList){
-					var hn:int = handList.length
+					if (handList) {
+						
+					gs.hn = handList.length
 					
-					for (j = 0; j < hn; j++)
+					for (j = 0; j < gs.hn; j++)
 					{
 						
 						if (handList[j])
@@ -618,7 +621,7 @@ package com.gestureworks.analysis
 						{
 							mpo = GestureGlobals.gw_public::motionPoints[handList[j].palm.motionPointID];
 							if (!mpo) {
-								trace("palm gone", handList[j].palm.motionPointID, handList[j].motionPointID, handList[j].handID);
+								//trace("palm gone", handList[j].palm.motionPointID, handList[j].motionPointID, handList[j].handID);
 								
 								//WILL NEED better VALID HAND LIST PLACEMENT
 								handList[j].seedList.length = 0;
@@ -633,7 +636,7 @@ package com.gestureworks.analysis
 								handList[j].pinky = null;
 								
 								handList.splice(j, 1);
-								hn -= 1;//note splicing error
+								gs.hn -= 1;//note splicing error
 							}
 						}
 						else {
@@ -649,23 +652,23 @@ package com.gestureworks.analysis
 							handList[j].pinky = null;
 							
 							handList.splice(j, 1);
-							hn -= 1;
+							gs.hn -= 1;
 						}
 						}
 					}
 					
 					///////////////////////////////////////////////
 					// GET HAND NUM TOTAL
-					hn = handList.length;
+					gs.hn = handList.length;
 					}
-					else hn = 0;
+					else gs.hn = 0;
 					
 					
 					///////////////////////////////////////////////
 					// PUSH FINGERS
 					var fnum:int = 0;
 					
-					for (j = 0; j < hn; j++)
+					for (j = 0; j < gs.hn; j++)
 					{
 						//clear previos motion points
 						handList[j].fingerList.length = 0;
@@ -2559,6 +2562,7 @@ package com.gestureworks.analysis
 				// PRESENT SINGLE PINCH POINT ALWAYS
 			var hn = handList.length
 				
+			trace("hand length",hn );
 				
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -2573,6 +2577,8 @@ package com.gestureworks.analysis
 				// GET LOCAL LIST OF CLOSE FINGER TIPS
 				// gererate pair distances
 				var fn:int = handList[j].fingerList.length;
+				
+				
 				
 				for (var i:int = 0; i < fn; i++)
 					{
@@ -2624,7 +2630,7 @@ package com.gestureworks.analysis
 							pmp.screen_position.y = best_pt1.screen_position.y - (best_pt1.screen_position.y - best_pt2.screen_position.y) * 0.5;
 							pmp.screen_position.z = best_pt1.screen_position.z - (best_pt1.screen_position.z - best_pt2.screen_position.z) * 0.5;
 							
-							//pmp.handID = hand.handID;
+							pmp.handID = handList[j].handID;
 							pmp.type = "pinch";
 							pmp.mode = "motion";
 															
@@ -2646,7 +2652,7 @@ package com.gestureworks.analysis
 							pmp0.screen_position.y = best_pt1.screen_position.y - (best_pt1.screen_position.y - best_pt2.screen_position.y) * 0.5;
 							pmp0.screen_position.z = best_pt1.screen_position.z - (best_pt1.screen_position.z - best_pt2.screen_position.z) * 0.5;
 							
-							//pmp.handID = hand.handID;
+							//pmp.handID =  handList[j].handID;
 							pmp0.type = "pinch";
 							pmp0.mode = "motion";
 															
@@ -3232,6 +3238,21 @@ package com.gestureworks.analysis
 					}
 				}*/
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		// FACE MOTION

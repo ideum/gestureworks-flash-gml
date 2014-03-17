@@ -179,92 +179,12 @@ package com.gestureworks.analysis
 		{
 			//trace("KineMetric::resetRootCluster");
 			
-			if (cO.position){
-			cO.position.x = 0;
-			cO.position.y = 0;
-			cO.position.z = 0;//-3D
-			}
+			if (cO.position) cO.position = new Vector3D(0,0,0);
 			
 			cO.width = 0;
 			cO.height = 0;
 			cO.length = 0;//-3D
 			cO.radius = 0;
-			
-			//cO.separation
-			cO.separationX = 0;
-			cO.separationY = 0;
-			cO.separationZ = 0;//-3D
-			
-			cO.rotation = 0;
-			cO.rotationX = 0;//-3D
-			cO.rotationY = 0;//-3D
-			cO.rotationZ = 0;//-3D
-			
-			cO.orientation =  0;
-			//cO.thumbID = 0;
-			//cO.hand_normal = 0;
-			//cO.hand_radius = 0;
-			
-			cO.mx = 0;
-			cO.my = 0;
-			cO.mz = 0;//-
-			
-			//////////////////////////////////
-			////////////////////////////////////
-			cO.orient_dx = 0;
-			cO.orient_dy = 0;
-			cO.orient_dz = 0;//-3D
-			cO.pivot_dtheta = 0;
-		
-			/////////////////////////
-			// first diff
-			/////////////////////////
-			cO.dtheta = 0;
-			cO.dthetaX = 0;
-			cO.dthetaY = 0;
-			cO.dthetaZ = 0;
-			cO.dtheta = 0;
-			cO.dx = 0;
-			cO.dy = 0;
-			cO.dz = 0;//-3D
-			cO.ds = 0;
-			cO.dsx = 0;
-			cO.dsy = 0;
-			cO.dsz = 0;//-
-			cO.etm_dx = 0;
-			cO.etm_dy = 0;
-			cO.etm_dz = 0;//-3D
-			
-			////////////////////////
-			// second diff
-			////////////////////////
-			cO.ddx = 0;
-			cO.ddy = 0;
-			cO.ddz = 0;//-
-			
-			cO.etm_ddx = 0;
-			cO.etm_ddy = 0;
-			cO.etm_ddz = 0;//-3D
-			
-			////////////////////////////
-			// sub cluster analysis
-			// NEED TO MOVE INTO IPOINTARRAY
-			////////////////////////////
-			cO.hold_x = 0;
-			cO.hold_y = 0;
-			cO.hold_z = 0;//-3D
-			cO.hold_n = 0;
-			
-			//accelerometer
-			//SENSOR
-			//cO.ax =0
-			//cO.ay =0
-			//cO.az =0
-			//cO.atheta =0
-			//cO.dax =0
-			//cO.day =0
-			//cO.daz =0
-			//cO.datheta =0
 			
 			cO.gPointArray = new Vector.<GesturePointObject>;
 		}
@@ -290,19 +210,14 @@ package com.gestureworks.analysis
 					cO.height = 0;
 					cO.length = 0;
 					
-					//MULTIMODAL POINT ARRAY
-					cO.mmPointArray.length = 0;
-					for (var p:uint = 0; p < cO.iPointArray.length; p++) cO.mmPointArray.push(cO.iPointArray[p]);
-					//for (var q:uint = 0; q < tpn; q++) cO.mmPointArray.push(cO.touchArray[q]);
-					
-					
+	
 					if (N == 1)
 					{
-						var pt0:* = cO.mmPointArray[0];
+						//var pt0:* = cO.mmPointArray[0];
+						var pt0:InteractionPointObject = cO.iPointArray[0];
 
-						cO.position.x = pt0.position.x;
-						cO.position.y = pt0.position.y;
-						cO.position.z = pt0.position.z;
+						if (!ts.transform3d && pt0.mode=="motion" && pt0.screen_position) cO.position = pt0.screen_position;
+						else cO.position = pt0.position;
 						
 						cO.radius = 15;
 						cO.width = 30;
@@ -314,25 +229,22 @@ package com.gestureworks.analysis
 						{	
 						for (i = 0; i < N; i++)
 						{
-						var pt:* = cO.mmPointArray[i];
+						//var pt:* = cO.mmPointArray[i];
+						var pt:InteractionPointObject = cO.iPointArray[i];
 						
-						if (pt is TouchPointObject)
-						{
-							cO.position.x += pt.position.x;
-							cO.position.y += pt.position.y;
-							cO.position.z += pt.position.z;
-						}
-						else 
-						{
-							cO.position.x += pt.position.x;
-							cO.position.y += pt.position.y;
-							cO.position.z += pt.position.z;
-						}
+						if (!ts.transform3d && pt.mode == "motion") pt.position = pt.screen_position;
+
+						cO.position.x += pt.position.x;
+						cO.position.y += pt.position.y;
+						cO.position.z += pt.position.z;
+						
 						
 							for (var j1:uint = 0; j1 < N; j1++)
 							{
-							var pt2:* = cO.mmPointArray[j1];
 								
+							//var pt2:* = cO.mmPointArray[j1];
+							var pt2:InteractionPointObject = cO.iPointArray[j1];
+							
 								if ((i != j1) && (pt) && (pt2))
 									{
 									var dx:Number;
@@ -340,38 +252,10 @@ package com.gestureworks.analysis
 									var dz:Number;
 									
 									//trace(pt,pt2)
-									
-										if (pt is TouchPointObject)
-										{
-											if (pt2 is TouchPointObject)
-											{
-												dx = pt.x - pt2.x;
-												dy = pt.y - pt2.y;
-												dz = pt.z - pt2.z;
-											}
-											else 
-											{
-												dx = pt.x - pt2.position.x;
-												dy = pt.y - pt2.position.y;
-												dz = pt.z - pt2.position.z;
-											}
-										}
-										
-										else
-										{
-											if (pt2 is TouchPointObject)
-											{
-												dx = pt.position.x - pt2.x;
-												dy = pt.position.y - pt2.y;
-												dz = pt.position.z - pt2.z;
-											}
-											else {
-												dx = pt.position.x - pt2.position.x;
-												dy = pt.position.y - pt2.position.y;
-												dz = pt.position.z - pt2.position.z;
-											}
-										}
-										
+										dx = pt.position.x - pt2.position.x;
+										dy = pt.position.y - pt2.position.y;
+										dz = pt.position.z - pt2.position.z;
+
 										var abs_dx:Number = Math.abs(dx);
 										var abs_dy:Number = Math.abs(dy);
 										var abs_dz:Number = Math.abs(dz);
@@ -1233,7 +1117,7 @@ package com.gestureworks.analysis
 			
 			//CHANGE IN SUBCLUSTER INTERACTION POINT NUMBER
 			//if (cO.history.length > 3) sdipn = sipn - cO.history[1].iPointClusterList[type].ipn;
-			if (cO.history.length > 3) sdipn = sipn - cO.history[1].iPointClusterList.index.ipn
+			if (cO.history.length > 3) sdipn = sipn - cO.history[1].iPointClusterList.index.ipn //TODO: CHNAGE TO HISTORY 0
 			else sdipn = 1;
 			
 			// GET IP BASED CONSTANTS
@@ -1823,7 +1707,8 @@ package com.gestureworks.analysis
 			var sipn:int = sub_cO.ipn
 			var sipnk:Number = sub_cO.ipnk;
 			var sipnk0:Number = sub_cO.ipnk0
-
+			
+			if (!sub_cO.position) sub_cO.position = new Vector3D();
 			sub_cO.position.x = 0;
 			sub_cO.position.y = 0;
 			sub_cO.position.z = 0;
@@ -2396,7 +2281,7 @@ package com.gestureworks.analysis
 			
 			
 			
-			trace("kn 3d manipulate",sipn,cO.history[hist].iPointClusterList.index, dipn);
+			//trace("kn 3d manipulate",sipn,cO.history[hist].iPointClusterList.index, dipn);
 			
 
 			// dipn ==0 when no changes in inpn between frames
@@ -2406,7 +2291,7 @@ package com.gestureworks.analysis
 					var c_0:ipClusterObject = cO.history[0].iPointClusterList.index;//finger_cO
 					var c_1:ipClusterObject = cO.history[hist].iPointClusterList.index;//finger_cO
 					
-					trace("timelinked clusters",c_0,c_1)
+					//trace("timelinked clusters",c_0,c_1)
 						
 					//trace("hist x---------------------------------------------",cO.subClusterArray[index].x,cO.history[0].subClusterArray[index].x, cO.history[6].subClusterArray[index].x)
 					
@@ -2415,14 +2300,14 @@ package com.gestureworks.analysis
 					
 							//if (ts.transform3d)
 							//{
-							
+							if (c_1.position && c_0.position){
 							//////////////////////////////////////////////////////////
 							//CHANGE IN CLUSTER POSITION
 							if ((c_1.position.x!= 0) && (c_0.position.x != 0)) 	sub_cO.dx = (c_0.position.x - c_1.position.x)*hk;
 							if ((c_1.position.y != 0) && (c_0.position.y != 0)) 	sub_cO.dy = (c_0.position.y - c_1.position.y)*hk;
 							if ((c_1.position.z != 0) && (c_0.position.z != 0)) 	sub_cO.dz = (c_0.position.z - c_1.position.z)*hk;
 							
-							trace(c_0.position.x,c_1.position.x);
+							//trace(c_0.position.x,c_1.position.x);
 							//trace(cO.dx,cO.dy,cO.dz);
 							//}
 							//else {
@@ -2431,7 +2316,7 @@ package com.gestureworks.analysis
 								//if ((c_1.screen_position.z != 0) && (c_0.screen_position.z != 0)) 	sub_cO.dz = (c_0.screen_position.z - c_1.screen_position.z)*hk;
 							//trace(c_0.screen_position.x,c_1.screen_position.x);
 							//}
-							trace(" dx",sub_cO.dx, sub_cO.dy, sub_cO.dz);
+							//trace(" dx",sub_cO.dx, sub_cO.dy, sub_cO.dz);
 						
 						if (sipn == 1)
 							{
@@ -2584,7 +2469,7 @@ package com.gestureworks.analysis
 									//trace("lim rot",sub_cO.dtheta,sub_cO.dthetaX,sub_cO.dthetaY,sub_cO.dthetaZ,dipn,delta_ipn)
 									
 			}
-			
+			}
 		}
 		
 		// 3D MANIPULATE GENERIC 
@@ -2825,6 +2710,12 @@ package com.gestureworks.analysis
 					var c_0:ipClusterObject = iPointCluster;//cO.history[0].iPointClusterList.index;
 					var c_1:ipClusterObject = cO.history[0].iPointClusterList.index//cO.history[hist].iPointClusterList.index;
 						
+					//if (!c_0.position)c_0.position = new Vector3D();
+					//if (!c_1.position) c_1.position = new Vector3D();
+					
+					
+					if (c_0.position && c_1.position)
+					{
 							//trace("hist x",cO.finger_cO.x,cO.history[0].finger_cO.x, cO.history[6].finger_cO.x)
 							//trace("hist rot",cO.finger_cO.rotation,cO.history[0].finger_cO.rotation, cO.history[2].finger_cO.rotation)
 								
@@ -2834,13 +2725,14 @@ package com.gestureworks.analysis
 							if ((c_1.position.y != 0) && (c_0.position.y != 0)) 	sub_cO.dy = (c_0.position.y - c_1.position.y)*hk;
 							if ((c_1.position.z != 0) && (c_0.position.z != 0)) 	sub_cO.dz = (c_0.position.z - c_1.position.z)*hk;
 							
-							trace("ipcluster",c_0.type,iPointCluster.position, c_0.position, c_1.position);
+						//	trace("ipcluster",c_0.type,iPointCluster.position, c_0.position, c_1.position);
 							//trace(cO.dx,cO.dy,cO.dz);
 								
 							//NEED LIMITS FOR CLUSTER N CHANGE
 							//LIMIT TRANLATE
 							var trans_max_delta:Number = 200;//please remove before i drive myself crazy!!!!!!!
-									
+							
+							/*
 							if (Math.abs(sub_cO.dx) > trans_max_delta) 
 							{
 								if (sub_cO.dx < 0) sub_cO.dx = -trans_max_delta;
@@ -2855,8 +2747,9 @@ package com.gestureworks.analysis
 							{
 								if (sub_cO.dz < 0) sub_cO.dz = -trans_max_delta;
 								if (sub_cO.dz > 0) sub_cO.dz = trans_max_delta;
-							}
-							//trace("get diff");	
+							}*/
+							//trace("get diff");
+					}
 			}
 			//trace("motion translate kinemetric",sub_cO.type, sub_cO.dx,sub_cO.dy,sub_cO.dz);
 		}
