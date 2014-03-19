@@ -24,16 +24,20 @@ package com.gestureworks.objects
 		public var id:int;
 	
 		public var active:Boolean = false;
-		
 		// cluster type
 		public var type:String;
-		
 		// cluster ip point mode type
 		public var mode:String;
-		//public var motion_type:String;
-		//public var touch_type:String;
-		//public var sensor_type:String;
 		
+		public var point_add:Boolean = false;
+		
+		public var point_remove:Boolean = false;
+		
+		public var add:Boolean = false;
+		
+		public var remove:Boolean = false;
+		// frame count
+		public var count:int;
 		
 		///////////////////////////////////////
 		// cluster properties//////////////////
@@ -44,78 +48,44 @@ package com.gestureworks.objects
 		private var hn:int = 0;
 		// number of fingers---------------------
 		private var fn:int = 0;
-		
 		// number of touch points
 		public var tpn:int = 0;
 		// number of motion points
 		public var mpn:int = 0;
 		// number of sensor points
 		public var spn:int = 0;
-		
 		// number of derived interactive points---------------------
 		public var ipn:int = 0;
 		public var ipnk:Number = 0;
 		public var ipnk0:Number = 0;
-	
 		// CHANGE IN NUMBER OF INTERACTION POINTS
 		public var dipn:int = 0;
-		
-		
-		
-		
-		/////////////////////////////////
-		// frame count
-		public var count:int;
-		
-		public var point_add:Boolean = false;
-		public var point_remove:Boolean = false;
-		public var add:Boolean = false;
-		public var remove:Boolean = false;
-		
-		// position---------------------
-		public var position:Vector3D = new Vector3D();
-		
-		// width----------------------
-		public var width:Number = 0;
-		// height---------------------
-		public var height:Number = 0;
-		// length---------------------
-		public var length:Number = 0;
-		// radius---------------------
+
+
+		//radius ------------------
 		public var radius:Number = 0;
-	
-		
-		// separation------------------
+		// size---------------------
+		public var size:Vector3D //= new Vector3D(); //(width/height/length)as(x/y/z)
+		// position---------------------
+		public var position:Vector3D //= new Vector3D();
+		// separation-----------------2d
 		public var separation:Number = 0;
-		// separation------------------
-		public var separationX:Number = 0;
-		// separationY------------------
-		public var separationY:Number = 0;
-		// separationZ------------------
-		public var separationZ:Number = 0;
-	
-		
-		// rotation---------------------
+		// separation-----------------3d
+		public var separation3D:Vector3D //= new Vector3D();
+		// rotation--------------------2d
 		public var rotation:Number = 0;
-		// rotationX---------------------
-		public var rotationX:Number = 0;
-		// rotation---------------------
-		public var rotationY:Number = 0;
-		// rotationZ---------------------
-		public var rotationZ:Number = 0;
-		
-		// mean position
-		// mx---------------------
-		public var mx:Number = 0;
-		// my---------------------
-		public var my:Number = 0;
-		// mz---------------------
-		public var mz:Number = 0;
-		
-		
-		/////////////////////////////////////////////////
-		// velocities
-		/////////////////////////////////////////////////
+		// rotation--------------------3d
+		public var rotation3D:Vector3D //= new Vector3D;
+		public var rotationList:Vector.<Vector3D> = new Vector.<Vector3D>;
+
+		//inst velocity//////////////////////////////////////////////dx,dy,dz
+		public var velocity:Vector3D //= new Vector3D ();
+		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
+		public var acceleration:Vector3D //= new Vector3D ();
+		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
+		public var jolt:Vector3D //= new Vector3D ();
+	
+		// position_delta
 		// dx---------------------
 		public var dx:Number = 0;
 		// dy---------------------
@@ -123,6 +93,7 @@ package com.gestureworks.objects
 		// dz---------------------
 		public var dz:Number = 0;
 		
+		// size_delta
 		// size veloctiy
 		// dw---------------------
 		public var dw:Number = 0;
@@ -131,10 +102,8 @@ package com.gestureworks.objects
 		// dr---------------------
 		public var dr:Number = 0;
 
-		
-		///////////////////////////////////////////////////////////////////////////////
+		//separation_delta
 		// scale velocity
-		///////////////////////////////////////////////////////////////////////////////
 		// dsx---------------------
 		public var ds:Number = 0;
 		// dsx---------------------
@@ -144,9 +113,8 @@ package com.gestureworks.objects
 		// dsz---------------------
 		public var dsz:Number = 0;
 		
-		///////////////////////////////////////////////////////////////////////////////
+		//rotation_delta
 		//rotational velocity
-		///////////////////////////////////////////////////////////////////////////////
 		// dtheta ------------------
 		public var dtheta:Number = 0;
 		// dthetax ------------------
@@ -159,64 +127,8 @@ package com.gestureworks.objects
 		public var pivot_dtheta:Number = 0;
 	
 	
-		///////////////////////////////////////////////////////////////////////////////
-		//mean velocity
-		///////////////////////////////////////////////////////////////////////////////
-		// mdx---------------------
-		public var mdx:Number = 0;
-		// mdy---------------------
-		public var mdy:Number = 0;
-		// mdz---------------------
-		public var mdz:Number = 0;
-		
-		//////////////////////////////////////////////
-		// accelerations
-		//////////////////////////////////////////////
-		// ddx ------------------
-		public var ddx:Number = 0;
-		// ddy ------------------
-		public var ddy:Number = 0;
-		// ddz ------------------
-		public var ddz:Number = 0;
 		
 		
-		///////////////////////////////////////////////////////////////////////////////
-		// rotational acceleration
-		///////////////////////////////////////////////////////////////////////////////
-		// ddtheta ------------------
-		public var ddtheta:Number = 0;
-		
-		////////////////////////////////////////////////////////////////////////////////
-		// separation acceleration
-		////////////////////////////////////////////////////////////////////////////////
-		// ddsx ------------------
-		public var ddsx:Number = 0;
-		// ddsy ------------------
-		public var ddsy:Number = 0;
-		// ddsz ------------------
-		public var ddsz:Number = 0;
-		// dds ------------------
-		public var dds:Number = 0;
-		// dds3d ------------------
-		public var dds3d:Number = 0;
-		
-		///////////////////////////////////////////////////////////////////////////////
-		// estimated total mean acceleration
-		///////////////////////////////////////////////////////////////////////////////
-		// etm_ddx ------------------
-		public var etm_dx:Number = 0;
-		// etm ddy ------------------
-		public var etm_dy:Number = 0;
-		// etm ddz ------------------
-		public var etm_dz:Number = 0;
-		
-		// etm_ddx ------------------
-		public var etm_ddx:Number = 0;
-		// etm_ddy ------------------
-		public var etm_ddy:Number = 0;
-		// etm_ddz ------------------
-		public var etm_ddz:Number = 0;
-	
 		///////////////////////////////////////////////////////////////////////////////
 		// 2d/3d hand surface profile / data structure
 		///////////////////////////////////////////////////////////////////////////////
@@ -232,6 +144,8 @@ package com.gestureworks.objects
 		public var orient_dy:Number = 0;
 		// orient_dz---------------------
 		public var orient_dz:Number = 0;
+		
+		
 	
 		// public var holdPoint:Vector3D = new Vector3D(); 
 		// hold_x---------------------//remove
@@ -243,26 +157,9 @@ package com.gestureworks.objects
 		// c_locked---------------------remove
 		public var hold_n:int = 0;
 		
-	
-		//inst velocity//////////////////////////////////////////////dx,dy,dz
-		public var velocity:Vector3D //= new Vector3D ();
-		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
-		public var acceleration:Vector3D //= new Vector3D ();
-		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
-		public var jolt:Vector3D //= new Vector3D ();
-	
-		public var rotationList:Vector.<Vector3D> //= new Vector.<Vector3D>
-		
-		
-		/////////////////////////////////////////////////////////////////////////////
-		// cluster Interaction Point list
-		/////////////////////////////////////////////////////////////////////////////
-		// DERIVED POINT LIST BASED ON PRIMARY INTERACTION CRITERIA
-		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
-		// CLASIFIED BY TYPE INTO SINGLE LIST
-		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
-		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 
+		// cluster Interaction Point list
+		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
 		/**
 		 * Reset attributes to initial values
@@ -283,57 +180,31 @@ package com.gestureworks.objects
 		//	dn=0;
 			dipn = 0;
 			count = 0;
-			position.x=0;
-			position.y=0;
-			position.z=0;
-			width=0;
-			height=0;
-			length=0;
-			radius=0;		
-			separation=0;
-			separationX=0;
-			separationY=0;
-			separationZ=0;
-			rotation=0;
-			rotationX=0;
-			rotationY=0;
-			rotationZ=0;
-			mx=0;
-			my=0;
-			mz=0;
+			
+			
+			
+			
+			
+			
+			dr = 0;
+			ds = 0;
+			dtheta = 0;
+			pivot_dtheta = 0;
+			
 			dx=0;
 			dy=0;
-			dz=0;
+			dz = 0;
 			dw=0;
-			dh=0;
-			dr=0;
-			ds=0;
+			dh = 0;
 			dsx=0;
 			dsy=0;
 			dsz=0;
-			dtheta=0;
 			dthetaX=0;
 			dthetaY=0;
 			dthetaZ=0;
-			pivot_dtheta=0;
-			mdx=0;
-			mdy=0;
-			mdz=0;
-			ddx=0;
-			ddy=0;
-			ddz=0;
-			ddtheta=0;
-			ddsx=0;
-			ddsy=0;
-			ddsz=0;
-			dds=0;
-			dds3d=0;
-			etm_dx=0;
-			etm_dy=0;
-			etm_dz=0;
-			etm_ddx=0;
-			etm_ddy=0;
-			etm_ddz=0;
+			
+			
+
 			thumbID = 0;
 			handednes = "none";
 			orientation = 0;
@@ -344,9 +215,18 @@ package com.gestureworks.objects
 			hold_y = 0;
 			hold_z = 0;
 			hold_n = 0;		
+			
+			
+			
+			radius=0;
+			size.setTo(0, 0, 0);
 			position.setTo(0, 0, 0);
+			separation = 0;
+			separation3D.setTo(0, 0, 0);
+			rotation=0;
+			rotation3D.setTo(0, 0, 0);
+			
 			//direction.setTo(0,0,0);
-			//scale.setTo(0,0,0);
 			//scaleDelta.setTo(0,0,0);
 			//rotationDelta.setTo(0,0,0);
 			velocity.setTo(0,0,0);

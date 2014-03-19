@@ -62,18 +62,14 @@ package com.gestureworks.objects
 		public var	add:Boolean = false;
 		public var	remove:Boolean = false;
 		
-		
-		// width----------------------
-		public var width:Number=0;
-		// height---------------------
-		public var height:Number=0;
-		// length---------------------
-		public var length:Number=0;
+
+		// size----------------------
+		public var size:Vector3D;
 		// radius---------------------
 		public var radius:Number=0;
 
 		//inst position//////////////////////////////////////////////x,y,z
-		public var position:Vector3D = new Vector3D ();
+		public var position:Vector3D //= new Vector3D ();
 		//inst direction/orientation //////////////////////////////////////////////x,y,z
 		//--public var direction:Vector3D //= new Vector3D ();
 		//inst scale //////////////////////////////////////////////scaleX,scaleY,scaleZ
@@ -144,11 +140,8 @@ package com.gestureworks.objects
 			dipn = 0;
 			count = 0;
 			
-			width=0;
-			height=0;
-			length=0;
+			size.setTo(0,0,0);
 			radius=0;		
-			
 			position.setTo(0,0,0);
 			//direction.setTo(0,0,0);
 			//scale.setTo(0,0,0);

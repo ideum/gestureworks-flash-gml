@@ -179,13 +179,9 @@ package com.gestureworks.analysis
 		{
 			//trace("KineMetric::resetRootCluster");
 			
-			if (cO.position) cO.position = new Vector3D(0,0,0);
-			
-			cO.width = 0;
-			cO.height = 0;
-			cO.length = 0;//-3D
+			if (cO.position) cO.position.setTo(0, 0, 0);
+			if (cO.size) cO.size.setTo(0,0,0);
 			cO.radius = 0;
-			
 			cO.gPointArray = new Vector.<GesturePointObject>;
 		}
 		
@@ -200,36 +196,28 @@ package com.gestureworks.analysis
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////
 					
 					if (!cO.position) cO.position = new Vector3D();
+					if (!cO.size) cO.size = new Vector3D();
 					
-					cO.position.x = 0; 
-					cO.position.y = 0;
-					cO.position.z = 0;
-					
+					if (cO.position) cO.position.setTo(0, 0, 0);
+					if (cO.size) cO.size.setTo(0,0,0);
 					cO.radius = 0;
-					cO.width = 0;
-					cO.height = 0;
-					cO.length = 0;
 					
 	
 					if (N == 1)
 					{
-						//var pt0:* = cO.mmPointArray[0];
 						var pt0:InteractionPointObject = cO.iPointArray[0];
 
 						if (!ts.transform3d && pt0.mode=="motion" && pt0.screen_position) cO.position = pt0.screen_position;
 						else cO.position = pt0.position;
 						
 						cO.radius = 15;
-						cO.width = 30;
-						cO.height = 30;
-						cO.length = 30;
+						cO.size.setTo(30,30,30);
 					}
 					
 					else if (N > 1)
 						{	
 						for (i = 0; i < N; i++)
 						{
-						//var pt:* = cO.mmPointArray[i];
 						var pt:InteractionPointObject = cO.iPointArray[i];
 						
 						if (!ts.transform3d && pt.mode == "motion") pt.position = pt.screen_position;
@@ -261,14 +249,14 @@ package com.gestureworks.analysis
 										var abs_dz:Number = Math.abs(dz);
 										
 										// MAX SEPERATION BETWEEN A PAIR OF POINTS IN THE CLUSTER
-										if (abs_dx > cO.width) cO.width = abs_dx;
-										if (abs_dy > cO.height) cO.height = abs_dy;
-										if (abs_dz > cO.length) cO.length = abs_dz;
+										if (abs_dx > cO.size.x) cO.size.x = abs_dx;
+										if (abs_dy > cO.size.y) cO.size.y = abs_dy;
+										if (abs_dz > cO.size.z) cO.size.z = abs_dz;
 									}
 							}
 						}
 						
-						cO.radius = 0.5*Math.sqrt(cO.width * cO.width + cO.height * cO.height + cO.length * cO.length);//
+						cO.radius = 0.5*Math.sqrt(cO.size.x * cO.size.x + cO.size.y * cO.size.y + cO.size.z * cO.size.z);//
 						//divide by subcluster ip number sipnk 
 							
 						cO.position.x *= k0;
@@ -1110,8 +1098,6 @@ package com.gestureworks.analysis
 			// GET SUBCLUSTER INTERACTION POINT NUMBER
 			iPointCluster.ipn = iPointCluster.iPointArray.length;
 			sipn = iPointCluster.ipn;
-			
-			
 			}
 			else sipn = 0;
 			
@@ -1149,27 +1135,15 @@ package com.gestureworks.analysis
 			var sipn:int = sub_cO.ipn
 			var sipnk:Number = sub_cO.ipnk;
 			var sipnk0:Number = sub_cO.ipnk0
-			
 			//trace("get ip dims 2d ", sipn, sipnk, sipnk0);
-
-			sub_cO.position.x = 0;
-			sub_cO.position.y = 0;
-			sub_cO.position.z = 0;
 			
-			sub_cO.radius = 0
-			sub_cO.width = 0;
-			sub_cO.height = 0;
-			sub_cO.length = 0;
-			
-			sub_cO.separationX = 1;
-			sub_cO.separationY = 1;
-			sub_cO.separationZ = 1;
-			
-			// rotation of group
-			sub_cO.rotation = 0
-			sub_cO.rotationX = 0; 
-			sub_cO.rotationY = 0; 
-			sub_cO.rotationZ = 0;
+			sub_cO.position.setTo(0,0,0);
+			sub_cO.radius = 0;
+			sub_cO.size.setTo(0, 0, 0);	
+			sub_cO.separation = 1;
+			sub_cO.separation3D.setTo(1,1,1);
+			sub_cO.rotation = 0;
+			sub_cO.rotation3D.setTo(0,0,0);
 			
 			
 			//trace("dim",sipn)
@@ -1207,9 +1181,12 @@ package com.gestureworks.analysis
 										
 										// MAX SEPERATION BETWEEN A PAIR OF POINTS IN THE CLUSTER
 										// set size.x......
-										if (abs_dx > sub_cO.width) sub_cO.width = abs_dx;
-										if (abs_dy > sub_cO.height) sub_cO.height = abs_dy;
-										if (abs_dz > sub_cO.length) sub_cO.length = abs_dz;
+										//if (abs_dx > sub_cO.width) sub_cO.width = abs_dx;
+										//if (abs_dy > sub_cO.height) sub_cO.height = abs_dy;
+										//if (abs_dz > sub_cO.length) sub_cO.length = abs_dz;
+										if (abs_dx > sub_cO.size.x) sub_cO.size.x = abs_dx;
+										if (abs_dy > sub_cO.size.y) sub_cO.size.y = abs_dy;
+										if (abs_dz > sub_cO.size.z) sub_cO.size.z = abs_dz;
 									 }
 									}
 								 
@@ -1709,24 +1686,17 @@ package com.gestureworks.analysis
 			var sipnk0:Number = sub_cO.ipnk0
 			
 			if (!sub_cO.position) sub_cO.position = new Vector3D();
-			sub_cO.position.x = 0;
-			sub_cO.position.y = 0;
-			sub_cO.position.z = 0;
+			if (!sub_cO.size) sub_cO.size = new Vector3D();
+			if (!sub_cO.separation3D) sub_cO.separation3D = new Vector3D();
+			if (!sub_cO.rotation3D) sub_cO.rotation3D = new Vector3D();
 			
+			sub_cO.position.setTo(0,0,0);
 			sub_cO.radius = 0
-			sub_cO.width = 0;
-			sub_cO.height = 0;
-			sub_cO.length = 0;
-			
-			sub_cO.separationX = 1;
-			sub_cO.separationY = 1;
-			sub_cO.separationZ = 1;
-			
-			// rotation of group
+			sub_cO.size.setTo(0, 0, 0);
+			sub_cO.separation = 1
+			sub_cO.separation3D.setTo(1,1,1);
 			sub_cO.rotation = 0
-			sub_cO.rotationX = 0; 
-			sub_cO.rotationY = 0; 
-			sub_cO.rotationZ = 0;
+			sub_cO.rotation3D.setTo(0,0,0);
 			
 			
 			//trace("dim",sipn)
@@ -1764,9 +1734,9 @@ package com.gestureworks.analysis
 									/* //ONLY FOR ONE HAND
 									if (pt.type == "palm")
 									{
-										cO.rotationX = RAD_DEG * Math.asin(pt.normal.x);
-										cO.rotationY = RAD_DEG * Math.asin(pt.normal.y);
-										cO.rotationZ = RAD_DEG * Math.asin(pt.normal.z);
+										cO.rotation3D.x = RAD_DEG * Math.asin(pt.normal.x);
+										cO.rotation3D.y = RAD_DEG * Math.asin(pt.normal.y);
+										cO.rotation3D.z = RAD_DEG * Math.asin(pt.normal.z);
 									}*/
 									
 									//SIZE WIDTH HIEGHT DEPTH
@@ -1783,9 +1753,9 @@ package com.gestureworks.analysis
 										var abs_dz:Number = Math.abs(dz);
 										
 										// MAX SEPERATION BETWEEN A PAIR OF POINTS IN THE CLUSTER
-										if (abs_dx > sub_cO.width) sub_cO.width = abs_dx;
-										if (abs_dy > sub_cO.height) sub_cO.height = abs_dy;
-										if (abs_dz > sub_cO.length) sub_cO.length = abs_dz;
+										if (abs_dx > sub_cO.size.x) sub_cO.size.x = abs_dx;
+										if (abs_dy > sub_cO.size.y) sub_cO.size.y = abs_dy;
+										if (abs_dz > sub_cO.size.z) sub_cO.size.z = abs_dz;
 									 }
 									}
 								 
@@ -1797,29 +1767,29 @@ package com.gestureworks.analysis
 										var dzs:Number = pt.position.z - ipt.position.z;
 
 										// separation of group
-										sub_cO.separationX += Math.abs(dxs);
-										sub_cO.separationY += Math.abs(dys);
-										sub_cO.separationZ += Math.abs(dzs);
+										sub_cO.separation3D.x += Math.abs(dxs);
+										sub_cO.separation3D.y += Math.abs(dys);
+										sub_cO.separation3D.z+= Math.abs(dzs);
 										
 										// rotation of group
 										//sub_cO.rotation += (calcAngle(dxs, dys)) //|| 0
-										//sub_cO.rotationX += (calcAngle(dys, dzs)); 
-										//sub_cO.rotationY += (calcAngle(dzs, dxs)); 
-										//sub_cO.rotationZ += (calcAngle(dxs, dys));
+										//sub_cO.rotation3D.x += (calcAngle(dys, dzs)); 
+										//sub_cO.rotation3D.y += (calcAngle(dzs, dxs)); 
+										//sub_cO.rotation3D.z += (calcAngle(dxs, dys));
 										
 										sub_cO.rotation = 0;
-										sub_cO.rotationX = 0; 
-										sub_cO.rotationY = 0; 
-										sub_cO.rotationZ = 0;
+										sub_cO.rotation3D.x = 0; 
+										sub_cO.rotation3D.y = 0; 
+										sub_cO.rotation3D.z = 0;
 									}
 							}
 							// divide by subcluster pair count sipnk0 
-							sub_cO.separationX *= sipnk0;
-							sub_cO.separationY *= sipnk0;
-							sub_cO.separationZ *= sipnk0;
+							sub_cO.separation3D.x *= sipnk0;
+							sub_cO.separation3D.y *= sipnk0;
+							sub_cO.separation3D.z *= sipnk0;
 							
 							
-							sub_cO.radius = 0.5*Math.sqrt(sub_cO.width * sub_cO.width + sub_cO.height * sub_cO.height + sub_cO.length * sub_cO.length);//
+							sub_cO.radius = 0.5*Math.sqrt(sub_cO.size.x * sub_cO.size.x + sub_cO.size.y * sub_cO.size.y + sub_cO.size.z * sub_cO.size.z);//
 							//divide by subcluster ip number sipnk 
 							
 							sub_cO.position.x *= sipnk;
@@ -1859,29 +1829,29 @@ package com.gestureworks.analysis
 										
 										
 										//sub_cO.rotation += Math.atan(tz) * RAD_DEG;
-										//sub_cO.rotationX += Math.atan(tx) * RAD_DEG; 
-										//sub_cO.rotationY += Math.atan(ty) * RAD_DEG; 
-										//sub_cO.rotationZ += Math.atan(tz) * RAD_DEG;
+										//sub_cO.rotation3D.x += Math.atan(tx) * RAD_DEG; 
+										//sub_cO.rotation3D.y += Math.atan(ty) * RAD_DEG; 
+										//sub_cO.rotation3D.z += Math.atan(tz) * RAD_DEG;
 										
 										//sub_cO.rotation += Math.atan2(dyc , dxc) * RAD_DEG;
-										//sub_cO.rotationX += Math.atan2(dyc , dzc) * RAD_DEG; 
-										//sub_cO.rotationY += Math.atan2(dyc , dzc) * RAD_DEG; 
-										//sub_cO.rotationZ += Math.atan2(dyc , dxc) * RAD_DEG;
+										//sub_cO.rotation3D.x += Math.atan2(dyc , dzc) * RAD_DEG; 
+										//sub_cO.rotation3D.y += Math.atan2(dyc , dzc) * RAD_DEG; 
+										//sub_cO.rotation3D.z += Math.atan2(dyc , dxc) * RAD_DEG;
 										
 										//sub_cO.rotation += calcAngle(dyc , dxc);
-										//sub_cO.rotationX += calcAngle(dyc , dzc); 
-										//sub_cO.rotationY += calcAngle(dyc , dzc); 
-										//sub_cO.rotationZ += calcAngle(dyc , dxc);
+										//sub_cO.rotation3D.x += calcAngle(dyc , dzc); 
+										//sub_cO.rotation3D.y += calcAngle(dyc , dzc); 
+										//sub_cO.rotation3D.z += calcAngle(dyc , dxc);
 										
 										//sub_cO.rotation += calcAngle2(dyc , dxc);
-										//sub_cO.rotationX += calcAngle2(dyc , dzc); 
-										//sub_cO.rotationY += calcAngle2(dyc , dzc); 
-										//sub_cO.rotationZ += calcAngle2(dyc , dxc);
+										//sub_cO.rotation3D.x += calcAngle2(dyc , dzc); 
+										//sub_cO.rotation3D.y += calcAngle2(dyc , dzc); 
+										//sub_cO.rotation3D.z += calcAngle2(dyc , dxc);
 										
 										//sub_cO.rotation += calcAngle3(dyc , dxc);
-										//sub_cO.rotationX += calcAngle3(dyc , dzc); 
-										//sub_cO.rotationY += calcAngle3(dyc , dzc); 
-										//sub_cO.rotationZ += calcAngle3(dyc , dxc);
+										//sub_cO.rotation3D.x += calcAngle3(dyc , dzc); 
+										//sub_cO.rotation3D.y += calcAngle3(dyc , dzc); 
+										//sub_cO.rotation3D.z += calcAngle3(dyc , dxc);
 										
 										//trace("----",i, rx, ry, rz);
 									}
@@ -1889,9 +1859,9 @@ package com.gestureworks.analysis
 								
 								// divide by subcluster pair count sipnk0 
 								sub_cO.rotation *= sipnk0;
-								sub_cO.rotationX *= sipnk0;
-								sub_cO.rotationY *= sipnk0;
-								sub_cO.rotationZ *= sipnk0;
+								sub_cO.rotation3D.x *= sipnk0;
+								sub_cO.rotation3D.y *= sipnk0;
+								sub_cO.rotation3D.z *= sipnk0;
 					//}
 					/*
 					else if (sipn == 1) 
@@ -1905,26 +1875,26 @@ package com.gestureworks.analysis
 						sub_cO.length = 15;
 						sub_cO.radius = 50;
 						
-						sub_cO.separationX = 1;
-						sub_cO.separationY = 1;
-						sub_cO.separationZ = 1;
+						sub_cO.separation3D.x = 1;
+						sub_cO.separation3D.y = 1;
+						sub_cO.separation3D.z = 1;
 						
 						// ONLY FOR ONE HAND
 						if (ptArray[0].type == "palm")
 						{
-							sub_cO.rotationX = -RAD_DEG * Math.asin(ptArray[0].normal.z);
-							sub_cO.rotationY = RAD_DEG * Math.asin(ptArray[0].direction.x); // otherwise zero?
-							sub_cO.rotationZ = RAD_DEG * Math.asin(ptArray[0].normal.x);
-							sub_cO.rotation = sub_cO.rotationZ;
+							sub_cO.rotation3D.x = -RAD_DEG * Math.asin(ptArray[0].normal.z);
+							sub_cO.rotation3D.y = RAD_DEG * Math.asin(ptArray[0].direction.x); // otherwise zero?
+							sub_cO.rotation3D.z = RAD_DEG * Math.asin(ptArray[0].normal.x);
+							sub_cO.rotation = sub_cO.rotation3D.z;
 							//trace("palm direction", ptArray[0].direction.x, ptArray[0].direction.y, ptArray[0].direction.z);
 							//trace("palm norm", ptArray[0].normal.x,ptArray[0].normal.y,ptArray[0].normal.z);
-							//trace("palm rotate",sub_cO.rotationX,sub_cO.rotationY,sub_cO.rotationZ,sub_cO.rotation );
+							//trace("palm rotate",sub_cO.rotation3D.x,sub_cO.rotation3D.y,sub_cO.rotation3D.z,sub_cO.rotation );
 						}
 						else 
 						{
-							sub_cO.rotationX = 0;
-							sub_cO.rotationY = 0;
-							sub_cO.rotationZ = 0;
+							sub_cO.rotation3D.x = 0;
+							sub_cO.rotation3D.y = 0;
+							sub_cO.rotation3D.z = 0;
 							sub_cO.rotation = 0;
 						}
 						
@@ -1938,7 +1908,7 @@ package com.gestureworks.analysis
 					*/
 					
 				//trace("sub dims",sub_cO.width,sub_cO.height,sub_cO.length,"motion",mcO.width,mcO.height,mcO.length,"root",cO.width,cO.height,cO.length)
-				//trace(sub_cO.rotationZ,sub_cO.rotation, sipn)
+				//trace(sub_cO.rotation3D.z,sub_cO.rotation, sipn)
 			}
 			//trace("get ip dims");
 				
@@ -2285,7 +2255,7 @@ package com.gestureworks.analysis
 			
 
 			// dipn ==0 when no changes in inpn between frames
-			if ((sipn!= 0)&&(cO.history[hist].iPointClusterList.index))//&&(dipn==0))		
+			if ((sipn!= 0)&&(cO.history[hist].iPointClusterList.index)&&(dipn==0))		
 				{
 					//trace("t",ptArray[0].position.x,ptArray[0].history.length, cO.iPointArray2D[0].history.length,cO.iPointArray[0].history.length );
 					var c_0:ipClusterObject = cO.history[0].iPointClusterList.index;//finger_cO
@@ -2293,7 +2263,7 @@ package com.gestureworks.analysis
 					
 					//trace("timelinked clusters",c_0,c_1)
 						
-					//trace("hist x---------------------------------------------",cO.subClusterArray[index].x,cO.history[0].subClusterArray[index].x, cO.history[6].subClusterArray[index].x)
+					//trace("hist x---------------------------------------------",cO.history[0].iPointClusterList.index.x,cO.history[hist].iPointClusterList.index.x, cO.history[1].iPointClusterList.index.x)
 					
 							//trace("hist x",cO.finger_cO.x,cO.history[0].finger_cO.x, cO.history[6].finger_cO.x)
 							//trace("hist rot",cO.finger_cO.rotation,cO.history[0].finger_cO.rotation, cO.history[2].finger_cO.rotation)
@@ -2307,7 +2277,7 @@ package com.gestureworks.analysis
 							if ((c_1.position.y != 0) && (c_0.position.y != 0)) 	sub_cO.dy = (c_0.position.y - c_1.position.y)*hk;
 							if ((c_1.position.z != 0) && (c_0.position.z != 0)) 	sub_cO.dz = (c_0.position.z - c_1.position.z)*hk;
 							
-							//trace(c_0.position.x,c_1.position.x);
+							trace(c_0.position.x,c_1.position.x);
 							//trace(cO.dx,cO.dy,cO.dz);
 							//}
 							//else {
@@ -2324,9 +2294,9 @@ package com.gestureworks.analysis
 								if (ptArray[0].type == "palm")
 								{
 									if ((c_1.rotation != 0) && (c_0.rotation != 0)) 	sub_cO.dtheta = (c_0.rotation- c_1.rotation) * hk;
-									if ((c_1.rotationX != 0) && (c_0.rotationX != 0))	sub_cO.dthetaX = (c_0.rotationX- c_1.rotationX) * hk;
-									if ((c_1.rotationY != 0) && (c_0.rotationY != 0))	sub_cO.dthetaY = (c_0.rotationY- c_1.rotationY) * hk;
-									if ((c_1.rotationZ != 0) && (c_0.rotationZ != 0))	sub_cO.dthetaZ = (c_0.rotationZ - c_1.rotationZ) * hk;
+									if ((c_1.rotation3D.x != 0) && (c_0.rotation3D.x != 0))	sub_cO.dthetaX = (c_0.rotation3D.x- c_1.rotation3D.x) * hk;
+									if ((c_1.rotation3D.y != 0) && (c_0.rotation3D.y != 0))	sub_cO.dthetaY = (c_0.rotation3D.y- c_1.rotation3D.y) * hk;
+									if ((c_1.rotation3D.z != 0) && (c_0.rotation3D.z != 0))	sub_cO.dthetaZ = (c_0.rotation3D.z - c_1.rotation3D.z) * hk;
 								}
 								else {
 									sub_cO.dtheta = 0;
@@ -2342,9 +2312,9 @@ package com.gestureworks.analysis
 								//////////////////////////////////////////////////////////
 								// CHANGE IN SEPARATION
 								if ((c_1.radius != 0) && (c_0.radius != 0)) 			sub_cO.ds = (c_0.radius - c_1.radius) * sck*hk;
-								if ((c_1.separationX != 0) && (c_0.separationX != 0)) 	sub_cO.dsx = (c_0.separationX - c_1.separationX) * sck*hk;
-								if ((c_1.separationY != 0) && (c_0.separationY != 0)) 	sub_cO.dsy = (c_0.separationY - c_1.separationY) * sck*hk;
-								if ((c_1.separationZ != 0) && (c_0.separationZ != 0)) 	sub_cO.dsz = (c_0.separationZ - c_1.separationZ) * sck*hk;
+								if ((c_1.separation3D.x != 0) && (c_0.separation3D.x != 0)) 	sub_cO.dsx = (c_0.separation3D.x - c_1.separation3D.x) * sck*hk;
+								if ((c_1.separation3D.y != 0) && (c_0.separation3D.y != 0)) 	sub_cO.dsy = (c_0.separation3D.y - c_1.separation3D.y) * sck*hk;
+								if ((c_1.separation3D.z != 0) && (c_0.separation3D.z != 0)) 	sub_cO.dsz = (c_0.separation3D.z - c_1.separation3D.z) * sck*hk;
 								//trace("radius",c_0.radius, c_1.radius);
 								
 								if(delta_ipn==0) // ROTATION IS MOST SENSITIVE TO DELTA_IPN 
@@ -2352,9 +2322,9 @@ package com.gestureworks.analysis
 									//////////////////////////////////////////////////////////
 									// CHANGE IN ROTATION
 									//if ((c_1.rotation != 0) && (c_0.rotation != 0))		sub_cO.dtheta = (c_0.rotation- c_1.rotation) * hk;
-									//if ((c_1.rotationX != 0) && (c_0.rotationX != 0)) 	sub_cO.dthetaX = (c_0.rotationX- c_1.rotationX) * hk;
-									//if ((c_1.rotationY != 0) && (c_0.rotationY != 0))	sub_cO.dthetaY = (c_0.rotationY- c_1.rotationY) * hk;
-									//if ((c_1.rotationZ != 0) && (c_0.rotationZ != 0))	sub_cO.dthetaZ = (c_0.rotationZ - c_1.rotationZ) * hk;
+									//if ((c_1.rotation3D.x != 0) && (c_0.rotation3D.x != 0)) 	sub_cO.dthetaX = (c_0.rotation3D.x- c_1.rotation3D.x) * hk;
+									//if ((c_1.rotation3D.y != 0) && (c_0.rotation3D.y != 0))	sub_cO.dthetaY = (c_0.rotation3D.y- c_1.rotation3D.y) * hk;
+									//if ((c_1.rotation3D.z != 0) && (c_0.rotation3D.z != 0))	sub_cO.dthetaZ = (c_0.rotation3D.z - c_1.rotation3D.z) * hk;
 									//trace("roation",c_0.rotation, c_1.rotation, c_0.dtheta);
 									
 									//if () 
@@ -2369,12 +2339,41 @@ package com.gestureworks.analysis
 										{	
 											if (c_0.rotationList[k] && c_1.rotationList[k]) 
 											{
-												if ((c_1.rotationList[k].x != 0) && (c_0.rotationList[k].x != 0)) sub_cO.dthetaX += (c_0.rotationList[k].x - c_1.rotationList[k].x) * hk * sipnk;
-												if ((c_1.rotationList[k].y != 0) && (c_0.rotationList[k].y != 0)) sub_cO.dthetaY += (c_0.rotationList[k].y - c_1.rotationList[k].y) * hk* sipnk;
-												if ((c_1.rotationList[k].z != 0) && (c_0.rotationList[k].z != 0)) sub_cO.dthetaZ += (c_0.rotationList[k].z - c_1.rotationList[k].z) * hk * sipnk;
-												if ((c_1.rotationList[k].z != 0) && (c_0.rotationList[k].z != 0)) sub_cO.dtheta +=  (c_0.rotationList[k].z - c_1.rotationList[k].z) * hk * sipnk;
+												var dtx:Number = 0;
+												var dty:Number = 0;
+												var dtz:Number = 0;
 												
-												//trace("rot",k,sub_cO.dthetaX,sub_cO.dthetaY,sub_cO.dthetaZ,sub_cO.dtheta)
+												if ((c_1.rotationList[k].x != 0) && (c_0.rotationList[k].x != 0)) dtx = c_0.rotationList[k].x - c_1.rotationList[k].x;
+												if ((c_1.rotationList[k].y != 0) && (c_0.rotationList[k].y != 0)) dty = c_0.rotationList[k].y - c_1.rotationList[k].y;
+												if ((c_1.rotationList[k].z != 0) && (c_0.rotationList[k].z != 0)) dtz = c_0.rotationList[k].z - c_1.rotationList[k].z;
+												//trace("rotpair----------", dtz,c_0.rotationList[k].z,c_1.rotationList[k].z);
+
+												if (Math.abs(dtx) > 90)
+												{
+													if (dtx > 0) dtx = 180 - dtx;
+													else dtx = 180 + dtx;
+												}
+												if (Math.abs(dty) > 90)
+												{
+													if (dty > 0) dty = 180 - dty;
+													else dty = 180 + dty;
+												}
+												if (Math.abs(dtz) > 90)
+												{
+													if (dtz > 0) dtz = 180 - dtz;
+													else dtz = 180 + dtz;
+												}
+												
+												//if (Math.abs(dtz) > 90) trace("--------------------------------------------------------------->90")
+												
+												//trace("subpair----------", dtz);
+												
+												sub_cO.dthetaX += dtx * hk * sipnk;
+												sub_cO.dthetaY += dty * hk* sipnk;
+												sub_cO.dthetaZ += dtz * hk * sipnk;
+												sub_cO.dtheta +=  dtz * hk * sipnk;
+												
+												//trace("rot",k, hk, sipnk,sub_cO.dthetaX,sub_cO.dthetaY,sub_cO.dthetaZ,sub_cO.dtheta)
 											}
 										}
 									}
@@ -2383,7 +2382,7 @@ package com.gestureworks.analysis
 								}
 							}
 							
-							
+							/*
 									//NEED LIMITS FOR CLUSTER N CHANGE
 									
 									//LIMIT TRANLATE
@@ -2435,11 +2434,23 @@ package com.gestureworks.analysis
 									}
 									
 									//trace(sub_cO.dsx,sub_cO.dsy)
+									*/
 									
+									trace("--------------------------------------------------------",sub_cO.dtheta);
+									
+									
+									
+									
+									//trace("rot", sub_cO.dtheta, sub_cO.dthetaX, sub_cO.dthetaY, sub_cO.dthetaZ, dipn, delta_ipn)
+									
+									/*
 									// LIMIT ROTATE
 									var rot_max_delta:Number = 20//20//45
 									
-									//trace("rot",sub_cO.dtheta,sub_cO.dthetaX,sub_cO.dthetaY,sub_cO.dthetaZ,dipn,delta_ipn)
+									
+									
+									
+									
 									
 									if (Math.abs(sub_cO.dtheta) > rot_max_delta)
 									{
@@ -2467,7 +2478,7 @@ package com.gestureworks.analysis
 									}
 									//trace("get diff");	
 									//trace("lim rot",sub_cO.dtheta,sub_cO.dthetaX,sub_cO.dthetaY,sub_cO.dthetaZ,dipn,delta_ipn)
-									
+									*/
 			}
 			}
 		}
@@ -2502,17 +2513,18 @@ package com.gestureworks.analysis
 			//if(cO.history.length>8)trace("waht",sipn,cO.dipn,cO.history[hist].subClusterArray[index])
 			
 			var delta_ipn:int = 0;
-			
+			/*
 			if ((cO.history.length > 3)&&(sub_cO.ipn!=0)) {//hist
 				
-				for (i = 0; i < 3; i++) 
+				for (var i:uint = 0; i < 3; i++) 
 				{	
-					delta_ipn += Math.abs(cO.history[i].iPointClusterList[index].dipn);
+					if (cO.history[i].iPointClusterList[index]) delta_ipn += Math.abs(cO.history[i].iPointClusterList[index].dipn);
+					//else 
 					//trace("---", sub_cO.dipn, cO.history[1].subClusterArray[index].dipn, cO.history[2].subClusterArray[index].dipn,cO.history[3].subClusterArray[index].dipn, cO.history[4].subClusterArray[index].dipn, "tot",delta_ipn)
 				}
 			} 
-			else delta_ipn = 1;
-			
+			//else delta_ipn = 1;
+			*/
 			
 			
 			// dipn ==0 when no changes in inpn between frames
@@ -2529,9 +2541,9 @@ package com.gestureworks.analysis
 								if (ptArray[0].type == "palm")
 								{
 									if ((c_1.rotation != 0) && (c_0.rotation != 0)) 	sub_cO.dtheta = (c_0.rotation- c_1.rotation) * hk;
-									if ((c_1.rotationX != 0) && (c_0.rotationX != 0))	sub_cO.dthetaX = (c_0.rotationX- c_1.rotationX) * hk;
-									if ((c_1.rotationY != 0) && (c_0.rotationY != 0))	sub_cO.dthetaY = (c_0.rotationY- c_1.rotationY) * hk;
-									if ((c_1.rotationZ != 0) && (c_0.rotationZ != 0))	sub_cO.dthetaZ = (c_0.rotationZ - c_1.rotationZ) * hk;
+									if ((c_1.rotation3D.x != 0) && (c_0.rotation3D.x != 0))	sub_cO.dthetaX = (c_0.rotation3D.x- c_1.rotation3D.x) * hk;
+									if ((c_1.rotation3D.y != 0) && (c_0.rotation3D.y != 0))	sub_cO.dthetaY = (c_0.rotation3D.y- c_1.rotation3D.y) * hk;
+									if ((c_1.rotation3D.z != 0) && (c_0.rotation3D.z != 0))	sub_cO.dthetaZ = (c_0.rotation3D.z - c_1.rotation3D.z) * hk;
 								}
 								else {
 									sub_cO.dtheta = 0;
@@ -2628,7 +2640,7 @@ package com.gestureworks.analysis
 			sub_cO.dsy = 0;
 			sub_cO.dsz = 0;
 			
-			trace("kn", sipn, cO.history[hist].iPointClusterList.index, dipn);
+			//trace("kn", sipn, cO.history[hist].iPointClusterList.index, dipn);
 			
 			// dipn ==0 when no changes in inpn between frames
 			if ((sipn!= 0)&&(cO.history[hist].iPointClusterList.index)&&(dipn==0))//
@@ -2643,12 +2655,12 @@ package com.gestureworks.analysis
 								//////////////////////////////////////////////////////////
 								// CHANGE IN SEPARATION
 								if ((c_1.radius != 0) && (c_0.radius != 0)) 			sub_cO.ds = (c_0.radius - c_1.radius) * sck*hk;
-								if ((c_1.separationX != 0) && (c_0.separationX != 0)) 	sub_cO.dsx = (c_0.separationX - c_1.separationX) * sck*hk;
-								if ((c_1.separationY != 0) && (c_0.separationY != 0)) 	sub_cO.dsy = (c_0.separationY - c_1.separationY) * sck*hk;
-								if ((c_1.separationZ != 0) && (c_0.separationZ != 0)) 	sub_cO.dsz = (c_0.separationZ - c_1.separationZ) * sck*hk;
+								if ((c_1.separation3D.x != 0) && (c_0.separation3D.x != 0)) 	sub_cO.dsx = (c_0.separation3D.x - c_1.separation3D.x) * sck*hk;
+								if ((c_1.separation3D.y != 0) && (c_0.separation3D.y != 0)) 	sub_cO.dsy = (c_0.separation3D.y - c_1.separation3D.y) * sck*hk;
+								if ((c_1.separation3D.z != 0) && (c_0.separation3D.z != 0)) 	sub_cO.dsz = (c_0.separation3D.z - c_1.separation3D.z) * sck*hk;
 								//trace("radius",c_0.radius, c_1.radius);
 							}
-
+									/*
 									//LMIT SCALE
 									var sc_max_delta:Number = 0.02 // spikes upto 0.148, 0.08
 									
@@ -2674,7 +2686,7 @@ package com.gestureworks.analysis
 										if (sub_cO.dsz < 0) sub_cO.dsz = -sc_max_delta;
 										if (sub_cO.dsz > 0) sub_cO.dsz = sc_max_delta;
 									}
-									
+									*/
 									//trace(sub_cO.dsx,sub_cO.dsy)
 			}
 		}
@@ -2836,7 +2848,7 @@ package com.gestureworks.analysis
 		/////////////////////////////////////////////////////////////////////////////////////////
 		// FINDS THE ANGLE BETWEEN TWO VECTORS 
 		/////////////////////////////////////////////////////////////////////////////////////////
-		
+		/*
 		private static function dotProduct(x0:Number, y0:Number,x1:Number, y1:Number):Number
 			{	
 				if ((x0!=0)&&(y0!=0)&&(x1!=0)&&(y1!=0)) return Math.acos((x0 * x1 + y0 * y1) / (Math.sqrt(x1 * x1 + y1 * y1) * Math.sqrt(x0 * x0 + y0 * y0)));
@@ -2844,12 +2856,13 @@ package com.gestureworks.analysis
 				
 				
 		}	
-			
+			*/
 		/////////////////////////////////////////////////////////////////////////////////////////
 		// tan function with adjustments for angle wrapping
 		/////////////////////////////////////////////////////////////////////////////////////////
 		// NOTE NEED TO CLEAN LOGIC TO PREVENT ROTATIONS ABOVE 360 AND PREVENT ANY NEGATIVE ROTATIONS
 		
+		/*
 		private static function calcAngle(adjacent:Number, opposite:Number):Number
 			{
 				if (adjacent == 0) return opposite < 0 ? 270 : 90 ;
@@ -2878,7 +2891,7 @@ package com.gestureworks.analysis
 			var theta_rad:Number  = Math.atan2( y , x)
 			return (theta_rad/Math.PI*180) + (theta_rad > 0 ? 0 : 360);	
 		}
-		
+		*/
 		
 		private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
 

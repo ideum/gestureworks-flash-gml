@@ -339,33 +339,23 @@ package com.gestureworks.core
 						
 						/////////////////////////////////////////////////////////////////////////
 						// WILL NEED TO BLEND SUBCLUSTER ABSOLUTE DATA
-						/*
-						trO.position.x = cO.position.x; // NEED FOR AFFINE TRANSFORM NON NATIVE
-						trO.position.y = cO.position.y; // NEED FOR AFFINE TRANSFORM NON NATIVE
-						trO.position.z = cO.position.z; // 3d--
+						trO.position = cO.position // NEED FOR AFFINE TRANSFORM
 						
-						trO.width = cO.width
-						trO.height = cO.height
-						trO.length = cO.length//3d--
+						trO.width = cO.size.x
+						trO.height = cO.size.y
+						trO.length = cO.size.z
 						trO.radius = cO.radius
 						
+						/*
 						trO.scale = cO.separation
-						trO.scaleX = cO.separationX
-						trO.scaleY = cO.separationY
-						trO.scaleZ = cO.separationZ//3d--
-								
-						
 						trO.rotation = cO.rotation
-						trO.rotationX = cO.rotationX//3d--
-						trO.rotationY = cO.rotationY//3d--
-						trO.rotationZ = cO.rotationZ//3d--
 						trO.orientation = cO.orientation
 						*/
 						/////////////////////////////////////////////////////////////////////////////////////////////
 						
 						// TODO: Check into this, what does this mean?
-						trO.localx =100//cO.x-ts.x; 
-						trO.localy =100//cO.y - ts.y; 
+						//trO.localx =100//cO.x-ts.x; 
+						//trO.localy =100//cO.y - ts.y; 
 						
 						//trace("pipeline",trO.x,trO.y,trO.z);
 						

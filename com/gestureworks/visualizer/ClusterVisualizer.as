@@ -146,8 +146,8 @@ package com.gestureworks.visualizer
 			style.stroke_color = 0xFFAE1F;
 			_x = cO.position.x;
 			_y = cO.position.y;
-			_width = cO.width-2;
-			_height = cO.height-2;
+			_width = cO.size.x-2;
+			_height = cO.size.y-2;
 			_radius = cO.radius+5;
 			
 			if(_drawRadius){
@@ -450,9 +450,9 @@ package com.gestureworks.visualizer
 									
 									_x = sub_cO.position.x;
 									_y = sub_cO.position.y;
+									_width = sub_cO.size.x;
+									_height = sub_cO.size.y;
 									
-									_width = sub_cO.width;
-									_height = sub_cO.height;
 									_radius = sub_cO.radius-50 -i*10;
 									_rotation = sub_cO.rotation; 
 						 
@@ -624,8 +624,8 @@ package com.gestureworks.visualizer
 							
 									_x = sub_cO.position.x;
 									_y = sub_cO.position.y;
-									_width = sub_cO.width;
-									_height = sub_cO.height;
+									_width = sub_cO.size.x;
+									_height = sub_cO.size.y;
 									_radius = sub_cO.radius;
 									_rotation = sub_cO.rotation; 
 						 
