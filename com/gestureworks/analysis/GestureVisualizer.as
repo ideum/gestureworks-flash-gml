@@ -314,7 +314,7 @@ package com.gestureworks.analysis
 					// gest current gesture event array from frame
 					gestureEventArray = ts.tiO.frame.gestureEventArray;
 
-					trace("gesture event array--------------------------------------------",gestureEventArray.length);
+					//trace("gesture event array--------------------------------------------",gestureEventArray.length);
 							
 						
 								for (var j:uint = 0; j < gestureEventArray.length; j++) 

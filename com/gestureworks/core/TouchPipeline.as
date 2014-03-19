@@ -66,6 +66,8 @@ package com.gestureworks.core
 				
 					var g:GestureObject = gO.pOList[i];
 					
+					//g.activeEvent = true;
+					
 						for (j=0; j < dn; j++) 
 						{
 							var gDim:DimensionObject = g.dList[j];
@@ -223,6 +225,7 @@ package com.gestureworks.core
 											
 											if (gDim.delta_filter)
 											{
+												/*
 												if (Math.abs(gDim.gestureDelta) < gDim.delta_min) gDim.gestureDelta = 0;
 												
 												if (Math.abs(gDim.gestureDelta) > gDim.delta_max) 
@@ -230,6 +233,20 @@ package com.gestureworks.core
 													if (gDim.gestureDelta < 0) gDim.gestureDelta = -gDim.delta_max;
 													if (gDim.gestureDelta > 0) gDim.gestureDelta = gDim.delta_max;
 												}
+												*/
+												
+												if (Math.abs(gDim.gestureDelta) < Math.abs(gDim.delta_min)) gDim.gestureDelta = 0;
+												
+												if (Math.abs(gDim.gestureDelta) > Math.abs(gDim.delta_max)) 
+												{
+													if (gDim.gestureDelta < 0) gDim.gestureDelta = -gDim.delta_max;
+													if (gDim.gestureDelta > 0) gDim.gestureDelta = gDim.delta_max;
+												}
+												
+												//if(gDim.directional)
+												
+												if ((gDim.gestureDelta < 0)&&(gDim.delta_min>0)&&(gDim.delta_max>0)) gDim.gestureDelta = 0;
+												if ((gDim.gestureDelta > 0)&&(gDim.delta_min<0)&&(gDim.delta_max<0)) gDim.gestureDelta = 0;
 											}
 											
 									
@@ -289,8 +306,8 @@ package com.gestureworks.core
 								////////////////////////////////////////////////////////////////////////////////////////////////////
 								
 								if (gDim.gestureDelta != 0) g.activeEvent = true;
-								
-								//trace("gesturedelta",g.event_type, gDim, gDim.gestureDelta)
+								//else g.activeEvent = false;
+								//trace("gesturedelta",g.event_type, gDim, gDim.gestureDelta,g.activeEvent )
 
 								//////////////////////////////////////////////////////////
 								//trace("pipeline out", gDim.gestureDelta);

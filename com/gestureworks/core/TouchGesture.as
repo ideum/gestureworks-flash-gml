@@ -692,6 +692,7 @@ package com.gestureworks.core
 			//traceTimeline();
 			
 		}
+		
 		public function traceTimeline():void
 		{
 			var gn:int = ts.tiO.frame.gestureEventArray.length
@@ -765,10 +766,12 @@ package com.gestureworks.core
 								Data["n"] = new Object();
 								//Data["n"] = gO.pOList[key].n//N; static selection criteria/ FOR SOME REASON N IS BEING ZEROED????? IN GESTURE OBJECT
 								//Data["n"] = cO.n // not great for swipe and flick as always zero
-								Data["n"] = gO.pOList[key].n_current;
 								
+								if (gO.pOList[key].type =="swipe") Data["n"] = gO.pOList[key].n //CHNAGED FOR SWIPE (MAY SCREW UP TAP ?? HENCE TYPE TEST)
+								else Data["n"] = gO.pOList[key].n_current;
 								//N; static selection criteria
 								
+								//trace(cO.n,ts.tpn,gO.pOList[key].n_current,gO.pOList[key].n)
 								
 								//trace("N...",gO.pOList[key].nMax,gO.pOList[key].nMin,gO.pOList[key].n,gO.pOList[key].gesture_id);
 								

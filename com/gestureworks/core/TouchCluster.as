@@ -680,7 +680,7 @@ package com.gestureworks.core
 							if (g.algorithm_class == "kinemetric")
 							{
 									// activate all by default
-									g.activeEvent = true;
+									//g.activeEvent = true; // NOOOOO OTHERWISE WILL FIRE EVEN WHEN DELTA IS ZERO
 									
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
 									
@@ -796,7 +796,8 @@ package com.gestureworks.core
 											//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);
 											
 											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
-											if (gdim.activeDim) g.activeEvent = true;
+											//if (gdim.activeDim) g.activeEvent = true;
+											if (gdim.gestureDelta != 0) g.activeEvent = true;
 											
 											//trace("TOUCH GESTURE OBJECT", res, tcO[res], gdim.clusterDelta, g.activeEvent,gdim.activeDim);
 										}
@@ -805,8 +806,9 @@ package com.gestureworks.core
 										g.data.x = tcO.x;
 										g.data.y = tcO.y;
 										g.data.z = tcO.z;
-										//g.data.n = tpn;
+										//g.data.n = g.n//ts.tpn;
 										
+										//trace("cluster data for gesture n",ts.tpn);
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////
 										
