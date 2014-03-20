@@ -707,10 +707,10 @@ package com.gestureworks.core
 			{
 				trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
 			}
-			for (var j:uint = 0; j <cn ; j++) 
-			{
-				trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
-			}
+			//for (var j:uint = 0; j <cn ; j++) 
+			//{
+				//trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
+			//}
 			
 			//trace("timeline on?",tiO.timelineOn)
 		}
@@ -725,8 +725,17 @@ package com.gestureworks.core
 			if (tiO.timelineOn)
 			{
 				//if (traceDebugMode) trace("timeline frame update");
-				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = PoolManager.frameObject; 					//tiO.frame = new FrameObject();
+				TimelineHistories.historyQueue(ts.clusterID);	// push histories 
+				
+				///////////////////////////////////////////////////
+				// FOR SOME REASON THIS KILLS DTAP AND TTAP
+				// IT COULD BE THE RESET METHOD AND TIMING 
+				///////////////////////////////////////////////////
+				//tiO.frame = PoolManager.frameObject; 			
+				///////////////////////////////////////////////////
+				tiO.frame = new FrameObject(); //	works but expensive
+				//tiO.frame.reset(); //seems to work
+				
 			}
 			else {
 				//RESET FRAME ANYWAY TP PREVENT EVENT OVERFLOW
@@ -766,10 +775,10 @@ package com.gestureworks.core
 								Data["n"] = new Object();
 								//Data["n"] = gO.pOList[key].n//N; static selection criteria/ FOR SOME REASON N IS BEING ZEROED????? IN GESTURE OBJECT
 								//Data["n"] = cO.n // not great for swipe and flick as always zero
+								Data["n"] = gO.pOList[key].n_current
 								
-								//if (gO.pOList[key].type =="swipe") 
-								Data["n"] = gO.pOList[key].n //CHNAGED FOR SWIPE (MAY SCREW UP TAP ?? HENCE TYPE TEST)
-								//else Data["n"] = gO.pOList[key].n_current;
+								if (gO.pOList[key].event_type =="swipe") Data["n"] = gO.pOList[key].n //CHNAGED FOR SWIPE (MAY SCREW UP TAP ?? HENCE TYPE TEST)
+						
 								//N; static selection criteria
 								
 								//trace(cO.n,ts.tpn,gO.pOList[key].n_current,gO.pOList[key].n)

@@ -306,17 +306,20 @@ package com.gestureworks.analysis
 				
 				var	gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>;
 				
-				//trace(dtap_time, dtap_dist);
+				
 				
 				// find tap pairs 
 				// dont need current frame as never double tap in a single frame
 				// LOOK IN HISTORY
 				for (var i:uint = 0; i < dtap_time; i++) 
 					{
-					if (ts.tiO.history > i)
+					if (ts.tiO.history.length > i)
+					{
+					if (ts.tiO.history[i])
 					{
 					gestureEventArray = ts.tiO.history[i].gestureEventArray;
-
+					
+					//trace(dtap_time, dtap_dist, gestureEventArray.length);
 					
 							for (var j:uint = 0; j < gestureEventArray.length; j++) 
 								{
@@ -341,6 +344,7 @@ package com.gestureworks.analysis
 										}
 									}
 								}
+							}
 						}
 					}	
 		}
@@ -363,7 +367,7 @@ package com.gestureworks.analysis
 				// LOOK IN HISTORY
 				for (var i:uint = 0; i < ttap_time; i++) 
 					{
-					if (ts.tiO.history.length > 0)
+					if (ts.tiO.history.length > i)
 						{						
 					if (ts.tiO.history[i])
 					{
@@ -385,7 +389,7 @@ package com.gestureworks.analysis
 											for (var k:uint = i; k < (i+ttap_time); k++) 
 												{
 												//trace("nest error");
-												if (ts.tiO.history.length > 0)
+												if (ts.tiO.history.length > k)
 												{
 												if (ts.tiO.history[k])
 												{

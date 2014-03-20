@@ -48,8 +48,8 @@ package com.gestureworks.objects
 			id = NaN;
 			pointEventArray.length = 0;			
 			clusterEventArray.length = 0;			
-			gestureEventArray.length = 0;			
-			transformEventArray.length = 0;			
+			gestureEventArray.length = 0;	
+			transformEventArray.length =0;			
 		}
 	}
 }
