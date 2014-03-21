@@ -93,10 +93,10 @@ package com.gestureworks.analysis
 			var hold_dist:int = g.point_translation_max;
 			
 			//POINT COUNT FILTERING
-			if (g.n && g.n != hold_number)
-				return;
-			else if (!g.n && (hold_number < g.nMin || hold_number > g.nMax))
-				return;
+			//if (g.n && g.n != hold_number) //HOLD NUMBER IS NOT GOOD MEASURE
+				//return;
+			//else if (!g.n && (hold_number < g.nMin || hold_number > g.nMax))
+				//return;
 			
 			//HOLD TIME MEASURED IN FRAMES
 			var	hold_time:int = Math.ceil(g.point_event_duration_min * GestureWorks.application.frameRate * 0.001)							
@@ -161,15 +161,19 @@ package com.gestureworks.analysis
 						}
 					//trace("LOCKED",LN)
 					//////////////////////			
-								
-
-						if (LN) {
-							if ((LN == hold_number) || (hold_number == 0)) 
+							
+					//trace("hold nnn", LN,hold_number,cO.hold_n, g.n,g.nMax,g.nMin);
+						
+						//if (LN) {
+						
+							//if ((LN == hold_number) || (hold_number == 0)) 
+							if (LN && ((LN >= g.nMin)&&(LN <= g.nMax) || (LN == g.n))) 
 								{
+								
 								cO.hold_x *= 1 / LN//k0;
 								cO.hold_y *= 1 / LN//k0;
 								cO.hold_n = LN;
-								
+							
 								// hold event id
 								holdID++;
 								
@@ -189,13 +193,14 @@ package com.gestureworks.analysis
 									
 									//////////////////////////////////////
 									
+									//trace("HOLD EVENT PUSHED",cO.hold_x,cO.hold_y,cO.hold_n,LN);
+									
 									var hold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.HOLD, { x:cO.hold_x, y:cO.hold_y, gestureID:holdID , id:key} );
 									ts.tiO.frame.gestureEventArray.push(hold_event);
-									
-									
 								}
 							//trace("cluster",cO.hold_x,cO.hold_y,LN,N, cO.hold_n)
-						}
+							
+						//}
 						else {
 							cO.hold_x = 0;
 							cO.hold_y = 0;

@@ -361,9 +361,10 @@ package com.gestureworks.core
 								
 								if (gO.pOList[key].algorithm == "hold")
 								{	
+								//trace("hold check called");
 								gesture_disc.findLockedPoints(key);	
-										
-									if (!cO.hold_n)	gO.pOList[key].activeEvent = false;
+									// FOR SOME REASON 3 FINGER HOLD FIRES TWICE AS HOLD_N IS NOT ZEROED
+									if (!cO.hold_n||!cO.hold_x||!cO.hold_y)	gO.pOList[key].activeEvent = false;
 									else {
 										gO.pOList[key].activeEvent = true;
 										//gO.pOList[key].dispatchEvent = true;
@@ -869,7 +870,7 @@ package com.gestureworks.core
 							{
 								//trace("touch gesture", gO.pOList[key].event_type, gO.pOList[key].activeEvent, gO.pOList[key].dispatchEvent)
 								//trace(gO.pOList[key].active, gO.release, gO.passive, gO.complete)
-								
+
 								ts.dispatchEvent(GWEVENT);
 								//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
 								//if ((tiO.timelineOn) && (tiO.gestureEvents))	
