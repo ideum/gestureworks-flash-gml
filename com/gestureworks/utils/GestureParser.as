@@ -560,6 +560,7 @@ package com.gestureworks.utils
 														if (gml.Gesture_set[g].Gesture[i].processing.delta_filter.property[j])
 														{
 															dO.delta_filter = gml.Gesture_set[g].Gesture[i].processing.delta_filter.property[j].attribute("active") == "true" ?true:false;
+															dO.delta_directional = gml.Gesture_set[g].Gesture[i].processing.delta_filter.property[j].attribute("directional") == "true" ?true:false;
 															dO.delta_max = Number(gml.Gesture_set[g].Gesture[i].processing.delta_filter.property[j].attribute("delta_max"));
 															dO.delta_min = Number(gml.Gesture_set[g].Gesture[i].processing.delta_filter.property[j].attribute("delta_min"));
 														}

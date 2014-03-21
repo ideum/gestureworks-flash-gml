@@ -81,6 +81,9 @@ package com.gestureworks.objects
 		////////////////////////////////////////////////////////////////
 		// delta_threshold---------------------
 		public var delta_filter:Boolean = false;
+		
+		// determins if delta limits are signed, to create directional delta limits--
+		public var delta_directional:Boolean = false;
 
 		// delta_max ---------------------
 		public var delta_max:Number = 100;

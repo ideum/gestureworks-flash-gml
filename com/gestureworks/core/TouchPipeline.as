@@ -235,30 +235,28 @@ package com.gestureworks.core
 												}
 												*/
 												
-												//if (Math.abs(gDim.gestureDelta) < Math.abs(gDim.delta_min)) gDim.gestureDelta = 0;
-												
-												//if (Math.abs(gDim.gestureDelta) > Math.abs(gDim.delta_max)) 
-												//{
-													//if (gDim.gestureDelta < 0) gDim.gestureDelta = -gDim.delta_max;
-													//if (gDim.gestureDelta > 0) gDim.gestureDelta = gDim.delta_max;
-												//}
-												
-												//if(gDim.directional)
-												
-												//if ((gDim.gestureDelta < 0)&&(gDim.delta_min>0)&&(gDim.delta_max>0)) gDim.gestureDelta = 0;
-												//if ((gDim.gestureDelta > 0)&&(gDim.delta_min<0)&&(gDim.delta_max<0)) gDim.gestureDelta = 0;
-												
-												
-												//trace(gDim.gestureDelta)
-												
-												if ((gDim.gestureDelta < 0) && (gDim.delta_min < 0) && (gDim.delta_max < 0))
+												if (!gDim.delta_directional)
 												{
-													if ((Math.abs(gDim.gestureDelta) > Math.abs(gDim.delta_max))||(Math.abs(gDim.gestureDelta) < Math.abs(gDim.delta_min))) gDim.gestureDelta = 0;
+													if (Math.abs(gDim.gestureDelta) < Math.abs(gDim.delta_min))
+													{
+														if ((gDim.gestureDelta < 0 && gDim.delta_min < 0)||(gDim.gestureDelta > 0 && gDim.delta_min > 0))	gDim.gestureDelta = 0;
+													}
+													if (Math.abs(gDim.gestureDelta) > Math.abs(gDim.delta_max)) 
+													{
+														if ((gDim.gestureDelta < 0 && gDim.delta_max < 0)||(gDim.gestureDelta > 0 && gDim.delta_max > 0)) gDim.gestureDelta = gDim.delta_max;
+													}
 												}
 												else {
-													if ((gDim.gestureDelta > gDim.delta_max)||(gDim.gestureDelta < gDim.delta_min)) gDim.gestureDelta = 0;
+													//trace(gDim.gestureDelta)
+													if ((gDim.gestureDelta < 0) && (gDim.delta_min < 0) && (gDim.delta_max < 0))
+													{
+														if ((Math.abs(gDim.gestureDelta) > Math.abs(gDim.delta_max))||(Math.abs(gDim.gestureDelta) < Math.abs(gDim.delta_min))) gDim.gestureDelta = 0;
+													}
+													else {
+														if ((gDim.gestureDelta > gDim.delta_max)||(gDim.gestureDelta < gDim.delta_min)) gDim.gestureDelta = 0;
+													}
+													//trace(gDim.gestureDelta,gDim.delta_min,gDim.delta_max)
 												}
-												//trace(gDim.gestureDelta,gDim.delta_min,gDim.delta_max)
 											}
 											
 									

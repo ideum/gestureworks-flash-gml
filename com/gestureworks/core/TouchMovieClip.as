@@ -37,6 +37,7 @@ package com.gestureworks.core
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Transform;
 	import flash.utils.Dictionary;
@@ -914,6 +915,12 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public var mtx:Matrix;
+		/**
+		 * For non-native affine tranformations3D, used to cache previous transform in order to revert modifications made through direct transformation settings
+		 * (i.e. x,y,rotation,etc.) allowing the TouchTransform to apply all gesture tranformations
+		 * @private
+		 */
+		public var mtx3D:Matrix3D;
 		
 		
 		/////////////////////////////////////////////////////////////
