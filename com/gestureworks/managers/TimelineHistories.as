@@ -63,8 +63,13 @@ package com.gestureworks.managers
 			//var object:FrameObject = PoolManager.frameObject;
 			var object:FrameObject = new FrameObject;
 				
-				var ten:int = frame.pointEventArray.length
-				var gen:int = frame.gestureEventArray.length
+			var ten:int
+			var gen:int
+			
+				if (frame.pointEventArray) ten = frame.pointEventArray.length
+				else ten = 0;
+				if (frame.gestureEventArray) gen = frame.gestureEventArray.length
+				else gen = 0;
 				//trace("arrays", ten,gen);
 				//object.pointEventArray = frame.pointEventArray;
 				//object.gestureEventArray = frame.gestureEventArray;

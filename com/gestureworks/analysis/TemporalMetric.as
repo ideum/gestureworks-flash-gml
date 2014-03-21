@@ -41,7 +41,8 @@ package com.gestureworks.analysis
 	{
 		private var touchObjectID:int;
 		private var ts:Object;//	private var ts:TouchSprite;
-		private var cO:ipClusterObject;
+		//TESTING WILL NEED TO ASIGN LOCAL SUBCLUSTER
+		private var sub_cO:ipClusterObject = new ipClusterObject();
 		
 		// pause time between gesture event counting cycles
 		private var tap_pauseTime:int = 0;
@@ -104,8 +105,8 @@ package com.gestureworks.analysis
 											
 			
 			var dn:uint = g.dList.length;
-			var N:uint = cO.tpn//cO.n;
-			var LN:uint = cO.hold_n;
+			var N:uint = sub_cO.tpn//cO.n;
+			var LN:uint = sub_cO.hold_n;
 			
 			//clear hold position
 			//cO.hold_x = 0;
@@ -139,8 +140,8 @@ package com.gestureworks.analysis
 										if (pt.holdCount >= hold_time) 
 											{
 											pt.holdLock = true; 
-											cO.hold_x += pt.position.x;
-											cO.hold_y += pt.position.y;
+											sub_cO.hold_x += pt.position.x;
+											sub_cO.hold_y += pt.position.y;
 											//trace("why here")
 											}	
 										}
@@ -166,9 +167,9 @@ package com.gestureworks.analysis
 						if (LN) {
 							if ((LN == hold_number) || (hold_number == 0)) 
 								{
-								cO.hold_x *= 1 / LN//k0;
-								cO.hold_y *= 1 / LN//k0;
-								cO.hold_n = LN;
+								sub_cO.hold_x *= 1 / LN//k0;
+								sub_cO.hold_y *= 1 / LN//k0;
+								sub_cO.hold_n = LN;
 								
 								// hold event id
 								holdID++;
@@ -177,19 +178,19 @@ package com.gestureworks.analysis
 									// push data (bypasses filtering for now)
 									/////////////////////////////////////
 									
-									g.data.x = cO.hold_x; 
-									g.data.y = cO.hold_y; 
+									g.data.x = sub_cO.hold_x; 
+									g.data.y = sub_cO.hold_y; 
 									
 									var d:Object = new Object();
-										d["x"] = cO.hold_x;
-										d["y"] = cO.hold_y;
-										d["n"] = cO.hold_n;
+										d["x"] = sub_cO.hold_x;
+										d["y"] = sub_cO.hold_y;
+										d["n"] = sub_cO.hold_n;
 									
 									for (DIM = 0; DIM < dn; DIM++)	g.dList[DIM].gestureDelta = d[g.dList[DIM].property_result];
 									
 									//////////////////////////////////////
 									
-									var hold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.HOLD, { x:cO.hold_x, y:cO.hold_y, gestureID:holdID , id:key} );
+									var hold_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.HOLD, { x:sub_cO.hold_x, y:sub_cO.hold_y, gestureID:holdID , id:key} );
 									ts.tiO.frame.gestureEventArray.push(hold_event);
 									
 									
@@ -197,9 +198,9 @@ package com.gestureworks.analysis
 							//trace("cluster",cO.hold_x,cO.hold_y,LN,N, cO.hold_n)
 						}
 						else {
-							cO.hold_x = 0;
-							cO.hold_y = 0;
-							cO.hold_n = 0;
+							sub_cO.hold_x = 0;
+							sub_cO.hold_y = 0;
+							sub_cO.hold_n = 0;
 						}
 						
 		}
@@ -442,6 +443,8 @@ package com.gestureworks.analysis
 				// count in current frame
 				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
+				if (gestureEventArray){
+				
 					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
 						//trace("gesture:",gestureEventArray[p].type)
@@ -452,6 +455,7 @@ package com.gestureworks.analysis
 								tap_y_mean += gestureEventArray[j].value.y;
 							}
 					}
+				}
 				
 					//count history
 					var ct:int = 0;
@@ -545,6 +549,8 @@ package com.gestureworks.analysis
 				// count in current frame
 				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
+				
+				if(gestureEventArray){
 					for (var p:uint = 0; p < gestureEventArray.length; p++) 
 					{
 						//trace(gestureEventArray[j].type)
@@ -555,6 +561,7 @@ package com.gestureworks.analysis
 								dtap_y_mean += gestureEventArray[j].value.y;
 							}
 					}
+				}
 				
 				//count history
 				var dct:int = 0;
@@ -567,7 +574,8 @@ package com.gestureworks.analysis
 						{
 						//trace("finding taps",tapEventCount);
 						gestureEventArray = ts.tiO.history[i].gestureEventArray;
-					
+						
+						if (gestureEventArray){
 								for (var j:uint = 0; j < gestureEventArray.length; j++) 
 								{
 									//trace("d gesture:",gestureEventArray[j].type)
@@ -579,6 +587,7 @@ package com.gestureworks.analysis
 									}
 								}
 							}
+						}
 					}
 					
 					//trace("dtap event count", dtapEventCount)
@@ -639,6 +648,7 @@ package com.gestureworks.analysis
 				// count in current frame
 				var gestureEventArray:Vector.<GWGestureEvent> = ts.tiO.frame.gestureEventArray
 					
+				if (gestureEventArray){
 					for (var p:int = 0; p < gestureEventArray.length; p++) 
 					{
 						//trace(gestureEventArray[j].type)
@@ -649,6 +659,7 @@ package com.gestureworks.analysis
 								ttap_y_mean += gestureEventArray[j].value.y;
 							}
 					}
+				}
 				
 				//count history
 				var tct:int = 0;

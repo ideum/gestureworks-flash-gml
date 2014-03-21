@@ -59,10 +59,12 @@ package com.gestureworks.core
 		private var ts:Object;
 		private var id:uint;
 		
-		private var cO:ipClusterObject
+		//private var cO:ipClusterObject
 		private var sO:StrokeObject
 		private var gO:GestureListObject;
 		private var tiO:TimelineObject;
+		
+		private var sub_cO
 		/////////////////////////////////////////////////////////
 		
 		public function TouchGesture(touchObjectID:int):void
@@ -70,6 +72,8 @@ package com.gestureworks.core
 			//super();
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
+			
+			sub_cO = new ipClusterObject();
 			
 			//TODO: POINT TO RELEVANT SUBCLUSTER //cO = GestureGlobals.gw_public::clusters[id]//ts.cO;
 			//sO = GestureGlobals.gw_public::clusters[id]//ts.sO;
@@ -335,6 +339,7 @@ package com.gestureworks.core
 			var dtapCalled:Boolean = false;
 			var ttapCalled:Boolean = false;
 			
+			
 		//	trace("process temporalmetric");
 			
 			//gn = gO.pOList.length;
@@ -362,7 +367,7 @@ package com.gestureworks.core
 								{	
 								gesture_disc.findLockedPoints(key);	
 										
-									if (!cO.hold_n)	gO.pOList[key].activeEvent = false;
+									if (!sub_cO.hold_n)	gO.pOList[key].activeEvent = false;
 									else {
 										gO.pOList[key].activeEvent = true;
 										//gO.pOList[key].dispatchEvent = true;
@@ -583,7 +588,7 @@ package com.gestureworks.core
 						if (gO.pOList[key].dispatch_reset == "point_change") // 
 						{
 							//trace("--",dN,_N, cO.point_remove,cO.point_add)
-							if((cO.point_remove)||(cO.point_add)) // point change
+							if((ts.cO.point_remove)||(sub_cO.point_add)) // point change
 							{
 								gO.pOList[key].complete = false;
 								gO.pOList[key].activeEvent = false;
@@ -594,7 +599,7 @@ package com.gestureworks.core
 						if (gO.pOList[key].dispatch_reset == "point_add") // 
 						{
 							//trace("--",dN,_N, cO.point_add)
-							if(cO.point_add) // point change
+							if(ts.cO.point_add) // point change
 							{
 								gO.pOList[key].complete = false;
 								gO.pOList[key].activeEvent = false;
@@ -605,7 +610,7 @@ package com.gestureworks.core
 						if (ts.gO.pOList[key].dispatch_reset == "point_remove") // 
 						{
 							//trace("--",dN,_N, cO.point_remove)
-							if(cO.point_remove) // point change
+							if(ts.cO.point_remove) // point change
 							{
 								gO.pOList[key].complete = false;
 								gO.pOList[key].activeEvent = false;
@@ -647,7 +652,7 @@ package com.gestureworks.core
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
-				if((tiO.timelineOn)&&(ts.tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:cO.position.x,y:cO.position.y}));
+				if(tiO.timelineOn && ts.tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
 				gO.start = false;
 				//trace("start fired",cO.x,cO.y);
 			}
@@ -673,7 +678,7 @@ package com.gestureworks.core
 			if ((gO.release)&&(ts.gestureEventRelease))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
-				if ((tiO.timelineOn) && (tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:cO.position.x,y:cO.position.y}));
+				if (tiO.timelineOn && tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
 				gO.release = false;
 				//trace("release fired",cO.x,cO.y);
 			}
@@ -682,7 +687,7 @@ package com.gestureworks.core
 			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE,{id:gO.id}));
-				if((tiO.timelineOn)&&(tiO.gestureEvents))	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:cO.position.x,y:cO.position.y}));
+				if(tiO.timelineOn && tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
 				gO.complete = false;
 				//trace("complete fired",cO.x,cO.y);
 			}
