@@ -45,15 +45,16 @@ package com.gestureworks.managers
 
 		{	
 			//if(debug)
-			//	trace("init leap motion device----------------------------------------------------",leapmode,leapEnabled,GestureWorksCore.deviceServer)
+				trace("init leap motion device----------------------------------------------------",leapmode,leapEnabled)
 			
-			if (GestureWorks.activeMotion){	
+			//if (GestureWorks.activeMotion){	
 				
 			if (leapEnabled)
 			{
 				trace("leapmode",leapmode);
 				//if (!GestureWorksCore.deviceServer)
 				//{
+				/*
 					// NATIVE LEAP MANAGERS
 					if(leapmode == "2d"){
 						lmManager = new Leap2DManager();
@@ -64,7 +65,7 @@ package com.gestureworks.managers
 						lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
 					}
 				//}
-				
+				*/
 				//SERVER LEAP MANAGERS
 				if (leapmode == "2d_ds") {
 					trace(leapmode)
@@ -89,7 +90,7 @@ package com.gestureworks.managers
 				motionPointCount = GestureGlobals.gw_public::motionPointCount;
 				motionArray =  GestureGlobals.gw_public::motionArray;
 			}
-			}
+			//}
 		}
 		
 		gw_public static function deInitialize():void
@@ -116,6 +117,8 @@ package com.gestureworks.managers
 		{			
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			// create new point object
+			
+			//if(pt){
 			var mpO:MotionPointObject = pt;
 				mpO.id = motionPointCount; 
 				mpO.phase = "begin";
@@ -126,8 +129,12 @@ package com.gestureworks.managers
 				motionArray.push(mpO);
 				motionPointCount++;
 				
+				//trace(pt.motionPointID,motionPoints[pt.motionPointID])
+				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				motionPoints[pt.motionPointID] = mpO;//as MotionPointObject
+				 //GestureGlobals.gw_public::motionPoints[pt.motionPointID]= mpO
+			//}
 		}
 		
 
@@ -139,7 +146,6 @@ package com.gestureworks.managers
 			if (mpO)
 			{
 					mpO.phase = "end";
-
 					// REMOVE POINT FROM LOCAL LIST
 					motionArray.splice(mpO.id, 1);
 					// REDUCE LOACAL POINT COUNT
@@ -150,11 +156,9 @@ package com.gestureworks.managers
 					{
 						motionArray[i].id = i;
 					}
-					
 					// DELETE FROM GLOBAL POINT LIST
 					delete motionPoints[motionPointID] as MotionPointObject;
 			}
-			
 			//trace("should be removed",mpoints[motionPointID], motionSprite.motionPointCount, motionSprite.cO.motionArray.length);
 			//trace("motion point tot",motionSprite.motionPointCount)
 		}

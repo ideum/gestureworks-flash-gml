@@ -62,7 +62,7 @@ package com.gestureworks.server
 
 		public function processMotion3DSocketData(handList:XMLList):void 
 		{
-			//trace("prcess motion socket data")
+			trace("prcess motion socket data")
 				//message = frame.Messages.Message;
 				//trace(message)
 				

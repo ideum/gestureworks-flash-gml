@@ -590,7 +590,7 @@ package com.gestureworks.managers
 		
 		public static function interactionFrameHandler(event:GWEvent):void
 		{
-		//	trace("touch frame process ----------------------------------------------",gs.touchPointCount, gs.cO.touchArray.length,gs.cO.iPointArray.length);	
+			trace("touch frame process ----------------------------------------------",gs.touchPointCount);	
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;

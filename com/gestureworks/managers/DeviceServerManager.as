@@ -153,7 +153,7 @@ package com.gestureworks.managers
 			var lg:int = str.length;
 			var start:String = str.substr(0,6)//str.substr(0,6)
 			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
-			//trace(str)
+			trace(str)
 			//trace(lg,start,end);
 			
 			
