@@ -36,7 +36,7 @@ package com.gestureworks.managers
 		private var isOE:Boolean = false; // open exhibits	
 		private var isT:Boolean = false; // gw trial	
 		
-		private var splashTime:int = 5; // in seconds
+		private var splashTime:int = 2; // in seconds
 		private var trialTime:int = 1800; // in seconds		
 		private var gwURL:String = "http://gestureworks.com/collections/all";
 		

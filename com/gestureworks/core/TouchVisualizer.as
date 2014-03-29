@@ -30,7 +30,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		private var ts:*;//TouchSprite;
+		public var ts:*;//TouchSprite;
 		/**
 		* @private
 		*/
@@ -105,7 +105,9 @@ package com.gestureworks.core
         {
 			if (!activated) {
 				activated = true;
-				ts = GestureGlobals.gw_public::touchObjects[id];			
+				
+				if (GestureGlobals.gw_public::touchObjects[id])
+					ts = GestureGlobals.gw_public::touchObjects[id];			
 				//trace("create touchsprite debug display")
 
 				debug_display = new Sprite();

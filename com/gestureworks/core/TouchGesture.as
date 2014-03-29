@@ -695,25 +695,57 @@ package com.gestureworks.core
 		public function traceTimeline():void
 		{
 			var gn:int = ts.tiO.frame.gestureEventArray.length
+<<<<<<< HEAD
+=======
+			var tn:int = ts.tiO.frame.pointEventArray.length
+			var cn:int = ts.tiO.frame.clusterEventArray.length
+>>>>>>> oe-4.1.0
 			
 			for (var j:uint = 0; j <gn ; j++) 
 			{
 				trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
 			}
+<<<<<<< HEAD
+=======
+			for (var j:uint = 0; j <tn ; j++) 
+			{
+				trace("timeline object touch event:", ts.tiO.frame.pointEventArray[j].type);
+			}
+			for (var j:uint = 0; j <cn ; j++) 
+			{
+				trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[j].type);
+			}
+			
+			//trace("timeline on?",tiO.timelineOn)
+>>>>>>> oe-4.1.0
 		}
 									
 									
 		
 		public function manageTimeline():void
 		{
+<<<<<<< HEAD
 			//trace("timline mgmt");
+=======
+			//trace("TOUCH GESTURE timEline mgmt");
+			
+>>>>>>> oe-4.1.0
 			// MANAGE TIMELINE
 			if (tiO.timelineOn)
 			{
 				//if (traceDebugMode) trace("timeline frame update");
 				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
+<<<<<<< HEAD
 				tiO.frame = PoolManager.frameObject;
 				//tiO.frame = new FrameObject();
+=======
+				tiO.frame = PoolManager.frameObject; 					//tiO.frame = new FrameObject();
+			}
+			else {
+				//RESET FRAME ANYWAY TP PREVENT EVENT OVERFLOW
+				//TOUCH OBJECTS CAN CACHE GESTURE EVENTS (TO THE TIMELINE OBJECT) WHEN NOT USING GESTURES THAT "REQUIRE" THER TEMPORALMETRIC
+				tiO.frame = PoolManager.frameObject;
+>>>>>>> oe-4.1.0
 			}
 		}
 		

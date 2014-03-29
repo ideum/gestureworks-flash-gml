@@ -170,9 +170,13 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function applyHooks(event:GWTouchEvent):void {
+			var e:GWTouchEvent = null;
 			for each(var hook:Function in hooks) {
-				event = hook(event);
+				e = hook(event);
+				if (e) { break; }
 			}
+			if (e)
+				event = e;
 		}
 		
 		/**
@@ -651,7 +655,11 @@ package com.gestureworks.managers
 				//trace("FrameID");
 				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED
 				// ON ALL OBJECTS
+<<<<<<< HEAD
 				if (GestureGlobals.frameID == 200) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
+=======
+				if (GestureGlobals.frameID == 100) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
+>>>>>>> oe-4.1.0
 				
 			}
 			
@@ -671,7 +679,11 @@ package com.gestureworks.managers
 				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
 					if (tO.cO)
 					{
+<<<<<<< HEAD
 						if (GestureGlobals.frameID == 200) 
+=======
+						if (GestureGlobals.frameID == 100) 
+>>>>>>> oe-4.1.0
 						{
 							tO.tc.initIPSupport();
 							tO.tc.initIPFilters();
@@ -701,8 +713,12 @@ package com.gestureworks.managers
 					tO.updateDebugDisplay();
 				}
 				
+<<<<<<< HEAD
 				// MANAGE TIMELINE FRAMES
 				//if (tO.tg) tO.tg.manageTimeline(); //??? doesnt seem to work when put here
+=======
+				// MANAGE TIMELINE FRAMES IN TOUCH GESTURE
+>>>>>>> oe-4.1.0
 			}
 			
 			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS

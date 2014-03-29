@@ -256,7 +256,7 @@ package com.gestureworks.analysis
 							for (var i:int = 0; i < tap_time; i++) // 20 fames
 								{
 							
-								if (ts.tiO.history[i])
+								if (ts.tiO.history.length > i)
 								{
 								pointEventArray = ts.tiO.history[i].pointEventArray;
 							
@@ -313,7 +313,7 @@ package com.gestureworks.analysis
 				// LOOK IN HISTORY
 				for (var i:uint = 0; i < dtap_time; i++) 
 					{
-					if (ts.tiO.history[i])
+					if (ts.tiO.history > i)
 					{
 					gestureEventArray = ts.tiO.history[i].gestureEventArray;
 

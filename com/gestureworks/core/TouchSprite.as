@@ -1230,7 +1230,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function removeAllListeners():void {
-			var eCnt:int = _eventListeners.length;
+			var eCnt:int = _eventListeners ? _eventListeners.length : 0;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
 				e = _eventListeners[i];
