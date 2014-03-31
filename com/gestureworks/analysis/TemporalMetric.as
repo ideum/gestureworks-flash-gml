@@ -199,8 +199,7 @@ package com.gestureworks.analysis
 									ts.tiO.frame.gestureEventArray.push(hold_event);
 								}
 							//trace("cluster",cO.hold_x,cO.hold_y,LN,N, cO.hold_n)
-							
-						//}
+
 						else {
 							cO.hold_x = 0;
 							cO.hold_y = 0;

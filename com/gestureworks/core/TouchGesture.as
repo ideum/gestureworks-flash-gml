@@ -778,6 +778,8 @@ package com.gestureworks.core
 								//Data["n"] = cO.n // not great for swipe and flick as always zero
 								Data["n"] = gO.pOList[key].n_current
 								
+								//trace("n count",cO.n,gO.pOList[key].n, gO.pOList[key].n_current)
+								
 								if (gO.pOList[key].event_type =="swipe") Data["n"] = gO.pOList[key].n //CHNAGED FOR SWIPE (MAY SCREW UP TAP ?? HENCE TYPE TEST)
 						
 								//N; static selection criteria
