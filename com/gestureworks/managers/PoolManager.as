@@ -60,11 +60,11 @@ package com.gestureworks.managers {
 		private  function updateCOPool():void {
 			poolSize = objCnt * GestureGlobals.clusterHistoryCaptureLength;
 			
-			for (var i:int = cOPool.length; i < poolSize; i++)
-				cOPool.push(new ClusterObject());
+			for (var i:int = cPool.length; i < poolSize; i++)
+				cPool.push(new ClusterObject());
 				
-			if (poolSize < cOPool.length)
-				cOPool.splice(poolSize, cOPool.length-1);
+			if (poolSize < cPool.length)
+				cPool.shrinkBy(poolSize-cPool.length);
 		}
 		
 		/**
@@ -72,9 +72,8 @@ package com.gestureworks.managers {
 		 * @return the top ClusterObject
 		 */
 		public  function get clusterObject():ClusterObject {
-			var cO:ClusterObject = cOPool.shift();
+			var cO:ClusterObject = cPool.cycle() as ClusterObject;
 			cO.reset();
-			cOPool.push(cO);			
 			return cO;
 		}
 		
@@ -87,11 +86,11 @@ package com.gestureworks.managers {
 		private  function updateFramePool():void {
 			poolSize = objCnt * GestureGlobals.timelineHistoryCaptureLength;
 			
-			for (var i:int = framePool.length; i < poolSize; i++)
-				framePool.push(new FrameObject());
+			for (var i:int = fPool.length; i < poolSize; i++)
+				fPool.push(new FrameObject());
 				
-			if (poolSize < framePool.length)
-				framePool.splice(poolSize, framePool.length - 1);
+			if (poolSize < fPool.length)
+				fPool.shrinkBy(fPool.length - poolSize);
 		}
 		
 		/**
@@ -99,9 +98,8 @@ package com.gestureworks.managers {
 		 * @return the top FrameObject
 		 */
 		public  function get frameObject():FrameObject {
-			var frame:FrameObject = framePool.shift();
+			var frame:FrameObject = fPool.cycle() as FrameObject;
 			frame.reset();
-			framePool.push(frame);			
 			return frame;
 		}
 		
