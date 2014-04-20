@@ -26,7 +26,8 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.ipClusterObject;
 	
 	public class ClusterHistories 
-	{
+	{	
+		private static var poolManager:PoolManager = PoolManager.getInstance();
 		//////////////////////////////////////////////////////
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
@@ -47,7 +48,7 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(clusterObject:ClusterObject):Object
 		{
-			var object:ClusterObject = PoolManager.clusterObject;
+			var object:ClusterObject = poolManager.clusterObject;
 				
 				// native properties
 				object.n = clusterObject.n;

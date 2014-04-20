@@ -23,6 +23,8 @@ package com.gestureworks.managers
 	
 	public class ObjectManager 
 	{
+		private static var poolManager:PoolManager = PoolManager.getInstance();
+		
 		private static var count:int;
 				
 		public static function registerTouchObject(touchObject:Object):int
@@ -30,7 +32,7 @@ package com.gestureworks.managers
 			touchObject.clusterID = count;
 			GestureGlobals.gw_public::touchObjects[count] = touchObject;
 			GestureGlobals.objectCount++;
-			PoolManager.registerPools();
+			poolManager.registerPools();
 			count++;
 			return touchObject.clusterID;
 		}
@@ -39,7 +41,7 @@ package com.gestureworks.managers
 		{
 			delete GestureGlobals.gw_public::touchObjects[touchObject.touchObjectID];
 			GestureGlobals.objectCount--;			
-			PoolManager.unregisterPools();
+			poolManager.unregisterPools();
 			count--;
 		}
 	}

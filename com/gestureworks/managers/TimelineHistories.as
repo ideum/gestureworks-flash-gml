@@ -32,6 +32,8 @@ package com.gestureworks.managers
 	
 	public class TimelineHistories 
 	{
+		private static var poolManager:PoolManager = PoolManager.getInstance();
+		
 		//////////////////////////////////////////////////////
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
@@ -58,7 +60,7 @@ package com.gestureworks.managers
 		public static function historyObject(frame:FrameObject):Object
 		{
 			//trace("in hist");
-			var object:FrameObject = PoolManager.frameObject;
+			var object:FrameObject = poolManager.frameObject;
 			//var object:FrameObject = new FrameObject;
 				
 				var ten:int = frame.pointEventArray.length
