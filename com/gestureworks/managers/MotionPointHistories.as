@@ -29,12 +29,14 @@ package com.gestureworks.managers
 	
 	public class MotionPointHistories 
 	{
+		public static var trackMotion:Boolean = false;
 		//////////////////////////////////////////////////////
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
 		
 		public static function historyQueue(event:GWMotionEvent):void//event:ClusterEvent
 		{
+			if (!MotionManager.disabled) return;
 			// define cluster to update
 			var mpo:MotionPointObject = GestureGlobals.gw_public::motionPoints[event.value.motionPointID];
 			
@@ -58,6 +60,7 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(mpo:MotionPointObject):Object
 		{
+			if (!MotionManager.disabled) return null;
 			var FrameID:int = 0;
 			//var currentFrameID:int = GestureGlobals.frameID;
 			//var currentMotionFrameID:int = GestureGlobals.motionFrameID;

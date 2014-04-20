@@ -44,7 +44,7 @@ package com.gestureworks.managers
 	
 	public class MotionManager 
 	{	
-
+		public static var disabled:Boolean = true;
 		public static var lmManager:LeapManager
 		public static var motionSprite:TouchSprite;
 		public static var leapmode:String = "3d"//"2d"; //======================================================================
@@ -55,6 +55,7 @@ package com.gestureworks.managers
 		gw_public static function initialize():void
 
 		{	
+			if (disabled) return;
 			//if(debug)
 				//trace("init leap motion device----------------------------------------------------",leapmode)
 				
@@ -95,6 +96,7 @@ package com.gestureworks.managers
 		
 		gw_public static function deInitialize():void
 		{
+			if (disabled) return;
 			if (leapmode == "2d" && lmManager) {
 				lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
 				Leap2DManager(lmManager).dispose();
