@@ -22,10 +22,8 @@ package com.gestureworks.managers {
 		}
 		
 		//cluster object pool
-		private  var cOPool:Vector.<ClusterObject> = new Vector.<ClusterObject>();
 		private var cPool:LinkedList = new LinkedList();
 		//frame object pool
-		private  var framePool:Vector.<FrameObject> = new Vector.<FrameObject>();
 		private var fPool:LinkedList = new LinkedList();
 		//number of registered touch objects
 		private  var objCnt:int;		
