@@ -3,6 +3,7 @@ package com.gestureworks.managers {
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.objects.ClusterObject;
 	import com.gestureworks.objects.FrameObject;
+	import com.gestureworks.utils.collections.LinkedList;
 	
 	/**
 	 * Manages object pooling to recycle objects opposed to performance intensive allocation (instantiation)
@@ -22,9 +23,10 @@ package com.gestureworks.managers {
 		
 		//cluster object pool
 		private  var cOPool:Vector.<ClusterObject> = new Vector.<ClusterObject>();
+		private var cPool:LinkedList = new LinkedList();
 		//frame object pool
 		private  var framePool:Vector.<FrameObject> = new Vector.<FrameObject>();
-		
+		private var fPool:LinkedList = new LinkedList();
 		//number of registered touch objects
 		private  var objCnt:int;		
 		//variable to store the pool sizes
