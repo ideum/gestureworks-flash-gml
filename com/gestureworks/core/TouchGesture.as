@@ -733,10 +733,10 @@ package com.gestureworks.core
 				// FOR SOME REASON THIS KILLS DTAP AND TTAP
 				// IT COULD BE THE RESET METHOD AND TIMING 
 				///////////////////////////////////////////////////
-				//tiO.frame = PoolManager.frameObject; 			
+				tiO.frame = PoolManager.getInstance().frameObject; 			
 				///////////////////////////////////////////////////
-				tiO.frame = new FrameObject(); //	works but expensive
-				//tiO.frame.reset(); //seems to work
+				//tiO.frame = new FrameObject(); //	works but expensive
+				tiO.frame.reset(); //seems to work
 				
 			}
 			else {

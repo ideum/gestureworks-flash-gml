@@ -55,7 +55,7 @@ package com.gestureworks.analysis
 		private var touchObjectID:int;
 		private var ts:Object;//private var ts:TouchSprite;
 		private var cO:ClusterObject;
-		private var mcO:ipClusterObject = new ipClusterObject(); 	//MOTION SUPER
+	//	private var mcO:ipClusterObject = new ipClusterObject(); 	//MOTION SUPER
 		private var tcO:ipClusterObject = new ipClusterObject(); 	//TOUCH SUPER
 		//private var scO:ipClusterObject = new ipClusterObject(); 	//SENSOR SUPER
 		
@@ -131,7 +131,7 @@ package com.gestureworks.analysis
 			cO = ts.cO; // super cluster
 			
 			tcO = cO.tcO; //parent touch cluster
-			mcO = cO.mcO; // parent motion cluster
+			//mcO = cO.mcO; // parent motion cluster
 			//scO = ts.scO; // parent sensor cluster
 			
 			
@@ -148,7 +148,7 @@ package com.gestureworks.analysis
 			maxZ = GestureGlobals.gw_public::leapMaxZ;
 			
 			// CREATE INTERACTION POINT SUBCLUSTERS
-			if (ts.motionEnabled)initSubClusters();
+			//if (ts.motionEnabled)initSubClusters();
 			
 			if (ts.traceDebugMode) trace("init cluster kinemetric");
 		}
@@ -335,41 +335,41 @@ package com.gestureworks.analysis
 		{
 			//trace("KineMetric::resetMotionCluster");
 			
-			mcO.x = 0;
-			mcO.y = 0;
-			mcO.z = 0;//-3D
-			
-			mcO.width = 0;
-			mcO.height = 0;
-			mcO.length = 0;//-3D
-			mcO.radius = 0;
-			
+			//mcO.x = 0;
+			//mcO.y = 0;
+			//mcO.z = 0;//-3D
+			//
+			//mcO.width = 0;
+			//mcO.height = 0;
+			//mcO.length = 0;//-3D
+			//mcO.radius = 0;
+			//
 			//cO.separation
-			mcO.separationX = 0;
-			mcO.separationY = 0;
-			mcO.separationZ = 0;//-3D
-			
-			mcO.rotation = 0;
-			mcO.rotationX = 0;//-3D
-			mcO.rotationY = 0;//-3D
-			mcO.rotationZ = 0;//-3D
-			mcO.orientation =  0;
-
+			//mcO.separationX = 0;
+			//mcO.separationY = 0;
+			//mcO.separationZ = 0;//-3D
+			//
+			//mcO.rotation = 0;
+			//mcO.rotationX = 0;//-3D
+			//mcO.rotationY = 0;//-3D
+			//mcO.rotationZ = 0;//-3D
+			//mcO.orientation =  0;
+//
 			/////////////////////////
 			// first diff
 			/////////////////////////
-			mcO.dtheta = 0;
-			mcO.dthetaX = 0;
-			mcO.dthetaY = 0;
-			mcO.dthetaZ = 0;
-			mcO.dtheta = 0;
-			mcO.dx = 0;
-			mcO.dy = 0;
-			mcO.dz = 0;//-3D
-			mcO.ds = 0;
-			mcO.dsx = 0;
-			mcO.dsy = 0;
-			mcO.dsz = 0;//-
+			//mcO.dtheta = 0;
+			//mcO.dthetaX = 0;
+			//mcO.dthetaY = 0;
+			//mcO.dthetaZ = 0;
+			//mcO.dtheta = 0;
+			//mcO.dx = 0;
+			//mcO.dy = 0;
+			//mcO.dz = 0;//-3D
+			//mcO.ds = 0;
+			//mcO.dsx = 0;
+			//mcO.dsy = 0;
+			//mcO.dsz = 0;//-
 		}
 		
 		
@@ -1813,8 +1813,9 @@ package com.gestureworks.analysis
 			ts.cO.mcO.ipn = ipn;
 			
 			//CHANGE IN INTERACTION POINT NUMBER
-			if (cO.history.length>3) dipn = mcO.ipn - cO.history[1].ipn;
-			else dipn = 1;
+			//if (cO.history.length>3) dipn = mcO.ipn - cO.history[1].ipn;
+			//else 
+			dipn = 1;
 			cO.dipn = dipn;
 
 			// GET IP BASED CONSTANTS
@@ -2952,60 +2953,60 @@ package com.gestureworks.analysis
 					var sub_cO:ipClusterObject = cO.subClusterArray[i];
 
 						// each dimension / property must be merged independently
-						if (sub_cO.ipn>0)
-						{
-							asc++;
+						//if (sub_cO.ipn>0)
+						//{
+							//asc++;
 							//trace("weave ipcos",sub_cO.ipn, sub_cO.type);
-							
+							//
 							// recalculate cluster center
 							// average over all ip subcluster subclusters 
 							// MAY NEED TO GIVE EQUAL WEIGHT TO ALL INTERACTION POINTS
 							// CURRENTLY CENTER OF 4 FINGER SUBCLUSTER IS SAME WEIGHT AS 1 PINCH POINT WHICH PUSHED AVERAGE CENTER CLOSER TO PINCH POINT
-							
-							mcO.x += sub_cO.x  
-							mcO.y += sub_cO.y
-							mcO.z += sub_cO.z
-							
-							
+							//
+							//mcO.x += sub_cO.x  
+							//mcO.y += sub_cO.y
+							//mcO.z += sub_cO.z
+							//
+							//
 							// recalculate based on ip subcluster totals
-							mcO.width = sub_cO.width; // get max
-							mcO.height = sub_cO.height;// get max
-							mcO.length = sub_cO.length;// get max
-							mcO.radius = sub_cO.radius;// get max
-										
+							//mcO.width = sub_cO.width; // get max
+							//mcO.height = sub_cO.height;// get max
+							//mcO.length = sub_cO.length;// get max
+							//mcO.radius = sub_cO.radius;// get max
+										//
 							// recalculate based on ip subcluster totals
-							mcO.separation = sub_cO.separation;// get max
-							mcO.separationX = sub_cO.separationX;// get max
-							mcO.separationY = sub_cO.separationY;// get max
-							mcO.separationZ = sub_cO.separationZ;// get max
-									
+							//mcO.separation = sub_cO.separation;// get max
+							//mcO.separationX = sub_cO.separationX;// get max
+							//mcO.separationY = sub_cO.separationY;// get max
+							//mcO.separationZ = sub_cO.separationZ;// get max
+									//
 							// recalculate based on ip subcluster totals
-							mcO.rotation = sub_cO.rotation;// get max
-							mcO.rotationX = sub_cO.rotationX;// get max
-							mcO.rotationY = sub_cO.rotationY;// get max
-							mcO.rotationZ = sub_cO.rotationZ;// get max
-							
-							
+							//mcO.rotation = sub_cO.rotation;// get max
+							//mcO.rotationX = sub_cO.rotationX;// get max
+							//mcO.rotationY = sub_cO.rotationY;// get max
+							//mcO.rotationZ = sub_cO.rotationZ;// get max
+							//
+							//
 							// map non zero deltas // accumulate 
 							// perhaps find average 
-							mcO.dx += sub_cO.dx;
-							mcO.dy += sub_cO.dy;
-							mcO.dz += sub_cO.dz;	
-								
-							mcO.dtheta += sub_cO.dtheta;
-							mcO.dthetaX += sub_cO.dthetaX;
-							mcO.dthetaY += sub_cO.dthetaY;
-							mcO.dthetaZ += sub_cO.dthetaZ;
-													
-							mcO.ds += sub_cO.ds; // must not be affected by cluster chnage in radius
-							mcO.dsx += sub_cO.dsx;
-							mcO.dsy += sub_cO.dsy;
-							mcO.dsz += sub_cO.dsz;
+							//mcO.dx += sub_cO.dx;
+							//mcO.dy += sub_cO.dy;
+							//mcO.dz += sub_cO.dz;	
+								//
+							//mcO.dtheta += sub_cO.dtheta;
+							//mcO.dthetaX += sub_cO.dthetaX;
+							//mcO.dthetaY += sub_cO.dthetaY;
+							//mcO.dthetaZ += sub_cO.dthetaZ;
+													//
+							//mcO.ds += sub_cO.ds; // must not be affected by cluster chnage in radius
+							//mcO.dsx += sub_cO.dsx;
+							//mcO.dsy += sub_cO.dsy;
+							//mcO.dsz += sub_cO.dsz;
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
-							
+							//
 							//trace("sub",sub_cO.dx, sub_cO.dy)
-						}
+						//}
 				}
 				
 				asck = 1 / asc;
@@ -3014,9 +3015,9 @@ package com.gestureworks.analysis
 				//trace("weave weight", asck,asc)
 				
 				// AVERAGE CLUSTER POSITION
-				mcO.x *= asck;  
-				mcO.y *= asck;
-				mcO.z *= asck;
+				//mcO.x *= asck;  
+				//mcO.y *= asck;
+				//mcO.z *= asck;
 				
 				
 				//trace("motion",mcO.dx,mcO.dy)
@@ -3048,41 +3049,41 @@ package com.gestureworks.analysis
 			*/
 			
 					// each dimension / property must be merged independently
-						if (mcO.ipn>0)
-						{
-
+						//if (mcO.ipn>0)
+						//{
+//
 							// recalculate cluster center
 							// average over all ip subcluster subclusters 
-							cO.x = mcO.x;
-							cO.y = mcO.y;
-							cO.z = mcO.z;
-							
-							cO.width = mcO.width;
-							cO.height = mcO.height; 
-							cO.length = mcO.length; 
-							cO.radius = mcO.radius; 
-							
+							//cO.x = mcO.x;
+							//cO.y = mcO.y;
+							//cO.z = mcO.z;
+							//
+							//cO.width = mcO.width;
+							//cO.height = mcO.height; 
+							//cO.length = mcO.length; 
+							//cO.radius = mcO.radius; 
+							//
 							// map non zero deltas // accumulate 
 							// perhaps find average 
-							cO.dx += mcO.dx;
-							cO.dy += mcO.dy;
-							cO.dz += mcO.dz;	
-								
-							cO.dtheta += mcO.dtheta;//
-							cO.dthetaX += mcO.dthetaX;
-							cO.dthetaY += mcO.dthetaY;
-							cO.dthetaZ += mcO.dthetaZ;
-													
-							cO.ds += mcO.ds; //must not be affected by cluster change in radius
-							cO.dsx += mcO.dsx;//
-							cO.dsy += mcO.dsy;//
-							cO.dsz += mcO.dsz;//
+							//cO.dx += mcO.dx;
+							//cO.dy += mcO.dy;
+							//cO.dz += mcO.dz;	
+								//
+							//cO.dtheta += mcO.dtheta;//
+							//cO.dthetaX += mcO.dthetaX;
+							//cO.dthetaY += mcO.dthetaY;
+							//cO.dthetaZ += mcO.dthetaZ;
+													//
+							//cO.ds += mcO.ds; //must not be affected by cluster change in radius
+							//cO.dsx += mcO.dsx;//
+							//cO.dsy += mcO.dsy;//
+							//cO.dsz += mcO.dsz;//
 							///////////////////////////////////////////////////////////////////////////////////////
 							///////////////////////////////////////////////////////////////////////////////////////
-							
+							//
 							//trace("weave motion",cO.x,cO.y,cO.z, cO.width,cO.height)
-							
-						}
+							//
+						//}
 				//trace("motion prime to core cluster", mcO.x,mcO.y,mcO.z,cO.dx,cO.dy)
 		}
 		
