@@ -94,9 +94,19 @@ package com.gestureworks.core
 		public function set active(a:Boolean):void {
 			if (!_active && a) {
 				_active = true;
+				_dynamicActive = true;
 				TouchManager.preinitBase(this);
 			}
 		}
+		
+		private var _dynamicActive:Boolean = false; 
+		public function get dynamicActive():Boolean { return _dynamicActive; }
+		public function set dynamicActive(value:Boolean):void {
+			if (_dynamicActive == value)
+				return; 
+				
+			_dynamicActive = value;
+		}			
 		
 		private var _localModes:Boolean = false;
 		/**

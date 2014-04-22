@@ -27,6 +27,9 @@ package com.gestureworks.interfaces
 		 */
 		function get active():Boolean;
 		function set active(a:Boolean):void; 
+				
+		function get dynamicActive():Boolean;
+		function set dynamicActive(a:Boolean):void; 
 		
 		/**
 		 * Flag indicating the application of local modes over the global settings. By default, all objects are enabled for input

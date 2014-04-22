@@ -33,6 +33,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -96,6 +97,15 @@ package com.gestureworks.core
 				TouchManager.preinitBase(this);
 			}
 		}
+		
+		private var _dynamicActive:Boolean = false; 
+		public function get dynamicActive():Boolean { return _dynamicActive; }
+		public function set dynamicActive(value:Boolean):void {
+			if (_dynamicActive == value)
+				return; 
+				
+			_dynamicActive = value;
+		}			
 		
 		private var _localModes:Boolean = false;
 		/**
@@ -1229,7 +1239,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function removeAllListeners():void {
-			var eCnt:int = _eventListeners.length;
+			var eCnt:int = _eventListeners ? _eventListeners.length : 0;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
 				e = _eventListeners[i];
