@@ -37,6 +37,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
 	import flash.display.DisplayObject;
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.utils.Dictionary;
@@ -259,7 +260,11 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onTouchBegin(e:TouchEvent):void {			
+		private static function onTouchBegin(e:TouchEvent):void {	
+			if (e.target is Stage){
+				return;
+			}
+
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
 			processOverlays(event);
@@ -320,6 +325,10 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function onTouchEnd(e:TouchEvent):void {
+			if (e.target is Stage){
+				return;
+			}
+			
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchUp(event);
 			processOverlays(event);
@@ -386,7 +395,11 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onMove(e:TouchEvent):void {
+		private static function onMove(e:TouchEvent):void {			
+			if (e.target is Stage){
+				return;
+			}
+			
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchMove(event);
 			processOverlays(event);			
