@@ -125,35 +125,35 @@ package com.gestureworks.managers
 			//trace("motion point begin, motionManager",event.value.motionPointID);
 			
 			// create new point object
-			var mpointObject:MotionPointObject  = new MotionPointObject();
-					
-					mpointObject.id = motionSprite.motionPointCount; // NEEDED FOR THUMBID ?????????????? not in motion
-					mpointObject.motionPointID = event.value.motionPointID;
-					mpointObject.type = event.value.type;
-					mpointObject.handID = event.value.handID;
-					
-					mpointObject.position = event.value.position;
-					mpointObject.direction = event.value.direction;
-					mpointObject.normal = event.value.normal;
-					mpointObject.velocity = event.value.velocity;
-
-					mpointObject.sphereCenter = event.value.sphereCenter;
-					mpointObject.sphereRadius = event.value.sphereRadius;
-					
-					mpointObject.length = event.value.length;
-					mpointObject.width = event.value.width;
-					
-					
+			//var mpointObject:MotionPointObject  = new MotionPointObject();
+					//
+					//mpointObject.id = motionSprite.motionPointCount; // NEEDED FOR THUMBID ?????????????? not in motion
+					//mpointObject.motionPointID = event.value.motionPointID;
+					//mpointObject.type = event.value.type;
+					//mpointObject.handID = event.value.handID;
+					//
+					//mpointObject.position = event.value.position;
+					//mpointObject.direction = event.value.direction;
+					//mpointObject.normal = event.value.normal;
+					//mpointObject.velocity = event.value.velocity;
+//
+					//mpointObject.sphereCenter = event.value.sphereCenter;
+					//mpointObject.sphereRadius = event.value.sphereRadius;
+					//
+					//mpointObject.length = event.value.length;
+					//mpointObject.width = event.value.width;
+					//
+					//
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST
-					motionSprite.cO.motionArray.push(mpointObject);
-					motionSprite.motionPointCount++;
-				
-				
+					//motionSprite.cO.motionArray.push(mpointObject);
+					//motionSprite.motionPointCount++;
+				//
+				//
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::motionPoints[event.value.motionPointID] = mpointObject;
-				
+				//GestureGlobals.gw_public::motionPoints[event.value.motionPointID] = mpointObject;
+				//
 				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerMotionPoint(mpointObject);
+				//registerMotionPoint(mpointObject);
 			
 		}
 		
@@ -162,29 +162,29 @@ package com.gestureworks.managers
 		public static function onMotionEnd(event:GWMotionEvent):void
 		{
 			//trace("Motion point End, motionManager", event.value.motionPointID)
-			var motionPointID:int = event.value.motionPointID;
-			var pointObject:MotionPointObject = mpoints[motionPointID];
-		
-			
-			if (pointObject)
-			{
+			//var motionPointID:int = event.value.motionPointID;
+			//var pointObject:MotionPointObject = mpoints[motionPointID];
+		//
+			//
+			//if (pointObject)
+			//{
 					// REMOVE POINT FROM LOCAL LIST
-					motionSprite.cO.motionArray.splice(pointObject.id, 1);
+					//motionSprite.cO.motionArray.splice(pointObject.id, 1);
 					//test motionSprite.cO.motionArray.splice(pointObject.motionPointID, 1);
-					
+					//
 					// REDUCE LOACAL POINT COUNT
-					motionSprite.motionPointCount--;
-					
+					//motionSprite.motionPointCount--;
+					//
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < motionSprite.cO.motionArray.length; i++)
-					{
-						motionSprite.cO.motionArray[i].id = i;
-					}
-				
+					//for (var i:int = 0; i < motionSprite.cO.motionArray.length; i++)
+					//{
+						//motionSprite.cO.motionArray[i].id = i;
+					//}
+				//
 					// DELETE FROM GLOBAL POINT LIST
-					delete mpoints[event.value.motionPointID];
-			}
-			
+					//delete mpoints[event.value.motionPointID];
+			//}
+			//
 			//trace("motion point tot",motionSprite.motionPointCount)
 		}
 		
@@ -193,32 +193,32 @@ package com.gestureworks.managers
 		public static function onMotionMove(event:GWMotionEvent):void
 		{			
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
-			var mpO:MotionPointObject = mpoints[event.value.motionPointID];
-			
+			//var mpO:MotionPointObject = mpoints[event.value.motionPointID];
+			//
 			//trace("motion move event, motionManager", event.value.motionPointID);
-			
-				if (mpO)
-				{	
+			//
+				//if (mpO)
+				//{	
 					//mpO = event.value;
-					
+					//
 					//mpO.id  = event.value.id;
 					//mpO.motionPointID  = event.value.motionPointID;
-					mpO.position = event.value.position;
-					mpO.direction = event.value.direction;
-					mpO.normal = event.value.normal;
-					mpO.velocity = event.value.velocity;
-					
-					mpO.sphereRadius = event.value.sphereRadius;
-					mpO.sphereCenter = event.value.sphereCenter;
-					
-					mpO.length = event.value.length;
-					mpO.width = event.value.width;
+					//mpO.position = event.value.position;
+					//mpO.direction = event.value.direction;
+					//mpO.normal = event.value.normal;
+					//mpO.velocity = event.value.velocity;
+					//
+					//mpO.sphereRadius = event.value.sphereRadius;
+					//mpO.sphereCenter = event.value.sphereCenter;
+					//
+					//mpO.length = event.value.length;
+					//mpO.width = event.value.width;
 					//mpO.handID = event.value.handID;
-
-				
-					mpO.moveCount ++;
+//
+				//
+					//mpO.moveCount ++;
 					//trace( mpO.moveCount);
-				}
+				//}
 				
 				// UPDATE POINT HISTORY 
 				MotionPointHistories.historyQueue(event);

@@ -99,94 +99,94 @@ package com.gestureworks.managers
 			//NEED IP COUNT FOR ID
 			//for each(var tO:Object in touchObjects)
 			//{
-				// DUPE CORE IP LIST FOR NOW
-				// create new interaction point clone for each interactive display object 
-				var ipO:InteractionPointObject  = new InteractionPointObject();	
-				
-						ipO.id = gms.interactionPointCount; // NEEDED FOR THUMBID
-						ipO.interactionPointID = event.value.interactionPointID;
-						ipO.handID = event.value.handID;
-						ipO.type = event.value.type;
-						
-						ipO.position = event.value.position;
-						ipO.direction = event.value.direction;
-						ipO.normal = event.value.normal;
-						ipO.velocity = event.value.velocity;
-
-						ipO.sphereCenter = event.value.sphereCenter;
-						ipO.sphereRadius = event.value.sphereRadius;
-						
-						ipO.length = event.value.length;
-						ipO.width = event.value.width;
-						
+				 //DUPE CORE IP LIST FOR NOW
+				 //create new interaction point clone for each interactive display object 
+				//var ipO:InteractionPointObject  = new InteractionPointObject();	
+				//
+						//ipO.id = gms.interactionPointCount; // NEEDED FOR THUMBID
+						//ipO.interactionPointID = event.value.interactionPointID;
+						//ipO.handID = event.value.handID;
+						//ipO.type = event.value.type;
+						//
+						//ipO.position = event.value.position;
+						//ipO.direction = event.value.direction;
+						//ipO.normal = event.value.normal;
+						//ipO.velocity = event.value.velocity;
+//
+						//ipO.sphereCenter = event.value.sphereCenter;
+						//ipO.sphereRadius = event.value.sphereRadius;
+						//
+						//ipO.length = event.value.length;
+						//ipO.width = event.value.width;
+						//
 						//ADVANCED IP PROEPRTIES
-						ipO.flatness = event.value.flatness;
-						ipO.orientation = event.value.orientation;
-						ipO.fn = event.value.fn;
-						ipO.splay = event.value.splay;
-						ipO.fist = event.value.fist;
-						
-						ipO.phase = "begin"
+						//ipO.flatness = event.value.flatness;
+						//ipO.orientation = event.value.orientation;
+						//ipO.fn = event.value.fn;
+						//ipO.splay = event.value.splay;
+						//ipO.fist = event.value.fist;
+						//
+						//ipO.phase = "begin"
 						//trace(ipO.interactionPointID)
-						
-						
-				
-				
-				////////////////////////////////////////////
+						//
+						//
+				//
+				//
+				//////////////////////////////////////////
 				//ADD TO GLOBAL Interaction POINT LIST
-				gms.cO.iPointArray.push(ipO);
-				
+				//gms.cO.iPointArray.push(ipO);
+				//
 				//trace("ip begin",ipO.type)
-				
-				///////////////////////////////////////////////////////////////////
-				// ADD TO LOCAL OBJECT Interaction POINT LIST
-				for each(var tO:Object in touchObjects)
-				{
-					if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
-					{
-						var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
-						var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
-						
-						// 2D HIT TEST FOR 2D OBJECT
-						if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
-						{
+				//
+				/////////////////////////////////////////////////////////////////
+				 //ADD TO LOCAL OBJECT Interaction POINT LIST
+				//for each(var tO:Object in touchObjects)
+				//{
+					//if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
+					//{
+						//var xh:Number = normalize(ipO.position.x, minX, maxX) * sw;//tO.stage.stageWidth;//1920
+						//var yh:Number = normalize(ipO.position.y, minY, maxY) * sh;//tO.stage.stageHeight; //1080
+						//
+						 //2D HIT TEST FOR 2D OBJECT
+						//if ((tO is TouchSprite)||(tO is TouchMovieClip))//ITouchObject
+						//{
 							//trace("2d hit test");			
-							if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
-						}			
+							//if (tO.hitTestPoint(xh, yh, false)) tO.cO.iPointArray.push(ipO);
+						//}			
 						//2D HIT TEST ON 3D OBJECT
-						if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
-						{
-							if (hitTest3D != null) {
+						//if (tO is ITouchObject3D) //ITouchObject //TouchObject3D
+						//{
+							//if (hitTest3D != null) {
 								 //trace("3d hit test",hitTest3D(tO as ITouchObject3D, tO.view, xh, yh),tO, tO.vto,tO.name, tO.view, tO as TouchContainer3D)
-								if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
-									tO.cO.iPointArray.push(ipO);								
-								}
-							}
-							
-
-						}
-							
-					}
+								//if (hitTest3D(tO as ITouchObject3D, xh, yh)==true) {
+									//tO.cO.iPointArray.push(ipO);								
+								//}
+							//}
+							//
+//
+						//}
+							//
+					//}
 					//else if if ((tO.motionClusterMode == "local_strong")&&(tO.tc.ipSupported(ipO.type)))
 					//{
-						
+						//
 					//}
-				}
-				
-				
-				
-				// update local touch object point count
-				gms.interactionPointCount++;
-
-				///////////////////////////////////////////////////////////////////////////
-				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
-				GestureGlobals.gw_public::interactionPoints[event.value.interactionPointID] = ipO;
-					
-				////////////////////////////////////////////////////////////////////////////
-				// REGISTER TOUCH POINT WITH TOUCH MANAGER
-				registerInteractionPoint(ipO);
+				//}
+				//
+				//
+				//
+				 //update local touch object point count
+				//gms.interactionPointCount++;
+//
+				/////////////////////////////////////////////////////////////////////////
+				 //ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
+				//GestureGlobals.gw_public::interactionPoints[event.value.interactionPointID] = ipO;
+					//
+				//////////////////////////////////////////////////////////////////////////
+				 //REGISTER TOUCH POINT WITH TOUCH MANAGER
+				//registerInteractionPoint(ipO);
 			//}
-			
+			//
 			//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
 		}
 		
@@ -195,37 +195,37 @@ package com.gestureworks.managers
 		public static function onInteractionEnd(event:GWInteractionEvent):void
 		{
 			
-			var iPID:int = event.value.interactionPointID;
-			var ipointObject:InteractionPointObject = ipoints[iPID];
+			//var iPID:int = event.value.interactionPointID;
+			//var ipointObject:InteractionPointObject = ipoints[iPID];
 			//trace("Motion point End, motionManager", iPID)
-			
-			if (ipointObject)
-			{
-				ipointObject.phase="end"
-				
+			//
+			//if (ipointObject)
+			//{
+				//ipointObject.phase="end"
+				//
 					// REMOVE POINT FROM GLOBAL LIST
-					gms.cO.iPointArray.splice(ipointObject.id, 1);
-					
+					//gms.cO.iPointArray.splice(ipointObject.id, 1);
+					//
 					// REMOVE FROM LOCAL OBJECTES
-					for each(var tO:Object in touchObjects)
-					{
-						if (tO.motionClusterMode=="local_strong") tO.cO.iPointArray.splice(ipointObject.id, 1);
-					}
-					
-					
+					//for each(var tO:Object in touchObjects)
+					//{
+						//if (tO.motionClusterMode=="local_strong") tO.cO.iPointArray.splice(ipointObject.id, 1);
+					//}
+					//
+					//
 					// REDUCE LOACAL POINT COUNT
-					gms.interactionPointCount--;
-					
+					//gms.interactionPointCount--;
+					//
 					// UPDATE POINT ID 
-					for (var i:int = 0; i < gms.cO.iPointArray.length; i++)
-					{
-						gms.cO.iPointArray[i].id = i;
-					}
-				
+					//for (var i:int = 0; i < gms.cO.iPointArray.length; i++)
+					//{
+						//gms.cO.iPointArray[i].id = i;
+					//}
+				//
 					// DELETE FROM GLOBAL POINT LIST
-					delete ipoints[event.value.interactionPointID];
-			}
-			
+					//delete ipoints[event.value.interactionPointID];
+			//}
+			//
 			//trace("interaction point end",gms.interactionPointCount)
 		}
 		
@@ -234,41 +234,41 @@ package com.gestureworks.managers
 		public static function onInteractionUpdate(event:GWInteractionEvent):void
 		{			
 			//  CONSOLODATED UPDATE METHOD FOR POINT POSITION AND TOUCH OBJECT CALCULATIONS
-			var ipO:InteractionPointObject = ipoints[event.value.interactionPointID];
-			
+			//var ipO:InteractionPointObject = ipoints[event.value.interactionPointID];
+			//
 			//trace("interaction move event, interactionsManager", event.value.interactionPointID);
-			
-				if (ipO)
-				{	
+			//
+				//if (ipO)
+				//{	
 					//mpO = event.value;
-					ipO.interactionPointID  = event.value.interactionPointID;
-					ipO.position = event.value.position;
-					ipO.direction = event.value.direction;
-					ipO.normal = event.value.normal;
-					ipO.velocity = event.value.velocity;
-					
-					ipO.sphereRadius = event.value.sphereRadius;
-					ipO.sphereCenter = event.value.sphereCenter;
-					
-					ipO.length = event.value.length;
-					ipO.width = event.value.width;
-					
-					ipO.flatness = event.value.flatness;
-					ipO.orientation = event.value.orientation;
-					ipO.fn = event.value.fn;
-					ipO.splay = event.value.splay;
-					ipO.fist = event.value.fist;
-					
-					ipO.phase = "update"
+					//ipO.interactionPointID  = event.value.interactionPointID;
+					//ipO.position = event.value.position;
+					//ipO.direction = event.value.direction;
+					//ipO.normal = event.value.normal;
+					//ipO.velocity = event.value.velocity;
+					//
+					//ipO.sphereRadius = event.value.sphereRadius;
+					//ipO.sphereCenter = event.value.sphereCenter;
+					//
+					//ipO.length = event.value.length;
+					//ipO.width = event.value.width;
+					//
+					//ipO.flatness = event.value.flatness;
+					//ipO.orientation = event.value.orientation;
+					//ipO.fn = event.value.fn;
+					//ipO.splay = event.value.splay;
+					//ipO.fist = event.value.fist;
+					//
+					//ipO.phase = "update"
 					//mpO.handID = event.value.handID;
 					//ipO.moveCount ++;
-					
+					//
 					//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
-				}
-				
-
+				//}
+				//
+//
 				// UPDATE POINT HISTORY 
-				InteractionPointHistories.historyQueue(event);
+				//InteractionPointHistories.historyQueue(event);
 		}	
 	
 		

@@ -76,7 +76,7 @@ package com.gestureworks.managers
 				act_vector[3] = event.accelerationZ;
 				
 			//push sensor data to cluster object
-			ms.cO.sensorArray = act_vector	
+			//ms.cO.sensorArray = act_vector	
 			// update cluster analysis
 			//ms.updateSensorClusterAnalysis()
         }

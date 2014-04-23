@@ -161,18 +161,18 @@ package com.gestureworks.analysis
 		{
 			// update data
 			//N = cO.pointArray.length;
-			tpn = cO.tpn;
-			mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
+			//tpn = cO.tpn;
+			//mpn = cO.motionArray2D.length;// only shows when 2d visualizer working  //mpn = cO.mpn;
 			
 			
 			
 			// clear graphics
-			graphics.clear();
-			
+			//graphics.clear();
+			//
 			
 			// draw
-			if (ts.touchEnabled)	draw_touchPoints();
-			if (ts.motionEnabled)	draw_motionPoints();
+			//if (ts.touchEnabled)	draw_touchPoints();
+			//if (ts.motionEnabled)	draw_motionPoints();
 			//if (ts._sensorEnabled)	draw_sensorPoints();
 		}
 		
@@ -367,94 +367,94 @@ package com.gestureworks.analysis
 		private function draw_motionPoints():void
 		{
 					// clear text
-					if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
-				
+					//if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
+				//
 					//trace("mpn",mpn)
-						
+						//
 					// Calculate the hand's average finger tip position
-					for (i = 0; i < mpn; i++) 
-								{
-								var mp:MotionPointObject = cO.motionArray2D[i];
-									
-									if (mp.type == "finger")
-									{
-										var zm:Number = mp.position.z * 0.2;
-										var wm:Number = (mp.width) *10;
+					//for (i = 0; i < mpn; i++) 
+								//{
+								//var mp:MotionPointObject = cO.motionArray2D[i];
+									//
+									//if (mp.type == "finger")
+									//{
+										//var zm:Number = mp.position.z * 0.2;
+										//var wm:Number = (mp.width) *10;
 										//trace("length", finger.length);
 										//trace("width", finger.width);
-
-											if (_drawShape)
-											{
-												if (mp.fingertype == "thumb") 
-												{
+//
+											//if (_drawShape)
+											//{
+												//if (mp.fingertype == "thumb") 
+												//{
 													//  draw finger point 
-													graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
-													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
-													
-													graphics.beginFill(0xFF0000, style.fill_alpha);
-													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-													graphics.endFill();
-												}
-												
-												else
-												{
+													//graphics.lineStyle(4, 0xFF0000, style.stroke_alpha);
+													//graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
+													//
+													//graphics.beginFill(0xFF0000, style.fill_alpha);
+													//graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+													//graphics.endFill();
+												//}
+												//
+												//else
+												//{
 													//  draw finger point 
-													graphics.lineStyle(4, 0x6AE370, style.stroke_alpha);
-													graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
-													graphics.beginFill(0x6AE370, style.fill_alpha);
-													graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
-													graphics.endFill();
-												}
-											}
-											
-											/*
-											if (_drawText)
-											{
+													//graphics.lineStyle(4, 0x6AE370, style.stroke_alpha);
+													//graphics.drawCircle(mp.position.x ,mp.position.y, style.radius + 20 + zm);	
+													//graphics.beginFill(0x6AE370, style.fill_alpha);
+													//graphics.drawCircle(mp.position.x, mp.position.y, style.radius);
+													//graphics.endFill();
+												//}
+											//}
+											//
+											///*
+											//if (_drawText)
+											//{
 												//drawPoints ID of point
-												mptext_array[i].x = mp.position.x + 50;
-												mptext_array[i].y = mp.position.y - 50;
-												mptext_array[i].visible = true;
-												mptext_array[i].textCont = String(mp.fingertype) + ": ID:" + String(mp.motionPointID) + "\n"
-																		+ "Thumb prob: " + (Math.round(1 * mp.thumb_prob)) +  "\n" 
-																		+ "N length: " + (Math.round(100 * mp.normalized_length)) * 0.01 + " length: " + (Math.round(mp.length)) + "\n"
-																		+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01 +"\n"
-																		+ "max_length: " + Math.round(mp.max_length) + " min_length: "+ Math.round(mp.min_length) + " length: "+ Math.round(mp.length) + " Extension: " + mp.extension + "%"; 
+												//mptext_array[i].x = mp.position.x + 50;
+												//mptext_array[i].y = mp.position.y - 50;
+												//mptext_array[i].visible = true;
+												//mptext_array[i].textCont = String(mp.fingertype) + ": ID:" + String(mp.motionPointID) + "\n"
+																		//+ "Thumb prob: " + (Math.round(1 * mp.thumb_prob)) +  "\n" 
+																		//+ "N length: " + (Math.round(100 * mp.normalized_length)) * 0.01 + " length: " + (Math.round(mp.length)) + "\n"
+																		//+ "N palm angle: " + (Math.round(100 * mp.normalized_palmAngle)) * 0.01 + " palm angle: " + (Math.round(100 * mp.palmAngle)) * 0.01 +"\n"
+																		//+ "max_length: " + Math.round(mp.max_length) + " min_length: "+ Math.round(mp.min_length) + " length: "+ Math.round(mp.length) + " Extension: " + mp.extension + "%"; 
 																		//" width: "+ Math.round(100*mp.width)*0.01 +
-											}	*/
-									}
-									
-									
-									if (mp.type == "palm")
-									{
+											//}	*/
+									//}
+									//
+									//
+									//if (mp.type == "palm")
+									//{
 										////////////////////////////////////////////////////
 										//// draw hand data
 										////////////////////////////////////////////////////
-										if (_drawShape)
-											{
+										//if (_drawShape)
+											//{
 												// palm center
-												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius+10+ mp.position.z * 0.2);
-												graphics.beginFill(0xFFFFFF, style.fill_alpha);
-												graphics.drawCircle(mp.position.x, mp.position.y, style.radius-10);
-												graphics.endFill();
-												
+												//graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
+												//graphics.drawCircle(mp.position.x, mp.position.y, style.radius+10+ mp.position.z * 0.2);
+												//graphics.beginFill(0xFFFFFF, style.fill_alpha);
+												//graphics.drawCircle(mp.position.x, mp.position.y, style.radius-10);
+												//graphics.endFill();
+												//
 												//normal
-												graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
-												graphics.moveTo(mp.position.x,mp.position.y);
-												graphics.lineTo(mp.position.x + 50*mp.normal.x, mp.position.y + 50*mp.normal.y);
-											}
-											
-											/*
-											if (_drawText)
-											{
+												//graphics.lineStyle(2, 0xFF0000, style.stroke_alpha);
+												//graphics.moveTo(mp.position.x,mp.position.y);
+												//graphics.lineTo(mp.position.x + 50*mp.normal.x, mp.position.y + 50*mp.normal.y);
+											//}
+											//
+											///*
+											//if (_drawText)
+											//{
 												//drawPoints ID of point
-												mptext_array[i].textCont = "Palm: " + "ID" + String(mp.motionPointID) + "    id" + String(mp.id);
-												mptext_array[i].x = mp.position.x;
-												mptext_array[i].y = mp.position.y - 50;
-												mptext_array[i].visible = true;
-											}*/
-									}
-								}
+												//mptext_array[i].textCont = "Palm: " + "ID" + String(mp.motionPointID) + "    id" + String(mp.id);
+												//mptext_array[i].x = mp.position.x;
+												//mptext_array[i].y = mp.position.y - 50;
+												//mptext_array[i].visible = true;
+											//}*/
+									//}
+								//}
 					
 		}
 
