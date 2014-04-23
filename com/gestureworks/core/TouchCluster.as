@@ -18,7 +18,7 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWClusterEvent;
 	import com.gestureworks.analysis.KineMetric;
 	import com.gestureworks.analysis.VectorMetric;
-	import com.gestureworks.analysis.GeoMetric;
+	//import com.gestureworks.analysis.GeoMetric;
 	import com.gestureworks.objects.GestureObject;
 	
 	import com.gestureworks.objects.ClusterObject;
@@ -41,14 +41,14 @@ package com.gestureworks.core
 		*/
 		private var cluster_kinemetric:KineMetric;
 		public var cluster_vectormetric:VectorMetric;
-		private var cluster_geometric:GeoMetric;
+		//private var cluster_geometric:GeoMetric;
 		
 		/**
 		* @private
 		*/
 		private var kinemetricsOn:Boolean = true;
 		private var vectormetricsOn:Boolean = true;
-		private var geometricsOn:Boolean = true;
+		//private var geometricsOn:Boolean = true;
 		
 		private var gn:uint;
 		private var key:uint;
@@ -60,7 +60,7 @@ package com.gestureworks.core
 		private var gO:GestureListObject;
 		private var cO:ClusterObject
 		private var tcO:ipClusterObject
-		private var mcO:ipClusterObject
+		//private var mcO:ipClusterObject
 		//private var scO:ipClusterObject
 		
 		private var tiO:TimelineObject
@@ -70,17 +70,17 @@ package com.gestureworks.core
 		
 		////////////////////////////////////////
 		// define subcluster queries
-		public var fingerPoints:Boolean = false; 
-		public var thumbPoints:Boolean = false; 
-		public var palmPoints:Boolean = false; 
-		public var fingerAveragePoints:Boolean = false; 
-		public var fingerAndThumbPoints:Boolean = false;
-		public var pinchPoints:Boolean = false; 
-		public var triggerPoints:Boolean = false; 
-		public var pushPoints:Boolean = false; 
-		public var hookPoints:Boolean = false; 
-		public var framePoints:Boolean = false; 
-		public var fistPoints:Boolean = false; 
+		//public var fingerPoints:Boolean = false; 
+		//public var thumbPoints:Boolean = false; 
+	//	public var palmPoints:Boolean = false; 
+		//public var fingerAveragePoints:Boolean = false; 
+		//public var fingerAndThumbPoints:Boolean = false;
+		//public var pinchPoints:Boolean = false; 
+		//public var triggerPoints:Boolean = false; 
+		//public var pushPoints:Boolean = false; 
+		//public var hookPoints:Boolean = false; 
+		//public var framePoints:Boolean = false; 
+		//public var fistPoints:Boolean = false; 
 		
 		//private var motionSprite:Object;
 		
@@ -91,13 +91,12 @@ package com.gestureworks.core
 			
 			id = touchObjectID;
 			ts = GestureGlobals.gw_public::touchObjects[id];
-			//motionSprite = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
 			touchObjects = GestureGlobals.gw_public::touchObjects;
 			
 			gO = ts.gO;
 			cO = ts.cO;
 				tcO = cO.tcO;
-				mcO = cO.mcO;
+				//mcO = cO.mcO;
 				//scO = cO.scO;
 			
 			tiO = ts.tiO;
@@ -125,7 +124,7 @@ package com.gestureworks.core
 				// set constructor logic 
 				kinemetricsOn = true;
 				vectormetricsOn = true;	
-				geometricsOn = true;	
+				//geometricsOn = true;	
 		}
 		/**
 		 * @private
@@ -141,7 +140,7 @@ package com.gestureworks.core
 				if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
 					
 				// characterizes advanced relative geometry of a cluster
-				if (geometricsOn)cluster_geometric = new GeoMetric(id);
+				//if (geometricsOn)cluster_geometric = new GeoMetric(id);
 		}
 		/**
 		 * @private
@@ -153,7 +152,7 @@ package com.gestureworks.core
 				// analyzes and characterizes multi-point motion
 				if (kinemetricsOn)		cluster_kinemetric.init();
 				if (vectormetricsOn)	cluster_vectormetric.init();
-				if (geometricsOn)		cluster_geometric.init();
+				//if (geometricsOn)		cluster_geometric.init();
 				
 		}
 		/**
@@ -165,12 +164,12 @@ package com.gestureworks.core
 			//trace("update cluster count");
 			
 			// geometric on
-			cluster_geometric.findMotionClusterConstants();  // get mpn
+			//cluster_geometric.findMotionClusterConstants();  // get mpn
 			
 			
 			// get point count
 			cluster_kinemetric.findTouchClusterConstants(); // get tpn
-			cluster_kinemetric.find3DGlobalIPConstants();  	// get ipn
+			//cluster_kinemetric.find3DGlobalIPConstants();  	// get ipn
 			cluster_kinemetric.findRootClusterConstants(); 	// get n
 			
 			//trace("update ts count", ts.N, ts.tpn, ts.ipn)
@@ -274,7 +273,7 @@ package com.gestureworks.core
 				gn = gO.pOList.length;
 				
 				cluster_kinemetric.resetRootCluster();
-				cluster_kinemetric.resetMotionCluster();
+				//cluster_kinemetric.resetMotionCluster();
 				cluster_kinemetric.resetTouchCluster();
 				
 				//cluster_kinemetric.findRootInstDimention();
@@ -285,16 +284,16 @@ package com.gestureworks.core
 				clearGestureObjectClusterDeltas();
 				
 				// must preceed kinemetrics
-				if (geometricsOn)
-				{	
+				//if (geometricsOn)
+				//{	
 					//TODO: GEOMRETRIC 2D (TRIANGLE TEST)
 					//if (ts.touchEnabled) getGeoMetrics2D(); 
-					if (ts.motionEnabled) getGeoMetrics3D();
-				}
+					//if (ts.motionEnabled) getGeoMetrics3D();
+				//}
 				if (kinemetricsOn) 
 				{	
 					if (ts.touchEnabled) getKineMetrics();
-					if (ts.motionEnabled) getKineMetrics3D();
+					//if (ts.motionEnabled) getKineMetrics3D();
 				}
 				
 				if (vectormetricsOn) 
@@ -361,7 +360,7 @@ package com.gestureworks.core
 		//////////////////////////////////////////////////////////////////////////////
 		// WOULD ALSO ALLOW FOR (FIDUCIAL + TOUCH) OR (PEN + TOUCH) GESTURES 
 		//AS EACH WOULD BE IN DIFFERENT LOCAL SUBCLUSTER
-		
+		/*
 		public function ipSupported(type:String):Boolean
 		{
 			var result:Boolean = false;
@@ -379,16 +378,18 @@ package com.gestureworks.core
 							if ((type == "fist") && (fistPoints)) 							result = true; 
 							
 			return result		
-		} 
+		} */
 		
+		/*
 			public function initGeoMetric2D():void
 		{
 			// look at global gesture list and check what fiducials are required
 			// activate gloabl touch geometric 2d anlysis
-		}
+		}*/
 		
 		//ESTABLISHES GLOABL IP SUPPORT
 		// SEE TOUCH MANAGER
+		/*
 		public function initGeoMetric3D():void
 		{
 			//trace("set geometric init",core);
@@ -452,8 +453,8 @@ package com.gestureworks.core
 			//DIDNT REALLY NEED AS FRAME DRIVEN
 			core_init = true;
 			}
-		}
-		
+		}*/
+		/*
 		
 		// ESTABLISHES LOCAL IP SUPPORT TO ALLOW IN LOCAL IP LIST
 		public function initIPSupport():void
@@ -506,14 +507,14 @@ package com.gestureworks.core
 				
 			}
 			
-		}
+		}*/
 		
 		
-		
+		/*
 		public function initIPFilters():void
 		{
 			cluster_kinemetric.initFilterIPCluster();
-		}
+		}*/
 		
 		public function getVectorMetrics():void 
 		{
@@ -528,94 +529,6 @@ package com.gestureworks.core
 		}
 		
 		
-		public function getSkeletalMetrics3D():void 
-		{
-			//trace("get skeletal geometric");
-			
-			if (core)
-			{
-				//trace("get core geometrics")
-				
-				//////////////////////////////////////////////////////
-				// RESET CLUSTER
-				//////////////////////////////////////////////////////
-				//cluster_geometric.resetGeoCluster();
-				
-				
-				// NEEDS TO UPDATE HERE TO STAY CURRENT
-				// NEED TO FIND OUT WHY ??
-				cluster_geometric.findMotionClusterConstants()
-				
-				/////////////////////////////////////////////////////
-				//BUILD SKELETAL MODEL FROM RAW MOTION POINTS
-				/////////////////////////////////////////////////////
-				
-				// BASIC HAND
-					cluster_geometric.clearHandData();	
-					cluster_geometric.createHand(); // palm points // finger list palm ip 
-				// SKELETAL DETAIL
-					cluster_geometric.findFingerAverage();// finger average point// up down 
-					cluster_geometric.normalizeFingerSize(); // norm lengths (palm distances)
-					cluster_geometric.findHandRadius(); // favdist 
-					cluster_geometric.findThumb(); // thumb // left// right
-				// ADVANCED SKELETON
-					//--cluster_geometric.findFingers(); // uniquely identify fingers
-					//--cluster_geometric.findJoints(); // finger joints //knuckle / wrist
-				////////////////////////////////////////////////
-			}
-		}
-		
-		public function getGeoMetrics3D():void 
-		{
-			//TODO:  SET TO BE AWARE OF NUMBER OF FINGERS ASOCOCIATED WITH CONFIG
-			// SET TO BE AWARE OF REQUIRED HAND SETTINGS FLATNESS AND ORIENTATION
-			
-			if (core)
-			{
-			//trace("get core geometrics", core);
-			
-			//FOR EACH GESTURE ON TS
-			//var gn:int = ts.gO.pOList.length;
-			//trace("hello", gn)
-			
-			//for (key = 0; key < gn; key++) 
-			//{
-			//var g:GestureObject = gO.pOList[key];
-
-				//if (g.cluster_input_type == "motion")
-				//{
-				// FOR EACH HAND
-				//for (var j:int = 0; j < cO.hn; j++)
-					//{	
-					// IF H_FN AND FLATNESS AND ORINETATION MATCH
-					//trace(g.h_fn,g.h_flatness)
-					
-					//if ((cO.handList[j].fingerList.length == g.h_fn)&&(cO.handList[j].flatness == g.h_flatness))
-						//{
-						if (fingerPoints)			cluster_geometric.find3DFingerPoints(); 
-						if (thumbPoints)			cluster_geometric.find3DThumbPoints(); 
-						if (palmPoints)				cluster_geometric.find3DPalmPoints(); 
-						if (fingerAveragePoints)	cluster_geometric.find3DFingerAveragePoints(); 
-						if (fingerAndThumbPoints)	cluster_geometric.find3DFingerAndThumbPoints(); 
-									
-						//CONFIGURATION BASED INTERACTION POINTS
-						if (pinchPoints)			cluster_geometric.find3DPinchPoints(); 
-						if (triggerPoints)			cluster_geometric.find3DTriggerPoints(); 
-						if (pushPoints)				cluster_geometric.find3DPushPoints(); 
-						if (hookPoints)				cluster_geometric.find3DHookPoints(); 
-						if (framePoints)			cluster_geometric.find3DFramePoints(); 
-						if (fistPoints)			cluster_geometric.find3DFistPoints(); 
-						
-						// LATER
-							//---cluster_geometric.find3DToolPoints();
-							//---cluster_geometric.find3DRegionPoints();
-							//---cluster_geometric.find3dTipTapPoints();
-						//}
-					//}
-				//}
-			//}
-			}
-		}
 		
 		public function clearGestureObjectClusterDeltas():void
 		{
@@ -680,7 +593,7 @@ package com.gestureworks.core
 							if (g.algorithm_class == "kinemetric")
 							{
 									// activate all by default
-									//g.activeEvent = true; // NOOOOO OTHERWISE WILL FIRE EVEN WHEN DELTA IS ZERO
+									g.activeEvent = true;
 									
 									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
 									
@@ -796,8 +709,7 @@ package com.gestureworks.core
 											//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);
 											
 											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
-											//if (gdim.activeDim) g.activeEvent = true;
-											if (gdim.gestureDelta != 0) g.activeEvent = true;
+											if (gdim.activeDim) g.activeEvent = true;
 											
 											//trace("TOUCH GESTURE OBJECT", res, tcO[res], gdim.clusterDelta, g.activeEvent,gdim.activeDim);
 										}
@@ -806,9 +718,8 @@ package com.gestureworks.core
 										g.data.x = tcO.x;
 										g.data.y = tcO.y;
 										g.data.z = tcO.z;
-										//g.data.n = g.n//ts.tpn;
+										//g.data.n = tpn;
 										
-										//trace("cluster data for gesture n",ts.tpn);
 										//////////////////////////////////////////////////////////////////
 										//////////////////////////////////////////////////////////////////
 										
@@ -832,7 +743,7 @@ package com.gestureworks.core
 			//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
 			cluster_kinemetric.WeaveTouchClusterData();
 		}
-
+		/*
 		public function getKineMetrics3D():void 
 		{		
 			
@@ -1058,7 +969,7 @@ package com.gestureworks.core
 			cluster_kinemetric.Weave3DIPClusterData();
 			cluster_kinemetric.WeaveMotionClusterData();
 			}
-		}
+		}*/
 		
 		
 		//TODO: KILL GESTUREPOINT AND USE GESTURE EVENT INSTEAD
