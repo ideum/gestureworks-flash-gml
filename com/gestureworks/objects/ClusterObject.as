@@ -15,8 +15,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.objects 
 {
-	import com.gestureworks.objects.InteractionPointObject;
-	import flash.geom.Vector3D;
+	//import com.gestureworks.objects.InteractionPointObject;
+	//import flash.geom.Vector3D;
 	
 	public class ClusterObject extends Object 
 	{		
@@ -209,7 +209,7 @@ package com.gestureworks.objects
 		
 		// become handList //NO NEED AS ANY CLUSTER CAN BE A HAND 2D OR 3D
 		// ANY CLUSTER CAN SUBCLUSTER INTO TWO HANDS OR SUBLISTS OF PREANALYZED POINTS
-		public var handList:Vector.<HandObject> = new Vector.<HandObject>;
+		//public var handList:Vector.<HandObject> = new Vector.<HandObject>;
 
 			/// INSIDE 3D HAND Object
 				//--width
@@ -262,26 +262,26 @@ package com.gestureworks.objects
 		////////////////////////////////////////////////////////////////////
 		//ABSOLUTE PROPS
 		//inst position//////////////////////////////////////////////x,y,z
-		public var position:Vector3D = new Vector3D ();
+		//public var position:Vector3D = new Vector3D ();
 		//inst direction/orientation //////////////////////////////////////////////x,y,z
-		public var direction:Vector3D = new Vector3D ();
+		//public var direction:Vector3D = new Vector3D ();
 		//inst scale //////////////////////////////////////////////scaleX,scaleY,scaleZ
-		public var scale :Vector3D = new Vector3D ();
+		//public var scale :Vector3D = new Vector3D ();
 		//inst scale change //////////////////////////////////////////////rotationX,rotationY,rotationZ
 		//public var rotation:Vector3D = new Vector3D ();
 		
 		/////////////////////////////////////////////////////////////////////////////
 		// DELTA PROPS
 		//inst scale change//////////////////////////////////////////////dsx,dsy,dsz
-		public var scaleDelta :Vector3D = new Vector3D ();
+		//public var scaleDelta :Vector3D = new Vector3D ();
 		//inst scale change //////////////////////////////////////////////dthetax,dthetay,dthetaz
-		public var rotationDelta:Vector3D = new Vector3D ();
+		//public var rotationDelta:Vector3D = new Vector3D ();
 		//inst velocity//////////////////////////////////////////////dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
+		//public var velocity:Vector3D = new Vector3D ();
 		//inst acceleration//////////////////////////////////////////////ddx,ddy,ddz
-		public var acceleration:Vector3D = new Vector3D ();
+		///public var acceleration:Vector3D = new Vector3D ();
 		//inst jolt//////////////////////////////////////////////ddx,ddy,ddz
-		public var jolt:Vector3D = new Vector3D ();
+		//public var jolt:Vector3D = new Vector3D ();
 		
 		
 		
@@ -318,7 +318,7 @@ package com.gestureworks.objects
 		
 		
 		// PRIME MULTIMODAL POINT ARRAY COPIED FROM CLOBAL REGISTERED CACHE
-		public var mmPointArray:Array = new Array();
+		//public var mmPointArray:Array = new Array();
 
 		/////////////////////////////////////////////////////////////////////////
 		//default cluster level RAW data structures
@@ -326,11 +326,11 @@ package com.gestureworks.objects
 		// surface point data list----------------
 		public var pointArray:Vector.<PointObject> = new Vector.<PointObject>();
 		// motion point data list
-		public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		//public var motionArray:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		// motion point data list
-		public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
+		//public var motionArray2D:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
 		// sensor point data list----------------
-		public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
+		//public var sensorArray:Vector.<Number> = new Vector.<Number>();//<SensorPointObject>();
 		
 		
 		/////////////////////////////////////////////////////////////////////////////
@@ -340,25 +340,25 @@ package com.gestureworks.objects
 		// GENERATED FROM PRIMARY CLUSTER ANALYSIS FROM RAW POINT DATA
 		// CLASIFIED BY TYPE INTO SINGLE LIST
 		// type // PINCH POINT // TAP POINT// HOLD POINT // TRIGGER POINT // PALM POINT
-		public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		//public var iPointArray:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		//public var iPointArray2D:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		
 			
 		//TOUCH PARENT CLUSTER ///////////////////////////////////////
 		public var tcO:ipClusterObject = new ipClusterObject ();
 		//TOUCH SUBCLUSTER ARRAY
-		public var tsubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		//public var tsubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		//MOTION PARENT CLUSTER///////////////////////////////////////
-		public var mcO:ipClusterObject = new ipClusterObject ();
+		//public var mcO:ipClusterObject = new ipClusterObject ();
 		//MOTION SUBCLUSTER ARRAY
 		//TODO: CHANGE NAME TO mSubCluster
-		public var subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		//public var subClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		// SENSOR PARENT CLUSTER//////////////////////////////////////
-		public var scO:ipClusterObject = new ipClusterObject ();
+		//public var scO:ipClusterObject = new ipClusterObject ();
 		//TOUCH SUBCLUSTER ARRAY
-		public var ssubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
+		//public var ssubClusterArray:Vector.<ipClusterObject> = new Vector.<ipClusterObject>();
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
@@ -440,7 +440,7 @@ package com.gestureworks.objects
 			etm_ddx=0;
 			etm_ddy=0;
 			etm_ddz=0;
-			handList.length = 0;
+			//handList.length = 0;
 			thumbID = 0;
 			handednes = "none";
 			orientation = 0;
@@ -451,33 +451,19 @@ package com.gestureworks.objects
 			hold_y = 0;
 			hold_z = 0;
 			hold_n = 0;		
-			position.setTo(0,0,0);
-			direction.setTo(0,0,0);
-			scale.setTo(0,0,0);
-			scaleDelta.setTo(0,0,0);
-			rotationDelta.setTo(0,0,0);
-			velocity.setTo(0,0,0);
-			acceleration.setTo(0,0,0);
-			jolt.setTo(0,0,0);
+			
 			point_add = false;
 			point_remove = false;
 			add = false;
 			remove = false;
-			mmPointArray.length = 0;
+			
 			pointArray.length = 0;
-			motionArray.length = 0;
-			motionArray2D.length = 0;
-			sensorArray.length = 0;
-			iPointArray.length = 0;
-			iPointArray2D.length = 0;
-			tcO.reset();
-			tsubClusterArray.length = 0;
-			mcO.reset();
-			subClusterArray.length = 0;
-			scO.reset();
-			ssubClusterArray.length = 0;
 			gPointArray.length = 0;
 			history.length = 0;
+			
+			tcO.reset();
+			
+			
 		}
 	}
 }

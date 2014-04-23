@@ -23,11 +23,10 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.gw_public;
 	import com.gestureworks.objects.ClusterObject;
-	import com.gestureworks.objects.ipClusterObject;
+	//import com.gestureworks.objects.ipClusterObject;
 	
 	public class ClusterHistories 
-	{	
-		private static var poolManager:PoolManager = PoolManager.getInstance();
+	{
 		//////////////////////////////////////////////////////
 		// based on a cluster move event
 		//////////////////////////////////////////////////////
@@ -48,7 +47,7 @@ package com.gestureworks.managers
 		// loads history object and returns value.
 		public static function historyObject(clusterObject:ClusterObject):Object
 		{
-			var object:ClusterObject = poolManager.clusterObject;
+			var object:ClusterObject = PoolManager.clusterObject;
 				
 				// native properties
 				object.n = clusterObject.n;
@@ -124,70 +123,70 @@ package com.gestureworks.managers
 				//object.motionArray = clusterObject.motionArray;
 				
 				//interaction DATA///////////////////////////////////////////
-				object.iPointArray = clusterObject.iPointArray;
-				object.iPointArray2D = clusterObject.iPointArray2D;
+				//object.iPointArray = clusterObject.iPointArray;
+				//object.iPointArray2D = clusterObject.iPointArray2D;
 				
 				// aggregate values
 				//objec.velocity = clusterObject.velocity;
 				//objec.acceleration = clusterObject.acceleration;
 				//object.jolt = clusterObject.jolt;
 				
-				
+				/*
 				var sipn:int = clusterObject.subClusterArray.length
 				//trace("hist", sipn);
 				
-				//for (var i:uint = 0; i < sipn; i++) 
-						//{
-					//
-					//object.subClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
-				//
-					//object.subClusterArray[i].ipn = clusterObject.subClusterArray[i].ipn;
-					//object.subClusterArray[i].ipnk = clusterObject.subClusterArray[i].ipnk;
-					//object.subClusterArray[i].ipnk0 = clusterObject.subClusterArray[i].ipnk0;
-					//object.subClusterArray[i].dipn = clusterObject.subClusterArray[i].dipn;
-					//
-					//object.subClusterArray[i].x = clusterObject.subClusterArray[i].x;
-					//object.subClusterArray[i].y = clusterObject.subClusterArray[i].y;
-					//object.subClusterArray[i].z = clusterObject.subClusterArray[i].z;
-					//
-					//object.subClusterArray[i].radius = clusterObject.subClusterArray[i].radius;
-					//object.subClusterArray[i].width = clusterObject.subClusterArray[i].width;
-					//object.subClusterArray[i].height = clusterObject.subClusterArray[i].height;
-					//object.subClusterArray[i].length = clusterObject.subClusterArray[i].length;
-					//
-					//object.subClusterArray[i].rotation = clusterObject.subClusterArray[i].rotation;
-					//object.subClusterArray[i].rotationX = clusterObject.subClusterArray[i].rotationX;
-					//object.subClusterArray[i].rotationY = clusterObject.subClusterArray[i].rotationY;
-					//object.subClusterArray[i].rotationZ = clusterObject.subClusterArray[i].rotationZ;
-					//
-					//object.subClusterArray[i].separation = clusterObject.subClusterArray[i].separation;
-					//object.subClusterArray[i].separationX = clusterObject.subClusterArray[i].separationX;
-					//object.subClusterArray[i].separationY = clusterObject.subClusterArray[i].separationY;
-					//object.subClusterArray[i].separationZ = clusterObject.subClusterArray[i].separationZ;
-					//
-					//
-					//object.subClusterArray[i].dx = clusterObject.subClusterArray[i].dx;
-					//object.subClusterArray[i].dy = clusterObject.subClusterArray[i].dy;
-					//object.subClusterArray[i].dz = clusterObject.subClusterArray[i].dz;
-					//
-					//object.subClusterArray[i].ds = clusterObject.subClusterArray[i].ds;
-					//object.subClusterArray[i].dsx = clusterObject.subClusterArray[i].dsx;
-					//object.subClusterArray[i].dsy = clusterObject.subClusterArray[i].dsy;
-					//object.subClusterArray[i].dsz = clusterObject.subClusterArray[i].dsz;
-					//
-					//object.subClusterArray[i].dtheta = clusterObject.subClusterArray[i].dtheta;
-					//object.subClusterArray[i].dthetaX = clusterObject.subClusterArray[i].dthetaX;
-					//object.subClusterArray[i].dthetaY = clusterObject.subClusterArray[i].dthetaY;
-					//object.subClusterArray[i].dthetaZ = clusterObject.subClusterArray[i].dthetaZ;
-					//
+				for (var i:uint = 0; i < sipn; i++) 
+						{
+					
+					object.subClusterArray[i] = new ipClusterObject()//clusterObject.finger_cO;
+				
+					object.subClusterArray[i].ipn = clusterObject.subClusterArray[i].ipn;
+					object.subClusterArray[i].ipnk = clusterObject.subClusterArray[i].ipnk;
+					object.subClusterArray[i].ipnk0 = clusterObject.subClusterArray[i].ipnk0;
+					object.subClusterArray[i].dipn = clusterObject.subClusterArray[i].dipn;
+					
+					object.subClusterArray[i].x = clusterObject.subClusterArray[i].x;
+					object.subClusterArray[i].y = clusterObject.subClusterArray[i].y;
+					object.subClusterArray[i].z = clusterObject.subClusterArray[i].z;
+					
+					object.subClusterArray[i].radius = clusterObject.subClusterArray[i].radius;
+					object.subClusterArray[i].width = clusterObject.subClusterArray[i].width;
+					object.subClusterArray[i].height = clusterObject.subClusterArray[i].height;
+					object.subClusterArray[i].length = clusterObject.subClusterArray[i].length;
+					
+					object.subClusterArray[i].rotation = clusterObject.subClusterArray[i].rotation;
+					object.subClusterArray[i].rotationX = clusterObject.subClusterArray[i].rotationX;
+					object.subClusterArray[i].rotationY = clusterObject.subClusterArray[i].rotationY;
+					object.subClusterArray[i].rotationZ = clusterObject.subClusterArray[i].rotationZ;
+					
+					object.subClusterArray[i].separation = clusterObject.subClusterArray[i].separation;
+					object.subClusterArray[i].separationX = clusterObject.subClusterArray[i].separationX;
+					object.subClusterArray[i].separationY = clusterObject.subClusterArray[i].separationY;
+					object.subClusterArray[i].separationZ = clusterObject.subClusterArray[i].separationZ;
+					
+					
+					object.subClusterArray[i].dx = clusterObject.subClusterArray[i].dx;
+					object.subClusterArray[i].dy = clusterObject.subClusterArray[i].dy;
+					object.subClusterArray[i].dz = clusterObject.subClusterArray[i].dz;
+					
+					object.subClusterArray[i].ds = clusterObject.subClusterArray[i].ds;
+					object.subClusterArray[i].dsx = clusterObject.subClusterArray[i].dsx;
+					object.subClusterArray[i].dsy = clusterObject.subClusterArray[i].dsy;
+					object.subClusterArray[i].dsz = clusterObject.subClusterArray[i].dsz;
+					
+					object.subClusterArray[i].dtheta = clusterObject.subClusterArray[i].dtheta;
+					object.subClusterArray[i].dthetaX = clusterObject.subClusterArray[i].dthetaX;
+					object.subClusterArray[i].dthetaY = clusterObject.subClusterArray[i].dthetaY;
+					object.subClusterArray[i].dthetaZ = clusterObject.subClusterArray[i].dthetaZ;
+					
 					// aggregate values
-					//object.subClusterArray[i].velocity = clusterObject.subClusterArray[i].velocity;
-					//object.subClusterArray[i].acceleration = clusterObject.subClusterArray[i].acceleration;
-					//object.subClusterArray[i].jolt = clusterObject.subClusterArray[i].jolt;
-					//
-					//object.subClusterArray[i].rotationList = clusterObject.subClusterArray[i].rotationList;
-					//
-				//}
+					object.subClusterArray[i].velocity = clusterObject.subClusterArray[i].velocity;
+					object.subClusterArray[i].acceleration = clusterObject.subClusterArray[i].acceleration;
+					object.subClusterArray[i].jolt = clusterObject.subClusterArray[i].jolt;
+					
+					object.subClusterArray[i].rotationList = clusterObject.subClusterArray[i].rotationList;
+					
+				}*/
 				
 				//SENSOR ACCELEROMETER DATA
 				//object.sensorArray = clusterObject.sensorArray;
