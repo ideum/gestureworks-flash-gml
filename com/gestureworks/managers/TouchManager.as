@@ -262,6 +262,7 @@ package com.gestureworks.managers
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {	
 			
+			/*
 			if (e.target is Stage) {
 				GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);				
 				return;
@@ -269,7 +270,7 @@ package com.gestureworks.managers
 			else if (!GestureWorks.application.hasEventListener(TouchEvent.TOUCH_MOVE)) {
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);				
 			}
-			
+			*/
 			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
@@ -397,7 +398,16 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onMove(e:TouchEvent):void {			
+		private static function onMove(e:TouchEvent):void {	
+			//trace("target",e.target)
+			
+			if (e.target == GestureWorks.application) 
+			{
+				e.stopPropagation;
+				e.stopImmediatePropagation;
+				//trace("stage")//.
+			}
+			
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchMove(event);
 			//processOverlays(event);			
