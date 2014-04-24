@@ -261,7 +261,7 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {	
-			/*
+			
 			if (e.target is Stage) {
 				GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);				
 				return;
@@ -269,7 +269,7 @@ package com.gestureworks.managers
 			else if (!GestureWorks.application.hasEventListener(TouchEvent.TOUCH_MOVE)) {
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);				
 			}
-			*/
+			
 			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
