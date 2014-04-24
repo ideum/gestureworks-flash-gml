@@ -168,7 +168,7 @@ package com.gestureworks.events
 		 */
 		private function importEvent(event:Event):void
 		{ 
-			//sourceEvent = event;
+			sourceEvent = event;
 			//source = getDefinitionByName(getQualifiedClassName(event)) as Class;
 			//var sourceInfo:XML = describeType(event);
 			//var prop:XML;
@@ -215,6 +215,10 @@ package com.gestureworks.events
 					this.type = "gwTouchMove";
 				else if (ev.type == "touchEnd")
 					this.type = "gwTouchEnd";
+				else if (ev.type == "touchOut")
+					this.type = "gwTouchOut";
+				else if (ev.type == "touchOver")
+					this.type = "gwTouchOver";
 				else
 					this.type = "gwTouchBegin";	
 			}
