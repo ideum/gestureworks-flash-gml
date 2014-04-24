@@ -18,6 +18,7 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWClusterEvent;
 	import com.gestureworks.analysis.KineMetric;
 	import com.gestureworks.analysis.VectorMetric;
+	
 	//import com.gestureworks.analysis.GeoMetric;
 	import com.gestureworks.objects.GestureObject;
 	
@@ -123,7 +124,7 @@ package com.gestureworks.core
 		{
 				// set constructor logic 
 				kinemetricsOn = true;
-				vectormetricsOn = true;	
+				//vectormetricsOn = true;	
 				//geometricsOn = true;	
 		}
 		/**
@@ -137,7 +138,7 @@ package com.gestureworks.core
 				if (kinemetricsOn) cluster_kinemetric = new KineMetric(id);
 
 				// analyzes and characterizes multi-point paths to match against established strokes
-				if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
+				//if (vectormetricsOn) cluster_vectormetric = new VectorMetric(id);
 					
 				// characterizes advanced relative geometry of a cluster
 				//if (geometricsOn)cluster_geometric = new GeoMetric(id);
@@ -151,7 +152,7 @@ package com.gestureworks.core
 				// called once gml is parsed and gesture objects created
 				// analyzes and characterizes multi-point motion
 				if (kinemetricsOn)		cluster_kinemetric.init();
-				if (vectormetricsOn)	cluster_vectormetric.init();
+				//if (vectormetricsOn)	cluster_vectormetric.init();
 				//if (geometricsOn)		cluster_geometric.init();
 				
 		}
@@ -296,18 +297,18 @@ package com.gestureworks.core
 					//if (ts.motionEnabled) getKineMetrics3D();
 				}
 				
-				if (vectormetricsOn) 
-				{
-					if (ts.touchEnabled) getVectorMetrics();
+				//if (vectormetricsOn) 
+				//{
+					//if (ts.touchEnabled) getVectorMetrics();
 					//TODO: 3D VECTOR METRICS
 					//if (ts.motion_input) getVectorMetrics3D();
-				}
+				//}
 				
 				//cluster_kinemetric.findRootInstDimention();
 				
 				//trace("hand pos",cO.hand.position)
 				
-				if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
+				//if ((ts.clusterEvents) && (ts.N)) manageClusterPropertyEventDispatch();
 				
 				//getGesturePoints();
 				

@@ -101,18 +101,18 @@ package com.gestureworks.core
 		/**
 		 * point history capture length
 		 */		
-		public static var pointHistoryCaptureLength:int = 8;//int.MAX_VALUE
+		public static var pointHistoryCaptureLength:int = 2;//int.MAX_VALUE
 		
 		/**
 		 * cluster history capture length
 		 */		
-		public static var clusterHistoryCaptureLength:int = 60;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
+		public static var clusterHistoryCaptureLength:int = 1;//int.MAX_VALUE // SET FOR 3D LEAP MOTION ANALYSIS
 		
 		
 		/**
 		 * motion history capture length
 		 */
-		public static var motionHistoryCaptureLength:int =120;//int.MAX_VALUE
+		public static var motionHistoryCaptureLength:int =0;//int.MAX_VALUE
 
 		
 		/**
@@ -123,7 +123,7 @@ package com.gestureworks.core
 		/**
 		 * timeline history capture length
 		 */
-		public static var timelineHistoryCaptureLength:int = 20;//int.MAX_VALUE
+		public static var timelineHistoryCaptureLength:int = 4;//int.MAX_VALUE
 		
 		
 		/**

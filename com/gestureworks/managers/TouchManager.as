@@ -261,6 +261,7 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {	
+			/*
 			if (e.target is Stage) {
 				GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);				
 				return;
@@ -268,10 +269,11 @@ package com.gestureworks.managers
 			else if (!GestureWorks.application.hasEventListener(TouchEvent.TOUCH_MOVE)) {
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);				
 			}
-
+			*/
+			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
-			processOverlays(event);
+			//processOverlays(event);
 		}
 		
 		/**
@@ -331,7 +333,7 @@ package com.gestureworks.managers
 		private static function onTouchEnd(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchUp(event);
-			processOverlays(event);
+			//processOverlays(event);
 		}		
 		
 		// stage on TOUCH_UP.
@@ -398,7 +400,7 @@ package com.gestureworks.managers
 		private static function onMove(e:TouchEvent):void {			
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchMove(event);
-			processOverlays(event);			
+			//processOverlays(event);			
 		}			
 	
 		private static var pointObject:PointObject;		
@@ -598,7 +600,7 @@ package com.gestureworks.managers
 							obj.tp = new TouchPipeline(obj.touchObjectID);
 		if (obj.gestureEvents)	obj.tg = new TouchGesture(obj.touchObjectID);
 							obj.tt = new TouchTransform(obj.touchObjectID);
-							obj.visualizer = new TouchVisualizer(obj.touchObjectID);
+							//obj.visualizer = new TouchVisualizer(obj.touchObjectID);
 		}	
 		
 		public static function callLocalGestureParser(obj:ITouchObject):void

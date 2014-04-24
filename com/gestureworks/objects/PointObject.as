@@ -113,10 +113,10 @@ package com.gestureworks.objects
 		
 		//  objectList
 		// UPDATE TO VECTOR
-		public var objectList:Array = [];
+		public var objectList:Array = new Array();
 		
 		// UPDATE TO VECTOR
-		public var clusterList:Array = [];
+		public var clusterList:Array //= [];
 		
 		
 		// history
