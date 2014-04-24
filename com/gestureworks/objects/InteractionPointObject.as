@@ -48,22 +48,22 @@ package com.gestureworks.objects
 		public var phase:String = new String();
 		
 		//position/////////////////////////////////////////////x,y,x
-		public var position:Vector3D = new Vector3D ();
+		public var position:Vector3D //= new Vector3D ();
 		
 		//direction////////////////////////
-		public var direction:Vector3D = new Vector3D ();
+		public var direction:Vector3D //= new Vector3D ();
 		
 		//normal/////////////////////////
-		public var normal:Vector3D = new Vector3D ();
+		public var normal:Vector3D //= new Vector3D ();
 		
 		//velocity//////////////////////////////////////////////dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
+		public var velocity:Vector3D //= new Vector3D ();
 		
 		//accleration//////////////////////////////////////////////ddx,ddy,ddz
-		public var acceleration:Vector3D = new Vector3D ();
+		public var acceleration:Vector3D //= new Vector3D ();
 		
 		//jolt//////////////////////////////////////////////ddx,ddy,ddz
-		public var jolt:Vector3D = new Vector3D ();
+		public var jolt:Vector3D //= new Vector3D ();
 	
 		//width
 		public var width:Number = 0;
@@ -75,13 +75,13 @@ package com.gestureworks.objects
 		public var fist:Boolean = false;
 		
 		//rotation/////////////////////////////////////////////x,y,x
-		public var rotation:Matrix = new Matrix ();
+		public var rotation:Matrix //= new Matrix ();
 		
 		//palm radius
 		public var sphereRadius:Number = 0;
 		
 		// sphere center
-		public var sphereCenter:Vector3D = new Vector3D ();
+		public var sphereCenter:Vector3D //= new Vector3D ();
 		
 		//min length of this motion point for sesioon
 		public var min_length:Number = 100000000;
@@ -94,6 +94,6 @@ package com.gestureworks.objects
 		
 		///////////////////////////////////////////////////////////////////
 		// history/////////////////////////////////////////////////////////
-		public var history:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		public var history:Vector.<InteractionPointObject> //= new Vector.<InteractionPointObject>();
 	}
 }

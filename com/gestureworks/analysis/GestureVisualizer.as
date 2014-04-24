@@ -637,8 +637,8 @@ package com.gestureworks.analysis
 				
 	//graphics.lineStyle(4, 0x00FFFF, 1);
 	//graphics.drawRect(100, 100,50,50);	
-	
-					if (cO.gPointArray.length)
+	/*
+					if (0)//cO.gPointArray.length
 					{
 					////////////////////////////////////////////////////////////
 						
@@ -647,7 +647,7 @@ package com.gestureworks.analysis
 						// draw all pinch points
 						for (var gn:int = 0; gn < cO.gPointArray.length; gn++) 
 						{
-							var gpt:GesturePointObject = cO.gPointArray[gn];
+							var gpt:GesturePointObject //= cO.gPointArray[gn];
 							
 							if (gpt)
 							{
@@ -674,7 +674,7 @@ package com.gestureworks.analysis
 						
 						}
 					}
-						
+			*/			
 		}	
 	
 

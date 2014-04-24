@@ -1075,7 +1075,7 @@ package com.gestureworks.core
 		 */
 		public function updateDebugDisplay():void
 		{
-			if(visualizer) visualizer.updateDebugDisplay()
+			//if(visualizer) //visualizer.updateDebugDisplay()
 		}
 			
 		private var _debugDisplay:Boolean = false;

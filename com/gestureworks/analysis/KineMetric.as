@@ -274,7 +274,7 @@ package com.gestureworks.analysis
 			//cO.daz =0
 			//cO.datheta =0
 			
-			cO.gPointArray = new Vector.<GesturePointObject>;
+			//cO.gPointArray = new Vector.<GesturePointObject>;
 		}
 		
 		

@@ -23,23 +23,23 @@ package com.gestureworks.objects
 		// NUMBER OF STROKES IN STROKE OBJECT
 		public var n:int = 0;
 		
-		public var path_collection:Vector.<Array> = new Vector.<Array>();
+		public var path_collection:Vector.<Array> //= new Vector.<Array>();
 		
 		// path_data FOR UNISTROKES
 		// CONVERT TO VECTOR
-		public var path_data:Array = new Array();
+		public var path_data:Array //= new Array();
 		
 		// CONVERT TO VECTOR
 		// NORMALIZED PATH DATA FOR UNISTROKES
-		public var path_data_norm:Array = new Array();
+		public var path_data_norm:Array //= new Array();
 		
 		//////////////////////kill
-		public var pathmap:Array = new Array();
+		public var pathmap:Array //= new Array();
 
 		////////////////////////
 		
 		// PATH DATA FOR MULTISTROKES
-		public var pathDataArray:Vector.<Array> = new Vector.<Array>();
+		public var pathDataArray:Vector.<Array> //= new Vector.<Array>();
 		
 		
 		// PATH MATCH PROBABILITY 

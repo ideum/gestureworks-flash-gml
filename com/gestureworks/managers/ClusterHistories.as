@@ -194,7 +194,7 @@ package com.gestureworks.managers
 				
 				
 				//Gesture Points DATA simple timeline
-				object.gPointArray = clusterObject.gPointArray;
+				//object.gPointArray = clusterObject.gPointArray;
 				
 				//trace("cluster history push")
 

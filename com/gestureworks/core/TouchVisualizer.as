@@ -112,7 +112,7 @@ package com.gestureworks.core
 
 				debug_display = new Sprite();
 				//initDebugVars();
-				initDebugDisplay();
+				//initDebugDisplay();
 				
 				if (ts.stage) addtostage();
 				else ts.addEventListener(Event.ADDED_TO_STAGE, addtostage);
@@ -158,10 +158,10 @@ package com.gestureworks.core
 		*/
 		
 	}
-	public function initDebugDisplay():void 
+	private function initDebugDisplay():void 
 	{
 		//if (traceDebugMode) trace("init debug display",touchObjectID);
-					
+				/*	
 			if (ts.debugDisplay)
 			{		
 					/////////////////////////////////////////////////////////////////
@@ -195,14 +195,15 @@ package com.gestureworks.core
 							gesture.init();
 						debug_display.addChild(gesture);
 					}
-			}
+			}*/
 	}
 			
 	/**
 	* @private
 	*/
-	public function drawDebugDisplay():void
+	private function drawDebugDisplay():void
 	{
+		/*
 		//trace("trying to draw display",ts.debugDisplay,debug_display);
 		if ((ts.debugDisplay)&&(debug_display))
 			{
@@ -215,31 +216,33 @@ package com.gestureworks.core
 				if ((gestureDisplay)&&(gesture)) 	gesture.draw();
 				
 			}
-		}
+		}*/
 	}
 	/**
 	* @private
 	*/
 	public function clearDebugDisplay():void
 	{
+		/*
 		//if(traceDebugMode) trace("trying to clear debug display",touchObjectID)
 		if ((ts.debugDisplay)&&(debug_display))
 		{
 			if (point) 	point.clear();
 			if (cluster) cluster.clear();
 			if (gesture) gesture.clear();
-		}
+		}*/
 	}
 	/**
 	* @private
 	*/
-	public function updateDebugDisplay():void
+	private function updateDebugDisplay():void
 	{
+		/*
 		if (debug_display)
 			{
 			clearDebugDisplay();
 			drawDebugDisplay();
-			}
+			}*/
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////	
 	

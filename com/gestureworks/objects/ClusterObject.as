@@ -362,7 +362,7 @@ package com.gestureworks.objects
 		
 		///////////////////////////////////////////////////////////////////////////////////
 		// GESTURE POINTS
-		public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
+		//public var gPointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
 		
 	
 		/////////////////////////////////////////////////////////////////////////
@@ -458,7 +458,7 @@ package com.gestureworks.objects
 			remove = false;
 			
 			pointArray.length = 0;
-			gPointArray.length = 0;
+			//gPointArray.length = 0;
 			history.length = 0;
 			
 			tcO.reset();

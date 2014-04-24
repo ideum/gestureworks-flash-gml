@@ -382,7 +382,7 @@ package com.gestureworks.managers
 						////////////////////////////////////////////////////////
 						//FORCES IMMEDIATE UPDATE ON TOUCH UP
 						//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
-						updateTouchObject(tO);
+						//------------------------------------------------------------------------------updateTouchObject(tO);
 					}
 				}
 				// DELETE FROM GLOBAL POINT LIST

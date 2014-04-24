@@ -30,22 +30,22 @@ package com.gestureworks.objects
 		public var type:String = new String();
 		
 		//position/////////////////////////////////////////////x,y,x
-		public var position:Vector3D = new Vector3D ();
+		public var position:Vector3D //= new Vector3D ();
 		
 		//direction////////////////////////
-		public var direction:Vector3D = new Vector3D ();
+		public var direction:Vector3D //= new Vector3D ();
 		
 		//normal/////////////////////////
-		public var normal:Vector3D = new Vector3D ();
+		public var normal:Vector3D //= new Vector3D ();
 		
 		//velocity//////////////////////////////////////////////dx,dy,dz
-		public var velocity:Vector3D = new Vector3D ();
+		public var velocity:Vector3D //= new Vector3D ();
 		
 		//accleration//////////////////////////////////////////////ddx,ddy,ddz
-		public var acceleration:Vector3D = new Vector3D ();
+		public var acceleration:Vector3D //= new Vector3D ();
 		
 		//jolt//////////////////////////////////////////////ddx,ddy,ddz
-		public var jolt:Vector3D = new Vector3D ();
+		public var jolt:Vector3D //= new Vector3D ();
 
 		//width
 		public var width:Number = 0;
@@ -54,6 +54,6 @@ package com.gestureworks.objects
 		public var length:Number = 0;
 		
 		//rotation/////////////////////////////////////////////x,y,x
-		public var rotation:Matrix = new Matrix ();
+		public var rotation:Matrix //= new Matrix ();
 	}
 }
