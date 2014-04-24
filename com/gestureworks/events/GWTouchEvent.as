@@ -93,7 +93,7 @@ package com.gestureworks.events
 		 */
 		public function GWTouchEvent(event:Event = null, type:String = "touchBegin", bubbles:Boolean=true, cancelable:Boolean=false, touchPointID:int=0, isPrimaryTouchPoint:Boolean=false, localX:Number=NaN, localY:Number=NaN, sizeX:Number=NaN, sizeY:Number=NaN, pressure:Number=NaN, relatedObject:InteractiveObject=null, ctrlKey:Boolean=false, altKey:Boolean=false, shiftKey:Boolean=false)
 		{
-			super(resolveType(type), bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
+			super(type, bubbles, cancelable, touchPointID, isPrimaryTouchPoint, localX, localY, sizeX, sizeY, pressure, relatedObject, ctrlKey, altKey, shiftKey);
 			if(event)
 				importEvent(event);
 			_time = getTimer();
@@ -168,30 +168,56 @@ package com.gestureworks.events
 		 */
 		private function importEvent(event:Event):void
 		{ 
-			sourceEvent = event;
-			source = getDefinitionByName(getQualifiedClassName(event)) as Class;
-			var sourceInfo:XML = describeType(event);
-			var prop:XML;
-			var propName:String;
-			var eventType:Class = Class(getDefinitionByName(getQualifiedClassName(event)));
-			
-			if (eventType == MouseEvent)
-				touchPointID = MousePoint.getID();
-			else if (eventType == TuioTouchEvent)
-				touchPointID = TuioTouchEvent(event).tuioContainer.sessionID;
-
-			for each(prop in sourceInfo.accessor) {
-				propName = String(prop.@name);
+			//sourceEvent = event;
+			//source = getDefinitionByName(getQualifiedClassName(event)) as Class;
+			//var sourceInfo:XML = describeType(event);
+			//var prop:XML;
+			//var propName:String;
+			//var eventType:Class = Class(getDefinitionByName(getQualifiedClassName(event)));
+			//
+			//if (eventType == MouseEvent)
+				//touchPointID = MousePoint.getID();
+			//else if (eventType == TuioTouchEvent)
+				//touchPointID = TuioTouchEvent(event).tuioContainer.sessionID;
+//
+			//for each(prop in sourceInfo.accessor) {
+				//propName = String(prop.@name);
+				//
+				//if (this.hasOwnProperty(propName))
+				//{ 
+					//trace(propName);
+					//if (propName == "type") { 
+						//this[propName] = TOUCH_TYPE_MAP[eventType][event[propName]];						
+					//}
+					//else
+						//this[propName] = event[propName];
+				//}
+			//}	
+			var ev:TouchEvent;
+			if (event is TouchEvent) {
+				ev = event as TouchEvent;
+				this.pressure = ev.pressure;
+				this.relatedObject = ev.relatedObject;
+				this.bubbles = ev.bubbles;
+				this.shiftKey = ev.shiftKey;
+				this.cancelable = ev.cancelable;
+				this.target = ev.target;
+				this.currentTarget = ev.currentTarget;
+				this.eventPhase = ev.eventPhase;
+				this.localX = ev.localX;
+				this.localY = ev.localY;
+				this.stageX = ev.stageX;
+				this.stageY = ev.stageY
+				this.touchPointID = ev.touchPointID;
+				this.isPrimaryTouchPoint = ev.isPrimaryTouchPoint
 				
-				if (this.hasOwnProperty(propName))
-				{
-					if (propName == "type") { 
-						this[propName] = TOUCH_TYPE_MAP[eventType][event[propName]];						
-					}
-					else
-						this[propName] = event[propName];
-				}
-			}	
+				if (ev.type == "touchMove")
+					this.type = "gwTouchMove";
+				else if (ev.type == "touchEnd")
+					this.type = "gwTouchEnd";
+				else
+					this.type = "gwTouchBegin";	
+			}
 		}
 		
 		/**
