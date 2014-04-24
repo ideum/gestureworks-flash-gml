@@ -1,5 +1,4 @@
 package com.gestureworks.utils.collections {
-	import com.gestureworks.cml.away3d.elements.Node;
 	/**
 	 * ...
 	 * @author Ideum
