@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.gestureworks.managers
 {
+	import attract.ActivityTracker_new;
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
@@ -262,6 +263,7 @@ package com.gestureworks.managers
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {	
 			
+			ActivityTracker_new.getInstance().onBegin();			
 			/*
 			if (e.target is Stage) {
 				GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);				
@@ -285,6 +287,7 @@ package com.gestureworks.managers
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
 		{
+			ActivityTracker_new.getInstance().onEnd();			
 			applyHooks(event);
 			if (validTarget(event)) { 
 											
