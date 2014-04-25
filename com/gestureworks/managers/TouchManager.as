@@ -403,8 +403,8 @@ package com.gestureworks.managers
 			
 			if (e.target == GestureWorks.application) 
 			{
-				e.stopPropagation;
-				e.stopImmediatePropagation;
+				e.stopPropagation();
+				e.stopImmediatePropagation();
 				//trace("stage")//.
 			}
 			
