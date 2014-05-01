@@ -120,17 +120,24 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function onMove(e:TouchEvent):void {
-			var event:GWTouchEvent = new GWTouchEvent(e);
+			
+			//var event:GWTouchEvent = new GWTouchEvent(e); // KILLS PERFORMANCE
 			//onTouchMove(event);
 			
+			//var tpO:TouchPointObject  = new TouchPointObject();
+				//	tpO.id = touchPointCount; 
+				//	tpO.touchPointID = event.touchPointID;
+				//	tpO.position = new Vector3D (event.stageX, event.stageY, event.stageZ);
+				//	tpO.size = new Vector3D (event.sizeX, event.sizeY);
+				//	tpO.pressure = event.pressure;
+				
 			var tpO:TouchPointObject  = new TouchPointObject();
-			
 					tpO.id = touchPointCount; 
-					tpO.touchPointID = event.touchPointID;
-					tpO.position = new Vector3D (event.stageX, event.stageY, event.stageZ);
-					tpO.size = new Vector3D (event.sizeX, event.sizeY);
-					tpO.pressure = event.pressure;
-			
+					tpO.touchPointID = e.touchPointID;
+					tpO.position = new Vector3D (e.stageX, e.stageY, 0);//e.stageZ
+					tpO.size = new Vector3D (e.sizeX, e.sizeY);
+					tpO.pressure = e.pressure;	
+	
 			onTouchMovePoint(tpO);
 		}	
 		
