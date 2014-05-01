@@ -413,6 +413,9 @@ package com.gestureworks.managers
 			
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchMove(event);
+			
+			
+			
 			//processOverlays(event);			
 		}			
 	
