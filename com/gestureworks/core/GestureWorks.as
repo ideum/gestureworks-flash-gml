@@ -115,9 +115,10 @@ package com.gestureworks.core
 		 * The GestureWorks constructor.
 		 * var gestureworks:GestureWorks = new GestureWorks();
 		 */
-		public function GestureWorks(cmlPath:String = null)
+		public function GestureWorks(gmlPath:String = null, cmlPath:String = null)
 		{
 			super();
+			if (gmlPath) gml = gmlPath;
 			if (cmlPath) cml = cmlPath;
 		}
 
