@@ -262,7 +262,6 @@ package com.gestureworks.managers
 		private static function onTouchBegin(e:TouchEvent):void {			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
-			processOverlays(event);
 		}
 		
 		/**
@@ -306,6 +305,8 @@ package com.gestureworks.managers
 					//}
 					else {
 						 assignPoint(event);
+						 processOverlays(event);
+						 
 						 if (event.target.parent is ITouchObject) {
 							event.target = event.target.parent;
 							propagatePoint( event);
