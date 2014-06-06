@@ -480,7 +480,7 @@ package com.gestureworks.analysis
 						//trace("hist frames",ts.tiO.history.length);
 						if (ts.tiO.history.length > 0) 
 						{
-						if (ts.tiO.history[i])
+						if (ts.tiO.history.length > i)
 						{
 						
 						gestureEventArray = ts.tiO.history[i].gestureEventArray;
