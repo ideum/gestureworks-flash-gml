@@ -66,29 +66,9 @@ package com.gestureworks.managers
 		gw_public static function initialize():void
 		{
 			trace("device server manager init");
-			
 			//init();
-			
-			/*
-			//////////////////////////////////////////////////
-			motionManagerSocket = new Motion3DSManager(); //HAND
-			//leapsocket2DMgr = new Leap2DSManager();
-			
-			touchManagerSocket = new Touch2DSManager(); //TOUCH
-			
-			eyeManagerSocket = new Eye2DSManager(); //EYE
-			
-			androidSensorManagerSocket = new AndroidSensorManager();
-			controllerSensorManagerSocket = new ControllerSensorManager();
-			
+		}
 
-			initXMLSocket();*/
-		}
-		
-		public function updatePoints():void
-		{
-			//if (touchManagerSocket) touchManagerSocket.addRemoveUpdatePoints();
-		}
 		
 		public function init():void
 		{
@@ -219,7 +199,9 @@ package com.gestureworks.managers
 								//PQ /////////////////////////////////////////////////
 								if ((deviceType == "PQ") && (inputType == "Points2d")) {
 									//trace(message.InputPoint.Values.Finger);
-									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+									trace("pq finger", message.InputPoint.Values.Finger);//FINGER
+									trace("pq stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
+									trace("pq fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
 									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
 									//trace("in pq")
 								}
@@ -228,7 +210,6 @@ package com.gestureworks.managers
 									trace("3m finger", message.InputPoint.Values.Finger);//FINGER
 									trace("3m stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
 									trace("3m fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
-									
 									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
 								}
 								

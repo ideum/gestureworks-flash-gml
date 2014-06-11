@@ -38,11 +38,17 @@ package com.gestureworks.objects
 		// interaction point type // tool/pen/brush/ pin/pinch/hook/trigger/
 		public var type:String = new String();
 		
+		//tag id or shape id
+		public var name:String = new String();
+		
 		// handID // parent hand ID (if type finger)
 		public var handID:int = 0;
 		
 		//finger number on hand config that created ip
 		public var fn:int = 0;
+		
+		// number of points that make the tag/fiducial
+		public var tagn:int = 0;
 		
 		// hand orientation // up/down
 		public var orientation:String = new String("undefined");
@@ -60,6 +66,8 @@ package com.gestureworks.objects
 		public var init_position:Vector3D = new Vector3D ();
 		public var position:Vector3D = new Vector3D ();
 		public var screen_position:Vector3D = new Vector3D ();
+		
+		public var size:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();
@@ -86,6 +94,9 @@ package com.gestureworks.objects
 		
 		//fist state for palm ip
 		public var fist:Boolean = false;
+		
+		public var theta:Number = 0;
+		public var dtheta:Number = 0;
 		
 		//rotation/////////////////////////////////////////////x,y,x
 		public var rotation:Matrix = new Matrix ();
