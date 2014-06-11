@@ -104,6 +104,7 @@ package com.gestureworks.analysis
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
 			
+			// move to device server
 			minX = GestureGlobals.gw_public::leapMinX;
 			maxX = GestureGlobals.gw_public::leapMaxX;
 			minY = GestureGlobals.gw_public::leapMinY;
@@ -132,153 +133,34 @@ package com.gestureworks.analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// Find Interactive Finger Touch Points 
+		
+		//NATIVE TOUCH POINT TO IP METHOD
 		public function findFingerTouchPoints():void
 		{
+			//trace("find fingers");
 			if (touchArray){
 			
-			//var sizeThreshold:Number = 0.46; // GML ADJUST
 			var fn:int = touchArray.length;
-			var minSize:int = 145;
-			var maxSize:int = 1000;
-				
-				//classfy tag points
-				
-				findTouchPointProperties();
-				//find2DTagPoints();
-			
+		
 				for (var i:int = 0; i < fn; i++)
 				{
 					var tp:TouchPointObject = touchArray[i];
-					var size:Number = tp.area;
-					
-					//trace("size",size);
-					//trace("touch geometric",tp.tagID, tp.area, tp.size.x, tp.size.y);
-					
-					if (tp.tagID == 0)
-					{
-					if ((size >= minSize)&&(size < maxSize))
-					{
-						var tip:InteractionPointObject = new InteractionPointObject();
+	
+					var tip:InteractionPointObject = new InteractionPointObject();
 							tip.rootPointID = tp.touchPointID;
 							tip.position = tp.position;
-							//tip.size.x = tp.size.x;
-							//tip.size.y = tp.size.y;
 							tip.mode = "touch";
+							tip.source = "native";
 							tip.type = "finger_dynamic";
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);
-						//trace("push finger ");
-						//trace("finger size",size);
-					}
-					///////////////
-					//TEST
-					else if ((size < minSize)&&(size!=0)){
-						var tip:InteractionPointObject = new InteractionPointObject();
-							tip.position = tp.position;
-							tip.mode = "touch";
-							tip.type = "pen_dynamic";
-								
-						// push to interactive point list
-						InteractionPointTracker.framePoints.push(tip);
-						//trace("push pen ");
-						//trace("pen size",size);
-					}
-					
-					///test
-					if (size == 0) {
-						
-						var tip:InteractionPointObject = new InteractionPointObject();
-							tip.rootPointID = tp.touchPointID;
-							tip.position = tp.position;
-							tip.mode = "touch";
-							tip.type = "finger_dynamic";
-								
-						// push to interactive point list
-						InteractionPointTracker.framePoints.push(tip);
-						//trace("push eye", tip.position)
-						
-					}
-					
-					
-					
-					/*
-					else if (size > maxSize){
-						var tip:InteractionPointObject = new InteractionPointObject();
-							tip.position = tp.position;
-							tip.mode = "touch";
-							tip.type = "shape_dynamic";
-								
-						//var radius = Math.sqrt(size)*0.5
-						// push to interactive point list
-						InteractionPointTracker.framePoints.push(tip);
-						//trace("push finger ",tip.touchPointID);
-						//trace("shape size",size, radius);
-					}*/
-					
-					else {
-						
-						var tip:InteractionPointObject = new InteractionPointObject();
-							tip.rootPointID = tp.touchPointID;
-							tip.position = tp.position;
-							tip.mode = "touch";
-							tip.type = "finger_dynamic";
-								
-						// push to interactive point list
-						InteractionPointTracker.framePoints.push(tip);
-						//trace("push finger ");
-						//trace("finger size",size);
-					}
-					
-					
-					}
-				}
+				}	
 			}
 		}
-		
-		public function findPenTouchPoints():void
-		{
-			var fn:int = touchArray.length;
-			var minSize:int = 83;
-			
-				for (var i:int = 0; i < fn; i++)
-				{
-					var tp:TouchPointObject = touchArray[i];
-					//if(!locked){
-					if ((tp.size.x < minSize) && (tp.size.y < minSize))
-					{
-						var tip:InteractionPointObject = new InteractionPointObject();
-							tip.position = tp.position;
-							tip.mode = "touch";
-							tip.type = "touch_pen_dynamic";
-								
-						// push to interactive point list
-						InteractionPointTracker.framePoints.push(tip);
-					}
-				}
-		}
-		
-		public function findTouchPointProperties(): void
-		{
-			var tpn = touchArray.length;
-			
-			for (var i:int = 0; i < tpn; i++) 
-				{
-					//GET AREA
-					var area:Number = touchArray[i].size.x * touchArray[i].size.y;
-					//GET RADIUS ON TOUCH POINT
-					var radius:Number = Math.sqrt(area) * 0.5;
-					touchArray[i].area = area;
-					touchArray[i].radius = radius;
-				}
-		}
-		
-		public function find2DTagPoints():void
-		{
-			
-		
-		}
+		//public function findPenTouchPoints():void{}
+		//public function findTouchPointProperties(): void{}
+		//public function find2DTagPoints():void{}
 		
 		
 		

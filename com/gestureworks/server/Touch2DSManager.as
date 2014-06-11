@@ -31,7 +31,7 @@ package com.gestureworks.server
 		
 		public var stylusOn:Boolean = false;
 		public var tagOn:Boolean = false;
-		public var fingerOn:Boolean = false;
+		public var fingerOn:Boolean = true;
 		public var shapeOn:Boolean = false;
 
 		
@@ -43,13 +43,16 @@ package com.gestureworks.server
 		
 		public function processTouch2DSocketData(xmlList:XMLList):void //:XML//message:XML
 		{
-			//trace("inside");
+			
+			var id_shift:int = 2000;
+			
 	
 				fingercount = int(xmlList.Finger.length());
 				styluscount = int(xmlList.Stylus.length());
 				fiducialcount = int(xmlList.Fiducial.length());
 				shapecount = int(xmlList.Shape.length());
 				
+				trace("inside touch2d server parser", fingercount);
 				
 				//FINGER
 				if (xmlList.Finger && fingerOn) 
@@ -59,16 +62,19 @@ package com.gestureworks.server
 					{
 						//trace(xmlList.Finger,xmlList.Finger[k], fingercount,xmlList.Finger[k].@id,xmlList.Finger[k].@x)
 						//var f =  message.InputPoint.Values.Surface.Point[k];
-						var finger:Object =  xmlList.Finger[k];//message.InputPoint.Values.Eye[k];
+						var finger =  xmlList.Finger[k];//message.InputPoint.Values.Eye[k];
 						var ptf:InteractionPointObject = new InteractionPointObject();
 						
-							ptf.id = finger.@id; 
+							ptf.id = int(finger.@id) + id_shift; 
+							ptf.source = "server";
 							ptf.type = "finger"
-							ptf.phase = finger.@phase;
+							ptf.phase = finger.@phase; //need phase
 							//ptf.pressure = finger.@pressure;
 							ptf.theta = finger.@theta;
 							if (!ptf.position) ptf.position = new Vector3D(finger.@x,finger.@y,0);
 							if (!ptf.size) ptf.size = new Vector3D(finger.@width, finger.@height, 0);
+							
+							trace(ptf.id,ptf.source,ptf.type, ptf.phase)
 							
 						InteractionPointTracker.framePoints.push(ptf);
 					}
@@ -82,13 +88,13 @@ package com.gestureworks.server
 					{
 						var stylus:Object =  xmlList.Stylus[ks];
 						var pts:InteractionPointObject = new InteractionPointObject();
-							pts.id = stylus.@id;
+							pts.id = int(stylus.@id) + id_shift;
+							pts.source = "server";
 							pts.type = "stylus";
 							pts.phase = stylus.@phase;
 							//pts.pressure = stylus.@pressure;
 							if (!pts.position) pts.position = new Vector3D(stylus.@x,stylus.@y,0);
 							if (!pts.size) pts.size = new Vector3D(stylus.@width, stylus.@height, 0);
-							
 							
 						InteractionPointTracker.framePoints.push(pts);
 					}
@@ -103,7 +109,8 @@ package com.gestureworks.server
 						//var f =  message.InputPoint.Values.Surface.Point[k];
 						var tag:Object =  xmlList.Fiducial[ko];//message.InputPoint.Values.Eye[k];
 						var pto:InteractionPointObject = new InteractionPointObject();
-							pto.id = tag.@id; 
+							pto.id = int(tag.@id) + id_shift;
+							pto.source = "server";
 							pto.type = "tag";
 							pto.name = tag.name;// or ref
 							pto.tagn = tag.n; // point number
@@ -126,7 +133,8 @@ package com.gestureworks.server
 						//var f =  message.InputPoint.Values.Surface.Point[k];
 						var shape:Object = xmlList.Shape[ksh];//message.InputPoint.Values.Eye[k];
 						var ptsh:InteractionPointObject = new InteractionPointObject();
-							ptsh.id = shape.@id; 
+							ptsh.id = int(shape.@id) + id_shift;
+							ptsh.source = "server";
 							ptsh.type = "shape"
 							ptsh.name = shape.name;
 							ptf.theta = finger.@theta;

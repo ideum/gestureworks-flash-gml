@@ -146,7 +146,7 @@ package com.gestureworks.managers
 			var lg:int = str.length;
 			var start:String = str.substr(0,6)//str.substr(0,6)
 			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
-			trace(str)
+			//trace(str)
 			//trace(lg,start,end);
 			
 			
@@ -199,9 +199,9 @@ package com.gestureworks.managers
 								//PQ /////////////////////////////////////////////////
 								if ((deviceType == "PQ") && (inputType == "Points2d")) {
 									//trace(message.InputPoint.Values.Finger);
-									trace("pq finger", message.InputPoint.Values.Finger);//FINGER
-									trace("pq stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
-									trace("pq fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
+									//trace("pq finger", message.InputPoint.Values.Finger);//FINGER
+									//trace("pq stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
+									//trace("pq fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
 									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
 									//trace("in pq")
 								}

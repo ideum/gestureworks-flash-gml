@@ -28,6 +28,7 @@ package com.gestureworks.objects
 		// age of point
 		public var age:int;
 		
+		
 		// interactionPointID
 		public var interactionPointID:int;
 		public var rootPointID:int;
@@ -37,6 +38,7 @@ package com.gestureworks.objects
 		
 		// interaction point type // tool/pen/brush/ pin/pinch/hook/trigger/
 		public var type:String = new String();
+		public var source:String = new String();
 		
 		//tag id or shape id
 		public var name:String = new String();

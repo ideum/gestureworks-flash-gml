@@ -114,10 +114,14 @@ package com.gestureworks.managers
 				// CREATE GLOBAL TIMELINE
 				/////////////////////////////////////////////////////////////////////////
 					// CREATES A NEW TIMELINE OBJECT 
-					// CONTAINS A HISTORY OF ALL TOUCH EVENTS, GESTURE EVENTS 
-					// AND TRANSFORM EVENTS THAT OCCUR ON EACH TOUCHSPRITE 
+					// CONTAINS A HISTORY OF ALL PRIMATIVE (TOUCH) EVENTS, GESTURE EVENTS 
+					// AND TRANSFORM EVENTS THAT OCCUR ON EACH TOUCHSPRITE
+					// WILL CONTAIN GESTURE SEQUENCES AND BATCHES
 					/////////////////////////////////////////////////////////////////////////
 				tiO = new TimelineObject();  
+				
+					//TODO: make timeline always on and ready for input
+					//create timeline history
 					tiO.timelineOn = true; // activates timeline manager
 					tiO.pointEvents = false; // pushes point events into timline
 					tiO.gestureEvents = false; // pushes gesture events into timleine
@@ -353,7 +357,7 @@ package com.gestureworks.managers
 		///////////////////////////////////////////////////////////////////////////////////////
 		
 		/**
-		 * Assign interaction points to parent's with interaction poiont bubbling enabled.
+		 * Assign interaction points to parent's with interaction point bubbling enabled.
 		 * @param	target
 		 * @param	event
 		 */
@@ -373,6 +377,33 @@ package com.gestureworks.managers
 				}
 			}
 		}
+		
+		//MAY NOT NEED SINCE GESTURE EVENT WILL BUBBLE ANYWAY
+		/*
+		private static function propagateGesturePoint(ipt:GesturePointObject, ts:Object):void {
+			
+			//trace("propgate interaction");
+			if ((ts.parent) && (ts.parent  is ITouchObject))
+			{
+				if (ts.parent.interactionPointBubbling)
+				{
+					
+					var type = ipt.type;
+					// create gesture event??
+					var gevent:GWGestureEvent = new GWGestureEvent();
+					
+					// dispatch from parent
+					ts.parent.dispatch(gevent);
+					
+					//PUSH GESTURE TO TIMLEINE WITH REF TO PARENT
+					tiO.frame.gestureEventArray.push(gevent);
+						
+					//INIT PUSH OF INTERACTION POINT TO GRANDPARENT
+					if  (ts.parent.parent is ITouchObject)propagateInteractionPoint(ipt,ts.parent);
+					//else if (ts.targetParent) ts.parent.cO.iPointArray.push(ipt);
+				}
+			}
+		}*/
 		
 
 		/**

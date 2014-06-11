@@ -360,8 +360,8 @@ package com.gestureworks.core
 			{
 				iPointClusterList.finger_dynamic = new ipClusterObject();
 				iPointClusterList.finger_dynamic.active = true; //TODO: AUTOMATE ACTIVATION
-				iPointClusterList.finger_dynamic.type = "finger_dynamic";
 				iPointClusterList.finger_dynamic.mode = "touch";
+				iPointClusterList.finger_dynamic.type = "finger_dynamic";
 				//iPointClusterList["finger_dynamic"].motion_type = "dynamic";
 				
 				//trace("finger dynamic init")
@@ -764,7 +764,8 @@ package com.gestureworks.core
 						{
 							if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 			penTouchPoints = true; 
 							if ((g.cluster_type == "tag") || (g.cluster_type == "all")) 			tagTouchPoints = true; 
-							if ((g.cluster_type == "finger")||(g.cluster_type == "all")) 			fingerTouchPoints = true; 
+							if ((g.cluster_type == "finger") || (g.cluster_type == "all")) 			fingerTouchPoints = true; 
+							if ((g.cluster_type == "shape")||(g.cluster_type == "all")) 			shapeTouchPoints = true; 
 						}
 						
 						/////////////////////////////////////////////////////////

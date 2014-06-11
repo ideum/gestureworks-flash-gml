@@ -84,6 +84,8 @@ package com.gestureworks.managers
 					
 						for each(fp in temp_framePoints)
 						{
+							if (fp.source == "native") 
+							{
 							//trace(ap.type)
 							
 							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
@@ -100,6 +102,7 @@ package com.gestureworks.managers
 							
 							//trace(ap.id, fp.id, ap.interactionPointID, fp.interactionPointID,ap.type,fp.type,dist);
 							//trace("roooooot",ap.rootPointID, fp.rootPointID);
+							}
 						}
 						
 						
@@ -147,56 +150,57 @@ package com.gestureworks.managers
 						{
 						for each(fp in temp_framePoints)
 							{
-							if (ap.type == fp.type)
+							if (fp.source == "native") 
 							{
+								if (ap.type == fp.type)
+								{
+									
+								//var dist0:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 								
-							//var dist0:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
-							
-							//trace(ap.position.z,fp.position.z)
-							//trace("dist",dist,dist0,ap.type,fp.type, ap.interactionPointID, fp.interactionPointID,_ID, ap.rootPointID, fp.rootPointID)
-							
-							
-							if(ap.rootPointID == fp.rootPointID) 
-							{
-								ap.rootPointID = fp.rootPointID;
-								ap.age += 1;
-								ap.phase = "update";
-									
-									//ap.init_position = fp.init_position;
-									ap.position = fp.position;
-									ap.direction = fp.direction;
-									ap.normal = fp.normal;
-									
-									ap.screen_position = fp.screen_position;
-									ap.screen_direction = fp.screen_direction;
-									ap.screen_normal = fp.screen_normal;
-									
-									// advanced ip features
-									ap.fist = fp.fist;
-									ap.splay = fp.splay;
-									ap.orientation = fp.orientation;
-									ap.radius = fp.radius;
-									ap.flatness = fp.flatness;
-									ap.fn = fp.fn;
-									
-									//sensors
-									ap.acceleration = fp.acceleration;
-									ap.buttons = fp.buttons;
-									
-									ap.handID = fp.handID;
-									ap.type = fp.type;
-									ap.mode = fp.mode;
-									
-									
-									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
-										
-									//InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
-									InteractionManager.onInteractionUpdatePoint(ap);
-									//if (debug)
-									//trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, ap.position);	
-							
-							}
-							
+								//trace(ap.position.z,fp.position.z)
+								//trace("dist",dist,dist0,ap.type,fp.type, ap.interactionPointID, fp.interactionPointID,_ID, ap.rootPointID, fp.rootPointID)
+
+									if(ap.rootPointID == fp.rootPointID) 
+									{
+										ap.rootPointID = fp.rootPointID;
+										ap.age += 1;
+										ap.phase = "update";
+											
+											//ap.init_position = fp.init_position;
+											ap.position = fp.position;
+											ap.direction = fp.direction;
+											ap.normal = fp.normal;
+											
+											ap.screen_position = fp.screen_position;
+											ap.screen_direction = fp.screen_direction;
+											ap.screen_normal = fp.screen_normal;
+											
+											// advanced ip features
+											ap.fist = fp.fist;
+											ap.splay = fp.splay;
+											ap.orientation = fp.orientation;
+											ap.radius = fp.radius;
+											ap.flatness = fp.flatness;
+											ap.fn = fp.fn;
+											
+											//sensors
+											ap.acceleration = fp.acceleration;
+											ap.buttons = fp.buttons;
+											
+											ap.handID = fp.handID;
+											ap.type = fp.type;
+											ap.mode = fp.mode;
+											
+											
+											temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
+												
+											//InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
+											InteractionManager.onInteractionUpdatePoint(ap);
+											//if (debug)
+											//trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, ap.position);	
+										}
+								
+									}
 							}
 						}	
 					}
@@ -205,6 +209,8 @@ package com.gestureworks.managers
 					// ADD NEW POINTS TO ACTIVE will add (WHEN an!=0)
 					for each(fp in temp_framePoints)
 					{
+						if (fp.source == "native") 
+						{
 						_ID++;
 						fp.interactionPointID = _ID;
 						fp.age = 0;
@@ -220,6 +226,7 @@ package com.gestureworks.managers
 						InteractionManager.onInteractionBeginPoint(fp);
 						//if (debug) trace("an!=0 ADDED:", fp.id, fp.interactionPointID, fp.type, fp.position);
 						//trace("ip begin",fp.interactionPointID,temp_framePoints.length)
+						}
 					}
 					
 					/*
@@ -236,6 +243,30 @@ package com.gestureworks.managers
 					}
 					*/
 					
+					////////////////////////////////////////////////////////////////////
+					// MANAGE SERVER INTERACTION POINTS AS FULLY LIFE CYCLCED ON ENTRY
+					for each(fp in temp_framePoints)
+					{
+						if (fp.source == "server") 
+						{
+							if (fp.phase == "begin")
+							{
+								fp.init_position = new Vector3D(fp.position.x, fp.position.y, 0);
+								InteractionManager.onInteractionBeginPoint(fp);
+							}
+							else if (fp.phase == "update")
+							{
+								InteractionManager.onInteractionUpdatePoint(fp);
+							}
+							else if (fp.phase == "end")
+							{
+								InteractionManager.onInteractionEndPoint(fp.interactionPointID);
+							}
+							
+							activePoints.push(fp);
+						}
+					}
+	
 		}
 		
 			
