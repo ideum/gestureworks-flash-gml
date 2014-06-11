@@ -1296,7 +1296,7 @@ package com.gestureworks.analysis
 									{	
 										var palm = handList[j].palm;
 										
-										var dist = Vector3D.distance(finger.palmplaneline_position,palm.position)
+										var dist:Number = Vector3D.distance(finger.palmplaneline_position,palm.position)
 										//var minDist:int = 45;
 										//var maxDist:int = 95;
 										
@@ -1365,7 +1365,7 @@ package com.gestureworks.analysis
 									{
 										var palm = handList[j].palm;
 										
-										var dist = Vector3D.distance(finger.palmplaneline_position,palm.position)
+										var dist:Number = Vector3D.distance(finger.palmplaneline_position,palm.position)
 										//var minDist:int = 0;
 										//var maxDist:int = 20;
 										
@@ -1451,7 +1451,7 @@ package com.gestureworks.analysis
 										
 										var palm = handList[j].palm;
 										
-										var dist = Vector3D.distance(finger.palmplaneline_position,palm.position)
+										var dist:Number = Vector3D.distance(finger.palmplaneline_position,palm.position)
 										
 										//var minDist:int = 45;
 										//var maxDist:int = 95;
@@ -1537,7 +1537,7 @@ package com.gestureworks.analysis
 									{
 										var palm = handList[j].palm;
 										
-										var dist = Vector3D.distance(finger.palmplaneline_position,palm.position)
+										var dist:Number = Vector3D.distance(finger.palmplaneline_position,palm.position)
 										//var minDist:int = 45;
 										//var maxDist:int = 95;
 										
@@ -1918,7 +1918,7 @@ package com.gestureworks.analysis
 		public function findHandDirection():void 
 		{
 			
-			var hn = handList.length;
+			var hn:int = handList.length;
 			
 			for (j = 0; j < hn; j++)
 			{
@@ -2026,7 +2026,7 @@ package com.gestureworks.analysis
 			var min_mwlr:Number;
 			var max_mwlr:Number;
 			
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (j = 0; j < hn; j++)
 			{
@@ -2084,7 +2084,7 @@ package com.gestureworks.analysis
 							var vp_mpl:Vector3D = palm_plane_point.subtract(p_pos);
 							var dist2:Number = (vp_mpl.x * direction.x) + (vp_mpl.y * direction.y) + (vp_mpl.z * direction.z);
 							
-							var splay = handList[j].splay;
+							var splay:Number = handList[j].splay;
 							var palm_plane_line_point:Vector3D = new Vector3D((palm_plane_point.x - dist2 * direction.x), (palm_plane_point.y -dist2 * direction.y), (palm_plane_point.z - dist2 * direction.z));
 							//var palm_plane_line_point:Vector3D = new Vector3D((f_pos.x - dist2 * direction.x), (f_pos.y -dist2 * direction.y), (f_pos.z - dist2 * direction.z));
 							
@@ -2289,7 +2289,7 @@ package com.gestureworks.analysis
 		public function findThumb():void
 		{
 			
-		var hn = handList.length
+		var hn:int = handList.length
 		
 		for (j = 0; j < hn; j++)
 			{
@@ -2560,9 +2560,9 @@ package com.gestureworks.analysis
 					// CLOSTEST TO FAV CREATES 2 FINGER ERROR
 					// THUMB REQUOREMENT NEEDS FULL TESTING
 				// PRESENT SINGLE PINCH POINT ALWAYS
-			var hn = handList.length
+			var hn:int = handList.length
 				
-			trace("hand length",hn );
+			//trace("hand length",hn );
 				
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -2673,7 +2673,7 @@ package com.gestureworks.analysis
 		{
 			// hooked fingers
 			var hookThreshold:Number = 0.46; // GML ADJUST
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -2731,7 +2731,7 @@ package com.gestureworks.analysis
 			// must add other planes (orthogonal)
 			// must add plane bounds (x and y for z)
 			var z_wall:int = 50;
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -2774,7 +2774,7 @@ package com.gestureworks.analysis
 				// PUSH TRIGGER STATE BASED ON THUMB STATE
 				
 			var triggerThreshold:Number = 0.6; // bigger threahold than hook // GML ADJUST
-			var hn = handList.length
+			var hn:int = handList.length
 			
 				for (var j:int = 0; j < hn; j++)
 				{	
@@ -2842,7 +2842,7 @@ package com.gestureworks.analysis
 			var y_max:Number;
 			var z_min:Number; 
 			var z_max:Number;
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -2891,7 +2891,7 @@ package com.gestureworks.analysis
 			var minAngle:Number = 0.9; // GML CONFIG
 			var maxAngle:Number = Math.PI / 2; //GML CONFIG
 			var minExtension:Number = 0.55;
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -2973,7 +2973,7 @@ package com.gestureworks.analysis
 		// Collect Interactive FingerTip Points
 		public function find3DFingerPoints():void
 		{
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -3008,7 +3008,7 @@ package com.gestureworks.analysis
 		// Collect Interactive Thumb Points
 		public function find3DThumbPoints():void
 		{
-			var hn = handList.length
+			var hn:int = handList.length
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -3035,7 +3035,7 @@ package com.gestureworks.analysis
 		// Collect Interactive Thumb Points
 		public function find3DFingerAndThumbPoints():void
 		{
-		var hn = handList.length	
+		var hn:int = handList.length	
 			
 			for (var j:int = 0; j < hn; j++)
 				{	
@@ -3063,7 +3063,7 @@ package com.gestureworks.analysis
 		// Collect Interactive FingerAverage Points
 		public function find3DFingerAveragePoints():void 
 		{
-			var hn = handList.length
+			var hn:int = handList.length
 			
 				for (j = 0; j < hn; j++)
 				{
@@ -3267,7 +3267,7 @@ package com.gestureworks.analysis
 			{
 			//trace("FIND3DEYEPOINTS",motionArray.length,motionArray2D.length)
 			
-			var pv = new Vector3D
+			var pv:Vector3D = new Vector3D
 			
 				for (var i:int = 0; i < gs.mpn; i++)
 				{

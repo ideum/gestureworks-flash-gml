@@ -30,7 +30,7 @@ package com.gestureworks.managers
 	public class DeviceManager
 	{
 		private static var dp:DeviceParser;
-		private static var ds:DeviceServerManager;
+		public static var ds:DeviceServerManager;
 		
 		// initializes deviceManager
 		public function initialize():void
@@ -69,6 +69,13 @@ package com.gestureworks.managers
 				trace("configuring server connected devices using dml specs");
 				configServerDevices();
 			}
+		}
+		
+		public static function update():void {
+			
+			//trace(ds);
+			//if (ds) ds.updatePoints();
+			
 		}
 		
 		public static function configServerDevices():void

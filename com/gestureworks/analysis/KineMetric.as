@@ -1570,7 +1570,7 @@ package com.gestureworks.analysis
 	public function getSubClusterConstants():void 
 	{
 			// FOR EACH SUBCLUSTER IN MOTION MATRIX ////////////////////////////////////
-			for each (var iPointCluster in iPointClusterList) 
+			for each (var iPointCluster:ipClusterObject in iPointClusterList) 
 			{	
 				//trace("kinemetric",key,iPointClusterList[key], key.active, key.mode)
 				//if (iPointCluster){
@@ -2197,7 +2197,7 @@ package com.gestureworks.analysis
 		// 3D MANIPULATE GENERIC 
 		public function find3DIPTransformation(iPointCluster:ipClusterObject):void////type:String
 		{			
-		//	trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
+			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			var hist:int = 1; //CREATES DELAY 
 			var hk:Number = 1 / hist;
 			var index = iPointCluster.type;
@@ -2277,7 +2277,7 @@ package com.gestureworks.analysis
 							if ((c_1.position.y != 0) && (c_0.position.y != 0)) 	sub_cO.dy = (c_0.position.y - c_1.position.y)*hk;
 							if ((c_1.position.z != 0) && (c_0.position.z != 0)) 	sub_cO.dz = (c_0.position.z - c_1.position.z)*hk;
 							
-							trace(c_0.position.x,c_1.position.x);
+							//trace(c_0.position.x,c_1.position.x);
 							//trace(cO.dx,cO.dy,cO.dz);
 							//}
 							//else {
@@ -2436,7 +2436,7 @@ package com.gestureworks.analysis
 									//trace(sub_cO.dsx,sub_cO.dsy)
 									*/
 									
-									trace("--------------------------------------------------------",sub_cO.dtheta);
+									//trace("--------------------------------------------------------",sub_cO.dtheta);
 									
 									
 									
@@ -2624,7 +2624,7 @@ package com.gestureworks.analysis
 		
 			// GET SUBCLUSTER OBJECT
 			var sub_cO:ipClusterObject = iPointCluster;
-			var index =  iPointCluster.type;
+			var index = iPointCluster.type;
 			
 			//GET TRANSFORMED IP ARRAY
 			var ptArray:Vector.<InteractionPointObject> = sub_cO.iPointArray;

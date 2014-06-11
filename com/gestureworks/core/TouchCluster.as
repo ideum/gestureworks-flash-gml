@@ -459,15 +459,15 @@ package com.gestureworks.core
 			
 			if (accelerometerPoints)
 			{
-			iPointClusterList["native_accelerometer"] = new ipClusterObject();
-			iPointClusterList["native_accelerometer"].active = true;
-			iPointClusterList["native_accelerometer"].mode = "sensor";
-			iPointClusterList["native_accelerometer"].type = "native_accelerometer";
-			
-			iPointClusterList["remote_accelerometer"] = new ipClusterObject();
-			iPointClusterList["remote_accelerometer"].active = true;
-			iPointClusterList["remote_accelerometer"].mode = "sensor";
-			iPointClusterList["remote_accelerometer"].type = "remote_accelerometer";
+				iPointClusterList["native_accelerometer"] = new ipClusterObject();
+				iPointClusterList["native_accelerometer"].active = true;
+				iPointClusterList["native_accelerometer"].mode = "sensor";
+				iPointClusterList["native_accelerometer"].type = "native_accelerometer";
+				
+				iPointClusterList["remote_accelerometer"] = new ipClusterObject();
+				iPointClusterList["remote_accelerometer"].active = true;
+				iPointClusterList["remote_accelerometer"].mode = "sensor";
+				iPointClusterList["remote_accelerometer"].type = "remote_accelerometer";
 			}
 			// accelerometer
 			// myo
@@ -1258,7 +1258,7 @@ package com.gestureworks.core
 		public function getSubClusters():void 
 		{
 			//trace("getting subclusters");
-				for each (var iPointCluster in iPointClusterList) 
+				for each (var iPointCluster:ipClusterObject in iPointClusterList) 
 				{
 					//trace("get subclusters", iPointCluster.iPointArray.length)
 					if (iPointCluster)
@@ -1270,9 +1270,9 @@ package com.gestureworks.core
 				}
 				
 				//update subcluster point arrays //////////////////////////////
-				for (var i = 0; i < cO.iPointArray.length; i++) 
+				for (var i:uint = 0; i < cO.iPointArray.length; i++) 
 				{
-					var ipt = cO.iPointArray[i]
+					var ipt:InteractionPointObject = cO.iPointArray[i]
 					var type:String = String(ipt.type);
 					
 					//trace("update subcluster",cO.iPointArray.length, iPointClusterList[type], iPointClusterList[type].iPointArray.length);

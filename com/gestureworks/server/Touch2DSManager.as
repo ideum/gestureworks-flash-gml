@@ -2,9 +2,15 @@ package com.gestureworks.server
 {
 	import com.gestureworks.objects.TouchPointObject;
 	import com.gestureworks.managers.TouchManager;
+	import com.gestureworks.events.GWTouchEvent;
+	import com.gestureworks.managers.InteractionPointTracker;
+	import com.gestureworks.objects.InteractionPointObject;
+	
+	import flash.geom.Vector3D;
 	/**
-	 * The Leap3DSManager handles the parsing of leap type socket frame data from the device server.
-	 *
+	 * The Touch2DSManager handles the parsing of touch type points socket frame data from the device server.
+	 * Generic touch points a split by type into finger, stylus, fiducial and shape.
+	 * 
 	 * @author Ideum
 	 *
 	 */
@@ -15,8 +21,10 @@ package com.gestureworks.server
 		private static var inputType:String
 		private static var frameId:int 
 		private static var timestamp:int 
-		private static var count:int
-		//private static var objectCount:int
+		private static var fingercount:int
+		private static var styluscount:int
+		private static var fiducialcount:int
+		private static var shapecount:int
 		private static var debug:Boolean = false;
 		
 		private static var pids:Vector.<int> = new Vector.<int>();
@@ -73,33 +81,134 @@ package com.gestureworks.server
 		*/
 		
 		
-		public function processTouch2DSocketData(xmlList:XMLList):void 
+		public function processTouch2DSocketData(xmlList:XMLList):void //:XML//message:XML
 		{
+			//trace("inside");
 			//trace(message)
 				// CREATE POINT LIST
 				pointList = new Vector.<TouchPointObject>();
-				count = int(xmlList.length());//int(message.InputPoint.Values.Eye.length());
 				pids = new Vector.<int>();
 				
-				// CREATE Touch POINTS
-				for (var k:int = 0; k < count; k++)
+				fingercount = int(xmlList.Finger.length());
+				styluscount = int(xmlList.Stylus.length());
+				fiducialcount = int(xmlList.Fiducial.length());
+				shapecount = int(xmlList.Shape.length());
+				
+				
+				//FINGER
+				if (xmlList.Finger) 
 				{
-					//var f =  message.InputPoint.Values.Surface.Point[k];
-					var f =  xmlList[k];//message.InputPoint.Values.Eye[k];
-					var ptf:TouchPointObject = new TouchPointObject();
-						ptf.id = f.@id; 
-						ptf.position.x = f.@x; 
-						ptf.position.y = f.@y;
-						ptf.pressure = f.@pressure;
-						ptf.size.x = f.@width;
-						ptf.size.y = f.@height;
-					pointList.push(ptf);
-					
-					//PUSH IDS
-					pids.push(int(f.@id));
+					// CREATE finger Touch POINTS
+					for (var k:int = 0; k < fingercount; k++)
+					{
+						//trace(xmlList.Finger,xmlList.Finger[k], fingercount,xmlList.Finger[k].@id,xmlList.Finger[k].@x)
+						//var f =  message.InputPoint.Values.Surface.Point[k];
+						var f:Object =  xmlList.Finger[k];//message.InputPoint.Values.Eye[k];
+						//var ptf:TouchPointObject = new TouchPointObject();
+						var ptf:InteractionPointObject = new InteractionPointObject();
+						
+							ptf.id = f.@id; 
+							if (!ptf.position) ptf.position = new Vector3D(f.@x,f.@y,0);
+								//ptf.position.x = f.@x; 
+								//ptf.position.y = f.@y;
+							//ptf.pressure = f.@pressure;
+							//if (!ptf.size) ptf.size= new Vector3D(f.@width,f.@height,0);
+								//ptf.size.x = f.@width;
+								//ptf.size.y = f.@height;
+							//ptf.type = "finger"
+							//ptf.theta = f.@theta;
+						
+						//--pointList.push(ptf);
+						
+						//trace(f.@id)
+						
+						//PUSH IDS
+						//--pids.push(int(f.@id));
+						
+						//
+						InteractionPointTracker.framePoints.push(ptf)
+					}
 				}
-
+				/*
+				//STYLUS/PEN/BRUSH (position, radius,width,height, name, theta)
+				if (xmlList.Stylus) 
+				{
+					// CREATE finger Touch POINTS
+					for (var ks:int = 0; ks < styluscount; ks++)
+					{
+						//var f =  message.InputPoint.Values.Surface.Point[k];
+						var s =  xmlList.Stylus[ks];//message.InputPoint.Values.Eye[k];
+						var pts:TouchPointObject = new TouchPointObject();
+							pts.id = s.@id; 
+							pts.position.x = s.@x; 
+							pts.position.y = s.@y;
+							pts.pressure = s.@pressure;
+							pts.size.x = s.@width;
+							pts.size.y = s.@height;
+							//ptf.type = "stylus";
+							//ptf.theta = f.@theta;
+						pointList.push(pts);
+						
+						//PUSH IDS
+						pids.push(int(s.@id));
+					}
+				}
+				
+				//OBJECT/FIDUCIAL/TAG (position, point number,width,height,name, theta)
+				if (xmlList.Fiducial) 
+				{
+					// CREATE finger Touch POINTS
+					for (var ko:int = 0; ko < fiducialcount; ko++)
+					{
+						//var f =  message.InputPoint.Values.Surface.Point[k];
+						var o =  xmlList.Fiducial[ko];//message.InputPoint.Values.Eye[k];
+						var pto:TouchPointObject = new TouchPointObject();
+							pto.id = o.@id; 
+							pto.position.x = o.@x; 
+							pto.position.y = o.@y;
+							pto.pressure = o.@pressure;
+							pto.size.x = o.@width;
+							pto.size.y = o.@height;
+							//ptf.type = "fiducial";
+							//ptf.name = o.name;// or ref
+							//ptf.n = o.n; // point number
+							//ptf.theta = f.@theta;
+						pointList.push(pto);
+						
+						//PUSH IDS
+						pids.push(int(o.@id));
+					}
+				}
+				
+				//SHAPE (position, radius,width,height,name, theta)
+				if (xmlList.Shape) 
+				{
+					// CREATE finger Touch POINTS
+					for (var ksh:int = 0; ksh < shapecount; ksh++)
+					{
+						//var f =  message.InputPoint.Values.Surface.Point[k];
+						var shape =  xmlList.Shape[ksh];//message.InputPoint.Values.Eye[k];
+						var ptsh:TouchPointObject = new TouchPointObject();
+							ptsh.id = shape.@id; 
+							ptsh.position.x = shape.@x; 
+							ptsh.position.y = shape.@y;
+							ptsh.pressure = shape.@pressure;
+							ptsh.size.x = shape.@width;
+							ptsh.size.y = shape.@height;
+							//ptf.type = "shape"
+							//ptf.name = o.name;// or ref
+							//ptf.theta = f.@theta;
+						pointList.push(ptsh);
+						
+						//PUSH IDS
+						pids.push(int(shape.@id));
+					}
+				}*/
+	
+				// UPDATE
 				addRemoveUpdatePoints();
+				
+				//trace("active point number",activePoints.length )
 		}
 		
 		
@@ -134,6 +243,7 @@ package com.gestureworks.server
 			//trace("pid array length",pids.length);
 		}
 		*/
+		
 		private static function getFramePoint(id:int):TouchPointObject//Object 
 		{
 			var obj:TouchPointObject//Object;
@@ -145,7 +255,7 @@ package com.gestureworks.server
 		}
 		
 
-		private static function addRemoveUpdatePoints():void 
+		public function addRemoveUpdatePoints():void 
 		{
 			//trace("touch add remove update----------------------------------------------------", pointList.length, activePoints.length)
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,12 +269,14 @@ package com.gestureworks.server
 					activePoints.splice(activePoints.indexOf(aid), 1);
 					
 					//TouchManager.onTouchUp(new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, aid, false));
-					TouchManager.onTouchUpPoint(aid);
+					//--TouchManager.onTouchUpPoint(aid);
 					//trace("TOUCH POINT REMOVED:",aid);
 				}
 				
 				//trace("active point aid",aid)
 			}
+			
+			//activePoints.length = 0;
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//POINT ADDITION AND UPDATE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,18 +315,23 @@ package com.gestureworks.server
 					{
 						activePoints.push(pid);	
 						//TouchManager.onTouchDown(te);
-						TouchManager.onTouchDownPoint(pt);
+						//--TouchManager.onTouchDownPoint(pt);
 						//trace("TOUCH POINT ADDED:", pid);		
 					}
 					else {
 						//TouchManager.onTouchMove(te)
-						TouchManager.onTouchMovePoint(pt)		
+						//--TouchManager.onTouchMovePoint(pt)		
 						//trace("TOUCH POINT UPDATE:", pid);
 					}
 					//trace(pt.size.x,pt.size.y, pt.pressure)
 				}
 				//trace("pids pid",pid)
 			}
+			
+			
+			
+			trace("active point number",activePoints.length )
+			
 		}
 		
 		

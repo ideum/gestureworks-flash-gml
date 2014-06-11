@@ -85,6 +85,11 @@ package com.gestureworks.managers
 			initXMLSocket();*/
 		}
 		
+		public function updatePoints():void
+		{
+			//if (touchManagerSocket) touchManagerSocket.addRemoveUpdatePoints();
+		}
+		
 		public function init():void
 		{
 			trace("device server manager init",GestureWorks.activeTouch,GestureWorks.activeMotion,GestureWorks.activeSensor );
@@ -92,7 +97,7 @@ package com.gestureworks.managers
 			//////////////////////////////////////////////////
 			if (GestureWorks.activeTouch) 
 			{
-				//touchManagerSocket = new Touch2DSManager(); 
+				touchManagerSocket = new Touch2DSManager(); 
 			}
 			if (GestureWorks.activeMotion)
 			{
@@ -145,6 +150,14 @@ package com.gestureworks.managers
 		private static function handleSocketClosed(event:Event):void {
 			trace("closed",event);			
 		}
+		
+		
+			
+			
+			
+			
+			
+		
 
 		private static function onSocketDataHandler(event:ProgressEvent):void
 		{
@@ -202,18 +215,29 @@ package com.gestureworks.managers
 							//if (inputMode=="touch"){
 							///////////////////////////////////////////////////////////////
 							// TOUCH //////////////////////////////////////////////////////
+							
+								//PQ /////////////////////////////////////////////////
 								if ((deviceType == "PQ") && (inputType == "Points2d")) {
 									//trace(message.InputPoint.Values.Finger);
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									//trace("in pq")
 								}
 								//3M////////////////////////////////////////////////////////
+								if ((deviceType == "3M") && (inputType == "Points2d")) {
+									trace("3m finger", message.InputPoint.Values.Finger);//FINGER
+									trace("3m stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
+									trace("3m fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
+									
+									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+								}
+								
 								//ZYTRONIC//////////////////////////////////////////////////
 								//if (deviceType == "LeapMotion" && inputType == "Points2d"){}//touchManagerSocket.processTouch2DSocketData(message);
-
 								
 								if (deviceType == "Android" && inputType == "Points2d"){//WORKS
-									//trace("Android touch", message.InputPoint.Values.Finger);
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values.Finger);
+									//trace("Android finger touch", message.InputPoint.Values.Finger);
+									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
 								}
 							}
 							
@@ -268,7 +292,10 @@ package com.gestureworks.managers
 									androidSensorManagerSocket.processAndroidSensorSocketData(message.InputPoint.Values.AndroidDevice)
 								}
 								if ((deviceType == "MUSE") && (inputType == "Accel3d")) trace(deviceType, ": ", inputType);
-								if ((deviceType == "MYO") && (inputType == "Accel3d")) trace(deviceType, ": ", inputType);
+								
+								if ((deviceType == "MYO") && (inputType == "Accel3d")) {
+									trace(deviceType, ": ", inputType);
+								}
 								
 								//GPS
 								//MAGNOMETER
@@ -298,8 +325,18 @@ package com.gestureworks.managers
 								if ((deviceType == "MUSE") && (inputType == "EEG")) trace(deviceType, ": ", inputType);
 								if ((deviceType == "INSIGHT") && (inputType == "EEG")) trace(deviceType, ": ", inputType);
 								//MYO////////////////////////////////////////////////////
-								if ((deviceType == "MYO") && (inputType == "EMG")) trace(deviceType, ": ", inputType);
+								if ((deviceType == "MYO") && (inputType == "EMG")) {
+									trace(deviceType, ": ", inputType);
+								}
+								
 								//VOICE/////////////////////////////////////////////////
+								//M$ SAPI// PERC VOICE
+								if ((deviceType == "Microphone") && (inputType == "voice")) {
+									trace("SAPI VOICE")
+								}
+								
+								
+								
 							//}
 							}
 					}

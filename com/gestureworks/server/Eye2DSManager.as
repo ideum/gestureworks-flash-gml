@@ -71,8 +71,8 @@ package com.gestureworks.server
 				for (var k:int = 0; k < count; k++)
 				{
 					//var f =  message.InputPoint.Values.Surface.Point[k];
-					var e =  xmlList.Eye[k];//message.InputPoint.Values.Eye[k];
-					var p = e.Point[0];
+					var e:Object =  xmlList.Eye[k];//message.InputPoint.Values.Eye[k];
+					var p:Object = e.Point[0];
 					var pte:MotionPointObject = new MotionPointObject();
 						pte.id = p.@id;
 						pte.position = new Vector3D (p.@pcenter_x*1920, p.@pcenter_y*1080, 0); //TODO: PUSH AS PART OF CALIBRATION VARS

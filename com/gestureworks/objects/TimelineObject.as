@@ -32,9 +32,6 @@ package com.gestureworks.objects
 		// add touch point events
 		public var pointEvents:Boolean = false;
 
-		// add touch cluster events
-		public var clusterEvents:Boolean = false;
-
 		// add touch point events
 		public var gestureEvents:Boolean = false;
 
@@ -51,8 +48,6 @@ package com.gestureworks.objects
 			_frame = value;
 		}
 		
-
-		// NEEEDS TO BE VECTOR
 		// timeline history
 		public var history:Vector.<FrameObject> = new Vector.<FrameObject>;
 

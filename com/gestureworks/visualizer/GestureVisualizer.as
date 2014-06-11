@@ -311,6 +311,8 @@ package com.gestureworks.visualizer
 				
 				// based on timeline gesture events
 				
+				
+				/*
 				if(ts.tiO.frame.gestureEventArray){
 				
 					// gest current gesture event array from frame
@@ -440,6 +442,7 @@ package com.gestureworks.visualizer
 									
 									}
 							}
+							*/
 						}
 		
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,6 +470,7 @@ package com.gestureworks.visualizer
 				//ts.tiO.gestureEvents = true;
 				
 				
+				/*
 				
 				//trace("visulaize event frame",ts.tiO.timelineOn,ts.tiO.history.length,GestureGlobals.frameID);
 				var st:int = 0;
@@ -628,7 +632,7 @@ package com.gestureworks.visualizer
 							
 						}
 		
-		
+		*/
 	}
 	
 	

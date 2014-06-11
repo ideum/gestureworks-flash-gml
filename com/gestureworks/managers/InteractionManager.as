@@ -43,6 +43,7 @@ package com.gestureworks.managers
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.GesturePointObject;
 	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.TouchPointObject;
@@ -71,6 +72,10 @@ package com.gestureworks.managers
 		private static var iPointArray:Vector.<InteractionPointObject>
 		
 		private static var gs:CoreSprite;
+		private static var tiO:TimelineObject;
+		//private static var stO:StrokeObject;
+		
+		
 		private static var interaction_init:Boolean = false;
 		
 		private static var sw:int;
@@ -107,11 +112,14 @@ package com.gestureworks.managers
 				
 				/////////////////////////////////////////////////////////
 				// CREATE GLOBAL TIMELINE
-				
-				var tiO = new TimelineObject();  
-					tiO.timelineOn = false; // activates timline manager
+				/////////////////////////////////////////////////////////////////////////
+					// CREATES A NEW TIMELINE OBJECT 
+					// CONTAINS A HISTORY OF ALL TOUCH EVENTS, GESTURE EVENTS 
+					// AND TRANSFORM EVENTS THAT OCCUR ON EACH TOUCHSPRITE 
+					/////////////////////////////////////////////////////////////////////////
+				tiO = new TimelineObject();  
+					tiO.timelineOn = true; // activates timeline manager
 					tiO.pointEvents = false; // pushes point events into timline
-					tiO.clusterEvents = false; // pushes cluster events into timeline
 					tiO.gestureEvents = false; // pushes gesture events into timleine
 					tiO.transformEvents = false; // pushes transform events into timeline
 				GestureGlobals.gw_public::timeline = tiO;
@@ -131,6 +139,7 @@ package com.gestureworks.managers
 			// leave this on for all input types
 			GestureWorks.application.addEventListener(GWEvent.ENTER_FRAME, interactionFrameHandler); //MOVE TO INTERACTION MANAGER
 			interaction_init = true;
+			
 			}
 		}
 		
@@ -264,6 +273,8 @@ package com.gestureworks.managers
 					}
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
 					delete interactionPoints[interactionPointID] as InteractionPointObject;
+					
+					
 			}
 			//trace("interaction point end POINT",interactionPointCount)
 		}
@@ -362,6 +373,7 @@ package com.gestureworks.managers
 				}
 			}
 		}
+		
 
 		/**
 		 * Registers a function to externally modify the provided GWTouchEvent for point processing
@@ -458,12 +470,6 @@ package com.gestureworks.managers
 		*/
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		 ///////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////
-		// MOVE ALL TO INTERACTION MANAGER
-		///////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////
 			
 		public static function preinitBase(obj:ITouchObject):void 
         {
@@ -514,25 +520,6 @@ package com.gestureworks.managers
 					obj.trO.id = obj.touchObjectID;
 				GestureGlobals.gw_public::transforms[obj.touchObjectID] = obj.trO; 
 				
-									//TODO: KILL AND INTERGRATE FUNCTIONALITY INTO GLOBAL TIMELINE OBJECT
-												/////////////////////////////////////////////////////////////////////////
-												// CREATES A NEW TIMELINE OBJECT 
-												// CONTAINS A HISTORY OF ALL TOUCH EVENTS, CLUSTER EVENTS, GESTURE EVENTS 
-												// AND TRANSFORM EVENTS THAT OCCUR ON THE TOUCHSPRITE
-												/////////////////////////////////////////////////////////////////////////
-												obj.tiO = new TimelineObject();  
-													obj.tiO.id = obj.touchObjectID;
-													obj.tiO.timelineOn = false; // activates timline manager
-													obj.tiO.pointEvents = false; // pushes point events into timline
-													obj.tiO.clusterEvents = false; // pushes cluster events into timeline
-													obj.tiO.gestureEvents = false; // pushes gesture events into timleine
-													obj.tiO.transformEvents = false; // pushes transform events into timeline
-													//TODO:DONT REGISTAR
-												GestureGlobals.gw_public::timelines[obj.touchObjectID] = obj.tiO;
-				
-			//}
-			
-			
 			// bypass gml requirement for testing
 			initBase(obj);
 			if (obj.debugDisplay)
@@ -579,7 +566,7 @@ package com.gestureworks.managers
 		{
 			//trace("gesturelist update");
 			var obj:ITouchObject = event.target as ITouchObject;
-			if (obj.tg) obj.tg.initTimeline();
+			//if (obj.tg) obj.tg.initTimeline();
 		}		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -590,7 +577,10 @@ package com.gestureworks.managers
 		
 		public static function interactionFrameHandler(event:GWEvent):void
 		{
-			trace("touch frame process ----------------------------------------------",gs.touchPointCount);	
+			//DEVICE MANAGER CONTROL
+			//DeviceManager.update();
+			
+			//trace("touch frame process ----------------------------------------------", gs.touchPointCount);	
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
@@ -616,6 +606,13 @@ package com.gestureworks.managers
 				//GET SENSOR PREMETRICS
 				if (GestureWorks.activeSensor) gs.cc.getSensorGeoMetrics();
 				
+				
+				//GET GLOBAL TIMELINE TAPS
+				// if (GestureWorks.activeTimline)
+				gs.cc.getTemporalMetrics();
+				
+				
+				
 				//gs.cc.updateCoreRawPointCount();
 				
 				//GLOBAL VISUALIZER FOR RAW INPUT DATA
@@ -628,7 +625,7 @@ package com.gestureworks.managers
 			////////////////////////////////////////////////////////////////////////////
 			// DEPTH SORTING
 			////////////////////////////////////////////////////////////////////////////
-			var temp_tOList:Array = new Array();//= touchObjects;
+			var temp_tOList = new Array();//= touchObjects;
 
 			for each(var itO:Object in touchObjects)
 			{
@@ -661,6 +658,8 @@ package com.gestureworks.managers
 			//REQUIRED//////////////////////// REVERSES ORDER OF ADDITON AND THERFOR INDEX
 			temp_tOList.reverse();
 			
+			
+			GestureGlobals.gw_public::temp_tOList = temp_tOList;
 			
 			//TEST TRACE
 			//for (var i:int = 0; i < temp_tOList.length; i++) 
@@ -742,9 +741,10 @@ package com.gestureworks.managers
 			// zero motion frame count
 			GestureGlobals.motionFrameID = 1;
 			//trace(GestureGlobals.motionframeID)
+			
 		}
 		
-
+	
 		public static function hitTestiPointsAddLocal(ipt:InteractionPointObject,temp_tOList:Array):void
 			{
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -814,12 +814,12 @@ package com.gestureworks.managers
 											if (hitTest3D != null){
 												if ((hitTest3D(ts as ITouchObject3D, ipt.position.x, ipt.position.y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 												{	
-													var match:Boolean = false;
-													for (var b:uint = 0; b < ts.cO.iPointArray.length; b++)
+													var match2:Boolean = false;
+													for (var b2:uint = 0; b2 < ts.cO.iPointArray.length; b2++)
 													{
-														if (ts.cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
+														if (ts.cO.iPointArray[b2].interactionPointID == ipt.interactionPointID) match2 = true;
 													}
-													if (!match) {
+													if (!match2) {
 														ts.cO.iPointArray.push(ipt);
 														propagateInteractionPoint(ipt, ts);
 													}
@@ -843,8 +843,8 @@ package com.gestureworks.managers
 									{
 										if (ts is ITouchObject)
 										{
-											var x = ipt.screen_position.x//normalize(ipt.position.x, minX, maxX) * sw;
-											var y = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
+											var x:Number = ipt.screen_position.x//normalize(ipt.position.x, minX, maxX) * sw;
+											var y:Number = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
 											
 											if ((ts.hitTestPoint(x, y, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 											{
@@ -858,10 +858,10 @@ package com.gestureworks.managers
 											//trace("3D MOTION HITTEST");
 											if (hitTest3D != null) {
 												
-												var x = ipt.screen_position.x //normalize(ipt.position.x, minX, maxX) * sw;
-												var y = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
+												var x2:Number = ipt.screen_position.x //normalize(ipt.position.x, minX, maxX) * sw;
+												var y2:Number = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
 												
-												if ((hitTest3D(ts as ITouchObject3D, x, y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+												if ((hitTest3D(ts as ITouchObject3D, x2, y2))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 												{ 
 													ts.cO.iPointArray.push(ipt);
 													propagateInteractionPoint(ipt, ts);
@@ -875,47 +875,48 @@ package com.gestureworks.managers
 									{
 										if (ts is ITouchObject)
 										{
-											var x = ipt.screen_position.x//normalize(ipt.position.x, minX, maxX) * sw;
-											var y = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
+											var x3:Number = ipt.screen_position.x//normalize(ipt.position.x, minX, maxX) * sw;
+											var y3:Number = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
 											
-											if ((ts.hitTestPoint(x, y, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+											if ((ts.hitTestPoint(x3, y3, true))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 											{
 												// CHECK TO SEE IF ALREADY ADDED
-												var match:Boolean = false;
-												for (var b:uint = 0; b < ts.cO.iPointArray.length; b++)
+												var match3:Boolean = false;
+												for (var b3:uint = 0; b3 < ts.cO.iPointArray.length; b3++)
 												{
-													if (ts.cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
+													if (ts.cO.iPointArray[b3].interactionPointID == ipt.interactionPointID) match3 = true;
 												}
-												if (!match)
+												if (!match3)
 												{
 													ts.cO.iPointArray.push(ipt);
 													propagateInteractionPoint(ipt, ts);
 												}
 											}
 										}
-									}
-									else if (ts is ITouchObject3D)
-									{
+										
+										else if (ts is ITouchObject3D)
+										{
 										//trace("3D MOTION HITTEST");
 										
 											if (hitTest3D != null) {
 												
-											var x = ipt.screen_position.x//normalize(ipt.position.x, minX, maxX) * sw;
-											var y = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
+											var x4:Number = ipt.screen_position.x//normalize(ipt.position.x, minX, maxX) * sw;
+											var y4:Number = ipt.screen_position.y//normalize(ipt.position.y, minY, maxY) * sh;
 
-												if ((hitTest3D(ts as ITouchObject3D, x, y))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
+												if ((hitTest3D(ts as ITouchObject3D, x4, y4))&&((!ts.mouseChildren)||(!ts.interactionPointChildren)))
 												{	
-													var match:Boolean = false;
-													for (var b:uint = 0; b < ts.cO.iPointArray.length; b++)
+													var match4:Boolean = false;
+													for (var b4:uint = 0; b4 < ts.cO.iPointArray.length; b4++)
 													{
-														if (ts.cO.iPointArray[b].interactionPointID == ipt.interactionPointID) match = true;
+														if (ts.cO.iPointArray[b4].interactionPointID == ipt.interactionPointID) match4 = true;
 													}
-													if (!match) {
+													if (!match4) {
 														ts.cO.iPointArray.push(ipt);
 														propagateInteractionPoint(ipt, ts);
 													}
 												}
 											}
+										}
 									}
 								} 
 
@@ -1011,13 +1012,7 @@ package com.gestureworks.managers
 						}
 			}
 			
-			
-			
-			/*
-			private static function normalize(value : Number, minimum : Number, maximum : Number) : Number {
 
-                        return (value - minimum) / (maximum - minimum);
-         }*/
 		
 	}
 }

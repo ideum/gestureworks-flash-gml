@@ -28,6 +28,7 @@ package com.gestureworks.objects
 		
 		// gesture point type /tap
 		public var type:String = new String();
+		public var mode:String = new String();
 		
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();

@@ -75,7 +75,7 @@ package com.gestureworks.managers
 
 				//////////////////////////////////////////////////////////////////////////
 				//CACHE VALUES FOR EACH ACTIVE SUBCLUSTER 
-				for each (var iPointCluster in clusterObject.iPointClusterList) 
+				for each (var iPointCluster:ipClusterObject in clusterObject.iPointClusterList) 
 				{
 					
 					var index:String = iPointCluster.type; 

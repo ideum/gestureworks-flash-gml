@@ -38,7 +38,10 @@ package com.gestureworks.objects
 		public var pressure:Number = 0;
 		public var area:Number = 0;
 		public var radius:Number = 0;
-		
+		public var theta:Number = 0;
+		public var n:int = 0;
+		public var type:String = "";
+		public var name:String = "";
 		//////////////////////////////////////////////
 		// dx
 		public var dx:Number=0;
@@ -53,9 +56,6 @@ package com.gestureworks.objects
 		public var DY:Number=0;
 		// DZ
 		public var DZ:Number=0;		
-		
-		
-	
 		
 		//////////////////////////////////////////////////
 		// MAY NEED TO MOVE TO CLUSTER OR IP OBJECT

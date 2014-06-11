@@ -25,6 +25,9 @@ package com.gestureworks.objects
 		
 		public var tagID:int;
 		
+		// age of point
+		public var age:int;
+		
 		// interactionPointID
 		public var interactionPointID:int;
 		public var rootPointID:int;
@@ -54,6 +57,7 @@ package com.gestureworks.objects
 		public var phase:String = new String();
 		
 		//position/////////////////////////////////////////////x,y,x
+		public var init_position:Vector3D = new Vector3D ();
 		public var position:Vector3D = new Vector3D ();
 		public var screen_position:Vector3D = new Vector3D ();
 		

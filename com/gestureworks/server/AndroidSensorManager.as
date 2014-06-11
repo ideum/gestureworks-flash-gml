@@ -59,7 +59,7 @@ package com.gestureworks.server
 				
 				//trace(xmlList);
 				
-					var p = xmlList.Acceleration[0];
+					var p:Object = xmlList.Acceleration[0];
 					var pte:SensorPointObject = new SensorPointObject();
 						pte.id = 0//p.@id;
 						pte.acceleration = new Vector3D (p.@x, p.@y, p.@z);

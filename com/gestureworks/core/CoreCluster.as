@@ -19,6 +19,7 @@ package com.gestureworks.core
 	import com.gestureworks.analysis.KineMetric;
 	import com.gestureworks.analysis.VectorMetric;
 	import com.gestureworks.analysis.CoreGeoMetric;
+	import com.gestureworks.analysis.CoreTemporalMetric;
 	import com.gestureworks.objects.GestureObject;
 	
 	import com.gestureworks.objects.TouchPointObject;
@@ -47,6 +48,7 @@ package com.gestureworks.core
 		*/
 		//public var cluster_vectormetric:VectorMetric;
 		private var cluster_geometric:CoreGeoMetric;
+		private var cluster_temporalmetric:CoreTemporalMetric;
 		public var visualizer:CoreVisualizer;
 		
 		private var gn:uint;
@@ -113,6 +115,7 @@ package com.gestureworks.core
 			iPointArray = GestureGlobals.gw_public::iPointArray;
 			
 			initCoreGeoMetric();
+			initCoreTemporalMetric();
           }
 		  
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,6 +131,13 @@ package com.gestureworks.core
 			
 			visualizer = new CoreVisualizer();
 		}
+		
+		public function initCoreTemporalMetric():void
+		{
+			cluster_temporalmetric = new CoreTemporalMetric();
+			cluster_temporalmetric.init();
+		}
+		
 		
 		public function updateCoreRawPointCount():void 
 		{
@@ -262,34 +272,9 @@ package com.gestureworks.core
 					////////////////////////////////////////////////////
 					if (g.cluster_input_type == "touch")
 						{
-							if ((g.cluster_type == "finger") || (g.cluster_type == "all")) 
-							{
-								fingerTouchPoints = true;
-								//tO.tc.fingerTouchPoints = true;
-							}
-							if ((g.cluster_type == "tag") || (g.cluster_type == "all")) 
-							{			
-								tagTouchPoints = true; 
-								//tO.tc.tagTouchPoints = true; 
-								/*
-									// creat five point tag
-									cO.objectArray[0] = new Array()
-										cO.objectArray[0][0] = new TouchPointObject();
-										cO.objectArray[0][0].dist = 100;
-										cO.objectArray[0][1] = new TouchPointObject();
-										cO.objectArray[0][1].dist = 96;
-										cO.objectArray[0][2] = new TouchPointObject();
-										cO.objectArray[0][2].dist = 92;
-										cO.objectArray[0][3] = new TouchPointObject();
-										cO.objectArray[0][3].dist = 84;
-										cO.objectArray[0][4] = new TouchPointObject();
-										cO.objectArray[0][4].dist = 76;
-										*/
-							}
-							if ((g.cluster_type == "pen") || (g.cluster_type == "all")) 
-							{
-								penTouchPoints = true; 
-							}
+							if ((g.cluster_type == "finger") || (g.cluster_type == "all")) fingerTouchPoints = true;
+							if ((g.cluster_type == "tag") || (g.cluster_type == "all")) tagTouchPoints = true; 
+							if ((g.cluster_type == "pen") || (g.cluster_type == "all")) penTouchPoints = true; 
 						}
 
 					if (g.cluster_input_type == "motion")
@@ -342,7 +327,7 @@ package com.gestureworks.core
 			//trace("get geometric 2d",cluster_geometric);
 			cluster_geometric.findFingerTouchPoints();
 			//cluster_geometric.find2DTagTouchPoints();
-			//cluster_geometric.findPenTouchPoints
+			//cluster_geometric.findPenTouchPoints();
 		}
 		
 		public function getSensorGeoMetrics():void
@@ -359,6 +344,14 @@ package com.gestureworks.core
 			getSkeletalGeoMetrics3D();
 			getPoseGeoMetrics3D();
 		}
+		
+		public function getTemporalMetrics():void
+		{
+			//trace("get geometric 2d",cluster_geometric);
+			cluster_temporalmetric.findGesturePoints();
+		}
+		
+		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -459,6 +452,12 @@ package com.gestureworks.core
 		}
 		
 		
+		
+		
+		public function manageTimeline():void
+		{
+			cluster_temporalmetric.manageTimeline();
+		}
 		
 		
 		

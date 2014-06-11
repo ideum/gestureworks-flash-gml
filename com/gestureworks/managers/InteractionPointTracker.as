@@ -3,6 +3,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.TouchSprite;
 	import com.gestureworks.events.GWInteractionEvent;
+	import com.gestureworks.objects.GesturePointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.InteractionPointObject;
 	
@@ -33,13 +34,17 @@ package com.gestureworks.managers
 		private static var d2:Number = 100//40//200//40//200//200;//40 //DEFINES TOLERENCE TRACK POINT
 		private static var d1:Number = 0;
 		private static var debug:Boolean = false;
+		private static var tiO;
+		private static var tapID = 0;
 		
 		public static function initialize():void
 		{
 			activePoints = new Vector.<InteractionPointObject>;
 			framePoints = new Vector.<InteractionPointObject>;
 			temp_framePoints = new Vector.<InteractionPointObject>;
-			trace("interaction point tracker init");
+			
+			tiO = GestureGlobals.gw_public::timeline
+			//trace("interaction point tracker init");
 		}
 		
 		
@@ -79,9 +84,19 @@ package com.gestureworks.managers
 					
 						for each(fp in temp_framePoints)
 						{
+							//trace(ap.type)
+							
 							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 							if (ap.type == fp.type && ap.rootPointID == fp.rootPointID) found = true;
-							else if ((ap.type == fp.type) && (dist < d2)) found = true;
+							
+							else if (ap.type == fp.type) 
+							{
+								if (ap.type == "finger_dynamic")
+								{
+									if (dist < 10) found = true; //FINGER SEP
+								}
+								else if (dist < d2) found = true;
+							}
 							
 							//trace(ap.id, fp.id, ap.interactionPointID, fp.interactionPointID,ap.type,fp.type,dist);
 							//trace("roooooot",ap.rootPointID, fp.rootPointID);
@@ -93,11 +108,37 @@ package com.gestureworks.managers
 						if (!found) 
 						{
 							activePoints.splice(activePoints.indexOf(ap), 1);
+							ap.phase = "end";
+							
+							//trace(ap.position, ap.init_position)
+							var dr:Vector3D = ap.position.subtract(ap.init_position);
+							var dist = dr.length;
+							
+							
+							
+							
 							//InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
 							InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
 							//trace("ended with this:",dist)
 							//if (debug) 
 							//trace("an!=0 REMOVED:-------------------------------------------", ap.id, ap.interactionPointID, ap.type, ap.position);
+							
+							if (ap.age < 30 && dist < 10) 
+							{
+								//trace("TAPPPPPP in ip tracker", ap.age, dist);
+							
+								// create tap gesture point and place in global timeline frame
+								var gpt:GesturePointObject = new GesturePointObject();
+									gpt.gesturePointID = tapID;
+									gpt.position = ap.position;
+									gpt.type = "tap";
+									gpt.mode = "touch"
+									
+									tapID += 1;
+									
+								tiO.frame.gesturePointArray.push(gpt);
+
+							}
 						}
 				}
 					//////////////////////////////////////////////////////////////////
@@ -118,6 +159,10 @@ package com.gestureworks.managers
 							if(ap.rootPointID == fp.rootPointID) 
 							{
 								ap.rootPointID = fp.rootPointID;
+								ap.age += 1;
+								ap.phase = "update";
+									
+									//ap.init_position = fp.init_position;
 									ap.position = fp.position;
 									ap.direction = fp.direction;
 									ap.normal = fp.normal;
@@ -151,40 +196,7 @@ package com.gestureworks.managers
 									//trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, ap.position);	
 							
 							}
-							//else if (dist0 < d2)  ////update
-							/*	{
-									ap.rootPointID = fp.rootPointID;
-									ap.position = fp.position;
-									ap.direction = fp.direction;
-									ap.normal = fp.normal;
-									
-									ap.screen_position = fp.screen_position;
-									ap.screen_direction = fp.screen_direction;
-									ap.screen_normal = fp.screen_normal;
-									
-									// advanced ip features
-									ap.fist = fp.fist;
-									ap.splay = fp.splay;
-									ap.orientation = fp.orientation;
-									ap.radius = fp.radius;
-									ap.flatness = fp.flatness;
-									ap.fn = fp.fn;
-									
-									//sensors
-									ap.acceleration = fp.acceleration;
-									ap.buttons = fp.buttons;
-									
-									ap.handID = fp.handID;
-									ap.type = fp.type;
-									ap.mode = fp.mode;
-									
-									
-									temp_framePoints.splice(temp_framePoints.indexOf(fp), 1);
-										
-									//InteractionManager.onInteractionUpdate(new GWInteractionEvent(GWInteractionEvent.INTERACTION_UPDATE, ap, true, false)); //push update event
-									InteractionManager.onInteractionUpdatePoint(ap);
-									//if (debug)trace("UPDATE:",ap.id, ap.interactionPointID,ap.type, ap.position, ap.acceleration, dist0);	
-								}*/
+							
 							}
 						}	
 					}
@@ -195,6 +207,11 @@ package com.gestureworks.managers
 					{
 						_ID++;
 						fp.interactionPointID = _ID;
+						fp.age = 0;
+						fp.phase = "begin";
+						fp.init_position = new Vector3D(fp.position.x, fp.position.y, 0);
+						//trace(fp.position)
+						
 						//fp.rootPointID = fp.rootPointID;
 						//trace(fp)
 						//trace(activePoints);

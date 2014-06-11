@@ -64,6 +64,8 @@ package com.gestureworks.core
 		 * Contains a dictionary of all touchObjects available to the framework.
 		 */
 		gw_public static var touchObjects:Dictionary = new Dictionary();
+		
+		gw_public static var temp_tOList:Array = new Array();
 		/**
 		 * Contains a dictionary of all clusters present to the framework.
 		 */

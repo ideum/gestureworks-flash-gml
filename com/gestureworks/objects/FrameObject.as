@@ -26,9 +26,12 @@ package com.gestureworks.objects
 		
 		//pointEventArray
 		public var pointEventArray:Vector.<GWTouchEvent> //= new Vector.<GWTouchEvent>;
-
+		
+		//gesturePointArray
+		public var gesturePointArray:Vector.<GesturePointObject> = new Vector.<GesturePointObject>();
+		
 		//gestureEventArray
-		public var gestureEventArray:Vector.<GWGestureEvent> //= new Vector.<GWGestureEvent>();
+		public var gestureEventArray:Vector.<GWGestureEvent> = new Vector.<GWGestureEvent>();
 
 		//transformEventArray
 		public var transformEventArray:Vector.<GWTransformEvent> //= new Vector.<GWTransformEvent>();

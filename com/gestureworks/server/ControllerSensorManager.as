@@ -51,7 +51,7 @@ package com.gestureworks.server
 				
 				//trace(xmlList);
 				
-					var p = xmlList;
+					var p:Object = xmlList;
 					var pte:SensorPointObject = new SensorPointObject();
 						pte.id = 500;//p.@id; //controller server id
 						pte.type = "controller";

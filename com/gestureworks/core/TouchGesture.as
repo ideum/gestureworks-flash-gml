@@ -23,9 +23,9 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	//import com.gestureworks.analysis.GesturePipeline;
-	import com.gestureworks.analysis.TemporalMetric;
+	import com.gestureworks.analysis.CoreTemporalMetric;
 	
-	import com.gestureworks.managers.TimelineHistories;
+	//import com.gestureworks.managers.TimelineHistories;
 	import com.gestureworks.objects.FrameObject; 
 	import com.gestureworks.objects.DimensionObject;
 	
@@ -44,7 +44,7 @@ package com.gestureworks.core
 		/**
 		* @private
 		*/
-		public var gesture_disc:TemporalMetric;
+		//public var gesture_disc:CoreTemporalMetric;
 		
 		/**
 		* @private
@@ -64,7 +64,7 @@ package com.gestureworks.core
 		private var gO:GestureListObject;
 		private var tiO:TimelineObject;
 		
-		private var sub_cO
+		private var sub_cO:ipClusterObject
 		/////////////////////////////////////////////////////////
 		
 		public function TouchGesture(touchObjectID:int):void
@@ -78,7 +78,7 @@ package com.gestureworks.core
 			//TODO: POINT TO RELEVANT SUBCLUSTER //cO = GestureGlobals.gw_public::clusters[id]//ts.cO;
 			//sO = GestureGlobals.gw_public::clusters[id]//ts.sO;
 			gO = GestureGlobals.gw_public::gestures[id]//ts.gO;
-			tiO = GestureGlobals.gw_public::timelines[id]//ts.tiO;
+			tiO = GestureGlobals.gw_public::timeline//ts.tiO;
 			
 			initGesture();
          }
@@ -87,81 +87,6 @@ package com.gestureworks.core
          public function initGesture():void 
          {
 			//if(traceDebugMode) trace("create touchsprite gesture");
-			initGestureAnalysis();
-		}
-		
-		/**
-		* @private
-		*/
-		public function initGestureAnalysis():void //clusterObject:Object
-		{
-			//if (traceDebugMode) trace("init gesture analysis", touchObjectID);
-			
-			// configure gesturelist from listener attachment
-			//if (hasEventListener(GWGestureEvent.DRAG)) trace("has drag listener");
-			//hasEventListener(GWGestureEvent.SCALE, scaleHandeler);
-			//hasEventListener(GWGestureEvent.ROTATE, rotateHandeler);
-			
-			// analyze for descrete gesture sequence/series
-			gesture_disc = new TemporalMetric(id);
-			
-			
-			//initTimeline(); // must init after parsing
-			// analyze for gesture conflict/compliment
-		}
-		
-		/**
-		* @private
-		*/
-		public function initTimeline():void
-		{
-			gn = gO.pOList.length;
-			for (key=0; key < gn; key++) 
-			//for (key in gO.pOList)
-			{
-				
-				if (!tiO.timelineOn)
-				{
-					if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")||(gO.pOList[key].gesture_type == "hold"))
-					{
-						tiO.timelineOn = true;
-						tiO.pointEvents = true;
-						tiO.gestureEvents = true; // for gesutre feedback
-						tiO.timelineInit = true;
-						GestureGlobals.timelineHistoryCaptureLength = 80;
-						tapOn = true;
-					}
-					else if ((gO.pOList[key].gesture_type == "motion_tap") || (gO.pOList[key].gesture_type == "motion_hold"))
-					{
-						tiO.timelineOn = true;
-						//tiO.pointEvents = true;
-						tiO.gestureEvents = true; // for gestute feedback
-						tiO.timelineInit = true;
-						GestureGlobals.timelineHistoryCaptureLength = 80;
-						tapOn = true;
-					}
-				}
-				
-				
-				//MAKE GML PROGRAMMABLE SET GLOBAL POINT HISTORY
-				if (gO.pOList[key].gesture_type == "stroke") GestureGlobals.pointHistoryCaptureLength = 150; // define in GML
-
-				//trace("tsgesture, timelineon:",tiO.timelineOn, tiO.timelineInit);
-			}	
-			//trace("init timeline",tapOn,tiO.timelineOn);
-		}
-		
-		/**
-		* @private
-		*/
-		//////////////////////////////////////////////////////
-		// currently not used
-		// intended for non tap gestures that require timeline 
-		// analysis like gesture sequencing
-		//////////////////////////////////////////////////////
-		private function updateTimelineGestureAnalysis():void
-		{
-			gesture_disc.findTimelineGestures();
 		}
 		
 		/**
@@ -175,15 +100,7 @@ package com.gestureworks.core
 			// ONLY IF GESTURE EVENTS ARE ACTIVE
 			if (ts.gestureEvents)
 			{
-				gn = gO.pOList.length;
-				
 				dispatchMode();
-				
-					//processKineMetric(); // will move here eventually
-					//processGeoMetric();
-					processVectorMetric();
-					processTemoralMetric();
-				
 				dispatchGestures();
 				dispatchReset();
 			}
@@ -193,14 +110,6 @@ package com.gestureworks.core
 		////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////
-		
-		/**
-		* @private
-		*/
-		public function onTouchEnd(event:TouchEvent):void
-		{
-			//trace("touch end");
-		}
 		
 		public function dispatchMode():void 
 		{
@@ -291,262 +200,9 @@ package com.gestureworks.core
 				}
 		}
 		
-		public function processVectorMetric():void {
-			
-			//trace("process vector metric");
-			
-			var strokeCalled:Boolean = false;
-			
-			for (key = 0; key < gn; key++) 
-			{
-				//if (ts.gestureList[gO.pOList[key].gesture_id])||(ts.gestureList[gO.pOList[key].gesture_set_id])) so can validate set
-				//{
-					if (gO.pOList[key].gesture_type == "stroke")
-						{
-							if ((ts.cO.remove) && (!gO.pOList[key].complete)&&(!strokeCalled)) 
-								{
-								//trace("find stroke..", cO.path_data, cO.history[0].path_data);
-												
-								var pn:uint = sO.path_n;
-								// MAKES SURE PATH IS LONG ENOUGHT TO RESAMPLE
-								if (pn > 60)
-								{
-									ts.tc.cluster_vectormetric.normalizeSamplePath();
-									ts.tc.cluster_vectormetric.findStrokeGesture();
-									strokeCalled = true;
-									//trace("touch gesture call stroke analysis");
-								}
-								//else ts.tc.cluster_vectormetric.resetPathProperties();
-							}
-						gO.pOList[key].complete = true;
-						}
-						
-					if (gO.pOList[key].gesture_type == "path")
-						{
-							//trace("find path data");
-							// path layout tool
-							// resample based on number of touch object in group
-							// return point list to peg objects on path
-						}
-				//}
-			}
-		}
-		
-		// needs to move to touchsprite cluster
-		public function processTemoralMetric():void {
-			
-			var tapCalled:Boolean = false; // prevents multi gesture search
-			var dtapCalled:Boolean = false;
-			var ttapCalled:Boolean = false;
-			
-			
-		//	trace("process temporalmetric");
-			
-			//gn = gO.pOList.length;
-			for (key=0; key < gn; key++) 
-			//for (key in gO.pOList)
-					{
-						
-					//if (ts.gestureList[gO.pOList[key].gesture_id])||(ts.gestureList[gO.pOList[key].gesture_set_id]))// so can vaidate set
-					if (ts.gestureList[gO.pOList[key].gesture_id])
-					{
-						if ((gO.pOList[key].algorithm_class == "temporalmetric") && (gO.pOList[key].algorithm_type == "discrete"))
-						{	
-						
-								
-						///////////////////////////////////////////////
-						// HOLD GESTURE// type hold
-						///////////////////////////////////////////////
-							
-						if (gO.pOList[key].gesture_type == "hold")
-						{
-							//trace("process hold")
-							//gO.pOList[key].dispatchEvent = false;
-								
-								if (gO.pOList[key].algorithm == "hold")
-								{	
-								gesture_disc.findLockedPoints(key);	
-										
-									if (!sub_cO.hold_n)	gO.pOList[key].activeEvent = false;
-									else {
-										gO.pOList[key].activeEvent = true;
-										//gO.pOList[key].dispatchEvent = true;
-										//trace("dispatch----------------------------------", gO.pOList[key].dispatchEvent);
-										}
-								}
-						}
-						///////////////////////////////////////////////	
-							
-							
-						//trace("TEMPROAL METRIC");
-						// SEARCH FOR EVENT MATCH LIST	
-						
-						// AVOIDS THE NEED TO HAVE MORE EVENTS AND LISTENERS IN THE DISPLAY LIST
-						// DO NOT LISTEN INSTEAD LOOK FOR EVIDENCE ON TIMELINE
-						
-						//search for touch end events on timeline						
-
-						if ((gO.pOList[key].match_TouchEvent == "gwTouchEnd" || gO.pOList[key].match_TouchEvent == "touchEnd")|| (gO.pOList[key].match_GestureEvent == "tap") )
-						{
-							if ((tiO.pointEvents) && (tiO.frame.pointEventArray))
-							{
-								
-							// in current frame
-							for (var j:int = 0; j < ts.tiO.frame.pointEventArray.length; j++) 
-									{
-									if (tiO.frame.pointEventArray[j].type == "gwTouchEnd" || tiO.frame.pointEventArray[j].type == "touchEnd") 
-									{
-										//trace("touch end")
-									
-										//FIND TOUCHBEGIN/TOUCHEND PAIRS
-										if ((tapOn) && (!tapCalled))
-										if((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")){
-										{	
-											//gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], gO.pOList[key].gesture_id) ; // tap event pairs
-											gesture_disc.findGestureTap(tiO.frame.pointEventArray[j], key) ; // tap event pairs
-											tapCalled = true; // if called by another gesture using tap do not call again
-											//trace("trace find tap",gO.pOList[key].gesture_id);
-										}
-										}
-									}
-									}
-							}
-						}
-						
-
-						if (gO.pOList[key].match_GestureEvent == "tap") 
-						{
-							
-								if (tiO.history.length>=1)
-								{
-								for (var k:int = 0; k < tiO.history[0].gestureEventArray.length; k++) 
-									{
-										if (tiO.history[0].gestureEventArray[k].type == "tap" ) {
-											
-											// FIND TAP EVENT PAIRS
-											if ((gO.pOList[key].gesture_type == "double_tap") && (!dtapCalled))	
-											{
-												//gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
-												gesture_disc.findGestureDoubleTap(tiO.history[0].gestureEventArray[k], key);
-												dtapCalled = true;
-											}
-											
-											// FIND TAP EVENT TRIPLETS
-											if ((gO.pOList[key].gesture_type == "triple_tap")&& (!ttapCalled))
-											{
-												//gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], gO.pOList[key].gesture_id);
-												gesture_disc.findGestureTripleTap(tiO.history[0].gestureEventArray[k], key);
-												ttapCalled = true;
-											}
-											
-											//???????????????????????????????????????????
-											// find hold and tap event pairs??
-											//if ((gO.pOList[key].gesture_type == "hold_tap")&& (!htapCalled))
-											//{
-												//gesture_disc.findGestureHoldTap(tiO.history[0].gestureEventArray[k], key);
-												//htapCalled = true;
-											//}
-										}
-									}
-								}
-							
-						}	
-						
-						///////////////////////////////////////////////////////////////////////////
-						// generic event pair search
-						
-						// IF EVENT B OCCURES
-						// GO BACK AND LOOK FOR EVENT A
-						//????????????????????????????????????????????????
-						//if (gO.pOList[key].match_gestureEvent == "hold") 
-						//{
-							
-						//}
-						///////////////////////////////////////////////////////////////////////////	
-						
-						
-						/////////////////////////////////////////////////////////////////////////////////////////////
-						/////////////////////////////////////////////////////////////////////////////////////////////
-					
-						/////////////////////////////////////////////////////////////////////////////////////////////////
-						// process discrete gestures batches for dispatch
-						/////////////////////////////////////////////////////////////////////////////////////////////////
-						if ((gO.pOList[key].dispatch_mode == "batch"))
-							{
-									//tap counter
-									if (gO.pOList[key].gesture_type == "tap") 
-									{
-										//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
-										if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval ) gO.pOList[key].timer_count = 0;
-										
-										if (gO.pOList[key].timer_count == 0) {
-											//gesture_disc.countTapEvents(gO.pOList[key].gesture_id);
-											gesture_disc.countTapEvents(key);
-											//trace("count tap",gO.pOList[key].timer_count);
-											//trace("d mode", gO.pOList[key].dispatchEvent);
-											//
-											//DIPATCH EVENT LOCKES AND IS NOT ACTIVATED IN COUNT TAP EVENTS??
-											//
-									
-										}
-										gO.pOList[key].timer_count++
-									}
-									// double tap counter
-									if (gO.pOList[key].gesture_type == "double_tap") 
-									{
-										//if (gO.pOList[key].timer_count > Math.ceil(gO.pOList[key].dispatch_interval * GestureWorks.application.frameRate * 0.001)) gO.pOList[key].timer_count = 0;
-										if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
-										
-										if (gO.pOList[key].timer_count == 0) {
-											//gesture_disc.countDoubleTapEvents(gO.pOList[key].gesture_id);
-											gesture_disc.countDoubleTapEvents(key);
-											//trace("count dtap",gO.pOList[key].timer_count);
-										}
-										gO.pOList[key].timer_count++
-									}
-													
-									// triple tap counter
-									if (gO.pOList[key].gesture_type == "triple_tap") 
-									{
-										if (gO.pOList[key].timer_count > gO.pOList[key].dispatch_interval) gO.pOList[key].timer_count = 0;
-										
-										if (gO.pOList[key].timer_count == 0) {
-											//gesture_disc.countTripleTapEvents(gO.pOList[key].gesture_id);
-											gesture_disc.countTripleTapEvents(key);
-											//trace("count dtap",gO.pOList[key].timer_count);
-										}
-										gO.pOList[key].timer_count++
-									}
-									
-									//trace("d mode",gO.pOList[key].dispatchEvent);
-							}
-							
-							///////////////////////////
-							// goes through current frame and dispatched current tap double tap and triple tap events direct from timeline.
-							/*
-							if ((gO.pOList[key].dispatch_mode == "stream"))
-							{
-								var gestureEventArray:Array = tiO.frame.gestureEventArray
-								
-								for (var p:int = 0; p < gestureEventArray.length; p++)
-									{
-									if((gO.pOList[key].gesture_type=="tap")||(gO.pOList[key].gesture_type=="double_tap")||(gO.pOList[key].gesture_type=="triple_tap")){
-									if (gO.pOList[key].gesture_type == gestureEventArray[p].type) dispatchEvent(gestureEventArray[p]);	
-									}
-									}
-							}
-							*/
-							
-							
-							
-							
-							
-						}
-					}
-				}
-		}
-		
-		
+		/**
+		* @private
+		*/
 		
 		public function dispatchReset():void 
 		{
@@ -652,7 +308,7 @@ package com.gestureworks.core
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.START, {id:gO.id}));
-				if(tiO.timelineOn && ts.tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
+				//if(tiO.timelineOn && ts.tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.START, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
 				gO.start = false;
 				//trace("start fired",cO.x,cO.y);
 			}
@@ -678,7 +334,7 @@ package com.gestureworks.core
 			if ((gO.release)&&(ts.gestureEventRelease))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id}));
-				if (tiO.timelineOn && tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
+				//if (tiO.timelineOn && tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.RELEASE, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
 				gO.release = false;
 				//trace("release fired",cO.x,cO.y);
 			}
@@ -687,7 +343,7 @@ package com.gestureworks.core
 			if ((gO.complete)&&(ts.gestureEventComplete))
 			{
 				ts.dispatchEvent(new GWGestureEvent(GWGestureEvent.COMPLETE,{id:gO.id}));
-				if(tiO.timelineOn && tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
+				//if(tiO.timelineOn && tiO.gestureEvents && tiO.frame.gestureEventArray)	tiO.frame.gestureEventArray.push(new GWGestureEvent(GWGestureEvent.COMPLETE, {id:gO.id,x:ts.cO.position.x,y:ts.cO.position.y}));
 				gO.complete = false;
 				//trace("complete fired",cO.x,cO.y);
 			}
@@ -697,52 +353,14 @@ package com.gestureworks.core
 			gO.complete = false;	
 			
 			
-			manageTimeline();
+			//--manageTimeline();
 			//traceTimeline();
 		}
 		
-		public function traceTimeline():void
-		{
-			if (ts.tiO.frame)
-			{
-				var gn:int = ts.tiO.frame.gestureEventArray.length
-				var tn:int = ts.tiO.frame.pointEventArray.length
-				var cn:int = ts.tiO.frame.clusterEventArray.length
-				
-				for (var j:uint = 0; j <gn ; j++) 
-				{
-					trace("timeline object gesture event:", ts.tiO.frame.gestureEventArray[j].type);
-				}
-				for (var k:uint = 0; k <tn ; k++) 
-				{
-					trace("timeline object touch event:", ts.tiO.frame.pointEventArray[k].type);
-				}
-				for (var p:uint = 0; p <cn ; p++) 
-				{
-					trace("timeline object cluster event:", ts.tiO.frame.clusterEventArray[p].type);
-				}
-			}
-			//trace("timeline on?",tiO.timelineOn)
-		}
-		
-		
-		public function manageTimeline():void 
-		{	
-			// MANAGE TIMELINE
-			if (tiO.timelineOn)
-			{
-				//if (traceDebugMode) trace("timeline frame update");
-				TimelineHistories.historyQueue(tiO);		// push histories
-				
-				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
-				//tiO.frame = PoolManager.frameObject;
-			}
-			else {
-				//tiO.frame = PoolManager.frameObject;
-				tiO.frame = new FrameObject();				
-			}
-		}
-		
+
+		/**
+		* @private
+		*/
 		public function constructGestureEvents(key:uint):void 
 		{
 		
@@ -869,7 +487,7 @@ package com.gestureworks.core
 								ts.dispatchEvent(GWEVENT);
 								//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
 								//if ((tiO.timelineOn) && (tiO.gestureEvents))	
-								if (ts.tiO.frame.gestureEventArray) ts.tiO.frame.gestureEventArray.push(GWEVENT);
+								//----if (ts.tiO.frame.gestureEventArray) ts.tiO.frame.gestureEventArray.push(GWEVENT);
 								//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							}
 							

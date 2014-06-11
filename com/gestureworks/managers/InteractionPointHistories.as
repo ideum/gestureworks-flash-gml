@@ -81,6 +81,8 @@ package com.gestureworks.managers
 				object.fn = ipo.fn;
 				object.fist = ipo.fist;
 				
+				//object.age = ipo.age;
+				
 			//	trace(ipo.history.length)
 				
 			

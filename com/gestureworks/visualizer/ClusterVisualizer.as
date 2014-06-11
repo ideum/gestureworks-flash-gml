@@ -198,7 +198,7 @@ package com.gestureworks.visualizer
 	{
 		//trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
 		//if (ipn)
-		for each (var iPointCluster in iPointClusterList) 
+		for each (var iPointCluster:ipClusterObject in iPointClusterList) 
 		
 			var ipn:int = iPointCluster.ipn;
 			{
@@ -419,7 +419,7 @@ package com.gestureworks.visualizer
 	private function drawSubClusterDims():void
 	{	
 		//trace("draw",ipn,scn)
-		for each (var iPointCluster in iPointClusterList) 
+		for each (var iPointCluster:ipClusterObject in iPointClusterList) 
 				{
 				if (iPointCluster.mode=="motion" && iPointCluster.active)
 				{
