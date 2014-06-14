@@ -174,22 +174,17 @@ package com.gestureworks.managers
 			// ADD TO POINT LIST OF GLOBAL TOUCH OBJECT
 			var tpO:TouchPointObject  = new TouchPointObject();
 					
-					if (!tpO.size) tpO.size = new Vector3D();
-					if (!tpO.position) tpO.position = new Vector3D();
-			
 					tpO.id = touchPointCount; 
 					tpO.touchPointID = event.touchPointID;
-					tpO.position.x = event.stageX;
-					tpO.position.y = event.stageY;
-					tpO.position.z = event.stageZ;
-					tpO.size.x = event.sizeX;
-					tpO.size.y = event.sizeY;
+			
+					if (!tpO.size) tpO.size = new Vector3D(event.sizeX,event.sizeY);
+					if (!tpO.position) tpO.position = new Vector3D(event.stageX,event.stageY,event.stageZ);
 					tpO.pressure = event.pressure;
 					//tpO.phase = "begin";
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
 					touchArray.push(tpO);
-					touchPointCount++;//touchPointCount++;
+					touchPointCount++;
 					
 					// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY/////////
 					touchPoints[tpO.touchPointID] = tpO;
@@ -212,7 +207,7 @@ package com.gestureworks.managers
 			if (!touchArray) touchArray = new Vector.<TouchPointObject> 
 			
 			
-			var tpO:TouchPointObject = new TouchPointObject();
+			var tpO:TouchPointObject = new TouchPointObject();//????????
 					tpO.id = gs.touchPointCount; 
 					tpO.touchPointID = pt.touchPointID;
 					tpO.position = pt.position;
@@ -223,8 +218,7 @@ package com.gestureworks.managers
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
 					touchArray.push(pt);//tpO
-					touchPointCount++;//touchPointCount++;
-					//trace("push touch point");
+					touchPointCount++;
 				
 					// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY/////////
 					touchPoints[pt.touchPointID] = pt//tpO;
@@ -305,20 +299,12 @@ package com.gestureworks.managers
 			
 				if (tpO)
 				{	
-					if (!tpO.size) tpO.size = new Vector3D();
-					if (!tpO.position) tpO.position = new Vector3D();
+					if (!tpO.size) tpO.size = new Vector3D(event.sizeX,event.sizeY);
+					if (!tpO.position) tpO.position = new Vector3D(event.stageX,event.stageY,event.stageZ);
 					
-					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
-					//tpO.id  = //event.id;
 					tpO.touchPointID  = event.touchPointID;
-					tpO.position.x = event.stageX;
-					tpO.position.y = event.stageY;
-					tpO.position.z = event.stageZ;
-					tpO.size.x = event.sizeX;
-					tpO.size.y = event.sizeY;
 					//tpO.pressure = event.pressure;
 					tpO.moveCount ++;
-					//trace( tpO.moveCount);
 				}
 				
 				// UPDATE POINT HISTORY 

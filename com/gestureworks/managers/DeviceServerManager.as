@@ -77,7 +77,7 @@ package com.gestureworks.managers
 			//////////////////////////////////////////////////
 			if (GestureWorks.activeTouch) 
 			{
-				touchManagerSocket = new Touch2DSManager(); 
+				//touchManagerSocket = new Touch2DSManager(); 
 			}
 			if (GestureWorks.activeMotion)
 			{
@@ -202,7 +202,10 @@ package com.gestureworks.managers
 									//trace("pq finger", message.InputPoint.Values.Finger);//FINGER
 									//trace("pq stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
 									//trace("pq fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									
+									//trace(message.InputPoint.Values);
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									Touch2DSManager.processTouch2DSocketData(message.InputPoint.Values);
 									//trace("in pq")
 								}
 								//3M////////////////////////////////////////////////////////
@@ -210,7 +213,10 @@ package com.gestureworks.managers
 									trace("3m finger", message.InputPoint.Values.Finger);//FINGER
 									trace("3m stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
 									trace("3m fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									Touch2DSManager.processTouch2DSocketData(message.InputPoint.Values);
+									
 								}
 								
 								//ZYTRONIC//////////////////////////////////////////////////
@@ -218,7 +224,7 @@ package com.gestureworks.managers
 								
 								if (deviceType == "Android" && inputType == "Points2d"){//WORKS
 									//trace("Android finger touch", message.InputPoint.Values.Finger);
-									touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
 								}
 							}
 							

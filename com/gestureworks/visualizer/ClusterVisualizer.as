@@ -364,7 +364,10 @@ package com.gestureworks.visualizer
 									}
 									
 								}	
-								if (ipt.type == "finger_dynamic")//finger
+								
+								//trace("Cluster ip vis", ipt.type)
+								
+								if (ipt.type == "finger_dynamic"|| ipt.type == "finger")//finger
 								{
 									// sensor center
 									graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);

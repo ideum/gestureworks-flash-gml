@@ -40,6 +40,7 @@ package com.gestureworks.visualizer
 	import com.gestureworks.objects.SensorPointObject;
 	import com.gestureworks.objects.MotionPointObject;
 	import com.gestureworks.objects.TouchPointObject;
+	import com.gestureworks.objects.InteractionPointObject;
 	
 	
 	import com.gestureworks.utils.AddSimpleText;
@@ -52,12 +53,13 @@ package com.gestureworks.visualizer
 		private var touchArray:Vector.<TouchPointObject>;
 		private var motionArray:Vector.<MotionPointObject>;
 		private var sensorArray:Vector.<SensorPointObject>;
+		private var ipArray:Vector.<InteractionPointObject>;
 		
 		private var gs:CoreSprite;
 		private var tpn:uint = 0;
 		private var mpn:uint = 0;
 		private var spn:uint = 0;
-		//private var ipn:uint = 0;
+		private var ipn:uint = 0;
 		
 		
 		private var mptext_array:Array = new Array();
@@ -89,6 +91,7 @@ package com.gestureworks.visualizer
 			sensorArray = GestureGlobals.gw_public::sensorArray;
 			
 			motionPoints = GestureGlobals.gw_public::motionPoints;
+			ipArray = GestureGlobals.gw_public::iPointArray;
 			//hist = 8;
 			
 			
@@ -150,6 +153,12 @@ package com.gestureworks.visualizer
 			if (sensorArray) spn = sensorArray.length;
 			else spn = 0;
 			
+			//global ip arry
+			if (ipArray) ipn = ipArray.length;
+			else ipn = 0;
+			
+			//trace("ipn",ipn);
+			
 			// clear graphics
 			graphics.clear();
 			
@@ -157,7 +166,8 @@ package com.gestureworks.visualizer
 			if (GestureWorks.activeTouch && tpn)		draw_touchPoints();
 			if (GestureWorks.activeMotion && mpn)		draw_motionPoints();
 			if (GestureWorks.activeSensor && spn)		draw_sensorPoints();
-
+			
+			if (ipn) draw_interactionPoints();
 		}
 		
 		
@@ -479,7 +489,31 @@ package com.gestureworks.visualizer
 						
 					}
 	}
-			
+	
+	
+	
+	
+		////////////////////////////////////////////////////////////
+		//interaction points
+		////////////////////////////////////////////////////////////
+		public function draw_interactionPoints():void
+		{
+				for (var b:uint = 0; b < ipn; b++) 
+				{
+					var pt:InteractionPointObject = ipArray[b] as InteractionPointObject;
+					var x:Number = pt.position.x;
+					var y:Number = pt.position.y;
+					
+					//trace("ip vis",pt,x,y)
+					
+					graphics.lineStyle(1, 0x888888, 1);							
+					graphics.beginFill(0xFFFFFF, style.fill_alpha);
+					graphics.drawCircle(x, y, style.radius);
+					graphics.endFill();
+				}
+		}	
+	
+	
 	public function clear():void
 	{
 			//trace("trying to clear");

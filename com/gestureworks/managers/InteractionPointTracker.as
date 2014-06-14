@@ -84,7 +84,7 @@ package com.gestureworks.managers
 					
 						for each(fp in temp_framePoints)
 						{
-							if (fp.source == "native") 
+							if (fp.source == "native" ) //||fp.source == "server" 
 							{
 							//trace(ap.type)
 							
@@ -93,7 +93,7 @@ package com.gestureworks.managers
 							
 							else if (ap.type == fp.type) 
 							{
-								if (ap.type == "finger_dynamic")
+								if (ap.type == "finger_dynamic" )//||ap.type == "finger"
 								{
 									if (dist < 10) found = true; //FINGER SEP
 								}
@@ -121,7 +121,10 @@ package com.gestureworks.managers
 							
 							
 							//InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
-							InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
+							//InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
+							
+							InteractionManager.onInteractionEndPoint(ap); 
+							
 							//trace("ended with this:",dist)
 							//if (debug) 
 							//trace("an!=0 REMOVED:-------------------------------------------", ap.id, ap.interactionPointID, ap.type, ap.position);
@@ -242,31 +245,6 @@ package com.gestureworks.managers
 						}
 					}
 					*/
-					
-					////////////////////////////////////////////////////////////////////
-					// MANAGE SERVER INTERACTION POINTS AS FULLY LIFE CYCLCED ON ENTRY
-					for each(fp in temp_framePoints)
-					{
-						if (fp.source == "server") 
-						{
-							if (fp.phase == "begin")
-							{
-								fp.init_position = new Vector3D(fp.position.x, fp.position.y, 0);
-								InteractionManager.onInteractionBeginPoint(fp);
-							}
-							else if (fp.phase == "update")
-							{
-								InteractionManager.onInteractionUpdatePoint(fp);
-							}
-							else if (fp.phase == "end")
-							{
-								InteractionManager.onInteractionEndPoint(fp.interactionPointID);
-							}
-							
-							activePoints.push(fp);
-						}
-					}
-	
 		}
 		
 			
