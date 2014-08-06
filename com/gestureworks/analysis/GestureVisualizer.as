@@ -324,11 +324,7 @@ package com.gestureworks.analysis
 									var dx:Number;
 									var dy:Number;
 									
-<<<<<<< HEAD
-									trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
-=======
 								//	trace("draw gesture event:",gestureEventArray[j],gestureEventArray[j].type, x, y);
->>>>>>> oe-4.1.0
 									
 									
 									//if (gestureEventArray[j].type =="manipulate")

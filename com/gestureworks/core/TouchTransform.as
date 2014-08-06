@@ -460,11 +460,8 @@ package com.gestureworks.core
 					
 					ref_frame_angle = angle;
 					var scalex:Number = parent_modifier.a / Math.cos(angle);
-<<<<<<< HEAD
 					var scaley:Number = parent_modifier.a / Math.cos(angle);
-=======
 					var scaley:Number = scalex//parent_modifier.a / Math.cos(angle);
->>>>>>> oe-4.1.0
 					
 					// TRANSFORM AFFINE POINT
 					var pt:Point;
@@ -545,11 +542,8 @@ package com.gestureworks.core
 				////////////////////////////////////////////////////
 				// flash 2.5D only
 				// HAVING 3D MATRIX PASS THROUGH ENABLES ROTATEXYZ TO PASS THROUGH
-<<<<<<< HEAD
-				else if (ts.transform.matrix3D)// check for 3D matrix,
-=======
+
 				if (ts.transform.matrix3D)// check for 3D matrix,
->>>>>>> oe-4.1.0
 				{							
 					// get the projection offset created by the z-position	
 					if (ts.transform.perspectiveProjection) // ts can define location projection
@@ -569,12 +563,9 @@ package com.gestureworks.core
 				//////////////////////////////////////////////////////
 				// 2d display object only
 				else
-				{
-<<<<<<< HEAD
-					dtheta *= DEG_RAD; // new 
-=======
+				{					
 					//dtheta *= DEG_RAD; // new 
->>>>>>> oe-4.1.0
+					
 					affine_modifier = ts.transform.matrix;
 					//affine_modifier = ts.transform.matrix3D;
 						affine_modifier.translate( - t_x, - t_y);
@@ -587,12 +578,8 @@ package com.gestureworks.core
 
 				updateLocalProperties();
 				
-<<<<<<< HEAD
 				if (ts.vto)
 					ts.updateVTO();	
-=======
-				if (ts.vto) ts.updateVTO();	
->>>>>>> oe-4.1.0
 			}
 		}
 		
