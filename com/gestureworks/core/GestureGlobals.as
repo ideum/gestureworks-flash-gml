@@ -101,7 +101,7 @@ package com.gestureworks.core
 		/**
 		 * point history capture length
 		 */		
-		public static var pointHistoryCaptureLength:int = 2;//int.MAX_VALUE
+		public static var pointHistoryCaptureLength:int = 8;//int.MAX_VALUE
 		
 		/**
 		 * cluster history capture length
