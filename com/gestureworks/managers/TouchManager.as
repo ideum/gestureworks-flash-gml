@@ -767,6 +767,71 @@ package com.gestureworks.managers
 				}
 		}
 		
+		/**
+		 * Removes all points from touch object
+		 * @param	obj touch object
+		 * @return  removed points
+		 */
+		public static function forceRelease(obj:ITouchObject):Vector.<PointObject> {			
+			
+			//current points registered to object
+			var removed:Vector.<PointObject> = obj.pointArray.concat();;  	
+			var event:GWTouchEvent;
+			
+			//if object has registered points...,
+			if (removed.length) {
+				
+				//...remove each point
+				for each(var point:PointObject in removed) {
+					
+					//touch end event
+					event = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, point.touchPointID);					
+					
+					//update event timelines
+					if (obj.tiO) {
+						obj.tiO.frame.pointEventArray.push(event);
+					}
+					
+					//remove point from local list
+					obj.pointArray.splice(point.id, 1);
+					
+					//decrement point count
+					obj.pointCount--;
+					
+					//update object
+					updateTouchObject(obj);
+					
+					//delete point when assigned to this object only
+					if (point.objectList.length == 1) {
+						delete points[point.touchPointID];
+					}
+				
+				}			
+			}			
+			return removed; 
+		}
+		
+		/**
+		 * Transfer points from one object to another
+		 * @param	source  object to remove points from
+		 * @param	destination  object to transfer points to
+		 */
+		public static function transferPoints(source:ITouchObject, destination:ITouchObject):void {
+			
+			//remove points registerd to source object
+			var transfer:Vector.<PointObject> = forceRelease(source);
+			var event:GWTouchEvent;
+			
+			//generate a touch event on the destination object for each point
+			for each(var point:PointObject in transfer) {
+				event = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, point.touchPointID);
+				event.source = TouchEvent;
+				event.target = destination;
+				event.stageX = point.x;
+				event.stageY = point.y;
+				onTouchDown(event);
+			}
+		}
 		
 	}
 }
