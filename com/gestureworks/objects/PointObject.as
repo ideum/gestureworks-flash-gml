@@ -105,6 +105,10 @@ package com.gestureworks.objects
 		// object
 		public var object:ITouchObject;
 
+		/**
+		 * Object that triggered touch event
+		 */
+		public var originator:ITouchObject;
 		
 		///////////////////////////////////////////////////////
 		// list of objects that are given copy of touch point

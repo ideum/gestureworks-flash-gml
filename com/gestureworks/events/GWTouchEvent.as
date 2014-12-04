@@ -119,6 +119,9 @@ package com.gestureworks.events
 		public function set target(v:Object):void { _target = v; }
 		override public function get target():Object { return _target; }
 		
+		private var _originator:Object;
+		public function get originator():Object { return _originator; }
+		
 		private var _type:String;
 		public function set type(v:String):void { _type = v; }
 		override public function get type():String { return _type; }
@@ -169,6 +172,7 @@ package com.gestureworks.events
 		private function importEvent(event:Event):void
 		{ 
 			sourceEvent = event;
+			_originator = event.target;
 			source = getDefinitionByName(getQualifiedClassName(event)) as Class;
 			var sourceInfo:XML = describeType(event);
 			var prop:XML;
