@@ -467,6 +467,7 @@ package com.gestureworks.managers
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = target; // sets primary touch object/cluster
+				pointObject.originator = event.originator as ITouchObject;
 				pointObject.id = target.pointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
@@ -768,14 +769,12 @@ package com.gestureworks.managers
 		}
 		
 		/**
-		 * Removes all points from touch object
-		 * @param	obj touch object
-		 * @return  removed points
+		 * Removes specified points from touch object
+		 * @param	obj  object to remove points from
+		 * @param	points  points to remove from object
 		 */
-		public static function forceRelease(obj:ITouchObject):Vector.<PointObject> {			
-			
-			//current points registered to object
-			var removed:Vector.<PointObject> = obj.pointArray.concat();;  	
+		public static function removePoints(obj:ITouchObject, points:Vector.<PointObject>) {
+			var removed:Vector.<PointObject> = points.concat();
 			var event:GWTouchEvent;
 			
 			//if object has registered points...,
@@ -793,7 +792,8 @@ package com.gestureworks.managers
 					}
 					
 					//remove point from local list
-					obj.pointArray.splice(point.id, 1);
+					obj.pointArray.splice(obj.pointArray.indexOf(point), 1);
+					obj.tpn = obj.pointArray.length;
 					
 					//decrement point count
 					obj.pointCount--;
@@ -806,20 +806,30 @@ package com.gestureworks.managers
 						delete points[point.touchPointID];
 					}
 				
-				}			
+				}
 			}			
-			return removed; 
+			return removed;			
 		}
+		
+		/**
+		 * Removes all points from touch object
+		 * @param	obj touch object
+		 * @return  removed points
+		 */
+		public static function forceRelease(obj:ITouchObject):Vector.<PointObject> {			
+			return removePoints(obj, obj.pointArray);
+		}				
 		
 		/**
 		 * Transfer points from one object to another
 		 * @param	source  object to remove points from
 		 * @param	destination  object to transfer points to
+		 * @param   points  points to transfer; if null, all points are transferred
 		 */
-		public static function transferPoints(source:ITouchObject, destination:ITouchObject):void {
+		public static function transferPoints(source:ITouchObject, destination:ITouchObject, points:Vector.<PointObject> = null):void {
 			
 			//remove points registerd to source object
-			var transfer:Vector.<PointObject> = forceRelease(source);
+			var transfer:Vector.<PointObject> = points ? points : forceRelease(source);
 			var event:GWTouchEvent;
 			
 			//generate a touch event on the destination object for each point
