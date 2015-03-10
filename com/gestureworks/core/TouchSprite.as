@@ -1025,9 +1025,9 @@ package com.gestureworks.core
 		public function get scale():Number{return _scale;}
 		public function set scale(value:Number):void
 		{
-			_scale = value < minScale ? minScale : value > maxScale ? maxScale : value;
-			scaleX = scale;
-			scaleY = scale;
+			_scale = value;
+			scaleX = _scale;
+			scaleY = _scale;
 		}					
 		
 		// affine transform point  

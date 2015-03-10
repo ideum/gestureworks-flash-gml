@@ -773,7 +773,7 @@ package com.gestureworks.managers
 		 * @param	obj  object to remove points from
 		 * @param	points  points to remove from object
 		 */
-		public static function removePoints(obj:ITouchObject, points:Vector.<PointObject>) {
+		public static function removePoints(obj:ITouchObject, points:Vector.<PointObject>):Vector.<PointObject> {
 			var removed:Vector.<PointObject> = points.concat();
 			var event:GWTouchEvent;
 			

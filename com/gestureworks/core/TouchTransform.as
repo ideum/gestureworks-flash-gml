@@ -18,7 +18,9 @@ package com.gestureworks.core
 	import com.gestureworks.events.GWTransformEvent;
 	import com.gestureworks.interfaces.ITouchObject3D;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.GestureListObject;
+	import com.gestureworks.objects.GestureObject;
 	import com.gestureworks.objects.TransformObject;
 	import flash.geom.*;
 	import flash.geom.Matrix3D;
@@ -86,73 +88,55 @@ package com.gestureworks.core
 		}
 		
 		public function updateTransformLimits():void 
-        {
-			//dO.target_id = "dsx";
-			
-			var gn:uint = gO.pOList.length;
-			
-			for (var i:uint=0; i < gn; i++) 
-					{
-						var dn1:uint = gO.pOList[i].dList.length;
-						for (var j:uint=0; j < dn1; j++) 
-							{
-							if (gO.pOList[i].dList[j].target_id)
-								{
-									// map transform limits
-									if (gO.pOList[i].dList[j].target_id == "dx") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minX = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxX = gO.pOList[i].dList[j].property_max; 
-									}
-									if (gO.pOList[i].dList[j].target_id == "dy") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minY = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxY = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dz") 
-									{
-										if (gO.pOList[i].dList[j].property_min)	ts.minZ = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max)	ts.maxZ = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dsx") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minScaleX = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxScaleX = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dsy") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minScaleY = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxScaleY = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dsz") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minScaleZ = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxScaleZ = gO.pOList[i].dList[j].property_max;
-									}
-									// map transform limits
-									if (gO.pOList[i].dList[j].target_id == "dtheta") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minRotation = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxRotation = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dthetaX") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minRotationX = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxRotationX = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dthetaY") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minRotationY = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxRotationY = gO.pOList[i].dList[j].property_max;
-									}
-									if (gO.pOList[i].dList[j].target_id == "dthetaZ") 
-									{
-										if (gO.pOList[i].dList[j].property_min) ts.minRotationZ = gO.pOList[i].dList[j].property_min;
-										if (gO.pOList[i].dList[j].property_max) ts.maxRotationZ = gO.pOList[i].dList[j].property_max;
-									}
-								}
-							}					
+        {		
+			for each(var pO:GestureObject in gO.pOList) {
+				for each(var dO:DimensionObject in pO.dList) {
+					switch(dO.target_id) {
+						case "dx":
+							ts.minX = dO.property_min;
+							ts.maxX = dO.property_max;
+							break; 
+						case "dy":
+							ts.minY = dO.property_min;
+							ts.maxY = dO.property_max;
+							break; 
+						case "dz":
+							ts.minZ = dO.property_min;
+							ts.maxZ = dO.property_max;
+							break; 
+						case "dsx":
+							ts.minScaleX = dO.property_min;
+							ts.maxScaleX = dO.property_max;
+							break; 
+						case "dsy":
+							ts.minScaleY = dO.property_min;
+							ts.maxScaleY = dO.property_max;
+							break; 
+						case "dsz":
+							ts.minScaleZ = dO.property_min;
+							ts.maxScaleZ = dO.property_max;
+							break; 
+						case "dtheta":
+							ts.minRotation = dO.property_min;
+							ts.maxRotation = dO.property_max;
+							break; 
+						case "dthetaX":
+							ts.minRotationX = dO.property_min;
+							ts.maxRotationX = dO.property_max;
+							break; 
+						case "dthetaY":
+							ts.minRotationY = dO.property_min;
+							ts.maxRotationY = dO.property_max;
+							break; 
+						case "dthetaZ":
+							ts.minRotationZ = dO.property_min;
+							ts.maxRotationZ = dO.property_max;
+							break; 
+						default:
+							break;
 					}
+				}
+			}						
 		}
 
 		/**
@@ -161,6 +145,15 @@ package com.gestureworks.core
 		*/		
 		public function updateLocalProperties():void
 		{
+			//boundary check
+			with (ts) {
+				x = x; 
+				y = y; 
+				rotation = rotation;
+				scaleX = scaleX;
+				scaleY = scaleY;
+			}
+			
 			ts.dx = 0;
 			ts.dy = 0;
 			ts.dz = 0;
@@ -180,7 +173,7 @@ package com.gestureworks.core
 				trO.obj_x = trO.transAffinePoints[4].x//_x
 				trO.obj_y = trO.transAffinePoints[4].y//_y	
 			}
-			
+						
 			trO.obj_scaleX = ts.scaleX;
 			trO.obj_scaleY = ts.scaleY;
 			trO.obj_scaleZ = ts.scaleZ;
@@ -357,16 +350,9 @@ package com.gestureworks.core
 				dthetaZ = trO.dthetaZ;	
 				
 				//native transform boundaries
-				if ((ts.x+dx < ts.minX) || (ts.x+dx > ts.maxX)) dx = 0;
-				if ((ts.y+dy < ts.minY) || (ts.y+dy > ts.maxY)) dy = 0;					
-				if ((ts.z+dz < ts.minZ) || (ts.z+dz > ts.maxZ)) dz = 0;					
 				if ((ts.scaleX+dsx < ts.minScaleX) || (ts.scaleX+dsx > ts.maxScaleX)) dsx = 0;
 				if ((ts.scaleY+dsy < ts.minScaleY) || (ts.scaleY+dsy > ts.maxScaleY)) dsy = 0;
-				if ((ts.scaleZ+dsz < ts.minScaleZ) || (ts.scaleZ+dsz > ts.maxScaleZ)) dsz = 0;
 				if ((ts.rotation+dtheta < ts.minRotation) || (ts.rotation+dtheta > ts.maxRotation)) dtheta = 0;
-				if ((ts.rotationX+dthetaX < ts.minRotationX) || (ts.rotationX+dthetaX > ts.maxRotationX)) dthetaX = 0;
-				if ((ts.rotationY+dthetaY < ts.minRotationY) || (ts.rotationY+dthetaY > ts.maxRotationY)) dthetaY = 0;
-				if ((ts.rotationZ+dthetaZ < ts.minRotationZ) || (ts.rotationZ+dthetaZ > ts.maxRotationZ)) dthetaZ = 0;
 					
 				////////////////////////////////////////////////////
 				// check for away 3D 
