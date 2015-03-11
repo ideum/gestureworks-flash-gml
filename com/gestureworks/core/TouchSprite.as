@@ -293,14 +293,21 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get traceDebugMode():Boolean{return _traceDebugMode;}
-		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
+		public function set traceDebugMode(value:Boolean):void {	_traceDebugMode = value; }
+		
+		/**
+		 * @inheritDoc
+		 */
+		private var _totalPointCount:int;
+		public function get totalPointCount():int { return _totalPointCount; }
+		public function set totalPointCount(value:int):void { _totalPointCount = value; }
 		
 		private var _pointCount:int;
 		/**
 		 * @inheritDoc
 		 */
 		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void {	_pointCount = value; }
+		public function set pointCount(value:int):void { _pointCount = value; }
 		
 		private var _motionPointCount:int;
 		/**

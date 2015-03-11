@@ -88,6 +88,10 @@ package com.gestureworks.managers
 				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);
+				
+				//UPDATES POINT COUNT ON OVER AND OUT
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_OVER, totalPointUpdate);								
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_OUT, totalPointUpdate);								
 			}
 
 			// leave this on for all input types
@@ -272,8 +276,8 @@ package com.gestureworks.managers
 		 * @param	overrideRegisterPoints
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
-		{
-			applyHooks(event);
+		{			
+			applyHooks(event);			
 			if (validTarget(event)) { 
 											
 				if (ITouchObject(event.target).registerPoints) {
@@ -284,26 +288,6 @@ package com.gestureworks.managers
 						event.target = event.target.parent;	
 						assignPoint(event);
 					}
-					//else if (event.target.targetList.length)
-					//{							
-						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						//assignPoint(event);
-						//var tgt:Object;
-						//
-						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-						//for (var i:int = 0; i < event.target.targetList.length; i++) 
-						//{
-							//tgt = event.target.targetList[i];
-							//
-							//if (!tgt is ITouchObject)
-								//tgt = virtualTouchObjects[tgt];
-							//
-							//if(tgt is ITouchObject && tgt.active){
-								//assignPointClone(event, ITouchObject(tgt));
-								//tgt.broadcastTarget = true;
-							//}
-						//}
-					//}
 					else {
 						 assignPoint(event);
 						 
@@ -329,10 +313,9 @@ package com.gestureworks.managers
 		
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:GWTouchEvent):void
-		{
+		{			
 			applyHooks(event);
-			var pointObject:Object = points[event.touchPointID];
-			
+			var pointObject:Object = points[event.touchPointID];			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
@@ -767,6 +750,19 @@ package com.gestureworks.managers
 					}
 				}
 		}
+		
+		/**
+		 * Update total point count on down/over and up/out events
+		 * @param	event
+		 */
+		public static function totalPointUpdate(event:TouchEvent):void {
+			if (event.type == TouchEvent.TOUCH_OVER || event.type == GWTouchEvent.TOUCH_OVER) {
+				ITouchObject(event.target).totalPointCount++;
+			}
+			else {
+				ITouchObject(event.target).totalPointCount--;
+			}
+		}		
 		
 		/**
 		 * Removes specified points from touch object

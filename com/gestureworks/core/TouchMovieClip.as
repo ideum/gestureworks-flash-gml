@@ -33,6 +33,7 @@ package com.gestureworks.core
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -292,7 +293,14 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get traceDebugMode():Boolean{return _traceDebugMode;}
-		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
+		public function set traceDebugMode(value:Boolean):void {	_traceDebugMode = value; }
+		
+		/**
+		 * @inheritDoc
+		 */
+		private var _totalPointCount:int;
+		public function get totalPointCount():int { return _totalPointCount; }
+		public function set totalPointCount(value:int):void { _totalPointCount = value; }
 		
 		private var _pointCount:int;
 		/**
@@ -1024,9 +1032,9 @@ package com.gestureworks.core
 		public function get scale():Number{return _scale;}
 		public function set scale(value:Number):void
 		{
-			_scale = value < minScale ? minScale : value > maxScale ? maxScale : value;
-			scaleX = scale;
-			scaleY = scale;
+			_scale = value;
+			scaleX = _scale;
+			scaleY = _scale;
 		}					
 		
 		// affine transform point  
@@ -1229,7 +1237,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function removeAllListeners():void {
-			var eCnt:int = _eventListeners.length;
+			var eCnt:int = _eventListeners ? _eventListeners.length : 0;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
 				e = _eventListeners[i];
