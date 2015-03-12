@@ -176,7 +176,7 @@ package com.gestureworks.interfaces
 		function set traceDebugMode(value:Boolean):void;
 		
 		/**
-		 * Number of points registered with object regardless of gesture activation state
+		 * Total number of points registered with object and/or child objects regardless of gesture activation state or method of registration (touch over, touch down, etc.)
 		 */
 		function get totalPointCount():int;
 		function set totalPointCount(value:int):void;

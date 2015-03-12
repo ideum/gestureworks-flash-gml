@@ -109,6 +109,8 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_OVER, totalPointUpdate);								
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_OUT, totalPointUpdate);				
 		}		
 		
 		public static function pointCount():int {

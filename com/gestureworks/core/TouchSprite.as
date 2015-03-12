@@ -300,7 +300,12 @@ package com.gestureworks.core
 		 */
 		private var _totalPointCount:int;
 		public function get totalPointCount():int { return _totalPointCount; }
-		public function set totalPointCount(value:int):void { _totalPointCount = value; }
+		public function set totalPointCount(value:int):void { 
+			if (parent && parent is ITouchObject) {
+				ITouchObject(parent).totalPointCount += value > _totalPointCount ? value -_totalPointCount : -(_totalPointCount - value);
+			}
+			_totalPointCount = value; 			
+		}
 		
 		private var _pointCount:int;
 		/**
