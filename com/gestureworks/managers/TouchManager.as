@@ -758,6 +758,9 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		public static function totalPointUpdate(event:TouchEvent):void {
+			if (!(event.target is ITouchObject)) {
+				return; 
+			}
 			if (event.type == TouchEvent.TOUCH_OVER || event.type == GWTouchEvent.TOUCH_OVER) {
 				ITouchObject(event.target).totalPointCount++;
 			}
