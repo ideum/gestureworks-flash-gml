@@ -296,6 +296,11 @@ package com.gestureworks.core
 		public function set traceDebugMode(value:Boolean):void {	_traceDebugMode = value; }
 		
 		/**
+		 * For each point registration, reorder the object's index to the top of its parent's display list.
+		 */
+		public var topOnPoint:Boolean;
+		
+		/**
 		 * @inheritDoc
 		 */
 		private var _totalPointCount:int;
@@ -303,6 +308,9 @@ package com.gestureworks.core
 		public function set totalPointCount(value:int):void { 
 			if (parent && parent is ITouchObject) {
 				ITouchObject(parent).totalPointCount += value > _totalPointCount ? value -_totalPointCount : -(_totalPointCount - value);
+			}
+			if (topOnPoint && value > _totalPointCount) {
+				parent.addChildAt(this, parent.numChildren - 1);
 			}
 			_totalPointCount = value; 			
 		}
