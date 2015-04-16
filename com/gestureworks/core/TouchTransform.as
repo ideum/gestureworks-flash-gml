@@ -277,7 +277,7 @@ package com.gestureworks.core
 	*/
 	private function applyNativeTransform():void
 		{
-				if ((ts.parent) && (ts.transformGestureVectors))
+				if ((ts.parent) && (ts.transformGestureVectors) && (ts.parent.transform.concatenatedMatrix))
 				{
 				//trace("native parent")
 				//ts.transform.matrix = ts.mtx; // put for testing
