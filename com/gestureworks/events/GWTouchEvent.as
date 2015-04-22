@@ -119,6 +119,9 @@ package com.gestureworks.events
 		public function set target(v:Object):void { _target = v; }
 		override public function get target():Object { return _target; }
 		
+		private var _originator:Object;
+		public function get originator():Object { return _originator; }
+		
 		private var _type:String;
 		public function set type(v:String):void { _type = v; }
 		override public function get type():String { return _type; }
@@ -169,33 +172,10 @@ package com.gestureworks.events
 		private function importEvent(event:Event):void
 		{ 
 			sourceEvent = event;
-			//source = getDefinitionByName(getQualifiedClassName(event)) as Class;
-			//var sourceInfo:XML = describeType(event);
-			//var prop:XML;
-			//var propName:String;
-			//var eventType:Class = Class(getDefinitionByName(getQualifiedClassName(event)));
-			//
-			//if (eventType == MouseEvent)
-				//touchPointID = MousePoint.getID();
-			//else if (eventType == TuioTouchEvent)
-				//touchPointID = TuioTouchEvent(event).tuioContainer.sessionID;
-//
-			//for each(prop in sourceInfo.accessor) {
-				//propName = String(prop.@name);
-				//
-				//if (this.hasOwnProperty(propName))
-				//{ 
-					//trace(propName);
-					//if (propName == "type") { 
-						//this[propName] = TOUCH_TYPE_MAP[eventType][event[propName]];						
-					//}
-					//else
-						//this[propName] = event[propName];
-				//}
-			//}	
 			var ev:TouchEvent;
 			if (event is TouchEvent) {
 				ev = event as TouchEvent;
+				_originator = event.target; 
 				this.pressure = ev.pressure;
 				this.relatedObject = ev.relatedObject;
 				this.bubbles = ev.bubbles;
