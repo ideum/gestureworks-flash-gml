@@ -27,9 +27,6 @@ package com.gestureworks.interfaces
 		 */
 		function get active():Boolean;
 		function set active(a:Boolean):void; 
-				
-		function get dynamicActive():Boolean;
-		function set dynamicActive(a:Boolean):void; 
 		
 		/**
 		 * Flag indicating the application of local modes over the global settings. By default, all objects are enabled for input
@@ -179,7 +176,13 @@ package com.gestureworks.interfaces
 		function set traceDebugMode(value:Boolean):void;
 		
 		/**
-		 * 
+		 * Total number of points registered with object and/or child objects regardless of gesture activation state or method of registration (touch over, touch down, etc.)
+		 */
+		function get totalPointCount():int;
+		function set totalPointCount(value:int):void;
+		
+		/**
+		 * Number of points being processed for gesture-active objects
 		 */
 		function get pointCount():int;
 		function set pointCount(value:int):void;

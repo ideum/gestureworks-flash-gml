@@ -94,19 +94,9 @@ package com.gestureworks.core
 		public function set active(a:Boolean):void {
 			if (!_active && a) {
 				_active = true;
-				_dynamicActive = true;
 				TouchManager.preinitBase(this);
 			}
 		}
-		
-		private var _dynamicActive:Boolean = false; 
-		public function get dynamicActive():Boolean { return _dynamicActive; }
-		public function set dynamicActive(value:Boolean):void {
-			if (_dynamicActive == value)
-				return; 
-				
-			_dynamicActive = value;
-		}			
 		
 		private var _localModes:Boolean = false;
 		/**
@@ -303,14 +293,34 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get traceDebugMode():Boolean{return _traceDebugMode;}
-		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
+		public function set traceDebugMode(value:Boolean):void {	_traceDebugMode = value; }
+		
+		/**
+		 * For each point registration, reorder the object's index to the top of its parent's display list.
+		 */
+		public var topOnPoint:Boolean;
+		
+		/**
+		 * @inheritDoc
+		 */
+		private var _totalPointCount:int;
+		public function get totalPointCount():int { return _totalPointCount; }
+		public function set totalPointCount(value:int):void { 
+			if (parent && parent is ITouchObject) {
+				ITouchObject(parent).totalPointCount += value > _totalPointCount ? value -_totalPointCount : -(_totalPointCount - value);
+			}
+			if (topOnPoint && value > _totalPointCount) {
+				parent.addChildAt(this, parent.numChildren - 1);
+			}
+			_totalPointCount = value; 			
+		}
 		
 		private var _pointCount:int;
 		/**
 		 * @inheritDoc
 		 */
 		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void {	_pointCount = value; }
+		public function set pointCount(value:int):void { _pointCount = value; }
 		
 		private var _motionPointCount:int;
 		/**
@@ -1035,9 +1045,9 @@ package com.gestureworks.core
 		public function get scale():Number{return _scale;}
 		public function set scale(value:Number):void
 		{
-			_scale = value; 
-			scaleX = scale;
-			scaleY = scale;
+			_scale = value;
+			scaleX = _scale;
+			scaleY = _scale;
 		}					
 		
 		// affine transform point  
@@ -1075,7 +1085,7 @@ package com.gestureworks.core
 		 */
 		public function updateDebugDisplay():void
 		{
-			//if(visualizer) //visualizer.updateDebugDisplay()
+			if(visualizer) visualizer.updateDebugDisplay()
 		}
 			
 		private var _debugDisplay:Boolean = false;

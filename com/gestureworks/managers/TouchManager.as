@@ -18,28 +18,35 @@ package com.gestureworks.managers
 	import com.gestureworks.core.GestureGlobals;
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.gw_public;
+	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.core.TouchCluster;
 	import com.gestureworks.core.TouchGesture;
 	import com.gestureworks.core.TouchPipeline;
 	import com.gestureworks.core.TouchTransform;
+	import com.gestureworks.core.TouchVisualizer;
 	import com.gestureworks.events.GWEvent;
 	import com.gestureworks.events.GWGestureEvent;
 	import com.gestureworks.events.GWTouchEvent;
-	import com.gestureworks.interfaces.ITouchObject;
 	import com.gestureworks.managers.PointHistories;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.FrameObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
 	import com.gestureworks.utils.GestureParser;
+	import flash.display.DisplayObject;
 	import flash.events.MouseEvent;
 	import flash.events.TouchEvent;
 	import flash.utils.Dictionary;
 	import org.tuio.TuioEvent;
 	
+	import flash.geom.Vector3D;
+	import com.gestureworks.objects.InteractionPointObject;
 	
+	import com.gestureworks.core.TouchSprite; 
+	import com.gestureworks.core.TouchMovieClip; 	
 	
 	
 	/* 
@@ -81,6 +88,10 @@ package com.gestureworks.managers
 				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);
+				
+				//UPDATES POINT COUNT ON OVER AND OUT
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_OVER, totalPointUpdate);								
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_OUT, totalPointUpdate);								
 			}
 
 			// leave this on for all input types
@@ -98,6 +109,8 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_OVER, totalPointUpdate);								
+			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_OUT, totalPointUpdate);				
 		}		
 		
 		public static function pointCount():int {
@@ -252,21 +265,10 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onTouchBegin(e:TouchEvent):void {	
-					
-			/*
-			if (e.target is Stage) {
-				GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);				
-				return;
-			}
-			else if (!GestureWorks.application.hasEventListener(TouchEvent.TOUCH_MOVE)) {
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);				
-			}
-			*/
-			
+		private static function onTouchBegin(e:TouchEvent):void {			
 			var event:GWTouchEvent = new GWTouchEvent(e);					
 			onTouchDown(event);
-			//processOverlays(event);
+			processOverlays(event);
 		}
 		
 		/**
@@ -276,8 +278,8 @@ package com.gestureworks.managers
 		 * @param	overrideRegisterPoints
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
-		{	
-			applyHooks(event);
+		{			
+			applyHooks(event);			
 			if (validTarget(event)) { 
 											
 				if (ITouchObject(event.target).registerPoints) {
@@ -288,31 +290,13 @@ package com.gestureworks.managers
 						event.target = event.target.parent;	
 						assignPoint(event);
 					}
-					//else if (event.target.targetList.length)
-					//{							
-						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						//assignPoint(event);
-						//var tgt:Object;
-						//
-						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-						//for (var i:int = 0; i < event.target.targetList.length; i++) 
-						//{
-							//tgt = event.target.targetList[i];
-							//
-							//if (!tgt is ITouchObject)
-								//tgt = virtualTouchObjects[tgt];
-							//
-							//if(tgt is ITouchObject && tgt.active){
-								//assignPointClone(event, ITouchObject(tgt));
-								//tgt.broadcastTarget = true;
-							//}
-						//}
-					//}
 					else {
 						 assignPoint(event);
+						 
 						 if (event.target.parent is ITouchObject) {
-							event.target = event.target.parent;
-							propagatePoint( event);
+							var e:GWTouchEvent = event.clone() as GWTouchEvent;							
+							e.target = event.target.parent;
+							propagatePoint(e);
 						 }
 					}
 				}
@@ -326,15 +310,14 @@ package com.gestureworks.managers
 		private static function onTouchEnd(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchUp(event);
-			//processOverlays(event);
+			processOverlays(event);
 		}		
 		
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:GWTouchEvent):void
-		{
+		{			
 			applyHooks(event);
-			var pointObject:Object = points[event.touchPointID];
-			
+			var pointObject:Object = points[event.touchPointID];			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
@@ -377,7 +360,7 @@ package com.gestureworks.managers
 						////////////////////////////////////////////////////////
 						//FORCES IMMEDIATE UPDATE ON TOUCH UP
 						//HELPS ENSURE ACCURATE RELEASE STATE FOR SINGLE FINGER SINGLE TAP CAPTURES
-						//------------------------------------------------------------------------------updateTouchObject(tO);
+						updateTouchObject(tO);
 					}
 				}
 				// DELETE FROM GLOBAL POINT LIST
@@ -390,22 +373,10 @@ package com.gestureworks.managers
 		 * Convert TouchEvent to GWTouchEvent
 		 * @param	event
 		 */
-		private static function onMove(e:TouchEvent):void {	
-			//trace("target",e.target)
-			
-			if (e.target == GestureWorks.application) 
-			{
-				e.stopPropagation();
-				e.stopImmediatePropagation();
-				//trace("stage")//.
-			}
-			
+		private static function onMove(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
 			onTouchMove(event);
-			
-			
-			
-			//processOverlays(event);			
+			processOverlays(event);			
 		}			
 	
 		private static var pointObject:PointObject;		
@@ -481,6 +452,7 @@ package com.gestureworks.managers
 			// create new point object
 			var pointObject:PointObject  = new PointObject();	
 				pointObject.object = target; // sets primary touch object/cluster
+				pointObject.originator = event.originator as ITouchObject;
 				pointObject.id = target.pointCount; // NEEDED FOR THUMBID
 				pointObject.touchPointID = event.touchPointID;
 				pointObject.x = event.stageX;
@@ -605,7 +577,7 @@ package com.gestureworks.managers
 							obj.tp = new TouchPipeline(obj.touchObjectID);
 		if (obj.gestureEvents)	obj.tg = new TouchGesture(obj.touchObjectID);
 							obj.tt = new TouchTransform(obj.touchObjectID);
-							//obj.visualizer = new TouchVisualizer(obj.touchObjectID);
+							obj.visualizer = new TouchVisualizer(obj.touchObjectID);
 		}	
 		
 		public static function callLocalGestureParser(obj:ITouchObject):void
@@ -653,27 +625,84 @@ package com.gestureworks.managers
 		}		
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
-			public static function touchFrameHandler(event:GWEvent):void
+		public static function touchFrameHandler(event:GWEvent):void
 		{
 			//trace("touch frame process ----------------------------------------------");	
 			
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
-
+			
+			//trace(GestureGlobals.frameID)
+			/////////////////////////////////////////////////////////////////////////////
+			//GET MOTION POINT LIST
+			if (GestureWorks.activeMotion)
+			{
+				gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
+				gms.tc.getSkeletalMetrics3D();
+				
+				//trace("FrameID");
+				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED
+				// ON ALL OBJECTS
+				if (GestureGlobals.frameID == 100) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
+				
+			}
+			
+			//TODO: CLEAN UP INIT
+			// DISABLE BLOCK WHEN NO MOTION POINTS
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
-				
 				if (tO.disposal) {
 					tO.dispose();
 					continue;
 				}
-			
+				//trace("tm touchobject",tO, tO.tc.core);
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
+				//GET GLOBAL MOTION POINTS		
+				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
+					if (tO.cO)
+					{
+						if (GestureGlobals.frameID == 100) 
+						{
+							tO.tc.initIPSupport();
+							tO.tc.initIPFilters();
+						}
+						
+						tO.cO.motionArray = gms.cO.motionArray
+						tO.cO.handList = gms.cO.handList;
+						//tO.cO.iPointArray = gms.cO.iPointArray;
+					}
+					else 
+						continue;
+				}
+					
 				// update touch,cluster and gesture processing
-				if (ITouchObject(tO).dynamicActive)updateTouchObject(ITouchObject(tO));
+				updateTouchObject(ITouchObject(tO));
 				
+
+				// move to timeline visualizer
+				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
+				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
+				if ((tO.visualizer)&&(tO.visualizer.debug_display))
+				{
+					//UPDATE TRANSFORM HISTORIES
+					TransformHistories.historyQueue(tO.touchObjectID);
+					
+					// update touch object debugger display
+					tO.updateDebugDisplay();
+				}
+				
+				// MANAGE TIMELINE FRAMES IN TOUCH GESTURE
 			}
-				
+			
+			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
+			// update interation point global list
+			InteractionPointTracker.getActivePoints();
+			
+			// zero motion frame count
+			GestureGlobals.motionFrameID = 1;
+			//trace(GestureGlobals.motionframeID)
 		}
 		
 		
@@ -723,6 +752,22 @@ package com.gestureworks.managers
 					}
 				}
 		}
+		
+		/**
+		 * Update total point count on down/over and up/out events
+		 * @param	event
+		 */
+		public static function totalPointUpdate(event:TouchEvent):void {
+			if (!(event.target is ITouchObject)) {
+				return; 
+			}
+			if (event.type == TouchEvent.TOUCH_OVER || event.type == GWTouchEvent.TOUCH_OVER) {
+				ITouchObject(event.target).totalPointCount++;
+			}
+			else {
+				ITouchObject(event.target).totalPointCount--;
+			}
+		}		
 		
 		/**
 		 * Removes specified points from touch object
