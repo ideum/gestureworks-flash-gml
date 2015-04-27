@@ -28,6 +28,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
@@ -534,7 +535,15 @@ package com.gestureworks.core
 		 * @inheritDoc 
 		 */		
 		public function get releaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set releaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}		
+		public function set releaseInertia(value:Boolean):void {	_gestureReleaseInertia = value; }				
+		/**
+		 * @inheritDoc
+		 */
+		public function stopInertia():void {
+			for each(var dim:DimensionObject in gO.pOList[0].dList) {
+				dim.gestureDeltaCache = 0; 
+			}
+		}
 		
 		private var _gestureTweenOn:Boolean = false;
 		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }

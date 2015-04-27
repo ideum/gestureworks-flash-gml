@@ -312,6 +312,11 @@ package com.gestureworks.interfaces
 		function set releaseInertia(value:Boolean):void;
 		
 		/**
+		 * Clears inertial delta cache
+		 */
+		function stopInertia():void; 
+		
+		/**
 		 * @default false
 		 */
 		function get gestureTweenOn():Boolean;
