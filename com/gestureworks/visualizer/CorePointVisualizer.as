@@ -163,18 +163,18 @@ package com.gestureworks.visualizer
 			graphics.clear();
 			
 			//DRAW
-			if (GestureWorks.activeTouch && tpn)		draw_touchPoints();
-			if (GestureWorks.activeMotion && mpn)		draw_motionPoints();
-			if (GestureWorks.activeSensor && spn)		draw_sensorPoints();
+			if (GestureWorks.activeTouch && tpn)		draw_touchPointsGlobal();
+			if (GestureWorks.activeMotion && mpn)		draw_motionPointsGlobal();
+			if (GestureWorks.activeSensor && spn)		draw_sensorPointsGlobal();
 			
-			if (ipn) draw_interactionPoints();
+			if (ipn) draw_interactionPointsGlobal();
 		}
 		
 		
 		////////////////////////////////////////////////////////////
 		// touch points
 		////////////////////////////////////////////////////////////
-		public function draw_touchPoints():void
+		public function draw_touchPointsGlobal():void
 		{
 			// clear text
 			//for (i = 0; i < maxPoints; i++) tptext_array[i].visible = false;
@@ -273,7 +273,7 @@ package com.gestureworks.visualizer
 		/////////////////////////////////////////////////////////////////////
 		// motion points
 		///////////////////////////////////////////////////////////////////
-		public function draw_motionPoints():void
+		public function draw_motionPointsGlobal():void
 		{
 					// clear text
 					//if (_drawText)	for (i = 0; i < maxPoints; i++) mptext_array[i].visible = false;
@@ -431,7 +431,7 @@ package com.gestureworks.visualizer
 		////////////////////////////////////////////////////////////////
 		// sensor points // eye tracking / accelerometer / myo
 		////////////////////////////////////////////////////////////////
-	public function draw_sensorPoints():void
+	public function draw_sensorPointsGlobal():void
 		{
 			//trace("drawing sensor points", spn);
 				
@@ -496,7 +496,7 @@ package com.gestureworks.visualizer
 		////////////////////////////////////////////////////////////
 		//interaction points
 		////////////////////////////////////////////////////////////
-		public function draw_interactionPoints():void
+		public function draw_interactionPointsGlobal():void
 		{
 				for (var b:uint = 0; b < ipn; b++) 
 				{
@@ -504,12 +504,29 @@ package com.gestureworks.visualizer
 					var x:Number = pt.position.x;
 					var y:Number = pt.position.y;
 					
-					//trace("ip vis",pt,x,y)
+					//trace("ip vis",pt,x,y, pt.type)
 					
-					graphics.lineStyle(1, 0x888888, 1);							
-					graphics.beginFill(0xFFFFFF, style.fill_alpha);
-					graphics.drawCircle(x, y, style.radius);
-					graphics.endFill();
+					if (pt.type == "finger")
+					{
+						graphics.lineStyle(1, 0x888888, 1);							
+						graphics.beginFill(0xFFFFFF, 0.2);
+						graphics.drawCircle(x, y, 1.8*style.radius);
+						graphics.endFill();
+					}
+					else if (pt.type == "tag") 
+					{
+						graphics.lineStyle(3, 0xFFFFFF, 1);							
+						graphics.beginFill(0x000000, 0.2);
+						graphics.drawCircle(x, y, 1.8*style.radius);
+						graphics.endFill();
+					}
+					else 
+					{
+						graphics.lineStyle(3, 0xFFFFFF, 1);							
+						graphics.beginFill(0xFF00FF, 0.2);
+						graphics.drawCircle(x, y, 1.8*style.radius);
+						graphics.endFill();
+					}
 				}
 		}	
 	

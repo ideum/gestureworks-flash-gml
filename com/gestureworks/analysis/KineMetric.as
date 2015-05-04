@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////////////
 //
 //  IDEUM
-//  Copyright 2011-2012 Ideum
+//  Copyright 2011-2015 Ideum
 //  All Rights Reserved.
 //
 //  GestureWorks
@@ -1611,7 +1611,7 @@ package com.gestureworks.analysis
 		// 3D MANIPULATE GENERIC 
 		public function find3DIPTransformation(iPointCluster:ipClusterObject):void////type:String
 		{			
-			//trace("motion transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
+			//trace("MD transform kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			var hist:int = 1; //CREATES DELAY 
 			var hk:Number = 1 / hist;
 			var index = iPointCluster.type;
@@ -2112,7 +2112,7 @@ package com.gestureworks.analysis
 		
 		public function find3DIPTranslation(iPointCluster:ipClusterObject):void//type:String
 		{
-			//trace("-------------------------motion translate kinemetric", cO.iPointArray.length, ipn,cO.ipn);
+			//trace("-------------------------ip translate kinemetric", cO.iPointArray.length, ipn,cO.ipn);
 			var hist:int = 1;
 			var hk:Number = 1 / hist;
 			
@@ -2181,7 +2181,7 @@ package com.gestureworks.analysis
 							//trace("get diff");
 					}
 			}
-			//trace("motion translate kinemetric",sub_cO.type, sub_cO.dx,sub_cO.dy,sub_cO.dz);
+			//trace("@kinemetric, ip translate ",sub_cO.type, sub_cO.dx,sub_cO.dy,sub_cO.dz);
 		}
 		
 		public function find3DIPAcceleration(iPointCluster:ipClusterObject):void//type:String

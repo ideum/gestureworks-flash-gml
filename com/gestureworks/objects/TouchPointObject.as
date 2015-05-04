@@ -31,7 +31,9 @@ package com.gestureworks.objects
 		// frameID
 		public var frameID:int;
 		// move count // number move updates for point in frame
-		public var moveCount:int=0;
+		public var moveCount:int = 0;
+		public var age:uint
+		public var phase:String;
 		
 		public var position:Vector3D //= new Vector3D();
 		public var size:Vector3D //= new Vector3D();

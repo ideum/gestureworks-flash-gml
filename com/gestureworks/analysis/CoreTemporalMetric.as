@@ -113,6 +113,8 @@ package com.gestureworks.analysis
 				var gO = GestureGlobals.gw_public::gestures[ts.id]
 				var key:uint
 				
+				//trace("init timeline--------------------",gO.pOList[key].gesture_type);
+				
 					if ((gO.pOList[key].gesture_type == "tap")||(gO.pOList[key].gesture_type == "double_tap")||(gO.pOList[key].gesture_type == "triple_tap")||(gO.pOList[key].gesture_type == "hold"))
 					{
 						tiO.timelineOn = true;
@@ -127,6 +129,14 @@ package com.gestureworks.analysis
 						tiO.timelineOn = true;
 						//tiO.pointEvents = true;
 						tiO.gestureEvents = true; // for gestute feedback
+						tiO.timelineInit = true;
+						GestureGlobals.timelineHistoryCaptureLength = 80;
+						tapOn = true;
+					}
+					else if (gO.pOList[key].gesture_type == "touch_finger_tap"){
+						tiO.timelineOn = true;
+						tiO.pointEvents = true;
+						tiO.gestureEvents = true; // for gesutre feedback
 						tiO.timelineInit = true;
 						GestureGlobals.timelineHistoryCaptureLength = 80;
 						tapOn = true;
@@ -190,13 +200,13 @@ package com.gestureworks.analysis
 					//trace("gesture num",gn)
 					
 					for (key = 0; key < gn; key++) {
-						//trace(ts.gO.pOList[key].gesture_type);
-						if (ts.gO.pOList[key].gesture_type == "tap") temporalGesture = true;
+						//trace("-----------",ts.gO.pOList[key].gesture_type);
+						if (ts.gO.pOList[key].gesture_type == "tap" ||ts.gO.pOList[key].gesture_type == "touch_finger_tap") temporalGesture = true;
 					}
 					
 					//trace("gp hik test", ts, gpt.type)
 					if(temporalGesture){
-								if ((gpt)&&(gpt.type=="tap")&&(gpt.mode=="touch")&&(ts.touchClusterMode == "local_strong" || ts.touchClusterMode == "local_weak"))
+								if ((gpt)&&(gpt.type=="tap" ||gpt.type=="touch_finger_tap")&&(gpt.mode=="touch")&&(ts.touchClusterMode == "local_strong" || ts.touchClusterMode == "local_weak"))
 								{
 										if (ts is ITouchObject)
 										{
@@ -204,9 +214,11 @@ package com.gestureworks.analysis
 											{
 												var data = new Object();
 													data.x = gpt.position.x;
-													data.x = gpt.position.x;
+													data.y = gpt.position.y;
+													data.n = gpt.n;
 													data.target = ts;
-												var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, data);
+												var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TOUCH_FINGER_TAP, data);
+												//var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, data);
 													
 												ts.dispatchEvent(gpt_event);
 												
@@ -223,9 +235,11 @@ package com.gestureworks.analysis
 												{ 
 													var data = new Object();
 														data.x = gpt.position.x;
-														data.x = gpt.position.x;
+														data.y = gpt.position.y;
+														data.n = gpt.n;
 														data.target = ts;
-													var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, data);
+													var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TOUCH_FINGER_TAP, data);
+													//var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, data);
 													
 													ts.dispatchEvent(gpt_event);
 													
@@ -240,13 +254,15 @@ package com.gestureworks.analysis
 										
 										
 								}
-								else if ((ts.touchClusterMode == "global") && (ts.touchEnabled) && (gpt) && (gpt.type=="tap")&& (gpt.mode == "touch")) 
+								else if ((ts.touchClusterMode == "global") && (ts.touchEnabled) && (gpt) && (gpt.type=="tap"||gpt.type=="touch_finger_tap")&& (gpt.mode == "touch")) 
 								{
 									var data = new Object();
 										data.x = gpt.position.x;
-										data.x = gpt.position.x;
+										data.y = gpt.position.y;
+										data.n = gpt.n;
 										data.target = ts;
-									var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, data);
+									var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TOUCH_FINGER_TAP, data);
+									//var gpt_event:GWGestureEvent = new GWGestureEvent(GWGestureEvent.TAP, data);
 													
 									ts.dispatchEvent(gpt_event);
 													

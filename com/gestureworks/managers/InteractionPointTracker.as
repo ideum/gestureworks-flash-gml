@@ -91,9 +91,10 @@ package com.gestureworks.managers
 							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 							if (ap.type == fp.type && ap.rootPointID == fp.rootPointID) found = true;
 							
+							
 							else if (ap.type == fp.type) 
 							{
-								if (ap.type == "finger_dynamic" )//||ap.type == "finger"
+								if (ap.type == "finger" )//||ap.type == "finger"
 								{
 									if (dist < 10) found = true; //FINGER SEP
 								}
@@ -115,7 +116,7 @@ package com.gestureworks.managers
 							
 							//trace(ap.position, ap.init_position)
 							var dr:Vector3D = ap.position.subtract(ap.init_position);
-							var dist = dr.length;
+							var dist:Number = dr.length;
 							
 							
 							
@@ -131,15 +132,16 @@ package com.gestureworks.managers
 							
 							if (ap.age < 30 && dist < 10) 
 							{
-								//trace("TAPPPPPP in ip tracker", ap.age, dist);
+								//trace("@ ip tracker TAP begin + end pair", ap.age, dist, tiO.frame.gesturePointArray.length);
 							
 								// create tap gesture point and place in global timeline frame
 								var gpt:GesturePointObject = new GesturePointObject();
 									gpt.gesturePointID = tapID;
 									gpt.position = ap.position;
-									gpt.type = "tap";
+									//gpt.type = "tap";
+									gpt.type = "touch_finger_tap";
 									gpt.mode = "touch"
-									
+									gpt.n = 1;
 									tapID += 1;
 									
 								tiO.frame.gesturePointArray.push(gpt);
@@ -165,7 +167,7 @@ package com.gestureworks.managers
 
 									if(ap.rootPointID == fp.rootPointID) 
 									{
-										ap.rootPointID = fp.rootPointID;
+										//ap.rootPointID = fp.rootPointID;
 										ap.age += 1;
 										ap.phase = "update";
 											

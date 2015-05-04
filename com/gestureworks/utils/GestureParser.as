@@ -61,26 +61,31 @@ package com.gestureworks.utils
 			
 			//trace(gml)
 				gestureTypeList = { 
+								//transmodal
+									"manipulate":true,
 									"translate":true, 
 									"drag":true, 
 									"scale":true, 
 									"rotate":true,
+									
 									"pivot":true,
 									"orient":true,
 									"swipe":true,
 									"flick":true,
 									"scroll":true, 
-									"tilt":true,  
+									"tilt":true,
+									
 									"hold":true, 
 									"tap":true,   
 									"double_tap":true,  
 									"triple_tap":true,
-									"manipulate":true,
+									
 									"stroke":true,
 									"stroke_letter":true,
 									"stroke_greek":true,
 									"stroke_shape":true,
 									"stroke_symbol":true,
+									
 									"3d_drag":true,
 									"3d_translate":true,
 									"3d_rotate":true, 
@@ -93,18 +98,50 @@ package com.gestureworks.utils
 									"3d_tap":true,
 									"3d_hold":true,
 									"3d_double_tap":true,
-									"motion_drag":true,
-									"motion_translate":true,
-									"motion_rotate":true, 
-									"motion_scale":true,
-									"motion_manipulate":true,
-									"motion_tilt":true,
-									"motion_swipe":true,
-									"motion_flick":true,
-									"motion_stroke":true,
-									"motion_tap":true,
-									"motion_hold":true,
-									"motion_double_tap":true
+									
+									//touch modal
+										"touch_drag":true, 
+										"touch_scale":true, 
+										"touch_rotate":true,
+										"touch_tap":true,
+										
+											"touch_finger_drag":true, 
+											"touch_finger_scale":true, 
+											"touch_finger_rotate":true,
+											"touch_finger_tap":true, 
+											
+											"touch_pen_drag":true, 
+											"touch_pen_scale":true, 
+											"touch_pen_rotate":true,
+											"touch_pen_tap":true,
+											
+											"touch_tag_drag":true, 
+											"touch_tag_scale":true, 
+											"touch_tag_rotate":true,
+											"touch_tag_tap":true,
+											
+									//motion modal
+										"motion_drag":true,
+										"motion_translate":true,
+										"motion_rotate":true, 
+										"motion_scale":true,
+										"motion_manipulate":true,
+										"motion_tilt":true,
+										"motion_swipe":true,
+										"motion_flick":true,
+										"motion_stroke":true,
+										"motion_tap":true,
+										"motion_hold":true,
+										"motion_double_tap":true,
+										
+											"motion_pinch_drag":true,
+											"motion_pinch_translate":true,
+											"motion_pinch_rotate":true, 
+											"motion_pinch_scale":true,
+											"motion_pinch_manipulate":true,
+											"motion_pinch_tap":true,
+											"motion_pinch_hold":true
+										
 									};		
 
 									

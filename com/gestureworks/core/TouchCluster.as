@@ -128,15 +128,11 @@ package com.gestureworks.core
         {	
 			cluster_kinemetric = new KineMetric(id);
 				cluster_kinemetric.init();
-				
-			//cluster_vectormetric = new VectorMetric(id);
-				//cluster_vectormetric.init();
 		}
 		
 		public function initClusterAnalysisConfig():void 
 		{
 			cluster_kinemetric.init();
-			//cluster_vectormetric.init();
 		}
 		
 		public function initSubClusters():void 
@@ -150,74 +146,9 @@ package com.gestureworks.core
 		public function initMotionSubClusters():void
 		{
 			//trace("init sublucster")
-			
-			
-			//if (!cO.mSubClusterArray) cO.mSubClusterArray = new Vector.<ipClusterObject>
-			
 			// TODO: MOVE TO CLUSTER MANAGER NOT "TOUCHCLUSTER"
 			
-			//HAND TRACKING //////////////////////////////////////////////////////////////
-			/*
-				// init MOTION SKELETAL subclusters
-				cO.mSubClusterArray[0] = new ipClusterObject();// finger
-				cO.mSubClusterArray[0].active = true; //TODO: AUTOMATE ACTIVATION
-				cO.mSubClusterArray[0].type = "finger";		
-				cO.mSubClusterArray[1] = new ipClusterObject();// palm
-				cO.mSubClusterArray[1].active = true;
-				cO.mSubClusterArray[1].type = "palm";	
-				cO.mSubClusterArray[2] = new ipClusterObject();// thumb
-				cO.mSubClusterArray[2].active = true;
-				cO.mSubClusterArray[2].type = "thumb";		
-				cO.mSubClusterArray[3] = new ipClusterObject();// finger avergae
-				cO.mSubClusterArray[3].active = true;
-				cO.mSubClusterArray[3].type = "finger_average";
-				cO.mSubClusterArray[4] = new ipClusterObject(); //finger and thumb
-				cO.mSubClusterArray[4].active = true;
-				cO.mSubClusterArray[4].type = "digit";
-				// INIT MOTION VIRTUAL SUBCLUSTERS
-				cO.mSubClusterArray[5] = new ipClusterObject(); // trigger
-				cO.mSubClusterArray[5].active = true;
-				cO.mSubClusterArray[5].type = "trigger";		
-				cO.mSubClusterArray[6] = new ipClusterObject(); // pinch
-				cO.mSubClusterArray[6].active = true;
-				cO.mSubClusterArray[6].type = "pinch";
-				cO.mSubClusterArray[7] = new ipClusterObject(); // hook
-				cO.mSubClusterArray[7].active = true;
-				cO.mSubClusterArray[7].type = "hook";
-				cO.mSubClusterArray[8] = new ipClusterObject(); //frame
-				cO.mSubClusterArray[8].active = true;
-				cO.mSubClusterArray[8].type = "frame";
-				cO.mSubClusterArray[9] = new ipClusterObject(); //fist
-				cO.mSubClusterArray[9].active = true;
-				cO.mSubClusterArray[9].type = "fist";
-				
-				cO.mSubClusterArray[10] = new ipClusterObject(); //region
-				cO.mSubClusterArray[10].active = true;
-				cO.mSubClusterArray[10].type = "push";
-				cO.mSubClusterArray[11] = new ipClusterObject(); //region
-				cO.mSubClusterArray[11].active = true;
-				cO.mSubClusterArray[11].type = "region";
-				
-				//HAND OBJECT TRACKING 
-				cO.mSubClusterArray[12] = new ipClusterObject(); //tool
-				cO.mSubClusterArray[12].active = true;
-				cO.mSubClusterArray[12].type = "tool";
-				
-				
-			//FACE TRACKING//////////////////////////////////////////////////////
-				
-				cO.mSubClusterArray[13] = new ipClusterObject(); //gaze
-				cO.mSubClusterArray[13].active = true;
-				cO.mSubClusterArray[13].type = "gaze";
-				cO.mSubClusterArray[14] = new ipClusterObject(); //eye
-				cO.mSubClusterArray[14].active = true;
-				cO.mSubClusterArray[14].type = "eye";
-				////////////////////////////////////////////////////////////
-				//
-				*/
-			
-			//iPointClusterList["finger_dynamic"] = tSubClusterArray;
-				
+			//HAND TRACKING //////////////////////////////////////////////////////////////	
 			// init MOTION SKELETAL subclusters
 			
 				if (fingerPoints)
@@ -358,29 +289,29 @@ package com.gestureworks.core
 			
 			if (fingerTouchPoints)
 			{
-				iPointClusterList.finger_dynamic = new ipClusterObject();
-				iPointClusterList.finger_dynamic.active = true; //TODO: AUTOMATE ACTIVATION
-				iPointClusterList.finger_dynamic.mode = "touch";
-				iPointClusterList.finger_dynamic.type = "finger_dynamic";
-				//iPointClusterList["finger_dynamic"].motion_type = "dynamic";
+				iPointClusterList.finger = new ipClusterObject();
+				iPointClusterList.finger.active = true; //TODO: AUTOMATE ACTIVATION
+				iPointClusterList.finger.mode = "touch";
+				iPointClusterList.finger.type = "finger"; //MUST MATCH OBJECT NAME!!!! 
+				//iPointClusterList["finger"].motion_type = "dynamic";
 				
 				//trace("finger dynamic init")
 			}
 			if (penTouchPoints)
 			{
-				iPointClusterList.pen_dynamic = new ipClusterObject();
-				iPointClusterList.pen_dynamic.active = true; //TODO: AUTOMATE ACTIVATION
-				iPointClusterList.pen_dynamic.mode = "touch";
-				iPointClusterList.pen_dynamic.type = "pen_dynamic";
-				///iPointClusterList["pen_dynamic"].motion_type = "dynamic";
+				iPointClusterList.pen = new ipClusterObject();
+				iPointClusterList.pen.active = true; //TODO: AUTOMATE ACTIVATION
+				iPointClusterList.pen.mode = "touch";
+				iPointClusterList.pen.type = "pen";
+				///iPointClusterList["pen"].motion_type = "dynamic";
 			}
 			if (tagTouchPoints)
 			{
-				iPointClusterList.tag_dynamic = new ipClusterObject();
-				iPointClusterList.tag_dynamic.active = true; //TODO: AUTOMATE ACTIVATION
-				iPointClusterList.tag_dynamic.mode = "touch";
-				iPointClusterList.tag_dynamic.type = "tag_dynamic";
-				//iPointClusterList["tag_dynamic"].motion_type = "dynamic";
+				iPointClusterList.tag = new ipClusterObject();
+				iPointClusterList.tag.active = true; //TODO: AUTOMATE ACTIVATION
+				iPointClusterList.tag.mode = "touch";
+				iPointClusterList.tag.type = "tag";
+				//iPointClusterList["tag"].motion_type = "dynamic";
 			}
 			
 			/*
@@ -820,423 +751,7 @@ package com.gestureworks.core
 		{		
 			//cluster_kinemetric.find3DIPAcceleration();
 		}
-		/*
-		public function getKineMetrics2D():void 
-		{			
-			gn = gO.pOList.length;
-			
-			//trace("-touch cluster -----------------------------",gn);
-			
-			for (key = 0; key < gn; key++) 
-			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
-			{
-				
-				// if gesture object is active in gesture list
-				// FILTER BY INPUT TYPE
-				//trace(gO.pOList[key].gesture_id,ts.gestureList[gO.pOList[key].gesture_id],gO.pOList[key].cluster_input_type)
-				
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type=="touch"))//gO.pOList[key].cluster_input_type=="it_was_me"
-				{
-				
-					// set dim length
-					dn = gO.pOList[key].dList.length;
-					
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					// PROCESSING INTERACTION POINT KINEMETRICS
-					// INTERACTION POINTS FROM // TOUCH POINTS
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
-					//trace("TOUCHCLUSTER: processing motion kinemetrics",ts.cO.ipn);
-					
-					// processing algorithms when in motion
-					if(ts.cO.ipn!=0){	//&&(sub_cO_n==gn))	// check kinemetric and if continuous analyze
-						
-						var g:GestureObject = gO.pOList[key];
-						var c_type:String = g.cluster_type;
-						c_type = "finger_dynamic"
-						
-						var subClusterArray:ipClusterObject = iPointClusterList[c_type];
-
-						//trace("touch cluster", c_type, g.cluster_type, subClusterArray)
-						
-						if (subClusterArray)
-						{
-						
-						var sub_cO_n:int =  subClusterArray.ipn;
-
-						//trace(sub_cO_n,cluster_n)
-						//trace("gesture algorithm and class---------------------------------------",sub_cO_n, g.algorithm_class, g.algorithm)
-						
-						// check point number requirements
-						if((sub_cO_n >= g.nMin)&&(sub_cO_n<= g.nMax)||(sub_cO_n == g.n))
-						{
-							//trace("call touch cluster calc",ts.cO.fn,g.algorithm);
-							
-							///////////////////////////////////////////////
-							// MOTION MATCH
-							///////////////////////////////////////////////
-							
-							// activate all by default
-							g.activeEvent = true;
-
-							
-							if (g.algorithm_class == "kinemetric")
-							{
-									// BASIC 3D DRAG // ALGORITHM // type drag
-									if (g.algorithm == "drag") 	cluster_kinemetric.find2DIPTranslation(subClusterArray);
-									if (g.algorithm == "scale") 	cluster_kinemetric.find2DIPSeparation(c_type);
-									if (g.algorithm == "rotate") 	cluster_kinemetric.find2DIPRotation(c_type);
-									if (g.algorithm == "manipulate") 	cluster_kinemetric.find2DIPTransformation(c_type);
-
-									///////////////////////////////////////////////////////////////////////////////////
-									// LIMIT DELTA BY CLUSTER VALUES
-									/////////////////////////////////////////////////////////////////////////////////////
-									g.activeEvent = false; // deactivate by default then reactivate based on value
-									
-									//NEED TO PULL FROM RELVANT SUBCLUSTER
-									
-										for (DIM = 0; DIM < dn; DIM++) 
-										{
-										var	gdim:DimensionObject = g.dList[DIM];
-												gdim.activeDim = true; // ACTIVATE DIM
-										var	res:String = gdim.property_result
-										
-										
-										//////////////////////////////////////////////////////////////////////////////////
-										// CLUSTER DELTA CACHE
-										if (res == "x") gdim.clusterDelta = subClusterArray.position.x;//cO.position.x
-										else if(res == "y") gdim.clusterDelta = subClusterArray.position.y;//cO.position.y//
-										else if (res == "z") gdim.clusterDelta = subClusterArray.position.z;//cO.position.z//
-										
-										else
-										{
-											//WHEN THERE ARE NO LIMITS IMPOSED
-											gdim.clusterDelta = subClusterArray[res];
-											//gdim.clusterDelta = cO[res];
-											//trace("result", res,cO.tSubClusterArray[b][res]);
-										}
-										//////////////////////////////////////////////////////////////////////////////////////////
-										
-											//CLOSE DIM IF NO VALUE
-											if (gdim.clusterDelta == 0) gdim.activeDim = false;
-
-											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
-											if (gdim.activeDim) g.activeEvent = true;
-											
-											//trace("GESTURE MOTION OBJECT", res, cO.subClusterArray[b][res], gdim.clusterDelta, g.activeEvent,gdim.activeDim);
-										}
-										
-										//trace("sub_cluster data", g.activeEvent, g.dispatchEvent, cO.subClusterArray[b].dx,cO.subClusterArray[b].ipn,cO.hn, cO.fn );
-										
-										//NEED TO PULL FROM RELVANT GESTURE OBJECT//SUBCLUSTER OBJECT
-										//g.data.x = subClusterArray[c_type].position.x; 		// gesture position
-										//g.data.y = subClusterArray[c_type].position.y; 		// gesture position
-										//g.data.z = subClusterArray[c_type].position.z; 		// gesture position
-										//g.data.ipn = subClusterArray[c_type].ipn; 	// current ip total
-										
-										//trace(g.data.x,
-										//if ((g.activeEvent) && (g.dispatchEvent))
-										//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
-						}	
-							///////////////////////////////////////////////////
-						}
-				}
-				}
-				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// END IP TOUCH KIMETRIC PROCESSING
-				///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				}
-			}
-
-				//cluster_kinemetric.WeaveTouchSubClusterData()
-				
-				//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
-				//cluster_kinemetric.WeaveTouchRootClusterData(); // should move to cluster manager
-			}
 		
-		*/
-		
-		
-		
-		
-		/*
-		public function getKineMetrics():void 
-		{		
-	
-			gn = gO.pOList.length;
-			
-			cluster_kinemetric.resetTouchClusterValues();
-			cluster_kinemetric.findTouchInstDimention();
-			
-			//cluster_geometric.find2DTagPoints(); 
-			
-			//trace("-touch cluster -----------------------------",gn);
-			
-			for (key = 0; key < gn; key++) 
-			//for (key in gO.pOList) //if(gO.pOList[key] is GesturePropertyObject)
-			{
-				
-				// if gesture object is active in gesture list
-				// FILTER BY INPUT TYPE
-				
-				//NOTE TOUCGH GESTURE EVENTS WERE BEING REACTIVATED BY MOTION INOPUT AND INTERFERING WITH MOTION GESTURE EVENTS
-				// FIX WAS TO FILTER CLUSTER PROCESSING SO THAT EVENTACTIVE STATES WERE NOT OVERWRITTEN
-				// NEED TO UPDATE TOUCH GESTURES AND TYPE THEM (TOUCH, MOTION, MOTION & TOUCH, SENSOR, SENSOR & TOUCH, SENSOR & MOTION...)	
-				/// need to test more
-				
-				//trace(gO.pOList[key].cluster_input_type);
-				
-				
-				////////////////////////////////////////////////
-				//TAG HACK
-				//if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type="")||(gO.pOList[key].cluster_input_type="touch"))&&(cluster_geometric.tag_match))
-				// also consider not motion
-				//gO.pOList[key].cluster_input_type!="motion"
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&((gO.pOList[key].cluster_input_type=="")||(gO.pOList[key].cluster_input_type=="touch")||(gO.pOList[key].cluster_input_type=="touch_")))
-				{
-				
-					// set dim length
-					dn = gO.pOList[key].dList.length;
-
-					var g:GestureObject = gO.pOList[key];
-					
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					// PROCESSING TOUCH KINEMETRICS
-					// TOUCH POINTS
-					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
-					if (ts.tpn != 0) // check kinemetric and if continuous analyze
-					{		
-						// check point number requirements
-						if((ts.tpn >= g.nMin)&&(ts.tpn <= g.nMax)||(ts.tpn == g.n))
-						{
-							//trace("call cluster calc",ts.N);
-							
-							if (g.algorithm_class == "kinemetric")
-							{
-									// activate all by default
-									g.activeEvent = true;
-									
-									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
-									
-									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-									if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformation();
-																		//cluster_kinemetric.findSimpleMeanInstTransformation();
-									
-										// BASIC DRAG CONTROL // ALGORITHM // type drag
-										if (g.algorithm == "drag")			cluster_kinemetric.findMeanInstTranslation();
-										//if (g.algorithm == "translate")			cluster_kinemetric.findMeanInstTranslation();
-
-										// BASIC SCALE CONTROL // ALGORITHM // type scale
-										if (g.algorithm == "scale")		cluster_kinemetric.findMeanInstSeparation();
-																		//cluster_kinemetric.findSimpleMeanInstSeparation();
-									
-										// BASIC ROTATE CONTROL // ALGORITHM // type rotate
-										if (g.algorithm == "rotate")		cluster_kinemetric.findMeanInstRotation();
-																			//cluster_kinemetric.findSimpleMeanInstRotation();
-									
-									
-									// BASIC ORIENTATION CONTROL // ALGORITHM
-									if (g.algorithm == "orient")		cluster_kinemetric.findInstOrientation();
-
-									// BASIC PIVOT CONTROL // ALGORITHM
-									if (g.algorithm == "pivot")		cluster_kinemetric.findInstPivot();
-									
-									///////////////////////////////////////////////////////////////////////////////////////
-									// CLUSTER PROEPRTY LIMIT CONTROLLED DELTAS
-									
-									// BASIC SCROLL CONTROL // ALGORITHM
-									// CONTINUOUS// MIN TRANSLATION IN X AND Y// VELOCITY MUST BE ABOVE MIN VALUE
-									// RETURN AVERAGE ENSABLE TEMPORAL VELOCITY 
-									if (g.algorithm == "scroll")	cluster_kinemetric.findMeanTemporalVelocity(); // ensamble temporal mean velocity
-
-									// BASIC TILT CONTROL // ALGORITHM
-									// CONTINUOUS// LOOK FOR SEPARATION OF CLUSTER IN X AND Y DIRECTION//SEPARATION MUST BE ABOVE MIN VALUE// LOCKED INTO 3 POINT EXCLUSIVE ACTIVATION
-									// RETURN DX AND DY
-									if (g.algorithm == "tilt")	cluster_kinemetric.findMeanInstSeparation();
-									
-									// BASIC FLICK CONTROL // ALGORITHM
-									// SHOULD BE DISCRETE ON RELEASE // IF BETWEEN ACCEL THREHOLD RETURN GESTURE
-									if ((g.algorithm == "flick")||(g.algorithm == "swipe"))
-									{
-										cluster_kinemetric.findMeanTemporalVelocity(); // ensamble temporal mean velocity
-										cluster_kinemetric.findMeanTemporalAcceleration(); //ensamble temporal mean acceleration
-									}
-									
-
-									///////////////////////////////////////////////////////////////////////////////////
-									// LIMIT DELTA BY CLUSTER VALUES
-									/////////////////////////////////////////////////////////////////////////////////////
-								
-										g.activeEvent = false;
-									
-										for (DIM = 0; DIM < dn; DIM++) 
-										{
-											var gdim:DimensionObject = g.dList[DIM];
-												gdim.activeDim = true; // ACTIVATE DIM
-											var res:String = gdim.property_result
-											
-											//trace("touch result",res);
-											////////////////////////////////////////////////////
-											// CHECK FOR CLUSTER PROEPERTY VALUE LIMITS IF EXIST
-											////////////////////////////////////////////////////
-											
-											// WHEN PROPERTY LIMITS ESTABLISHED
-											// ONLY USES ONE VAR PER PROPERTY BUT COULD BE EXTENDED
-											// STILL NEED TO MAP RETURN TO RESULT
-											if (gdim.property_vars[0])
-											{
-												//trace("tcO property ",gdim.property_vars[0],gdim.property_vars[0]["var"]);
-												//TODO: FIX VARAIBLES BLOCK
-												var num:Number = Math.abs(tcO[gdim.property_vars[0]["var"]]);
-												var dim_var:Number = 0;
-													
-												// when max and min
-												if ((gdim.property_vars[0]["min"] != null) && (gdim.property_vars[0]["max"] != null))
-												{
-													if ((num >= gdim.property_vars[0]["min"])&&(num <= gdim.property_vars[0]["max"]))	gdim.clusterDelta = cO[res];//dim_var = num;
-													else gdim.clusterDelta = 0;//dim_var = 0;
-												}
-												// when min
-												else if(gdim.property_vars[0]["min"] != null) 
-												{	
-													if (num >= gdim.property_vars[0]["min"])	{
-														gdim.clusterDelta = tcO[res];//dim_var = num;
-														//trace("MIN",num)
-													}
-													else gdim.clusterDelta = 0//dim_var = 0;
-												}
-												// when max 
-												else if (gdim.property_vars[0]["max"] != null) 
-												{	
-													//if (num <= gdim.property_vars[0]["max"])	gdim.clusterDelta = cO[res];//dim_var = num;
-													//else gdim.clusterDelta = 0;//dim_var = 0;
-												}
-												else {
-													//TODO: APPLY MAPPING PROPERTIES
-													gdim.clusterDelta = tcO[res];
-												}
-												
-											}
-											
-											
-											
-											//WHEN THERE ARE NO LIMITS IMPOSED
-											else {
-												// check new vector map
-												// note will chnage to touchcluster array //cO.tSubClusterArray[b].position.z;
-												//trace("touch result",res,tcO["position"],tcO["position"].x,tcO["position"]["x"]);//
-												if (res == "x") gdim.clusterDelta = tcO.position.x;
-												else if (res == "y") gdim.clusterDelta = tcO.position.y;
-												else if (res == "z") gdim.clusterDelta = tcO.position.z;
-												//TODO:WILL NEED FOR SCALE AND ROTATE,SIZE, DELTA_POSITION, DELTA_SCALE, DELTA_ROTATE, ACCELERATION, JOLT, JERK....
-												//or map one to one using name
-												else gdim.clusterDelta = tcO[res];
-											}
-											
-											/////////////////////////////////////////////////////////////
-											//GREAT FOR FINDING CLUSTER PROPERTIES
-											//trace("touchcluster",res,tcO[res])
-											/////////////////////////////////////////////////////////////
-											
-
-											//CLOSE DIM IF NO VALUE
-											if (gdim.clusterDelta == 0) gdim.activeDim = false;
-											//trace("GESTURE OBJECT", res, cO[res], gdim.clusterDelta);
-											
-											// CLOSE GESTURE OBJECT IF ALL DIMS INACTIVE
-											if (gdim.activeDim) g.activeEvent = true;
-											
-											//trace("TOUCH GESTURE OBJECT", res, tcO[res], gdim.clusterDelta, g.activeEvent,gdim.activeDim);
-										}
-
-
-										g.data.x = tcO.position.x;
-										g.data.y = tcO.position.y;
-										g.data.z = tcO.position.z;
-										//g.data.n = tpn;
-										
-										//////////////////////////////////////////////////////////////////
-										//////////////////////////////////////////////////////////////////
-										
-										//if ((g.activeEvent) && (g.dispatchEvent))
-										//trace("CLUSTER OBJECT","dx",cO["dx"],"dy",cO["dx"], "etm_dx",cO["etm_dx"],"etm_dy", cO["etm_dy"],"ddx", cO["etm_ddx"],"ddy", cO["etm_ddy"])
-							}
-							///////////////////////////////////////////////////
-						}
-				}
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// END TOUCH POINT KINEMETRIC PROCESSING
-				//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
-				//else {
-					//trace("processing algorithm when NOT touching");
-				//}
-
-				}
-				
-				
-				/*
-				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// MULTIMODAL TRANSMODAL CROSS MODAL CLUSTER ANALYSIS
-				// TOUCH AND MOTION ///////////////////////////////////////////////////////
-				if (gO.pOList[key].cluster_input_type == "touch_motion") 
-				{
-					// set dim length
-					dn = gO.pOList[key].dList.length;
-
-					var g:GestureObject = gO.pOList[key];
-					
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					// PROCESSING TOUCH KINEMETRICS
-					// TOUCH POINTS
-					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
-					if (ts.tpn != 0) // check kinemetric and if continuous analyze
-					{		
-						// check point number requirements
-						if((ts.tpn >= g.nMin)&&(ts.tpn <= g.nMax)||(ts.tpn == g.n))
-						{
-							//trace("call cluster calc",ts.N);
-							
-							if (g.algorithm_class == "kinemetric")
-							{
-									// activate all by default
-									g.activeEvent = true;
-									
-									//trace("kinemetric algorithm",gO.pOList[key].algorithm);
-									
-									// BASIC DRAG/SCALE/ROTATE CONTROL // ALGORITHM // type manipulate
-									//if (g.algorithm == "manipulate") 	cluster_kinemetric.findMeanInstTransformationMModal();
-							}
-						}
-					}
-				}*/
-				
-				// TOUCH AND SENSOR
-				// MOTION AND SENSOR
-			/*
-				
-			}
-			
-			//	WEAVE TOUCH DATA INTO ROOT SUPER CLUSTER
-			cluster_kinemetric.WeaveTouchRootClusterData(); // should move to cluster manager
-		}*/
-		
-		
-		/*
-		public function clusterHitTest():void 
-		{		
-			//if (!core) cluster_kinemetric.hitTestCluster();
-		}*/
-		
-		/*
-		public function mapMotion3Dto2D():void 
-		{
-			//trace("tc mapping motion points", cO.motionArray.length, cO.motionArray2D.length, cluster_geometric );
-			if (!ts.transform3d) cluster_geometric.mapMotionPoints3Dto2D();
-		}*/
 		
 		public function findSubClusters():void 
 		{		
@@ -1289,7 +804,7 @@ package com.gestureworks.core
 
 		public function getKineMetrics3D():void 
 		{		
-			//trace("3d kinmetrics-------------------------");
+			//trace("configuration space kinemetrics-------------------------");
 			
 			gn = gO.pOList.length;
 			
@@ -1303,7 +818,7 @@ package com.gestureworks.core
 				// FILTER BY INPUT TYPE
 				//trace(gO.pOList[key].gesture_id,ts.gestureList[gO.pOList[key].gesture_id],gO.pOList[key].cluster_input_type)
 				
-				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type=="motion" || gO.pOList[key].cluster_input_type=="touch"))
+				if ((ts.gestureList[gO.pOList[key].gesture_id])&&(gO.pOList[key].cluster_input_type=="motion" || gO.pOList[key].cluster_input_type=="touch" ))
 				{
 				
 					// set dim length
@@ -1315,7 +830,7 @@ package com.gestureworks.core
 					// INTERACTION POINTS FROM // MOTION POINTS
 					//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-					//trace("TOUCHCLUSTER: processing motion kinemetrics",ts.cO.ipn);
+					//trace("TOUCHCLUSTER: processing config kinemetrics",ts.cO.ipn);
 					
 					// processing algorithms when in motion
 					if(ts.cO.ipn!=0){	//&&(sub_cO_n==gn))	// check kinemetric and if continuous analyze
@@ -1358,7 +873,9 @@ package com.gestureworks.core
 						var g:GestureObject = gO.pOList[key];
 						var c_type:String = g.cluster_type;
 						
-						//if (c_type=="") c_type = "finger_dynamic"
+						//trace(c_type);
+						
+						if (c_type=="") c_type = "finger" // default for backwards compatability with gml 1.0
 						
 						var b:int = 0;
 						var subClusterArray:ipClusterObject = iPointClusterList[c_type];
@@ -1368,12 +885,12 @@ package com.gestureworks.core
 						{
 						var sub_cO_n:int =  subClusterArray.ipn;
 
-						//trace("ipn",sub_cO_n)
+						//trace("ipn",sub_cO_n,g.n,g.nMax,g.n,g.nMin)
 
 						// check point number requirements
 						if((sub_cO_n >= g.nMin)&&(sub_cO_n<= g.nMax)||(sub_cO_n == g.n))
 						{
-							//trace("call motion cluster calc",ts.cO.fn,g.algorithm_class,g.algorithm);
+							//trace("call cluster calc",ts.cO.fn,g.algorithm_class,g.algorithm);
 							///////////////////////////////////////////////
 							// MOTION MATCH
 							///////////////////////////////////////////////
@@ -1426,6 +943,8 @@ package com.gestureworks.core
 														//WHEN THERE ARE NO LIMITS IMPOSED
 														gdim.clusterDelta = subClusterArray[res]; //OVERIDES BLENDING??
 														//gdim.clusterDelta = cO[res];
+														
+														//trace("writing deltas into gesture dim @ touch cluster",gdim.clusterDelta);
 													}
 													////////////////////////////////////////////////////////////////////////////////////////
 													//trace("result", res);

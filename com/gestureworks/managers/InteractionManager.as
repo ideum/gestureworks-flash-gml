@@ -186,12 +186,12 @@ package com.gestureworks.managers
 		{
 			var ipO:InteractionPointObject = interactionPoints[pt.interactionPointID] as InteractionPointObject;
 			
-			trace("interaction point End, interactionManager",ipO, pt.interactionPointID)
+			//trace("interaction point End, interactionManager",ipO, pt.interactionPointID)
 			
 			if (ipO)
 			{
 					//UPDATE PHASE
-					ipO.phase = "end";
+					ipO.phase = "end";// not really usefull
 		
 					// REMOVE POINT FROM GLOBAL ARRAY
 					iPointArray.splice(ipO.id, 1);
@@ -218,7 +218,7 @@ package com.gestureworks.managers
 			var ipO:InteractionPointObject = interactionPoints[pt.interactionPointID] as InteractionPointObject;
 			
 			//trace("interaction move point, interactionsManager",ipO, pt.interactionPointID, pt.position);
-			trace("pt",pt.interactionPointID,pt.rootPointID,pt.id);
+			//trace("pt",pt.interactionPointID,pt.rootPointID,pt.id);
 			//trace("ipO",ipO.interactionPointID,ipO.rootPointID,ipO.id);
 			
 				if (ipO)
@@ -269,7 +269,7 @@ package com.gestureworks.managers
 				// SAME WITH VECTOR ANALYSIS
 				//InteractionPointHistories.historyQueue(ipO);
 				//ipO.history.unshift(InteractionPointHistories.historyObject(ipO))
-				trace("interaction point update POINT",interactionPointCount,iPointArray.length)
+				//trace("interaction point update POINT",interactionPointCount,iPointArray.length)
 		}	
 	
 		///////////////////////////////////////////////////////////////////////////////////////

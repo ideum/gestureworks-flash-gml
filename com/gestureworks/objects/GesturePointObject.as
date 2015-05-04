@@ -30,6 +30,9 @@ package com.gestureworks.objects
 		public var type:String = new String();
 		public var mode:String = new String();
 		
+		// n------- number of input points involved in the gesture
+		public var n:int = 0;
+		
 		//position/////////////////////////////////////////////x,y,x
 		public var position:Vector3D = new Vector3D ();
 		

@@ -136,7 +136,8 @@ package com.gestureworks.managers
 					tpO.touchPointID = e.touchPointID;
 					tpO.position = new Vector3D (e.stageX, e.stageY, 0);//e.stageZ
 					tpO.size = new Vector3D (e.sizeX, e.sizeY);
-					tpO.pressure = e.pressure;	
+					tpO.pressure = e.pressure;
+					tpO.phase = "update";
 	
 			onTouchMovePoint(tpO);
 		}	
@@ -215,6 +216,7 @@ package com.gestureworks.managers
 					tpO.size.x = 0;
 					tpO.size.y = 0;
 					//tpO.pressure = pt.pressure;
+					tpO.phase = "begin";
 					
 					//ADD TO GLOBAL MOTION SPRITE POINT LIST//////////////////
 					touchArray.push(pt);//tpO
@@ -266,7 +268,8 @@ package com.gestureworks.managers
 			trace("Touch point End, touchManager");// , event.touchPointID, gs.touchPointCount, gs.cO.touchArray.length)
 			
 			var tpO:TouchPointObject = touchPoints[touchPointID] as TouchPointObject;
-			
+				tpO.phase = "end";
+				
 			if (tpO)
 			{
 					// REMOVE POINT FROM LOCAL LIST

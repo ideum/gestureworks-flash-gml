@@ -302,7 +302,7 @@ package com.gestureworks.core
 								
 								if (gDim.gestureDelta != 0) g.activeEvent = true;
 								
-								//trace("gesturedelta",g.event_type, gDim, gDim.gestureDelta)
+								//trace("@touchpipeline, gesturedelta",g.event_type, gDim, gDim.gestureDelta)
 
 								//////////////////////////////////////////////////////////
 								//trace("pipeline out", gDim.gestureDelta);

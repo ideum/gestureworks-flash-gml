@@ -136,7 +136,7 @@ package com.gestureworks.visualizer
 		// FIXME:
 		
 		// draw
-		if (ts.touchEnabled) 	draw_touch_gesture();
+		//if (ts.touchEnabled) 	draw_touch_gesture();
 		//if (ts.motionEnabled)	draw_motion_gesture();// DONT NEED YET // TODO: CLEAN UP GESTURE POINT VIEW
 		//if (ts.sensorEnabled) draw_sensor_gesture();
 		
@@ -156,7 +156,7 @@ package com.gestureworks.visualizer
 		{			
 			if ((_drawPivot)&&(ts.trO.init_center_point) && (ts.trO.transformPointsOn))
 			{
-				if ((ts.cO.position.x != 0) && (ts.cO.position.y != 0) && (ts.cO.dx != 0) && (ts.cO.dy != 0)) {
+				if ((ts.cO.position.x != 0) && (ts.cO.position.y != 0)){ //&& (ts.cO.dx != 0) && (ts.cO.dy != 0)) {
 				
 				var x_c:Number = 0;
 				var y_c:Number = 0;

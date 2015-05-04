@@ -145,13 +145,17 @@ package com.gestureworks.analysis
 				for (var i:int = 0; i < fn; i++)
 				{
 					var tp:TouchPointObject = touchArray[i];
-	
 					var tip:InteractionPointObject = new InteractionPointObject();
+							
 							tip.rootPointID = tp.touchPointID;
 							tip.position = tp.position;
+							tip.size = tp.size;
+							//tip.pressure = tp.pressure;
+							tip.age = tp.age;
 							tip.mode = "touch";
 							tip.source = "native";
-							tip.type = "finger_dynamic";
+							tip.type = "finger"; 
+							//tip.motion = "dynamic"
 								
 						// push to interactive point list
 						InteractionPointTracker.framePoints.push(tip);

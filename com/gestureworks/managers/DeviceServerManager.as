@@ -66,11 +66,12 @@ package com.gestureworks.managers
 		gw_public static function initialize():void
 		{
 			trace("device server manager init");
-			//init();
+			init();
 		}
 
-		
-		public function init():void
+		//public function init():void
+		public static function init():void
+		//gw_public static function init():void
 		{
 			trace("device server manager init",GestureWorks.activeTouch,GestureWorks.activeMotion,GestureWorks.activeSensor );
 			

@@ -31,6 +31,7 @@ package com.gestureworks.objects
 		
 		// interactionPointID
 		public var interactionPointID:int;
+		
 		public var rootPointID:int;
 		
 		// input mode of interaction point touch/motion/sensor
@@ -71,6 +72,8 @@ package com.gestureworks.objects
 		
 		public var size:Vector3D = new Vector3D ();
 		
+		
+		
 		//direction////////////////////////
 		public var direction:Vector3D = new Vector3D ();
 		public var screen_direction:Vector3D = new Vector3D ();
@@ -87,6 +90,8 @@ package com.gestureworks.objects
 		
 		//jolt//////////////////////////////////////////////ddx,ddy,ddz
 		public var jolt:Vector3D = new Vector3D ();
+		
+		public var pressure:Number;
 	
 		//width
 		public var width:Number = 0;
@@ -95,11 +100,12 @@ package com.gestureworks.objects
 		public var length:Number = 0;
 		
 		//fist state for palm ip
-		public var fist:Boolean = false;
+		public var fist:Boolean = false; // should chnage to p
 		
 		public var theta:Number = 0;
 		public var dtheta:Number = 0;
 		
+		//public
 		//rotation/////////////////////////////////////////////x,y,x
 		public var rotation:Matrix = new Matrix ();
 		

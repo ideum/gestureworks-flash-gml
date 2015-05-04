@@ -100,6 +100,9 @@ package com.gestureworks.core
 			// ONLY IF GESTURE EVENTS ARE ACTIVE
 			if (ts.gestureEvents)
 			{
+				//get gn for interaction object
+				gn = gO.pOList.length;
+				
 				dispatchMode();
 				dispatchGestures();
 				dispatchReset();
@@ -293,17 +296,7 @@ package com.gestureworks.core
 		{	
 			//if (traceDebugMode) trace("continuous gesture event dispatch");
 			//trace("touch gesture dispatch--------------------------",gO.release);
-		
-			
-			/*
-			// MANAGE TIMELINE
-			if (tiO.timelineOn)
-			{
-				//if (traceDebugMode) trace("timeline frame update");
-				TimelineHistories.historyQueue(ts.clusterID);			// push histories 
-				tiO.frame = new FrameObject();						// create new timeline frame //trace("manage timeline");
-			}*/
-			
+
 			// start OBJECT complete event gesturing
 			if ((gO.start)&&(ts.gestureEventStart))
 			{
@@ -316,9 +309,12 @@ package com.gestureworks.core
 			//////////////////////////////////////////////
 			// custom GML gesture events with active event
 			//////////////////////////////////////////////
+			
+			//trace("gesture dispatch",key, gn)
+			
 			for (key=0; key < gn; key++) 
 				{	
-					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent)
+					//trace("dispatchgesture",gO.pOList[key].activeEvent,gO.pOList[key].dispatchEvent, key)
 					// IF GESTURE EVENT
 					if ((gO.pOList[key].activeEvent) && (gO.pOList[key].dispatchEvent))	constructGestureEvents(key);
 					
@@ -469,7 +465,7 @@ package com.gestureworks.core
 									Data[gO.pOList[key].dList[DIM].property_id] = Number(gO.pOList[key].dList[DIM].gestureDelta);	
 									//trace(gO.pOList[key].dList[DIM].gestureDeltaCache);
 									
-									//trace(gO.pOList[key].dList[DIM].active);
+									//trace("@touch gesture, data on gesture dims",gO.pOList[key].dList[DIM].property_id, Data[gO.pOList[key].dList[DIM].property_id],gO.pOList[key].dList[DIM].clusterDelta,gO.pOList[key].dList[DIM].gestureDelta);
 								}
 							
 							
@@ -477,9 +473,15 @@ package com.gestureworks.core
 							//var GWEVENT:GWGestureEvent = new GWGestureEvent(type, Data);
 							var GWEVENT:GWGestureEvent = new GWGestureEvent(gO.pOList[key].event_type, Data);
 							
-							//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z);
+						//trace("type-----------", gO.pOList[key].event_type, GWEVENT.type,GWEVENT.value.x,GWEVENT.value.y,GWEVENT.value.z,GWEVENT.value.dx,GWEVENT.value.dy);
 							//trace(gO.pOList[key].event_type,gO.pOList[key].gesture_id)
-							if ((GWEVENT.type != "motion_hold") && (GWEVENT.type != "motion_tap")) //motion_flick, motion_swipe
+							
+							// will need to create temporal event manager and dispatch manager
+							//NOTE TAP IS MODAL GENERIC TAP WHICH SHOULD BE TRIGGERED WITH ANY MODAL INPUT TYPE
+							//TOUCH_TAP WILL TRIGGER ON ANY TOUCH CLASSIFIED INPUT
+							//TOUCH_FINGER_TAP WILL ONLY TRIGGER ON FINGER CLASSIFIED TOUCH INPUT
+							//MOTION_TAP WILL TRIGGER ON ANY MOTION INPUT
+							if (GWEVENT.type != "tap" && GWEVENT.type != "touch_finger_tap"&& GWEVENT.type != "motion_hold" && GWEVENT.type != "motion_tap") //motion_flick, motion_swipe
 							{
 								//trace("touch gesture", gO.pOList[key].event_type, gO.pOList[key].activeEvent, gO.pOList[key].dispatchEvent)
 								//trace(gO.pOList[key].active, gO.release, gO.passive, gO.complete)
@@ -488,6 +490,7 @@ package com.gestureworks.core
 								//TODO: CHECK THAT GESTURE EVENTS WILL WRITE WHEN SET TO ON
 								//if ((tiO.timelineOn) && (tiO.gestureEvents))	
 								//----if (ts.tiO.frame.gestureEventArray) ts.tiO.frame.gestureEventArray.push(GWEVENT);
+								if (tiO.frame.gestureEventArray) tiO.frame.gestureEventArray.push(GWEVENT);
 								//trace("GESTURE EVENT PUSH",tiO.timelineOn,tiO.gestureEvents,gO.pOList[key].event_type,GestureGlobals.frameID)
 							}
 							

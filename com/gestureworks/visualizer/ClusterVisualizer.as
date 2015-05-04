@@ -367,7 +367,7 @@ package com.gestureworks.visualizer
 								
 								//trace("Cluster ip vis", ipt.type)
 								
-								if (ipt.type == "finger_dynamic"|| ipt.type == "finger")//finger
+								if ( ipt.type == "finger")//finger
 								{
 									// sensor center
 									graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
@@ -376,12 +376,7 @@ package com.gestureworks.visualizer
 									graphics.endFill();
 									
 								}
-								else if (ipt.type == "finger_static")
-								{
-									graphics.lineStyle(3, 0xFFFF00, style.stroke_alpha);//red
-									graphics.drawCircle(ipt.position.x , ipt.position.y, style.radius + 10);
-								}
-								else if (ipt.type == "pen_dynamic")
+								else if (ipt.type == "pen")
 								{
 									// sensor center
 									graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
@@ -390,7 +385,7 @@ package com.gestureworks.visualizer
 									graphics.endFill();
 								}
 								
-								else if (ipt.type == "tag_dynamic")
+								else if (ipt.type == "tag")
 								{
 									// sensor center
 									graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
@@ -620,9 +615,9 @@ package com.gestureworks.visualizer
 							{
 							//trace("hello",sub_cO.type);	
 							
-									if (sub_cO.type == "finger_dynamic") style.stroke_color = 0xFF0000;//0x00FFFF;
-									if (sub_cO.type == "pen_dynamic") style.stroke_color = 0x00FF00;//0x00FFFF;
-									if (sub_cO.type == "tag_dynamic") style.stroke_color = 0x0000FF;//0x00FFFF;
+									if (sub_cO.type == "finger") style.stroke_color = 0xFF0000;//0x00FFFF;
+									if (sub_cO.type == "pen") style.stroke_color = 0x00FF00;//0x00FFFF;
+									if (sub_cO.type == "tag") style.stroke_color = 0x0000FF;//0x00FFFF;
 									
 							
 									_x = sub_cO.position.x;

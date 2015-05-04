@@ -48,7 +48,9 @@ package com.gestureworks.managers
 				trace("init leap motion device----------------------------------------------------",leapmode,leapEnabled)
 			
 			//if (GestureWorks.activeMotion){	
-				
+			
+			//leapmode= "3d_ds"
+			
 			if (leapEnabled)
 			{
 				trace("leapmode",leapmode);
@@ -64,14 +66,15 @@ package com.gestureworks.managers
 						lmManager = new Leap3DManager();
 						lmManager.addEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
 					}
+					*/
 				//}
-				*/
+				
 				//SERVER LEAP MANAGERS
 				if (leapmode == "2d_ds") {
 					trace(leapmode)
 				}
 				if (leapmode == "3d_ds") {
-					trace(leapmode)
+					//trace(leapmode)
 					
 					// init leap socker mgr
 					//leapsocketMgr = new Leap3DSManager;

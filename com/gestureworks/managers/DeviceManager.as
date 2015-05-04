@@ -64,7 +64,7 @@ package com.gestureworks.managers
 				ds = new DeviceServerManager();
 					//ds.host = dp.host;
 					//ds.port = dp.port;
-					ds.init();
+					//ds.init();
 					
 				trace("configuring server connected devices using dml specs");
 				configServerDevices();

@@ -34,7 +34,7 @@ package com.gestureworks.server
 		
 		private static var debug:Boolean = false;
 		
-		public static var stylusOn:Boolean = false;
+		public static var stylusOn:Boolean = true;
 		public static var tagOn:Boolean = true;
 		public static var fingerOn:Boolean = true;
 		public static var shapeOn:Boolean = false;
@@ -52,14 +52,12 @@ package com.gestureworks.server
 		
 		public static function processTouch2DSocketData(xmlList:XMLList):void //:XML//message:XML
 		{
-			
 			var id_shift:int = 200;
-			
-	
-				fingercount = int(xmlList.Finger.length());
-				styluscount = int(xmlList.Stylus.length());
-				fiducialcount = int(xmlList.Fiducial.length());
-				shapecount = int(xmlList.Shape.length());
+
+			fingercount = int(xmlList.Finger.length());
+			styluscount = int(xmlList.Stylus.length());
+			fiducialcount = int(xmlList.Fiducial.length());
+			shapecount = int(xmlList.Shape.length());
 				
 				//trace("inside touch2d server parser", fingercount);
 				
@@ -76,71 +74,49 @@ package com.gestureworks.server
 
 							ptf.interactionPointID = int(finger.@id) + id_shift; 
 							ptf.rootPointID = int(finger.@id); 
-							ptf.source = "server";
+							ptf.source = "native"//"server";
 							ptf.mode = "touch";
-							ptf.type = "finger_dynamic"//must be dynamic to show in debugger
+							ptf.type = "finger"//must be dynamic to show in debugger
 							ptf.phase = finger.@phase; //need phase
 							ptf.radius = finger.@radius;
-							//ptf.pressure = finger.@pressure;
+							ptf.pressure = finger.@pressure;
 							ptf.theta = finger.@theta; 
 							ptf.position = new Vector3D(finger.@x, finger.@y, 0);
 							ptf.size = new Vector3D(finger.@width, finger.@height, 0);
 							
-							//trace(ptf.id,ptf.source,ptf.type, ptf.phase, ptf.position)
-							
-						//InteractionPointTracker.framePoints.push(ptf); // dont need tracker
-
-						if (ptf.phase == "begin"|| ptf.phase == "touch_down")
-							{
-								//trace("socket begin",ptf.interactionPointID,ptf.rootPointID);
-								InteractionManager.onInteractionBeginPoint(ptf);
-								
-								//interactionPoints[ptf.interactionPointID]  = ptf;
-								//trace("touch 2ds manager interaction point begin, interactionManager",ptf, ptf.interactionPointID)
-							}
-							else if (ptf.phase == "update"|| ptf.phase == "touch_move")
-							{
-								//trace("update",ptf.init_position.x,ptf.init_position.y,ptf.position.x,ptf.position.y);
-								InteractionManager.onInteractionUpdatePoint(ptf);
-								
-							}
-							else if (ptf.phase == "end"|| ptf.phase == "touch_up")
-							{
-								//trace("socket end",ptf.interactionPointID,ptf.rootPointID);
-								
-								
-								//var ipO:InteractionPointObject = interactionPoints[ptf.interactionPointID] as InteractionPointObject;
-			
-								//trace("touch 2ds manager interaction point End, interactionManager",ipO, ptf.interactionPointID)
-								
-								
-								InteractionManager.onInteractionEndPoint(ptf);
-							}
+						//trace(ptf.id,ptf.source,ptf.type, ptf.phase, ptf.position)
 						
+						InteractionPointTracker.framePoints.push(ptf);
 						
+						//if (ptf.phase == "begin"|| ptf.phase == "touch_down") 		InteractionManager.onInteractionBeginPoint(ptf);
+						//else if (ptf.phase == "update"|| ptf.phase == "touch_move")	InteractionManager.onInteractionUpdatePoint(ptf);
+						//else if (ptf.phase == "end"|| ptf.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptf);
 					}
 				}
 				
 				//STYLUS/PEN/BRUSH (position, radius,width,height, name, theta)
 				if (xmlList.Stylus && stylusOn) 
 				{
-					// CREATE finger Touch POINTS
+					// CREATE pen Touch POINTS
 					for (var ks:int = 0; ks < styluscount; ks++)
 					{
 						var stylus:Object =  xmlList.Stylus[ks];
 						var pts:InteractionPointObject = new InteractionPointObject();
+						
 							pts.id = int(stylus.@id) + id_shift;
-							pts.source = "server";
+							pts.source = "native"//"server";
 							pts.mode = "touch";
-							pts.type = "stylus";
+							pts.type = "finger"//"stylus";
 							pts.phase = stylus.@phase;
 							//pts.pressure = stylus.@pressure;
-							//if (!pts.position)
+							pts.radius = stylus.@radius;
 							pts.position = new Vector3D(stylus.@x,stylus.@y,0);
-							//if (!pts.size)
 							pts.size = new Vector3D(stylus.@width, stylus.@height, 0);
 							
 						InteractionPointTracker.framePoints.push(pts);
+						//if (pts.phase == "begin"|| pts.phase == "touch_down") 		InteractionManager.onInteractionBeginPoint(pts);
+						//else if (pts.phase == "update"|| pts.phase == "touch_move")	InteractionManager.onInteractionUpdatePoint(pts);
+						//else if (pts.phase == "end"|| pts.phase == "touch_up")		InteractionManager.onInteractionEndPoint(pts);
 					}
 				}
 				
@@ -149,36 +125,44 @@ package com.gestureworks.server
 				{
 					//trace("tag parser",fiducialcount);
 					
-					// CREATE finger Touch POINTS
+					// CREATE tag Touch POINTS
 					for (var ko:int = 0; ko < fiducialcount; ko++)
 					{
 						//var f =  message.InputPoint.Values.Surface.Point[k];
 						var tag:Object =  xmlList.Fiducial[ko];//message.InputPoint.Values.Eye[k];
-						var pto:InteractionPointObject = new InteractionPointObject();
-							pto.id = int(tag.@id) + id_shift;
-							pto.source = "server";
-							pto.mode = "touch";
-							pto.type = "tag";
-							pto.name = tag.name;// or ref
-							pto.tagn = tag.n; // point number
-							pto.theta = tag.@theta;
-							pto.dtheta = tag.@dtheta;
+						var ptt:InteractionPointObject = new InteractionPointObject();
+						
+							ptt.interactionPointID = int(tag.@id) + id_shift; 
+							ptt.rootPointID = int(tag.@id); 
+							ptt.source = "server";
+							ptt.mode = "touch";
+							ptt.type = "tag";
+							ptt.name = tag.name;// or ref
+							ptt.tagn = tag.numPoints; // point number
+							ptt.theta = tag.@theta;
+							ptt.dtheta = tag.@dtheta;
+							ptt.radius = tag.@radius;
 							//pto.pressure = tag.@pressure
-							//if (pto.position) 
-							pto.position = new Vector3D(tag.@x,tag.@y,0); 
-							//if (pto.size)
-							pto.size = new Vector3D(tag.@width, tag.@height, 0);
+							ptt.position = new Vector3D(tag.@x,tag.@y,0); 
+							ptt.size = new Vector3D(tag.@width, tag.@height, 0);
+						
+						//trace(xmlList);
+						trace("tag-----------------------------",ptt.interactionPointID,ptt.rootPointID ,ptt.source,ptt.name ,ptt.type, ptt.phase)
 							
-							trace(ptf.id,ptf.source,ptf.name ,ptf.type, ptf.phase)
-							
-						InteractionPointTracker.framePoints.push(pto);
+						//InteractionPointTracker.framePoints.push(pto);
+						
+						if (ptt.phase == "") InteractionManager.onInteractionBeginPoint(ptt);
+						
+						if (ptt.phase == "begin"|| ptt.phase == "touch_down") 		InteractionManager.onInteractionBeginPoint(ptt);
+						else if (ptt.phase == "update"|| ptt.phase == "touch_move")	InteractionManager.onInteractionUpdatePoint(ptt);
+						else if (ptt.phase == "end"|| ptt.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptt);
 					}
 				}
 				
 				//SHAPE (position, radius,width,height,name, theta)
 				if (xmlList.Shape && shapeOn) 
 				{
-					// CREATE finger Touch POINTS
+					// CREATE shape Touch POINTS
 					for (var ksh:int = 0; ksh < shapecount; ksh++)
 					{
 						//var f =  message.InputPoint.Values.Surface.Point[k];
@@ -191,13 +175,15 @@ package com.gestureworks.server
 							ptsh.name = shape.name;
 							ptsh.theta = shape.@theta;
 							ptsh.dtheta = shape.@dtheta;
+							ptsh.radius = shape.@radius;
 							//ptsh.pressure = shape.@pressure;
-							//if (ptsh.position)
 							ptsh.position = new Vector3D(shape.@x,shape.@y,0); 
-							//if (ptsh.size)
 							ptsh.size = new Vector3D(shape.@width, shape.@height, 0);
 							
-						InteractionPointTracker.framePoints.push(ptsh);
+						//InteractionPointTracker.framePoints.push(ptsh);
+						if (ptsh.phase == "begin"|| ptsh.phase == "touch_down") 		InteractionManager.onInteractionBeginPoint(ptsh);
+						else if (ptsh.phase == "update"|| ptsh.phase == "touch_move")	InteractionManager.onInteractionUpdatePoint(ptsh);
+						else if (ptsh.phase == "end"|| ptsh.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptsh);
 					}
 				}
 

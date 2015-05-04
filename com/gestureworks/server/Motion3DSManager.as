@@ -71,7 +71,7 @@ package com.gestureworks.server
 				//handType = message.InputPoint.Values.Hand.@type; //left/right
 				//handSplay
 				
-				//trace("hand count",handCount);
+				trace("hand count",handCount);
 
 				// CREATE POINT LIST
 				pointList = new Vector.<MotionPointObject>//Array();
