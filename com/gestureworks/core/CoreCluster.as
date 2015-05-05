@@ -380,6 +380,7 @@ package com.gestureworks.core
 				// BASIC HAND
 					cluster_geometric.updateMotionPoints();//createHand(); // palm points // finger list palm ip 
 					
+					
 				// SKELETAL DETAIL
 					cluster_geometric.findFingerAverage();// finger average point// up down 
 					cluster_geometric.findHandOrientation();
@@ -388,6 +389,7 @@ package com.gestureworks.core
 					cluster_geometric.findHandRadius(); // favdist 
 					cluster_geometric.findThumb(); // thumb // left// right
 				
+					
 				// ADVANCED SKELETON
 				//	cluster_geometric.dynamicSkeletonUpdate();
 			
