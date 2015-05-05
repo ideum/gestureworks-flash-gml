@@ -62,7 +62,7 @@ package com.gestureworks.server
 
 		public function processMotion3DSocketData(handList:XMLList):void 
 		{
-			trace("prcess motion socket data")
+			//trace("prcess motion socket data")
 				//message = frame.Messages.Message;
 				//trace(message)
 				
@@ -71,7 +71,7 @@ package com.gestureworks.server
 				//handType = message.InputPoint.Values.Hand.@type; //left/right
 				//handSplay
 				
-				trace("hand count",handCount);
+				//trace("hand count",handCount);
 
 				// CREATE POINT LIST
 				pointList = new Vector.<MotionPointObject>//Array();

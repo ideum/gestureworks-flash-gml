@@ -465,6 +465,7 @@ package com.gestureworks.analysis
 					gs.fn = fnum
 		}
 		
+		/*
 		public function lockHandType():void 
 		{
 			
@@ -493,10 +494,10 @@ package com.gestureworks.analysis
 						}
 						}
 				}
-		}
+		}*/
 		
-		public function lockThumb():void 
-		{
+		//public function lockThumb():void 
+		//{
 			//for (j = 0; j < hn; j++)
 				//{
 					//if (handList[j].type)
@@ -531,8 +532,9 @@ package com.gestureworks.analysis
 						*/
 				//}
 				
-		}
+		//}
 		
+		/*
 		public function dynamicSkeletonUpdate():void 
 		{
 			for (j = 0; j < handList.length; j++)
@@ -546,7 +548,7 @@ package com.gestureworks.analysis
 								//trace("create new hand skeleton", handList[j].type, handList[j].lockedType);
 								lockThumb();
 								createSkeleton(true);
-								matchFingers(true);
+								//matchFingers(true);
 								positionTips();
 								positionJoints();
 							}
@@ -582,7 +584,7 @@ package com.gestureworks.analysis
 									
 								// reset skeleton
 								createSkeleton(true);
-								matchFingers(true);
+								//matchFingers(true);
 								positionTips();
 								positionJoints();
 						}
@@ -604,8 +606,9 @@ package com.gestureworks.analysis
 				}
 				
 				cacheFingers();
-		}
+		}*/
 		
+		/*
 		//NEED TO INCLUDE ORIENATION
 		public function pushSeeds():void 
 		{
@@ -685,7 +688,7 @@ package com.gestureworks.analysis
 										handList[j].seedList[3] = new Vector3D();
 										handList[j].seedList[4] = new Vector3D();
 									}
-		}
+		}*/
 		
 		public function createSkeleton(force_update:Boolean):void 
 		{
@@ -694,7 +697,7 @@ package com.gestureworks.analysis
 			for (j = 0; j <handList.length; j++)
 				{
 					// SEED SKELTON GEOMETRY
-					if (handList[j].seedList.length==0) pushSeeds()
+					//if (handList[j].seedList.length==0) pushSeeds()
 					
 						var s:int = 30;
 						var p:Vector3D = handList[j].position;
@@ -885,7 +888,7 @@ package com.gestureworks.analysis
 						
 							//trace(handList[j].knuckleList.length);
 							
-							
+							/*
 							
 							//////////////////////////////////////////////////////////
 							//CREATE KNUCLE PROJECTION POINTS IN PALM LINE
@@ -904,18 +907,11 @@ package com.gestureworks.analysis
 								kpt.palmplaneline_position = palm_plane_line_point
 								
 								}
-							
-							
-							
-							
-							
-							
-							
-							
+							*/
 					}
 		}
 		
-
+		/*
 		// UNIQUE FINGER IDS
 		public function matchFingers(force_update:Boolean):void 
 		{
@@ -1032,8 +1028,9 @@ package com.gestureworks.analysis
 					}
 					
 					findClassifiedFingerData();
-		}
+		}*/
 		
+		/*
 		public function getPinky(fn:int,knuckle:MotionPointObject,maxDist:Number,minDist:Number,maxAngle:Number,maxKnuckleDist:Number,prev_max:Number):void 
 		{
 			for (var k:int = 0; k <fn; k++)// fingertips
@@ -1099,8 +1096,9 @@ package com.gestureworks.analysis
 									}
 								}
 								}
-		}
+		}*/
 		
+		/*
 		public function getMiddle(fn:int,knuckle:MotionPointObject,maxDist:Number,minDist:Number, maxAngle:Number,maxKnuckleDist:Number,prev_max:Number):void 
 		{
 			for (var k:int = 0; k <fn; k++)// fingertips
@@ -1186,8 +1184,9 @@ package com.gestureworks.analysis
 									}
 								}
 								}
-		}
+		}*/
 		
+		/*
 		public function getIndex(fn:int,knuckle:MotionPointObject,maxDist:Number,minDist:Number,maxAngle:Number,maxKnuckleDist:Number,prev_max:Number):void 
 		{
 			for (var k:int = 0; k <fn; k++)// fingertips
@@ -1230,21 +1229,21 @@ package com.gestureworks.analysis
 										var prev_dist:Number = Vector3D.distance(finger.position,finger.positionCached)
 										//trace("index finger cached",k, prev_dist)
 										
-										/*
-										var middle:MotionPointObject = handList[j].middle;
-										var neighbourMax:int = 40;
+										
+										//var middle:MotionPointObject = handList[j].middle;
+										//var neighbourMax:int = 40;
 										
 										
-										if (middle.id) //context association with neighbour tip
-										{
-											var middle_dist:Number = Vector3D.distance(finger.position, middle.position)
-											if (middle_dist < neighbourMax)
-											{
-												trace("MIDDLE HELPED",k, middle_dist)
-												handList[j].fingerList[k].fingertype = "index";
-												handList[j].index = handList[j].fingerList[k];
-											}	
-										}*/
+										//if (middle.id) //context association with neighbour tip
+										//{
+											//var middle_dist:Number = Vector3D.distance(finger.position, middle.position)
+											//if (middle_dist < neighbourMax)
+											//{
+												//trace("MIDDLE HELPED",k, middle_dist)
+												//handList[j].fingerList[k].fingertype = "index";
+												//handList[j].index = handList[j].fingerList[k];
+											//}	
+										}//
 										
 										if (prev_dist < prev_max) 
 										{
@@ -1272,8 +1271,9 @@ package com.gestureworks.analysis
 									}
 									}
 								}
-		}
+		}*/
 		
+		/*
 		public function getRing(fn:int,knuckle:MotionPointObject,maxDist:Number,minDist:Number,maxAngle:Number,maxKnuckleDist:Number,prev_max:Number):void 
 		{
 			for (var k:int = 0; k <fn; k++)// fingertips
@@ -1318,20 +1318,20 @@ package com.gestureworks.analysis
 										//trace("index finger cached",k, prev_dist)
 										
 										
-										/*
-										var middle:MotionPointObject = handList[j].middle;
-										var neighbourMax:int = 40;
 										
-										if (middle.id) //context association with neighbour tip
-										{
-											var middle_dist:Number = Vector3D.distance(finger.position, middle.position)
-											if (middle_dist < neighbourMax)
-											{
-												trace("MIDDLE HELPED",k, middle_dist)
-												handList[j].fingerList[k].fingertype = "ring";
-												handList[j].ring = handList[j].fingerList[k];
-											}	
-										}*/
+										//var middle:MotionPointObject = handList[j].middle;
+										//var neighbourMax:int = 40;
+										
+										//if (middle.id) //context association with neighbour tip
+									//	{
+										//	var middle_dist:Number = Vector3D.distance(finger.position, middle.position)
+											//if (middle_dist < neighbourMax)
+											//{
+												//trace("MIDDLE HELPED",k, middle_dist)
+												//handList[j].fingerList[k].fingertype = "ring";
+												//handList[j].ring = handList[j].fingerList[k];
+											//}	
+										//}
 										
 										if (prev_dist < prev_max) 
 										{
@@ -1359,7 +1359,7 @@ package com.gestureworks.analysis
 									}
 								}
 								}
-		}
+		}*/
 		
 		
 		public function positionTips():void 

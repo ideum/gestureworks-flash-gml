@@ -389,7 +389,7 @@ package com.gestureworks.core
 					cluster_geometric.findThumb(); // thumb // left// right
 				
 				// ADVANCED SKELETON
-					cluster_geometric.dynamicSkeletonUpdate();
+				//	cluster_geometric.dynamicSkeletonUpdate();
 			
 		}
 		
