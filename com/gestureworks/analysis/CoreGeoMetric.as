@@ -289,13 +289,13 @@ package com.gestureworks.analysis
 		// create basic hand
 		public function updateMotionPoints():void 
 		{
-			//trace("updateMotionPoints",mpn, motionArray.length, handList.length, hn)
-			
 			if (motionArray) gs.mpn = motionArray.length;
 			else gs.mpn = 0;
 			
 			if (handList) gs.hn = handList.length;
 			else gs.hn = 0;
+			
+			//trace("updateMotionPoints",gs.mpn, motionArray.length, handList.length, gs.hn)
 			
 				for (i = 0; i < gs.mpn; i++)//mpn
 					{
@@ -303,11 +303,13 @@ package com.gestureworks.analysis
 						/// create hand
 						if (motionArray[i].type == "palm") 
 						{
+							trace("palm", i, motionArray[i].position);
+							
 										if (gs.hn != 0)
 										{
 										for (j = 0; j < gs.hn; j++)//handList.length
 										{
-											//trace("////////////////////////////////",handList[j].handID, motionArray[i].handID)
+											//trace("////////////////////////////////",i,j,handList[j].handID, motionArray[i].handID)
 											
 											
 											if ((handList[j].handID != motionArray[i].handID)&&(handList.length < 2))
@@ -320,24 +322,43 @@ package com.gestureworks.analysis
 													hand.direction = motionArray[i].direction
 													hand.normal = motionArray[i].normal
 													hand.handID = motionArray[i].handID;
+													
+													/*
+													//get finger types
+													hand.thumb =
 													hand.palm = motionArray[i]; // link palm point
-								
+													hand.index = null;
+													hand.middle = null;
+													hand.ring = null;
+													hand.pinky = null;
+													
+													//get joints
+													hand.pipList.length = 0;
+													hand.dipList.length = 0;
+													hand.tipList.length = 0;
+													*/
+													
 												handList.push(hand);
-												//trace("p",motionArray[i].handID)
+												
 											}
-											else {
-												//trace("update hand",j,handList[j].handID,motionArray[i].handID);
+											/*else {
+												
+												trace("update hand",j,handList[j].handID,motionArray[i].handID);
 												//update hand
 												//handList[j] = motionArray[i];
-												handList[j].position = motionArray[i].position;
-												handList[j].direction = motionArray[i].direction
-												handList[j].normal = motionArray[i].normal
-												handList[j].palm = motionArray[i];
-												}	
+												//handList[j].motionPointID = motionArray[i].motionPointID; 
+												//-handList[j].position = motionArray[i].position;
+												//--handList[j].direction = motionArray[i].direction
+												//--handList[j].normal = motionArray[i].normal
+												//handList[j].handID = motionArray[i].handID;
+												//-handList[j].palm = motionArray[i];
+												
+												//trace("p",j,i, motionArray[i].handID,motionArray[i].position)
+												}*/	
 											}
 										}
 										else {
-											//trace("--------------------------------------------------------zero create hand");
+											//trace("--------------------------------------------------------zero create hand",handList[j].handID,motionArray[i].handID );
 											//create hand
 											var hand:HandObject = new HandObject();	
 													hand.motionPointID = motionArray[i].motionPointID //palmID
@@ -469,7 +490,7 @@ package com.gestureworks.analysis
 		
 		
 		
-		public function createSkeleton(force_update:Boolean):void 
+		public function createSkeleton():void 
 		{
 			//trace("create hand")
 
@@ -505,92 +526,6 @@ package com.gestureworks.analysis
 					
 						//trace("sn",sn);
 	
-								if (force_update)
-								{
-								//trace("skeleton rebuilt");
-								
-								// CLEAR OUT LISTS
-								handList[j].knuckleList.length = 0;
-								handList[j].tipList.length = 0;
-								handList[j].dipList.length = 0;
-								handList[j].pipList.length = 0;
-								
-								//CLEAR FINGER REFERENCES TO FORCE ID CYCLE
-								//handList[j].thumb = null; // MUST RESET IN THUMB ID FUNCTION
-								handList[j].index = new MotionPointObject();
-								handList[j].middle = new MotionPointObject()//null;
-								handList[j].ring = new MotionPointObject()//null;
-								handList[j].pinky = new MotionPointObject()//null;
-								
-								//CLEAR FINGER IDS
-								for (i = 0; i <handList[j].fingerList.length; i++)
-									{	
-									if (handList[j].fingerList[i].fingertype!="thumb") handList[j].fingerList[i].fingertype = "";
-									}
-								
-								//trace("create knuckle", sn)
-								////////////////////////////////////////////////
-								// CREATE SKELTAL KNUCLE, JOINTS AND TIPS SEEDS
-								////////////////////////////////////////////////
-									for (i = 0; i <sn; i++)//mpn
-									{	
-										//handList[j].seedList.push(vArray[i]);
-										
-										// create static number of knuckles
-										var kp:MotionPointObject = new MotionPointObject();
-											kp.handID = handList[j].handID;	
-											kp.type = "mcp" + (i+1);
-											
-											var v:Vector3D = handList[j].seedList[i];
-											var pv:Vector3D = Utils3D.projectVector(m, v);			
-											// translate
-											var rv:Vector3D = p.add(pv);
-								
-											kp.position = rv;
-											
-										handList[j].knuckleList.push(kp);
-										
-										//exclude thumb
-										if (i != 0)
-										{
-											//create joints PIPS
-											var j_pip:MotionPointObject = new MotionPointObject();
-												j_pip.handID = handList[j].handID;	
-												j_pip.type = "pip" + (i);
-												
-												var ds:Vector3D = new Vector3D(handList[j].direction.x * s, handList[j].direction.y * s, handList[j].direction.z * s);
-												var vd:Vector3D = kp.position.add(ds);
-												
-												j_pip.position = vd;
-											handList[j].pipList.push(j_pip);
-										}
-										
-										//create joints DIPS
-										var j_dip:MotionPointObject = new MotionPointObject();
-											j_dip.handID = handList[j].handID;	
-											j_dip.type = "dip" + (i+1);
-											
-											var ds2:Vector3D = new Vector3D(handList[j].direction.x * s*1.3, handList[j].direction.y * s*1.3, handList[j].direction.z * s*1.3);
-											var vd2:Vector3D = kp.position.add(ds2);
-											j_dip.position = vd2;
-										handList[j].dipList.push(j_dip);
-										
-										// create TIPS
-										var j_tip:MotionPointObject = new MotionPointObject();
-											j_tip.handID = handList[j].handID;	
-											j_tip.type = "tip" + (i+1);
-											
-											var ds3:Vector3D = new Vector3D(handList[j].direction.x * s*1.6, handList[j].direction.y * s*1.6, handList[j].direction.z * s*1.6);
-											var vd3:Vector3D = kp.position.add(ds3);
-											j_tip.position = vd3;
-										handList[j].tipList.push(j_tip);
-										
-									}
-							
-									//trace("build",handList[j].knuckleList.length)
-							}
-							else
-							{
 								var kn:int = handList[j].knuckleList.length;
 								var dn:int = handList[j].dipList.length
 								var pn:int = handList[j].pipList.length
@@ -687,7 +622,7 @@ package com.gestureworks.analysis
 								
 								}
 							*/
-					}
+					
 		}
 		
 		
@@ -734,24 +669,26 @@ package com.gestureworks.analysis
 					
 					if (handList[j].position && handList[j].normal){
 					
-					for (i = 0; i < hfn; i++)
-							{	
-									var fpt:MotionPointObject = handList[j].fingerList[i];
+				
+						for (i = 0; i < hfn; i++)
+								{	
+										var fpt:MotionPointObject = handList[j].fingerList[i];
 
-									// finger average point (fingers + thumb)
-									fav_pt.x += fpt.position.x;
-									fav_pt.y += fpt.position.y;
-									fav_pt.z += fpt.position.z;
-									
-									if (fpt.fingertype == "finger") 
-									//if (motionArray[i].fingertype == "finger") // add other finger types
-									{
-										// finger average point
-										pfav_pt.x += fpt.position.x;
-										pfav_pt.y += fpt.position.y;
-										pfav_pt.z += fpt.position.z;
-									}
-							}
+										// finger average point (fingers + thumb)
+										fav_pt.x += fpt.position.x;
+										fav_pt.y += fpt.position.y;
+										fav_pt.z += fpt.position.z;
+										
+										if (fpt.fingertype == "finger") 
+										//if (motionArray[i].fingertype == "finger") // add other finger types
+										{
+											// finger average point
+											pfav_pt.x += fpt.position.x;
+											pfav_pt.y += fpt.position.y;
+											pfav_pt.z += fpt.position.z;
+										}
+								}
+						
 							fav_pt.x *= hfnk;
 							fav_pt.y *= hfnk;
 							fav_pt.z *= hfnk;
@@ -760,10 +697,18 @@ package com.gestureworks.analysis
 							pfav_pt.y *= (hfnk - 1);
 							pfav_pt.z *= (hfnk - 1);
 							
+							
+							if (hfn == 0) {
+								fav_pt = handList[j].palm.position;
+								pfav_pt = handList[j].palm.position;
+							}
+							
 							//////////////////////////////////////////////////////////////////////////////////////////////////
 							// push fav point to hand object
 							handList[j].fingerAveragePosition = fav_pt;
 							handList[j].pureFingerAveragePosition = pfav_pt;
+							
+							
 							
 							//GET PROJECTED FAV POINT AND PROJECTED PUREFINGERFAV POINT
 							var vp_mp:Vector3D = fav_pt.subtract(handList[j].position);
@@ -778,7 +723,7 @@ package com.gestureworks.analysis
 							handList[j].projectedFingerAveragePosition = fav_palm_plane_point;
 							handList[j].projectedPureFingerAveragePosition = pfav_palm_plane_point;
 						}
-				}
+					}
 				//trace("hand pos",hand.position)
 		}
 
@@ -971,6 +916,7 @@ package com.gestureworks.analysis
 			// set plam plane fav projection point
 			handList[j].projectedFingerAveragePosition = palm_plane_favpoint;
 			
+			//trace("coregeometric:palm,",hn,j,p_pos, direction)
 			
 			// get values
 			for (i = 0; i < hfn; i++)
@@ -1443,6 +1389,13 @@ package com.gestureworks.analysis
 							}
 						}
 					}
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//
+		public function getJoints():void
+		{
+			
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2023,7 +1976,7 @@ package com.gestureworks.analysis
 							palm_pt.radius  = handList[j].radius  
 							palm_pt.type = "palm";	
 							
-							//trace("fist: geometric", palm_pt.fist, handList[j].orientation, handList[j].flatness, handList[j].splay, handList[j].type);
+							trace("fist: geometric",palm_pt.position, palm_pt.fist, handList[j].orientation, handList[j].flatness, handList[j].splay, handList[j].type);
 							
 						InteractionPointTracker.framePoints.push(palm_pt)
 				}

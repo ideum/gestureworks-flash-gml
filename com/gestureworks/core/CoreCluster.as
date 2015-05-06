@@ -364,15 +364,8 @@ package com.gestureworks.core
 				//////////////////////////////////////////////////////
 				// RESET CLUSTER
 				//////////////////////////////////////////////////////
-				//cluster_geometric.resetGeoCluster();
-				
 				cluster_geometric.clearHandData();	
-				
-				
-				// NEEDS TO UPDATE HERE TO STAY CURRENT
-				// NEED TO FIND OUT WHY ??
-				//cluster_geometric.findMotionClusterConstants()
-				
+			
 				/////////////////////////////////////////////////////
 				//BUILD SKELETAL MODEL FROM RAW MOTION POINTS
 				/////////////////////////////////////////////////////
@@ -380,18 +373,14 @@ package com.gestureworks.core
 				// BASIC HAND
 					cluster_geometric.updateMotionPoints();//createHand(); // palm points // finger list palm ip 
 					
-					
 				// SKELETAL DETAIL
 					cluster_geometric.findFingerAverage();// finger average point// up down 
-					cluster_geometric.findHandOrientation();
-					cluster_geometric.findHandDirection();
+					//cluster_geometric.findHandOrientation();
+					//cluster_geometric.findHandDirection();
 					cluster_geometric.normalizeFingerFeatures(); // norm lengths (palm distances)
-					cluster_geometric.findHandRadius(); // favdist 
-					cluster_geometric.findThumb(); // thumb // left// right
+					//cluster_geometric.findHandRadius(); // favdist 
+					//cluster_geometric.findThumb(); // thumb // left// right
 				
-					
-				// ADVANCED SKELETON
-				//	cluster_geometric.dynamicSkeletonUpdate();
 			
 		}
 		

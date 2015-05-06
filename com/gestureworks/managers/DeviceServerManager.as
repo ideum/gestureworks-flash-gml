@@ -236,9 +236,11 @@ package com.gestureworks.managers
 							//////////////////////////////////////////////////////////////
 							
 							//trace("motion",deviceType,inputType);
+							//trace(message);
 							
 								//HAND/FINGER TRACKING////////////////////////////////////////
 								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);//motionManagerSocket.processMotion3DSocketData(message);
+								if ((deviceType == "RealSense") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
 								//if ((deviceType == "Creative_Senz3d") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
 								//if ((deviceType == "PMD_Nano") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
 								//if ((deviceType == "Occipital_Structure") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);

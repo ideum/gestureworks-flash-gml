@@ -113,6 +113,13 @@ package com.gestureworks.objects
 		public var palm_finger_direction:Vector3D = new Vector3D ();
 		public var projected_palm_finger_direction:Vector3D = new Vector3D ();
 		
+		
+		//joints////////////////////////////////////////////////////////
+		public var joint_0:Vector3D = new Vector3D ();
+		public var joint_1:Vector3D = new Vector3D ();
+		public var joint_2:Vector3D = new Vector3D ();
+		public var joint_3:Vector3D = new Vector3D ();
+		
 		/*
 		//size///////////////////////////////////////////w,h,l
 		public var size:Vector3D = new Vector3D ();
