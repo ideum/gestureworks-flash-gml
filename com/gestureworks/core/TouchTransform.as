@@ -93,44 +93,44 @@ package com.gestureworks.core
 				for each(var dO:DimensionObject in pO.dList) {
 					switch(dO.target_id) {
 						case "dx":
-							ts.minX = dO.property_min;
-							ts.maxX = dO.property_max;
+							ts.minX = isNaN(dO.property_min) ? ts.minX : dO.property_min;
+							ts.maxX = isNaN(dO.property_max) ? ts.maxX : dO.property_max;
 							break; 
 						case "dy":
-							ts.minY = dO.property_min;
-							ts.maxY = dO.property_max;
+							ts.minY = isNaN(dO.property_min) ? ts.minY : dO.property_min;
+							ts.maxY = isNaN(dO.property_max) ? ts.maxY : dO.property_max;
 							break; 
 						case "dz":
-							ts.minZ = dO.property_min;
-							ts.maxZ = dO.property_max;
+							ts.minZ = isNaN(dO.property_min) ? ts.minZ : dO.property_min;
+							ts.maxZ = isNaN(dO.property_max) ? ts.maxZ : dO.property_max;
 							break; 
 						case "dsx":
-							ts.minScaleX = dO.property_min;
-							ts.maxScaleX = dO.property_max;
+							ts.minScaleX = isNaN(dO.property_min) ? ts.minScaleX: dO.property_min;
+							ts.maxScaleX = isNaN(dO.property_max) ? ts.maxScaleX : dO.property_max;
 							break; 
 						case "dsy":
-							ts.minScaleY = dO.property_min;
-							ts.maxScaleY = dO.property_max;
+							ts.minScaleY = isNaN(dO.property_min) ? ts.minScaleY : dO.property_min;
+							ts.maxScaleY = isNaN(dO.property_max) ? ts.maxScaleY : dO.property_max;
 							break; 
 						case "dsz":
-							ts.minScaleZ = dO.property_min;
-							ts.maxScaleZ = dO.property_max;
+							ts.minScaleZ = isNaN(dO.property_min) ? ts.minScaleZ : dO.property_min;
+							ts.maxScaleZ = isNaN(dO.property_max) ? ts.maxScaleZ : dO.property_max;
 							break; 
 						case "dtheta":
-							ts.minRotation = dO.property_min;
-							ts.maxRotation = dO.property_max;
+							ts.minRotation = isNaN(dO.property_min) ? ts.minRotation : dO.property_min;
+							ts.maxRotation = isNaN(dO.property_max) ? ts.maxRotation : dO.property_max;
 							break; 
 						case "dthetaX":
-							ts.minRotationX = dO.property_min;
-							ts.maxRotationX = dO.property_max;
+							ts.minRotationX = isNaN(dO.property_min) ? ts.minRotationX : dO.property_min;
+							ts.maxRotationX = isNaN(dO.property_max) ? ts.maxRotationX : dO.property_max;
 							break; 
 						case "dthetaY":
-							ts.minRotationY = dO.property_min;
-							ts.maxRotationY = dO.property_max;
+							ts.minRotationY = isNaN(dO.property_min) ? ts.minRotationY : dO.property_min;
+							ts.maxRotationY = isNaN(dO.property_max) ? ts.maxRotationY : dO.property_max;
 							break; 
 						case "dthetaZ":
-							ts.minRotationZ = dO.property_min;
-							ts.maxRotationZ = dO.property_max;
+							ts.minRotationZ = isNaN(dO.property_min) ? ts.minRotationZ : dO.property_min;
+							ts.maxRotationZ = isNaN(dO.property_max) ? ts.maxRotationZ : dO.property_max;
 							break; 
 						default:
 							break;
@@ -207,7 +207,6 @@ package com.gestureworks.core
 			
 		//TODO: MERGE "applyaffineTransform" and "applyNativeTransform()"
 		// set logic internally to the transform based on ts type
-		
 		
 			//////////////////////////////////////////////////////////////////////
 			// ACTIVE INTERACTION POINT TRANSFORM
