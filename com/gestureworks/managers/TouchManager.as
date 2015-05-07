@@ -761,6 +761,7 @@ package com.gestureworks.managers
 			}
 			else if(event.touchPointID in totalPoints){
 				ITouchObject(totalPoints[event.touchPointID]).totalPointCount--;
+				delete totalPoints[event.touchPointID]; 
 			}
 		}		
 		
