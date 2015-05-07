@@ -60,6 +60,7 @@ package com.gestureworks.managers
 	
 	public class TouchManager
 	{
+		public static var totalPoints:Dictionary = new Dictionary();
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
@@ -87,11 +88,7 @@ package com.gestureworks.managers
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);
-				
-				//UPDATES POINT COUNT ON OVER AND OUT
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_OVER, totalPointUpdate);								
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_OUT, totalPointUpdate);								
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);							
 			}
 
 			// leave this on for all input types
@@ -109,8 +106,6 @@ package com.gestureworks.managers
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_BEGIN, onTouchBegin);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_MOVE, onMove);
-			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_OVER, totalPointUpdate);								
-			GestureWorks.application.removeEventListener(TouchEvent.TOUCH_OUT, totalPointUpdate);				
 		}		
 		
 		public static function pointCount():int {
@@ -266,7 +261,8 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {			
-			var event:GWTouchEvent = new GWTouchEvent(e);					
+			var event:GWTouchEvent = new GWTouchEvent(e);	
+			totalPointUpdate(event);
 			onTouchDown(event);
 			processOverlays(event);
 		}
@@ -309,6 +305,7 @@ package com.gestureworks.managers
 		 */
 		private static function onTouchEnd(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
+			totalPointUpdate(event);
 			onTouchUp(event);
 			processOverlays(event);
 		}		
@@ -754,18 +751,17 @@ package com.gestureworks.managers
 		}
 		
 		/**
-		 * Update total point count on down/over and up/out events
+		 * Update total point count on input begin and end events
 		 * @param	event
 		 */
-		public static function totalPointUpdate(event:TouchEvent):void {
-			if (!(event.target is ITouchObject)) {
-				return; 
-			}
-			if (event.type == TouchEvent.TOUCH_OVER || event.type == GWTouchEvent.TOUCH_OVER) {
+		public static function totalPointUpdate(event:GWTouchEvent):void {
+			if (event.target is ITouchObject && event.type == GWTouchEvent.TOUCH_BEGIN) {
 				ITouchObject(event.target).totalPointCount++;
+				totalPoints[event.touchPointID] = event.target; 
 			}
-			else {
-				ITouchObject(event.target).totalPointCount--;
+			else if(event.touchPointID in totalPoints){
+				ITouchObject(totalPoints[event.touchPointID]).totalPointCount--;
+				delete totalPoints[event.touchPointID]; 
 			}
 		}		
 		
