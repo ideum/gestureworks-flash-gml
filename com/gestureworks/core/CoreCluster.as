@@ -381,7 +381,7 @@ package com.gestureworks.core
 					//cluster_geometric.findHandRadius(); // favdist 
 					//cluster_geometric.findThumb(); // thumb // left// right
 				
-			
+				//cluster_geometric.getOrientationHandSide();
 		}
 		
 		public function getPoseGeoMetrics3D():void 

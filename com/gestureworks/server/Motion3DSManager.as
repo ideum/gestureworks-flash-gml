@@ -36,6 +36,9 @@ package com.gestureworks.server
 		private static var _minZ:Number = -110;
 		private static var _maxZ:Number = 200;
 		
+		
+		private static var full_skeleton = true;
+		
 		/**
 		 * The Leap3DSManager constructor allows arguments for screen and leap device calibration settings.
 		 * @param	minX minimum Leap X coordinate
@@ -91,24 +94,26 @@ package com.gestureworks.server
 					var f:Object =  handList[j].Finger[k];
 					var joint_length:int = handList[j].Finger[k].joint.length();
 					
+					//trace("motion3dmanager:joint length",joint_length);
+					
 					var ptf:MotionPointObject = new MotionPointObject();// new Object();
 						ptf.type = "finger";
-						//ptf.fingerID = f.@fingerType
-						//ptf.extension
 						ptf.handID = j;
 						ptf.id = f.@id;
-						ptf.position = new Vector3D(f.Position.@x, f.Position.@y, f.Position.@z * -1);
-						ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
-						//ptf.velocity = new Vector3D(f.Velocity.@x, f.Velocity.@y, f.Velocity.@z*-1);
 						ptf.width = f.@Width;
 						ptf.length = f.@Length;
 						
+						
 						//WHEN JOINTS COME FROM DEVICE SERVER////////////////////////////////////////////////////
-						if (joint_length) {
+						if (joint_length&&full_skeleton) 
+						{					
 							var j0:Object =  handList[j].Finger[k].joint[0];
 							var j1:Object =  handList[j].Finger[k].joint[1];
 							var j2:Object =  handList[j].Finger[k].joint[2];
 							var j3:Object =  handList[j].Finger[k].joint[3];
+							
+							
+							
 							
 							//PUSH JOINTS
 							//for (var m:uint = 0; m < 3; m++)
@@ -126,13 +131,21 @@ package com.gestureworks.server
 								//ptf.joint_2.direction = new Vector3D(j2.Direction.@x, j2.Direction.@y, j2.Direction.@z * -1);
 								
 								//ptf.joint_3.position = new Vector3D(j3.Position.@x, j3.Position.@y, j3.Position.@z * -1);
-								ptf.joint_3 = new Vector3D(j3.Position.@x, j3.Position.@y, j3.Position.@z * -1);
+								//ptf.joint_3 = new Vector3D(j3.Position.@x, j3.Position.@y, j3.Position.@z * -1);
 								//ptf.joint_3.direction = new Vector3D(j3.Direction.@x, j3.Direction.@y, j3.Direction.@z * -1);	
-							//}
-							
-							// MAP LAST JOINT TO FINGERTIP///////////////////////////////////////////////////////////////
-							ptf.position = new Vector3D(j3.Position.@x, j3.Position.@y, j3.Position.@z * -1);
-							ptf.direction = new Vector3D(j3.Direction.@x, j3.Direction.@y, j3.Direction.@z * -1);
+								
+								// MAP LAST JOINT TO FINGERTIP///////////////////////////////////////////////////////////////
+								ptf.position = new Vector3D(j3.Position.@x, j3.Position.@y, j3.Position.@z *-1);
+								ptf.direction = new Vector3D(j3.Direction.@x, j3.Direction.@y, j3.Direction.@z * -1);
+								ptf.fingertype = f.@fingerType
+								//trace("finger tip position",ptf.position);
+							//}							
+						}
+						
+						else {
+							ptf.position = new Vector3D(f.Position.@x, f.Position.@y, f.Position.@z * -1);
+							ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
+						//ptf.velocity = new Vector3D(f.Velocity.@x, f.Velocity.@y, f.Velocity.@z*-1);
 						}
 						
 					pointList.push(ptf);
@@ -141,46 +154,31 @@ package com.gestureworks.server
 					//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
 					
 					
-					
-					
-					
 				}
 				
 				// CREATE PALM MOTION POINT
 					//var p:Object =  message.InputPoint.Values.Hand[j].Palm;
 					var p:Object =  handList[j].Palm;
 					
-					var ptp:Object = new MotionPointObject();//new Object();
+					var ptp:MotionPointObject = new MotionPointObject();//new Object();
 						ptp.type = "palm";
 						ptp.handID = j;
 						ptp.id = 5000+j//p.@id;
 						ptp.position = new Vector3D(p.Position.@x, p.Position.@y, p.Position.@z * -1);
 						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z*-1);
-						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z*-1);
-							
+						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1);
+						ptp.sphereRadius = f.@Length
+						ptp.handside = f.@handSide;
+						ptp.orientation = f.@palmOrientation;
+						
+						
 					pointList.push(ptp);
 					//trace("palm", ptp.id, ptp.position, ptp.direction, ptp.normal)
 					
 					//PUSH IDS
 					pids.push(int(5000+j)) ////p.@id
 					
-				/*
-				// CREATE TOOL MOTION POINT
-					var o =  message.InputPoint.Values.Hand[j].Object;
 				
-					var opt:MotionPointObject = new MotionPointObject()
-						opt.type = "tool";
-						opt.handID = j;
-						opt.id = o.@id;
-						opt.position = new Vector3D(o.Position.@x, o.Position.@y, o.Position.@z * -1);
-						opt.direction = new Vector3D(o.Direction.@x, o.Direction.@y, o.Direction.@z*-1);
-						opt.normal = new Vector3D(o.Normal.@x, o.Normal.@y, o.Normal.@z);
-					
-					pointList.push(opt);
-					
-					pids.push(int(handList[i].Object[k].@id)) 
-					//trace("tool", opt.id, opt.position, opt.direction, opt.normal);
-					*/
 				}
 					
 					GestureGlobals.motionFrameID += 1;

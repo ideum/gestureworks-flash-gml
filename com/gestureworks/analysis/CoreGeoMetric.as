@@ -341,20 +341,6 @@ package com.gestureworks.analysis
 												handList.push(hand);
 												
 											}
-											/*else {
-												
-												trace("update hand",j,handList[j].handID,motionArray[i].handID);
-												//update hand
-												//handList[j] = motionArray[i];
-												//handList[j].motionPointID = motionArray[i].motionPointID; 
-												//-handList[j].position = motionArray[i].position;
-												//--handList[j].direction = motionArray[i].direction
-												//--handList[j].normal = motionArray[i].normal
-												//handList[j].handID = motionArray[i].handID;
-												//-handList[j].palm = motionArray[i];
-												
-												//trace("p",j,i, motionArray[i].handID,motionArray[i].position)
-												}*/	
 											}
 										}
 										else {
@@ -487,146 +473,6 @@ package com.gestureworks.analysis
 		}
 		
 		
-		
-		
-		
-		public function createSkeleton():void 
-		{
-			//trace("create hand")
-
-			for (j = 0; j <handList.length; j++)
-				{
-					// SEED SKELTON GEOMETRY
-					//if (handList[j].seedList.length==0) pushSeeds()
-					
-						var s:int = 30;
-						var p:Vector3D = handList[j].position;
-							var rotX:Number = RAD_DEG * Math.asin(handList[j].normal.x);
-							var rotY:Number = RAD_DEG * Math.asin(handList[j].direction.x);
-							var rotZ:Number = RAD_DEG * Math.asin(handList[j].normal.z);
-							
-							var orient:Number = 0//180//Math.PI/2//0;
-							
-							//ADJUST ROTATION MATRIX BASED ON ORIENTATION
-							// MUST FOX FINGER MATHCING AND MAKE ORIENTATIION INDEPEDANT
-							// AND FIX DOT PRODCT PROBLEM
-							if (handList[j].orientation == "up") orient = 180//Math.PI;
-							else orient = 0;
-							
-							//trace(handList[j].orientation, orient, rotX, rotX + orient,handList[j].type,handList[j].lockedType)
-							//
-							
-							// roate in 3d space
-							var m:Matrix3D = new Matrix3D ()//(1,0,0,1,0,1,0,1,0,0,1,1,0,0,0,1);
-								m.appendRotation(rotX + orient, new Vector3D(0, 0, 1));
-								m.appendRotation(rotZ, new Vector3D(-1, 0, 0));
-								m.appendRotation(rotY , new Vector3D(0, 1, 0)); //direction
-					
-							var sn:int = handList[j].seedList.length;
-					
-						//trace("sn",sn);
-	
-								var kn:int = handList[j].knuckleList.length;
-								var dn:int = handList[j].dipList.length
-								var pn:int = handList[j].pipList.length
-								var tn:int = handList[j].tipList.length;
-								
-								//trace("update joints",kn, dn,pn,tn, sn)
-								
-								//update knuckles
-								for (i = 0; i <kn; i++)//mpn
-									{	
-										var v:Vector3D = handList[j].seedList[i];
-										var pv:Vector3D = Utils3D.projectVector(m, v);			
-											
-										// translate
-										var rv:Vector3D = p.add(pv);
-										handList[j].knuckleList[i].position = rv;
-									}
-								
-								//////////////////////////////////////////////////////////////////
-								//CACHED POSITONS
-								//update tips to cached values
-								//TODO: MUST INCLUDE PALM ROATION IN PLANE
-								for (i = 0; i <tn; i++)//mpn
-									{		
-										var v2:Vector3D = handList[j].positionCached;
-										var palm_vel:Vector3D = handList[j].palm.position.subtract(v2);
-										
-										//GET POSITION CACHE
-										if (handList[j].tipList[i].positionCached)
-										{
-											/*
-											var normal:Vector3D = handList[j].palm.normal;
-											var v0:Vector3D = handList[j].tipList[i].positionCached;
-												
-											// FIND RELATIVE POSITON TO PALM
-											var v:Vector3D = v0.subtract(handList[j].palm.position);
-											
-											// PROJECT INTO THE PALM PLANE
-											var dist:Number = (v.x * normal.x) + (v.y * normal.y) + (v.z * normal.z);
-											var palm_plane_chachedtip:Vector3D = new Vector3D((v0.x - dist * normal.x), (v0.y -dist*normal.y), (v0.z - dist*normal.z));
-											
-											handList[j].tipList[i].position = palm_plane_chachedtip.add(palm_vel);
-											*/
-											
-											
-											
-											// PROJECT INTO THE PALM PLANE
-											var diff:Vector3D = handList[j].tipList[i].positionCached.subtract(handList[j].tipList[i].planePositionCached)
-											var rel:Vector3D = handList[j].tipList[i].relativePositionCached;
-											var plane_pos:Vector3D = handList[j].tipList[i].planePositionCached
-											
-											var pv:Vector3D = Utils3D.projectVector(m,plane_pos );			
-											var fv:Vector3D = pv.add(diff);
-											// translate
-											var trans_fv:Vector3D = fv.add(palm_vel);
-											
-											handList[j].tipList[i].position = trans_fv;
-											
-											//trace("palm velocity",palm_vel)
-											
-											}
-											
-										//GET DIRECTION CACHE
-										if (handList[j].tipList[i].directionCached)
-										{
-											// get direction vector (palm normal simplfication)
-											var v0:Vector3D = handList[j].tipList[i].directionCached;
-											handList[j].tipList[i].direction = v0;
-										}
-										
-									}	
-							}
-						
-						
-							//trace(handList[j].knuckleList.length);
-							
-							/*
-							
-							//////////////////////////////////////////////////////////
-							//CREATE KNUCLE PROJECTION POINTS IN PALM LINE
-							// GET PALM LINE POINT PROJECTION
-							
-							for (i = 0; i <kn; i++)//mpn
-								{		
-								var kpt = handList[j].knuckleList[i];
-								var direction = handList[j].palm.direction;
-								var k_pos:Vector3D = kpt.position;
-								var vkp_mpl:Vector3D = k_pos.subtract(handList[j].palm.position);
-								
-								var dist2:Number = (vkp_mpl.x * direction.x) + (vkp_mpl.y * direction.y) + (vkp_mpl.z * direction.z);
-								var palm_plane_line_point:Vector3D = new Vector3D((k_pos.x - dist2 * direction.x), (k_pos.y -dist2 * direction.y), (k_pos.z - dist2 * direction.z));
-								
-								kpt.palmplaneline_position = palm_plane_line_point
-								
-								}
-							*/
-					
-		}
-		
-		
-	
 		
 		public function findHandOrientation():void 
 		{
@@ -1391,6 +1237,27 @@ package com.gestureworks.analysis
 					}
 		}
 		
+		
+		public function getOrientationHandSide():void
+		{
+				for (j = 0; j < handList.length; j++)
+				{
+					//set radius
+					handList[j].radius = handList[j].palm.sphereRadius;
+					
+					//set orinetation
+					if (handList[j].palm.orientation)
+					{
+						handList[j].orientation = handList[j].palm.orientation
+					}
+					//set hand side
+					if (handList[j].palm.type)
+					{
+						handList[j].type = handList[j].palm.handside;
+					}
+					
+				}
+		}
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//
 		public function getJoints():void
