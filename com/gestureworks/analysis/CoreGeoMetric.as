@@ -179,17 +179,17 @@ package com.gestureworks.analysis
 				for (var i:uint = 0; i < motionArray.length; i++) 
 						{
 							var pt:MotionPointObject = motionArray[i];
-							
-							//trace(pt.type);
-							//pt.screen_position = );
-							//pt.screen_direction = new Vector3D();
-							pt.screen_normal = new Vector3D();
-							
 							var k1:int = 10;
 							
-							pt.screen_position = new Vector3D(pt.position.x*k1,pt.position.y*k1,pt.position.z*k1);
+							
+							var nx:Number = normalize(pt.position.x*k1, 0, sw); 
+							var ny:Number = normalize(pt.position.y*k1, 0, -sh); 
+							var nz:Number = normalize(pt.position.z*k1, 0, sd); 
+
+							//pt.screen_position = new Vector3D(pt.position.x * k1 + (0.5 * sw), pt.position.y * -k1 + (sh * 0.5), pt.position.z * k1 + (sd * 0.5));
+							pt.screen_position = new Vector3D(nx,ny,nz);
 							pt.screen_direction = new Vector3D(pt.direction.x,pt.direction.y*-1,pt.direction.z*-1);
-							pt.screen_normal =  new Vector3D(pt.normal.x,pt.normal.y*-1,pt.normal.z*-1);;
+							pt.screen_normal =  new Vector3D(pt.normal.x,pt.normal.y,pt.normal.z*-1);;
 						}
 				}
 		}	
