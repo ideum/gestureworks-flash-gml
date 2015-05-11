@@ -1,0 +1,222 @@
+<Message type="InputPoint" number="0">
+  <InputPoint id="2" deviceType="RealSense">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="right" palmOrientation="Inward" FingerCount="5" ObjectCount="0" id="2" x="-49.5053" y="-11.7146" z="224.495">
+        <Finger fingerType="thumb" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-35.317" y="-47.0751" z="221.353"/>
+            <Normal x="2.98938" y="0.0967642" z="1.28144"/>
+          </joint>
+          <joint id="1">
+            <Position x="-1.69452" y="-29.6538" z="218.186"/>
+            <Normal x="-3.05785" y="0.0879927" z="1.10011"/>
+          </joint>
+          <joint id="2">
+            <Position x="26.3253" y="-14.3875" z="212.016"/>
+            <Normal x="-2.94978" y="0.0894894" z="1.08928"/>
+          </joint>
+          <joint id="3">
+            <Position x="41.7489" y="0.923705" z="210.306"/>
+            <Normal x="-3.06257" y="0.116654" z="0.798269"/>
+          </joint>
+          <Normal x="-3.06257" y="0.116654" z="0.798269"/>
+        </Finger>
+        <Finger fingerType="index" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-18.979" y="23.6054" z="232.997"/>
+            <Normal x="2.96775" y="-0.0475204" z="0.455212"/>
+          </joint>
+          <joint id="1">
+            <Position x="-6.3573" y="64.7404" z="242.195"/>
+            <Normal x="2.93044" y="-0.0718538" z="0.313105"/>
+          </joint>
+          <joint id="2">
+            <Position x="-0.527018" y="79.0999" z="226.581"/>
+            <Normal x="-2.34984" y="-0.0718539" z="0.313105"/>
+          </joint>
+          <joint id="3">
+            <Position x="4.77324" y="92.154" z="212.386"/>
+            <Normal x="-2.34984" y="-0.0718539" z="0.313105"/>
+          </joint>
+          <Normal x="-2.34984" y="-0.0718539" z="0.313105"/>
+        </Finger>
+        <Finger fingerType="middle" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-43.7155" y="27.3984" z="230.548"/>
+            <Normal x="2.98896" y="-0.0960899" z="0.161717"/>
+          </joint>
+          <joint id="1">
+            <Position x="-33.8536" y="74.3722" z="230.093"/>
+            <Normal x="-3.13207" y="-0.0891991" z="0.206091"/>
+          </joint>
+          <joint id="2">
+            <Position x="-28.0993" y="101.773" z="229.809"/>
+            <Normal x="-3.13142" y="-0.0891991" z="0.206091"/>
+          </joint>
+          <joint id="3">
+            <Position x="-24.2773" y="113.024" z="213.722"/>
+            <Normal x="-2.20153" y="-0.0891991" z="0.206091"/>
+          </joint>
+          <Normal x="-2.20153" y="-0.0891991" z="0.206091"/>
+        </Finger>
+        <Finger fingerType="ring" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-64.7407" y="26.0958" z="227.846"/>
+            <Normal x="3.01887" y="-0.132227" z="-0.0992994"/>
+          </joint>
+          <joint id="1">
+            <Position x="-57.4824" y="68.4783" z="227.659"/>
+            <Normal x="-3.13721" y="-0.0949424" z="0.169193"/>
+          </joint>
+          <joint id="2">
+            <Position x="-53.7171" y="90.1435" z="226.993"/>
+            <Normal x="-3.11119" y="-0.0949424" z="0.169193"/>
+          </joint>
+          <joint id="3">
+            <Position x="-49.8704" y="106.71" z="216.469"/>
+            <Normal x="-2.58469" y="-0.0949424" z="0.169193"/>
+          </joint>
+          <Normal x="-2.58469" y="-0.0949424" z="0.169193"/>
+        </Finger>
+        <Finger fingerType="pinky" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-90.2878" y="16.8641" z="223.516"/>
+            <Normal x="3.07163" y="-0.166159" z="-0.450673"/>
+          </joint>
+          <joint id="1">
+            <Position x="-93.9695" y="52.612" z="232.321"/>
+            <Normal x="2.89936" y="-0.125855" z="-0.0716227"/>
+          </joint>
+          <joint id="2">
+            <Position x="-93.5189" y="65.6349" z="221.403"/>
+            <Normal x="-2.43749" y="-0.125855" z="-0.0716227"/>
+          </joint>
+          <joint id="3">
+            <Position x="-92.9402" y="76.2604" z="210.831"/>
+            <Normal x="-2.35151" y="-0.125855" z="-0.0716227"/>
+          </joint>
+          <Normal x="-2.35151" y="-0.125855" z="-0.0716227"/>
+        </Finger>
+        <Palm Length="52" Width="52">
+          <Position x="-49.5053" y="-11.7146" z="224.495"/>
+          <Normal x="0.11807" y="0.134789" z="-0.983815"/>
+          <Direction x="0" y="0" z="0"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>
+<Message type="InputPoint" number="0">
+  <InputPoint id="2" deviceType="RealSense">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="right" palmOrientation="Inward" FingerCount="5" ObjectCount="0" id="2" x="-49.3587" y="-11.9607" z="224.317">
+        <Finger fingerType="thumb" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-35.0744" y="-47.2654" z="220.988"/>
+            <Normal x="2.98885" y="0.101746" z="1.27859"/>
+          </joint>
+          <joint id="1">
+            <Position x="-1.42924" y="-29.8191" z="218.226"/>
+            <Normal x="-3.06852" y="0.0916072" z="1.09912"/>
+          </joint>
+          <joint id="2">
+            <Position x="26.4991" y="-14.4595" z="211.874"/>
+            <Normal x="-2.94402" y="0.0933012" z="1.08663"/>
+          </joint>
+          <joint id="3">
+            <Position x="41.8481" y="0.908236" z="210.009"/>
+            <Normal x="-3.05527" y="0.122867" z="0.795394"/>
+          </joint>
+          <Normal x="-3.05527" y="0.122867" z="0.795394"/>
+        </Finger>
+        <Finger fingerType="index" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-18.9236" y="23.4025" z="232.966"/>
+            <Normal x="2.96372" y="-0.0445378" z="0.452595"/>
+          </joint>
+          <joint id="1">
+            <Position x="-6.09513" y="64.5602" z="241.769"/>
+            <Normal x="2.9397" y="-0.0685217" z="0.316161"/>
+          </joint>
+          <joint id="2">
+            <Position x="-0.219466" y="79.1195" z="226.357"/>
+            <Normal x="-2.36318" y="-0.0685217" z="0.316161"/>
+          </joint>
+          <joint id="3">
+            <Position x="5.12205" y="92.3553" z="212.347"/>
+            <Normal x="-2.36318" y="-0.0685217" z="0.316161"/>
+          </joint>
+          <Normal x="-2.36318" y="-0.0685217" z="0.316161"/>
+        </Finger>
+        <Finger fingerType="middle" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-43.6728" y="27.1382" z="230.558"/>
+            <Normal x="2.98422" y="-0.0943988" z="0.159366"/>
+          </joint>
+          <joint id="1">
+            <Position x="-33.7269" y="74.0944" z="230.118"/>
+            <Normal x="-3.13239" y="-0.0866132" z="0.207933"/>
+          </joint>
+          <joint id="2">
+            <Position x="-27.9156" y="101.482" z="229.747"/>
+            <Normal x="-3.12829" y="-0.0866132" z="0.207933"/>
+          </joint>
+          <joint id="3">
+            <Position x="-24.2445" y="111.859" z="213.048"/>
+            <Normal x="-2.14783" y="-0.0866132" z="0.207933"/>
+          </joint>
+          <Normal x="-2.14783" y="-0.0866132" z="0.207933"/>
+        </Finger>
+        <Finger fingerType="ring" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-64.6968" y="25.7899" z="227.869"/>
+            <Normal x="3.01383" y="-0.13181" z="-0.101438"/>
+          </joint>
+          <joint id="1">
+            <Position x="-57.661" y="68.2104" z="227.865"/>
+            <Normal x="-3.14149" y="-0.0936101" z="0.164351"/>
+          </joint>
+          <joint id="2">
+            <Position x="-54.0614" y="89.9139" z="227.863"/>
+            <Normal x="-3.14149" y="-0.0936101" z="0.164351"/>
+          </joint>
+          <joint id="3">
+            <Position x="-50.49" y="103.03" z="213.193"/>
+            <Normal x="-2.31337" y="-0.09361" z="0.164351"/>
+          </joint>
+          <Normal x="-2.31337" y="-0.09361" z="0.164351"/>
+        </Finger>
+        <Finger fingerType="pinky" Length="0" Width="0">
+          <joint id="0">
+            <Position x="-90.2219" y="16.508" z="223.516"/>
+            <Normal x="3.06673" y="-0.167486" z="-0.452661"/>
+          </joint>
+          <joint id="1">
+            <Position x="-93.6268" y="52.2822" z="232.326"/>
+            <Normal x="2.89927" y="-0.124236" z="-0.0642706"/>
+          </joint>
+          <joint id="2">
+            <Position x="-93.1318" y="65.4575" z="221.595"/>
+            <Normal x="-2.45206" y="-0.124236" z="-0.0642706"/>
+          </joint>
+          <joint id="3">
+            <Position x="-92.3423" y="75.2425" z="210.253"/>
+            <Normal x="-2.27524" y="-0.124236" z="-0.0642706"/>
+          </joint>
+          <Normal x="-2.27524" y="-0.124236" z="-0.0642706"/>
+        </Finger>
+        <Palm Length="52" Width="52">
+          <Position x="-49.3587" y="-11.9607" z="224.317"/>
+          <Normal x="0.116785" y="0.139962" z="-0.983246"/>
+          <Direction x="0" y="0" z="0"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>

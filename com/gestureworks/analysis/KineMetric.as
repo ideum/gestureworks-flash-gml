@@ -106,22 +106,12 @@ package com.gestureworks.analysis
 		
 		private var gs:CoreSprite;
 		
-		private var sw:int
-		private var sh:int
+		private var sw:int;
+		private var sh:int;
+		private var sd:int;
 		
 		//hand config object
 		private var handConfig:Object = new Object();
-		
-		
-		// min max leap raw values
-		// NOTE MOTION POINT SENSITIVITY TO PINCH/TRIGGER/ CONSTS AS SHOULD BE RELATIVE??????
-		// AND HIT TEST
-		private var minX:Number //=-220//180 
-		private var maxX:Number //=220//180
-		private var minY:Number //=350//270 
-		private var maxY:Number //=120//50//-75
-		private var minZ:Number //=350//270 
-		private var maxZ:Number //=120//50//-75
 		
 		public static var hitTest3D:Function;	
 		
@@ -143,14 +133,7 @@ package com.gestureworks.analysis
 			
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
-			
-			//remove as will be on device server
-			minX = GestureGlobals.gw_public::leapMinX;
-			maxX = GestureGlobals.gw_public::leapMaxX;
-			minY = GestureGlobals.gw_public::leapMinY;
-			maxY = GestureGlobals.gw_public::leapMaxY;
-			minZ = GestureGlobals.gw_public::leapMinZ;
-			maxZ = GestureGlobals.gw_public::leapMaxZ;
+			sd = sh;
 			
 			if (ts.traceDebugMode) trace("init cluster kinemetric");
 		}
@@ -846,9 +829,9 @@ package com.gestureworks.analysis
 										//trace("interaction point id",ipt.interactionPointID, ipt.type)
 										//ipt2d.id = ipt.interactionPointID;
 										
-										ipt.screen_position.x = normalize(ipt.position.x, minX, maxX) * sw//1920;//stage.stageWidth;
-										ipt.screen_position.y = normalize(ipt.position.y, minY, maxY) * sh//1080;// stage.stageHeight;
-										ipt.screen_position.z = ipt.position.z
+										ipt.screen_position.x = ipt.position.x * sw;//1920;//stage.stageWidth;
+										ipt.screen_position.y = ipt.position.y * sh;//1080;// stage.stageHeight;
+										ipt.screen_position.z = ipt.position.z * sd;
 										
 										//normalized vector
 										ipt.screen_direction.x = -ipt.direction.x;

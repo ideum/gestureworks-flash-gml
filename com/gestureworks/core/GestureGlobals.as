@@ -94,16 +94,6 @@ package com.gestureworks.core
 		gw_public static var iPointClusterListCount:int;
 		
 		/**
-		 * min leap x value
-		 */
-		gw_public static var leapMinX:Number =-220;
-		gw_public static var leapMaxX:Number = 220;
-		gw_public static var leapMinY:Number = 350;
-		gw_public static var leapMaxY:Number = 120;
-		gw_public static var leapMinZ:Number = -220;
-		gw_public static var leapMaxZ:Number = 220;
-		
-		/**
 		 * frameID frame stamp relative to start of application.
 		 */
 		public static var frameID:int = 0;//int.MAX_VALUE

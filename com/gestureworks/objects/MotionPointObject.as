@@ -155,6 +155,11 @@ package com.gestureworks.objects
 		//normalized_favdist
 		public var normalized_favdist:Number = 0;
 
+		//orientation
+		public var orientation:String = "";
+		
+		//handside
+		public var handside:String = "";
 		
 		//palmAngle
 		public var palmAngle:Number = 0;

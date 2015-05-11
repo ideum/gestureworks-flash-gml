@@ -236,14 +236,15 @@ package com.gestureworks.managers
 							//////////////////////////////////////////////////////////////
 							
 							//trace("motion",deviceType,inputType);
-							//trace(message);
+							
+							////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							trace(message);
 							
 								//HAND/FINGER TRACKING////////////////////////////////////////
-								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);//motionManagerSocket.processMotion3DSocketData(message);
+								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
 								if ((deviceType == "RealSense") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
-								//if ((deviceType == "Creative_Senz3d") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
-								//if ((deviceType == "PMD_Nano") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
-								//if ((deviceType == "Occipital_Structure") && (inputType == "Hands3d")) leapsocket3DMgr.processLeap3DSocketData(frame);
+								//if ((deviceType == "DUO3D") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
 
 								//BODY TRACKING
 									//KINECT
@@ -252,6 +253,8 @@ package com.gestureworks.managers
 									
 								//FACE TRACKING
 									//SOKINECTIC
+									//REALSENSE//////////////////////////////////////////////////////////////////////////
+									
 									
 									// EYE TRACKING////////////////////////////////////////////////////////////////////
 										if ((deviceType == "Eyetribe") && (inputType == "Eyes3d")) { //WORKS
@@ -286,6 +289,9 @@ package com.gestureworks.managers
 								if ((deviceType == "MYO") && (inputType == "Accel3d")) {
 									trace(deviceType, ": ", inputType);
 								}
+								if ((deviceType == "NOD") && (inputType == "Accel3d")) {
+									trace(deviceType, ": ", inputType);
+								}
 								
 								//GPS
 								//MAGNOMETER
@@ -300,34 +306,28 @@ package com.gestureworks.managers
 									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values,deviceType);
 								}
 								
-								if (deviceType == "Other") {
-									//trace(message.InputPoint.Values)
-									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values,deviceType);
+								//MYO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									if ((deviceType == "MYO") && (inputType == "EMG")) {
+									trace(deviceType, ": ", inputType);
+								}
+								//NOD//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+								if ((deviceType == "NOD") && (inputType == "Sensor6D")) {
+									trace(deviceType, ": ", inputType);
 								}
 								
-								
+								//OLD SCHOOL CONTROLLERS/////////////////////////////////////////////////////////////////////////////////////////////////////////
 								if ((deviceType == "SNES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
 								if ((deviceType == "NES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
 								if ((deviceType == "PS3") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
 								if ((deviceType == "PS3_MOVE") && (inputType == "Controller"))	//sensorManagerSocket.processSensorControllerSocketData(message);
 								
-								//BCI DEVICES////////////////////////////////////////////
+								
+								//BCI DEVICES///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 								if ((deviceType == "MUSE") && (inputType == "EEG")) trace(deviceType, ": ", inputType);
 								if ((deviceType == "INSIGHT") && (inputType == "EEG")) trace(deviceType, ": ", inputType);
-								//MYO////////////////////////////////////////////////////
-								if ((deviceType == "MYO") && (inputType == "EMG")) {
-									trace(deviceType, ": ", inputType);
-								}
 								
-								//VOICE/////////////////////////////////////////////////
-								//M$ SAPI// PERC VOICE
-								if ((deviceType == "Microphone") && (inputType == "voice")) {
-									trace("SAPI VOICE")
-								}
+
 								
-								
-								
-							//}
 							}
 					}
 				}

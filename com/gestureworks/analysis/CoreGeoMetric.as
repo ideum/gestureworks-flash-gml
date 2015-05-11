@@ -61,15 +61,9 @@ package com.gestureworks.analysis
 		private var i:uint = 0;
 		private var j:uint = 0;
 		
-		private var minX:Number //=-220//180 
-		private var maxX:Number //=220//180
-		private var minY:Number //=350//270 
-		private var maxY:Number //=120//50//-75
-		private var minZ:Number //=350//270 
-		private var maxZ:Number //=120//50//-75
-		
 		private var sw:int
 		private var sh:int
+		private var sd:int
 		
 		private var std_radius:int = 30;
 		
@@ -100,19 +94,12 @@ package com.gestureworks.analysis
 			
 			iPointClusterLists = GestureGlobals.gw_public::iPointClusterLists;
 			
-
 			sw = GestureWorks.application.stageWidth
 			sh = GestureWorks.application.stageHeight;
-			
-			// move to device server
-			minX = GestureGlobals.gw_public::leapMinX;
-			maxX = GestureGlobals.gw_public::leapMaxX;
-			minY = GestureGlobals.gw_public::leapMinY;
-			maxY = GestureGlobals.gw_public::leapMaxY;
-			minZ = GestureGlobals.gw_public::leapMinZ;
-			maxZ = GestureGlobals.gw_public::leapMaxZ;
-			
+			sd = sh;
 			//if (ts.traceDebugMode) 
+			
+			trace("CoreGeoMetric:res",sw,sh,sd);
 		}
 		
 		
@@ -162,6 +149,8 @@ package com.gestureworks.analysis
 				}	
 			}
 		}
+		
+		
 		//public function findPenTouchPoints():void{}
 		//public function findTouchPointProperties(): void{}
 		//public function find2DTagPoints():void{}
@@ -192,41 +181,15 @@ package com.gestureworks.analysis
 							var pt:MotionPointObject = motionArray[i];
 							
 							//trace(pt.type);
-							if (pt.type != "eye")
-							{
-								if (pt.position)
-								{
-									pt.screen_position = new Vector3D();
-									pt.screen_position.x = normalize(pt.position.x, minX, maxX) * sw;
-									pt.screen_position.y = normalize(pt.position.y, minY, maxY) * sh;
-									pt.screen_position.z = pt.position.z
-								}
-								
-								if (pt.direction)
-								{
-									pt.screen_direction = new Vector3D();
-									pt.screen_direction.x = -pt.direction.x;
-									pt.screen_direction.y = pt.direction.y;
-									pt.screen_direction.z = pt.direction.z;
-								}
-								if (pt.normal)
-								{
-									pt.screen_normal = new Vector3D();
-									pt.screen_normal.x = -pt.normal.x;
-									pt.screen_normal.y = pt.normal.y;
-									pt.screen_normal.z = pt.normal.z;
-								}
-							}
-							else {
-								
-								pt.screen_position = new Vector3D();
-								pt.screen_direction = new Vector3D();
-								pt.screen_normal = new Vector3D();
-								
-								pt.screen_position = pt.position;
-								pt.screen_direction = pt.direction;
-								pt.screen_normal = pt.normal;
-							}
+							//pt.screen_position = );
+							//pt.screen_direction = new Vector3D();
+							pt.screen_normal = new Vector3D();
+							
+							var k1:int = 10;
+							
+							pt.screen_position = new Vector3D(pt.position.x*k1,pt.position.y*k1,pt.position.z*k1);
+							pt.screen_direction = new Vector3D(pt.direction.x,pt.direction.y*-1,pt.direction.z*-1);
+							pt.screen_normal =  new Vector3D(pt.normal.x,pt.normal.y*-1,pt.normal.z*-1);;
 						}
 				}
 		}	
@@ -303,7 +266,7 @@ package com.gestureworks.analysis
 						/// create hand
 						if (motionArray[i].type == "palm") 
 						{
-							trace("palm", i, motionArray[i].position);
+							//trace("coreGeometric:palm", i, motionArray[i].position);
 							
 										if (gs.hn != 0)
 										{
@@ -474,31 +437,6 @@ package com.gestureworks.analysis
 		
 		
 		
-		public function findHandOrientation():void 
-		{
-			///////////////////////////////////////////////////////////////////////////////////////////////////			
-			// GET HAND ORIENTATION
-			// CREATE METHOD WHEN NO FINGERS EXIST BUT THUMB IS PRESENT
-			// CREATE ORIENTATION LOCK SO STABLE TO FINGER NUMBER AND TYPE JBUT CHANGES IF FLIPS FROM PREVIOUS STATE
-			for (j = 0; j < handList.length; j++)
-				{
-					//var v:Vector3D = handList[j].fingerAveragePosition.subtract(handList[j].palm.position)
-					if (handList[j].pureFingerAveragePosition && handList[j].palm.position && handList[j].palm.normal){
-					var v:Vector3D = handList[j].pureFingerAveragePosition.subtract(handList[j].palm.position)
-					var orienAngle:Number = v.dotProduct(handList[j].palm.normal);// Vector3D.angleBetween(v0, v1);
-							
-					if (orienAngle > 0) {
-							handList[j].orientation = "down";
-						}
-					else if (orienAngle < 0) {
-							handList[j].orientation = "up";
-						}
-					else handList[j].orientation = "undefined";	
-					//trace(orienAngle,handList[j].orientation);
-					}
-				}
-		}
-		
 		public function findFingerAverage():void 
 		{
 
@@ -615,7 +553,6 @@ package com.gestureworks.analysis
 		
 		public function findHandDirection():void 
 		{
-			
 			var hn:int = handList.length;
 			
 			for (j = 0; j < hn; j++)
@@ -983,259 +920,7 @@ package com.gestureworks.analysis
 		}
 		
 		
-		// find thumb .. generate pair data
-		//TODO: FIND ORIENTATION REQUIREMENT FOR THUMB
-		public function findThumb():void
-		{
-			
-		var hn:int = handList.length
 		
-		for (j = 0; j < hn; j++)
-			{
-				
-			handList[j].pair_table = new Array();
-			
-			var hfn:int = handList[j].fingerList.length;
-			
-			var fpt:MotionPointObject //= handList[j].fingerList[i];
-			var palm_mpoint:MotionPointObject
-
-						///////////////////////////////////////////////////////////////////////////////////
-						// MOD THUMB PROB WITH FINGER LENGTH AND WIDTH
-						
-							// reset thumb
-							//handList[j].thumb = new MotionPointObject();
-							
-							// get largest thumb prob
-							var thumb_list:Array = new Array()
-							
-							//trace("--");
-							
-							
-							for (i = 0; i < hfn; i++)
-								{
-									fpt = handList[j].fingerList[i];
-									
-									// RESET THUMB PROB HIST
-									fpt.thumb_prob = 0
-
-									//ALL FEATURES////////////////////////////////////////////////////////////
-									fpt.thumb_prob += 2*(1- fpt.normalized_length)//2
-									fpt.thumb_prob += 5*(fpt.normalized_favdist) //WORKS VERY WELL ON OWN
-									fpt.thumb_prob += 2 * (fpt.normalized_palmAngle);//2
-									
-									// NO WIDTH WHEN IN WEBSOCKET
-									//trace("width",i,fpt.width)
-									if (fpt.width) fpt.thumb_prob += 1 * (fpt.normalized_mwlr); //width to length ratio
-									
-									//fpt.thumb_prob += 1 * (fpt.normalized_width) // experimentatal
-									//ALSO USE NORLAIZED AVERAGE EXTENSION (THUMB TENDS TO BEND MORE AS NO PIP)
-									
-									//trace("norm mwlr", fpt.thumb_prob,fpt.normalized_mwlr,fpt.normalized_width,fpt.normalized_length);
-									//trace(i, fpt.width, fpt.normalized_width, fpt.length, fpt.normalized_length, fpt.normalized_favdist,fpt.normalized_palmAngle,fpt.normalized_mwlr, fpt.thumb_prob);
-									
-									thumb_list[i] = fpt.thumb_prob;
-									/////////////////////////////////////////////////////////////////////////
-								}	
-							
-						///////////////////////////////////////////////////////////////////////////////////
-						// SET FINGER TO THUMB BASED ON HIGHEST PROB
-						var max_tp:Number = Math.max.apply(null, thumb_list);
-						var max_index:int = thumb_list.indexOf(max_tp);
-						
-						if ((max_index != -1) && (handList[j].fingerList[max_index]) && (handList[j].fingerList[max_index].type == "finger")) //&&(!handList[j].thumb)
-						{
-							
-							// 
-							//var v = handList[j].projectedFingerAveragePosition.subtract(handList[j].palm.position)
-							var v:Vector3D = handList[j].palm.direction;
-							var v1:Vector3D = handList[j].fingerList[max_index].palmplane_position.subtract(handList[j].palm.position)
-							
-							var angle:Number = Vector3D.angleBetween(v, v1)
-							var length:int = handList[j].fingerList[max_index].length;
-							var favdist:Number = handList[j].fingerList[max_index].favdist;
-							
-								//////////////////////////////////////////////////////////////////////
-								// QUICK EFFECTIVE METRIC/////////////////////////////////////////////
-								// FOR WHEN FN!=5
-								var ratio:Number = (1.1*length) / (favdist + 50 * angle)
-								//////////////////////////////////////////////////////////
-								
-								
-								//////////////////////////////////////////////////////////////////////
-								// THUMB VALIDITY CHECK
-								var validthumb:Boolean = true;// init value when no type lock
-								if ((handList[j].lockedType == "left") || (handList[j].lockedType == "right")) 
-									{
-										validthumb = false; 
-											//PREVENTS THUMB REASIGNMENT (DURING PINCH)
-											//PREVENTS THUMB OVERIDING CLASIFIED FINGERS
-											//(handList[j].fingerList[max_index].fingertype=="")
-											if ((handList[j].fingerList[max_index]) && (handList[j].palm)&&(handList[j].fingerList[max_index].fingertype==""))
-											{
-												var tVector:Vector3D = handList[j].fingerList[max_index].position.subtract(handList[j].palm.position);
-												var angle2:Number = handList[j].d_n_crossproduct.dotProduct(tVector);
-												
-												if ((angle2 < 0)&&(handList[j].lockedType == "left")) {
-													validthumb = true;
-												}
-												//right match
-												if ((angle2 > 0)&&(handList[j].lockedType == "right")) {
-													validthumb = true;
-												}
-											}
-									}
-									else if ((handList[j].type == "left") || (handList[j].type == "right")) 
-									{
-										validthumb = false; 
-										
-										if ((handList[j].fingerList[max_index]) && (handList[j].palm)&&(handList[j].fingerList[max_index].fingertype==""))
-											{
-												var tVector:Vector3D = handList[j].fingerList[max_index].position.subtract(handList[j].palm.position);
-												var angle2:Number = handList[j].d_n_crossproduct.dotProduct(tVector);
-												
-												if ((angle2 < 0)&&(handList[j].type == "left")) {
-													validthumb = true;
-												}
-												//right match
-												if ((angle2 > 0)&&(handList[j].type == "right")) {
-													validthumb = true;
-												}
-											}
-									}
-									//THERE CAN BE ONLY ONE THUMB
-									//else if (handList[j].thumb) {
-										//if (handList[j].thumb.id) validthumb = false; 
-									//}
-									
-									//trace("type",handList[j].type,handList[j].lockedType,validthumb);
-									
-								/////////////////////////////////////////////////////////////////////////
-								
-
-								if (validthumb)
-								{
-									//trace(ratio);
-									if (hfn == 5)
-									{
-									if ((ratio < 0.8))//0.56
-									{
-										// SET THUMB TYPE
-										handList[j].fingerList[max_index].fingertype = "thumb";	
-									
-										// SET THUMB IN HAND OBJECT
-										handList[j].thumb = handList[j].fingerList[max_index];
-										//trace("assign thumb", hfn);
-										return
-									}
-									else {
-										handList[j].fingerList[max_index].fingertype = "";
-										handList[j].thumb = null//handList[j].fingerList[max_index];//null
-										//trace("fail", hfn,handList[j].fingerList[max_index].position);
-									}
-									}
-									else if (hfn == 4)
-									{
-									if ((ratio < 0.70))
-									{
-										// SET THUMB TYPE
-										handList[j].fingerList[max_index].fingertype = "thumb";	
-									
-										// SET THUMB IN HAND OBJECT
-										handList[j].thumb = handList[j].fingerList[max_index];
-										//trace("assign thumb", hfn);
-										return
-									}
-									else {
-										handList[j].fingerList[max_index].fingertype = ""//"finger";
-										handList[j].thumb = null//handList[j].fingerList[max_index];//null
-										//trace("fail", hfn,handList[j].fingerList[max_index].position);
-									}
-									}
-									else if (hfn == 3)
-									{
-									if (ratio < 1.2)
-									{
-										// SET THUMB TYPE
-										handList[j].fingerList[max_index].fingertype = "thumb";	
-									
-										// SET THUMB IN HAND OBJECT
-										handList[j].thumb = handList[j].fingerList[max_index];
-										//trace("assign thumb", hfn);
-										return
-									}
-									else {
-										handList[j].fingerList[max_index].fingertype = ""//"finger";
-										handList[j].thumb = null//handList[j].fingerList[max_index];//null
-										//trace("fail", hfn,handList[j].fingerList[max_index].position);
-									}
-									}
-									
-									else if (hfn == 2) 
-									{
-										if (ratio < 2.1)
-										{
-										handList[j].fingerList[max_index].fingertype = "thumb";
-										handList[j].thumb = handList[j].fingerList[max_index];
-										return
-										}
-										
-										else {
-										handList[j].fingerList[max_index].fingertype =""// "finger";
-										handList[j].thumb = null;
-										}
-									}
-								}
-						}
-						
-						// NEED SECONDARY CONDITIONS TO ENSURE PINKY NOT SELECTED
-						// CHECK LOCKED TYPE SEE IF ON CORRECT SIDE OF HAND
-						else if ((validthumb)&&(hfn == 1)&&(handList[j].fingerList[0].type == "finger"))
-						{
-							// RATIO BREAKS APPART AS LENGTH AND FAV DIST NO LONGER RELEVANT
-							// ANGLE IS ONLY REMAINING METRIC
-							var v0:Vector3D = handList[j].palm.direction
-							var v10:Vector3D = handList[j].fingerList[0].palmplane_position.subtract(handList[j].palm.position)
-							var angle0:Number = Vector3D.angleBetween(v0, v10)
-							//trace("one", angle);
-							
-								if (angle0 > 0.2)
-								{
-									//trace("one")
-									handList[j].fingerList[0].fingertype = "thumb";
-									handList[j].thumb = handList[j].fingerList[0];
-									return
-								}
-								else {
-									handList[j].fingerList[0].fingertype =""// "finger";
-									handList[j].thumb = null;
-								}
-								
-							}
-	
-						////////////////////////////////////////////////////////////////////////////////
-						// GET HANDEDNESS
-						// PERHAPS CROSS CHECK WITH ORIENTATION
-						// INCASE SYSTEM THINKS HAND IS UPSIDE DOWN
-						if ((handList[j].thumb)&&(handList[j].orientation=="down"))
-						{
-							//trace("thumb",handList[j].thumb.width,handList[j].thumb.normalized_width,handList[j].thumb.normalized_mwlr)
-							
-							if(handList[j].thumb.position){
-							var thumbVector:Vector3D = handList[j].thumb.position.subtract(handList[j].palm.position);
-							var angle1:Number =  handList[j].d_n_crossproduct.dotProduct(thumbVector)
-							
-							if(angle1){
-								if (angle1 < 0) handList[j].type = "left";
-								if (angle1 > 0) handList[j].type = "right";
-							}
-							//else if (angle1 ==NaN) handList[j].type = "undefined";
-							
-							//trace(angle, handList[j].type)
-							}
-						}
-					}
-		}
 		
 		
 		public function getOrientationHandSide():void

@@ -31,7 +31,7 @@ package com.gestureworks.managers
 	
 	public class MotionManager 
 	{	
-		public static var lmManager:LeapManager
+		//public static var lmManager:LeapManager
 		private static var motion_init:Boolean = false;
 		public static var gs:CoreSprite;
 		public static var leapEnabled:Boolean = false;
@@ -98,16 +98,16 @@ package com.gestureworks.managers
 		
 		gw_public static function deInitialize():void
 		{
-			if (leapmode == "2d" && lmManager) {
-				lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
-				Leap2DManager(lmManager).dispose();
-				lmManager = null;
-			}
-			if (leapmode == "3d" && lmManager) {
-				lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
-				Leap3DManager(lmManager).dispose();
-				lmManager = null;
-			}
+			//if (leapmode == "2d" && lmManager) {
+				//lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				//Leap2DManager(lmManager).dispose();
+				//lmManager = null;
+			//}
+			//if (leapmode == "3d" && lmManager) {
+				//lmManager.removeEventListener(LeapEvent.LEAPMOTION_FRAME, onFrame);
+				//Leap3DManager(lmManager).dispose();
+				//lmManager = null;
+			//}
 		}
 
 		public static function onFrame(event:LeapEvent):void 
