@@ -1,0 +1,216 @@
+<Message type="InputPoint" number="0">
+  <InputPoint id="643" deviceType="LeapMotion">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="Left" palmOrientation="down" FingerCount="5" ObjectCount="0" id="1" x="0.52393" y="0.252125" z="0.670374">
+        <Finger fingerType="thumb" id="1">
+          <Position x="0.652955" y="0.247013" z="0.669476"/>
+          <Direction x="-0.826668" y="0.246776" z="-0.505689"/>
+        </Finger>
+        <Finger fingerType="index" id="2">
+          <Position x="0.628759" y="0.28282" z="0.563298"/>
+          <Direction x="-0.578237" y="-0.0228613" z="-0.815549"/>
+        </Finger>
+        <Finger fingerType="middle" id="3">
+          <Position x="0.597347" y="0.272532" z="0.530974"/>
+          <Direction x="-0.533419" y="-0.130914" z="-0.835659"/>
+        </Finger>
+        <Finger fingerType="ring" id="4">
+          <Position x="0.555944" y="0.266165" z="0.522166"/>
+          <Direction x="-0.451057" y="-0.0336837" z="-0.891859"/>
+        </Finger>
+        <Finger fingerType="pinky" id="5">
+          <Position x="0.510826" y="0.261474" z="0.5384"/>
+          <Direction x="-0.33291" y="0.163882" z="-0.928608"/>
+        </Finger>
+        <Palm Length="42.5662" Width="42.5662">
+          <Position x="0.52393" y="0.252125" z="0.670374"/>
+          <Normal x="0.411887" y="-0.837477" z="-0.35914"/>
+          <Direction x="0.287262" y="0.493363" z="-0.821019"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>
+<Message type="InputPoint" number="0">
+  <InputPoint id="643" deviceType="LeapMotion">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="Left" palmOrientation="down" FingerCount="5" ObjectCount="0" id="1" x="0.518341" y="0.24143" z="0.652718">
+        <Finger fingerType="thumb" id="1">
+          <Position x="0.648922" y="0.233936" z="0.644801"/>
+          <Direction x="-0.816146" y="0.256898" z="-0.517599"/>
+        </Finger>
+        <Finger fingerType="index" id="2">
+          <Position x="0.615222" y="0.270528" z="0.537471"/>
+          <Direction x="-0.494305" y="-0.0284529" z="-0.868823"/>
+        </Finger>
+        <Finger fingerType="middle" id="3">
+          <Position x="0.579598" y="0.26325" z="0.507771"/>
+          <Direction x="-0.437029" y="-0.117547" z="-0.891733"/>
+        </Finger>
+        <Finger fingerType="ring" id="4">
+          <Position x="0.536549" y="0.259411" z="0.503362"/>
+          <Direction x="-0.358332" y="-0.0173516" z="-0.933433"/>
+        </Finger>
+        <Finger fingerType="pinky" id="5">
+          <Position x="0.491823" y="0.254428" z="0.523242"/>
+          <Direction x="-0.244517" y="0.145517" z="-0.958664"/>
+        </Finger>
+        <Palm Length="42.5662" Width="42.5662">
+          <Position x="0.518341" y="0.24143" z="0.652718"/>
+          <Normal x="0.315423" y="-0.843777" z="-0.434221"/>
+          <Direction x="0.237449" y="0.513202" z="-0.824768"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>
+<Message type="InputPoint" number="0">
+  <InputPoint id="643" deviceType="LeapMotion">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="Left" palmOrientation="down" FingerCount="5" ObjectCount="0" id="1" x="0.512077" y="0.22839" z="0.633812">
+        <Finger fingerType="thumb" id="1">
+          <Position x="0.647024" y="0.219451" z="0.625777"/>
+          <Direction x="-0.819661" y="0.252477" z="-0.514209"/>
+        </Finger>
+        <Finger fingerType="index" id="2">
+          <Position x="0.600599" y="0.255267" z="0.510777"/>
+          <Direction x="-0.414688" y="-0.0408005" z="-0.909048"/>
+        </Finger>
+        <Finger fingerType="middle" id="3">
+          <Position x="0.561386" y="0.250701" z="0.483963"/>
+          <Direction x="-0.342994" y="-0.101589" z="-0.933828"/>
+        </Finger>
+        <Finger fingerType="ring" id="4">
+          <Position x="0.517029" y="0.249542" z="0.483997"/>
+          <Direction x="-0.259703" y="0.0147272" z="-0.965576"/>
+        </Finger>
+        <Finger fingerType="pinky" id="5">
+          <Position x="0.47015" y="0.242017" z="0.507359"/>
+          <Direction x="-0.118156" y="0.0948301" z="-0.988457"/>
+        </Finger>
+        <Palm Length="42.5662" Width="42.5662">
+          <Position x="0.512077" y="0.22839" z="0.633812"/>
+          <Normal x="0.225991" y="-0.849935" z="-0.475961"/>
+          <Direction x="0.187746" y="0.517444" z="-0.834867"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>
+<Message type="InputPoint" number="0">
+  <InputPoint id="643" deviceType="LeapMotion">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="Left" palmOrientation="down" FingerCount="5" ObjectCount="0" id="1" x="0.505721" y="0.21449" z="0.617384">
+        <Finger fingerType="thumb" id="1">
+          <Position x="0.645254" y="0.205454" z="0.611621"/>
+          <Direction x="-0.833904" y="0.260288" z="-0.486676"/>
+        </Finger>
+        <Finger fingerType="index" id="2">
+          <Position x="0.587599" y="0.239744" z="0.488845"/>
+          <Direction x="-0.357498" y="-0.0498673" z="-0.932581"/>
+        </Finger>
+        <Finger fingerType="middle" id="3">
+          <Position x="0.545358" y="0.238494" z="0.464196"/>
+          <Direction x="-0.267446" y="-0.06095" z="-0.961643"/>
+        </Finger>
+        <Finger fingerType="ring" id="4">
+          <Position x="0.499855" y="0.239487" z="0.467993"/>
+          <Direction x="-0.174072" y="0.0706896" z="-0.982192"/>
+        </Finger>
+        <Finger fingerType="pinky" id="5">
+          <Position x="0.448855" y="0.228354" z="0.494395"/>
+          <Direction x="0.0244124" y="0.0754929" z="-0.996847"/>
+        </Finger>
+        <Palm Length="42.5662" Width="42.5662">
+          <Position x="0.505721" y="0.21449" z="0.617384"/>
+          <Normal x="0.162117" y="-0.851535" z="-0.498604"/>
+          <Direction x="0.146107" y="0.520433" z="-0.84131"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>
+<Message type="InputPoint" number="0">
+  <InputPoint id="643" deviceType="LeapMotion">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="Left" palmOrientation="down" FingerCount="5" ObjectCount="0" id="1" x="0.500435" y="0.201943" z="0.603986">
+        <Finger fingerType="thumb" id="1">
+          <Position x="0.643085" y="0.191815" z="0.598787"/>
+          <Direction x="-0.847" y="0.25185" z="-0.468149"/>
+        </Finger>
+        <Finger fingerType="index" id="2">
+          <Position x="0.577008" y="0.224515" z="0.470729"/>
+          <Direction x="-0.312371" y="-0.0651837" z="-0.947721"/>
+        </Finger>
+        <Finger fingerType="middle" id="3">
+          <Position x="0.532274" y="0.226587" z="0.447823"/>
+          <Direction x="-0.204371" y="-0.0238479" z="-0.978603"/>
+        </Finger>
+        <Finger fingerType="ring" id="4">
+          <Position x="0.486003" y="0.228952" z="0.454994"/>
+          <Direction x="-0.104928" y="0.105191" z="-0.988901"/>
+        </Finger>
+        <Finger fingerType="pinky" id="5">
+          <Position x="0.431988" y="0.215446" z="0.484608"/>
+          <Direction x="0.136962" y="0.0622602" z="-0.988618"/>
+        </Finger>
+        <Palm Length="42.5662" Width="42.5662">
+          <Position x="0.500435" y="0.201943" z="0.603986"/>
+          <Normal x="0.107753" y="-0.860357" z="-0.498172"/>
+          <Direction x="0.114523" y="0.508496" z="-0.853415"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>
+<Message type="InputPoint" number="0">
+  <InputPoint id="643" deviceType="LeapMotion">
+    <InputTypes>
+      <InputType input="Hands3d"/>
+    </InputTypes>
+    <Values>
+      <Hand handSide="Left" palmOrientation="down" FingerCount="5" ObjectCount="0" id="1" x="0.495113" y="0.191121" z="0.593209">
+        <Finger fingerType="thumb" id="1">
+          <Position x="0.639357" y="0.179635" z="0.588658"/>
+          <Direction x="-0.855472" y="0.232185" z="-0.46288"/>
+        </Finger>
+        <Finger fingerType="index" id="2">
+          <Position x="0.569393" y="0.210188" z="0.45692"/>
+          <Direction x="-0.29105" y="-0.0846969" z="-0.952951"/>
+        </Finger>
+        <Finger fingerType="middle" id="3">
+          <Position x="0.522942" y="0.214343" z="0.434803"/>
+          <Direction x="-0.169058" y="-0.0171651" z="-0.985457"/>
+        </Finger>
+        <Finger fingerType="ring" id="4">
+          <Position x="0.476391" y="0.21792" z="0.443883"/>
+          <Direction x="-0.0681095" y="0.111238" z="-0.991457"/>
+        </Finger>
+        <Finger fingerType="pinky" id="5">
+          <Position x="0.420005" y="0.203646" z="0.475944"/>
+          <Direction x="0.203551" y="0.0464776" z="-0.97796"/>
+        </Finger>
+        <Palm Length="42.5662" Width="42.5662">
+          <Position x="0.495113" y="0.191121" z="0.593209"/>
+          <Normal x="0.0706025" y="-0.874972" z="-0.478998"/>
+          <Direction x="0.102062" y="0.484013" z="-0.869089"/>
+        </Palm>
+      </Hand>
+    </Values>
+  </InputPoint>
+</Message>

@@ -34,14 +34,21 @@ package com.gestureworks.server
 		private var sw:int
 		private var sh:int
 		private var sd:int
+		private var kf:int;
+		private var k2:Number;
+		private var k3:Number;
 		
 		public function Motion3DSManager() 
 		{
 			trace("leap 3d server manager constructor");
 			
-			sw = 100//GestureWorks.application.stageWidth
-			sh = 100//GestureWorks.application.stageHeight;
-			sd = sw; //stage depth
+			sw = GestureWorks.application.stageWidth;
+			sh = GestureWorks.application.stageHeight;
+			sd = sw; //stage depth;
+			
+			kf = 300;//300
+			k2 = 1000;
+			k3 = 2;
 			
 			//debug = true;
 		}
@@ -52,7 +59,7 @@ package com.gestureworks.server
 				//message = frame.Messages.Message;
 				//trace(message)
 				
-				handCount = int(handList.length());//int(message.InputPoint.Values.Hand.length());
+				handCount = int(handList.length());//int(message.InputPoint.Values.Hand.length()); //FIX ME
 				//handOrientation = message.InputPoint.Values.Hand.@orientation; //up/down
 				//handType = message.InputPoint.Values.Hand.@type; //left/right
 				//handSplay
@@ -65,16 +72,17 @@ package com.gestureworks.server
 				
 				for (var j:uint = 0; j < handCount; j++ )
 				{
-				fingerCount = int(handList[j].@FingerCount);// int(message.InputPoint.Values.Hand[j].@FingerCount);
-				objectCount = int(handList[j].@ObjectCount);//int(message.InputPoint.Values.Hand[j].@ObjectCount)
+				fingerCount = int(handList[j].@FingerCount);// int(message.InputPoint.Values.Hand[j].@FingerCount);  //FIX ME
+				objectCount = int(handList[j].@ObjectCount);//int(message.InputPoint.Values.Hand[j].@ObjectCount)  //FIX ME
 				//trace("3ds manager",handCount, fingerCount, objectCount);
-				
-				// CREATE FINGER TIP MOTION POINTS
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// CREATE FINGER TIP MOTION POINTS/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				for (var k:uint = 0; k < fingerCount; k++ )
 				{
 					//var f:Object =  message.InputPoint.Values.Hand[j].Finger[k];
 					var f:Object =  handList[j].Finger[k];
-					var joint_length:int = handList[j].Finger[k].joint.length();
+				//	var joint_length:int = handList[j].Finger[k].joint.length();
 					
 					//trace("motion3dmanager:joint length",joint_length);
 					
@@ -85,17 +93,24 @@ package com.gestureworks.server
 						ptf.width = 10//f.@Width;
 						ptf.length = 30//f.@Length;
 						
-						ptf.position = new Vector3D(f.Position.@x*sw, f.Position.@y*sh, f.Position.@z * -1*sd);
-						ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
+						ptf.position = new Vector3D(f.Position.@x*kf, f.Position.@y*kf, f.Position.@z * -1*kf);
+						//ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
 						ptf.fingertype = f.@fingerType;
+						
+						//ptf.extension = f.@extension; //	NEED FINGER EXTENSION FOR HAND FLATNESS AND POINTING CHECK FOR SPLAY AND TRIGGER
+						
+						ptf.screen_position = new Vector3D(f.Position.@x*k2+(sw*0.5), f.Position.@y*-k2 + sh, f.Position.@z*k2+sd);
+						ptf.screen_direction = new Vector3D(f.Direction.@x,f.Direction.@y*-1, f.Direction.@z*-1);
+						ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;
 						
 					pointList.push(ptf);
 					pids.push(int(f.@id)) 
 
 					//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
 				}
-				
-				// CREATE PALM MOTION POINT
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// CREATE PALM MOTION POINT//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					//var p:Object =  message.InputPoint.Values.Hand[j].Palm;
 					var p:Object =  handList[j].Palm;
 					
@@ -103,12 +118,26 @@ package com.gestureworks.server
 						ptp.type = "palm";
 						ptp.handID = j;
 						ptp.id = 5000+j//p.@id;
-						ptp.position = new Vector3D(p.Position.@x*sw, p.Position.@y*sh, p.Position.@z * -1*sd);
-						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z*-1);
-						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1);
+						ptp.position = new Vector3D(p.Position.@x*kf, p.Position.@y*kf, p.Position.@z * -1*kf);
+						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
+						
+						
+						
+						//ptp.normal =  new Vector3D(p.Normal.@x * -1, p.Normal.@z * 1, p.Normal.@y*-1); //realsense
+						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z*-1); // leap
+						//ptp.normal =  new Vector3D(p.Normal.@x*1, p.Normal.@y*1, p.Normal.@z*1); // test
+						
 						ptp.sphereRadius = p.@length
 						ptp.handside = p.@handSide;
 						ptp.orientation = p.@palmOrientation;
+						
+						//NEED FAV POINT 
+						//ptp.fingerAvergePosiiton = new Vector3D(p.favPosition.@x,p.favPosition.@y,p.favPosition.@z);
+						
+						
+						ptp.screen_position = new Vector3D(p.Position.@x*k2 + sw*0.5, p.Position.@y*-k2 + sh, p.Position.@z*k2+sd);
+						ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
+						ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y*-1, p.Normal.@z*-1);
 						
 					pointList.push(ptp);
 					//trace("palm", ptp.id, ptp.position, ptp.direction, ptp.normal)

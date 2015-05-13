@@ -162,281 +162,62 @@ package com.gestureworks.analysis
 		// 3d config analysis
 		///////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////
-		
-		public function mapMotionPoints3Dto2D():void 
+		public function createHands():void 
 		{
-			//trace("geometric mapping motion points", motionArray.length, motionArray2D.length);
-			//if (!ts.transform3d) 
 			
-			if (motionArray){
-			// CLEARS OUT LOCAL POINT ARRAYS
-			//var temp_motionArray2D = new Vector.<MotionPointObject>();
-			
-			//if (ts.motionEnabled)
-				//{
-				//trace("converting from 3d ip to 2d motion");
-				// NORMALIZE MOTION POINT DATA TO 2D
-				for (var i:uint = 0; i < motionArray.length; i++) 
-						{
-							var pt:MotionPointObject = motionArray[i];
-							var k1:int = 10;
-							
-							
-							var nx:Number = normalize(pt.position.x*k1, 0, sw); 
-							var ny:Number = normalize(pt.position.y*k1, 0, -sh); 
-							var nz:Number = normalize(pt.position.z*k1, 0, sd); 
-
-							//pt.screen_position = new Vector3D(pt.position.x * k1 + (0.5 * sw), pt.position.y * -k1 + (sh * 0.5), pt.position.z * k1 + (sd * 0.5));
-							pt.screen_position = new Vector3D(nx,ny,nz);
-							pt.screen_direction = new Vector3D(pt.direction.x,pt.direction.y*-1,pt.direction.z*-1);
-							pt.screen_normal =  new Vector3D(pt.normal.x,pt.normal.y,pt.normal.z*-1);;
-						}
-				}
-		}	
-		
-		
-		// clear derived point and cluster motion data
-		public function clearHandData():void
-		{
-			var clear_fingers:Boolean = false;
-			var clear_palm:Boolean = false;
-			
-			if (motionArray){
-			
-			for (i = 0; i < motionArray.length; i++)//mpn
-				{	
-					if (motionArray[i]) {
-						
-						if ((motionArray[i].type == "finger")&&(clear_fingers))
-						{	
-							// reset thum alloc// move to cluster
-							//motionArray[i].fingertype = "finger";	 
-							
-							// reset thumb probs // move to cluster
-							motionArray[i].thumb_prob = 0;
-							motionArray[i].mean_thumb_prob = 0
-							// normalized data
-							motionArray[i].normalized_length = 0;
-							motionArray[i].normalized_width = 0;
-							motionArray[i].normalized_palmAngle = 0;
-							motionArray[i].normalized_favdist = 0;
-						}
-						
-						if ((motionArray[i].type == "palm")&&(clear_palm))
-						{	
-							// reset thum alloc// move to cluster
-							motionArray[i].fingertype = null;	 
-							
-							// reset thumb probs // move to cluster
-							motionArray[i].thumb_prob = 0;
-							motionArray[i].mean_thumb_prob = 0
-							// normalized data
-							motionArray[i].normalized_length = 0;
-							motionArray[i].normalized_width = 0;
-							motionArray[i].normalized_palmAngle = 0;
-							motionArray[i].normalized_favdist = 0;
-						}
-					}
-				}
-				// reset motion points in list
-				//handList.length = 0;
-			
-				// reset hands
-				gs.hn = 0;
-				gs.fn = 0;
-			}
-		}
-		
-		
-		// get normalized finger length and palm angle
-		// create basic hand
-		public function updateMotionPoints():void 
-		{
 			if (motionArray) gs.mpn = motionArray.length;
 			else gs.mpn = 0;
 			
 			if (handList) gs.hn = handList.length;
 			else gs.hn = 0;
 			
-			//trace("updateMotionPoints",gs.mpn, motionArray.length, handList.length, gs.hn)
-			
+			if (gs.hn < 2)
+				{
 				for (i = 0; i < gs.mpn; i++)//mpn
 					{
-						//////////////////////////////////////////////////////
-						/// create hand
-						if (motionArray[i].type == "palm") 
+					///	updateHand palm
+					if (motionArray[i].type == "palm") 
 						{
-							//trace("coreGeometric:palm", i, motionArray[i].position);
+						//CREATE HAND OBJECT
+						var hand:HandObject = new HandObject();	
+							hand.motionPointID = motionArray[i].motionPointID //palmID
+							hand.position = motionArray[i].position //palmID
+							hand.direction = motionArray[i].direction
+							hand.normal = motionArray[i].normal
+							hand.handID = motionArray[i].handID;
+							hand.palm = motionArray[i]; // link palm point
+							hand.orientation = hand.palm.orientation
+							hand.type = hand.palm.handside;
+							hand.radius = hand.palm.sphereRadius;
 							
-										if (gs.hn != 0)
-										{
-										for (j = 0; j < gs.hn; j++)//handList.length
-										{
-											//trace("////////////////////////////////",i,j,handList[j].handID, motionArray[i].handID)
-											
-											
-											if ((handList[j].handID != motionArray[i].handID)&&(handList.length < 2))
-											{
-												//trace("create another hand");
-												//create hand
-												var hand:HandObject = new HandObject();	
-													hand.motionPointID = motionArray[i].motionPointID //palmID
-													hand.position = motionArray[i].position //palmID
-													hand.direction = motionArray[i].direction
-													hand.normal = motionArray[i].normal
-													hand.handID = motionArray[i].handID;
-													
-													/*
-													//get finger types
-													hand.thumb =
-													hand.palm = motionArray[i]; // link palm point
-													hand.index = null;
-													hand.middle = null;
-													hand.ring = null;
-													hand.pinky = null;
-													
-													//get joints
-													hand.pipList.length = 0;
-													hand.dipList.length = 0;
-													hand.tipList.length = 0;
-													*/
-													
-												handList.push(hand);
-												
-											}
-											}
-										}
-										else {
-											//trace("--------------------------------------------------------zero create hand",handList[j].handID,motionArray[i].handID );
-											//create hand
-											var hand:HandObject = new HandObject();	
-													hand.motionPointID = motionArray[i].motionPointID //palmID
-													hand.position = motionArray[i].position //palmID
-													hand.direction = motionArray[i].direction
-													hand.normal = motionArray[i].normal
-													hand.handID = motionArray[i].handID;
-													hand.palm = motionArray[i]; // link palm point
-													
-											if (!handList) handList = new Vector.<HandObject>
-											handList.push(hand);
-										}
-							}
-					}
-					
-					// CHECK PALM POINT STILL EXISTS
-					// IF NOT REMOVE FROM HAND LIST
-					//MOTION POINTS NOT KILLED FROM SERVER PROPERLY
-					var mpo:MotionPointObject
-					
-					if (handList) {
-						
-					gs.hn = handList.length
-					
-					for (j = 0; j < gs.hn; j++)
-					{
-						
-						if (handList[j])
-						{
-						if (handList[j].palm)
-						{
-							mpo = GestureGlobals.gw_public::motionPoints[handList[j].palm.motionPointID];
-							if (!mpo) {
-								//trace("palm gone", handList[j].palm.motionPointID, handList[j].motionPointID, handList[j].handID);
-								
-								//WILL NEED better VALID HAND LIST PLACEMENT
-								handList[j].seedList.length = 0;
-								handList[j].fingerList.length = 0;
-								handList[j].pipList.length = 0;
-								handList[j].dipList.length = 0;
-								handList[j].tipList.length = 0;
-								handList[j].palm = null;
-								handList[j].index = null;
-								handList[j].middle = null;
-								handList[j].ring = null;
-								handList[j].pinky = null;
-								
-								handList.splice(j, 1);
-								gs.hn -= 1;//note splicing error
-							}
+						if (!handList) handList = new Vector.<HandObject>
+						handList.push(hand);
 						}
-						else {
-							handList[j].seedList.length = 0;
-							handList[j].fingerList.length = 0;
-							handList[j].pipList.length = 0;
-							handList[j].dipList.length = 0;
-							handList[j].tipList.length = 0;
-							handList[j].palm = null;
-							handList[j].index = null;
-							handList[j].middle = null;
-							handList[j].ring = null;
-							handList[j].pinky = null;
+					}
+				}
 							
-							handList.splice(j, 1);
-							gs.hn -= 1;
-						}
-						}
-					}
-					
-					///////////////////////////////////////////////
-					// GET HAND NUM TOTAL
-					gs.hn = handList.length;
-					}
-					else gs.hn = 0;
-					
-					
-					///////////////////////////////////////////////
-					// PUSH FINGERS
-					var fnum:int = 0;
-					
-					for (j = 0; j < gs.hn; j++)
-					{
-						//clear previos motion points
-						handList[j].fingerList.length = 0;
-						
-						//trace("-------");
-						
+								
+					//	link finger motion points 
+					for (j = 0; j < gs.hn; j++)//handList.length
+					{								
 						for (i = 0; i < gs.mpn; i++)//mpn
-							{	
-							var mp:MotionPointObject = motionArray[i];
-
-							if ((handList[j].handID == mp.handID))
-							{
-								if (mp.type == "finger")
-									{
-										//trace("CREATE NEW FINGER ZERO", mp.motionPointID, mp.id ,mp.position,handList[j].fingerList.length)
-										//mp.fingertype = "finger"; // KILLING THUMB
-										// push fingers into finger list
-										handList[j].fingerList.push(mp);
-									}
-								if (mp.type == "tool")
-									{
-										//trace("tool..........................................");
-										// push tool into interaction point list
-										var tpt:InteractionPointObject = new InteractionPointObject();
-											tpt.position = mp.position;
-											tpt.direction = mp.direction;
-											tpt.length = mp.length;
-											tpt.width = mp.width;
-											tpt.handID = mp.handID;
-											tpt.type = mp.type;
-																								
-											//add to pinch point list
-											InteractionPointTracker.framePoints.push(tpt)				
-									}
+						{							
+								if (handList[j].handID == motionArray[i].handID)
+								{
+								if (motionArray[i].fingertype == "thumb") handList[j].thumb = motionArray[i];
+								if (motionArray[i].fingertype == "index") handList[j].index = motionArray[i];
+								if (motionArray[i].fingertype == "middle") handList[j].middle = motionArray[i];
+								if (motionArray[i].fingertype == "ring") handList[j].ring = motionArray[i];
+								if (motionArray[i].fingertype == "pinky") handList[j].pinky = motionArray[i];
+								
+								handList[j].fingerList.push(motionArray[i]);
 								}
-							}
-								//BUILD FINGER NUM TOTAL
-								fnum += handList[j].fingerList.length;
-								// push local finger list total
-								//handList[j].hfn = handList[j].fingerList.length;
-							}
-					/////////////////////////////////////////////
-					//GET FINGER NUM TOTAL
-					gs.fn = fnum
+						}	
+					}
+				
 		}
 		
-		
-		
+		/*
 		public function findFingerAverage():void 
 		{
 
@@ -509,9 +290,9 @@ package com.gestureworks.analysis
 						}
 					}
 				//trace("hand pos",hand.position)
-		}
+		}*/
 
-		
+		/*
 		public function findHandRadius():void 
 		{
 
@@ -549,99 +330,9 @@ package com.gestureworks.analysis
 					//handList[j].sphereRadius = favdist * palmratio;	
 					//trace("rad",handList[j].sphereRadius)
 				}
-		}
+		}*/
 		
-		public function findHandDirection():void 
-		{
-			var hn:int = handList.length;
-			
-			for (j = 0; j < hn; j++)
-			{
-					// TEST
-					/*
-					///////////////////////////////////////////////////////////////////////
-					// CALCUALTE DIRECTION OF HAND
-					var direction:Vector3D = handList[j].projectedFingerAveragePosition.subtract(handList[j].position); 
-					var pdirection:Vector3D = handList[j].projectedPureFingerAveragePosition.subtract(handList[j].position); 
-					
-					var length:Number = direction.length;
-					var unit_dir:Vector3D = new Vector3D(direction.x / length, direction.y / length, direction.z / length);
-					var plength:Number = pdirection.length;
-					var punit_dir:Vector3D = new Vector3D(pdirection.x / plength, pdirection.y / plength, pdirection.z / plength);
-					
-					//trace(handList[j].direction, handList[j].palm.direction, direction, unit_dir , length)
-					//trace(handList[j].direction,handList[j].palm.direction, pdirection, punit_dir , plength)
-					
-					handList[j].palm.direction = unit_dir//direction
-					handList[j].direction = unit_dir//direction
-					
-					//handList[j].palm.direction = punit_dir//direction
-					//handList[j].direction = punit_dir//direction
-					//////////////////////////////////////////////////////////////////////////////////
-					*/
-					
-					
-					///////////////////////////////////////////////////////////////////////////////////
-					var hfn:uint = handList[j].fingerList.length;
-					var dir:Vector3D = new Vector3D();
-					var classified_count:int = 0;
-					var ck:Number = 0;
-					
-					for (i = 0; i < hfn; i++)
-					{	
-					var fpt:MotionPointObject = handList[j].fingerList[i];
-
-						if ((fpt.type == "finger")&&(fpt.fingertype != "")&&(fpt.fingertype != "thumb"))// exclude unclassified fingers and thumbs
-						{
-							//var finger_dir:Vector3D = fpt.palmplane_finger_knuckle_direction;
-							classified_count += 1;
-								
-							dir.x +=  fpt.palmplane_finger_knuckle_direction.x;
-							dir.y +=  fpt.palmplane_finger_knuckle_direction.y;
-							dir.z +=  fpt.palmplane_finger_knuckle_direction.z;
-							//trace("loop",fpt.fingertype,fpt.position,fpt.palmplane_finger_knuckle_direction, classified_count)
-						}
-					}
-
-					if (classified_count!=0) ck = 1 / classified_count;
-					else ck = 0;
-							
-						dir.x *= ck;
-						dir.y *= ck;
-						dir.z *= ck;
-						
-					
-					// normalize vector
-					var lng:Number = dir.length;
-					var udir:Vector3D = new Vector3D(dir.x / lng, dir.y / lng, dir.z / lng);
-					
-					handList[j].direction_finger = dir;
-					//trace("new dir",lng, dir,udir,ck, classified_count);
-					
-					if (lng) 
-					{
-						handList[j].palm.direction = udir//direction
-						handList[j].direction = udir//direction
-						
-						//trace("fix direction")
-					}
-					
-					/////////////////////////////////////////////////////////////////////////////////////////
-					
-					
-					
-					
-					
-					
-					///////////////////////////////////////////////
-					// GET DIRECTION / NORMAL CROSS PRODUCT
-					if (handList[j].palm.normal && handList[j].palm.direction)
-					{
-					 handList[j].d_n_crossproduct =  handList[j].palm.normal.crossProduct(handList[j].palm.direction);
-					}
-			}
-		}
-		
+		/*
 		// get nomalized finger length and palm angle
 		// splay and flatness
 		public function normalizeFingerFeatures():void 
@@ -918,38 +609,9 @@ package com.gestureworks.analysis
 			}
 			}
 		}
+		*/
 		
-		
-		
-		
-		
-		public function getOrientationHandSide():void
-		{
-				for (j = 0; j < handList.length; j++)
-				{
-					//set radius
-					handList[j].radius = handList[j].palm.sphereRadius;
-					
-					//set orinetation
-					if (handList[j].palm.orientation)
-					{
-						handList[j].orientation = handList[j].palm.orientation
-					}
-					//set hand side
-					if (handList[j].palm.type)
-					{
-						handList[j].type = handList[j].palm.handside;
-					}
-					
-				}
-		}
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//
-		public function getJoints():void
-		{
-			
-		}
-
+/*
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Find Interactive Pinch Points //PINCH IP
@@ -1077,8 +739,176 @@ package com.gestureworks.analysis
 					
 			}
 		
+		}*/
+		
+		public function find3DPinchPointsExplicit():void
+		{
+			//trace("finding pinch points, geometric explicit");
+			
+			var pinchThreshold:Number = 20//60; //GML CONFIG 
+			var dist:Number;
+			var radius:Number = 50;
+			var palm:MotionPointObject;
+			var hn:int = handList.length
+				
+			//trace("hand length",hn );
+				
+			for (var j:int = 0; j < hn; j++)
+				{	
+				dist = Vector3D.distance(handList[j].index.position, handList[j].thumb.position);
+				
+				var thumbdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].thumb.position);
+				var indexdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].index.position);
+				var middledist:Number = Vector3D.distance(handList[j].palm.position, handList[j].middle.position);
+				var ringdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].ring.position);
+				var pinkydist:Number = Vector3D.distance(handList[j].palm.position, handList[j].pinky.position);
+				
+				//trace("pinch dist",dist,thumbdist,indexdist,middledist,ringdist,pinkydist );
+
+				// find midpoint between fingertips
+					if ((dist <= pinchThreshold)&&(middledist>radius)&&(ringdist>radius)&&(pinkydist>radius))
+					{	
+						//trace("pinch point",dist)
+						var pmp:InteractionPointObject = new InteractionPointObject();
+						
+							pmp.position = handList[j].thumb.position;
+							pmp.screen_position = handList[j].thumb.screen_position;
+							pmp.handID = handList[j].handID;
+							pmp.type = "pinch";
+							pmp.mode = "motion";
+							pmp.source = "native" // so that interaction point tracker works
+															
+						//add to pinch point list
+						InteractionPointTracker.framePoints.push(pmp)
+						//trace("2 pinch push", best_dist)	
+					}
+				
+				}
 		}
 		
+		
+		public function find3DTriggerPointsExplicit():void
+		{
+			//trace("finding pinch points, geometric explicit");
+			
+			var triggerThreshold:Number = 50//60; //GML CONFIG 
+			var radius:Number = 50;
+			var dist:Number;
+			var palm:MotionPointObject;
+			var hn:int = handList.length
+				
+			//trace("hand length",hn );
+				
+			for (var j:int = 0; j < hn; j++)
+				{	
+				dist = Vector3D.distance(handList[j].index.position, handList[j].thumb.position);
+				
+				var thumbdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].thumb.position);
+				var indexdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].index.position);
+				var middledist:Number = Vector3D.distance(handList[j].palm.position, handList[j].middle.position);
+				var ringdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].ring.position);
+				var pinkydist:Number = Vector3D.distance(handList[j].palm.position, handList[j].pinky.position);
+				
+				//trace("trigger dist",dist,indexdist,middledist, ringdist,pinkydist);
+				// find midpoint between fingertips
+					if ((dist >= triggerThreshold)&&(middledist<radius)&&(ringdist<radius)&&(pinkydist<radius))
+					{	
+						//trace("pinch point",dist)
+						var pmp:InteractionPointObject = new InteractionPointObject();
+						
+							pmp.position = handList[j].index.position;
+							pmp.screen_position = handList[j].index.screen_position;
+							pmp.handID = handList[j].handID;
+							pmp.type = "trigger";
+							pmp.mode = "motion";
+							pmp.source = "native" // so that interaction point tracker works
+															
+						//add to pinch point list
+						InteractionPointTracker.framePoints.push(pmp)
+						//trace("2 pinch push", best_dist)	
+					}
+				
+				}
+		}
+		
+		public function find3DFistPointsExplicit():void
+		{
+			//trace("finding fist points, geometric explicit");
+			var radius:Number = 55;
+			var palm:MotionPointObject;
+			var hn:int = handList.length
+				
+			//trace("hand length",hn );
+				
+			for (var j:int = 0; j < hn; j++)
+				{	
+				var thumbdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].thumb.position);
+				var indexdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].index.position);
+				var middledist:Number = Vector3D.distance(handList[j].palm.position, handList[j].middle.position);
+				var ringdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].ring.position);
+				var pinkydist:Number = Vector3D.distance(handList[j].palm.position, handList[j].pinky.position);
+				
+				trace("fist dist",thumbdist,indexdist,middledist, ringdist,pinkydist);
+				// find midpoint between fingertips
+					if ((indexdist<radius+10)&&(middledist<radius)&&(ringdist<radius)&&(pinkydist<radius))
+					{	
+						//trace("pinch point",dist)
+						var pmp:InteractionPointObject = new InteractionPointObject();
+						
+							pmp.position = handList[j].palm.position;
+							pmp.screen_position = handList[j].palm.screen_position;
+							pmp.handID = handList[j].handID;
+							pmp.type = "fist";
+							pmp.mode = "motion";
+							pmp.source = "native" // so that interaction point tracker works
+															
+						//add to pinch point list
+						InteractionPointTracker.framePoints.push(pmp)
+						//trace("2 pinch push", best_dist)	
+					}
+				
+				}
+		}
+		
+		public function find3DSplayPointsExplicit():void
+		{
+			//trace("finding Splay points, geometric explicit");
+			var radius:Number = 65;
+			var palm:MotionPointObject;
+			var hn:int = handList.length
+				
+			//trace("hand length",hn );
+				
+			for (var j:int = 0; j < hn; j++)
+				{	
+				var thumbdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].thumb.position);
+				var indexdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].index.position);
+				var middledist:Number = Vector3D.distance(handList[j].palm.position, handList[j].middle.position);
+				var ringdist:Number = Vector3D.distance(handList[j].palm.position, handList[j].ring.position);
+				var pinkydist:Number = Vector3D.distance(handList[j].palm.position, handList[j].pinky.position);
+				
+				trace("splay dist",thumbdist,indexdist,middledist, ringdist,pinkydist);
+				// find midpoint between fingertips
+					if ((indexdist>radius)&&(middledist>radius)&&(ringdist>radius)&&(pinkydist>radius))
+					{	
+						//trace("pinch point",dist)
+						var pmp:InteractionPointObject = new InteractionPointObject();
+						
+							pmp.position = handList[j].palm.position;
+							pmp.screen_position = handList[j].palm.screen_position;
+							pmp.handID = handList[j].handID;
+							pmp.type = "splay";
+							pmp.mode = "motion";
+							pmp.source = "native" // so that interaction point tracker works
+															
+						//add to pinch point list
+						InteractionPointTracker.framePoints.push(pmp)
+						//trace("2 pinch push", best_dist)	
+					}
+				
+				}
+		}
+		/*
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Find Interactive Hook Points 
 		public function find3DHookPoints():void
@@ -1134,8 +964,8 @@ package com.gestureworks.analysis
 				}
 			}
 			
-		}
-		
+		}*/
+		/*
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Find Interactive Push/Pin Point (z-axis)
 		public function find3DPushPoints():void
@@ -1616,7 +1446,7 @@ package com.gestureworks.analysis
 								InteractionPointTracker.framePoints.push(fist_pt)
 							}
 				}
-		}
+		}*/
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//Collect Interactive Tool Points 

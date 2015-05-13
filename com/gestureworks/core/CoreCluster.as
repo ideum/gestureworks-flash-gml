@@ -340,7 +340,7 @@ package com.gestureworks.core
 		public function getMotionGeoMetrics():void
 		{
 			//trace("get geometric 2d",cluster_geometric);
-			mapMotion3Dto2D();
+			//mapMotion3Dto2D(); //now done in motion point parser
 			getSkeletalGeoMetrics3D();
 			getPoseGeoMetrics3D();
 		}
@@ -357,31 +357,28 @@ package com.gestureworks.core
 		
 		public function getSkeletalGeoMetrics3D():void 
 		{
-			//trace("get skeletal geometric");
-			
-				//trace("get core geometrics")
-				
-				//////////////////////////////////////////////////////
-				// RESET CLUSTER
-				//////////////////////////////////////////////////////
-				cluster_geometric.clearHandData();	
+				//trace("get skeletal geometric");
 			
 				/////////////////////////////////////////////////////
 				//BUILD SKELETAL MODEL FROM RAW MOTION POINTS
 				/////////////////////////////////////////////////////
 				
 				// BASIC HAND
-					cluster_geometric.updateMotionPoints();//createHand(); // palm points // finger list palm ip 
+				cluster_geometric.createHands();
+				
+				//cluster_geometric.findFingerAverage();// finger average point// up down 
+				//cluster_geometric.normalizeFingerFeatures();
+				//cluster_geometric.getOrientationHandSide();
 					
 				// SKELETAL DETAIL
-					cluster_geometric.findFingerAverage();// finger average point// up down 
+					//cluster_geometric.findFingerAverage();
 					//cluster_geometric.findHandOrientation();
 					//cluster_geometric.findHandDirection();
-					cluster_geometric.normalizeFingerFeatures(); // norm lengths (palm distances)
+					//cluster_geometric.normalizeFingerFeatures(); // norm lengths (palm distances)
 					//cluster_geometric.findHandRadius(); // favdist 
 					//cluster_geometric.findThumb(); // thumb // left// right
 				
-				//cluster_geometric.getOrientationHandSide();
+				
 		}
 		
 		public function getPoseGeoMetrics3D():void 
@@ -409,19 +406,25 @@ package com.gestureworks.core
 					
 					//if ((cO.handList[j].fingerList.length == g.h_fn)&&(cO.handList[j].flatness == g.h_flatness))
 						//{
-						if (fingerPoints)			cluster_geometric.find3DFingerPoints(); 
-						if (thumbPoints)			cluster_geometric.find3DThumbPoints(); 
-						if (palmPoints)				cluster_geometric.find3DPalmPoints(); 
-						if (fingerAveragePoints)	cluster_geometric.find3DFingerAveragePoints(); 
-						if (fingerAndThumbPoints)	cluster_geometric.find3DFingerAndThumbPoints(); 
+						//if (fingerPoints)			cluster_geometric.find3DFingerPoints(); 
+						//if (thumbPoints)			cluster_geometric.find3DThumbPoints(); 
+						//if (palmPoints)				cluster_geometric.find3DPalmPoints(); 
+						//if (fingerAveragePoints)	cluster_geometric.find3DFingerAveragePoints(); 
+						//if (fingerAndThumbPoints)	cluster_geometric.find3DFingerAndThumbPoints(); 
 									
 						//CONFIGURATION BASED INTERACTION POINTS
-						if (pinchPoints)			cluster_geometric.find3DPinchPoints(); 
-						if (triggerPoints)			cluster_geometric.find3DTriggerPoints(); 
-						if (pushPoints)				cluster_geometric.find3DPushPoints(); 
-						if (hookPoints)				cluster_geometric.find3DHookPoints(); 
-						if (framePoints)			cluster_geometric.find3DFramePoints(); 
-						if (fistPoints)			cluster_geometric.find3DFistPoints(); 
+						//if (pinchPoints)			cluster_geometric.find3DPinchPoints(); 
+						//if (triggerPoints)			cluster_geometric.find3DTriggerPoints(); 
+						//if (pushPoints)				cluster_geometric.find3DPushPoints(); 
+						//if (hookPoints)				cluster_geometric.find3DHookPoints(); 
+						//if (framePoints)			cluster_geometric.find3DFramePoints(); 
+						//if (fistPoints)			cluster_geometric.find3DFistPoints(); 
+						
+						
+						cluster_geometric.find3DTriggerPointsExplicit(); 
+						cluster_geometric.find3DPinchPointsExplicit(); 
+						cluster_geometric.find3DFistPointsExplicit();
+						cluster_geometric.find3DSplayPointsExplicit(); 
 						
 						// LATER
 							//---cluster_geometric.find3DToolPoints();
@@ -434,13 +437,13 @@ package com.gestureworks.core
 			
 		}
 		
-		
-		public function mapMotion3Dto2D():void 
-		{
+		//NOW DONE IN MOTION POINT PARSER
+		//public function mapMotion3Dto2D():void 
+		//{
 			//trace("tc mapping motion points", cO.motionArray.length, cO.motionArray2D.length, cluster_geometric );
 			//if (!ts.transform3d) 
-			cluster_geometric.mapMotionPoints3Dto2D();
-		}
+			//cluster_geometric.mapMotionPoints3Dto2D();
+		//}
 		
 		
 		

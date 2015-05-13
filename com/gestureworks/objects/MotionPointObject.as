@@ -115,10 +115,10 @@ package com.gestureworks.objects
 		
 		
 		//joints////////////////////////////////////////////////////////
-		public var joint_0:Vector3D = new Vector3D ();
-		public var joint_1:Vector3D = new Vector3D ();
-		public var joint_2:Vector3D = new Vector3D ();
-		public var joint_3:Vector3D = new Vector3D ();
+		//public var joint_0:Vector3D = new Vector3D ();
+		//public var joint_1:Vector3D = new Vector3D ();
+		//public var joint_2:Vector3D = new Vector3D ();
+		//public var joint_3:Vector3D = new Vector3D ();
 		
 		/*
 		//size///////////////////////////////////////////w,h,l

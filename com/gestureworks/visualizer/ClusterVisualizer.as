@@ -196,7 +196,7 @@ package com.gestureworks.visualizer
 	
 	private function drawInteractionPoints():void
 	{
-		//trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
+		trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
 		//if (ipn)
 		for each (var iPointCluster:ipClusterObject in iPointClusterList) 
 		

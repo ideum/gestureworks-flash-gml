@@ -191,13 +191,17 @@ package com.gestureworks.managers
 					mpO.moveCount ++;
 					mpO.phase = "update";
 					mpO.handID = pt.handID;
+					
+					mpO.screen_direction = pt.screen_direction;
+					mpO.screen_position = pt.screen_position;
+					mpO.screen_normal = pt.screen_normal;
 					//trace( mpO.moveCount);
 					
 					
-					mpO.joint_0 = pt.joint_0;
-					mpO.joint_1 = pt.joint_1;
-					mpO.joint_2 = pt.joint_2;
-					mpO.joint_3 = pt.joint_3;
+					//mpO.joint_0 = pt.joint_0;
+					//mpO.joint_1 = pt.joint_1;
+					//mpO.joint_2 = pt.joint_2;
+					//mpO.joint_3 = pt.joint_3;
 					
 				}
 		}

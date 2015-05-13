@@ -73,7 +73,7 @@ package com.gestureworks.managers
 			clearFrame();
 
 			
-				//trace("interaction active points",activePoints.length,temp_framePoints.length, framePoints.length, activePoints.length);
+			//	trace("interaction active points",activePoints.length,temp_framePoints.length, framePoints.length, activePoints.length);
 
 				//////////////////////////////////////////////////////////////////////
 				// REMOVE from ap if not in fp
@@ -84,9 +84,11 @@ package com.gestureworks.managers
 					
 						for each(fp in temp_framePoints)
 						{
+							//trace("frame ip source and type", ap.type, fp.source)
+							
 							if (fp.source == "native" ) //||fp.source == "server" 
 							{
-							//trace(ap.type)
+							
 							
 							var dist:Number = Math.abs(Vector3D.distance(ap.position, fp.position));
 							if (ap.type == fp.type && ap.rootPointID == fp.rootPointID) found = true;
@@ -155,6 +157,7 @@ package com.gestureworks.managers
 						{
 						for each(fp in temp_framePoints)
 							{
+								//trace("temp frame ip source and type", ap.type, fp.source)
 							if (fp.source == "native") 
 							{
 								if (ap.type == fp.type)
@@ -214,6 +217,8 @@ package com.gestureworks.managers
 					// ADD NEW POINTS TO ACTIVE will add (WHEN an!=0)
 					for each(fp in temp_framePoints)
 					{
+						//trace("temp frame ip source and type",fp.source)
+						
 						if (fp.source == "native") 
 						{
 						_ID++;
