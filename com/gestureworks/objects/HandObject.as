@@ -41,6 +41,9 @@ package com.gestureworks.objects
 		//splay
 		public var splay:Number = 0;
 		
+		public var IPState:String = "";
+		public var IPPosition:Vector3D = new Vector3D ();
+		public var IPScreenPosition:Vector3D = new Vector3D ();
 		
 		// fingerArray 
 		public var fingerList:Vector.<MotionPointObject> = new Vector.<MotionPointObject>();
@@ -66,16 +69,16 @@ package com.gestureworks.objects
 		////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//position/////////////////////////////////////////////x,y,x
-		public var position:Vector3D = new Vector3D ();
-		public var positionCached:Vector3D = new Vector3D ();
+		//public var position:Vector3D = new Vector3D ();
+		//public var positionCached:Vector3D = new Vector3D ();
 		
 		//direction////////////////////////
-		public var direction:Vector3D = new Vector3D ();
+		//public var direction:Vector3D = new Vector3D ();
 		// direction from classified fingers only
-		public var direction_finger:Vector3D = new Vector3D ();
+		//public var direction_finger:Vector3D = new Vector3D ();
 		
 		//normal/////////////////////////
-		public var normal:Vector3D = new Vector3D ();
+		//public var normal:Vector3D = new Vector3D ();
 		
 		//width
 		public var width:Number = 0;

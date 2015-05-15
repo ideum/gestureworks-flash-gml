@@ -151,22 +151,27 @@ package com.gestureworks.managers
 		
 		
 		public static function onInteractionBeginPoint(pt:InteractionPointObject):void
-		{		
+		{	
+			var lpt = pt;
+			
+			
 			var ipO:InteractionPointObject = new InteractionPointObject();
 				ipO.phase = "begin";
 				ipO.id = interactionPointCount;		
-				ipO.interactionPointID = pt.interactionPointID;
-				ipO.rootPointID = pt.rootPointID;
-				ipO.source = pt.source;
-				ipO.mode = pt.mode;
-				ipO.type = pt.type;
+				ipO.interactionPointID = lpt.interactionPointID;
+				ipO.rootPointID = lpt.rootPointID;
+				ipO.source = lpt.source;
+				ipO.mode = lpt.mode;
+				ipO.type = lpt.type;
 				ipO.age = 0;
 				
-				ipO.radius = pt.radius;
-				ipO.theta = pt.theta;
-				ipO.init_position = new Vector3D(pt.position.x, pt.position.y, 0);
-				ipO.position = new Vector3D(pt.position.x, pt.position.y, 0);
-				ipO.size = pt.size;
+				ipO.radius = lpt.radius;
+				ipO.theta = lpt.theta;
+				ipO.init_position = new Vector3D(pt.position.x, pt.position.y, pt.position.z);
+				//ipO.init_position = lpt.position//new Vector3D(pt.position.x, pt.position.y, 0);
+				ipO.position = new Vector3D(pt.position.x, pt.position.y, pt.position.z);
+				//ipO.position = lpt.position//new Vector3D(pt.position.x, pt.position.y,);
+				ipO.size = lpt.size;
 				
 				//ADD TO GLOBAL Interaction POINT LIST
 				iPointArray.push(ipO);
@@ -195,6 +200,7 @@ package com.gestureworks.managers
 		
 					// REMOVE POINT FROM GLOBAL ARRAY
 					iPointArray.splice(ipO.id, 1);
+					
 	
 					// REDUCE GLOBAL INTERACTION POINT COUNT
 					interactionPointCount--;
@@ -223,16 +229,47 @@ package com.gestureworks.managers
 			
 				if (ipO)
 				{	
+					//;ipO = pt;
+					
+					/*
+											///////////////////////////////////////////////////////////////////////////////////////////////
+											// DUPLICATE PROCESS IN INTERACTION MANAGER
+											//////////////////////////////////////////////////////////////////////////////////////////////
+											// MUST FIX
+											//////////////////////////////////////////////////////////////////////////////////////////////
+											
+											
+										
+											
+											
+											
+											
+											
+		
+											
+											*/
+					
+					
+					
+					
+					
+					ipO.age++;
 					ipO.phase = "update"
 					ipO.interactionPointID = pt.interactionPointID; // id based on global hardware (native and server combined)
 					ipO.rootPointID = pt.rootPointID //id based on hardware traced reg
 					ipO.id = pt.id; //id based on point count
 					
-					//mpO.handID = event.value.handID;
 					
-					ipO.age++;
+					//mpO.handID = event.value.handID;
+					//ap.handID = fp.handID;
+					
+					
+					
+					////////////////////////////////////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////////////////////////////////////
 					ipO.mode = pt.mode;
 					ipO.type = pt.type;
+					//ap.init_position = fp.init_position;
 					ipO.position = pt.position;
 					ipO.direction = pt.direction;
 					ipO.normal = pt.normal;
@@ -241,11 +278,12 @@ package com.gestureworks.managers
 					ipO.screen_normal = pt.screen_normal;
 					
 					ipO.velocity = pt.velocity;
-					
+
 					ipO.radius = pt.radius
 					ipO.length = pt.length;
 					ipO.width = pt.width;
 					
+					// advanced ip features
 					ipO.flatness = pt.flatness;
 					ipO.orientation = pt.orientation;
 					ipO.fn = pt.fn;
@@ -256,7 +294,9 @@ package com.gestureworks.managers
 					ipO.acceleration = pt.acceleration;
 					ipO.buttons = pt.buttons;
 					//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
-				}
+					/////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					}
 				
 				else {
 					pt.phase = "update"

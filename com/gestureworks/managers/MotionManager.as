@@ -173,12 +173,16 @@ package com.gestureworks.managers
 			
 			var mpO:MotionPointObject = motionPoints[pt.motionPointID] as MotionPointObject;
 			
+			
 				if (mpO)
 				{	
+					//if(pt.position.x!=0){
+					//trace(mpO.type);
 					//trace(event.value.position.x, event.value.position.y,event.value.position.z)
 					//mpO.id  = event.value.id;
 					//mpO.motionPointID  = event.value.motionPointID;
 					//mpO.handID = pt.handID;
+					
 					
 					mpO.position = pt.position;
 					mpO.direction = pt.direction;
@@ -192,16 +196,15 @@ package com.gestureworks.managers
 					mpO.phase = "update";
 					mpO.handID = pt.handID;
 					
+					
 					mpO.screen_direction = pt.screen_direction;
 					mpO.screen_position = pt.screen_position;
 					mpO.screen_normal = pt.screen_normal;
 					//trace( mpO.moveCount);
 					
-					
-					//mpO.joint_0 = pt.joint_0;
-					//mpO.joint_1 = pt.joint_1;
-					//mpO.joint_2 = pt.joint_2;
-					//mpO.joint_3 = pt.joint_3;
+					//if (mpO.type == "palm") trace("palm motion point update", mpO.position, pt.position);
+					//if (mpO.fingertype == "index") trace("index motion point update", mpO.position, pt.position);
+					//}
 					
 				}
 		}

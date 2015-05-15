@@ -365,6 +365,7 @@ package com.gestureworks.core
 				
 				// BASIC HAND
 				cluster_geometric.createHands();
+				//cluster_geometric.findInteractionPointsExplicit(); 
 				
 				//cluster_geometric.findFingerAverage();// finger average point// up down 
 				//cluster_geometric.normalizeFingerFeatures();
@@ -421,10 +422,12 @@ package com.gestureworks.core
 						//if (fistPoints)			cluster_geometric.find3DFistPoints(); 
 						
 						
-						cluster_geometric.find3DTriggerPointsExplicit(); 
-						cluster_geometric.find3DPinchPointsExplicit(); 
-						cluster_geometric.find3DFistPointsExplicit();
-						cluster_geometric.find3DSplayPointsExplicit(); 
+						//cluster_geometric.find3DTriggerPointsExplicit(); 
+						//cluster_geometric.find3DPinchPointsExplicit(); 
+						//cluster_geometric.find3DFistPointsExplicit();
+						//cluster_geometric.find3DSplayPointsExplicit(); 
+						
+						cluster_geometric.findInteractionPointsExplicit(); 
 						
 						// LATER
 							//---cluster_geometric.find3DToolPoints();

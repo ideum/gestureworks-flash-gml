@@ -133,7 +133,7 @@ package com.gestureworks.visualizer
 		//ipn = cO.iPointArray.length;
 		graphics.clear();
 		drawRootClusterDims(); // for center trans viz
-		drawInteractionPoints();
+	//	drawInteractionPoints();
 		drawSubClusterDims();
 		//trace("draw", tpn,ipn, ts.ipn, cO.ipn,cO.iPointArray2D.length);
 	}
@@ -196,7 +196,7 @@ package com.gestureworks.visualizer
 	
 	private function drawInteractionPoints():void
 	{
-		trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
+		//trace("viz interaction pt",ipn, cO.ipn,cO.iPointArray.length);
 		//if (ipn)
 		for each (var iPointCluster:ipClusterObject in iPointClusterList) 
 		

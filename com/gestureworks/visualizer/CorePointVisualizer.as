@@ -44,7 +44,7 @@ package com.gestureworks.visualizer
 	
 	
 	import com.gestureworks.utils.AddSimpleText;
-	
+	import com.gestureworks.objects.HandObject;
 
 
 	public class CorePointVisualizer extends Shape//Container//Sprite
@@ -54,6 +54,7 @@ package com.gestureworks.visualizer
 		private var motionArray:Vector.<MotionPointObject>;
 		private var sensorArray:Vector.<SensorPointObject>;
 		private var ipArray:Vector.<InteractionPointObject>;
+		private var handList:Vector.<HandObject>;
 		
 		private var gs:CoreSprite;
 		private var tpn:uint = 0;
@@ -84,6 +85,9 @@ package com.gestureworks.visualizer
 			
 			motionPoints = GestureGlobals.gw_public::motionPoints;
 			ipArray = GestureGlobals.gw_public::iPointArray;
+			
+			
+			handList = GestureGlobals.gw_public::handList;
 			//hist = 8;
 			
 			
@@ -159,7 +163,8 @@ package com.gestureworks.visualizer
 			if (GestureWorks.activeMotion && mpn)		draw_motionPointsGlobal();
 			if (GestureWorks.activeSensor && spn)		draw_sensorPointsGlobal();
 			
-			if (ipn) draw_interactionPointsGlobal();
+			//if (ipn)
+			draw_interactionPointsGlobal();
 		}
 		
 		
@@ -396,9 +401,9 @@ package com.gestureworks.visualizer
 											{
 												// palm center
 												graphics.lineStyle(2, 0xFFFFFF, style.stroke_alpha);
-												graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius+10+ mp.screen_position.z * 0.2);
+												graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius+10+ mp.radius);
 												graphics.beginFill(0xFFFFFF, style.fill_alpha);
-												graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius-10);
+												graphics.drawCircle(mp.screen_position.x, mp.screen_position.y, style.radius-10);///
 												graphics.endFill();
 												
 												//normal
@@ -534,18 +539,99 @@ package com.gestureworks.visualizer
 		public function draw_interactionPointsGlobal():void
 		{
 			
+			if (handList.length)
+			{
+			var hand = handList[0];
+						if (hand.IPState == "pinch") 
+						{
+							graphics.lineStyle(5, 0x00FFFF, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, style.radius*2);
+						}
+							
+					// draw trigger
+						if (hand.IPState  == "trigger") //PURPLE 0xc44dbe
+						{
+							var tgr:Number = 30;
+							var triggerThreshold:Number = 0.5
+							// set style
+							graphics.lineStyle(5, 0xc44dbe, style.stroke_alpha);
+							// draw cross
+							graphics.moveTo (hand.IPScreenPosition.x - tgr, hand.IPScreenPosition.y);
+							graphics.lineTo (hand.IPScreenPosition.x + tgr ,hand.IPScreenPosition.y);
+							graphics.moveTo (hand.IPScreenPosition.x, hand.IPScreenPosition.y- tgr);
+							graphics.lineTo (hand.IPScreenPosition.x,hand.IPScreenPosition.y + tgr);
+							//draw cricle
+							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, tgr - 10);
+
+							// check extension
+							//if (ipt.extension < triggerThreshold) {
+									//graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius+20);
+								//}
+						}
+					
+					// draw FIST
+						if (hand.IPState  == "fist") //grey //
+							{
+							//trace ("draw fist");
+							graphics.lineStyle(5, 0xFFFFFF, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, style.radius*2);
+						}
+						
+					// draw SPLAY
+						if (hand.IPState == "splay") //black //
+							{
+								//trace ("draw splay");
+							graphics.lineStyle(5, 0x000000, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+						}
+						
+						// draw Peace
+						if (hand.IPState == "peace") //black //
+							{
+								//trace ("draw splay");
+							graphics.lineStyle(5, 0x007700, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+						}
+						
+						if (hand.IPState == "love") //black //
+							{
+								//trace ("draw splay");
+							graphics.lineStyle(5, 0x770000, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+						}
+						
+						if (hand.IPState == "point") //black //
+							{
+								//trace ("draw splay");
+							graphics.lineStyle(5, 0x777777, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+						}
+					
+			
+			}
+			
+			
+			
+			
+			/*
+			
+			
+			
+			
 				for (var b:uint = 0; b < ipn; b++) 
 				{
 					var ipt:InteractionPointObject = ipArray[b] as InteractionPointObject;
+					
+					
 					//var x:Number = pt.position.x;
 					//var y:Number = pt.position.y;
 				
-					
+					trace("core pointvisualizer:",ipt.screen_position,handList[0].palm.position);
 					
 					// draw pinch
 					if (ipt.type == "pinch") 
 						{
-							graphics.lineStyle(4, 0x00FFFF, style.stroke_alpha);
+							graphics.lineStyle(5, 0x00FFFF, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 							
@@ -555,7 +641,7 @@ package com.gestureworks.visualizer
 							var tgr:Number = 30;
 							var triggerThreshold:Number = 0.5
 							// set style
-							graphics.lineStyle(4, 0xc44dbe, style.stroke_alpha);
+							graphics.lineStyle(5, 0xc44dbe, style.stroke_alpha);
 							// draw cross
 							graphics.moveTo (ipt.screen_position.x - tgr, ipt.screen_position.y);
 							graphics.lineTo (ipt.screen_position.x + tgr , ipt.screen_position.y);
@@ -574,7 +660,7 @@ package com.gestureworks.visualizer
 						if (ipt.type == "fist") //grey //
 							{
 							//trace ("draw fist");
-							graphics.lineStyle(4, 0xFFFFFF, style.stroke_alpha);
+							graphics.lineStyle(5, 0xFFFFFF, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 						
@@ -582,11 +668,11 @@ package com.gestureworks.visualizer
 						if (ipt.type == "splay") //black //
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(4, 0x000000, style.stroke_alpha);
+							graphics.lineStyle(5, 0x000000, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 					
-					
+					*/
 					
 					
 					
@@ -616,7 +702,7 @@ package com.gestureworks.visualizer
 						graphics.drawCircle(x, y, 1.8*style.radius);
 						graphics.endFill();
 					}*/
-				}
+				//}
 				
 		}	
 	

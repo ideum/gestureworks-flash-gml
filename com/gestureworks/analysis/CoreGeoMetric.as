@@ -84,7 +84,7 @@ package com.gestureworks.analysis
 		
 		public function init():void
 		{
-			trace("init cluster geometric ");
+			//trace("init cluster geometric ");
 			
 			gs = GestureGlobals.gw_public::core; // need to find center of object for orientation and pivot
 			touchArray = GestureGlobals.gw_public::touchArray;
@@ -99,7 +99,7 @@ package com.gestureworks.analysis
 			sd = sh;
 			//if (ts.traceDebugMode) 
 			
-			trace("CoreGeoMetric:res",sw,sh,sd);
+			//trace("CoreGeoMetric:res",sw,sh,sd);
 		}
 		
 		
@@ -171,40 +171,75 @@ package com.gestureworks.analysis
 			if (handList) gs.hn = handList.length;
 			else gs.hn = 0;
 			
-			if (gs.hn < 2)
-				{
+			
+			//trace("hand num,ber",gs.hn);
+			if (gs.hn <= 2)
+			{
+				//trace("create hand, palm",handList.length,motionArray.length);
 				for (i = 0; i < gs.mpn; i++)//mpn
 					{
 					///	updateHand palm
-					if (motionArray[i].type == "palm") 
+					if (handList.length ==1)
+					{
+					if ((motionArray[i].type == "palm")&&(handList[0].handID != motionArray[i].handID))
 						{
 						//CREATE HAND OBJECT
 						var hand:HandObject = new HandObject();	
 							hand.motionPointID = motionArray[i].motionPointID //palmID
-							hand.position = motionArray[i].position //palmID
-							hand.direction = motionArray[i].direction
-							hand.normal = motionArray[i].normal
+							//hand.position = motionArray[i].position //palmID
+							//hand.direction = motionArray[i].direction
+							//hand.normal = motionArray[i].normal
 							hand.handID = motionArray[i].handID;
 							hand.palm = motionArray[i]; // link palm point
 							hand.orientation = hand.palm.orientation
 							hand.type = hand.palm.handside;
-							hand.radius = hand.palm.sphereRadius;
+							hand.radius = hand.palm.radius;
 							
 						if (!handList) handList = new Vector.<HandObject>
 						handList.push(hand);
+						//trace("create second hand",j,handList[j].palm.position )
+						}
+					
+						
+					}
+					else {
+						if (motionArray[i].type == "palm")
+						{
+						//CREATE HAND OBJECT
+						var hand:HandObject = new HandObject();	
+							hand.motionPointID = motionArray[i].motionPointID //palmID
+							//hand.position = motionArray[i].position //palmID
+							//hand.direction = motionArray[i].direction
+							//hand.normal = motionArray[i].normal
+							hand.handID = motionArray[i].handID;
+							hand.palm = motionArray[i]; // link palm point
+							hand.orientation = hand.palm.orientation
+							hand.type = hand.palm.handside;
+							hand.radius = hand.palm.radius;
+							
+						if (!handList) handList = new Vector.<HandObject>
+						handList.push(hand);
+						
+						//trace("create first hand",j,handList[j].palm.position )
 						}
 					}
+					}
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////
 				}
-							
-								
-					//	link finger motion points 
-					for (j = 0; j < gs.hn; j++)//handList.length
-					{								
+					
+					
+					
+				//	link finger motion points 
+				for (j = 0; j < gs.hn; j++)//handList.length
+				{				
+					if	(handList[j].fingerList.length < 5) 
+					{
 						for (i = 0; i < gs.mpn; i++)//mpn
 						{							
-								if (handList[j].handID == motionArray[i].handID)
+								if ((handList[j].handID == motionArray[i].handID)&&(motionArray[i].type == "finger"))
 								{
-								if (motionArray[i].fingertype == "thumb") handList[j].thumb = motionArray[i];
+								//trace("create hand, fingers");
+								if (motionArray[i].fingertype == "thumb")handList[j].thumb = motionArray[i];
 								if (motionArray[i].fingertype == "index") handList[j].index = motionArray[i];
 								if (motionArray[i].fingertype == "middle") handList[j].middle = motionArray[i];
 								if (motionArray[i].fingertype == "ring") handList[j].ring = motionArray[i];
@@ -212,8 +247,11 @@ package com.gestureworks.analysis
 								
 								handList[j].fingerList.push(motionArray[i]);
 								}
-						}	
+						}
+						//trace("assign finger points in hand",j,handList[j].palm.position )
 					}
+					
+				}
 				
 		}
 		
@@ -741,6 +779,122 @@ package com.gestureworks.analysis
 		
 		}*/
 		
+		
+		
+		
+		
+		
+		public function findInteractionPointsExplicit():void
+		{
+			//trace("finding Splay points, geometric explicit");
+			
+			var k = 40;
+			
+			var splayradius:Number = 70;
+			var fistradius:Number = 50;
+			var triggerradius:Number = 50;
+			var pinchradius:Number = 30;
+	
+			var palm:MotionPointObject;
+			var hn:int = handList.length
+			
+			var thumbindexdist:Number;
+			var thumbdist:Number;
+			var indexdist:Number; 
+			var middledist:Number;
+			var ringdist:Number;
+			var pinkydist:Number;
+			
+			//trace("hand length",hn );
+			for (var j:int = 0; j < hn; j++)
+				{	
+					
+				palm = handList[j].palm;
+					
+					
+				thumbdist =  Vector3D.distance(palm.position, handList[j].thumb.position);
+				indexdist =  Vector3D.distance(palm.position, handList[j].index.position);
+				middledist =  Vector3D.distance(palm.position, handList[j].middle.position);
+				ringdist =  Vector3D.distance(palm.position, handList[j].ring.position);
+				pinkydist =  Vector3D.distance(palm.position, handList[j].pinky.position);
+				thumbindexdist = Vector3D.distance(handList[j].index.position, handList[j].thumb.position);
+			
+				
+			//	trace("palm pos:",handList[j].palm.position);
+				
+				//if(handList[j].palm.position.x !=0){
+				
+					if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist>splayradius)&&(pinkydist>splayradius))
+					{	
+						//trace("splay point",dist)
+						var pmp:InteractionPointObject = new InteractionPointObject();
+						
+							pmp.position = palm.position;
+							pmp.screen_position = palm.screen_position;
+							pmp.handID = handList[j].handID;
+							pmp.type = "splay";
+							pmp.mode = "motion";
+							pmp.source = "native" // so that interaction point tracker works
+															
+						//add to pinch point list
+						//InteractionPointTracker.framePoints.push(pmp)
+						//trace("2 pinch push", best_dist)	
+						trace("splay point-------------------------------------------------------", pmp.position, palm.screen_position);
+						
+						handList[j].IPState = "splay";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((thumbindexdist >= triggerradius)&&(indexdist>fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "trigger";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					else if ((thumbindexdist <= pinchradius)&&(middledist>fistradius)&&(ringdist>fistradius)&&(pinkydist>fistradius))
+					{	
+						handList[j].IPState = "pinch";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					else if ((indexdist<fistradius+10)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "fist";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					
+					else if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "peace";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist>splayradius))
+					{	
+						handList[j].IPState = "love";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "point";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else{
+					handList[j].IPState = "none";
+					handList[j].IPPosition = palm.position;
+					handList[j].IPScreenPosition = palm.screen_position;
+					}
+				}
+		}
+		/*
 		public function find3DPinchPointsExplicit():void
 		{
 			//trace("finding pinch points, geometric explicit");
@@ -907,7 +1061,7 @@ package com.gestureworks.analysis
 					}
 				
 				}
-		}
+		}*/
 		/*
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Find Interactive Hook Points 

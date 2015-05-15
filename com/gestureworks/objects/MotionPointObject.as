@@ -127,6 +127,9 @@ package com.gestureworks.objects
 		
 		//width
 		public var width:Number = 0;
+		
+		//width
+		public var radius:Number = 0;
 
 		//length
 		public var length:Number = 0;

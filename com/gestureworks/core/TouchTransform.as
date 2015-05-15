@@ -397,7 +397,7 @@ package com.gestureworks.core
 					// modify transform
 					if (hit)
 					{
-					trace("proper 3d transform", dx,dy,dz);
+					//trace("proper 3d transform", dx,dy,dz);
 						
 					affine_modifier3D.copyFrom(ts.transform.matrix3D);
 						affine_modifier3D.appendTranslation( -trO.position.x + dx, -trO.position.y + dy, -trO.position.z + dz);	
