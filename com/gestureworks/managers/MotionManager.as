@@ -188,8 +188,7 @@ package com.gestureworks.managers
 					mpO.direction = pt.direction;
 					mpO.normal = pt.normal;
 					mpO.velocity = pt.velocity;
-					mpO.sphereRadius = pt.sphereRadius;
-					mpO.sphereCenter = pt.sphereCenter;
+					mpO.radius = pt.radius;
 					mpO.length = pt.length;
 					mpO.width = pt.width;
 					mpO.moveCount ++;

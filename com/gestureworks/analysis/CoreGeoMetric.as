@@ -76,6 +76,19 @@ package com.gestureworks.analysis
 		
 		public var tag_match:Boolean = false;
 		
+		
+		
+		private var maxindex:Number = 0;
+		private var maxmiddle:Number = 0;
+		private var maxring:Number = 0;
+		private var maxpinky:Number = 0;
+			
+		private var maxpfav:Number = 0;
+		private var rootRadius:Number = 1;
+		
+		
+		
+		
 		public function CoreGeoMetric() 
 		{
 			//touchObjectID = _id;
@@ -194,6 +207,7 @@ package com.gestureworks.analysis
 							hand.orientation = hand.palm.orientation
 							hand.type = hand.palm.handside;
 							hand.radius = hand.palm.radius;
+							hand.deviceType = hand.deviceType;
 							
 						if (!handList) handList = new Vector.<HandObject>
 						handList.push(hand);
@@ -216,6 +230,7 @@ package com.gestureworks.analysis
 							hand.orientation = hand.palm.orientation
 							hand.type = hand.palm.handside;
 							hand.radius = hand.palm.radius;
+							hand.deviceType = motionArray[i].deviceType;
 							
 						if (!handList) handList = new Vector.<HandObject>
 						handList.push(hand);
@@ -255,399 +270,6 @@ package com.gestureworks.analysis
 				
 		}
 		
-		/*
-		public function findFingerAverage():void 
-		{
-
-				//////////////////////////////////////////////////////////////////////////////
-				// GET FAV 
-				for (j = 0; j < handList.length; j++)
-				{
-					var fav_pt:Vector3D = new Vector3D();
-					var pfav_pt:Vector3D = new Vector3D();
-					var hfn:int = handList[j].fingerList.length;
-					var hfnk:Number = 0;
-					
-					if (hfn) hfnk = 1 / hfn;
-					
-					if (handList[j].position && handList[j].normal){
-					
-				
-						for (i = 0; i < hfn; i++)
-								{	
-										var fpt:MotionPointObject = handList[j].fingerList[i];
-
-										// finger average point (fingers + thumb)
-										fav_pt.x += fpt.position.x;
-										fav_pt.y += fpt.position.y;
-										fav_pt.z += fpt.position.z;
-										
-										if (fpt.fingertype == "finger") 
-										//if (motionArray[i].fingertype == "finger") // add other finger types
-										{
-											// finger average point
-											pfav_pt.x += fpt.position.x;
-											pfav_pt.y += fpt.position.y;
-											pfav_pt.z += fpt.position.z;
-										}
-								}
-						
-							fav_pt.x *= hfnk;
-							fav_pt.y *= hfnk;
-							fav_pt.z *= hfnk;
-							
-							pfav_pt.x *= (hfnk - 1);
-							pfav_pt.y *= (hfnk - 1);
-							pfav_pt.z *= (hfnk - 1);
-							
-							
-							if (hfn == 0) {
-								fav_pt = handList[j].palm.position;
-								pfav_pt = handList[j].palm.position;
-							}
-							
-							//////////////////////////////////////////////////////////////////////////////////////////////////
-							// push fav point to hand object
-							handList[j].fingerAveragePosition = fav_pt;
-							handList[j].pureFingerAveragePosition = pfav_pt;
-							
-							
-							
-							//GET PROJECTED FAV POINT AND PROJECTED PUREFINGERFAV POINT
-							var vp_mp:Vector3D = fav_pt.subtract(handList[j].position);
-							var normal:Vector3D = handList[j].normal;
-							var dist1:Number = (vp_mp.x * normal.x) + (vp_mp.y * normal.y) + (vp_mp.z * normal.z);
-							var fav_palm_plane_point:Vector3D = new Vector3D((fav_pt.x - dist1 * normal.x), (fav_pt.y -dist1 * normal.y), (fav_pt.z - dist1 * normal.z));
-							
-							var pvp_mp:Vector3D = pfav_pt.subtract(handList[j].position);
-							var pdist1:Number = (pvp_mp.x * normal.x) + (pvp_mp.y * normal.y) + (pvp_mp.z * normal.z);
-							var pfav_palm_plane_point:Vector3D = new Vector3D((pfav_pt.x - pdist1 * normal.x), (pfav_pt.y -pdist1 * normal.y), (pfav_pt.z - pdist1 * normal.z));
-							
-							handList[j].projectedFingerAveragePosition = fav_palm_plane_point;
-							handList[j].projectedPureFingerAveragePosition = pfav_palm_plane_point;
-						}
-					}
-				//trace("hand pos",hand.position)
-		}*/
-
-		/*
-		public function findHandRadius():void 
-		{
-
-			for (j = 0; j < handList.length; j++)
-				{
-					//trace("number finger",fn,fnk,fav_pt.x,fav_pt.y,fav_pt.z)
-					var favlength:Number = 0//100//100;
-					var palmratio:Number = 0.55//1.4;
-							
-					var hfn:int = handList[j].fingerList.length;
-					var hfnk:Number = 0;
-					if (hfn) hfnk = 1 / hfn;
-					
-						for (i = 0; i < hfn; i++)
-								{
-								//if(){
-								handList[j].fingerList[i].favdist = Vector3D.distance(handList[j].fingerList[i].position, handList[j].fingerAveragePosition);
-								// find average max length
-								//favlength += handList[j].fingerList[i].max_length; //??????
-								favlength += handList[j].fingerList[i].favdist; 
-								//trace("favdist", handList[j].fingerList[i].max_length, handList[j].fingerList[i].favdist,handList[j].fingerList[i].fingertype, hfnk)
-								//}
-								}
-					favlength *= hfnk;	
-					//trace(palmratio , favlength);
-					
-					// set current favlength
-					handList[j].favlength = favlength;
-					
-					//finger average distance max // only reset if larger than previous
-					if (favlength > handList[j].max_favlength) handList[j].max_favlength = favlength;
-					
-					// AVERAGE HAND RADIUS USES CACHED MAXIMUM FAVLENGTH FO SESSION
-					handList[j].radius = handList[j].max_favlength * palmratio;	
-					//handList[j].sphereRadius = favdist * palmratio;	
-					//trace("rad",handList[j].sphereRadius)
-				}
-		}*/
-		
-		/*
-		// get nomalized finger length and palm angle
-		// splay and flatness
-		public function normalizeFingerFeatures():void 
-		{
-			var min_max_length:Number;
-			var max_max_length:Number;
-			var min_max_width:Number;
-			var max_max_width:Number;
-			var min_length:Number;
-			var max_length:Number;
-			var min_width:Number
-			var max_width:Number
-			var min_palmAngle:Number
-			var max_palmAngle:Number
-			var min_favdist:Number;
-			var max_favdist:Number;
-			var min_mwlr:Number;
-			var max_mwlr:Number;
-			
-			var hn:int = handList.length
-			
-			for (j = 0; j < hn; j++)
-			{
-				
-			min_max_length = 0;
-			max_max_length = 0;
-			min_max_width = 0;
-			max_max_width = 0;
-			min_length = 0;
-			max_length = 0;
-			min_width = 0;
-			max_width = 0;
-			min_palmAngle = 0;
-			max_palmAngle = 0;
-			min_favdist = 0;
-			max_favdist = 0;
-			min_mwlr = 0;
-			max_mwlr = 0;
-				
-			if(handList[j].palm.position && handList[j].palm.direction && handList[j].palm.normal && handList[j].fingerAveragePosition){
-			
-			var hfn:uint = handList[j].fingerList.length;
-			var palm_mpoint:MotionPointObject = handList[j].palm; // NEED TO SIMPLIFY		
-			
-			var normal:Vector3D = palm_mpoint.normal;
-			var direction:Vector3D = palm_mpoint.direction;
-			var p_pos:Vector3D = palm_mpoint.position;
-			var fav_pos:Vector3D = handList[j].fingerAveragePosition;
-			var fvp_mp:Vector3D = fav_pos.subtract(p_pos);
-			
-			var dist:Number = (fvp_mp.x * normal.x) + (fvp_mp.y * normal.y) + (fvp_mp.z * normal.z);
-			var palm_plane_favpoint:Vector3D = new Vector3D((fav_pos.x - dist * normal.x), (fav_pos.y -dist*normal.y), (fav_pos.z - dist*normal.z));
-							
-			///////////////////////////////////////////////////
-			// set plam plane fav projection point
-			handList[j].projectedFingerAveragePosition = palm_plane_favpoint;
-			
-			//trace("coregeometric:palm,",hn,j,p_pos, direction)
-			
-			// get values
-			for (i = 0; i < hfn; i++)
-				{	
-					var fpt:MotionPointObject = handList[j].fingerList[i];
-						
-							//GET PALM PLANE POINT PROJECTION
-							var f_pos:Vector3D = fpt.position;
-							var vp_mp:Vector3D = f_pos.subtract(p_pos);
-							var dist1:Number = (vp_mp.x * normal.x) + (vp_mp.y * normal.y) + (vp_mp.z * normal.z);
-							var palm_plane_point:Vector3D = new Vector3D((f_pos.x - dist1 * normal.x), (f_pos.y -dist1 * normal.y), (f_pos.z - dist1 * normal.z));
-							
-							fpt.palmplane_position = palm_plane_point
-							//trace("projected point in palm plane",palm_plane_point)
-							
-							// GET PALM LINE POINT PROJECTION
-							//var vp_mpl:Vector3D = f_pos.subtract(p_pos);
-							var vp_mpl:Vector3D = palm_plane_point.subtract(p_pos);
-							var dist2:Number = (vp_mpl.x * direction.x) + (vp_mpl.y * direction.y) + (vp_mpl.z * direction.z);
-							
-							var splay:Number = handList[j].splay;
-							var palm_plane_line_point:Vector3D = new Vector3D((palm_plane_point.x - dist2 * direction.x), (palm_plane_point.y -dist2 * direction.y), (palm_plane_point.z - dist2 * direction.z));
-							//var palm_plane_line_point:Vector3D = new Vector3D((f_pos.x - dist2 * direction.x), (f_pos.y -dist2 * direction.y), (f_pos.z - dist2 * direction.z));
-							
-							
-							//palm_plane_line_point = new Vector3D (palm_plane_line_point.x*splay,palm_plane_line_point.y*splay,palm_plane_line_point.z);
-							
-							// from angle with cross product
-							//var dist2:Number = Vector3D.distance(palm_plane_point, p_pos);
-							//var vp_mpl:Vector3D = palm_plane_point.subtract(p_pos);
-							//var cross:Vector3D = palm_mpoint.direction.crossProduct(palm_mpoint.normal);
-							//var ang:Number = Vector3D.angleBetween(vp_mpl, cross);
-							//var palm_plane_line_point:Vector3D = new Vector3D(palm_mpoint.position.x+dist2 * Math.cos(ang),palm_mpoint.position.y,palm_mpoint.position.z);
-						
-							// TEST SPLAY CORRECTION
-							//trace(handList[j].splay)
-							
-							//fpt.palmplaneline_position = palm_plane_line_point
-							
-				
-							var ppp_dir:Vector3D = palm_plane_point.subtract(p_pos);
-							
-							// set palm angle of point
-							fpt.palmAngle =  Vector3D.angleBetween(ppp_dir, palm_mpoint.direction);
-							//palmAngle = Math.abs(Vector3D.angleBetween(motionArray[i].direction, palm_mpoint.direction));
-
-							// calc proper length from palm
-							fpt.length = Vector3D.distance(p_pos, f_pos) //- std_radius;
-							
-							// PALM FINGER VECTOR
-							fpt.palm_finger_direction = fpt.position.subtract(palm_mpoint.position);
-							
-							//PROJECTED PALM FINGER VECTOR
-							fpt.projected_palm_finger_direction = fpt.palmplane_position.subtract(palm_mpoint.position);
-							
-							//PROJECTED FINGER TIP VECTOR /////////////////////////////////////////////////////////
-							var fvtip_pos:Vector3D = f_pos.add(fpt.direction);
-							var fvtip_pos_palm:Vector3D = fvtip_pos.subtract(p_pos)
-							var dist2:Number = (fvtip_pos_palm.x * normal.x) + (fvtip_pos_palm.y * normal.y) + (fvtip_pos_palm.z * normal.z);
-							var projected_direction_pt:Vector3D = new Vector3D((fvtip_pos.x  - dist2 * normal.x), (fvtip_pos.y -dist2*normal.y), (fvtip_pos.z - dist2*normal.z));
-							fpt.projected_finger_direction = projected_direction_pt.subtract(fpt.palmplane_position);
-							
-							
-							
-							
-							
-							// FIND EXTENSION MEASURE
-							var angle_diff:Number = Vector3D.angleBetween(fpt.direction, fpt.palm_finger_direction);
-							// normalize
-							fpt.extension = normalize(angle_diff, 0, Math.PI*0.5);
-				}
-						
-				// find max and min values
-				for (i = 0; i < hfn; i++)
-				{
-					var fpt0:MotionPointObject = handList[j].fingerList[i];
-					
-						//max length max and min
-						//var value_max_length:Number = fpt0.max_length;
-						//if (value_max_length > max_max_length) max_max_length = value_max_length;
-						//if ((value_max_length < min_max_length)&&(value_max_length!=0)) min_max_length = value_max_length;
-						
-						// LOCAL LENGTH MAX AND MIN OF FINGER GROUP
-						var value_length:Number = fpt0.length; //SIMPLE PALM TO FINGER
-						if (value_length > max_length) max_length = value_length;
-						if ((value_length < min_length) && (value_length != 0)) min_length = value_length;
-						
-						// LOCAL WIDTH MAX AND MIN OF FINGER GROUP
-						var value_width:Number = fpt0.width;
-						if (value_width > max_width) max_width = value_width;
-						if ((value_width < min_width)&&(value_width!=0)) min_width = value_width;
-						
-						// LOCAL PALM ANGLE MAX AND MIN OF FINGER GROUP
-						var value_palm:Number = fpt0.palmAngle; //
-						if (value_palm > max_palmAngle) max_palmAngle = value_palm;
-						if ((value_palm < min_palmAngle)&&(value_palm!=0)) min_palmAngle = value_palm;
-
-						//LOCAL FINGER AVERAGE DISTANCE TO PALM POINT OF FINGER GROUP
-						var value:Number = fpt0.favdist; //
-						if (value > max_favdist) max_favdist = value;
-						if ((value < min_favdist) && (value != 0)) min_favdist = value;
-						
-						
-						/////////////////////////////////////////////////////////////////////////////////
-						// FIND MAX AND MIN LENGTHS AND WIDTH THAT ARE STORED IN THE MOTION POINT OBJECT
-						
-						// length max and min OF FINGER
-						var value_length:Number = fpt0.length;
-						if (value_length > fpt0.max_length) fpt0.max_length = value_length;
-						if ((value_length < fpt0.min_length) && (value_length != 0)) fpt0.min_length = value_length;
-						
-						// width max and min OF FINGER
-						var value_width:Number = fpt0.width;
-						if (value_width > fpt0.max_width) fpt0.max_width = value_width;
-						if ((value_width < fpt0.min_width)&&(value_width!=0)) fpt0.min_width = value_width;
-				}
-				
-				for (i = 0; i < hfn; i++)
-				{
-					var fpt:MotionPointObject = handList[j].fingerList[i];
-					
-						//max length max and min OF FINGER GROUP
-						var value_max_length:Number = fpt.max_length;
-						if (value_max_length > max_max_length) max_max_length = value_max_length;
-						if ((value_max_length < min_max_length) && (value_max_length != 0)) min_max_length = value_max_length;
-						
-						//max length max and min OF FINGER GROUP
-						var value_max_width:Number = fpt.max_width;
-						if (value_max_width > max_max_width) max_max_width = value_max_width;
-						if ((value_max_width < min_max_width) && (value_max_width != 0)) min_max_width = value_max_width;
-						
-						
-						//CACULATE MAX_WIDTH TO MAX_LENGTH RATIO FOR EACH FINGER
-						fpt.max_width_length_ratio = fpt.max_width/fpt.max_length
-				}
-				
-				
-				var avg_palm_angle:Number = 0;
-				
-				//normalize values and update
-				for (i = 0; i < hfn; i++)
-					{
-						var fpt1:MotionPointObject = handList[j].fingerList[i];
-						//trace(fpt1.max_length, min_max_length, max_max_length)
-						fpt1.normalized_max_length = normalize(fpt1.max_length, min_max_length, max_max_length);
-						fpt1.normalized_length = normalize(fpt1.length, min_length, max_length);
-						
-						// native websocket does not provice width
-						
-						if (fpt1.width) {
-							fpt1.normalized_max_width = normalize(fpt1.max_width, min_max_width, max_max_width);
-							fpt1.normalized_width = normalize(fpt1.width, min_width, max_width);
-						}
-						else {
-							fpt1.normalized_width = 0;
-							fpt1.normalized_max_width = 0;
-						}
-						
-						fpt1.normalized_palmAngle = normalize(fpt1.palmAngle, min_palmAngle, max_palmAngle);
-						fpt1.normalized_favdist = normalize(fpt1.favdist, min_favdist, max_favdist);
-						
-						
-						
-						//AVERGE PALM ANGLE
-						avg_palm_angle += fpt1.normalized_palmAngle;
-						
-						//trace("hand normalized values",i,fpt1.type,fpt1.fingertype,fpt1.normalized_length,fpt1.normalized_max_length,fpt1.normalized_palmAngle,fpt1.normalized_favdist)
-						
-						//GET MAX AND MIN WLRATIO
-						var value_mwlr:Number = fpt1.max_width_length_ratio;
-						if (value_mwlr > max_mwlr) max_mwlr = value_mwlr;
-						if ((value_mwlr < min_mwlr)&&(value_mwlr!=0))min_mwlr = value_mwlr;
-					}
-					
-					// set normalized mwlr values
-					for (i = 0; i < hfn; i++)
-					{
-						var fpt3 = handList[j].fingerList[i];
-						fpt3.normalized_mwlr = normalize(fpt3.max_width_length_ratio, min_mwlr, max_mwlr);
-						//trace("hand normalized values",i,fpt3.normalized_length,fpt3.normalized_width, fpt3.normalized_max_length,fpt3.normalized_max_width,fpt3.normalized_mwlr)
-
-					}
-					
-					
-					
-					///////////////////////////////////////////////////////////////////////////////////////////////
-					// FIND HAND FLATNESS MEASURE
-					// DIST BETWEEN FAV POINT AND PROJECTED FAV POINT IN PLANE
-					// SHOULD ADD EXCEPTION FO WHEN NO FINGERS (ZERO DISTANCE)
-					var pfav_fav_dist:Number = Vector3D.distance(palm_plane_favpoint,fav_pos)
-					handList[j].flatness = normalize(pfav_fav_dist, 0, 30);
-					//trace("flatness", handList[j].flatness);
-					
-					////////////////////////////////////////////////////////////////////////////////////////////////
-					// FIND HAND SPLAY MEASURE
-					//avg_palm_angle = avg_palm_angle / hfn;
-					
-					var splay_d:Number = 0;
-					
-					// MUST MAKE DISTANCE PAIR LIST
-					for (var i:int = 0; i < hfn; i++)
-					{
-					for (var q:int = 0; q < i+1; q++)
-					{
-						if (i!=q)
-						{
-							var dist0:Number = Vector3D.distance(handList[j].fingerList[i].position,handList[j].fingerList[q].position);
-							splay_d += dist0;
-						}
-					}
-					}
-					
-					splay_d = 2 * splay_d / (hfn * (hfn - 1));
-					handList[j].splay = normalize(splay_d, 30, 120);
-					//trace("splay", handList[j].splay);
-			}
-			}
-		}
-		*/
 		
 /*
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -781,7 +403,30 @@ package com.gestureworks.analysis
 		
 		
 		
-		
+		public function getProjectedPoints():void {
+			
+			for (i = 0; i < handList.length; i++)
+					{
+					var ppt = handList[i].palm;	
+					
+					for (j = 0; j < handList[i].fingerList.length; j++)//mpn
+						{
+							
+							var fpt = handList[i].fingerList[j];
+						
+							//GET PALM PLANE POINT PROJECTION
+							var f_pos:Vector3D = fpt.position;
+							var p_pos:Vector3D = ppt.position;
+							var vp_mp:Vector3D = f_pos.subtract(p_pos);
+							var normal:Vector3D = ppt.normal;
+							var dist1:Number = (vp_mp.x * normal.x) + (vp_mp.y * normal.y) + (vp_mp.z * normal.z);
+							var palm_plane_point:Vector3D = new Vector3D((f_pos.x - dist1 * normal.x), (f_pos.y -dist1 * normal.y), (f_pos.z - dist1 * normal.z));
+									
+							fpt.palmplane_position = palm_plane_point;
+							//trace("projected point in palm plane",palm_plane_point);
+						}
+					}
+			}
 		
 		
 		public function findInteractionPointsExplicit():void
@@ -790,75 +435,149 @@ package com.gestureworks.analysis
 			
 			var k = 40;
 			
-			var splayradius:Number = 70;
-			var fistradius:Number = 50;
-			var triggerradius:Number = 50;
-			var pinchradius:Number = 30;
+			
 	
 			var palm:MotionPointObject;
 			var hn:int = handList.length
 			
-			var thumbindexdist:Number;
-			var thumbdist:Number;
-			var indexdist:Number; 
-			var middledist:Number;
-			var ringdist:Number;
-			var pinkydist:Number;
+			//tip palm distances
+			var thumbdist:Number = 0;
+			var indexdist:Number = 0; 
+			var middledist:Number = 0;
+			var ringdist:Number = 0;
+			var pinkydist:Number = 0;
+			
+			//finger tip separation
+			var thumbindexdist:Number = 0;
+			var thumbmiddledist:Number = 0;
+			var indexmiddledist:Number = 0;
+			var middleringdist:Number = 0;
+			var ringpinkydist:Number = 0;
+			var indexpinkydist:Number = 0;
+			
+			var splayradius:Number = rootRadius*1.53// 80//rootRadius;//70;
+			var fistradius:Number = rootRadius*0.77//40//rootRadius * //0.67;//50;
+			var triggerradius:Number = rootRadius//50//rootRadius *// 0.67;//50;
+			var pinchradius:Number = rootRadius*0.58//30//rootRadius * //0.40;//30;
+			var splayfdist:Number = rootRadius*0.21//11//rootRadius * //0.15;// 11;
+			
+			
+			//var zangle:Number; // simple absolute pitch calculation based on hand normal
+			//var kangle:Number; // factor that scale for in verse pitch
+			//var zaxis:Vector3D = new Vector3D(0, 0, 1);
+			//var palmNormalXZProjection:Vector3D; 
+			
+			var projecttoplane:Boolean = true;
 			
 			//trace("hand length",hn );
 			for (var j:int = 0; j < hn; j++)
 				{	
 					
 				palm = handList[j].palm;
-					
-					
+				
+				//zangle = Vector3D.angleBetween(palm.normal, zaxis);
+				//kangle = 0.2*((Math.PI * 0.5) - zangle);	
+				
+				if (projecttoplane)
+				{
+				
+				thumbdist =  Vector3D.distance(palm.position, handList[j].thumb.palmplane_position);
+				indexdist =  Vector3D.distance(palm.position, handList[j].index.palmplane_position);
+				middledist =  Vector3D.distance(palm.position, handList[j].middle.palmplane_position);
+				ringdist =  Vector3D.distance(palm.position, handList[j].ring.palmplane_position);
+				pinkydist =  Vector3D.distance(palm.position, handList[j].pinky.palmplane_position);
+				
+				thumbindexdist = Vector3D.distance(handList[j].index.palmplane_position, handList[j].thumb.palmplane_position);
+				thumbmiddledist = Vector3D.distance(handList[j].middle.palmplane_position, handList[j].thumb.palmplane_position);
+				indexmiddledist = Vector3D.distance(handList[j].index.palmplane_position, handList[j].middle.palmplane_position);
+				middleringdist = Vector3D.distance(handList[j].middle.palmplane_position, handList[j].ring.palmplane_position);
+				ringpinkydist = Vector3D.distance(handList[j].ring.palmplane_position, handList[j].pinky.palmplane_position);
+				indexpinkydist = Vector3D.distance(handList[j].index.palmplane_position, handList[j].pinky.palmplane_position);
+				}
+				else{
+				
 				thumbdist =  Vector3D.distance(palm.position, handList[j].thumb.position);
 				indexdist =  Vector3D.distance(palm.position, handList[j].index.position);
 				middledist =  Vector3D.distance(palm.position, handList[j].middle.position);
 				ringdist =  Vector3D.distance(palm.position, handList[j].ring.position);
 				pinkydist =  Vector3D.distance(palm.position, handList[j].pinky.position);
+				
 				thumbindexdist = Vector3D.distance(handList[j].index.position, handList[j].thumb.position);
-			
+				thumbmiddledist = Vector3D.distance(handList[j].middle.position, handList[j].thumb.position);
+				indexmiddledist = Vector3D.distance(handList[j].index.position, handList[j].middle.position);
+				middleringdist = Vector3D.distance(handList[j].middle.position, handList[j].ring.position);
+				ringpinkydist = Vector3D.distance(handList[j].ring.position, handList[j].pinky.position);
 				
-			//	trace("palm pos:",handList[j].palm.position);
+				}
 				
-				//if(handList[j].palm.position.x !=0){
-				
-					if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist>splayradius)&&(pinkydist>splayradius))
-					{	
-						//trace("splay point",dist)
-						var pmp:InteractionPointObject = new InteractionPointObject();
-						
-							pmp.position = palm.position;
-							pmp.screen_position = palm.screen_position;
-							pmp.handID = handList[j].handID;
-							pmp.type = "splay";
-							pmp.mode = "motion";
-							pmp.source = "native" // so that interaction point tracker works
-															
-						//add to pinch point list
-						//InteractionPointTracker.framePoints.push(pmp)
-						//trace("2 pinch push", best_dist)	
-						trace("splay point-------------------------------------------------------", pmp.position, palm.screen_position);
-						
-						handList[j].IPState = "splay";
-						handList[j].IPPosition = palm.position;
-						handList[j].IPScreenPosition = palm.screen_position;
-					}
+				if ((handList[j].palm.position.x!=0)&&(handList[j].ring.position.x != 0) && (handList[j].middle.position.x != 0) && (handList[j].ring.position.x != 0))
+				{
+					// find max lengths
+					if (indexdist > maxindex) maxindex = indexdist;
+					if (middledist > maxmiddle) maxmiddle = middledist;
+					if (ringdist > maxring) maxring = ringdist;
+					if (pinkydist > maxpinky) maxpinky = pinkydist;
 					
-					else if ((thumbindexdist >= triggerradius)&&(indexdist>fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
-					{	
-						handList[j].IPState = "trigger";
-						handList[j].IPPosition = palm.position;
-						handList[j].IPScreenPosition = palm.screen_position;
-					}
-					else if ((thumbindexdist <= pinchradius)&&(middledist>fistradius)&&(ringdist>fistradius)&&(pinkydist>fistradius))
+					maxpfav = (maxindex + maxmiddle + maxring + maxpinky) * 0.2;
+					rootRadius = maxpfav * 0.6;   //realsesne 75// 79 projected
+												  //leap 50//52 projected
+					
+				}
+				else trace("not ready for fav")
+				
+				
+			
+				trace("finger dist:", thumbdist, indexdist, middledist, ringdist, pinkydist,handList[j].deviceType, rootRadius, thumbindexdist);
+				//trace("finger sep dista", thumbindexdist, indexmiddledist, middleringdist, ringpinkydist);
+				//trace("palm pos:",handList[j].palm.position,"finger pos:",handList[j].index.position,handList[j].middle.position,handList[j].ring.position);
+				//trace("zangle:", zangle, kangle);
+			//	trace("finger dist:", thumbdist, indexdist, thumbindexdist );
+				
+				
+				//trace("max finger dist:", maxindex, maxmiddle, maxring, maxpinky);
+				//trace("maxpfav:", maxpfav, "rootRadius", rootRadius);
+				
+				//trace("scaled finger dist:", zangle * thumbdist, zangle * indexdist, zangle * middledist, zangle * ringdist, zangle * pinkydist);
+				//trace("scaled finger dist:", kangle*thumbdist, kangle*indexdist, kangle*middledist, kangle*ringdist, kangle*pinkydist);
+				
+				//handList[i].
+				
+				if (handList[j].deviceType == "LeapMotion")
+				{
+				splayradius = rootRadius*1.53// 80////70;
+				fistradius = rootRadius*0.77//40/ //0.67;//50;
+				triggerradius = rootRadius//50//// 0.67;//50;
+				pinchradius = rootRadius*0.58//30// //0.40;//30;
+				splayfdist = rootRadius*0.21//11/ //0.15;// 11;
+				
+				if(rootRadius!=0){
+				
+					
+					if ((thumbindexdist <= pinchradius)&&(middledist>fistradius)&&(ringdist>fistradius)&&(pinkydist>fistradius))//&&(thumbdist>fistradius-10)&&(indexdist>fistradius)
 					{	
 						handList[j].IPState = "pinch";
 						handList[j].IPPosition = palm.position;
 						handList[j].IPScreenPosition = palm.screen_position;
 					}
-					else if ((indexdist<fistradius+10)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					
+					else if ((thumbindexdist >= triggerradius)&&(thumbdist>triggerradius)&&(indexdist>fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "trigger";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist>splayradius)&&(pinkydist>splayradius))
+					{	
+						if ((thumbindexdist > 4 * splayfdist) && (indexmiddledist > splayfdist) && (middleringdist > splayfdist) && (ringpinkydist > 2 * splayfdist))
+						{
+						handList[j].IPState = "splay";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+						}
+					}
+
+					else if ((thumbdist < fistradius)&&(indexdist<fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
 					{	
 						handList[j].IPState = "fist";
 						handList[j].IPPosition = palm.position;
@@ -866,23 +585,38 @@ package com.gestureworks.analysis
 					}
 					
 					
-					else if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					
+					
+					else if ((thumbdist < fistradius)&&(indexdist>splayradius)&&(middledist>splayradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
 					{	
+						if (indexmiddledist > splayfdist)
+						{
 						handList[j].IPState = "peace";
 						handList[j].IPPosition = palm.position;
 						handList[j].IPScreenPosition = palm.screen_position;
+						}
 					}
 					
-					else if ((indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist>splayradius))
+					else if ((thumbdist > splayradius)&&(indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist>splayradius))
 					{	
+						if (indexpinkydist > 3*splayfdist)
+						{
 						handList[j].IPState = "love";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+						}
+					}
+					
+					else if ((thumbdist < fistradius)&&(indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "point";
 						handList[j].IPPosition = palm.position;
 						handList[j].IPScreenPosition = palm.screen_position;
 					}
 					
-					else if ((indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					else if ((thumbdist > splayradius)&&(indexdist<fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
 					{	
-						handList[j].IPState = "point";
+						handList[j].IPState = "thumb";
 						handList[j].IPPosition = palm.position;
 						handList[j].IPScreenPosition = palm.screen_position;
 					}
@@ -892,7 +626,103 @@ package com.gestureworks.analysis
 					handList[j].IPPosition = palm.position;
 					handList[j].IPScreenPosition = palm.screen_position;
 					}
+					
+					//trace("ip state",handList[j].IPState , rootRadius)
 				}
+				}
+				
+				else if (handList[j].deviceType == "RealSense")
+				{
+				splayradius = rootRadius*1.4//110//
+				fistradius = rootRadius*1.14//90//
+				triggerradius = rootRadius*0.63//50//
+				pinchradius = rootRadius*0.51//40//
+				splayfdist =  rootRadius*0.31//25//
+				
+				
+				if(rootRadius!=0){
+				
+					
+					if (((thumbindexdist <= pinchradius)||(thumbmiddledist <= pinchradius*1.1))&&(middledist>fistradius)&&(ringdist>fistradius)&&(pinkydist>fistradius))//&&(thumbdist>fistradius-10)&&(indexdist>fistradius)
+					{	
+						handList[j].IPState = "pinch";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((thumbindexdist >= triggerradius)&&(thumbdist>triggerradius)&&(indexdist>fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "trigger";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist>splayradius)&&(pinkydist>splayradius))
+					{	
+						if ((thumbindexdist > 2 * splayfdist) && (thumbmiddledist > 2 * splayfdist) &&(indexmiddledist > splayfdist) && (middleringdist > splayfdist) && (ringpinkydist >  splayfdist))
+						{
+						handList[j].IPState = "splay";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+						}
+					}
+
+					else if ((thumbdist < fistradius)&&(indexdist < fistradius)&&(middledist < fistradius)&&(ringdist < fistradius)&&(pinkydist < fistradius))
+					{	
+						handList[j].IPState = "fist";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					
+					
+					/*
+					else if ((thumbdist < fistradius)&&(indexdist>splayradius)&&(middledist>splayradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						if (indexmiddledist > splayfdist)
+						{
+						handList[j].IPState = "peace";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+						}
+					}
+					
+					else if ((thumbdist > splayradius)&&(indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist>splayradius))
+					{	
+						if (indexpinkydist > 3*splayfdist)
+						{
+						handList[j].IPState = "love";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+						}
+					}
+					
+					else if ((thumbdist < fistradius)&&(indexdist>splayradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "point";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					else if ((thumbdist > splayradius)&&(indexdist<fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					{	
+						handList[j].IPState = "thumb";
+						handList[j].IPPosition = palm.position;
+						handList[j].IPScreenPosition = palm.screen_position;
+					}
+					*/
+					else{
+					handList[j].IPState = "none";
+					handList[j].IPPosition = palm.position;
+					handList[j].IPScreenPosition = palm.screen_position;
+					}
+					
+					trace("ip state",handList[j].IPState , rootRadius)
+				}
+				}
+				
+				
+			}
 		}
 		/*
 		public function find3DPinchPointsExplicit():void

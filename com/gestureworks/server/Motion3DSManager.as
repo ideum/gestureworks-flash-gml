@@ -34,28 +34,34 @@ package com.gestureworks.server
 		private var sw:int
 		private var sh:int
 		private var sd:int
-		private var kf:int;
-		private var k2:Number;
+		private var kx:int;
+		private var ky:int;
+		private var k2x:Number;
+		private var k2y:Number;
 		private var k3:Number;
 		
 		public function Motion3DSManager() 
 		{
-			trace("leap 3d server manager constructor");
+			//trace("leap 3d server manager constructor");
 			
-			sw = 500//GestureWorks.application.stageWidth;
-			sh = 1500//GestureWorks.application.stageHeight;
+			sw = 1920//GestureWorks.application.stageWidth;
+			sh = 1080//GestureWorks.application.stageHeight;
 			sd = sw; //stage depth;
 			
-			kf = 300;//300
-			k2 = 2000;//1000
-			k3 = 2;
+			
+			kx = 1//200;//1000
+			ky = 1//100;//300
+			k2x = 1//1000;//1000
+			k2y = 1//500;//1000
+			
+			k3 = 16/9;
 			
 			//debug = true;
 		}
 
-		public function processMotion3DSocketData(handList:XMLList):void 
+		public function processMotion3DSocketData(handList:XMLList,device:String):void 
 		{
-			trace("prcess motion socket data", sw,sh)
+			//trace("prcess motion socket data", sw,sh)
 				//message = frame.Messages.Message;
 				//trace(message)
 				
@@ -87,22 +93,23 @@ package com.gestureworks.server
 						ptp.type = "palm";
 						ptp.handID = j;
 						ptp.id = 100+j//5000+j//p.@id;
-						ptp.position = new Vector3D(p.Position.@x*kf, p.Position.@y*kf, p.Position.@z * -1*kf);
+						ptp.position = new Vector3D(p.Position.@x*kx, p.Position.@y*ky, p.Position.@z * -1*kx);
 						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
 						ptp.radius = 80;
+						ptp.deviceType = device;
 						
-						//ptp.normal =  new Vector3D(p.Normal.@x * -1, p.Normal.@z * 1, p.Normal.@y*-1); //realsense
-						//ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z*-1); // leap
-						ptp.normal =  new Vector3D(p.Normal.@x*-1, p.Normal.@z,p.Normal.@y *-1); // test
+						if (device=="RealSense") ptp.normal =  new Vector3D(p.Normal.@x * -1, p.Normal.@y * -1, p.Normal.@z*1); //realsense
+						else if (device=="LeapMotion") ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z*-1); // leap
+						//ptp.normal =  new Vector3D(p.Normal.@x*-1, p.Normal.@y*-1,p.Normal.@z *1); // test
 						
-						ptp.sphereRadius = p.@length
+						ptp.radius = p.@length
 						ptp.handside = p.@handSide;
 						ptp.orientation = p.@palmOrientation;
 						
 						//NEED FAV POINT 
 						//ptp.fingerAvergePosiiton = new Vector3D(p.favPosition.@x,p.favPosition.@y,p.favPosition.@z);
 						
-						ptp.screen_position = new Vector3D(p.Position.@x*k2 + sw*0.5, p.Position.@y*-k2 + sh, p.Position.@z*k2+sd);
+						ptp.screen_position = new Vector3D(p.Position.@x*k2x + sw*0.5, p.Position.@y*-k2y + sh, p.Position.@z*k2x+sd);
 						ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
 						ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y*-1, p.Normal.@z*-1);
 						
@@ -134,13 +141,13 @@ package com.gestureworks.server
 							ptf.width = 10//f.@Width;
 							ptf.length = 30//f.@Length;
 							
-							ptf.position = new Vector3D(f.Position.@x*kf, f.Position.@y*kf, f.Position.@z * -1*kf);
+							ptf.position = new Vector3D(f.Position.@x*kx, f.Position.@y*ky, f.Position.@z * -1*kx);
 							//ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
 							ptf.fingertype = f.@fingerType;
 							
 							//ptf.extension = f.@extension; //	NEED FINGER EXTENSION FOR HAND FLATNESS AND POINTING CHECK FOR SPLAY AND TRIGGER
 							
-							ptf.screen_position = new Vector3D(f.Position.@x*k2+(sw*0.5), f.Position.@y*-k2 + sh, f.Position.@z*k2+sd);
+							ptf.screen_position = new Vector3D(f.Position.@x*k2x+(sw*0.5), f.Position.@y*-k2y + sh, f.Position.@z*k2x+sd);
 							ptf.screen_direction = new Vector3D(f.Direction.@x,f.Direction.@y*-1, f.Direction.@z*-1);
 							ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;
 							

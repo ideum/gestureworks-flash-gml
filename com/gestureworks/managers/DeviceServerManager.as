@@ -244,8 +244,8 @@ package com.gestureworks.managers
 							
 							
 								//HAND/FINGER TRACKING////////////////////////////////////////
-								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
-								if ((deviceType == "RealSense") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
+								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand, deviceType);
+								if ((deviceType == "RealSense") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand, deviceType);
 								//if ((deviceType == "DUO3D") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
 
 								//BODY TRACKING

@@ -31,6 +31,8 @@ package com.gestureworks.objects
 		
 		// hand type // left / right
 		public var type:String = new String("undefined");
+		public var deviceType:String = new String("undefined");// tepm for realsense fix
+		
 	
 		// hand orientation // up/down
 		public var orientation:String = new String("undefined");
@@ -114,8 +116,5 @@ package com.gestureworks.objects
 		
 		public var d_n_crossproduct:Vector3D = new Vector3D ();
 		
-		//TODO: REMOVE
-		//pair table/////////////////////////////////////////////x,y,x
-		//public var pair_table:Array = new Array();
 	}
 }
