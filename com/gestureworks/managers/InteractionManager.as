@@ -236,23 +236,9 @@ package com.gestureworks.managers
 					// DUPLICATE PROCESS IN INTERACTION MANAGER
 					//////////////////////////////////////////////////////////////////////////////////////////////
 				    // MUST FIX
-				     //////////////////////////////////////////////////////////////////////////////////////////////
-											
-											
-										
-											
-											
-											
-											
-											
-		
-											
-											*/
-					
-					
-					
-					
-					
+				     //////////////////////////////////////////////////////////////////////////////////////////////						
+					*/
+					 
 					ipO.age++;
 					ipO.phase = "update"
 					ipO.interactionPointID = pt.interactionPointID; // id based on global hardware (native and server combined)

@@ -26,6 +26,7 @@ package com.gestureworks.managers
 	import com.gestureworks.core.gw_public;
 	
 	import com.gestureworks.server.Motion3DSManager;
+	import com.gestureworks.server.PoseManager;
 	import com.gestureworks.server.Touch2DSManager;
 	import com.gestureworks.server.Eye2DSManager;
 	import com.gestureworks.server.AndroidSensorManager;
@@ -51,12 +52,13 @@ package com.gestureworks.managers
 		private static var touchManagerSocket:Touch2DSManager;
 		
 		private static var motionManagerSocket:Motion3DSManager;
+		private static var poseManagerSocket:PoseManager;
 		private static var eyeManagerSocket:Eye2DSManager;
 		
 		private static var androidSensorManagerSocket:AndroidSensorManager;
 		private static var controllerSensorManagerSocket:ControllerSensorManager;
 		
-		
+		private static var poseData:XMLList;
 		
 		public function DeviceServerManager():void
 		{
@@ -75,6 +77,12 @@ package com.gestureworks.managers
 		{
 			trace("device server manager init",GestureWorks.activeTouch,GestureWorks.activeMotion,GestureWorks.activeSensor );
 			
+			////////////////////////////////////////////////
+			// TEST ////////////////////////////////////////
+			// InteractionPoint msanager for poses  
+			poseManagerSocket = new PoseManager();
+			
+			
 			//////////////////////////////////////////////////
 			if (GestureWorks.activeTouch) 
 			{
@@ -85,12 +93,12 @@ package com.gestureworks.managers
 				motionManagerSocket = new Motion3DSManager();
 				//eyeManagerSocket = new Eye2DSManager();
 			}
-			//if (GestureWorks.activeSensor)
-			//{
+			if (GestureWorks.activeSensor)
+			{
 				trace("Sensor classes init");
 				//androidSensorManagerSocket = new AndroidSensorManager();
 				//controllerSensorManagerSocket = new ControllerSensorManager();
-			//}
+			}
 			
 			initXMLSocket();
 		}
@@ -164,6 +172,7 @@ package com.gestureworks.managers
 					var inputType:String;
 					var inputMode:String;
 					var frameId:int; 
+					var ipID:int; 
 					var timestamp:int; 
 					var frame:XML;
 					var message:XML;
@@ -186,6 +195,7 @@ package com.gestureworks.managers
 							message = frame.Messages.Message[j]
 							deviceType = message.InputPoint.@deviceType;
 							inputMode = message.InputPoint.@deviceMode;
+							ipID = message.InputPoint.@id;
 							
 							//trace("inout mode",inputMode);
 							
@@ -193,6 +203,17 @@ package com.gestureworks.managers
 							else inputType = "unknown"
 							
 							//trace("data types",deviceType,inputType, inputMode)
+							
+							///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							//// POSE DATA
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							if ((deviceType == "Pose") && (inputType == "Other")) 
+								{
+									//trace("pose message:",message.InputPoint.Values, "pose",message.InputPoint.Values.Pose[0],message.InputPoint.Values.Pose.@body_side);	
+									poseManagerSocket.processPoseData(message.InputPoint.Values.Pose, ipID);
+							
+								}
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 							
 
 							if (GestureWorks.activeTouch)
@@ -240,8 +261,9 @@ package com.gestureworks.managers
 							//////////////////////////////////////////////////////////////
 							
 							//trace("motion",deviceType,inputType);
-						//	trace(message);
+							//trace(message);
 							
+
 							
 								//HAND/FINGER TRACKING////////////////////////////////////////
 								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand, deviceType);

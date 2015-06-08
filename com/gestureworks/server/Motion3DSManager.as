@@ -39,6 +39,10 @@ package com.gestureworks.server
 		private var k2x:Number;
 		private var k2y:Number;
 		private var k3:Number;
+		private var pk:Number; // perspective scalar
+		
+		private var ka:Number = 192/80;
+		private var kb:Number = 108/60;
 		
 		public function Motion3DSManager() 
 		{
@@ -54,7 +58,9 @@ package com.gestureworks.server
 			k2x = 1//1000;//1000
 			k2y = 1//500;//1000
 			
-			k3 = 16/9;
+			k3 = 16 / 9;
+			
+			pk = 1;
 			
 			//debug = true;
 		}
@@ -89,29 +95,58 @@ package com.gestureworks.server
 					//var p:Object =  message.InputPoint.Values.Hand[j].Palm;
 					var p:Object =  handList[j].Palm;
 					
+					
+					
 					var ptp:MotionPointObject = new MotionPointObject();//new Object();
 						ptp.type = "palm";
 						ptp.handID = j;
-						ptp.id = 100+j//5000+j//p.@id;
-						ptp.position = new Vector3D(p.Position.@x*kx, p.Position.@y*ky, p.Position.@z * -1*kx);
-						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
-						ptp.radius = 80;
+						ptp.id = 100 + j//5000+j//p.@id;
 						ptp.deviceType = device;
 						
-						if (device=="RealSense") ptp.normal =  new Vector3D(p.Normal.@x * -1, p.Normal.@y * -1, p.Normal.@z*1); //realsense
-						else if (device=="LeapMotion") ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z*-1); // leap
-						//ptp.normal =  new Vector3D(p.Normal.@x*-1, p.Normal.@y*-1,p.Normal.@z *1); // test
-						
 						ptp.radius = p.@length
-						ptp.handside = p.@handSide;
+						ptp.handside = handList[j].@handSide;//p.@handSide;
 						ptp.orientation = p.@palmOrientation;
+						ptp.radius = 80;
+						
+						// perspective scalar
+						pk = .005 * p.Position.@z;
+						//pk = 5* handList[j].@z;
+						
+						//trace("-------------------------------------------------------------------------stable???",p.Position.@z );
+						//trace("pk-----------------------------------------",pk,p.position);
+						//trace("pk-----------------------------------------", pk, handList[j].@handSide);
+						//trace("parsing device:",device);
+					
+						
+						ptp.position = new Vector3D(p.Position.@x*kx, p.Position.@y*ky, p.Position.@z * -1*kx);
+						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
+						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1); //universal
+						
+					//	ptp.normal =  new Vector3D(p.Normal.@x*-1, p.Normal.@y*-1, p.Normal.@z * 1); //universal
 						
 						//NEED FAV POINT 
 						//ptp.fingerAvergePosiiton = new Vector3D(p.favPosition.@x,p.favPosition.@y,p.favPosition.@z);
 						
-						ptp.screen_position = new Vector3D(p.Position.@x*k2x + sw*0.5, p.Position.@y*-k2y + sh, p.Position.@z*k2x+sd);
-						ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
-						ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y*-1, p.Normal.@z*-1);
+						//ptp.screen_position = new Vector3D(p.Position.@x * k2x + sw * 0.5, p.Position.@y * -k2y + 0.5 * sh, p.Position.@z * k2x + sd);
+						
+						
+						if (device == "RealSense")
+						{
+							ptp.screen_position = new Vector3D(p.Position.@x * k2x * pk + sw * 0.5, p.Position.@y * -k2y * pk + 0.5 * sh, p.Position.@z * k2x + sd);
+							//ptp.screen_position = new Vector3D(p.Position.@image_x * -ka * pk + sw * 1, p.Position.@image_y * kb * pk, p.Position.@image_z * sd);
+							
+							//ptp.screen_position = new Vector3D(handList[j].@image_x * -ka * pk + sw * 1, handList[j].@image_y * kb * pk, handList[j].@image_z * sd);
+							
+							ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
+							ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y * -1, p.Normal.@z * -1);
+							//trace("palm",ptp.position,ptp.direction,ptp.normal);
+						}
+						else if (device == "LeapMotion")
+						{
+							ptp.screen_position = new Vector3D(p.Position.@x*-k2x + sw*0.5, p.Position.@y*k2y + 0.5*sh, p.Position.@z*k2x+sd);
+							ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
+							ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y*-1, p.Normal.@z*-1);
+						}
 						
 						
 					pointList.push(ptp);
@@ -120,7 +155,9 @@ package com.gestureworks.server
 					//trace("data palm position:",j,ptp.position,p.@id)
 					//PUSH IDS
 					pids.push(int(100 +j)) //////int(5000+j)//+p.@id
-				
+					
+					
+					
 					
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// CREATE FINGER TIP MOTION POINTS/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,21 +177,39 @@ package com.gestureworks.server
 							ptf.id = f.@id;
 							ptf.width = 10//f.@Width;
 							ptf.length = 30//f.@Length;
+							ptf.fingertype = f.@fingerType;
 							
+						
+							//ptf.position = new Vector3D(f.Position.@x * kx * pk, f.Position.@y * ky * pk, f.Position.@z * -50 * kx);
 							ptf.position = new Vector3D(f.Position.@x*kx, f.Position.@y*ky, f.Position.@z * -1*kx);
 							//ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
-							ptf.fingertype = f.@fingerType;
 							
 							//ptf.extension = f.@extension; //	NEED FINGER EXTENSION FOR HAND FLATNESS AND POINTING CHECK FOR SPLAY AND TRIGGER
 							
-							ptf.screen_position = new Vector3D(f.Position.@x*k2x+(sw*0.5), f.Position.@y*-k2y + sh, f.Position.@z*k2x+sd);
-							ptf.screen_direction = new Vector3D(f.Direction.@x,f.Direction.@y*-1, f.Direction.@z*-1);
-							ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;
+							
+							if (device == "RealSense")
+							{
+								ptf.screen_position = new Vector3D(f.Position.@x * k2x + (sw * 0.5), f.Position.@y * -k2y + 0.5 * sh, f.Position.@z * k2x + sd);
+								//ptf.screen_position = new Vector3D(f.Position.@image_x*-ka*pk+ (sw *1), f.Position.@image_y*kb*pk, f.Position.@image_z*sd);
+								ptf.screen_direction = new Vector3D(f.Direction.@x, f.Direction.@y*-1, f.Direction.@z*-1);
+								ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;
+							}
+							else if (device == "LeapMotion")
+							{
+								
+								
+								//ptf.screen_position = new Vector3D(f.Position.@x * k2x + (sw * 0.5), f.Position.@y * -k2y + 0.5 * sh, f.Position.@z * k2x + sd);
+								ptf.screen_position = new Vector3D(f.Position.@x*-k2x+(sw*0.5), f.Position.@y*k2y + 0.5*sh, f.Position.@z*k2x + sd);
+								ptf.screen_direction = new Vector3D(f.Direction.@x,f.Direction.@y*-1, f.Direction.@z*-1);
+								ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;
+							}
 							
 						pointList.push(ptf);
 						pids.push(int(f.@id)) 
 
 						//trace("finger",k, ptf.type, ptf.id, ptf.handID,ptf.position, ptf.direction, ptf.width, ptf.length);
+						
+						//if (k==0) trace("pos",f.Position.@x,f.Position.@y);
 					}
 				
 				}

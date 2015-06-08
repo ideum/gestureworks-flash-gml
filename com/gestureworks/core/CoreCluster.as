@@ -366,6 +366,7 @@ package com.gestureworks.core
 				// BASIC HAND
 				cluster_geometric.createHands();
 				cluster_geometric.getProjectedPoints();
+				//	cluster_geometric.getProjectedPointsScreen();
 				//cluster_geometric.findInteractionPointsExplicit(); 
 				
 				//cluster_geometric.findFingerAverage();// finger average point// up down 

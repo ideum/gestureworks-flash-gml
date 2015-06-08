@@ -544,17 +544,17 @@ package com.gestureworks.visualizer
 			var hand = handList[0];
 						if (hand.IPState == "pinch") 
 						{
-							graphics.lineStyle(5, 0x00FFFF, style.stroke_alpha);
-							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, style.radius*2);
+							graphics.lineStyle(10, 0x00FFFF, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, style.radius*4);
 						}
 							
 					// draw trigger
 						if (hand.IPState  == "trigger") //PURPLE 0xc44dbe
 						{
-							var tgr:Number = 30;
+							var tgr:Number = 60;
 							var triggerThreshold:Number = 0.5
 							// set style
-							graphics.lineStyle(5, 0xc44dbe, style.stroke_alpha);
+							graphics.lineStyle(10, 0xc44dbe, style.stroke_alpha);
 							// draw cross
 							graphics.moveTo (hand.IPScreenPosition.x - tgr, hand.IPScreenPosition.y);
 							graphics.lineTo (hand.IPScreenPosition.x + tgr ,hand.IPScreenPosition.y);
@@ -573,38 +573,38 @@ package com.gestureworks.visualizer
 						if (hand.IPState  == "fist") //grey //
 							{
 							//trace ("draw fist");
-							graphics.lineStyle(5, 0xFFFFFF, style.stroke_alpha);
-							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, style.radius*2);
+							graphics.lineStyle(10, 0xFFFFFF, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x, hand.IPScreenPosition.y, style.radius*4);
 						}
 						
 					// draw SPLAY
 						if (hand.IPState == "splay") //black //
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(5, 0x000000, style.stroke_alpha);
-							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+							graphics.lineStyle(10, 0x000000, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*4);
 						}
 						
 						// draw Peace
 						if (hand.IPState == "peace") //black //
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(5, 0x007700, style.stroke_alpha);
-							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+							graphics.lineStyle(10, 0x007700, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*4);
 						}
 						
 						if (hand.IPState == "love") //black //
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(5, 0x770000, style.stroke_alpha);
-							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+							graphics.lineStyle(10, 0x770000, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*4);
 						}
 						
 						if (hand.IPState == "point") //black //
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(5, 0x777777, style.stroke_alpha);
-							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*2);
+							graphics.lineStyle(10, 0x777777, style.stroke_alpha);
+							graphics.drawCircle(hand.IPScreenPosition.x,hand.IPScreenPosition.y, style.radius*4);
 						}
 					
 			
