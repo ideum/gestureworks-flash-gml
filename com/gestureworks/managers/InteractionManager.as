@@ -206,7 +206,7 @@ package com.gestureworks.managers
 					
 	
 					// REDUCE GLOBAL INTERACTION POINT COUNT
-				//	interactionPointCount--;
+					interactionPointCount--;
 					
 					// UPDATE INTERACTION POINT ID 
 					for (var i:int = 0; i < iPointArray.length; i++)
@@ -273,11 +273,11 @@ package com.gestureworks.managers
 					ipO.width = pt.width;
 					
 					// advanced ip features
-					ipO.flatness = pt.flatness;
+					//ipO.flatness = pt.flatness;
 					ipO.orientation = pt.orientation;
 					ipO.fn = pt.fn;
-					ipO.splay = pt.splay;
-					ipO.fist = pt.fist;
+					//ipO.splay = pt.splay;
+					//ipO.fist = pt.fist;
 					
 					//sensors
 					ipO.acceleration = pt.acceleration;

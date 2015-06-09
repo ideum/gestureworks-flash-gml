@@ -92,32 +92,40 @@ package com.gestureworks.server
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 					var ptp:InteractionPointObject = new InteractionPointObject();
-						ptp.type = p.@name;
+						ptp.name =  p.@name;
+						ptp.type =  "pinch"//p.@type;//p.@name;
+						ptp.type_attribute = p.@type_attribute;
+						ptp.deviceType = p.@device;
 						ptp.id = ipID///100 + j//5000+j//p.@id;
-						
-						//ptp.deviceType = device;
-						//ptp.handside = p.@handSide;
-						//ptp.color = p.@color;
-						//ptp.orientation_x = p.@orientation_x;
-						//ptp.orientation_y = p.@orientation_y;
-						//ptp.orientation_z = p.@orientation_z;
-						//ptp.special = p.@special;
+						ptp.handside = p.@handSide;
 						//ptp.status = p.@status;
-						//ptp.type = p.@type;
-						//ptp.type = p.@type_attribute;
-						//ptp.type_attribute = p.@type_attribute;
+						//ptp.special = p.@special;
+						//ptp.color = p.@color;
+						
+						////////////////////////////////////////////////////////////////////
+						// 3D position and orientation data
 						ptp.position = new Vector3D(p.@x * kx, p.@y * ky, p.@z * -1 * kx);
-						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
-						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1); //universal
+						ptp.direction = new Vector3D(p.@direction_x, p.@direction_y, p.@direction_z * -1);
+						ptp.normal =  new Vector3D(p.@normal_x, p.@normal_y * -1, p.@normal_z * -1);
 						
+						////////////////////////////////////////////////////////////////////
+						// screen 2D position and orientation data
+						//ptp.screen_position = new Vector3D(p.@image_x, p.@image_y, p.@image_z);
 						//ptp.screen_position = new Vector3D(p.@image_x * -ka * pk + sw * 1, p.@image_y * kb * pk, p.@image_z * sd);
-						ptp.screen_position = new Vector3D(p.@x*-1*5 + (sw*0.5) , p.@y*-1*5/k3 + (sh*0.5) , p.@z);
+						//ptp.screen_position = new Vector3D(p.@image_x * -ka + sw * 1, p.@image_y * kb, p.@image_z * sd);
+						//ptp.screen_position = new Vector3D(p.@x*-1*5 + (sw*0.5) , p.@y*-1*5/k3 + (sh*0.5) , p.@z);
 						
-						ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
-						ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y * -1, p.Normal.@z * -1);
+						ptp.screen_position = new Vector3D(p.@screen_x, p.@screen_y, p.@screen_z);
+						ptp.screen_direction = new Vector3D(p.@direction_x, p.@direction_y*-1, p.@direction_z*-1);
+						ptp.screen_normal =  new Vector3D(p.@normal_x, p.@normal_y * -1, p.@normal_z * -1);
+						
+						
+					
+						
+						
 
 					pointList.push(ptp);
-					//trace("palm", ptp.id, ptp.position, ptp.direction, ptp.normal)
+					trace("pose", "type:",ptp.type, "ID:",ptp.id,"pos:", ptp.position, "screen pos:", ptp.screen_position, ptp.direction, ptp.normal)
 					
 					//trace("data palm position:",j,ptp.position,p.@id)
 					//PUSH IDS

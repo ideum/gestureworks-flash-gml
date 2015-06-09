@@ -651,9 +651,9 @@ package com.gestureworks.visualizer
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, tgr - 10);
 
 							// check extension
-							if (ipt.extension < triggerThreshold) {
-									graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius+20);
-								}
+							//if (ipt.extension < triggerThreshold) graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius+20);
+							if (ipt.type_attribute =="trigger_in") graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius+20);
+							
 						}
 					
 					// draw FIST

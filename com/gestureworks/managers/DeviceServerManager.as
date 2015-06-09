@@ -211,6 +211,7 @@ package com.gestureworks.managers
 								{
 									//trace("pose message:",message.InputPoint.Values, "pose",message.InputPoint.Values.Pose[0],message.InputPoint.Values.Pose.@body_side);	
 									poseManagerSocket.processPoseData(message.InputPoint.Values.Pose, ipID);
+									//trace("pose message",message)
 							
 								}
 							//////////////////////////////////////////////////////////////////////////////////////////////////////////////

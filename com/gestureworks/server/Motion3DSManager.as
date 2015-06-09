@@ -109,7 +109,7 @@ package com.gestureworks.server
 						ptp.radius = 80;
 						
 						// perspective scalar
-						pk = .005 * p.Position.@z;
+						pk = .01 * p.Position.@z;
 						//pk = 5* handList[j].@z;
 						
 						//trace("-------------------------------------------------------------------------stable???",p.Position.@z );
@@ -189,7 +189,7 @@ package com.gestureworks.server
 							
 							if (device == "RealSense")
 							{
-								ptf.screen_position = new Vector3D(f.Position.@x * k2x + (sw * 0.5), f.Position.@y * -k2y + 0.5 * sh, f.Position.@z * k2x + sd);
+								ptf.screen_position = new Vector3D(f.Position.@x * k2x*pk + (sw * 0.5), f.Position.@y *pk* -k2y + 0.5 * sh, f.Position.@z * k2x + sd);
 								//ptf.screen_position = new Vector3D(f.Position.@image_x*-ka*pk+ (sw *1), f.Position.@image_y*kb*pk, f.Position.@image_z*sd);
 								ptf.screen_direction = new Vector3D(f.Direction.@x, f.Direction.@y*-1, f.Direction.@z*-1);
 								ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;

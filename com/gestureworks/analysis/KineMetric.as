@@ -717,7 +717,7 @@ package com.gestureworks.analysis
 			}
 		
 		
-		
+		/*
 		public function filterIPCluster():void
 			{
 				// TODO: PULL FROM LOCAL GESTURE LIST
@@ -763,7 +763,7 @@ package com.gestureworks.analysis
 					
 				}
 			}
-		
+		*/
 		
 		public function mapCluster3Dto2D():void
 			{

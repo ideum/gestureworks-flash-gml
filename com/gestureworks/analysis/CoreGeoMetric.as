@@ -457,6 +457,7 @@ package com.gestureworks.analysis
 		public function findInteractionPointsExplicit():void
 		{
 			var palm:MotionPointObject;
+			var hand:HandObject;
 			
 			//tip palm distances
 			var thumbdist:Number = 0;
@@ -479,20 +480,14 @@ package com.gestureworks.analysis
 			var triggerradius:Number = 0
 			var pinchradius:Number = 0;
 			var splayfdist:Number = 0;
+
 			
-			var projecttoplane:Boolean = false;
-			var screen:Boolean = true;
-			
-			var zangle:Number = 0;
-			
-			//trace("hand length",hn );
 			for (var j:int = 0; j < handList.length; j++)
 				{	
 					
 				palm = handList[j].palm;
+				hand =  handList[j];
 				
-				
-
 				//trace("finger dist:", thumbdist, indexdist, middledist, ringdist, pinkydist,handList[j].deviceType, rootRadius, thumbindexdist);
 				//trace("finger sep dista", thumbindexdist, indexmiddledist, middleringdist, ringpinkydist);
 				//trace("palm pos:",handList[j].palm.position,"finger pos:",handList[j].index.position,handList[j].middle.position,handList[j].ring.position);
@@ -507,18 +502,18 @@ package com.gestureworks.analysis
 				if (handList[j].deviceType == "LeapMotion")
 				{
 					// find finger tip data in projected plane
-					thumbdist =  Vector3D.distance(palm.position, handList[j].thumb.palmplane_position);
-					indexdist =  Vector3D.distance(palm.position, handList[j].index.palmplane_position);
-					middledist =  Vector3D.distance(palm.position, handList[j].middle.palmplane_position);
-					ringdist =  Vector3D.distance(palm.position, handList[j].ring.palmplane_position);
-					pinkydist =  Vector3D.distance(palm.position, handList[j].pinky.palmplane_position);
+					thumbdist =  Vector3D.distance(palm.position, hand.thumb.palmplane_position);
+					indexdist =  Vector3D.distance(palm.position, hand.index.palmplane_position);
+					middledist =  Vector3D.distance(palm.position, hand.middle.palmplane_position);
+					ringdist =  Vector3D.distance(palm.position, hand.ring.palmplane_position);
+					pinkydist =  Vector3D.distance(palm.position, hand.pinky.palmplane_position);
 					
-					thumbindexdist = Vector3D.distance(handList[j].index.palmplane_position, handList[j].thumb.palmplane_position);
-					thumbmiddledist = Vector3D.distance(handList[j].middle.palmplane_position, handList[j].thumb.palmplane_position);
-					indexmiddledist = Vector3D.distance(handList[j].index.palmplane_position, handList[j].middle.palmplane_position);
-					middleringdist = Vector3D.distance(handList[j].middle.palmplane_position, handList[j].ring.palmplane_position);
-					ringpinkydist = Vector3D.distance(handList[j].ring.palmplane_position, handList[j].pinky.palmplane_position);
-					indexpinkydist = Vector3D.distance(handList[j].index.palmplane_position, handList[j].pinky.palmplane_position);
+					thumbindexdist = Vector3D.distance(handList[j].index.palmplane_position, hand.thumb.palmplane_position);
+					thumbmiddledist = Vector3D.distance(handList[j].middle.palmplane_position, hand.thumb.palmplane_position);
+					indexmiddledist = Vector3D.distance(handList[j].index.palmplane_position, hand.middle.palmplane_position);
+					middleringdist = Vector3D.distance(handList[j].middle.palmplane_position, hand.ring.palmplane_position);
+					ringpinkydist = Vector3D.distance(handList[j].ring.palmplane_position, hand.pinky.palmplane_position);
+					indexpinkydist = Vector3D.distance(handList[j].index.palmplane_position, hand.pinky.palmplane_position);
 					
 					
 					if ((handList[j].palm.position.x!=0)&&(handList[j].ring.position.x != 0) && (handList[j].middle.position.x != 0) && (handList[j].ring.position.x != 0))
@@ -538,8 +533,13 @@ package com.gestureworks.analysis
 					splayradius = rootRadius*1.53// 80////70;
 					fistradius = rootRadius*0.77//40/ //0.67;//50;
 					triggerradius = rootRadius//50//// 0.67;//50;
-					pinchradius = rootRadius*0.58//30// //0.40;//30;
-					splayfdist = rootRadius*0.21//11/ //0.15;// 11;
+					
+					// LEAP HAS TROUBLE TRACKING THUMB AND INDEX WHEN IN PINCH STATE SINCE LAST SDK UPDATE
+					// SO THIS MAY NEED TO BE FURTHER RELAXED
+					pinchradius = rootRadius*0.6//30// //0.40;//30; 
+					splayfdist = rootRadius * 0.21//11/ //0.15;// 11;
+					
+					trace("leap:",pinchradius, thumbindexdist);
 				
 				if (rootRadius != 0)
 				{
@@ -618,16 +618,7 @@ package com.gestureworks.analysis
 				
 				else if (handList[j].deviceType == "RealSense")
 				{
-					
-					
-					//handList[j].thumb.position.z = 0;
-					//handList[j].index.position.z = 0;
-					//handList[j].middle.position.z = 0;
-					//handList[j].ring.position.z = 0;
-					//handList[j].pinky.position.z = 0;
-					
-					
-	
+					/*
 						thumbdist =  Vector3D.distance(palm.position, handList[j].thumb.position);
 						indexdist =  Vector3D.distance(palm.position, handList[j].index.position);
 						middledist =  Vector3D.distance(palm.position, handList[j].middle.position);
@@ -639,57 +630,23 @@ package com.gestureworks.analysis
 						indexmiddledist = Vector3D.distance(handList[j].index.position, handList[j].middle.position);
 						middleringdist = Vector3D.distance(handList[j].middle.position, handList[j].ring.position);
 						ringpinkydist = Vector3D.distance(handList[j].ring.position, handList[j].pinky.position);
-
+					*/
 						
-						/*
-							thumbdist =  Vector3D.distance(palm.screen_position, handList[j].thumb.palmplane_position);
-							indexdist =  Vector3D.distance(palm.screen_position, handList[j].index.palmplane_position);
-							middledist =  Vector3D.distance(palm.screen_position, handList[j].middle.palmplane_position);
-							ringdist =  Vector3D.distance(palm.screen_position, handList[j].ring.palmplane_position);
-							pinkydist =  Vector3D.distance(palm.screen_position, handList[j].pinky.palmplane_position);
+						
+						thumbdist =  Vector3D.distance(palm.position, hand.thumb.palmplane_position);
+						indexdist =  Vector3D.distance(palm.position, hand.index.palmplane_position);
+						middledist =  Vector3D.distance(palm.position, hand.middle.palmplane_position);
+						ringdist =  Vector3D.distance(palm.position, hand.ring.palmplane_position);
+						pinkydist =  Vector3D.distance(palm.position, hand.pinky.palmplane_position);
 							
-							thumbindexdist = Vector3D.distance(handList[j].index.screen_position, handList[j].thumb.palmplane_position);
-							thumbmiddledist = Vector3D.distance(handList[j].middle.screen_position, handList[j].thumb.palmplane_position);
-							indexmiddledist = Vector3D.distance(handList[j].index.screen_position, handList[j].middle.palmplane_position);
-							middleringdist = Vector3D.distance(handList[j].middle.screen_position, handList[j].ring.palmplane_position);
-							ringpinkydist = Vector3D.distance(handList[j].ring.screen_position, handList[j].pinky.palmplane_position);
+						thumbindexdist = Vector3D.distance(hand.index.palmplane_position, hand.thumb.palmplane_position);
+						thumbmiddledist = Vector3D.distance(hand.middle.palmplane_position,hand.thumb.palmplane_position);
+						indexmiddledist = Vector3D.distance(hand.index.palmplane_position, hand.middle.palmplane_position);
+						middleringdist = Vector3D.distance(hand.middle.palmplane_position, hand.ring.palmplane_position);
+						ringpinkydist = Vector3D.distance(hand.ring.palmplane_position, hand.pinky.palmplane_position);
 
-							*/
-						
-						/*
-						/////////////////////////////////////////////////////////////////////////////
-						// get tilt angle////////////////////////////////////////////////////////////
-						var zaxis:Vector3D = new Vector3D(0, 0, 1);
-						zangle = Vector3D.angleBetween(palm.normal, zaxis);
-						
-						if (zangle > Math.PI / 2) zangle = Math.PI / 2
-						else zangle = 0.5*zangle;
-						
-						var zk = 1 + zangle;
-						
-						trace("zangle:",zangle);
-						*/
-						////////////////////////////////////////////////////////////////////////////
-						
-						/*
-							thumbdist =  Vector3D.distance(palm.screen_position, handList[j].thumb.screen_position);
-							indexdist =  Vector3D.distance(palm.screen_position, handList[j].index.screen_position);
-							middledist =  Vector3D.distance(palm.screen_position, handList[j].middle.screen_position);
-							ringdist =  Vector3D.distance(palm.screen_position, handList[j].ring.screen_position);
-							pinkydist =  Vector3D.distance(palm.screen_position, handList[j].pinky.screen_position);
-							
-							thumbindexdist = Vector3D.distance(handList[j].index.screen_position, handList[j].thumb.screen_position);
-							thumbmiddledist = Vector3D.distance(handList[j].middle.screen_position, handList[j].thumb.screen_position);
-							indexmiddledist = Vector3D.distance(handList[j].index.screen_position, handList[j].middle.screen_position);
-							middleringdist = Vector3D.distance(handList[j].middle.screen_position, handList[j].ring.screen_position);
-							ringpinkydist = Vector3D.distance(handList[j].ring.screen_position, handList[j].pinky.screen_position);
-							*/
-						//}
-					//}
 					
-					
-					
-					if ((handList[j].palm.position.x!=0)&&(handList[j].ring.position.x != 0) && (handList[j].middle.position.x != 0) && (handList[j].ring.position.x != 0))
+					if ((hand.palm.position.x!=0)&&(hand.ring.position.x != 0) && (hand.middle.position.x != 0) && (hand.ring.position.x != 0))
 					{
 						// find max lengths
 						if (indexdist > maxindex) maxindex = indexdist;
@@ -719,9 +676,9 @@ package com.gestureworks.analysis
 					// zeroed z values //////////////////////////
 					splayradius = rootRadius*1.7//145-230//
 					fistradius = rootRadius*1.3//120-180//
-					triggerradius = rootRadius*0.9//0.63//50//
+					triggerradius = rootRadius*1.1//0.63//50//
 					pinchradius = rootRadius*0.51//66//10-80//
-					splayfdist =  rootRadius * 0.31//41//10-80//
+					splayfdist =  rootRadius * 0.25//41//10-80//
 					
 					//trace(handList[j].index.screen_position);
 					//trace(handList[j].thumb.position, handList[j].index.position, handList[j].middle.position, handList[j].ring.position, handList[j].pinky.position);
@@ -731,30 +688,33 @@ package com.gestureworks.analysis
 				
 				if (rootRadius != 0)
 				{
-					if (((thumbindexdist <= pinchradius)||(thumbmiddledist <= pinchradius*1.1))&&(middledist>fistradius)&&(ringdist>fistradius)&&(pinkydist>fistradius))//&&(thumbdist>fistradius-10)&&(indexdist>fistradius)
+					if (((thumbindexdist <= pinchradius)||(thumbmiddledist <= pinchradius*1.1))&&(ringdist>fistradius)&&(pinkydist>fistradius))//(middledist>fistradius)&&&&(thumbdist>fistradius-10)&&(indexdist>fistradius)
 					{	
 						handList[j].IPState = "pinch";
 						handList[j].IPPosition = palm.position;
 						handList[j].IPScreenPosition = palm.screen_position;
 					}
 					
-					else if ((thumbindexdist >= triggerradius)&&(thumbdist>triggerradius)&&(indexdist>fistradius)&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
+					else if ((thumbindexdist >= triggerradius)&&(indexdist>fistradius)&&(middledist < fistradius) && (ringdist < fistradius) && (pinkydist < fistradius))
 					{	
-						handList[j].IPState = "trigger";
-						handList[j].IPPosition = palm.position;
-						handList[j].IPScreenPosition = palm.screen_position;
+						if ((thumbdist > triggerradius))
+						{
+							handList[j].IPState = "trigger";
+							handList[j].IPPosition = palm.position;
+							handList[j].IPScreenPosition = palm.screen_position;
+						}
+						else {
+							handList[j].IPState = "point";
+							handList[j].IPPosition = palm.position;
+							handList[j].IPScreenPosition = palm.screen_position;
+						}
 					}
-					else if ((thumbdist < fistradius)&&((indexdist>splayradius)||(middledist>splayradius))&&(middledist<fistradius)&&(ringdist<fistradius)&&(pinkydist<fistradius))
-					{	
-						handList[j].IPState = "point";
-						handList[j].IPPosition = palm.position;
-						handList[j].IPScreenPosition = palm.screen_position;
-					}
+					
 					
 					
 					else if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist>splayradius)&&(pinkydist>splayradius))
 					{	
-						if ((thumbindexdist > 2 * splayfdist) && (thumbmiddledist > 2 * splayfdist) &&(indexmiddledist > splayfdist) && (middleringdist > splayfdist) && (ringpinkydist >  splayfdist))
+						if ((thumbindexdist > 3 * splayfdist) &&(indexmiddledist > splayfdist) && (middleringdist > splayfdist) && (ringpinkydist >  2*splayfdist))//(thumbmiddledist > 2 * splayfdist)
 						{
 						handList[j].IPState = "splay";
 						handList[j].IPPosition = palm.position;
