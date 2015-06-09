@@ -31,7 +31,6 @@ package com.gestureworks.objects
 		
 		// interactionPointID
 		public var interactionPointID:int;
-		
 		public var rootPointID:int;
 		
 		// input mode of interaction point touch/motion/sensor

@@ -259,12 +259,12 @@ package com.gestureworks.managers
 					ipO.position = pt.position;
 					ipO.direction = pt.direction;
 					ipO.normal = pt.normal;
+					
 					ipO.screen_position = pt.screen_position;
 					ipO.screen_direction = pt.screen_direction;
 					ipO.screen_normal = pt.screen_normal;
 					
 					ipO.velocity = pt.velocity;
-
 					ipO.radius = pt.radius
 					ipO.length = pt.length;
 					ipO.width = pt.width;
@@ -301,22 +301,7 @@ package com.gestureworks.managers
 		///////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////
 		
-		/**
-		 * Register a virtual transform object with the touch manager
-		 * @param	t
-		 */
-		public static function registerVTO(t:ITouchObject):void {
-			virtualTransformObjects[t.vto] = t;  
-		}
 		
-		/**
-		 * Deregisters a virtual transform object 
-		 * @param	t
-		 */		
-		public static function deregisterVTO(t:ITouchObject):void {
-			delete virtualTransformObjects[t.vto];
-		}
-
 		///////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////
 		
@@ -369,102 +354,6 @@ package com.gestureworks.managers
 			}
 		}*/
 		
-
-		/**
-		 * Registers a function to externally modify the provided GWTouchEvent for point processing
-		 * @param  hook  The hook function with GWTouchEvent parameter
-		 */
-		public static function registerHook(hook:Function):void {
-			trace("register hooks");
-			if (!hooks)
-				hooks = new Vector.<Function>();
-			hooks.push(hook);
-			
-			trace("hooks",hooks.length)
-		}
-		
-		/**
-		 * Unregisters a hook function
-		 * @param	hook
-		 */
-		public static function deregisterHook(hook:Function):void {
-			if(hooks){
-				var index:int = hooks.indexOf(hook);
-				if (index > -1)
-					hooks.splice(index, 1);
-			}
-		}
-		
-		/**
-		 * Applies updates to GWTouchEvent through registered hook functions
-		 * @param	event
-		 */
-		private static function applyHooks(event:GWTouchEvent):void {
-			for each(var hook:Function in hooks) {
-				event = hook(event);
-			}
-		}
-		
-
-		/**
-		 * Determines the event's target is valid based on activated state and local mode settings.
-		 * @param	event
-		 * @return
-		 */
-		/*
-		public static function validTarget(event:GWTouchEvent):Boolean {
-			activatedTarget(event);
-			
-			//trace("valid target check",event.target,event.source)
-			
-			if (event.target is ITouchObject && event.target.active) {
-				
-				//local mode filters
-				if (event.target.localModes) {
-					
-					//trace("event source",event.source, event.target.localModes)
-					
-					switch(event.source) {
-						case TouchEvent:
-							return event.target.nativeTouch;
-						case MouseEvent:
-							return event.target.simulator;
-						case TuioEvent:
-							return event.target.tuio;
-						case Leap2DManager:
-							return event.target.leap2D;
-						case Touch2DSManager:
-							return event.target.server;
-						default:
-							return true;
-					}
-				}			
-				return true;
-				
-			}
-			return false;
-		}*/
-		
-		/**
-		 * If target is not activated, updates the target to the first activated ancestor
-		 * @param	event
-		 */
-		/*
-		private static function activatedTarget(event:GWTouchEvent):void {
-			
-			//trace("activated target",event.target)
-			
-			if (!event.target || (event.target is ITouchObject && event.target.active)) 
-				return;
-			else if (virtualTransformObjects[event.target])
-				event.target = virtualTransformObjects[event.target];
-			else
-				event.target = event.target.parent;
-			activatedTarget(event);
-		}
-		*/
-		///////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////////////////////////////
 			
 		public static function preinitBase(obj:ITouchObject):void 
         {

@@ -613,10 +613,10 @@ package com.gestureworks.visualizer
 			
 			
 			
-			/*
 			
 			
 			
+				
 			
 				for (var b:uint = 0; b < ipn; b++) 
 				{
@@ -626,7 +626,7 @@ package com.gestureworks.visualizer
 					//var x:Number = pt.position.x;
 					//var y:Number = pt.position.y;
 				
-					trace("core pointvisualizer:",ipt.screen_position,handList[0].palm.position);
+					trace("core pointvisualizer:",ipn, ipt.screen_position, ipt.position);
 					
 					// draw pinch
 					if (ipt.type == "pinch") 
@@ -672,7 +672,7 @@ package com.gestureworks.visualizer
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 					
-					*/
+					}
 					
 					
 					

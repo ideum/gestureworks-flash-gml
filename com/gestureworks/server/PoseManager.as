@@ -28,7 +28,7 @@ package com.gestureworks.server
 		
 		private static var pids:Vector.<int> = new Vector.<int>();
 		private static var pointList:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
-		private static var activePoints:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		private static var activePoints:Vector.<int> = new Vector.<int>();
 		
 		private var sw:int
 		private var sh:int
@@ -67,12 +67,19 @@ package com.gestureworks.server
 		public function processPoseData(poseList:XMLList,ipID:int):void // 
 		{
 			
+			
+			
 				//trace("hand count",handCount);
-				ipCount = int(poseList.length);// int(message.InputPoint.Values.Hand[j].@FingerCount);  //FIX ME
+				ipCount = poseList.length();// int(message.InputPoint.Values.Hand[j].@FingerCount);  //FIX ME
 				
 				// CREATE POINT LIST
 				pointList = new Vector.<InteractionPointObject>
 				pids = new Vector.<int>;
+				
+				
+				//trace("get pose", ipCount);
+				
+				
 				
 				for (var j:uint = 0; j < ipCount; j++ )
 				{
@@ -94,27 +101,27 @@ package com.gestureworks.server
 						//ptp.orientation_z = p.@orientation_z;
 						//ptp.special = p.@special;
 						//ptp.status = p.@status;
-						//ptp.type = p.@type;
-						//ptp.attribute = p.@type_attribute;
+						ptp.type = p.@type;
+						//ptp.type_attribute = p.@type_attribute;
 						ptp.position = new Vector3D(p.@x * kx, p.@y * ky, p.@z * -1 * kx);
-						//ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
-						//ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1); //universal
+						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
+						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1); //universal
+						
 						ptp.screen_position = new Vector3D(p.@image_x * -ka * pk + sw * 1, p.@image_y * kb * pk, p.@image_z * sd);
-						//ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
-						//ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y * -1, p.Normal.@z * -1);
+						ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
+						ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y * -1, p.Normal.@z * -1);
 
 					pointList.push(ptp);
 					//trace("palm", ptp.id, ptp.position, ptp.direction, ptp.normal)
 					
 					//trace("data palm position:",j,ptp.position,p.@id)
 					//PUSH IDS
-					pids.push(int(100 +j)) //////int(5000+j)//+p.@id
+					pids.push(ipID) ///(100 + j)///int(5000+j)//+p.@id
+					
+					//trace("push frame point", ipID);
 				}
 					
 				GestureGlobals.motionFrameID += 1;
-				// CALL LEAP PROCESSING
-				//processMotion3DData(message);
-				
 				addRemoveUpdatePoints();
 				
 		}
@@ -145,7 +152,7 @@ package com.gestureworks.server
 				if (pids.indexOf(aid) == -1) 
 				{
 					
-					var pt = getFramePoint(aid);
+					var pt:InteractionPointObject = getFramePoint(aid);
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
 					if (pt)InteractionManager.onInteractionEndPoint(pt);//aid
@@ -157,12 +164,12 @@ package com.gestureworks.server
 			//POINT ADDITION AND UPDATE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			for each(var pid:int in pids) //Number
 			{
-					var pt = getFramePoint(pid);
+					var pt:InteractionPointObject = getFramePoint(pid);
 					//trace("getting pid", pid);
 					
 					if (pt) 
 					{
-					pt.motionPointID = pt.id;	
+					pt.interactionPointID = pt.id;	
 						
 					//trace("PT",mp.type,mp.motionPointID,pid, mp.normal);
 					if (activePoints.indexOf(pid) == -1) 
@@ -170,12 +177,12 @@ package com.gestureworks.server
 						activePoints.push(pid);	
 						InteractionManager.onInteractionBeginPoint(pt);
 						//if(debug)
-							trace("ADDED:",pt.id, pt.motionPointID, pid);	
+							trace("ADDED:",pt.id, pt.interactionPointID, pid);	
 					}
 					else {
 						InteractionManager.onInteractionUpdatePoint(pt);
 						//if(debug)
-							trace("UPDATE:",pt.id, pt.motionPointID, pid);
+							//trace("UPDATE:",pt.id, pt.interactionPointID, pid);
 					}
 				}
 			}	
