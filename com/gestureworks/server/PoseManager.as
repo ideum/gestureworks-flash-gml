@@ -9,6 +9,8 @@ package com.gestureworks.server
 	import com.gestureworks.managers.MotionManager;
 	import com.gestureworks.managers.InteractionManager;
 	
+	
+	
 	import flash.geom.Vector3D;
 
 	/**
@@ -29,8 +31,12 @@ package com.gestureworks.server
 		private static var debug:Boolean = false;
 		
 		private static var pids:Vector.<int> = new Vector.<int>();
-		private static var pointList:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
 		private static var activePoints:Vector.<int> = new Vector.<int>();
+		private static var framepointList:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		private static var activepointList:Vector.<InteractionPointObject> = new Vector.<InteractionPointObject>();
+		
+		private static var iPointArray:Vector.<InteractionPointObject>
+		
 		
 		private var sw:int
 		private var sh:int
@@ -64,6 +70,8 @@ package com.gestureworks.server
 			pk = 1;
 			
 			//debug = true;
+			
+			iPointArray = GestureGlobals.gw_public::iPointArray;
 		}
 
 		public function processPoseData(poseList:XMLList,ipID:int):void // 
@@ -74,13 +82,16 @@ package com.gestureworks.server
 				//trace("hand count",handCount);
 				ipCount = poseList.length();// int(message.InputPoint.Values.Hand[j].@FingerCount);  //FIX ME
 				
-				// CREATE POINT LIST
-				pointList = new Vector.<InteractionPointObject>
+				// CREATE POINT LIST FOR POINTS IN MESSAGE FRAME
+				framepointList = new Vector.<InteractionPointObject>
+				
+				// CREATE ACTIVE POINT LIST// FOR POINTS THAT SHOULD EXIST
+				activepointList = new Vector.<InteractionPointObject>
 				pids = new Vector.<int>;
 				
 				
 				//trace("get pose", ipCount);
-				
+				//iPointArray = new Vector.<InteractionPointObject>;
 				
 				
 				for (var j:uint = 0; j < ipCount; j++ )
@@ -91,13 +102,16 @@ package com.gestureworks.server
 				// CREATE PALM MOTION POINT//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+				var pk = 1//.01 * p.@position_z;
+				
 					var ptp:InteractionPointObject = new InteractionPointObject();
 						ptp.name =  p.@name;
-						ptp.type =  "pinch"//p.@type;//p.@name;
+						ptp.type =  p.@type;//p.@name;
 						ptp.type_attribute = p.@type_attribute;
 						ptp.deviceType = p.@device;
 						ptp.id = ipID///100 + j//5000+j//p.@id;
 						ptp.handside = p.@handSide;
+						//ptp.age = 0;
 						//ptp.status = p.@status;
 						//ptp.special = p.@special;
 						//ptp.color = p.@color;
@@ -114,18 +128,24 @@ package com.gestureworks.server
 						//ptp.screen_position = new Vector3D(p.@image_x * -ka * pk + sw * 1, p.@image_y * kb * pk, p.@image_z * sd);
 						//ptp.screen_position = new Vector3D(p.@image_x * -ka + sw * 1, p.@image_y * kb, p.@image_z * sd);
 						//ptp.screen_position = new Vector3D(p.@x*-1*5 + (sw*0.5) , p.@y*-1*5/k3 + (sh*0.5) , p.@z);
+						//ptp.screen_position = new Vector3D(p.@position_x * k2x * pk + sw * 0.5, p.@position_y * -k2y * pk + 0.5 * sh, p.@position_z * k2x + sd);
 						
-						ptp.screen_position = new Vector3D(p.@screen_x, p.@screen_y, p.@screen_z);
+						
+						//LEAP PERFECT// RS IS OFF
+						ptp.screen_position = new Vector3D( -1 * p.@screen_x * pk + (0.5 * sw), p.@screen_y * pk + (0.5 * sh), p.@screen_z); 
+						
+						//ptp.screen_position = new Vector3D(p.@x *pk + (sw * 0.5), p.@y *pk + 0.5 * sh, p.@z + sd);
+						
 						ptp.screen_direction = new Vector3D(p.@direction_x, p.@direction_y*-1, p.@direction_z*-1);
 						ptp.screen_normal =  new Vector3D(p.@normal_x, p.@normal_y * -1, p.@normal_z * -1);
 						
 						
-					
+					//trace("pose type:",p.@name,p.@type,p.@deviceType);
 						
 						
-
-					pointList.push(ptp);
-					trace("pose", "type:",ptp.type, "ID:",ptp.id,"pos:", ptp.position, "screen pos:", ptp.screen_position, ptp.direction, ptp.normal)
+					//iPointArray.push(ptp);
+					framepointList.push(ptp);
+					//trace("pose", "type:",ptp.type, "ID:",ptp.id,"pos:", ptp.position, "screen pos:", ptp.screen_position, ptp.direction, ptp.normal)
 					
 					//trace("data palm position:",j,ptp.position,p.@id)
 					//PUSH IDS
@@ -138,10 +158,14 @@ package com.gestureworks.server
 					//trace("pose manager screen pos:",ptp.screen_position)
 				}
 					
-				GestureGlobals.motionFrameID += 1;
+				//GestureGlobals.motionFrameID += 1;
 				addRemoveUpdatePoints();
 				
-			
+				//getActivePointList();
+				
+				//trace("ip length:", iPointArray.length);
+				
+				//if (iPointArray.length == 1) trace(iPointArray[0].position);
 			
 		}
 		
@@ -153,12 +177,36 @@ package com.gestureworks.server
 		private static function getFramePoint(id:int):InteractionPointObject
 		{
 			var obj:InteractionPointObject;
-			for (var i:uint = 0; i < pointList.length; i++)
+			for (var i:uint = 0; i < framepointList.length; i++)
 			{
-				if (id == pointList[i].id) obj = pointList[i];
+				if (id == framepointList[i].id) obj = framepointList[i];
 			}
 			return obj
 		}
+		
+		/*
+		private static function getActivePoint(id:int):InteractionPointObject
+		{
+			var obj:InteractionPointObject;
+			for (var i:uint = 0; i < activepoints.length; i++)
+			{
+				if (id == activepointList[i].id) obj = activepoints[i];
+			}
+			return obj
+		}
+		
+		private static function getActivePointList():Vector.<InteractionPointObject>
+		{
+			for each(var aid:int in activePoints) 
+			{
+				
+			ativePointList.push(getActivePoint(aid));
+			
+			}
+			
+			trace("aplist length:",activePointList.length)
+		}*/
+		
 
 		private static function addRemoveUpdatePoints():void 
 		{
@@ -174,8 +222,7 @@ package com.gestureworks.server
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
 					//if (pt) {
-						InteractionManager.onInteractionEndPoint(aid);//aid
-					
+					InteractionManager.onInteractionEndPoint(aid);//aid
 					//if(debug)
 						trace("REMOVED:", aid);
 					//}
@@ -192,20 +239,21 @@ package com.gestureworks.server
 					{
 					pt.interactionPointID = pt.id;	
 						
-					//trace("PT",mp.type,mp.motionPointID,pid, mp.normal);
-					if (activePoints.indexOf(pid) == -1) 
-					{
-						activePoints.push(pid);	
-						InteractionManager.onInteractionBeginPoint(pt);
-						//if(debug)
-							//trace("ADDED:",pt.id, pt.interactionPointID, pid);	
+						//trace("PT",mp.type,mp.motionPointID,pid, mp.normal);
+						if (activePoints.indexOf(pid) == -1) 
+						{
+							activePoints.push(pid);	
+							
+							InteractionManager.onInteractionBeginPoint(pt);
+							//if(debug)
+								trace("ADDED:",pt.id, pt.interactionPointID, pid);	
+						}
+						else {
+							InteractionManager.onInteractionUpdatePoint(pt);
+							//if(debug)
+								trace("UPDATE:",pt.type, pt.age,pt.id, pt.interactionPointID, pid, pt.position,pt.phase);
+						}
 					}
-					else {
-						InteractionManager.onInteractionUpdatePoint(pt);
-						//if(debug)
-							//trace("UPDATE:",pt.id, pt.interactionPointID, pid);
-					}
-				}
 			}	
 		}
 		

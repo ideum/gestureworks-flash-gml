@@ -614,7 +614,7 @@ package com.gestureworks.visualizer
 			
 			
 			
-			
+			//trace("vis ipn",ipn,ipArray.length);
 			
 				
 			
@@ -622,7 +622,7 @@ package com.gestureworks.visualizer
 				{
 					var ipt:InteractionPointObject = ipArray[b] as InteractionPointObject;
 					
-					
+					//trace("ipn",ipn, ipt.type,ipt.screen_position.x);
 					//var x:Number = pt.position.x;
 					//var y:Number = pt.position.y;
 				
@@ -641,7 +641,7 @@ package com.gestureworks.visualizer
 							var tgr:Number = 30;
 							var triggerThreshold:Number = 0.5
 							// set style
-							graphics.lineStyle(8, 0xc44dbe, style.stroke_alpha);
+							graphics.lineStyle(4, 0xddffff, style.stroke_alpha);
 							// draw cross
 							graphics.moveTo (ipt.screen_position.x - tgr, ipt.screen_position.y);
 							graphics.lineTo (ipt.screen_position.x + tgr , ipt.screen_position.y);
@@ -665,10 +665,18 @@ package com.gestureworks.visualizer
 						}
 						
 					// draw SPLAY
-						if (ipt.type == "splay") //black //
+						if (ipt.type =="splay" ) //black //"splay"
 							{
 								//trace ("draw splay");
 							graphics.lineStyle(8, 0x000000, style.stroke_alpha);
+							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
+						}
+						
+						
+						if (ipt.type =="none" ) //black //"splay"
+							{
+								//trace ("draw splay");
+							graphics.lineStyle(8, 0x00FF00, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 					

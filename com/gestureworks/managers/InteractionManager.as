@@ -175,10 +175,8 @@ package com.gestureworks.managers
 				
 				//ADD TO GLOBAL Interaction POINT LIST
 				iPointArray.push(ipO);
-
 				// update local touch object point count
 				interactionPointCount++;
-				
 				// ASSIGN POINT OBJECT WITH GLOBAL POINT LIST DICTIONARY
 				interactionPoints[ipO.interactionPointID]  = ipO;
 
@@ -244,9 +242,12 @@ package com.gestureworks.managers
 					 
 					ipO.age++;
 					ipO.phase = "update"
-					ipO.interactionPointID = pt.interactionPointID; // id based on global hardware (native and server combined)
-					ipO.rootPointID = pt.rootPointID //id based on hardware traced reg
-					ipO.id = pt.id; //id based on point count
+					
+					//ipO.interactionPointID = pt.interactionPointID; // id based on global hardware (native and server combined)
+					//ipO.rootPointID = pt.rootPointID //id based on hardware traced reg
+					
+					// DONT UPDATE THIS ID AS POINT WILL NOT REMOVE CORRECTLY
+					//ipO.id = pt.id; //id based on point count 
 					
 					
 					//mpO.handID = event.value.handID;

@@ -539,7 +539,7 @@ package com.gestureworks.analysis
 					pinchradius = rootRadius*0.6//30// //0.40;//30; 
 					splayfdist = rootRadius * 0.21//11/ //0.15;// 11;
 					
-					trace("leap:",pinchradius, thumbindexdist);
+					//trace("leap:",pinchradius, thumbindexdist);
 				
 				if (rootRadius != 0)
 				{
@@ -663,14 +663,6 @@ package com.gestureworks.analysis
 					//var zrootRadius  = rootRadius* zk;
 					
 					//trace("tilt----------------------------",rootRadius,zk, zrootRadius, zangle)
-					
-					/*
-					splayradius = rootRadius*1.6//110//
-					fistradius = rootRadius*1.14//90//
-					triggerradius = rootRadius*0.8//0.63//50//
-					pinchradius = rootRadius*0.51//40//
-					splayfdist =  rootRadius * 0.31//25//
-					*/
 					
 					////////////////////////////////////////////
 					// zeroed z values //////////////////////////
