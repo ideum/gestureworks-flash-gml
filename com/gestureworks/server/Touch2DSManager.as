@@ -155,7 +155,7 @@ package com.gestureworks.server
 						
 						if (ptt.phase == "begin"|| ptt.phase == "touch_down") 		InteractionManager.onInteractionBeginPoint(ptt);
 						else if (ptt.phase == "update"|| ptt.phase == "touch_move")	InteractionManager.onInteractionUpdatePoint(ptt);
-						else if (ptt.phase == "end"|| ptt.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptt);
+						else if (ptt.phase == "end"|| ptt.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptt.interactionPointID);
 					}
 				}
 				
@@ -183,7 +183,7 @@ package com.gestureworks.server
 						//InteractionPointTracker.framePoints.push(ptsh);
 						if (ptsh.phase == "begin"|| ptsh.phase == "touch_down") 		InteractionManager.onInteractionBeginPoint(ptsh);
 						else if (ptsh.phase == "update"|| ptsh.phase == "touch_move")	InteractionManager.onInteractionUpdatePoint(ptsh);
-						else if (ptsh.phase == "end"|| ptsh.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptsh);
+						else if (ptsh.phase == "end"|| ptsh.phase == "touch_up")		InteractionManager.onInteractionEndPoint(ptsh.interactionPointID);
 					}
 				}
 

@@ -123,7 +123,7 @@ package com.gestureworks.managers
 							//InteractionManager.onInteractionEnd(new GWInteractionEvent(GWInteractionEvent.INTERACTION_END, ap, true, false)); //push update event
 							//InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
 							
-							InteractionManager.onInteractionEndPoint(ap); 
+							InteractionManager.onInteractionEndPoint(ap.interactionPointID); 
 							
 							//trace("ended with this:",dist)
 							//if (debug) 

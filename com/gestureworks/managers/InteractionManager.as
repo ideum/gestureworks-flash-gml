@@ -184,14 +184,17 @@ package com.gestureworks.managers
 
 				//trace("----------------------------ipointArray length",pt.id, pt.interactionPointID , pt.rootPointID, interactionPoints[pt.interactionPointID]  )
 		
-				//trace("interaction point end benin",interactionPointCount,iPointArray.length)
+				trace("interaction point begin",interactionPointCount,iPointArray.length)
 			}
 
-		public static function onInteractionEndPoint(pt:InteractionPointObject):void//interactionPointID:int
+		public static function onInteractionEndPoint(interactionPointID:int):void////pt:InteractionPointObject
 		{
-			var ipO:InteractionPointObject = interactionPoints[pt.interactionPointID] as InteractionPointObject;
 			
-			//trace("interaction point End, interactionManager",ipO, pt.interactionPointID)
+			trace("interaction point End, interactionManager", interactionPointID);
+			
+			var ipO:InteractionPointObject = interactionPoints[interactionPointID] as InteractionPointObject;
+			
+			trace(ipO);
 			
 			if (ipO)
 			{
@@ -203,7 +206,7 @@ package com.gestureworks.managers
 					
 	
 					// REDUCE GLOBAL INTERACTION POINT COUNT
-					interactionPointCount--;
+				//	interactionPointCount--;
 					
 					// UPDATE INTERACTION POINT ID 
 					for (var i:int = 0; i < iPointArray.length; i++)
@@ -211,9 +214,9 @@ package com.gestureworks.managers
 						iPointArray[i].id = i;
 					}
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
-					delete interactionPoints[ipO.interactionPointID] as InteractionPointObject;
+					delete interactionPoints[interactionPointID] as InteractionPointObject;
 					
-					//trace("ip deleted");
+					trace("ip deleted",interactionPointCount,iPointArray.length);
 			}
 			//trace("interaction point end POINT",interactionPointCount,iPointArray.length)
 		}
@@ -281,6 +284,8 @@ package com.gestureworks.managers
 					ipO.buttons = pt.buttons;
 					//trace("gms ipointArray length",gms.cO.iPointArray.length,ipO.position )
 					/////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					//trace("interaction manager screen pos:",ipO.screen_position)
 					
 					}
 				
@@ -353,6 +358,43 @@ package com.gestureworks.managers
 				}
 			}
 		}*/
+		
+		/**
+		 * Registers a function to externally modify the provided GWTouchEvent for point processing
+		 * @param  hook  The hook function with GWTouchEvent parameter
+		 */
+		public static function registerHook(hook:Function):void {
+			trace("register hooks");
+			if (!hooks)
+				hooks = new Vector.<Function>();
+			hooks.push(hook);
+			
+			trace("hooks",hooks.length)
+		}
+		
+		/**
+		 * Unregisters a hook function
+		 * @param	hook
+		 */
+		public static function deregisterHook(hook:Function):void {
+			if(hooks){
+				var index:int = hooks.indexOf(hook);
+				if (index > -1)
+					hooks.splice(index, 1);
+			}
+		}
+		
+		/**
+		 * Applies updates to GWTouchEvent through registered hook functions
+		 * @param	event
+		 */
+		private static function applyHooks(event:GWTouchEvent):void {
+			for each(var hook:Function in hooks) {
+				event = hook(event);
+			}
+		}
+		
+		
 		
 			
 		public static function preinitBase(obj:ITouchObject):void 

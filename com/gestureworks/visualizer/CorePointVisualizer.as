@@ -626,12 +626,12 @@ package com.gestureworks.visualizer
 					//var x:Number = pt.position.x;
 					//var y:Number = pt.position.y;
 				
-					trace("core pointvisualizer:",ipn, ipt.screen_position, ipt.position);
+					//trace("core pointvisualizer:",ipn, ipt.type, ipt.screen_position, ipt.position);
 					
 					// draw pinch
 					if (ipt.type == "pinch") 
 						{
-							graphics.lineStyle(5, 0x00FFFF, style.stroke_alpha);
+							graphics.lineStyle(8, 0x00FFFF, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 							
@@ -641,7 +641,7 @@ package com.gestureworks.visualizer
 							var tgr:Number = 30;
 							var triggerThreshold:Number = 0.5
 							// set style
-							graphics.lineStyle(5, 0xc44dbe, style.stroke_alpha);
+							graphics.lineStyle(8, 0xc44dbe, style.stroke_alpha);
 							// draw cross
 							graphics.moveTo (ipt.screen_position.x - tgr, ipt.screen_position.y);
 							graphics.lineTo (ipt.screen_position.x + tgr , ipt.screen_position.y);
@@ -660,7 +660,7 @@ package com.gestureworks.visualizer
 						if (ipt.type == "fist") //grey //
 							{
 							//trace ("draw fist");
-							graphics.lineStyle(5, 0xFFFFFF, style.stroke_alpha);
+							graphics.lineStyle(8, 0xFFFFFF, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 						
@@ -668,7 +668,7 @@ package com.gestureworks.visualizer
 						if (ipt.type == "splay") //black //
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(5, 0x000000, style.stroke_alpha);
+							graphics.lineStyle(8, 0x000000, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 					

@@ -2,6 +2,8 @@ package com.gestureworks.server
 {
 	import com.gestureworks.core.GestureWorks;
 	import com.gestureworks.core.GestureGlobals;
+	import com.gestureworks.core.gw_public;
+	
 	import com.gestureworks.events.GWMotionEvent;
 	import com.gestureworks.objects.InteractionPointObject;
 	import com.gestureworks.managers.MotionManager;
@@ -84,13 +86,13 @@ package com.gestureworks.server
 				for (var j:uint = 0; j < ipCount; j++ )
 				{
 					
-				var p:Object =  poseList//poseList[j].Pose;
+				var p:Object =  poseList[j];//poseList[j].Pose;
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// CREATE PALM MOTION POINT//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 					var ptp:InteractionPointObject = new InteractionPointObject();
-						ptp.type = p.name;
+						ptp.type = p.@name;
 						ptp.id = ipID///100 + j//5000+j//p.@id;
 						
 						//ptp.deviceType = device;
@@ -101,13 +103,16 @@ package com.gestureworks.server
 						//ptp.orientation_z = p.@orientation_z;
 						//ptp.special = p.@special;
 						//ptp.status = p.@status;
-						ptp.type = p.@type;
+						//ptp.type = p.@type;
+						//ptp.type = p.@type_attribute;
 						//ptp.type_attribute = p.@type_attribute;
 						ptp.position = new Vector3D(p.@x * kx, p.@y * ky, p.@z * -1 * kx);
 						ptp.direction = new Vector3D(p.Direction.@x, p.Direction.@y, p.Direction.@z * -1);
 						ptp.normal =  new Vector3D(p.Normal.@x, p.Normal.@y, p.Normal.@z * -1); //universal
 						
-						ptp.screen_position = new Vector3D(p.@image_x * -ka * pk + sw * 1, p.@image_y * kb * pk, p.@image_z * sd);
+						//ptp.screen_position = new Vector3D(p.@image_x * -ka * pk + sw * 1, p.@image_y * kb * pk, p.@image_z * sd);
+						ptp.screen_position = new Vector3D(p.@x*-1*5 + (sw*0.5) , p.@y*-1*5/k3 + (sh*0.5) , p.@z);
+						
 						ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
 						ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y * -1, p.Normal.@z * -1);
 
@@ -119,11 +124,17 @@ package com.gestureworks.server
 					pids.push(ipID) ///(100 + j)///int(5000+j)//+p.@id
 					
 					//trace("push frame point", ipID);
+					
+					//trace("raw screen pos:",p.@image_x, p.@image_y,p.@image_z)
+					
+					//trace("pose manager screen pos:",ptp.screen_position)
 				}
 					
 				GestureGlobals.motionFrameID += 1;
 				addRemoveUpdatePoints();
 				
+			
+			
 		}
 		
 		
@@ -151,13 +162,15 @@ package com.gestureworks.server
 				//trace("aid", aid, pids.length, pids.indexOf(aid), pids.indexOf(456))
 				if (pids.indexOf(aid) == -1) 
 				{
-					
 					var pt:InteractionPointObject = getFramePoint(aid);
 					// remove ref from activePoints list
 					activePoints.splice(activePoints.indexOf(aid), 1);
-					if (pt)InteractionManager.onInteractionEndPoint(pt);//aid
+					//if (pt) {
+						InteractionManager.onInteractionEndPoint(aid);//aid
+					
 					//if(debug)
 						trace("REMOVED:", aid);
+					//}
 				}
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +190,7 @@ package com.gestureworks.server
 						activePoints.push(pid);	
 						InteractionManager.onInteractionBeginPoint(pt);
 						//if(debug)
-							trace("ADDED:",pt.id, pt.interactionPointID, pid);	
+							//trace("ADDED:",pt.id, pt.interactionPointID, pid);	
 					}
 					else {
 						InteractionManager.onInteractionUpdatePoint(pt);

@@ -437,18 +437,18 @@ package com.gestureworks.core
 				_vto = value;
 				transform.matrix = transform.matrix;
 				//TouchManager.deregisterVTO(this);
-				InteractionManager.deregisterVTO(this);
+				//--InteractionManager.deregisterVTO(this);
 			}
 			else if (value && "transform" in value && value.transform is Transform) {
 				_vto = value;
 				transform.matrix = _vto.transform.matrix;
 				//TouchManager.registerVTO(this);
-				InteractionManager.registerVTO(this);
+				//--InteractionManager.registerVTO(this);
 			}
 			else {
 				_vto = value;
 				//TouchManager.registerVTO(this);
-				InteractionManager.registerVTO(this);
+				//--InteractionManager.registerVTO(this);
 			}
 		}
 		
