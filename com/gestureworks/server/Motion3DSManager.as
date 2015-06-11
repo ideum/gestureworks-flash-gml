@@ -230,6 +230,17 @@ package com.gestureworks.server
 			}
 			return obj
 		}
+		
+		public function clearPoints():void 
+		{
+			//POINT REMOVAL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			for each(var aid:int in activePoints) 
+			{
+				// remove ref from activePoints list
+				activePoints.splice(activePoints.indexOf(aid), 1);
+				MotionManager.onMotionEndPoint(aid);
+			}
+		}
 
 		private static function addRemoveUpdatePoints():void 
 		{

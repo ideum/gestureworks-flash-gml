@@ -48,6 +48,8 @@ package com.gestureworks.managers
 		public static var _port:int = 49191;
 		
 		private static var XMLFrameList:XMLList;
+		private static var aMString:String = new String("");
+		private static var tempAMString:String = new String("");
 		
 		private static var touchManagerSocket:Touch2DSManager;
 		
@@ -143,11 +145,6 @@ package com.gestureworks.managers
 		
 			
 			
-			
-			
-			
-		
-
 		private static function onSocketDataHandler(event:ProgressEvent):void
 		{
 			//trace("message", event, event.bytesLoaded, event.bytesTotal);
@@ -158,6 +155,330 @@ package com.gestureworks.managers
 			//trace(str)
 			//trace(lg,start,end);
 			
+			//trace("------------------------------------------------------------------------------------------------------------------------------------------------------------socket loop");
+			
+			// SIMPLE FRAME COMPLETENES CHECK
+			if ((start =="<Frame") && (end =="</Frame>"))
+			{
+				aMString += str;
+				//trace("----------------------------")
+			}
+			else trace("xml frame parsing error", lg, start, end);
+			
+			//trace("get socket strings");
+			
+		}
+		
+		public static function processSocketData():void
+		{
+			//trace("process appended String to XML Data");
+			//Copy appended frame String
+			tempAMString = aMString;
+			
+			// clear appended frame string
+			aMString =  new String();
+			
+			//create XML List from appended frame string
+			XMLFrameList = new XMLList(tempAMString);
+			
+			//PARSE ALL MESSAGES IN ALL ACCUMULATED FRAMES
+			parseMessages(XMLFrameList);
+			
+			//clean out zombies!!!
+			removePoints(XMLFrameList);
+		}
+		
+		private static function removePoints(currentXMLFrameList:XMLList):void
+		{
+			//trace("parse XML Messages");
+			
+				if (currentXMLFrameList) 
+				{
+					var dfrn:int = int(currentXMLFrameList.length());
+					var deviceType:String;
+					var inputType:String;
+					var inputMode:String;
+					var frameId:int; 
+					var ipID:int; 
+					var timestamp:int; 
+					var frame:XML;
+					var message:XML;
+					var mn:int;
+					var posePoints:Boolean = false;
+					var motionPoints:Boolean = false;
+				
+					//if (dfrn != 0)
+					//{
+					for (var i:int = 0; i < dfrn; i++ )
+					{
+						frame = XMLFrameList[i]
+						mn = frame.Messages.length();
+						
+						//trace("message length",dfrn,mn);
+						
+						for (var j:int = 0; j< mn; j++ )
+						{
+							message = frame.Messages.Message[j]
+							deviceType = message.InputPoint.@deviceType;
+							inputMode = message.InputPoint.@deviceMode;
+							
+							//establish input type
+							if (message.InputPoint.InputTypes.InputType.length()>0) inputType = message.InputPoint.InputTypes.InputType[0].@input;// simplify as likely use different output in seperate message
+							else inputType = "unknown"
+							
+							//trace(deviceType,inputMode, inputType);
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							//// POSE DATA ///////////////////////////////////////////////////////////////////////////////////////////////
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							if ((deviceType == "RealSense") && (inputType == "Other")||(deviceType == "LeapMotion") && (inputType == "Other")) 
+								{
+									//trace("dont kill")
+									posePoints = true;
+								}
+								
+							else if ((deviceType == "LeapMotion") && (inputType == "Hands3d")||(deviceType == "RealSense") && (inputType == "Hands3d")) 
+								{
+									motionPoints = true;
+								}
+						}
+					}
+					
+					if (posePoints==false) poseManagerSocket.clearPoints(); //TODO: upodte pose to generic IP
+					//if (motionPoints==false) motionManagerSocket.clearPoints(); // NEEDS WORK SEEMS TO LOCK UP HAND OBJECT AND KILL POSE IN HAND
+					
+				}
+				//else poseManagerSocket.removePoints();
+				
+	
+		}
+		
+		private static function parseMessages(currentXMLFrameList:XMLList):void
+		{
+			//trace("parse XML Messages");
+			
+				if (currentXMLFrameList) 
+				{
+					var dfrn:int = int(currentXMLFrameList.length());
+					var deviceType:String;
+					var inputType:String;
+					var inputMode:String;
+					var frameId:int; 
+					var ipID:int; 
+					var timestamp:int; 
+					var frame:XML;
+					var message:XML;
+					var mn:int;
+				
+					//if (dfrn != 0)
+					//{
+					for (var i:int = 0; i < dfrn; i++ )
+					{
+						frame = XMLFrameList[i]
+						mn = frame.Messages.length();
+						
+						////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//MESSAGE //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//trace(message);
+						
+						//trace("message length",mn);
+						
+						for (var j:int = 0; j< mn; j++ )
+						{
+							message = frame.Messages.Message[j]
+							deviceType = message.InputPoint.@deviceType;
+							inputMode = message.InputPoint.@deviceMode;
+							ipID = message.InputPoint.@id;
+							
+							//trace("inout mode",inputMode);
+							
+							if (message.InputPoint.InputTypes.InputType.length()>0) inputType = message.InputPoint.InputTypes.InputType[0].@input;// simplify as likely use different output in seperate message
+							else inputType = "unknown"
+							
+							//trace("data types",deviceType,inputType, inputMode)
+							
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							//// POSE DATA ///////////////////////////////////////////////////////////////////////////////////////////////
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							if ((deviceType == "RealSense") && (inputType == "Other")||(deviceType == "LeapMotion") && (inputType == "Other")) 
+								{
+									//trace("pose message:",message.InputPoint.Values, "pose",message.InputPoint.Values.Pose[0],message.InputPoint.Values.Pose.@body_side);	
+									poseManagerSocket.processPoseData(message.InputPoint.Values.Pose, ipID);
+									//trace("pose message",message)
+							
+								}
+							else {
+								//trace("call remove points");
+								//poseManagerSocket.removePoints();
+							}
+								
+							//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+							
+
+							if (GestureWorks.activeTouch)
+							{
+							//if (inputMode=="touch"){
+							///////////////////////////////////////////////////////////////
+							// TOUCH //////////////////////////////////////////////////////
+							
+								//PQ /////////////////////////////////////////////////
+								if ((deviceType == "PQ") && (inputType == "Points2d")) {
+									//trace(message.InputPoint.Values.Finger);
+									//trace("pq finger", message.InputPoint.Values.Finger);//FINGER
+									//trace("pq stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
+									//trace("pq fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
+									
+									//trace(message.InputPoint.Values);
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									Touch2DSManager.processTouch2DSocketData(message.InputPoint.Values);
+									//trace("in pq")
+								}
+								//3M////////////////////////////////////////////////////////
+								if ((deviceType == "3M") && (inputType == "Points2d")) {
+									trace("3m finger", message.InputPoint.Values.Finger);//FINGER
+									trace("3m stylus", message.InputPoint.Values.Stylus);//PEN/STYLUS
+									trace("3m fiducial", message.InputPoint.Values.Fiducial);//FIDUCIAL /OBJECT
+									
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+									Touch2DSManager.processTouch2DSocketData(message.InputPoint.Values);
+									
+								}
+								
+								//ZYTRONIC//////////////////////////////////////////////////
+								//if (deviceType == "LeapMotion" && inputType == "Points2d"){}//touchManagerSocket.processTouch2DSocketData(message);
+								
+								if (deviceType == "Android" && inputType == "Points2d"){//WORKS
+									//trace("Android finger touch", message.InputPoint.Values.Finger);
+									//touchManagerSocket.processTouch2DSocketData(message.InputPoint.Values);
+								}
+							}
+							
+							if (GestureWorks.activeMotion){//
+							//if (inputMode=="motion"){
+							//////////////////////////////////////////////////////////////
+							//MOTION//////////////////////////////////////////////////////
+							//////////////////////////////////////////////////////////////
+							
+							//trace("motion",deviceType,inputType);
+							//trace(message);
+							
+
+							
+								//HAND/FINGER TRACKING////////////////////////////////////////
+								if ((deviceType == "LeapMotion") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand, deviceType);
+								if ((deviceType == "RealSense") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand, deviceType);
+								//if ((deviceType == "DUO3D") && (inputType == "Hands3d")) motionManagerSocket.processMotion3DSocketData(message.InputPoint.Values.Hand);
+
+								//BODY TRACKING
+									//KINECT
+									//XITION
+									//SOFKINECTIC
+									
+								//FACE TRACKING
+									//SOKINECTIC
+									//REALSENSE//////////////////////////////////////////////////////////////////////////
+									
+									
+									// EYE TRACKING////////////////////////////////////////////////////////////////////
+										if ((deviceType == "Eyetribe") && (inputType == "Eyes3d")) { //WORKS
+											trace(deviceType, ": ", inputType);
+											eyeManagerSocket.processEye2DSocketData(message.InputPoint.Values);
+										}
+										if ((deviceType == "Tobii") && (inputType == "Eyes2d")){
+											trace(deviceType, ": ", inputType);
+											eyeManagerSocket.processEye2DSocketData(message.InputPoint.Values.Eye);
+										}
+							}
+							
+							if (GestureWorks.activeSensor)
+							{
+							//trace("active sensor in device socket parser");
+							//if (inputMode=="sensor"){
+							///////////////////////////////////////////////////////////////
+							// SENSOR //////////////////////////////////////////////////////
+							
+								//ARDUINO//////////////////////////////////////////////////////////////
+								//if ((deviceType == "Arduino") && (inputType == "Sensor6d")) tt.processSensorArduinoSocketData(message);
+								
+								//ACCELEROMETERS//////////////////////////////////////////////////////
+								if ((deviceType == "Android") && (inputType == "Sensor6d")) 
+								{
+									//trace("android sensors", message.InputPoint.Values.AndroidDevice);
+									//trace(message.InputPoint.Values.AndroidDevice.Acceleration, message.InputPoint.Values.AndroidDevice.RotationSpeed)
+									androidSensorManagerSocket.processAndroidSensorSocketData(message.InputPoint.Values.AndroidDevice)
+								}
+								if ((deviceType == "MUSE") && (inputType == "Accel3d")) trace(deviceType, ": ", inputType);
+								
+								if ((deviceType == "MYO") && (inputType == "Accel3d")) {
+									trace(deviceType, ": ", inputType);
+								}
+								if ((deviceType == "NOD") && (inputType == "Accel3d")) {
+									trace(deviceType, ": ", inputType);
+								}
+								
+								//GPS
+								//MAGNOMETER
+								//GYROMETER
+								//IR SENSOR
+							
+								// CONTROLLERS////////////////////////////////////////////
+								if ((deviceType == "WiiMote") && (inputType == "Sensor6d"))//Controller
+								{
+									//trace(deviceType, ": ", inputType);
+									//trace(message.InputPoint.Values)
+									controllerSensorManagerSocket.processControllerSensorSocketData(message.InputPoint.Values,deviceType);
+								}
+								
+								//MYO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+									if ((deviceType == "MYO") && (inputType == "EMG")) {
+									trace(deviceType, ": ", inputType);
+								}
+								//NOD//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+								if ((deviceType == "NOD") && (inputType == "Sensor6D")) {
+									trace(deviceType, ": ", inputType);
+								}
+								
+								//OLD SCHOOL CONTROLLERS/////////////////////////////////////////////////////////////////////////////////////////////////////////
+								if ((deviceType == "SNES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
+								if ((deviceType == "NES") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
+								if ((deviceType == "PS3") && (inputType == "Controller"))		//sensorManagerSocket.processSensorControllerSocketData(message);
+								if ((deviceType == "PS3_MOVE") && (inputType == "Controller"))	//sensorManagerSocket.processSensorControllerSocketData(message);
+								
+								
+								//BCI DEVICES///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+								if ((deviceType == "MUSE") && (inputType == "EEG")) trace(deviceType, ": ", inputType);
+								if ((deviceType == "INSIGHT") && (inputType == "EEG")) trace(deviceType, ": ", inputType);
+								
+
+								
+							}
+					}
+				}
+				}
+				else{
+					
+					trace("null frame");
+					
+				}
+				
+			//removePoints(currentXMLFrameList);
+				
+		}	
+		
+		
+		/*
+
+		private static function onSocketDataHandler2(event:ProgressEvent):void
+		{
+			//trace("message", event, event.bytesLoaded, event.bytesTotal);
+			var str:String = socket.readUTFBytes(socket.bytesAvailable);
+			var lg:int = str.length;
+			var start:String = str.substr(0,6)//str.substr(0,6)
+			var end:String = str.substr(lg - 8, 8)//str.substr(lg - 10, 8)
+			//trace(str)
+			//trace(lg,start,end);
+			
+			
+			//trace("------------------------------------------------------------------------------------------------------------------------------------------------------------socket loop");
 			
 			// SIMPLE FRAME COMPLETENES CHECK
 			if ((start =="<Frame") && (end =="</Frame>"))
@@ -188,7 +509,7 @@ package com.gestureworks.managers
 						//MESSAGE //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 						//trace(message);
 						
-						//trace("message length",mn);
+						trace("message length",mn);
 						
 						for (var j:int = 0; j< mn; j++ )
 						{
@@ -368,7 +689,7 @@ package com.gestureworks.managers
 			}
 			else trace("xml frame parsing error",lg,start,end);
 
-		}	
+		}	*/
 		
 		public static function get host():String{return _host;}
 		public static function set host(value:String):void {	_host = value; }

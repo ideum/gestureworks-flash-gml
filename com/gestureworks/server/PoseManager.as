@@ -90,10 +90,6 @@ package com.gestureworks.server
 				pids = new Vector.<int>;
 				
 				
-				//trace("get pose", ipCount);
-				//iPointArray = new Vector.<InteractionPointObject>;
-				
-				
 				for (var j:uint = 0; j < ipCount; j++ )
 				{
 					
@@ -115,7 +111,9 @@ package com.gestureworks.server
 						//ptp.status = p.@status;
 						//ptp.special = p.@special;
 						//ptp.color = p.@color;
+						ptp.radius = p.@root_radius;
 						
+						//trace("parsed rad:",ptp.radius, ptp.type)
 						////////////////////////////////////////////////////////////////////
 						// 3D position and orientation data
 						ptp.position = new Vector3D(p.@x * kx, p.@y * ky, p.@z * -1 * kx);
@@ -166,6 +164,8 @@ package com.gestureworks.server
 				//trace("ip length:", iPointArray.length);
 				
 				//if (iPointArray.length == 1) trace(iPointArray[0].position);
+				
+				//framepointList = new Vector.<InteractionPointObject>
 			
 		}
 		
@@ -174,7 +174,7 @@ package com.gestureworks.server
 		
 		
 
-		private static function getFramePoint(id:int):InteractionPointObject
+		public function getFramePoint(id:int):InteractionPointObject
 		{
 			var obj:InteractionPointObject;
 			for (var i:uint = 0; i < framepointList.length; i++)
@@ -184,33 +184,23 @@ package com.gestureworks.server
 			return obj
 		}
 		
-		/*
-		private static function getActivePoint(id:int):InteractionPointObject
+		public function clearPoints():void 
 		{
-			var obj:InteractionPointObject;
-			for (var i:uint = 0; i < activepoints.length; i++)
-			{
-				if (id == activepointList[i].id) obj = activepoints[i];
+			//trace("add remove update", activePoints.length, framepointList.length);
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//POINT REMOVAL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				for each(var aid:int in activePoints) 
+				{
+					// remove ref from activePoints list
+					activePoints.splice(activePoints.indexOf(aid), 1);
+					InteractionManager.onInteractionEndPoint(aid);//aid
+					//trace("REMOVED:", aid);
+				}
 			}
-			return obj
-		}
-		
-		private static function getActivePointList():Vector.<InteractionPointObject>
-		{
-			for each(var aid:int in activePoints) 
-			{
-				
-			ativePointList.push(getActivePoint(aid));
-			
-			}
-			
-			trace("aplist length:",activePointList.length)
-		}*/
-		
 
-		private static function addRemoveUpdatePoints():void 
+		public function addRemoveUpdatePoints():void 
 		{
-			//trace("motion----------------------------------------------", activePoints.length, pointList.length);
+			//trace("add remove update", activePoints.length, framepointList.length);
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//POINT REMOVAL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			for each(var aid:int in activePoints) 
@@ -224,7 +214,7 @@ package com.gestureworks.server
 					//if (pt) {
 					InteractionManager.onInteractionEndPoint(aid);//aid
 					//if(debug)
-						trace("REMOVED:", aid);
+						//trace("REMOVED:", aid);
 					//}
 				}
 			}
@@ -246,12 +236,12 @@ package com.gestureworks.server
 							
 							InteractionManager.onInteractionBeginPoint(pt);
 							//if(debug)
-								trace("ADDED:",pt.id, pt.interactionPointID, pid);	
+								//trace("ADDED:",pt.id, pt.interactionPointID, pid);	
 						}
 						else {
 							InteractionManager.onInteractionUpdatePoint(pt);
 							//if(debug)
-								trace("UPDATE:",pt.type, pt.age,pt.id, pt.interactionPointID, pid, pt.position,pt.phase);
+								//trace("UPDATE:",pt.type, pt.age,pt.id, pt.interactionPointID, pid, pt.position,pt.phase);
 						}
 					}
 			}	

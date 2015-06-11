@@ -506,6 +506,8 @@ package com.gestureworks.managers
 		{
 			//DEVICE MANAGER CONTROL
 			//DeviceManager.update();
+			 DeviceServerManager.processSocketData();
+			
 			
 			//trace("touch frame process ----------------------------------------------", gs.touchPointCount);	
 			

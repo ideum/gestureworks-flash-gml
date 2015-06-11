@@ -676,7 +676,7 @@ package com.gestureworks.visualizer
 						if (ipt.type =="none" ) //black //"splay"
 							{
 								//trace ("draw splay");
-							graphics.lineStyle(8, 0x00FF00, style.stroke_alpha);
+							graphics.lineStyle(8, 0xFF0000, style.stroke_alpha);
 							graphics.drawCircle(ipt.screen_position.x, ipt.screen_position.y, style.radius*2);
 						}
 					
