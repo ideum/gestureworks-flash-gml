@@ -714,7 +714,7 @@ package com.gestureworks.analysis
 					
 					else if ((indexdist>splayradius)&&(middledist>splayradius)&&(ringdist>splayradius)&&(pinkydist>splayradius))
 					{	
-						if ((thumbindexdist > 2 * splayfdist) &&(indexmiddledist > splayfdist) && (middleringdist > splayfdist) && (ringpinkydist >  1.5*splayfdist))//(thumbmiddledist > 2 * splayfdist)
+						if ((thumbindexdist > 1.6 * splayfdist) &&(indexmiddledist > splayfdist) && (middleringdist > splayfdist) && (ringpinkydist >  1.2*splayfdist))//(thumbmiddledist > 2 * splayfdist)
 						{
 						handList[j].IPState = "splay";
 						handList[j].IPPosition = palm.position;
