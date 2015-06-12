@@ -63,7 +63,7 @@ package com.gestureworks.objects
 		//length
 		public var length:Number = 0;
 		//extension percentage based on max and min length for session
-		public var extension:Number = 0;
+		public var extension:Boolean = true;
 		//favdist
 		public var favdist:Number = 0;
 		//normalized_favdist

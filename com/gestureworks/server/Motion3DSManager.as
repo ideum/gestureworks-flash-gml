@@ -133,9 +133,11 @@ package com.gestureworks.server
 						if (device == "RealSense")
 						{
 							ptp.screen_position = new Vector3D(p.Position.@x * k2x * pk + sw * 0.5, p.Position.@y * -k2y * pk + 0.5 * sh, p.Position.@z * k2x + sd);
-							//ptp.screen_position = new Vector3D(p.Position.@image_x * -ka * pk + sw * 1, p.Position.@image_y * kb * pk, p.Position.@image_z * sd);
 							
-							//ptp.screen_position = new Vector3D(handList[j].@image_x * -ka * pk + sw * 1, handList[j].@image_y * kb * pk, handList[j].@image_z * sd);
+							
+								//ptp.screen_position = new Vector3D(p.Position.@image_x * -ka * pk + sw * 1, p.Position.@image_y * kb * pk, p.Position.@image_z * sd);
+								//ptp.screen_position = new Vector3D(handList[j].@image_x * -ka * pk + sw * 1, handList[j].@image_y * kb * pk, handList[j].@image_z * sd);
+								//ptp.screen_position = new Vector3D(p.Position.@image_x, p.Position.@image_y, p.Position.@image_z);
 							
 							ptp.screen_direction = new Vector3D(p.Direction.@x, p.Direction.@y*-1, p.Direction.@z*-1);
 							ptp.screen_normal =  new Vector3D(p.Normal.@x, p.Normal.@y * -1, p.Normal.@z * -1);
@@ -179,20 +181,30 @@ package com.gestureworks.server
 							ptf.length = 30//f.@Length;
 							ptf.fingertype = f.@fingerType;
 							
+							if (f.@extended == 0) ptf.extension = false;
+							else if (f.@extended == 1) ptf.extension = true;
+							 
+							//trace("parser",ptf.fingertype,ptf.extension,f.@extended);
 						
-							//ptf.position = new Vector3D(f.Position.@x * kx * pk, f.Position.@y * ky * pk, f.Position.@z * -50 * kx);
+										//ptf.position = new Vector3D(f.Position.@x * kx * pk, f.Position.@y * ky * pk, f.Position.@z * -50 * kx);
 							ptf.position = new Vector3D(f.Position.@x*kx, f.Position.@y*ky, f.Position.@z * -1*kx);
-							//ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
+									//ptf.direction = new Vector3D(f.Direction.@x, f.Direction.@y, f.Direction.@z * -1);
 							
-							//ptf.extension = f.@extension; //	NEED FINGER EXTENSION FOR HAND FLATNESS AND POINTING CHECK FOR SPLAY AND TRIGGER
+									//ptf.extension = f.@extension; //	NEED FINGER EXTENSION FOR HAND FLATNESS AND POINTING CHECK FOR SPLAY AND TRIGGER
 							
 							
 							if (device == "RealSense")
 							{
 								ptf.screen_position = new Vector3D(f.Position.@x * k2x*pk + (sw * 0.5), f.Position.@y *pk* -k2y + 0.5 * sh, f.Position.@z * k2x + sd);
-								//ptf.screen_position = new Vector3D(f.Position.@image_x*-ka*pk+ (sw *1), f.Position.@image_y*kb*pk, f.Position.@image_z*sd);
+										//ptf.screen_position = new Vector3D(f.Position.@image_x * -ka * pk + (sw * 1), f.Position.@image_y * kb * pk, f.Position.@image_z * sd);
+										//ptf.screen_position = new Vector3D(f.Position.@image_x, f.Position.@image_y, f.Position.@image_z);
+								
 								ptf.screen_direction = new Vector3D(f.Direction.@x, f.Direction.@y*-1, f.Direction.@z*-1);
-								ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z*-1);;
+								ptf.screen_normal =  new Vector3D(f.Normal.@x, f.Normal.@y, f.Normal.@z * -1);;
+								
+								
+								
+								
 							}
 							else if (device == "LeapMotion")
 							{

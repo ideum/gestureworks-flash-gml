@@ -172,8 +172,12 @@ package com.gestureworks.managers
 		public static function processSocketData():void
 		{
 			//trace("process appended String to XML Data");
+			
 			//Copy appended frame String
 			tempAMString = aMString;
+			//clear socketData();
+			aMString = "";
+			//trace(aMString.length);
 			
 			// clear appended frame string
 			aMString =  new String();
@@ -186,6 +190,8 @@ package com.gestureworks.managers
 			
 			//clean out zombies!!!
 			removePoints(XMLFrameList);
+			
+			
 		}
 		
 		private static function removePoints(currentXMLFrameList:XMLList):void

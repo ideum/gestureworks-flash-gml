@@ -182,17 +182,17 @@ package com.gestureworks.managers
 
 				//trace("----------------------------ipointArray length",pt.id, pt.interactionPointID , pt.rootPointID, interactionPoints[pt.interactionPointID]  )
 		
-				trace("interaction point begin",interactionPointCount,iPointArray.length)
+				//trace("interaction point begin",interactionPointCount,iPointArray.length)
 			}
 
 		public static function onInteractionEndPoint(interactionPointID:int):void////pt:InteractionPointObject
 		{
 			
-			trace("interaction point End, interactionManager", interactionPointID);
+			//trace("interaction point End, interactionManager", interactionPointID);
 			
 			var ipO:InteractionPointObject = interactionPoints[interactionPointID] as InteractionPointObject;
 			
-			trace(ipO);
+			//trace(ipO);
 			
 			if (ipO)
 			{
@@ -214,7 +214,7 @@ package com.gestureworks.managers
 					// DELETE FROM UNIQUE GLOBAL INPUT POINT LIST
 					delete interactionPoints[interactionPointID] as InteractionPointObject;
 					
-					trace("ip deleted",interactionPointCount,iPointArray.length);
+					//trace("ip deleted",interactionPointCount,iPointArray.length);
 			}
 			//trace("interaction point end POINT",interactionPointCount,iPointArray.length)
 		}
