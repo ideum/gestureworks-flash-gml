@@ -99,6 +99,15 @@ package com.gestureworks.core
 			}
 		}
 		
+		private var _dynamicActive:Boolean = true;
+		/**
+		 * @inheritDoc
+		 */
+		public function get dynamicActive():Boolean { return _dynamicActive; }
+		public function set dynamicActive(a:Boolean):void {
+			_dynamicActive = a;
+		}		
+		
 		private var _localModes:Boolean = false;
 		/**
 		 * @inheritDoc
@@ -313,7 +322,8 @@ package com.gestureworks.core
 			if (topOnPoint && value > _totalPointCount) {
 				parent.addChildAt(this, parent.numChildren - 1);
 			}
-			_totalPointCount = value; 			
+			_totalPointCount = value; 	
+			dynamicActive = _totalPointCount > 0; 
 		}
 		
 		private var _pointCount:int;

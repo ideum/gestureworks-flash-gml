@@ -99,6 +99,15 @@ package com.gestureworks.core
 			}
 		}
 		
+		private var _dynamicActive:Boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public function get dynamicActive():Boolean { return _dynamicActive; }
+		public function set dynamicActive(a:Boolean):void {
+			_dynamicActive = a;
+		}		
+		
 		private var _localModes:Boolean = false;
 		/**
 		 * @inheritDoc

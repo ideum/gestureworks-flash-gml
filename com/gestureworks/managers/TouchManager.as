@@ -622,83 +622,25 @@ package com.gestureworks.managers
 		
 		// UPDATE ALL TOUCH OBJECTS IN DISPLAY LIST
 		public static function touchFrameHandler(event:GWEvent):void
-		{
-			//trace("touch frame process ----------------------------------------------");	
-			
+		{		
 			//INCREMENT TOUCH FRAME id
 			GestureGlobals.frameID += 1;
-			
-			//trace(GestureGlobals.frameID)
-			/////////////////////////////////////////////////////////////////////////////
-			//GET MOTION POINT LIST
-			if (GestureWorks.activeMotion)
-			{
-				gms = GestureGlobals.gw_public::touchObjects[GestureGlobals.motionSpriteID];
-				gms.tc.getSkeletalMetrics3D();
-				
-				//trace("FrameID");
-				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED
-				// ON ALL OBJECTS
-				if (GestureGlobals.frameID == 100) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
-				
-			}
-			
-			//TODO: CLEAN UP INIT
-			// DISABLE BLOCK WHEN NO MOTION POINTS
+
 			// update all touch objects in display list
 			for each(var tO:Object in touchObjects)
 			{
+				
 				if (tO.disposal) {
 					tO.dispose();
 					continue;
 				}
-				//trace("tm touchobject",tO, tO.tc.core);
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//PULL MOTION POINT DATA INTO EACH TOUCHOBJECT
-				//GET GLOBAL MOTION POINTS		
-				if((GestureWorks.activeMotion)&&(tO.motionEnabled)){
-					if (tO.cO)
-					{
-						if (GestureGlobals.frameID == 100) 
-						{
-							tO.tc.initIPSupport();
-							tO.tc.initIPFilters();
-						}
-						
-						tO.cO.motionArray = gms.cO.motionArray
-						tO.cO.handList = gms.cO.handList;
-						//tO.cO.iPointArray = gms.cO.iPointArray;
-					}
-					else 
-						continue;
-				}
-					
+			
 				// update touch,cluster and gesture processing
-				updateTouchObject(ITouchObject(tO));
-				
-
-				// move to timeline visualizer
-				// CURRENTLY NO GESTURE OR CLUSTER ANALYSIS REQURES
-				// DIRECT CLUSTER OR TRANSFROM HISTORY, USED IN DEBUG ONLY
-				if ((tO.visualizer)&&(tO.visualizer.debug_display))
-				{
-					//UPDATE TRANSFORM HISTORIES
-					TransformHistories.historyQueue(tO.touchObjectID);
-					
-					// update touch object debugger display
-					tO.updateDebugDisplay();
+				if (ITouchObject(tO).dynamicActive){
+					updateTouchObject(ITouchObject(tO));
 				}
 				
-				// MANAGE TIMELINE FRAMES IN TOUCH GESTURE
 			}
-			
-			//TRACK INTERACTIONS POINTS AND INTERACTION EVENTS
-			// update interation point global list
-			InteractionPointTracker.getActivePoints();
-			
-			// zero motion frame count
-			GestureGlobals.motionFrameID = 1;
-			//trace(GestureGlobals.motionframeID)
 		}
 		
 		

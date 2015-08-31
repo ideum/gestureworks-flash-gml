@@ -29,6 +29,12 @@ package com.gestureworks.interfaces
 		function set active(a:Boolean):void; 
 		
 		/**
+		 * Dynamically enable/disable gesture processing on an object
+		 */
+		function get dynamicActive():Boolean;
+		function set dynamicActive(a:Boolean):void; 		
+		
+		/**
 		 * Flag indicating the application of local modes over the global settings. By default, all objects are enabled for input
 		 * processing based on the application level mode settings (i.e. nativeTouch, simulator, tuio, etc.). This flag allows the 
 		 * inclusion/exclusion of specific input interaction according to local overrides. Note that the corresponding global setting
