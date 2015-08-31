@@ -176,7 +176,13 @@ package com.gestureworks.interfaces
 		function set traceDebugMode(value:Boolean):void;
 		
 		/**
-		 * 
+		 * Total number of points registered with object and/or child objects regardless of gesture activation state 
+		 */
+		function get totalPointCount():int;
+		function set totalPointCount(value:int):void;
+		
+		/**
+		 * Number of points being processed for gesture-active objects
 		 */
 		function get pointCount():int;
 		function set pointCount(value:int):void;
@@ -304,6 +310,11 @@ package com.gestureworks.interfaces
 		 */
 		function get releaseInertia():Boolean;
 		function set releaseInertia(value:Boolean):void;
+		
+		/**
+		 * Clears inertial delta cache
+		 */
+		function stopInertia():void; 
 		
 		/**
 		 * @default false

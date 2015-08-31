@@ -28,15 +28,18 @@ package com.gestureworks.core
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
 	import com.gestureworks.objects.TimelineObject;
 	import com.gestureworks.objects.TransformObject;
+	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Transform;
 	import flash.utils.Dictionary;
@@ -291,14 +294,34 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get traceDebugMode():Boolean{return _traceDebugMode;}
-		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
+		public function set traceDebugMode(value:Boolean):void {	_traceDebugMode = value; }
+		
+		/**
+		 * For each point registration, reorder the object's index to the top of its parent's display list.
+		 */
+		public var topOnPoint:Boolean;
+		
+		/**
+		 * @inheritDoc
+		 */
+		private var _totalPointCount:int;
+		public function get totalPointCount():int { return _totalPointCount; }
+		public function set totalPointCount(value:int):void { 
+			if (parent && parent is ITouchObject) {
+				ITouchObject(parent).totalPointCount += value > _totalPointCount ? value -_totalPointCount : -(_totalPointCount - value);
+			}
+			if (topOnPoint && value > _totalPointCount) {
+				parent.addChildAt(this, parent.numChildren - 1);
+			}
+			_totalPointCount = value; 			
+		}
 		
 		private var _pointCount:int;
 		/**
 		 * @inheritDoc
 		 */
 		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void {	_pointCount = value; }
+		public function set pointCount(value:int):void { _pointCount = value; }
 		
 		private var _motionPointCount:int;
 		/**
@@ -512,7 +535,15 @@ package com.gestureworks.core
 		 * @inheritDoc 
 		 */		
 		public function get releaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set releaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}		
+		public function set releaseInertia(value:Boolean):void {	_gestureReleaseInertia = value; }				
+		/**
+		 * @inheritDoc
+		 */
+		public function stopInertia():void {
+			for each(var dim:DimensionObject in gO.pOList[0].dList) {
+				dim.gestureDeltaCache = 0; 
+			}
+		}
 		
 		private var _gestureTweenOn:Boolean = false;
 		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }
@@ -914,6 +945,12 @@ package com.gestureworks.core
 		 * @private
 		 */
 		public var mtx:Matrix;
+		/**
+		 * For non-native affine tranformations3D, used to cache previous transform in order to revert modifications made through direct transformation settings
+		 * (i.e. x,y,rotation,etc.) allowing the TouchTransform to apply all gesture tranformations
+		 * @private
+		 */
+		public var mtx3D:Matrix3D;
 		
 		
 		/////////////////////////////////////////////////////////////
@@ -1017,9 +1054,9 @@ package com.gestureworks.core
 		public function get scale():Number{return _scale;}
 		public function set scale(value:Number):void
 		{
-			_scale = value < minScale ? minScale : value > maxScale ? maxScale : value;
-			scaleX = scale;
-			scaleY = scale;
+			_scale = value;
+			scaleX = _scale;
+			scaleY = _scale;
 		}					
 		
 		// affine transform point  
@@ -1222,7 +1259,7 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function removeAllListeners():void {
-			var eCnt:int = _eventListeners.length;
+			var eCnt:int = _eventListeners ? _eventListeners.length : 0;
 			var e:*;
 			for(var i:int = eCnt-1; i >= 0; i--) {
 				e = _eventListeners[i];

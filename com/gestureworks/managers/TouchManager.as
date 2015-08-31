@@ -60,6 +60,7 @@ package com.gestureworks.managers
 	
 	public class TouchManager
 	{
+		public static var totalPoints:Dictionary = new Dictionary();
 		public static var points:Dictionary = new Dictionary();
 		public static var touchObjects:Dictionary = new Dictionary();
 		private static var virtualTransformObjects:Dictionary = new Dictionary();
@@ -87,7 +88,7 @@ package com.gestureworks.managers
 				GestureWorks.application.addEventListener(TouchEvent.TOUCH_END, onTouchEnd);
 				
 				// DRIVES UPDATES ON TOUCH POINT PATHS
-				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);
+				GestureWorks.application.addEventListener(TouchEvent.TOUCH_MOVE, onMove);							
 			}
 
 			// leave this on for all input types
@@ -260,7 +261,8 @@ package com.gestureworks.managers
 		 * @param	event
 		 */
 		private static function onTouchBegin(e:TouchEvent):void {			
-			var event:GWTouchEvent = new GWTouchEvent(e);					
+			var event:GWTouchEvent = new GWTouchEvent(e);	
+			totalPointUpdate(event);
 			onTouchDown(event);
 			processOverlays(event);
 		}
@@ -272,8 +274,8 @@ package com.gestureworks.managers
 		 * @param	overrideRegisterPoints
 		 */
 		public static function onTouchDown(event:GWTouchEvent):void
-		{
-			applyHooks(event);
+		{			
+			applyHooks(event);			
 			if (validTarget(event)) { 
 											
 				if (ITouchObject(event.target).registerPoints) {
@@ -284,31 +286,13 @@ package com.gestureworks.managers
 						event.target = event.target.parent;	
 						assignPoint(event);
 					}
-					//else if (event.target.targetList.length)
-					//{							
-						//ASSIGN THIS TOUCH OBJECT AS PRIMARY CLUSTER
-						//assignPoint(event);
-						//var tgt:Object;
-						//
-						//CREATE SECONDARY CLUSTERS ON TARGET LIST ITEMS
-						//for (var i:int = 0; i < event.target.targetList.length; i++) 
-						//{
-							//tgt = event.target.targetList[i];
-							//
-							//if (!tgt is ITouchObject)
-								//tgt = virtualTouchObjects[tgt];
-							//
-							//if(tgt is ITouchObject && tgt.active){
-								//assignPointClone(event, ITouchObject(tgt));
-								//tgt.broadcastTarget = true;
-							//}
-						//}
-					//}
 					else {
 						 assignPoint(event);
+						 
 						 if (event.target.parent is ITouchObject) {
-							event.target = event.target.parent;
-							propagatePoint( event);
+							var e:GWTouchEvent = event.clone() as GWTouchEvent;							
+							e.target = event.target.parent;
+							propagatePoint(e);
 						 }
 					}
 				}
@@ -321,16 +305,16 @@ package com.gestureworks.managers
 		 */
 		private static function onTouchEnd(e:TouchEvent):void {
 			var event:GWTouchEvent = new GWTouchEvent(e);
+			totalPointUpdate(event);
 			onTouchUp(event);
 			processOverlays(event);
 		}		
 		
 		// stage on TOUCH_UP.
 		public static function onTouchUp(event:GWTouchEvent):void
-		{
+		{			
 			applyHooks(event);
-			var pointObject:Object = points[event.touchPointID];
-			
+			var pointObject:Object = points[event.touchPointID];			
 			if (pointObject) {
 				// allows bindings to work without killing global nativeTouch listeners
 				// NOTE: when enabling targeting object will have to be replaced with objectList
@@ -655,7 +639,8 @@ package com.gestureworks.managers
 				//trace("FrameID");
 				// TODO:MUST CHNAGE TO INIT ONCE GML IS FULLY PARSED
 				// ON ALL OBJECTS
-				if (GestureGlobals.frameID == 100) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation				
+				if (GestureGlobals.frameID == 100) gms.tc.initGeoMetric3D();//initi geemetic gloabl ip activation
+				
 			}
 			
 			//TODO: CLEAN UP INIT
@@ -764,6 +749,95 @@ package com.gestureworks.managers
 				}
 		}
 		
+		/**
+		 * Update total point count on input begin and end events
+		 * @param	event
+		 */
+		public static function totalPointUpdate(event:GWTouchEvent):void {
+			if (event.target is ITouchObject && event.type == GWTouchEvent.TOUCH_BEGIN) {
+				ITouchObject(event.target).totalPointCount++;
+				totalPoints[event.touchPointID] = event.target; 
+			}
+			else if(event.touchPointID in totalPoints){
+				ITouchObject(totalPoints[event.touchPointID]).totalPointCount--;
+				delete totalPoints[event.touchPointID]; 
+			}
+		}		
+		
+		/**
+		 * Removes specified points from touch object
+		 * @param	obj  object to remove points from
+		 * @param	points  points to remove from object
+		 */
+		public static function removePoints(obj:ITouchObject, points:Vector.<PointObject>):Vector.<PointObject> {
+			var removed:Vector.<PointObject> = points.concat();
+			var event:GWTouchEvent;
+			
+			//if object has registered points...,
+			if (removed.length) {
+				
+				//...remove each point
+				for each(var point:PointObject in removed) {
+					
+					//touch end event
+					event = new GWTouchEvent(null, GWTouchEvent.TOUCH_END, true, false, point.touchPointID);					
+					
+					//update event timelines
+					if (obj.tiO) {
+						obj.tiO.frame.pointEventArray.push(event);
+					}
+					
+					//remove point from local list
+					obj.pointArray.splice(obj.pointArray.indexOf(point), 1);
+					obj.tpn = obj.pointArray.length;
+					
+					//decrement point count
+					obj.pointCount--;
+					
+					//update object
+					updateTouchObject(obj);
+					
+					//delete point when assigned to this object only
+					if (point.objectList.length == 1) {
+						delete points[point.touchPointID];
+					}
+				
+				}
+			}			
+			return removed;			
+		}
+		
+		/**
+		 * Removes all points from touch object
+		 * @param	obj touch object
+		 * @return  removed points
+		 */
+		public static function forceRelease(obj:ITouchObject):Vector.<PointObject> {			
+			return removePoints(obj, obj.pointArray);
+		}				
+		
+		/**
+		 * Transfer points from one object to another
+		 * @param	source  object to remove points from
+		 * @param	destination  object to transfer points to
+		 * @param   points  points to transfer; if null, all points are transferred
+		 */
+		public static function transferPoints(source:ITouchObject, destination:ITouchObject, points:Vector.<PointObject> = null):void {
+			
+			//remove points registerd to source object
+			var transfer:Vector.<PointObject> = points ? points : forceRelease(source);
+			var event:GWTouchEvent;
+			
+			//generate a touch event on the destination object for each point
+			for each(var point:PointObject in transfer) {
+				event = new GWTouchEvent(null, GWTouchEvent.TOUCH_BEGIN, true, false, point.touchPointID);
+				event.source = TouchEvent;
+				event.target = destination;
+				event.stageX = point.x;
+				event.stageY = point.y;
+				onTouchDown(event);
+			}
+		}
 		
 	}
 }

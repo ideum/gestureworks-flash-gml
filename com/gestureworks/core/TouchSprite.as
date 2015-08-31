@@ -28,6 +28,7 @@ package com.gestureworks.core
 	import com.gestureworks.managers.ObjectManager;
 	import com.gestureworks.managers.TouchManager;
 	import com.gestureworks.objects.ClusterObject;
+	import com.gestureworks.objects.DimensionObject;
 	import com.gestureworks.objects.GestureListObject;
 	import com.gestureworks.objects.PointObject;
 	import com.gestureworks.objects.StrokeObject;
@@ -293,14 +294,34 @@ package com.gestureworks.core
 		 * @inheritDoc
 		 */
 		public function get traceDebugMode():Boolean{return _traceDebugMode;}
-		public function set traceDebugMode(value:Boolean):void{	_traceDebugMode=value;}
+		public function set traceDebugMode(value:Boolean):void {	_traceDebugMode = value; }
+		
+		/**
+		 * For each point registration, reorder the object's index to the top of its parent's display list.
+		 */
+		public var topOnPoint:Boolean;
+		
+		/**
+		 * @inheritDoc
+		 */
+		private var _totalPointCount:int;
+		public function get totalPointCount():int { return _totalPointCount; }
+		public function set totalPointCount(value:int):void { 
+			if (parent && parent is ITouchObject) {
+				ITouchObject(parent).totalPointCount += value > _totalPointCount ? value -_totalPointCount : -(_totalPointCount - value);
+			}
+			if (topOnPoint && value > _totalPointCount) {
+				parent.addChildAt(this, parent.numChildren - 1);
+			}
+			_totalPointCount = value; 			
+		}
 		
 		private var _pointCount:int;
 		/**
 		 * @inheritDoc
 		 */
 		public function get pointCount():int{return _pointCount;}
-		public function set pointCount(value:int):void {	_pointCount = value; }
+		public function set pointCount(value:int):void { _pointCount = value; }
 		
 		private var _motionPointCount:int;
 		/**
@@ -514,7 +535,15 @@ package com.gestureworks.core
 		 * @inheritDoc 
 		 */		
 		public function get releaseInertia():Boolean{return _gestureReleaseInertia;}
-		public function set releaseInertia(value:Boolean):void{	_gestureReleaseInertia=value;}		
+		public function set releaseInertia(value:Boolean):void {	_gestureReleaseInertia = value; }				
+		/**
+		 * @inheritDoc
+		 */
+		public function stopInertia():void {
+			for each(var dim:DimensionObject in gO.pOList[0].dList) {
+				dim.gestureDeltaCache = 0; 
+			}
+		}
 		
 		private var _gestureTweenOn:Boolean = false;
 		public function get gestureTweenOn():Boolean { return _gestureTweenOn; }
@@ -1025,9 +1054,9 @@ package com.gestureworks.core
 		public function get scale():Number{return _scale;}
 		public function set scale(value:Number):void
 		{
-			_scale = value < minScale ? minScale : value > maxScale ? maxScale : value;
-			scaleX = scale;
-			scaleY = scale;
+			_scale = value;
+			scaleX = _scale;
+			scaleY = _scale;
 		}					
 		
 		// affine transform point  
