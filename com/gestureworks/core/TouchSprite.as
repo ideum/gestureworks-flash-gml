@@ -99,7 +99,7 @@ package com.gestureworks.core
 			}
 		}
 		
-		private var _dynamicActive:Boolean = true;
+		private var _dynamicActive:Boolean = false;
 		/**
 		 * @inheritDoc
 		 */
